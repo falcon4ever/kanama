@@ -1,5 +1,7 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
+
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import java.lang.foreign.MemorySegment
@@ -579,6 +581,21 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
         } else {
             RefCounted.owned(Tween(GodotHandle(value)))
         }
+
+    /** Signal `step_finished(idx: int)`; see [TypedSignal]. */
+    val stepFinished: Signal1<Long>
+        @JvmName("stepFinishedTypedSignal")
+        get() = Signal1(this, "step_finished", SignalArgType.LONG)
+
+    /** Signal `loop_finished(loop_count: int)`; see [TypedSignal]. */
+    val loopFinished: Signal1<Long>
+        @JvmName("loopFinishedTypedSignal")
+        get() = Signal1(this, "loop_finished", SignalArgType.LONG)
+
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
 
     object Signals {
         const val stepFinished: String = "step_finished"

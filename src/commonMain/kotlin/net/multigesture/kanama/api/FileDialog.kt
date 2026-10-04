@@ -603,6 +603,26 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         ObjectCalls.ptrcallNoArgs(invalidateBind, segment)
     }
 
+    /** Signal `file_selected(path: String)`; see [TypedSignal]. */
+    val fileSelected: Signal1<String>
+        @JvmName("fileSelectedTypedSignal")
+        get() = Signal1(this, "file_selected", SignalArgType.STRING)
+
+    /** Signal `files_selected(paths: PackedStringArray)`; see [TypedSignal]. */
+    val filesSelected: Signal1<List<String>>
+        @JvmName("filesSelectedTypedSignal")
+        get() = Signal1(this, "files_selected", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))
+
+    /** Signal `dir_selected(dir: String)`; see [TypedSignal]. */
+    val dirSelected: Signal1<String>
+        @JvmName("dirSelectedTypedSignal")
+        get() = Signal1(this, "dir_selected", SignalArgType.STRING)
+
+    /** Signal `filename_filter_changed(filter: String)`; see [TypedSignal]. */
+    val filenameFilterChanged: Signal1<String>
+        @JvmName("filenameFilterChangedTypedSignal")
+        get() = Signal1(this, "filename_filter_changed", SignalArgType.STRING)
+
     object Signals {
         const val fileSelected: String = "file_selected"
         const val filesSelected: String = "files_selected"

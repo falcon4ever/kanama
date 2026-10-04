@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -107,6 +108,36 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
     fun reimportFiles(files: List<String>) {
         ObjectCalls.ptrcallWithPackedStringListArg(reimportFilesBind, segment, files)
     }
+
+    /** Signal `filesystem_changed()`; see [TypedSignal]. */
+    val filesystemChanged: Signal0
+        @JvmName("filesystemChangedTypedSignal")
+        get() = Signal0(this, "filesystem_changed")
+
+    /** Signal `script_classes_updated()`; see [TypedSignal]. */
+    val scriptClassesUpdated: Signal0
+        @JvmName("scriptClassesUpdatedTypedSignal")
+        get() = Signal0(this, "script_classes_updated")
+
+    /** Signal `sources_changed(exist: bool)`; see [TypedSignal]. */
+    val sourcesChanged: Signal1<Boolean>
+        @JvmName("sourcesChangedTypedSignal")
+        get() = Signal1(this, "sources_changed", SignalArgType.BOOLEAN)
+
+    /** Signal `resources_reimporting(resources: PackedStringArray)`; see [TypedSignal]. */
+    val resourcesReimporting: Signal1<List<String>>
+        @JvmName("resourcesReimportingTypedSignal")
+        get() = Signal1(this, "resources_reimporting", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))
+
+    /** Signal `resources_reimported(resources: PackedStringArray)`; see [TypedSignal]. */
+    val resourcesReimported: Signal1<List<String>>
+        @JvmName("resourcesReimportedTypedSignal")
+        get() = Signal1(this, "resources_reimported", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))
+
+    /** Signal `resources_reload(resources: PackedStringArray)`; see [TypedSignal]. */
+    val resourcesReload: Signal1<List<String>>
+        @JvmName("resourcesReloadTypedSignal")
+        get() = Signal1(this, "resources_reload", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))
 
     object Signals {
         const val filesystemChanged: String = "filesystem_changed"

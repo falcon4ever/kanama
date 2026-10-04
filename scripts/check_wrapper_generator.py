@@ -710,6 +710,63 @@ def check_no_shared_api_dir() -> int:
     return 0
 
 
+TYPED_SIGNAL_ACCESSOR = re.compile(
+    r'val (\w+): Signal(\d)\b[^\n]*\n\s*@JvmName\("\w+TypedSignal"\)\n\s*get\(\) = Signal\d\((?:this|GodotObject\(GodotHandle\(singleton\)\)), "(\w+)"'
+)
+
+
+def check_typed_signals() -> int:
+    """Task 134 D4: every engine signal in extension_api.json has a typed accessor (`val bodyEntered:
+    Signal1<Node2D>`) on its class, with the arity Godot declares, under the name
+    signal_accessor_names() chose (the `Signal` suffix on collisions). Object's two signals live on
+    the hand-written GodotObject; Tween and AudioStreamPlayer are hand-shaped per platform and carry
+    theirs by hand, so the gate reads every wrapper source, generated or not."""
+    import json
+
+    from generate_api_wrapper import signal_accessor_names
+    from wrapper_model import load_api_classes
+
+    api_classes = load_api_classes(ROOT / "extension_api.json")
+    expected = signal_accessor_names(api_classes)
+    raw = json.loads((ROOT / "extension_api.json").read_text(encoding="utf-8"))
+    arity = {
+        (cls["name"], sig["name"]): len(sig.get("arguments") or [])
+        for cls in raw.get("classes", [])
+        for sig in cls.get("signals") or []
+    }
+    found: dict[tuple[str, str], set[tuple[str, int]]] = {}
+    for directory in (SHARED_API_DIR, DESKTOP_API_DIR, IOS_API_DIR):
+        for path in sorted(directory.glob("*.kt")):
+            text = path.read_text(encoding="utf-8")
+            for match in TYPED_SIGNAL_ACCESSOR.finditer(text):
+                prop, n, signal = match.group(1), int(match.group(2)), match.group(3)
+                found.setdefault((path.name.split(".")[0], signal), set()).add((prop, n))
+    missing: list[str] = []
+    wrong: list[str] = []
+    for (cls, signal), n in sorted(arity.items()):
+        file_cls = "GodotObject" if cls == "Object" else cls
+        hits = found.get((file_cls, signal))
+        if not hits:
+            missing.append(f"{cls}.{signal}")
+            continue
+        name = expected.get((cls, signal))
+        for prop, got in hits:
+            if got != n or (name is not None and prop != name):
+                wrong.append(f"{cls}.{signal}: {prop}: Signal{got} (expected {name}: Signal{n})")
+    if missing or wrong:
+        for line in missing:
+            print(f"[wrapper_generator] FAIL typed signal missing: {line}", file=sys.stderr)
+        for line in wrong:
+            print(f"[wrapper_generator] FAIL typed signal mismatch: {line}", file=sys.stderr)
+        return 1
+    renamed = sorted(f"{c}.{s} -> {n}" for (c, s), n in expected.items() if n.endswith("Signal") and not s.endswith("signal"))
+    print(
+        f"[wrapper_generator] PASS typed signals: {len(arity)} engine signals, each with a typed accessor; "
+        f"{len(renamed)} renamed with the Signal suffix{': ' + ', '.join(renamed) if renamed else ''}"
+    )
+    return 0
+
+
 def main() -> int:
     if check_no_shared_api_dir() != 0:
         return 1
@@ -741,6 +798,8 @@ def main() -> int:
     if check_single_tree(tree) != 0:
         return 1
     if check_shared_tree_pointer() != 0:
+        return 1
+    if check_typed_signals() != 0:
         return 1
 
     adopted = (

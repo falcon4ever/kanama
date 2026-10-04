@@ -73,6 +73,16 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetStringName(findProfileBoneNameBind, segment, skeletonBoneName)
     }
 
+    /** Signal `bone_map_updated()`; see [TypedSignal]. */
+    val boneMapUpdated: Signal0
+        @JvmName("boneMapUpdatedTypedSignal")
+        get() = Signal0(this, "bone_map_updated")
+
+    /** Signal `profile_updated()`; see [TypedSignal]. */
+    val profileUpdated: Signal0
+        @JvmName("profileUpdatedTypedSignal")
+        get() = Signal0(this, "profile_updated")
+
     object Signals {
         const val boneMapUpdated: String = "bone_map_updated"
         const val profileUpdated: String = "profile_updated"

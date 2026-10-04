@@ -26,10 +26,13 @@ import kotlinx.cinterop.toKString
 import kotlinx.cinterop.toLong
 import kotlinx.cinterop.value
 import net.multigesture.kanama.api.GodotEnumValue
+import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
+import net.multigesture.kanama.api.SignalArgReader
+import net.multigesture.kanama.api.SignalArgumentException
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.IosScriptErrors
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -1590,6 +1593,115 @@ internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
     else -> null
   }
 }
+
+/**
+ * iOS's [SignalArgReader] (task 134 D4): reads the PT-tagged cells `kanama_ios_callable_trampoline`
+ * marshalled from a signal emission (the same cells a script method call receives). One per thread,
+ * reused by nested emissions ([dispatch] saves and restores the cells it reads). A Variant type the
+ * shim does not marshal yet arrives tagged `IOS_ARG_UNMARSHALLED_BASE + type` and fails with its
+ * name instead of turning into a silent null.
+ */
+@OptIn(ExperimentalForeignApi::class)
+internal class IosSignalArgReader : SignalArgReader {
+  private var tags: CPointer<IntVar>? = null
+  private var ptrs: CPointer<COpaquePointerVar>? = null
+  private var argc = 0
+
+  override val count: Int
+    get() = argc
+
+  fun dispatch(
+    tags: CPointer<IntVar>?,
+    ptrs: CPointer<COpaquePointerVar>?,
+    count: Int,
+    block: (SignalArgReader) -> Unit,
+  ) {
+    val savedTags = this.tags
+    val savedPtrs = this.ptrs
+    val savedCount = argc
+    this.tags = tags
+    this.ptrs = ptrs
+    argc = if (tags == null || ptrs == null) 0 else count
+    try {
+      block(this)
+    } finally {
+      this.tags = savedTags
+      this.ptrs = savedPtrs
+      argc = savedCount
+    }
+  }
+
+  private fun tag(index: Int): Int {
+    if (index < 0 || index >= argc) {
+      throw SignalArgumentException("argument ${index + 1} was not emitted ($argc were)")
+    }
+    return tags!![index]
+  }
+
+  private fun cell(index: Int): CPointer<ByteVar> =
+    ptrs!![index]?.reinterpret()
+      ?: throw SignalArgumentException("argument ${index + 1} has no value")
+
+  private fun mismatch(index: Int, expected: String, tag: Int): Nothing =
+    throw SignalArgumentException(
+      if (tag >= IOS_ARG_UNMARSHALLED_BASE) {
+        "argument ${index + 1}: Variant type ${tag - IOS_ARG_UNMARSHALLED_BASE} is not marshalled on iOS yet (expected $expected)"
+      } else {
+        "argument ${index + 1}: expected $expected, got iOS tag $tag"
+      }
+    )
+
+  override fun long(index: Int): Long {
+    val tag = tag(index)
+    if (tag != IOS_PT_INT64) mismatch(index, "int", tag)
+    return cell(index).reinterpret<LongVar>()[0]
+  }
+
+  override fun double(index: Int): Double =
+    when (val tag = tag(index)) {
+      IOS_PT_FLOAT64 -> cell(index).reinterpret<DoubleVar>()[0]
+      IOS_PT_INT64 -> cell(index).reinterpret<LongVar>()[0].toDouble()
+      else -> mismatch(index, "float", tag)
+    }
+
+  override fun bool(index: Int): Boolean {
+    val tag = tag(index)
+    if (tag != IOS_PT_BOOL) mismatch(index, "bool", tag)
+    return cell(index).reinterpret<LongVar>()[0] != 0L
+  }
+
+  override fun string(index: Int): String {
+    val tag = tag(index)
+    if (tag != IOS_PT_STRING) mismatch(index, "String", tag)
+    return cell(index).toKString()
+  }
+
+  override fun objectHandle(index: Int): GodotHandle? =
+    when (val tag = tag(index)) {
+      IOS_PT_VOID -> null
+      IOS_PT_OBJECT -> {
+        val address = cell(index).reinterpret<LongVar>()[0]
+        if (address == 0L) null else GodotHandle(MemorySegment.ofAddress(address))
+      }
+      else -> mismatch(index, "Object", tag)
+    }
+
+  override fun value(index: Int): Any? =
+    when (val tag = tag(index)) {
+      IOS_PT_VOID -> null
+      IOS_PT_OBJECT -> objectHandle(index)?.let { GodotObject(it) }
+      IOS_PT_RID -> RID(cell(index).reinterpret<LongVar>()[0])
+      else ->
+        if (tag >= IOS_ARG_UNMARSHALLED_BASE) mismatch(index, "Variant", tag)
+        else decodeIosCallArg(tag, cell(index))
+    }
+}
+
+/**
+ * The Variant-type tag base for an argument the shim does not marshal
+ * (KANAMA_IOS_ARG_UNMARSHALLED_BASE).
+ */
+private const val IOS_ARG_UNMARSHALLED_BASE = 1000
 
 @OptIn(ExperimentalForeignApi::class)
 internal fun decodeIosPropertyValue(ptTag: Int, bytes: CPointer<ByteVar>?, length: Int): Any? {

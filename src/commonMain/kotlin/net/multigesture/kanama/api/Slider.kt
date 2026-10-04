@@ -134,6 +134,16 @@ open class Slider(handle: GodotHandle) : Range(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isScrollableBind, segment)
     }
 
+    /** Signal `drag_started()`; see [TypedSignal]. */
+    val dragStarted: Signal0
+        @JvmName("dragStartedTypedSignal")
+        get() = Signal0(this, "drag_started")
+
+    /** Signal `drag_ended(value_changed: bool)`; see [TypedSignal]. */
+    val dragEnded: Signal1<Boolean>
+        @JvmName("dragEndedTypedSignal")
+        get() = Signal1(this, "drag_ended", SignalArgType.BOOLEAN)
+
     object Signals {
         const val dragStarted: String = "drag_started"
         const val dragEnded: String = "drag_ended"

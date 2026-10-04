@@ -2594,6 +2594,81 @@ internal fun signalHelperSuffix(godotName: String): String {
   return id.replaceFirstChar { it.uppercase() }
 }
 
+/**
+ * The [net.multigesture.kanama.api.SignalArgType] expression for one `@Signal` argument (task 134
+ * D4), or null when the argument has no typed decode (a primitive packed array, a script class):
+ * the signal then gets no typed accessor and keeps the `<Class>Signals` helpers.
+ */
+internal fun signalArgTypeExpr(arg: ArgModel): String? {
+  val api = "net.multigesture.kanama.api"
+  arg.godotEnum?.let { enum ->
+    return "$api.SignalArgType.enumOf(\"${enum.kotlinFqName}\", { ${enum.wrap("it")} }, { it.value })"
+  }
+  arg.objectWrapperFqName?.let { wrapper ->
+    val factory = if (arg.nullable) "nullableObjectOf" else "objectOf"
+    return "$api.SignalArgType.$factory(\"${wrapper.substringAfterLast('.')}\") { $wrapper(it) }"
+  }
+  val kotlinType = arg.type.kotlinType
+  return when (arg.type) {
+    TypeMapping.INT -> "$api.SignalArgType.LONG"
+    TypeMapping.FLOAT -> "$api.SignalArgType.DOUBLE"
+    TypeMapping.BOOL -> "$api.SignalArgType.BOOLEAN"
+    TypeMapping.STRING -> "$api.SignalArgType.STRING"
+    TypeMapping.VARIANT -> "$api.SignalArgType.VARIANT"
+    TypeMapping.OBJECT ->
+      if (arg.nullable) "$api.SignalArgType.nullableObjectOf(\"Object\") { $api.GodotObject(it) }"
+      else "$api.SignalArgType.objectOf(\"Object\") { $api.GodotObject(it) }"
+    else ->
+      when {
+        kotlinType.startsWith("List<") ->
+          "$api.SignalArgType.valueOf<$kotlinType>(\"${arg.type.name}\", List::class)"
+        kotlinType.startsWith("Map<") ->
+          "$api.SignalArgType.valueOf<$kotlinType>(\"${arg.type.name}\", Map::class)"
+        kotlinType == "ByteArray" ->
+          "$api.SignalArgType.valueOf<ByteArray>(\"PackedByteArray\", ByteArray::class)"
+        kotlinType.startsWith("net.multigesture.kanama.types.") && '<' !in kotlinType ->
+          "$api.SignalArgType.valueOf<$kotlinType>(\"${kotlinType.substringAfterLast('.')}\", $kotlinType::class)"
+        else -> null
+      }
+  }
+}
+
+/**
+ * Typed handles for a script's `@Signal` declarations (task 134 D4), as top-level extension
+ * properties next to the `<Class>Signals` helpers: `player.coinCollected.connect { coins -> }`,
+ * `coinCollected.emit(coins)`, `player.coinCollected.await()`. A signal with an argument that has
+ * no typed decode, or more than five arguments, is left to the helpers.
+ */
+internal fun typedSignalAccessors(fqClassName: String, signals: List<SignalModel>): String {
+  val sb = StringBuilder()
+  val seen = mutableSetOf<String>()
+  for (s in signals) {
+    if (s.args.size > 5) continue
+    val types = s.args.map { signalArgTypeExpr(it) ?: return@map null }
+    if (types.any { it == null }) continue
+    val name = signalHelperSuffix(s.godotName).replaceFirstChar { it.lowercase() }
+    if (!seen.add(name)) continue
+    val typeArgs =
+      if (s.args.isEmpty()) ""
+      else s.args.joinToString(", ", prefix = "<", postfix = ">") { it.kotlinType }
+    val ctorArgs =
+      (listOf(
+          "net.multigesture.kanama.api.GodotObject(godotObject)",
+          "\"${kotlinStringLiteral(s.godotName)}\"",
+        ) + types.map { it!! })
+        .joinToString(", ")
+    sb.appendLine()
+    sb.appendLine(
+      "/** Typed handle for the `${kotlinStringLiteral(s.godotName)}` signal; see `net.multigesture.kanama.api.TypedSignal`. */"
+    )
+    sb.appendLine(
+      "val $fqClassName.$name: net.multigesture.kanama.api.Signal${s.args.size}$typeArgs"
+    )
+    sb.appendLine("    get() = net.multigesture.kanama.api.Signal${s.args.size}($ctorArgs)")
+  }
+  return sb.toString()
+}
+
 private fun signalCallbackType(args: List<ArgModel>): String =
   args.joinToString(prefix = "(", postfix = ") -> Unit") { it.kotlinType }
 
@@ -4053,6 +4128,7 @@ internal class ScriptCodeEmitter(
     emitCleanupHelpers()
     objectClose()
     signalHelpers()
+    sb.append(typedSignalAccessors(model.fqName, model.signals))
     sb.appendMethodHelpers(model.simpleName, model.methods)
     sb.appendRpcHelpers(model.simpleName, model.methods)
     nameConstants()

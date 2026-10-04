@@ -410,6 +410,71 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
         ObjectCalls.ptrcallWithStringNameVariantStringNameBoolArgs(emitChangedBind, segment, property, value, field, changing)
     }
 
+    /** Signal `property_changed(property: StringName, value: Variant, field: StringName, changing: bool)`; see [TypedSignal]. */
+    val propertyChanged: Signal4<String, Any?, String, Boolean>
+        @JvmName("propertyChangedTypedSignal")
+        get() = Signal4(this, "property_changed", SignalArgType.STRING, SignalArgType.VARIANT, SignalArgType.STRING, SignalArgType.BOOLEAN)
+
+    /** Signal `multiple_properties_changed(properties: PackedStringArray, value: Array)`; see [TypedSignal]. */
+    val multiplePropertiesChanged: Signal2<List<String>, List<Any?>>
+        @JvmName("multiplePropertiesChangedTypedSignal")
+        get() = Signal2(this, "multiple_properties_changed", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class), SignalArgType.valueOf<List<Any?>>("Array", List::class))
+
+    /** Signal `property_keyed(property: StringName)`; see [TypedSignal]. */
+    val propertyKeyed: Signal1<String>
+        @JvmName("propertyKeyedTypedSignal")
+        get() = Signal1(this, "property_keyed", SignalArgType.STRING)
+
+    /** Signal `property_deleted(property: StringName)`; see [TypedSignal]. */
+    val propertyDeleted: Signal1<String>
+        @JvmName("propertyDeletedTypedSignal")
+        get() = Signal1(this, "property_deleted", SignalArgType.STRING)
+
+    /** Signal `property_keyed_with_value(property: StringName, value: Variant)`; see [TypedSignal]. */
+    val propertyKeyedWithValue: Signal2<String, Any?>
+        @JvmName("propertyKeyedWithValueTypedSignal")
+        get() = Signal2(this, "property_keyed_with_value", SignalArgType.STRING, SignalArgType.VARIANT)
+
+    /** Signal `property_checked(property: StringName, checked: bool)`; see [TypedSignal]. */
+    val propertyChecked: Signal2<String, Boolean>
+        @JvmName("propertyCheckedTypedSignal")
+        get() = Signal2(this, "property_checked", SignalArgType.STRING, SignalArgType.BOOLEAN)
+
+    /** Signal `property_overridden()`; see [TypedSignal]. */
+    val propertyOverridden: Signal0
+        @JvmName("propertyOverriddenTypedSignal")
+        get() = Signal0(this, "property_overridden")
+
+    /** Signal `property_favorited(property: StringName, favorited: bool)`; see [TypedSignal]. */
+    val propertyFavorited: Signal2<String, Boolean>
+        @JvmName("propertyFavoritedTypedSignal")
+        get() = Signal2(this, "property_favorited", SignalArgType.STRING, SignalArgType.BOOLEAN)
+
+    /** Signal `property_pinned(property: StringName, pinned: bool)`; see [TypedSignal]. */
+    val propertyPinned: Signal2<String, Boolean>
+        @JvmName("propertyPinnedTypedSignal")
+        get() = Signal2(this, "property_pinned", SignalArgType.STRING, SignalArgType.BOOLEAN)
+
+    /** Signal `property_can_revert_changed(property: StringName, can_revert: bool)`; see [TypedSignal]. */
+    val propertyCanRevertChanged: Signal2<String, Boolean>
+        @JvmName("propertyCanRevertChangedTypedSignal")
+        get() = Signal2(this, "property_can_revert_changed", SignalArgType.STRING, SignalArgType.BOOLEAN)
+
+    /** Signal `resource_selected(path: String, resource: Resource)`; see [TypedSignal]. */
+    val resourceSelected: Signal2<String, Resource?>
+        @JvmName("resourceSelectedTypedSignal")
+        get() = Signal2(this, "resource_selected", SignalArgType.STRING, SignalArgType.nullableObjectOf("Resource") { Resource(it) })
+
+    /** Signal `object_id_selected(property: StringName, id: int)`; see [TypedSignal]. */
+    val objectIdSelected: Signal2<String, Long>
+        @JvmName("objectIdSelectedTypedSignal")
+        get() = Signal2(this, "object_id_selected", SignalArgType.STRING, SignalArgType.LONG)
+
+    /** Signal `selected(path: String, focusable_idx: int)`; see [TypedSignal]. */
+    val selected: Signal2<String, Long>
+        @JvmName("selectedTypedSignal")
+        get() = Signal2(this, "selected", SignalArgType.STRING, SignalArgType.LONG)
+
     object Signals {
         const val propertyChanged: String = "property_changed"
         const val multiplePropertiesChanged: String = "multiple_properties_changed"

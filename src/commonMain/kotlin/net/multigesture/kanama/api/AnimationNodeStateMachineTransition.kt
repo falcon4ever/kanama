@@ -277,6 +277,11 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
         return ObjectCalls.ptrcallNoArgsRetString(getAdvanceExpressionBind, segment)
     }
 
+    /** Signal `advance_condition_changed()`; see [TypedSignal]. */
+    val advanceConditionChanged: Signal0
+        @JvmName("advanceConditionChangedTypedSignal")
+        get() = Signal0(this, "advance_condition_changed")
+
     object Signals {
         const val advanceConditionChanged: String = "advance_condition_changed"
     }

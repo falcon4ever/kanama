@@ -661,6 +661,16 @@ object AudioServer {
         ObjectCalls.ptrcallWithObjectArgs(registerStreamAsSampleBind, singleton, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /** Signal `bus_layout_changed()`; see [TypedSignal]. */
+    val busLayoutChanged: Signal0
+        @JvmName("busLayoutChangedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "bus_layout_changed")
+
+    /** Signal `bus_renamed(bus_index: int, old_name: StringName, new_name: StringName)`; see [TypedSignal]. */
+    val busRenamed: Signal3<Long, String, String>
+        @JvmName("busRenamedTypedSignal")
+        get() = Signal3(GodotObject(GodotHandle(singleton)), "bus_renamed", SignalArgType.LONG, SignalArgType.STRING, SignalArgType.STRING)
+
     object Signals {
         const val busLayoutChanged: String = "bus_layout_changed"
         const val busRenamed: String = "bus_renamed"

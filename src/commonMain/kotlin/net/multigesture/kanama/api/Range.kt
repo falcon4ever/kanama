@@ -293,6 +293,16 @@ open class Range(handle: GodotHandle) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(unshareBind, segment)
     }
 
+    /** Signal `value_changed(value: float)`; see [TypedSignal]. */
+    val valueChanged: Signal1<Double>
+        @JvmName("valueChangedTypedSignal")
+        get() = Signal1(this, "value_changed", SignalArgType.DOUBLE)
+
+    /** Signal `changed()`; see [TypedSignal]. */
+    val changed: Signal0
+        @JvmName("changedTypedSignal")
+        get() = Signal0(this, "changed")
+
     object Signals {
         const val valueChanged: String = "value_changed"
         const val changed: String = "changed"

@@ -30,6 +30,11 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(getInputRealNameBind, segment)
     }
 
+    /** Signal `input_type_changed()`; see [TypedSignal]. */
+    val inputTypeChanged: Signal0
+        @JvmName("inputTypeChangedTypedSignal")
+        get() = Signal0(this, "input_type_changed")
+
     object Signals {
         const val inputTypeChanged: String = "input_type_changed"
     }

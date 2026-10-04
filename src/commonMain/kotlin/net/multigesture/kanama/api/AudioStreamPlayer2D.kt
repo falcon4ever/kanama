@@ -429,6 +429,11 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
         return AudioServer.PlaybackType(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment))
     }
 
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
+
     object Signals {
         const val finished: String = "finished"
     }

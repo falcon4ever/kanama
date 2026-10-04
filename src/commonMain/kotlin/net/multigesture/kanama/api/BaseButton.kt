@@ -311,6 +311,26 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
         return ButtonGroup.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getButtonGroupBind, segment))
     }
 
+    /** Signal `pressed()`; see [TypedSignal]. */
+    val pressed: Signal0
+        @JvmName("pressedTypedSignal")
+        get() = Signal0(this, "pressed")
+
+    /** Signal `button_up()`; see [TypedSignal]. */
+    val buttonUp: Signal0
+        @JvmName("buttonUpTypedSignal")
+        get() = Signal0(this, "button_up")
+
+    /** Signal `button_down()`; see [TypedSignal]. */
+    val buttonDown: Signal0
+        @JvmName("buttonDownTypedSignal")
+        get() = Signal0(this, "button_down")
+
+    /** Signal `toggled(toggled_on: bool)`; see [TypedSignal]. */
+    val toggled: Signal1<Boolean>
+        @JvmName("toggledTypedSignal")
+        get() = Signal1(this, "toggled", SignalArgType.BOOLEAN)
+
     object Signals {
         const val pressed: String = "pressed"
         const val buttonUp: String = "button_up"

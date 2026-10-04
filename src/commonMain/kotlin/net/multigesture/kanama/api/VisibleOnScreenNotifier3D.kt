@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -30,6 +31,16 @@ open class VisibleOnScreenNotifier3D(handle: GodotHandle) : VisualInstance3D(han
     fun isOnScreen(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, segment)
     }
+
+    /** Signal `screen_entered()`; see [TypedSignal]. */
+    val screenEntered: Signal0
+        @JvmName("screenEnteredTypedSignal")
+        get() = Signal0(this, "screen_entered")
+
+    /** Signal `screen_exited()`; see [TypedSignal]. */
+    val screenExited: Signal0
+        @JvmName("screenExitedTypedSignal")
+        get() = Signal0(this, "screen_exited")
 
     object Signals {
         const val screenEntered: String = "screen_entered"

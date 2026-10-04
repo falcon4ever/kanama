@@ -220,6 +220,31 @@ class EditorSpinSlider(handle: GodotHandle) : Range(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isDeferredDragModeEnabledBind, segment)
     }
 
+    /** Signal `grabbed()`; see [TypedSignal]. */
+    val grabbed: Signal0
+        @JvmName("grabbedTypedSignal")
+        get() = Signal0(this, "grabbed")
+
+    /** Signal `ungrabbed()`; see [TypedSignal]. */
+    val ungrabbed: Signal0
+        @JvmName("ungrabbedTypedSignal")
+        get() = Signal0(this, "ungrabbed")
+
+    /** Signal `updown_pressed()`; see [TypedSignal]. */
+    val updownPressed: Signal0
+        @JvmName("updownPressedTypedSignal")
+        get() = Signal0(this, "updown_pressed")
+
+    /** Signal `value_focus_entered()`; see [TypedSignal]. */
+    val valueFocusEntered: Signal0
+        @JvmName("valueFocusEnteredTypedSignal")
+        get() = Signal0(this, "value_focus_entered")
+
+    /** Signal `value_focus_exited()`; see [TypedSignal]. */
+    val valueFocusExited: Signal0
+        @JvmName("valueFocusExitedTypedSignal")
+        get() = Signal0(this, "value_focus_exited")
+
     object Signals {
         const val grabbed: String = "grabbed"
         const val ungrabbed: String = "ungrabbed"

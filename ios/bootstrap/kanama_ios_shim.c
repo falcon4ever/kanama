@@ -185,11 +185,12 @@ extern void kanama_ios_runtime_script_instance_free(int64_t instance_handle);
 // Kotlin script object strong (count > 1) / weak (count 1), as C#'s CSharpInstance does.
 extern void kanama_ios_runtime_script_instance_refcount_incremented(int64_t instance_handle);
 extern int32_t kanama_ios_runtime_script_instance_refcount_decremented(int64_t instance_handle);
-extern void kanama_ios_runtime_dispatch_callable(
+// Returns 0, or the expected argument count when fewer were emitted (a call error).
+extern int32_t kanama_ios_runtime_dispatch_callable(
     int64_t callback_id,
-    int32_t argument_count,
-    const int32_t *argument_types,
-    const int64_t *argument_values
+    const int32_t *argument_tags,
+    const void *const *argument_ptrs,
+    int32_t argument_count
 );
 extern void kanama_ios_runtime_release_callable(int64_t callback_id);
 extern void kanama_ios_runtime_objectcalls_selftest(void);
@@ -10148,68 +10149,14 @@ static GDExtensionObjectPtr kanama_ios_variant_to_object(GDExtensionConstVariant
     return object;
 }
 
-// Custom-Callable trampoline: invoked by Godot when a signal connected via
-// kanama_ios_godot_object_connect_callable fires. Forwards to the Kotlin
-// callback registry keyed by callable_userdata (the callback id). Scalar signal
-// arguments are passed as Variant type tags plus int64 payloads (up to 4).
-// Unsupported Variant types surface as null.
+// Custom-Callable trampoline (defined after the argument marshalling helpers below).
 static void kanama_ios_callable_trampoline(
     void *callable_userdata,
     const GDExtensionConstVariantPtr *p_args,
     GDExtensionInt p_argument_count,
     GDExtensionVariantPtr r_return,
     GDExtensionCallError *r_error
-) {
-    int64_t callback_id = (int64_t)(intptr_t)callable_userdata;
-    int32_t argument_types[4] = { 0, 0, 0, 0 };
-    int64_t argument_values[4] = { 0, 0, 0, 0 };
-    int n = (int)p_argument_count;
-    if (n > 4) {
-        n = 4;
-    }
-    for (int i = 0; i < n; i++) {
-        int32_t type = g_variant_get_type != NULL
-            ? (int32_t)g_variant_get_type(p_args[i])
-            : KANAMA_IOS_VARIANT_TYPE_NIL;
-        argument_types[i] = type;
-        switch (type) {
-            case KANAMA_IOS_VARIANT_TYPE_BOOL: {
-                uint8_t value = 0;
-                if (g_variant_to_bool != NULL) {
-                    g_variant_to_bool(&value, (GDExtensionVariantPtr)p_args[i]);
-                }
-                argument_values[i] = value != 0 ? 1 : 0;
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_INT:
-                if (g_variant_to_int != NULL) {
-                    g_variant_to_int(&argument_values[i], (GDExtensionVariantPtr)p_args[i]);
-                }
-                break;
-            case KANAMA_IOS_VARIANT_TYPE_FLOAT: {
-                double value = 0.0;
-                if (g_variant_to_float != NULL) {
-                    g_variant_to_float(&value, (GDExtensionVariantPtr)p_args[i]);
-                }
-                memcpy(&argument_values[i], &value, sizeof(value));
-                break;
-            }
-            case KANAMA_IOS_VARIANT_TYPE_OBJECT:
-                argument_values[i] = (int64_t)(intptr_t)kanama_ios_variant_to_object(p_args[i]);
-                break;
-            default:
-                break;
-        }
-    }
-    kanama_ios_runtime_dispatch_callable(
-        callback_id, (int32_t)p_argument_count, argument_types, argument_values);
-    if (r_return != NULL) {
-        kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)r_return);
-    }
-    if (r_error != NULL) {
-        r_error->error = GDEXTENSION_CALL_OK;
-    }
-}
+);
 
 // Called by Godot when the last copy of the custom callable is destroyed (e.g.
 // the connection is removed or the emitting object is freed). Releases the
@@ -10428,6 +10375,213 @@ static void kanama_ios_variant_to_vector2i(GDExtensionConstVariantPtr variant, i
     *y = vec[1];
 }
 
+// PT-tagged cells for Variant arguments handed to Kotlin: a script method call
+// (kanama_ios_script_instance_call) and a signal lambda's Callable (kanama_ios_callable_trampoline)
+// marshal the same way. POD goes in the i64/f64/fvec/ivec cells; String, StringName and NodePath
+// are extracted to a utf8 cell freed by kanama_ios_free_arg_cells. Unaudited Variant types are
+// PT_VOID (the Kotlin decode yields null) so an unsupported arg can't silently route to the wrong
+// typed call.
+#define KANAMA_IOS_ARG_UNMARSHALLED_BASE 1000
+
+typedef struct {
+    int32_t tags[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    const void *ptrs[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    int64_t i64[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    double f64[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    float fvec[KANAMA_IOS_PTRCALL_MAX_ARGS][4];
+    int32_t ivec[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
+    char *strs[KANAMA_IOS_PTRCALL_MAX_ARGS];
+} KanamaIosArgCells;
+
+static void kanama_ios_marshal_variant_args(
+    const GDExtensionConstVariantPtr *args,
+    int32_t argc,
+    KanamaIosArgCells *cells
+) {
+    int32_t *tags = cells->tags;
+    const void **ptrs = cells->ptrs;
+    int64_t *i64 = cells->i64;
+    double *f64 = cells->f64;
+    float (*fvec)[4] = cells->fvec;
+    int32_t (*ivec)[2] = cells->ivec;
+    char **strs = cells->strs;
+    for (int32_t i = 0; i < argc; i++) {
+        tags[i] = KANAMA_IOS_PT_VOID;
+        ptrs[i] = NULL;
+        strs[i] = NULL;
+        GDExtensionConstVariantPtr v = (args != NULL) ? args[i] : NULL;
+        if (v == NULL) {
+            continue;
+        }
+        GDExtensionVariantType vt = g_variant_get_type != NULL
+            ? g_variant_get_type(v)
+            : KANAMA_IOS_VARIANT_TYPE_NIL;
+        switch (vt) {
+            case KANAMA_IOS_VARIANT_TYPE_INT:
+                i64[i] = kanama_ios_variant_to_int64(v);
+                tags[i] = KANAMA_IOS_PT_INT64;
+                ptrs[i] = &i64[i];
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_BOOL:
+                if (g_variant_to_bool != NULL) {
+                    uint8_t b = 0;
+                    g_variant_to_bool(&b, (GDExtensionVariantPtr)(intptr_t)v);
+                    i64[i] = (int64_t)b;
+                } else {
+                    i64[i] = 0;
+                }
+                tags[i] = KANAMA_IOS_PT_BOOL;
+                ptrs[i] = &i64[i];
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_FLOAT:
+                f64[i] = kanama_ios_variant_to_double(v);
+                tags[i] = KANAMA_IOS_PT_FLOAT64;
+                ptrs[i] = &f64[i];
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_VECTOR2:
+                if (g_variant_to_vector2 != NULL) {
+                    g_variant_to_vector2((GDExtensionUninitializedTypePtr)fvec[i], (GDExtensionVariantPtr)(intptr_t)v);
+                    tags[i] = KANAMA_IOS_PT_VECTOR2;
+                    ptrs[i] = fvec[i];
+                }
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_VECTOR3:
+                if (g_variant_to_vector3 != NULL) {
+                    g_variant_to_vector3((GDExtensionUninitializedTypePtr)fvec[i], (GDExtensionVariantPtr)(intptr_t)v);
+                    tags[i] = KANAMA_IOS_PT_VECTOR3;
+                    ptrs[i] = fvec[i];
+                }
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_COLOR:
+                if (g_variant_to_color != NULL) {
+                    g_variant_to_color((GDExtensionUninitializedTypePtr)fvec[i], (GDExtensionVariantPtr)(intptr_t)v);
+                    tags[i] = KANAMA_IOS_PT_COLOR;
+                    ptrs[i] = fvec[i];
+                }
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_VECTOR2I: {
+                int64_t vx = 0, vy = 0;
+                kanama_ios_variant_to_vector2i(v, &vx, &vy);
+                ivec[i][0] = (int32_t)vx;
+                ivec[i][1] = (int32_t)vy;
+                tags[i] = KANAMA_IOS_PT_VECTOR2I;
+                ptrs[i] = ivec[i];
+                break;
+            }
+            case KANAMA_IOS_VARIANT_TYPE_STRING:
+                if (g_variant_to_string != NULL) {
+                    uint64_t raw_str = 0;
+                    g_variant_to_string(&raw_str, (GDExtensionVariantPtr)(intptr_t)v);
+                    strs[i] = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)&raw_str);
+                    if (g_string_destructor != NULL) {
+                        g_string_destructor((GDExtensionStringPtr)&raw_str);
+                    }
+                    tags[i] = KANAMA_IOS_PT_STRING;
+                    ptrs[i] = (strs[i] != NULL) ? strs[i] : "";
+                }
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_NODE_PATH:
+                if (g_variant_to_node_path != NULL && g_string_from_node_path_constructor != NULL) {
+                    uint64_t raw_np = 0;
+                    g_variant_to_node_path((GDExtensionUninitializedTypePtr)&raw_np, (GDExtensionVariantPtr)(intptr_t)v);
+                    uint64_t raw_str = 0;
+                    const GDExtensionConstTypePtr np_args[1] = { (GDExtensionConstTypePtr)&raw_np };
+                    g_string_from_node_path_constructor((GDExtensionUninitializedTypePtr)&raw_str, np_args);
+                    strs[i] = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)&raw_str);
+                    kanama_ios_destroy_string(&raw_str);
+                    kanama_ios_destroy_node_path(&raw_np);
+                    tags[i] = KANAMA_IOS_PT_NODE_PATH;
+                    ptrs[i] = (strs[i] != NULL) ? strs[i] : "";
+                }
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_STRING_NAME:
+                // Task 134 D4: engine signals carry StringName arguments (animation_finished);
+                // Kotlin receives them as String, like desktop.
+                if (g_variant_to_string_name != NULL && g_string_from_string_name_constructor != NULL) {
+                    uint64_t raw_sn = 0;
+                    g_variant_to_string_name((GDExtensionUninitializedTypePtr)&raw_sn, (GDExtensionVariantPtr)(intptr_t)v);
+                    uint64_t raw_str = 0;
+                    const GDExtensionConstTypePtr sn_args[1] = { (GDExtensionConstTypePtr)&raw_sn };
+                    g_string_from_string_name_constructor((GDExtensionUninitializedTypePtr)&raw_str, sn_args);
+                    strs[i] = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)&raw_str);
+                    kanama_ios_destroy_string(&raw_str);
+                    kanama_ios_destroy_string_name(&raw_sn);
+                    tags[i] = KANAMA_IOS_PT_STRING;
+                    ptrs[i] = (strs[i] != NULL) ? strs[i] : "";
+                }
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_RID:
+                if (g_variant_to_rid == NULL) {
+                    g_variant_to_rid = g_get_variant_to_type_constructor(KANAMA_IOS_VARIANT_TYPE_RID);
+                }
+                if (g_variant_to_rid != NULL) {
+                    uint64_t rid = 0;
+                    g_variant_to_rid((GDExtensionUninitializedTypePtr)&rid, (GDExtensionVariantPtr)(intptr_t)v);
+                    i64[i] = (int64_t)rid;
+                    tags[i] = KANAMA_IOS_PT_RID;
+                    ptrs[i] = &i64[i];
+                }
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_OBJECT:
+                i64[i] = (int64_t)(intptr_t)kanama_ios_variant_to_object(v);
+                tags[i] = KANAMA_IOS_PT_OBJECT;
+                ptrs[i] = &i64[i];
+                break;
+            case KANAMA_IOS_VARIANT_TYPE_NIL:
+                break;
+            default:
+                // Unaudited arg type: no cell. The tag names the Variant type (above every PT kind)
+                // so a typed signal can say which type iOS does not marshal yet; the script-call
+                // decode yields null for it, as for PT_VOID, and the emitter skip+warns the method.
+                tags[i] = KANAMA_IOS_ARG_UNMARSHALLED_BASE + (int32_t)vt;
+                break;
+        }
+    }
+}
+
+static void kanama_ios_free_arg_cells(KanamaIosArgCells *cells, int32_t argc) {
+    for (int32_t i = 0; i < argc; i++) {
+        free(cells->strs[i]);
+    }
+}
+
+// Custom-Callable trampoline: invoked by Godot when a signal connected via
+// kanama_ios_godot_object_connect_callable fires. Forwards every argument (no count cap below
+// KANAMA_IOS_PTRCALL_MAX_ARGS) as PT-tagged cells to the Kotlin registry keyed by
+// callable_userdata (the callback id); task 134 D4 replaced the 4-scalar form.
+static void kanama_ios_callable_trampoline(
+    void *callable_userdata,
+    const GDExtensionConstVariantPtr *p_args,
+    GDExtensionInt p_argument_count,
+    GDExtensionVariantPtr r_return,
+    GDExtensionCallError *r_error
+) {
+    int64_t callback_id = (int64_t)(intptr_t)callable_userdata;
+    int32_t argc = (int32_t)p_argument_count;
+    if (argc < 0) {
+        argc = 0;
+    }
+    if (argc > KANAMA_IOS_PTRCALL_MAX_ARGS) {
+        argc = KANAMA_IOS_PTRCALL_MAX_ARGS;
+    }
+    KanamaIosArgCells cells;
+    kanama_ios_marshal_variant_args(p_args, argc, &cells);
+    int32_t expected = kanama_ios_runtime_dispatch_callable(callback_id, cells.tags, cells.ptrs, argc);
+    kanama_ios_free_arg_cells(&cells, argc);
+    if (r_return != NULL) {
+        kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)r_return);
+    }
+    if (r_error != NULL) {
+        if (expected > 0) {
+            r_error->error = GDEXTENSION_CALL_ERROR_TOO_FEW_ARGUMENTS;
+            r_error->argument = 0;
+            r_error->expected = expected;
+        } else {
+            r_error->error = GDEXTENSION_CALL_OK;
+        }
+    }
+}
+
 static void kanama_ios_script_instance_call(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr method,
@@ -10449,117 +10603,8 @@ static void kanama_ios_script_instance_call(
         if (argc > KANAMA_IOS_PTRCALL_MAX_ARGS) {
             argc = KANAMA_IOS_PTRCALL_MAX_ARGS;
         }
-        // Marshal every arg into a PT-tagged buffer (the inverse of kanama_ios_godot_object_call):
-        // POD goes in the i64/f64/fvec/ivec cells; String/NodePath are extracted to a utf8 cell
-        // freed after the call. Unaudited Variant types fall through to PT_VOID (the Kotlin decode
-        // yields null) so an unsupported arg can't silently route to the wrong typed call.
-        int32_t tags[KANAMA_IOS_PTRCALL_MAX_ARGS];
-        const void *ptrs[KANAMA_IOS_PTRCALL_MAX_ARGS];
-        int64_t i64[KANAMA_IOS_PTRCALL_MAX_ARGS];
-        double f64[KANAMA_IOS_PTRCALL_MAX_ARGS];
-        float fvec[KANAMA_IOS_PTRCALL_MAX_ARGS][4];
-        int32_t ivec[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
-        char *strs[KANAMA_IOS_PTRCALL_MAX_ARGS];
-
-        for (int32_t i = 0; i < argc; i++) {
-            tags[i] = KANAMA_IOS_PT_VOID;
-            ptrs[i] = NULL;
-            strs[i] = NULL;
-            GDExtensionConstVariantPtr v = (args != NULL) ? args[i] : NULL;
-            if (v == NULL) {
-                continue;
-            }
-            GDExtensionVariantType vt = g_variant_get_type != NULL
-                ? g_variant_get_type(v)
-                : KANAMA_IOS_VARIANT_TYPE_NIL;
-            switch (vt) {
-                case KANAMA_IOS_VARIANT_TYPE_INT:
-                    i64[i] = kanama_ios_variant_to_int64(v);
-                    tags[i] = KANAMA_IOS_PT_INT64;
-                    ptrs[i] = &i64[i];
-                    break;
-                case KANAMA_IOS_VARIANT_TYPE_BOOL:
-                    if (g_variant_to_bool != NULL) {
-                        uint8_t b = 0;
-                        g_variant_to_bool(&b, (GDExtensionVariantPtr)(intptr_t)v);
-                        i64[i] = (int64_t)b;
-                    } else {
-                        i64[i] = 0;
-                    }
-                    tags[i] = KANAMA_IOS_PT_BOOL;
-                    ptrs[i] = &i64[i];
-                    break;
-                case KANAMA_IOS_VARIANT_TYPE_FLOAT:
-                    f64[i] = kanama_ios_variant_to_double(v);
-                    tags[i] = KANAMA_IOS_PT_FLOAT64;
-                    ptrs[i] = &f64[i];
-                    break;
-                case KANAMA_IOS_VARIANT_TYPE_VECTOR2:
-                    if (g_variant_to_vector2 != NULL) {
-                        g_variant_to_vector2((GDExtensionUninitializedTypePtr)fvec[i], (GDExtensionVariantPtr)(intptr_t)v);
-                        tags[i] = KANAMA_IOS_PT_VECTOR2;
-                        ptrs[i] = fvec[i];
-                    }
-                    break;
-                case KANAMA_IOS_VARIANT_TYPE_VECTOR3:
-                    if (g_variant_to_vector3 != NULL) {
-                        g_variant_to_vector3((GDExtensionUninitializedTypePtr)fvec[i], (GDExtensionVariantPtr)(intptr_t)v);
-                        tags[i] = KANAMA_IOS_PT_VECTOR3;
-                        ptrs[i] = fvec[i];
-                    }
-                    break;
-                case KANAMA_IOS_VARIANT_TYPE_COLOR:
-                    if (g_variant_to_color != NULL) {
-                        g_variant_to_color((GDExtensionUninitializedTypePtr)fvec[i], (GDExtensionVariantPtr)(intptr_t)v);
-                        tags[i] = KANAMA_IOS_PT_COLOR;
-                        ptrs[i] = fvec[i];
-                    }
-                    break;
-                case KANAMA_IOS_VARIANT_TYPE_VECTOR2I: {
-                    int64_t vx = 0, vy = 0;
-                    kanama_ios_variant_to_vector2i(v, &vx, &vy);
-                    ivec[i][0] = (int32_t)vx;
-                    ivec[i][1] = (int32_t)vy;
-                    tags[i] = KANAMA_IOS_PT_VECTOR2I;
-                    ptrs[i] = ivec[i];
-                    break;
-                }
-                case KANAMA_IOS_VARIANT_TYPE_STRING:
-                    if (g_variant_to_string != NULL) {
-                        uint64_t raw_str = 0;
-                        g_variant_to_string(&raw_str, (GDExtensionVariantPtr)(intptr_t)v);
-                        strs[i] = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)&raw_str);
-                        if (g_string_destructor != NULL) {
-                            g_string_destructor((GDExtensionStringPtr)&raw_str);
-                        }
-                        tags[i] = KANAMA_IOS_PT_STRING;
-                        ptrs[i] = (strs[i] != NULL) ? strs[i] : "";
-                    }
-                    break;
-                case KANAMA_IOS_VARIANT_TYPE_NODE_PATH:
-                    if (g_variant_to_node_path != NULL && g_string_from_node_path_constructor != NULL) {
-                        uint64_t raw_np = 0;
-                        g_variant_to_node_path((GDExtensionUninitializedTypePtr)&raw_np, (GDExtensionVariantPtr)(intptr_t)v);
-                        uint64_t raw_str = 0;
-                        const GDExtensionConstTypePtr np_args[1] = { (GDExtensionConstTypePtr)&raw_np };
-                        g_string_from_node_path_constructor((GDExtensionUninitializedTypePtr)&raw_str, np_args);
-                        strs[i] = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)&raw_str);
-                        kanama_ios_destroy_string(&raw_str);
-                        kanama_ios_destroy_node_path(&raw_np);
-                        tags[i] = KANAMA_IOS_PT_NODE_PATH;
-                        ptrs[i] = (strs[i] != NULL) ? strs[i] : "";
-                    }
-                    break;
-                case KANAMA_IOS_VARIANT_TYPE_OBJECT:
-                    i64[i] = (int64_t)(intptr_t)kanama_ios_variant_to_object(v);
-                    tags[i] = KANAMA_IOS_PT_OBJECT;
-                    ptrs[i] = &i64[i];
-                    break;
-                default:
-                    // Unaudited arg type — leave PT_VOID; the emitter skip+warns the method.
-                    break;
-            }
-        }
+        KanamaIosArgCells cells;
+        kanama_ios_marshal_variant_args(args, argc, &cells);
 
         // Phase 5.3b: provide a PT-tagged return scratch. Kotlin sets ret_tag to the return's PT
         // kind (or PT_VOID) and writes its bytes; we then build the engine return Variant.
@@ -10567,7 +10612,7 @@ static void kanama_ios_script_instance_call(
         uint8_t ret_buf[32];
         memset(ret_buf, 0, sizeof(ret_buf));
         int32_t ok = kanama_ios_runtime_script_instance_call_v(
-            instance->runtime_handle, method_index, tags, ptrs, argc, &ret_tag, ret_buf);
+            instance->runtime_handle, method_index, cells.tags, cells.ptrs, argc, &ret_tag, ret_buf);
 
         if (ret != NULL && ret_tag != KANAMA_IOS_PT_VOID) {
             // Bool/Int/Float/Vector2/Vector2i are POD (bytes inline in ret_buf); String is
@@ -10576,9 +10621,7 @@ static void kanama_ios_script_instance_call(
             kanama_ios_pt_return_to_variant(ret_tag, ret_buf, (uint8_t *)ret);
         }
 
-        for (int32_t i = 0; i < argc; i++) {
-            free(strs[i]);
-        }
+        kanama_ios_free_arg_cells(&cells, argc);
 
         kanama_ios_script_instance_set_ok(error, ok);
         if (!ok) {

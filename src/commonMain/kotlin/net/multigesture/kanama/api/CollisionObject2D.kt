@@ -403,6 +403,31 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallWithIntArgRetUInt32(shapeFindOwnerBind, segment, shapeIndex)
     }
 
+    /** Signal `input_event(viewport: Node, event: InputEvent, shape_idx: int)`; see [TypedSignal]. */
+    val inputEvent: Signal3<Node, InputEvent?, Long>
+        @JvmName("inputEventTypedSignal")
+        get() = Signal3(this, "input_event", SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.nullableObjectOf("InputEvent") { InputEvent(it) }, SignalArgType.LONG)
+
+    /** Signal `mouse_entered()`; see [TypedSignal]. */
+    val mouseEntered: Signal0
+        @JvmName("mouseEnteredTypedSignal")
+        get() = Signal0(this, "mouse_entered")
+
+    /** Signal `mouse_exited()`; see [TypedSignal]. */
+    val mouseExited: Signal0
+        @JvmName("mouseExitedTypedSignal")
+        get() = Signal0(this, "mouse_exited")
+
+    /** Signal `mouse_shape_entered(shape_idx: int)`; see [TypedSignal]. */
+    val mouseShapeEntered: Signal1<Long>
+        @JvmName("mouseShapeEnteredTypedSignal")
+        get() = Signal1(this, "mouse_shape_entered", SignalArgType.LONG)
+
+    /** Signal `mouse_shape_exited(shape_idx: int)`; see [TypedSignal]. */
+    val mouseShapeExited: Signal1<Long>
+        @JvmName("mouseShapeExitedTypedSignal")
+        get() = Signal1(this, "mouse_shape_exited", SignalArgType.LONG)
+
     object Signals {
         const val inputEvent: String = "input_event"
         const val mouseEntered: String = "mouse_entered"

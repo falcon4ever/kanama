@@ -38,6 +38,61 @@ only `--write`.
 
 ## Unreleased
 
+### Added — typed engine signals (task 134 D4)
+
+Desktop, Android and iOS; Web keeps the untyped `signal(name)` handle for now.
+
+- **Every engine signal is a typed property** of its class, generated from `extension_api.json`
+  (all 503: `scripts/check_wrapper_generator.py` fails on a missing or mistyped one):
+  `area.bodyEntered: Signal1<Node3D>`, `timer.timeout: Signal0`,
+  `area.bodyShapeEntered: Signal4<RID, Node3D, Long, Long>`, on top of the runtime classes
+  `Signal0` … `Signal5` (`TypedSignal`). GDScript's `area.body_entered.connect(func(body): …)` is
+  `area.bodyEntered.connect { body -> … }` inside a `KanamaScript` (the lambda is bound to the
+  script's object, as a GDScript lambda is bound to its script) or `connect(target) { … }`
+  elsewhere; `connect(flags) { … }` takes `ConnectFlags.ONE_SHOT` / `DEFERRED`; `connect` returns
+  the `SignalConnection` to `close()`. `await()` suspends in `launch { }` and returns the argument
+  (`val body = area.bodyEntered.await()`), or a `SignalArgs2` … `SignalArgs5` to destructure for
+  two or more (GDScript returns an `Array`); it is cancelled if the emitter is freed first.
+  `emit(…)` emits with typed arguments, `connect(target, "method")` connects a registered method.
+- Arguments are decoded as their API type: `int` → `Long`, `float` → `Double`,
+  `String`/`StringName` → `String`, an object → its wrapper (borrowed, non-null except
+  `Resource`-like types), value types and collections as usual, `Variant` → `Any?`. Godot's API
+  marks no engine signal argument as an enum, so those stay `Long`. A wrongly typed emission (a
+  GDScript `emit_signal` is unchecked) is reported as a script error naming the signal and the
+  lambda is not called. `SignalArgType` (`LONG`, `DOUBLE`, `STRING`, `objectOf`, `enumOf`,
+  `valueOf`, …) gives a runtime-declared signal the same handle:
+  `Signal1(events, "health_changed", SignalArgType.LONG)`.
+- A property that would collide with a member of its class, an ancestor or a descendant gets a
+  `Signal` suffix (decided by the generator, `signal_accessor_names`); no Godot 4.7.2 signal
+  collides, so none is renamed. `X.Signals` string constants stay.
+- **`@Signal` declarations get typed handles too**: KSP generates an extension property per
+  signal next to the `<Class>Signals` helpers (`val Player.coinCollected: Signal1<Long>`), so
+  `coinCollected.emit(coins)` and `player.coinCollected.connect { coins -> }` work like the engine
+  signals; enum arguments are typed. A signal with an argument that has no typed decode (a
+  primitive packed array, a script class) or more than five arguments keeps only the helpers.
+- No argument limit and no per-emission list: lambda connections read Godot's argument array in
+  place (desktop `JvmSignalArgReader`, one per-thread scratch cell; iOS: the C shim forwards every
+  argument as the PT-tagged cells a script method call gets, instead of four scalars). The untyped
+  `connect(target, argumentCount)` no longer rejects more than three arguments. Measured on
+  desktop (Apple M1 Max, editor binary): see the task 134 C report; a 2-argument emission
+  allocates only the decoded values.
+- Proof: `typed_signal_smoke.tscn` in `scripts/runtime_smoke.sh` (typed connect, close, one-shot,
+  deferred, `await` of one value / a pair / cancelled on free, freed receiver not called, `emit` of
+  a `Vector2` and a `Node.ProcessMode` seen by a GDScript lambda exactly as a GDScript emit, a
+  GDScript emit decoded typed, a wrongly typed emit reported), `TypedSignalArgsTest`,
+  `TypedSignalAccessorsTest` (processor), and the iOS self-test rows `typed-signal(...)`.
+
+### Fixed — StringName values decoded as nil (task 134 D4)
+
+- A `StringName` read through the generic decode (`GodotObject.call`, `get`, an untyped signal
+  lambda's `List<Any?>` — `animation_finished(anim_name)`) arrived as `null` on desktop and
+  Android; it is now its text, as GDScript compares it with a `String`. On iOS a `StringName`
+  argument of a script method call or a signal is now delivered as a `String` (it was `null`), and
+  a `RID` signal argument as a `RID`.
+- **Source break:** `top-level` `kanamaIosRuntimeDispatchCallable` (the iOS C shim's signal entry
+  point, not called from game code) takes the PT-tagged argument cells and returns the expected
+  argument count on a too-short emission. Nothing to migrate in game code.
+
 ### Added — `Color` script type, Kotlin-typed constant folding, autoloads from threads and across hot reload (task 133 C2)
 
 Desktop, Android, iOS and Web.

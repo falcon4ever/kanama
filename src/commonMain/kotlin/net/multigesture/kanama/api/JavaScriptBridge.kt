@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -140,6 +141,11 @@ object JavaScriptBridge {
     fun forceFsSync() {
         ObjectCalls.ptrcallNoArgs(forceFsSyncBind, singleton)
     }
+
+    /** Signal `pwa_update_available()`; see [TypedSignal]. */
+    val pwaUpdateAvailable: Signal0
+        @JvmName("pwaUpdateAvailableTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "pwa_update_available")
 
     object Signals {
         const val pwaUpdateAvailable: String = "pwa_update_available"

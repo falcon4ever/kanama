@@ -47,9 +47,19 @@ internal actual constructor(
         flags: GodotObject.ConnectFlags,
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
-        require(argumentCount in 0..3) { "Signal lambda callbacks currently support 0..3 emitted arguments" }
+        require(argumentCount >= 0) { "argumentCount must not be negative" }
+        return connectArgs(target, argumentCount, flags, null, SignalCallbackRegistry.listDispatch(argumentCount, callback))
+    }
+
+    internal actual fun connectArgs(
+        target: GodotObject,
+        argumentCount: Int,
+        flags: GodotObject.ConnectFlags,
+        onRelease: (() -> Unit)?,
+        dispatch: (SignalArgReader) -> Unit,
+    ): SignalConnection {
         val oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags
-        val id = SignalCallbackRegistry.register(argumentCount, callback)
+        val id = SignalCallbackRegistry.register(argumentCount, onRelease, dispatch)
         // A custom Callable bound to the receiver: Godot calls its free_func -- releasing the
         // closure -- whenever it drops the connection (receiver or emitter freed, one-shot fired,
         // disconnected, failed connect). Task 131; the iOS shim works the same way.

@@ -1266,6 +1266,26 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
         return CanvasItem.OversamplingWithScale(ObjectCalls.ptrcallNoArgsRetLong(getOversamplingWithScaleBind, segment))
     }
 
+    /** Signal `draw()`; see [TypedSignal]. */
+    val draw: Signal0
+        @JvmName("drawTypedSignal")
+        get() = Signal0(this, "draw")
+
+    /** Signal `visibility_changed()`; see [TypedSignal]. */
+    val visibilityChanged: Signal0
+        @JvmName("visibilityChangedTypedSignal")
+        get() = Signal0(this, "visibility_changed")
+
+    /** Signal `hidden()`; see [TypedSignal]. */
+    val hidden: Signal0
+        @JvmName("hiddenTypedSignal")
+        get() = Signal0(this, "hidden")
+
+    /** Signal `item_rect_changed()`; see [TypedSignal]. */
+    val itemRectChanged: Signal0
+        @JvmName("itemRectChangedTypedSignal")
+        get() = Signal0(this, "item_rect_changed")
+
     object Signals {
         const val draw: String = "draw"
         const val visibilityChanged: String = "visibility_changed"

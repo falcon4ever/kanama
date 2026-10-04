@@ -234,6 +234,66 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         ObjectCalls.ptrcallWithLongArg(setGpuLevelBind, segment, level.value)
     }
 
+    /** Signal `session_begun()`; see [TypedSignal]. */
+    val sessionBegun: Signal0
+        @JvmName("sessionBegunTypedSignal")
+        get() = Signal0(this, "session_begun")
+
+    /** Signal `session_stopping()`; see [TypedSignal]. */
+    val sessionStopping: Signal0
+        @JvmName("sessionStoppingTypedSignal")
+        get() = Signal0(this, "session_stopping")
+
+    /** Signal `session_synchronized()`; see [TypedSignal]. */
+    val sessionSynchronized: Signal0
+        @JvmName("sessionSynchronizedTypedSignal")
+        get() = Signal0(this, "session_synchronized")
+
+    /** Signal `session_focussed()`; see [TypedSignal]. */
+    val sessionFocussed: Signal0
+        @JvmName("sessionFocussedTypedSignal")
+        get() = Signal0(this, "session_focussed")
+
+    /** Signal `session_visible()`; see [TypedSignal]. */
+    val sessionVisible: Signal0
+        @JvmName("sessionVisibleTypedSignal")
+        get() = Signal0(this, "session_visible")
+
+    /** Signal `session_loss_pending()`; see [TypedSignal]. */
+    val sessionLossPending: Signal0
+        @JvmName("sessionLossPendingTypedSignal")
+        get() = Signal0(this, "session_loss_pending")
+
+    /** Signal `instance_exiting()`; see [TypedSignal]. */
+    val instanceExiting: Signal0
+        @JvmName("instanceExitingTypedSignal")
+        get() = Signal0(this, "instance_exiting")
+
+    /** Signal `pose_recentered()`; see [TypedSignal]. */
+    val poseRecentered: Signal0
+        @JvmName("poseRecenteredTypedSignal")
+        get() = Signal0(this, "pose_recentered")
+
+    /** Signal `refresh_rate_changed(refresh_rate: float)`; see [TypedSignal]. */
+    val refreshRateChanged: Signal1<Double>
+        @JvmName("refreshRateChangedTypedSignal")
+        get() = Signal1(this, "refresh_rate_changed", SignalArgType.DOUBLE)
+
+    /** Signal `cpu_level_changed(sub_domain: int, from_level: int, to_level: int)`; see [TypedSignal]. */
+    val cpuLevelChanged: Signal3<Long, Long, Long>
+        @JvmName("cpuLevelChangedTypedSignal")
+        get() = Signal3(this, "cpu_level_changed", SignalArgType.LONG, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `gpu_level_changed(sub_domain: int, from_level: int, to_level: int)`; see [TypedSignal]. */
+    val gpuLevelChanged: Signal3<Long, Long, Long>
+        @JvmName("gpuLevelChangedTypedSignal")
+        get() = Signal3(this, "gpu_level_changed", SignalArgType.LONG, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `user_presence_changed(is_user_present: bool)`; see [TypedSignal]. */
+    val userPresenceChanged: Signal1<Boolean>
+        @JvmName("userPresenceChangedTypedSignal")
+        get() = Signal1(this, "user_presence_changed", SignalArgType.BOOLEAN)
+
     object Signals {
         const val sessionBegun: String = "session_begun"
         const val sessionStopping: String = "session_stopping"

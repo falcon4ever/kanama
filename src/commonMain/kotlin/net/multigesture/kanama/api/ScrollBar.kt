@@ -37,6 +37,11 @@ open class ScrollBar(handle: GodotHandle) : Range(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getCustomStepBind, segment)
     }
 
+    /** Signal `scrolling()`; see [TypedSignal]. */
+    val scrolling: Signal0
+        @JvmName("scrollingTypedSignal")
+        get() = Signal0(this, "scrolling")
+
     object Signals {
         const val scrolling: String = "scrolling"
     }

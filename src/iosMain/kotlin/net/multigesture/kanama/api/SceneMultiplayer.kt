@@ -167,6 +167,21 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
         ObjectCalls.ptrcallWithIntArg(setMaxDeltaPacketSizeBind, segment, size)
     }
 
+    /** Signal `peer_authenticating(id: int)`; see [TypedSignal]. */
+    val peerAuthenticating: Signal1<Long>
+        @JvmName("peerAuthenticatingTypedSignal")
+        get() = Signal1(this, "peer_authenticating", SignalArgType.LONG)
+
+    /** Signal `peer_authentication_failed(id: int)`; see [TypedSignal]. */
+    val peerAuthenticationFailed: Signal1<Long>
+        @JvmName("peerAuthenticationFailedTypedSignal")
+        get() = Signal1(this, "peer_authentication_failed", SignalArgType.LONG)
+
+    /** Signal `peer_packet(id: int, packet: PackedByteArray)`; see [TypedSignal]. */
+    val peerPacket: Signal2<Long, ByteArray>
+        @JvmName("peerPacketTypedSignal")
+        get() = Signal2(this, "peer_packet", SignalArgType.LONG, SignalArgType.valueOf<ByteArray>("PackedByteArray", ByteArray::class))
+
     object Signals {
         const val peerAuthenticating: String = "peer_authenticating"
         const val peerAuthenticationFailed: String = "peer_authentication_failed"

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -66,6 +67,11 @@ class EditorResourcePreview(handle: GodotHandle) : Node(handle) {
     fun checkForInvalidation(path: String) {
         ObjectCalls.ptrcallWithStringArg(checkForInvalidationBind, segment, path)
     }
+
+    /** Signal `preview_invalidated(path: String)`; see [TypedSignal]. */
+    val previewInvalidated: Signal1<String>
+        @JvmName("previewInvalidatedTypedSignal")
+        get() = Signal1(this, "preview_invalidated", SignalArgType.STRING)
 
     object Signals {
         const val previewInvalidated: String = "preview_invalidated"

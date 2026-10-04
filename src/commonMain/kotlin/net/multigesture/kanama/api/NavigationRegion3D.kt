@@ -259,6 +259,16 @@ class NavigationRegion3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, segment)
     }
 
+    /** Signal `navigation_mesh_changed()`; see [TypedSignal]. */
+    val navigationMeshChanged: Signal0
+        @JvmName("navigationMeshChangedTypedSignal")
+        get() = Signal0(this, "navigation_mesh_changed")
+
+    /** Signal `bake_finished()`; see [TypedSignal]. */
+    val bakeFinished: Signal0
+        @JvmName("bakeFinishedTypedSignal")
+        get() = Signal0(this, "bake_finished")
+
     object Signals {
         const val navigationMeshChanged: String = "navigation_mesh_changed"
         const val bakeFinished: String = "bake_finished"

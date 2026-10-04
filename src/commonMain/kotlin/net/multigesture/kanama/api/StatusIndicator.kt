@@ -7,6 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Rect2
+import net.multigesture.kanama.types.Vector2i
 
 /**
  * Application status indicator (aka notification area icon). Note: Status indicator is implemented
@@ -122,6 +123,11 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
     fun getRect(): Rect2 {
         return ObjectCalls.ptrcallNoArgsRetRect2(getRectBind, segment)
     }
+
+    /** Signal `pressed(mouse_button: int, mouse_position: Vector2i)`; see [TypedSignal]. */
+    val pressed: Signal2<Long, Vector2i>
+        @JvmName("pressedTypedSignal")
+        get() = Signal2(this, "pressed", SignalArgType.LONG, SignalArgType.valueOf<Vector2i>("Vector2i", Vector2i::class))
 
     object Signals {
         const val pressed: String = "pressed"

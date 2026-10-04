@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -81,6 +82,21 @@ object GDExtensionManager {
     fun getExtension(path: String): GDExtension? {
         return GDExtension.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getExtensionBind, singleton, path))
     }
+
+    /** Signal `extensions_reloaded()`; see [TypedSignal]. */
+    val extensionsReloaded: Signal0
+        @JvmName("extensionsReloadedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "extensions_reloaded")
+
+    /** Signal `extension_loaded(extension: GDExtension)`; see [TypedSignal]. */
+    val extensionLoaded: Signal1<GDExtension?>
+        @JvmName("extensionLoadedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "extension_loaded", SignalArgType.nullableObjectOf("GDExtension") { GDExtension(it) })
+
+    /** Signal `extension_unloading(extension: GDExtension)`; see [TypedSignal]. */
+    val extensionUnloading: Signal1<GDExtension?>
+        @JvmName("extensionUnloadingTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "extension_unloading", SignalArgType.nullableObjectOf("GDExtension") { GDExtension(it) })
 
     object Signals {
         const val extensionsReloaded: String = "extensions_reloaded"

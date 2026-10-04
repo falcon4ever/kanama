@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -90,6 +91,11 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
     fun getBoneLocalPoseOverride(boneIdx: Int): Transform2D {
         return ObjectCalls.ptrcallWithIntArgRetTransform2D(getBoneLocalPoseOverrideBind, segment, boneIdx)
     }
+
+    /** Signal `bone_setup_changed()`; see [TypedSignal]. */
+    val boneSetupChanged: Signal0
+        @JvmName("boneSetupChangedTypedSignal")
+        get() = Signal0(this, "bone_setup_changed")
 
     object Signals {
         const val boneSetupChanged: String = "bone_setup_changed"

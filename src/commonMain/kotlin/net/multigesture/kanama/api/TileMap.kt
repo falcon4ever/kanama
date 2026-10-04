@@ -725,6 +725,11 @@ class TileMap(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallWithVector2iAndLongArgRetVector2i(getNeighborCellBind, segment, coords, neighbor.value)
     }
 
+    /** Signal `changed()`; see [TypedSignal]. */
+    val changed: Signal0
+        @JvmName("changedTypedSignal")
+        get() = Signal0(this, "changed")
+
     object Signals {
         const val changed: String = "changed"
     }

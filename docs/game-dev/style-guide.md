@@ -331,7 +331,7 @@ fun fadeOut() {
     val tween = self.createTween() ?: return
     fadeTween = tween
     tween.tweenProperty(self, "modulate", Color.TRANSPARENT, 0.2).close()
-    tween.signal(Tween.Signals.finished).connect(self, argumentCount = 0, flags = GodotObject.ConnectFlags.ONE_SHOT) {
+    tween.finished.connect(GodotObject.ConnectFlags.ONE_SHOT) {
         if (fadeTween === tween) {
             fadeTween = null
         }

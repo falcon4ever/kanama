@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Transform3D
+import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -131,6 +132,41 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameAndVariantArg(setInputBind, segment, name, value)
     }
+
+    /** Signal `pose_changed(pose: XRPose)`; see [TypedSignal]. */
+    val poseChanged: Signal1<XRPose?>
+        @JvmName("poseChangedTypedSignal")
+        get() = Signal1(this, "pose_changed", SignalArgType.nullableObjectOf("XRPose") { XRPose(it) })
+
+    /** Signal `pose_lost_tracking(pose: XRPose)`; see [TypedSignal]. */
+    val poseLostTracking: Signal1<XRPose?>
+        @JvmName("poseLostTrackingTypedSignal")
+        get() = Signal1(this, "pose_lost_tracking", SignalArgType.nullableObjectOf("XRPose") { XRPose(it) })
+
+    /** Signal `button_pressed(action_name: String)`; see [TypedSignal]. */
+    val buttonPressed: Signal1<String>
+        @JvmName("buttonPressedTypedSignal")
+        get() = Signal1(this, "button_pressed", SignalArgType.STRING)
+
+    /** Signal `button_released(action_name: String)`; see [TypedSignal]. */
+    val buttonReleased: Signal1<String>
+        @JvmName("buttonReleasedTypedSignal")
+        get() = Signal1(this, "button_released", SignalArgType.STRING)
+
+    /** Signal `input_float_changed(action_name: String, value: float)`; see [TypedSignal]. */
+    val inputFloatChanged: Signal2<String, Double>
+        @JvmName("inputFloatChangedTypedSignal")
+        get() = Signal2(this, "input_float_changed", SignalArgType.STRING, SignalArgType.DOUBLE)
+
+    /** Signal `input_vector2_changed(action_name: String, vector: Vector2)`; see [TypedSignal]. */
+    val inputVector2Changed: Signal2<String, Vector2>
+        @JvmName("inputVector2ChangedTypedSignal")
+        get() = Signal2(this, "input_vector2_changed", SignalArgType.STRING, SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `profile_changed(role: String)`; see [TypedSignal]. */
+    val profileChanged: Signal1<String>
+        @JvmName("profileChangedTypedSignal")
+        get() = Signal1(this, "profile_changed", SignalArgType.STRING)
 
     object Signals {
         const val poseChanged: String = "pose_changed"

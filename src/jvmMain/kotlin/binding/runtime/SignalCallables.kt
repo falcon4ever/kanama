@@ -152,9 +152,11 @@ object SignalCallables {
     }
 
   /**
-   * `call_func`. Godot does not initialise [rError], so every path writes it. A throwing callback
-   * is contained and reported like a GDScript runtime error in a called function: Godot prints the
-   * script error and the call itself reports success with a nil return (`gdscript_vm.cpp`).
+   * `call_func`. Godot does not initialise [rError], so every path writes it. The entry reads the
+   * arguments in place through this thread's [JvmSignalArgReader] (task 134 D4). A throwing
+   * callback is contained and reported like a GDScript runtime error in a called function: Godot
+   * prints the script error and the call itself reports success with a nil return
+   * (`gdscript_vm.cpp`).
    */
   @JvmStatic
   fun call(
@@ -175,18 +177,7 @@ object SignalCallables {
       return
     }
     try {
-      val values =
-        if (entry.argumentCount == 0) {
-          emptyList()
-        } else {
-          val argv = args.reinterpret(entry.argumentCount * 8L)
-          Arena.ofConfined().use { arena ->
-            List(entry.argumentCount) { i ->
-              BuiltinTypes.readVariantScalar(argv.getAtIndex(ADDRESS, i.toLong()), arena)
-            }
-          }
-        }
-      entry.callback(values)
+      JvmSignalArgReader.current().dispatch(args, argCount.toInt(), entry.dispatch)
     } catch (t: Throwable) {
       ScriptErrors.report(t, "signal lambda")
       runCatching {
@@ -199,6 +190,6 @@ object SignalCallables {
   /** `free_func`: Godot dropped the last copy of the Callable. */
   @JvmStatic
   fun free(userdata: MemorySegment) {
-    SignalCallbackRegistry.unregister(userdata.address())
+    SignalCallbackRegistry.release(userdata.address())
   }
 }

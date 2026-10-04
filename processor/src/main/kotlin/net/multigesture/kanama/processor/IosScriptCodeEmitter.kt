@@ -176,6 +176,8 @@ internal data class IosScript(
   val properties: List<IosProperty>,
   val signals: List<IosSignal>,
   val rpcConfigs: List<IosRpcConfig>,
+  /** The `@Signal` declarations with their typed arguments, for the typed accessors (task 134). */
+  val signalModels: List<SignalModel> = emptyList(),
 )
 
 /**
@@ -582,6 +584,15 @@ internal class IosScriptCodeEmitter(
         }
         builder.appendLine("}")
       }
+      if (script.signalModels.isNotEmpty()) {
+        builder.append(
+          typedSignalAccessors(
+            listOfNotNull(script.packageName?.takeIf { it.isNotEmpty() }, script.className)
+              .joinToString("."),
+            script.signalModels,
+          )
+        )
+      }
       val helperMethods = script.methods.filter { !it.godotName.startsWith("_") }
       if (helperMethods.isNotEmpty()) {
         val fqClassName = "${script.packageName}.${script.className}"
@@ -772,6 +783,7 @@ internal class IosScriptCodeEmitter(
       properties = properties,
       signals = signals,
       rpcConfigs = rpcConfigs,
+      signalModels = model.signals,
     )
   }
 

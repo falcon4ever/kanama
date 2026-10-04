@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -3437,6 +3438,11 @@ object DisplayServer {
     fun pipModeSetAutoEnterOnBackground(autoEnterOnBackground: Boolean, windowId: Int = 0) {
         ObjectCalls.ptrcallWithBoolAndIntArgs(pipModeSetAutoEnterOnBackgroundBind, singleton, autoEnterOnBackground, windowId)
     }
+
+    /** Signal `orientation_changed(orientation: int)`; see [TypedSignal]. */
+    val orientationChanged: Signal1<Long>
+        @JvmName("orientationChangedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "orientation_changed", SignalArgType.LONG)
 
     object Signals {
         const val orientationChanged: String = "orientation_changed"

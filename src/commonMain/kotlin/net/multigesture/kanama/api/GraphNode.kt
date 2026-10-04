@@ -446,6 +446,16 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
         return ObjectCalls.ptrcallWithIntArgRetInt(getOutputPortSlotBind, segment, portIdx)
     }
 
+    /** Signal `slot_updated(slot_index: int)`; see [TypedSignal]. */
+    val slotUpdated: Signal1<Long>
+        @JvmName("slotUpdatedTypedSignal")
+        get() = Signal1(this, "slot_updated", SignalArgType.LONG)
+
+    /** Signal `slot_sizes_changed()`; see [TypedSignal]. */
+    val slotSizesChanged: Signal0
+        @JvmName("slotSizesChangedTypedSignal")
+        get() = Signal0(this, "slot_sizes_changed")
+
     object Signals {
         const val slotUpdated: String = "slot_updated"
         const val slotSizesChanged: String = "slot_sizes_changed"

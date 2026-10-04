@@ -71,6 +71,11 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getInfluenceBind, segment)
     }
 
+    /** Signal `modification_processed()`; see [TypedSignal]. */
+    val modificationProcessed: Signal0
+        @JvmName("modificationProcessedTypedSignal")
+        get() = Signal0(this, "modification_processed")
+
     object Signals {
         const val modificationProcessed: String = "modification_processed"
     }

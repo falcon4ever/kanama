@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -169,6 +170,16 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
     fun closeFile(path: String): GodotError {
         return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(closeFileBind, segment, path))
     }
+
+    /** Signal `editor_script_changed(script: Script)`; see [TypedSignal]. */
+    val editorScriptChanged: Signal1<Script?>
+        @JvmName("editorScriptChangedTypedSignal")
+        get() = Signal1(this, "editor_script_changed", SignalArgType.nullableObjectOf("Script") { Script(it) })
+
+    /** Signal `script_close(script: Script)`; see [TypedSignal]. */
+    val scriptClose: Signal1<Script?>
+        @JvmName("scriptCloseTypedSignal")
+        get() = Signal1(this, "script_close", SignalArgType.nullableObjectOf("Script") { Script(it) })
 
     object Signals {
         const val editorScriptChanged: String = "editor_script_changed"

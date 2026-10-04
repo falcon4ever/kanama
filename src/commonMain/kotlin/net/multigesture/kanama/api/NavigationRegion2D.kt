@@ -254,6 +254,16 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetRect2(getBoundsBind, segment)
     }
 
+    /** Signal `navigation_polygon_changed()`; see [TypedSignal]. */
+    val navigationPolygonChanged: Signal0
+        @JvmName("navigationPolygonChangedTypedSignal")
+        get() = Signal0(this, "navigation_polygon_changed")
+
+    /** Signal `bake_finished()`; see [TypedSignal]. */
+    val bakeFinished: Signal0
+        @JvmName("bakeFinishedTypedSignal")
+        get() = Signal0(this, "bake_finished")
+
     object Signals {
         const val navigationPolygonChanged: String = "navigation_polygon_changed"
         const val bakeFinished: String = "bake_finished"

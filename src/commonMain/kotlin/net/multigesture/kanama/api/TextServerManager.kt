@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -95,6 +96,16 @@ object TextServerManager {
     fun getPrimaryInterface(): TextServer? {
         return TextServer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPrimaryInterfaceBind, singleton))
     }
+
+    /** Signal `interface_added(interface_name: StringName)`; see [TypedSignal]. */
+    val interfaceAdded: Signal1<String>
+        @JvmName("interfaceAddedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "interface_added", SignalArgType.STRING)
+
+    /** Signal `interface_removed(interface_name: StringName)`; see [TypedSignal]. */
+    val interfaceRemoved: Signal1<String>
+        @JvmName("interfaceRemovedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "interface_removed", SignalArgType.STRING)
 
     object Signals {
         const val interfaceAdded: String = "interface_added"

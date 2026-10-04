@@ -1699,6 +1699,61 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     // before a throw.
     private fun describeForErrors(): String = "${call("get_class")}#${getInstanceId()}"
 
+    /** Signal `ready()`; see [TypedSignal]. */
+    val ready: Signal0
+        @JvmName("readyTypedSignal")
+        get() = Signal0(this, "ready")
+
+    /** Signal `renamed()`; see [TypedSignal]. */
+    val renamed: Signal0
+        @JvmName("renamedTypedSignal")
+        get() = Signal0(this, "renamed")
+
+    /** Signal `tree_entered()`; see [TypedSignal]. */
+    val treeEntered: Signal0
+        @JvmName("treeEnteredTypedSignal")
+        get() = Signal0(this, "tree_entered")
+
+    /** Signal `tree_exiting()`; see [TypedSignal]. */
+    val treeExiting: Signal0
+        @JvmName("treeExitingTypedSignal")
+        get() = Signal0(this, "tree_exiting")
+
+    /** Signal `tree_exited()`; see [TypedSignal]. */
+    val treeExited: Signal0
+        @JvmName("treeExitedTypedSignal")
+        get() = Signal0(this, "tree_exited")
+
+    /** Signal `child_entered_tree(node: Node)`; see [TypedSignal]. */
+    val childEnteredTree: Signal1<Node>
+        @JvmName("childEnteredTreeTypedSignal")
+        get() = Signal1(this, "child_entered_tree", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `child_exiting_tree(node: Node)`; see [TypedSignal]. */
+    val childExitingTree: Signal1<Node>
+        @JvmName("childExitingTreeTypedSignal")
+        get() = Signal1(this, "child_exiting_tree", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `child_order_changed()`; see [TypedSignal]. */
+    val childOrderChanged: Signal0
+        @JvmName("childOrderChangedTypedSignal")
+        get() = Signal0(this, "child_order_changed")
+
+    /** Signal `replacing_by(node: Node)`; see [TypedSignal]. */
+    val replacingBy: Signal1<Node>
+        @JvmName("replacingByTypedSignal")
+        get() = Signal1(this, "replacing_by", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `editor_description_changed(node: Node)`; see [TypedSignal]. */
+    val editorDescriptionChanged: Signal1<Node>
+        @JvmName("editorDescriptionChangedTypedSignal")
+        get() = Signal1(this, "editor_description_changed", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `editor_state_changed()`; see [TypedSignal]. */
+    val editorStateChanged: Signal0
+        @JvmName("editorStateChangedTypedSignal")
+        get() = Signal0(this, "editor_state_changed")
+
     object Signals {
         const val ready: String = "ready"
         const val renamed: String = "renamed"

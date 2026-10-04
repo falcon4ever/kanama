@@ -63,6 +63,16 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetColor(getDebugCustomColorBind, segment)
     }
 
+    /** Signal `curve_changed()`; see [TypedSignal]. */
+    val curveChanged: Signal0
+        @JvmName("curveChangedTypedSignal")
+        get() = Signal0(this, "curve_changed")
+
+    /** Signal `debug_color_changed()`; see [TypedSignal]. */
+    val debugColorChanged: Signal0
+        @JvmName("debugColorChangedTypedSignal")
+        get() = Signal0(this, "debug_color_changed")
+
     object Signals {
         const val curveChanged: String = "curve_changed"
         const val debugColorChanged: String = "debug_color_changed"

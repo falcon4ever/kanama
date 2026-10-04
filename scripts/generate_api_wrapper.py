@@ -3096,6 +3096,249 @@ def render_property(
     )
 
 
+# ---------------------------------------------------------------------------------------------
+# Typed engine signals (task 134 D4): one property per signal, `area.bodyEntered: Signal1<Node2D>`,
+# over the hand-written Signal0..Signal5 runtime classes (src/commonMain/.../api/TypedSignals.kt).
+# A signal whose name collides with a member of its class, an ancestor or a descendant (a method,
+# a property, a hand-written member) gets a `Signal` suffix; signal_accessor_names() is the single
+# decision, and `--list-signal-renames` prints it for the CHANGELOG.
+MAX_TYPED_SIGNAL_ARGS = 5
+
+# Value and collection types an engine signal emits, read through SignalArgType.valueOf with the
+# Kotlin class the runtime decode returns.
+SIGNAL_VALUE_TYPES: dict[str, tuple[str, str]] = {
+    "Vector2": ("Vector2", "Vector2::class"),
+    "Vector2i": ("Vector2i", "Vector2i::class"),
+    "Vector3": ("Vector3", "Vector3::class"),
+    "Vector3i": ("Vector3i", "Vector3i::class"),
+    "Vector4": ("Vector4", "Vector4::class"),
+    "Color": ("Color", "Color::class"),
+    "Rect2": ("Rect2", "Rect2::class"),
+    "Rect2i": ("Rect2i", "Rect2i::class"),
+    "RID": ("RID", "RID::class"),
+    "NodePath": ("NodePath", "NodePath::class"),
+    "Transform2D": ("Transform2D", "Transform2D::class"),
+    "Transform3D": ("Transform3D", "Transform3D::class"),
+    "Basis": ("Basis", "Basis::class"),
+    "Quaternion": ("Quaternion", "Quaternion::class"),
+    "AABB": ("AABB", "AABB::class"),
+    "Plane": ("Plane", "Plane::class"),
+    "Array": ("List<Any?>", "List::class"),
+    "Dictionary": ("Map<Any?, Any?>", "Map::class"),
+    "PackedStringArray": ("List<String>", "List::class"),
+    "PackedByteArray": ("ByteArray", "ByteArray::class"),
+    "PackedInt32Array": ("List<Int>", "List::class"),
+    "PackedInt64Array": ("List<Long>", "List::class"),
+    "PackedFloat32Array": ("List<Float>", "List::class"),
+    "PackedFloat64Array": ("List<Double>", "List::class"),
+    "PackedVector2Array": ("List<Vector2>", "List::class"),
+    "PackedVector3Array": ("List<Vector3>", "List::class"),
+    "PackedColorArray": ("List<Color>", "List::class"),
+    "typedarray::StringName": ("List<String>", "List::class"),
+    "typedarray::String": ("List<String>", "List::class"),
+}
+
+_HAND_MEMBER_CACHE: dict[str, set[str]] | None = None
+
+
+def _hand_member_names() -> dict[str, set[str]]:
+    """Members hand-written outside the generated tree, by receiver class: GodotObject's own members
+    and the extension members of the hand-written api files (`val Node.tree`, `fun Node.getNodeAs`)."""
+    global _HAND_MEMBER_CACHE
+    if _HAND_MEMBER_CACHE is not None:
+        return _HAND_MEMBER_CACHE
+    names: dict[str, set[str]] = {}
+    member = re.compile(r"^\s*(?:(?:public|internal|inline|override|open|actual|operator|infix|suspend)\s+)*(?:fun|val|var)\s+(?:<[^>]*>\s+)?(?:(\w+)(?:<[^>]*>)?\.)?(`?\w+`?)", re.M)
+    roots = [ROOT / "src/commonMain/kotlin/net/multigesture/kanama/api", ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api", ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api"]
+    for root in roots:
+        for path in sorted(root.glob("*.kt")):
+            text = path.read_text(encoding="utf-8")
+            if "Generated from Godot docs" in text[:2000] or "GENERATED desktop/Android companion" in text[:2000] or "GENERATED iOS companion" in text[:2000]:
+                continue
+            for receiver, name in member.findall(text):
+                if receiver:
+                    names.setdefault(receiver, set()).add(name.strip("`"))
+            if path.name == "GodotObject.kt":
+                body = text[text.find("open class GodotObject"):]
+                # GodotObject's own typed signal accessors (Object's signals) are not collisions.
+                accessors = set(re.findall(r"val (\w+): Signal\d", body))
+                for receiver, name in member.findall(body):
+                    if not receiver and name not in accessors:
+                        names.setdefault("GodotObject", set()).add(name.strip("`"))
+    _HAND_MEMBER_CACHE = names
+    return names
+
+
+def _class_member_names(cls: ApiClass) -> set[str]:
+    """Every Kotlin member name a wrapper class may declare (conservative: emitted or not)."""
+    names: set[str] = set()
+    for method_list in cls.methods.values():
+        for method in method_list:
+            if method.is_virtual:
+                continue
+            names.add(method_function_name(cls.name, method.name))
+    for prop in cls.properties:
+        raw = str(prop.get("name") or "")
+        names.add(PROPERTY_NAME_OVERRIDES.get((cls.name, raw), camel_name(raw)))
+    section = _member_section(cls.name)
+    if section:
+        names.update(re.findall(r"(?:fun|val|var)\s+(?:<[^>]*>\s+)?(\w+)", section))
+    hand = _hand_member_names()
+    names.update(hand.get(cls.name, set()))
+    return names
+
+
+_SIGNAL_NAMES_CACHE: dict[tuple[str, str], str] | None = None
+
+
+def signal_accessor_names(api_classes: dict[str, ApiClass]) -> dict[tuple[str, str], str]:
+    """(class, Godot signal name) -> Kotlin property name, with the `Signal` suffix on collisions."""
+    global _SIGNAL_NAMES_CACHE
+    if _SIGNAL_NAMES_CACHE is not None:
+        return _SIGNAL_NAMES_CACHE
+    children: dict[str, list[str]] = {}
+    for name, api_cls in api_classes.items():
+        children.setdefault(api_cls.inherits, []).append(name)
+    member_cache: dict[str, set[str]] = {}
+
+    def members(name: str) -> set[str]:
+        if name not in member_cache:
+            member_cache[name] = _class_member_names(api_classes[name]) if name in api_classes else set()
+        return member_cache[name]
+
+    def lineage(name: str) -> list[str]:
+        out = []
+        current = api_classes.get(name)
+        while current is not None:
+            out.append(current.name)
+            current = api_classes.get(current.inherits)
+        return out
+
+    def descendants(name: str) -> list[str]:
+        out, stack = [], list(children.get(name, []))
+        while stack:
+            child = stack.pop()
+            out.append(child)
+            stack.extend(children.get(child, []))
+        return out
+
+    hand_object = _hand_member_names().get("GodotObject", set())
+    result: dict[tuple[str, str], str] = {}
+    for name in sorted(api_classes):
+        api_cls = api_classes[name]
+        for signal in api_cls.signals:
+            raw = str(signal.get("name") or "")
+            base = camel_name(raw)
+            if not raw or not base:
+                continue
+            taken: set[str] = set(hand_object)
+            for other in (*lineage(name), *descendants(name)):
+                taken |= members(other)
+                if other != name:
+                    taken |= {camel_name(str(sig.get("name") or "")) for sig in api_classes[other].signals}
+            taken |= {"signal", "signals", "Signals"}
+            result[(name, raw)] = f"{base}Signal" if base in taken or base in RESERVED_WORDS else base
+    _SIGNAL_NAMES_CACHE = result
+    return result
+
+
+def _signal_object_wrapper(type_name: str, wrapper_classes: set[str], api_classes: dict[str, ApiClass]) -> tuple[str, str]:
+    """(wrapper class, Godot type it stands for): the class itself when this render target hosts it,
+    else its nearest hosted ancestor."""
+    current: str | None = type_name
+    while current:
+        wrapper = api_object_wrapper_type(current, wrapper_classes)
+        hosted = wrapper is not None and (
+            IOS_EMIT_CLASSES is None or current == "Object" or current in IOS_EMIT_CLASSES or wrapper == "GodotObject"
+        )
+        if hosted:
+            return wrapper, current
+        parent = api_classes.get(current)
+        current = parent.inherits if parent is not None else "Object"
+        if current == "":
+            current = "Object"
+    return "GodotObject", "Object"
+
+
+def signal_arg_type(type_name: str, wrapper_classes: set[str], api_classes: dict[str, ApiClass]) -> tuple[str, str, set[str]]:
+    """(Kotlin type, SignalArgType expression, imports) for one engine signal argument type."""
+    if type_name == "int":
+        return "Long", "SignalArgType.LONG", set()
+    if type_name == "float":
+        return "Double", "SignalArgType.DOUBLE", set()
+    if type_name == "bool":
+        return "Boolean", "SignalArgType.BOOLEAN", set()
+    if type_name in ("String", "StringName"):
+        return "String", "SignalArgType.STRING", set()
+    if type_name == "Variant":
+        return "Any?", "SignalArgType.VARIANT", set()
+    if type_name.startswith(("enum::", "bitfield::")):
+        enum_ref = enum_type_ref(type_name)
+        return enum_ref, f'SignalArgType.enumOf("{type_name.split("::", 1)[1]}", {{ {enum_ref}(it) }}, {{ it.value }})', set()
+    value = SIGNAL_VALUE_TYPES.get(type_name)
+    if value is not None:
+        kotlin, klass = value
+        imports = {name for name in DEFAULT_IMPORTS if re.search(rf"\b{name}\b", kotlin) and name not in {"ObjectCalls", "JvmName"}}
+        return kotlin, f'SignalArgType.valueOf<{kotlin}>("{type_name}", {klass})', imports
+    if type_name in api_classes or type_name == "Object":
+        wrapper, _godot = _signal_object_wrapper(type_name, wrapper_classes, api_classes)
+        if is_resource_like(type_name, api_classes):
+            return f"{wrapper}?", f'SignalArgType.nullableObjectOf("{type_name}") {{ {wrapper}(it) }}', set()
+        return wrapper, f'SignalArgType.objectOf("{type_name}") {{ {wrapper}(it) }}', set()
+    raise SystemExit(f"[generate_api_wrapper] no typed-signal mapping for argument type {type_name!r}")
+
+
+def render_signal_accessors(
+    cls: ApiClass,
+    wrapper_classes: set[str],
+    api_classes: dict[str, ApiClass],
+    singleton: bool,
+    imports: set[str],
+) -> str | None:
+    if not cls.signals:
+        return None
+    names = signal_accessor_names(api_classes)
+    owner = f"GodotObject(GodotHandle(singleton))" if singleton else "this"
+    blocks: list[str] = []
+    for signal in cls.signals:
+        raw = str(signal.get("name") or "")
+        prop = names.get((cls.name, raw))
+        if not prop:
+            continue
+        args = list(signal.get("arguments") or [])
+        if len(args) > MAX_TYPED_SIGNAL_ARGS:
+            raise SystemExit(
+                f"[generate_api_wrapper] {cls.name}.{raw} has {len(args)} arguments; add Signal{len(args)} to TypedSignals.kt"
+            )
+        kotlin_types: list[str] = []
+        exprs: list[str] = []
+        doc_args: list[str] = []
+        for arg in args:
+            arg_type = str(arg.get("type") or "")
+            kotlin, expr, extra = signal_arg_type(arg_type, wrapper_classes, api_classes)
+            imports.update(extra)
+            kotlin_types.append(kotlin)
+            exprs.append(expr)
+            doc_args.append(f"{arg.get('name')}: {arg_type}")
+        type_args = f"<{', '.join(kotlin_types)}>" if kotlin_types else ""
+        signal_type = f"Signal{len(args)}{type_args}"
+        ctor_args = ", ".join([owner, f'"{raw}"', *exprs])
+        blocks.append(
+            "\n".join(
+                [
+                    f"    /** Signal `{raw}({', '.join(doc_args)})`; see [TypedSignal]. */",
+                    f"    val {prop}: {signal_type}",
+                    f'        @JvmName("{prop}TypedSignal")',
+                    f"        get() = Signal{len(args)}({ctor_args})",
+                ]
+            )
+        )
+    if not blocks:
+        return None
+    imports.add("JvmName")
+    return "\n\n".join(blocks)
+
+
 def render_signal_constants(cls: ApiClass) -> str | None:
     if not cls.signals:
         return None
@@ -3506,6 +3749,7 @@ def render_draft(
     nested_enums = render_class_enums(cls.name, "    ", "actual" if actual else "plain")
     if nested_enums and RENDER_TARGET != "ios":
         imports.add("JvmInline")
+    signal_accessors = render_signal_accessors(cls, wrapper_classes, api_classes, singleton, imports)
     import_lines = sorted(f"import {DEFAULT_IMPORTS[name]}" for name in imports)
     body_sections = []
     if properties:
@@ -3518,6 +3762,8 @@ def render_draft(
     custom_members = _member_section(cls.name)
     if custom_members:
         body_sections.append(custom_members)
+    if signal_accessors:
+        body_sections.append(signal_accessors)
     signal_constants = render_signal_constants(cls)
     if signal_constants:
         body_sections.append(signal_constants)

@@ -41131,6 +41131,69 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     lamOneShotFires == 1 && IosCallableRegistry.size == lamOneShotBefore,
   )
 
+  // Task 134 D4: typed signals over the PT-tagged trampoline. A five-argument emission (the shim
+  // forwarded at most four scalars before) with an int, a String, a StringName (decoded as String,
+  // as desktop does), a Vector2 and an object, emitted engine-side by an Expression; the generated
+  // `renamed: Signal0` with CONNECT_ONE_SHOT; and both entries released afterwards.
+  run {
+    val api = net.multigesture.kanama.api.SignalArgType
+    val typedBefore = IosCallableRegistry.size
+    val emitter =
+      net.multigesture.kanama.api.Node(net.multigesture.kanama.api.GodotHandle(lamEmitter))
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+      lamEmitter,
+      listOf("kanamaTyped"),
+    )
+    val typed =
+      net.multigesture.kanama.api.Signal5(
+        emitter,
+        "kanamaTyped",
+        api.LONG,
+        api.STRING,
+        api.STRING,
+        api.valueOf<net.multigesture.kanama.types.Vector2>(
+          "Vector2",
+          net.multigesture.kanama.types.Vector2::class,
+        ),
+        api.objectOf("Node") { net.multigesture.kanama.api.Node(it) },
+      )
+    var typedSeen = ""
+    val typedConnection =
+      typed.connect(emitter) { n, s, sn, v, node ->
+        typedSeen = "$n;$s;$sn;$v;${node.instanceId == emitter.instanceId}"
+      }
+    val expressionHandle = ObjectCalls.constructObject("Expression")
+    val expression =
+      net.multigesture.kanama.api.Expression(
+        net.multigesture.kanama.api.GodotHandle(expressionHandle)
+      )
+    expression.parse(
+      "emit_signal(\"kanamaTyped\", 5, \"s\", StringName(\"sn\"), Vector2(1.5, 2), self)",
+      emptyList(),
+    )
+    expression.execute(emptyList(), emitter)
+    ObjectCalls.destroyObject(expressionHandle)
+    typedConnection.close()
+    check(
+      "typed-signal(five arguments incl. StringName, Vector2 and an object) seen=$typedSeen",
+      typedSeen == "5;s;sn;(1.5, 2.0);true",
+    )
+    var renamedFires = 0
+    emitter.renamed.connect(
+      emitter,
+      net.multigesture.kanama.api.GodotObject.ConnectFlags.ONE_SHOT,
+    ) {
+      renamedFires++
+    }
+    emitter.setName("KanamaTypedA")
+    emitter.setName("KanamaTypedB")
+    check(
+      "typed-signal(generated renamed: Signal0, one-shot, entries released)",
+      renamedFires == 1 && IosCallableRegistry.size == typedBefore,
+    )
+  }
+
   // Task 131 (F4): the report a contained script exception sends to Godot. Built, not sent -- a
   // sent one prints `SCRIPT ERROR`, which the visual smoke treats as a failure; delivery is the
   // documented device check (a throwing _ready shows `SCRIPT ERROR:` in the device log). The

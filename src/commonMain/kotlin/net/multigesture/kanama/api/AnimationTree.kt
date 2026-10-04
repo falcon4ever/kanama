@@ -106,6 +106,11 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
         return AnimationTree.AnimationProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment))
     }
 
+    /** Signal `animation_player_changed()`; see [TypedSignal]. */
+    val animationPlayerChanged: Signal0
+        @JvmName("animationPlayerChangedTypedSignal")
+        get() = Signal0(this, "animation_player_changed")
+
     object Signals {
         const val animationPlayerChanged: String = "animation_player_changed"
     }

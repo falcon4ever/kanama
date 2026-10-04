@@ -589,6 +589,36 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
         ObjectCalls.ptrcallWithRIDArg(physicalBonesRemoveCollisionExceptionBind, segment, exception)
     }
 
+    /** Signal `rest_updated()`; see [TypedSignal]. */
+    val restUpdated: Signal0
+        @JvmName("restUpdatedTypedSignal")
+        get() = Signal0(this, "rest_updated")
+
+    /** Signal `pose_updated()`; see [TypedSignal]. */
+    val poseUpdated: Signal0
+        @JvmName("poseUpdatedTypedSignal")
+        get() = Signal0(this, "pose_updated")
+
+    /** Signal `skeleton_updated()`; see [TypedSignal]. */
+    val skeletonUpdated: Signal0
+        @JvmName("skeletonUpdatedTypedSignal")
+        get() = Signal0(this, "skeleton_updated")
+
+    /** Signal `bone_enabled_changed(bone_idx: int)`; see [TypedSignal]. */
+    val boneEnabledChanged: Signal1<Long>
+        @JvmName("boneEnabledChangedTypedSignal")
+        get() = Signal1(this, "bone_enabled_changed", SignalArgType.LONG)
+
+    /** Signal `bone_list_changed()`; see [TypedSignal]. */
+    val boneListChanged: Signal0
+        @JvmName("boneListChangedTypedSignal")
+        get() = Signal0(this, "bone_list_changed")
+
+    /** Signal `show_rest_only_changed()`; see [TypedSignal]. */
+    val showRestOnlyChanged: Signal0
+        @JvmName("showRestOnlyChangedTypedSignal")
+        get() = Signal0(this, "show_rest_only_changed")
+
     object Signals {
         const val restUpdated: String = "rest_updated"
         const val poseUpdated: String = "pose_updated"

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -161,6 +162,16 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetStringNameList(getTravelPathBind, segment)
     }
+
+    /** Signal `state_started(state: StringName)`; see [TypedSignal]. */
+    val stateStarted: Signal1<String>
+        @JvmName("stateStartedTypedSignal")
+        get() = Signal1(this, "state_started", SignalArgType.STRING)
+
+    /** Signal `state_finished(state: StringName)`; see [TypedSignal]. */
+    val stateFinished: Signal1<String>
+        @JvmName("stateFinishedTypedSignal")
+        get() = Signal1(this, "state_finished", SignalArgType.STRING)
 
     object Signals {
         const val stateStarted: String = "state_started"

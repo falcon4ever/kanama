@@ -62,7 +62,10 @@ object VariantConverters {
     }
 
   fun variantTypeOf(variant: MemorySegment): VariantType? {
-    val id = getType.invoke(variant) as Int
+    val id = variantTypeId(variant)
     return VariantType.entries.firstOrNull { it.id == id }
   }
+
+  /** Godot's `Variant::Type` of [variant] as its integer id (no enum lookup). */
+  fun variantTypeId(variant: MemorySegment): Int = getType.invoke(variant) as Int
 }

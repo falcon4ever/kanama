@@ -97,6 +97,21 @@ object CameraServer {
         ObjectCalls.ptrcallWithObjectArgs(removeFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /** Signal `camera_feed_added(id: int)`; see [TypedSignal]. */
+    val cameraFeedAdded: Signal1<Long>
+        @JvmName("cameraFeedAddedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "camera_feed_added", SignalArgType.LONG)
+
+    /** Signal `camera_feed_removed(id: int)`; see [TypedSignal]. */
+    val cameraFeedRemoved: Signal1<Long>
+        @JvmName("cameraFeedRemovedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "camera_feed_removed", SignalArgType.LONG)
+
+    /** Signal `camera_feeds_updated()`; see [TypedSignal]. */
+    val cameraFeedsUpdated: Signal0
+        @JvmName("cameraFeedsUpdatedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "camera_feeds_updated")
+
     object Signals {
         const val cameraFeedAdded: String = "camera_feed_added"
         const val cameraFeedRemoved: String = "camera_feed_removed"
