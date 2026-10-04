@@ -112,7 +112,7 @@ actual class SignalConnection internal constructor(
     // receiver so Godot also erases the receiver-side connection entry (task 108).
     private val target: GodotObject? = null,
 ) : AutoCloseable {
-    private var closed = false
+    @kotlin.concurrent.Volatile private var closed = false
 
     // Disconnect the lambda Callable. The C path recreates the identity-equal custom Callable
     // (call_func + callback_id, bound to the same receiver) and Object.disconnects it; the

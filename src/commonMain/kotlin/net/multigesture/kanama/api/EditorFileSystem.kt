@@ -124,17 +124,17 @@ class EditorFileSystem(handle: GodotHandle) : Node(handle) {
         @JvmName("sourcesChangedTypedSignal")
         get() = Signal1(this, "sources_changed", SignalArgType.BOOLEAN)
 
-    /** Signal `resources_reimporting(resources: PackedStringArray)`; see [TypedSignal]. */
+    /** Signal `resources_reimporting(resources: PackedStringArray)`; see [TypedSignal]. On iOS a PackedStringArray argument is not delivered yet: a connection reports a script error. */
     val resourcesReimporting: Signal1<List<String>>
         @JvmName("resourcesReimportingTypedSignal")
         get() = Signal1(this, "resources_reimporting", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))
 
-    /** Signal `resources_reimported(resources: PackedStringArray)`; see [TypedSignal]. */
+    /** Signal `resources_reimported(resources: PackedStringArray)`; see [TypedSignal]. On iOS a PackedStringArray argument is not delivered yet: a connection reports a script error. */
     val resourcesReimported: Signal1<List<String>>
         @JvmName("resourcesReimportedTypedSignal")
         get() = Signal1(this, "resources_reimported", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))
 
-    /** Signal `resources_reload(resources: PackedStringArray)`; see [TypedSignal]. */
+    /** Signal `resources_reload(resources: PackedStringArray)`; see [TypedSignal]. On iOS a PackedStringArray argument is not delivered yet: a connection reports a script error. */
     val resourcesReload: Signal1<List<String>>
         @JvmName("resourcesReloadTypedSignal")
         get() = Signal1(this, "resources_reload", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))

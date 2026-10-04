@@ -3,8 +3,11 @@ package net.multigesture.kanama.example
 import kotlinx.coroutines.CancellationException
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.Area2D
+import net.multigesture.kanama.api.Control
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
+import net.multigesture.kanama.api.InputEvent
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Signal2
@@ -122,6 +125,34 @@ class TypedSignalSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
         awaitCancelled = true
       }
     }
+    // (7) Task 134 C review rows. P1: a RefCounted argument outlives its emission, kept by a lambda
+    // (GDScript `kept = ev`) and returned by await() a frame later. P2: closing a one-shot before
+    // it fires, and cancelling awaits, leave no Godot connection behind. P6: Godot emits a null
+    // body for a body without a node (area_2d.cpp `_body_inout`), which a typed lambda receives.
+    val control = Control(GodotHandle(ObjectCalls.constructObject("Control")))
+    self.addChild(control)
+    var kept: Any? = null
+    control.guiInput.connect { ev -> kept = ev }.use { probe.call("emit_gui", control) }
+    val keptAlive = runCatching { (kept as InputEvent).isPressed() }.isSuccess
+    var awaitedAlive = "pending"
+    probe.call("emit_gui_later", control) // two frames from now, after the await below connected
+    launch {
+      val ev: Any? = control.guiInput.await()
+      awaitedAlive = runCatching { (ev as InputEvent).isPressed() }.isSuccess.toString()
+    }
+    val stale = Node(GodotHandle(ObjectCalls.constructObject("Node")))
+    repeat(5) { stale.renamed.connect(owner, GodotObject.ConnectFlags.ONE_SHOT) {}.close() }
+    val oneShotLeft = stale.getSignalConnectionList("renamed").size
+    val staleAwaits = List(5) { launch { stale.renamed.await() } }
+    val area = Area2D(GodotHandle(ObjectCalls.constructObject("Area2D")))
+    var shapeHits = 0
+    var nullBody = false
+    area.bodyShapeEntered.connect { _, body: Any?, _, _ ->
+      shapeHits++
+      nullBody = body == null
+    }
+    probe.call("emit_null_shape", area)
+
     launch {
       nextFrame()
       val deferredLater = deferred
@@ -129,6 +160,18 @@ class TypedSignalSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
       pair.emit(7L, "seven")
       ObjectCalls.destroyObject(doomed.handle.segment)
       nextFrame()
+      val awaitsConnected = stale.getSignalConnectionList("renamed").size
+      staleAwaits.forEach { it.cancel() }
+      nextFrame()
+      nextFrame()
+      val awaitsLeft = stale.getSignalConnectionList("renamed").size
+      System.err.println(
+        "[kanama:kt] TypedSignalSmoke review kept_event_alive=$keptAlive awaited_event_alive=$awaitedAlive " +
+          "one_shot_closed_left=$oneShotLeft awaits_connected=$awaitsConnected awaits_cancelled_left=$awaitsLeft " +
+          "null_body_hits=$shapeHits null_body=$nullBody"
+      )
+      ObjectCalls.destroyObject(stale.handle.segment)
+      ObjectCalls.destroyObject(area.handle.segment)
       typedConnection.close()
       deferredConnection.close()
       System.err.println(

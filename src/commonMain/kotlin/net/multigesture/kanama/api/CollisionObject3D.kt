@@ -372,9 +372,9 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /** Signal `input_event(camera: Node, event: InputEvent, event_position: Vector3, normal: Vector3, shape_idx: int)`; see [TypedSignal]. */
-    val inputEvent: Signal5<Node, InputEvent?, Vector3, Vector3, Long>
+    val inputEvent: Signal5<Node, InputEvent, Vector3, Vector3, Long>
         @JvmName("inputEventTypedSignal")
-        get() = Signal5(this, "input_event", SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.nullableObjectOf("InputEvent") { InputEvent(it) }, SignalArgType.valueOf<Vector3>("Vector3", Vector3::class), SignalArgType.valueOf<Vector3>("Vector3", Vector3::class), SignalArgType.LONG)
+        get() = Signal5(this, "input_event", SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.objectOf("InputEvent") { InputEvent(it) }, SignalArgType.valueOf<Vector3>("Vector3", Vector3::class), SignalArgType.valueOf<Vector3>("Vector3", Vector3::class), SignalArgType.LONG)
 
     /** Signal `mouse_entered()`; see [TypedSignal]. */
     val mouseEntered: Signal0

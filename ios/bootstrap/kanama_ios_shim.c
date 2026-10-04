@@ -10562,7 +10562,17 @@ static void kanama_ios_callable_trampoline(
         argc = 0;
     }
     if (argc > KANAMA_IOS_PTRCALL_MAX_ARGS) {
-        argc = KANAMA_IOS_PTRCALL_MAX_ARGS;
+        // Never truncate: a lambda would read the wrong arguments. A call error, loudly.
+        kanama_ios_fault(__func__, "too-many-arguments", "signal emission");
+        if (r_return != NULL) {
+            kanama_ios_init_nil_variant((GDExtensionUninitializedVariantPtr)r_return);
+        }
+        if (r_error != NULL) {
+            r_error->error = GDEXTENSION_CALL_ERROR_TOO_MANY_ARGUMENTS;
+            r_error->argument = 0;
+            r_error->expected = KANAMA_IOS_PTRCALL_MAX_ARGS;
+        }
+        return;
     }
     KanamaIosArgCells cells;
     kanama_ios_marshal_variant_args(p_args, argc, &cells);

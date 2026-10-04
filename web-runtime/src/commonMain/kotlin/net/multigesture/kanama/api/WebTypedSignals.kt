@@ -129,20 +129,20 @@ abstract class SignalArgType<T> internal constructor(
  */
 abstract class TypedSignal internal constructor(
   /** The object that emits this signal. */
-  val owner: GodotObject,
+  val emitter: GodotObject,
   /** Godot's name of the signal. */
   val name: String,
 ) {
   /** Connects this signal to the Godot-facing [method] on [target]. */
   fun connect(target: GodotObject, method: String): GodotError =
-    owner.connect(name, target, method, GodotObject.ConnectFlags(0L))
+    emitter.connect(name, target, method, GodotObject.ConnectFlags(0L))
 
   /** Connects this signal to [method] on [target] with [flags]. */
   fun connect(target: GodotObject, method: String, flags: GodotObject.ConnectFlags): GodotError =
-    owner.connect(name, target, method, flags)
+    emitter.connect(name, target, method, flags)
 
   /** The untyped handle for this signal. */
-  fun untyped(): GodotSignal = owner.signal(name)
+  fun untyped(): GodotSignal = emitter.signal(name)
 
   internal suspend fun <R> awaitWith(connect: (GodotObject.ConnectFlags, (R) -> Unit) -> SignalConnection): R =
     suspendCancellableCoroutine { continuation ->
@@ -161,41 +161,41 @@ abstract class TypedSignal internal constructor(
 }
 
 /** A signal without arguments. */
-class Signal0(owner: GodotObject, name: String) : TypedSignal(owner, name) {
+class Signal0(emitter: GodotObject, name: String) : TypedSignal(emitter, name) {
   /** Connects [callback], bound to [target]. */
   fun connect(target: GodotObject, callback: () -> Unit): SignalConnection =
     connect(target, GodotObject.ConnectFlags(0L), callback)
 
   /** Connects [callback], bound to [target], with [flags]. */
   fun connect(target: GodotObject, flags: GodotObject.ConnectFlags, callback: () -> Unit): SignalConnection =
-    owner.signal(name).connectPlainConnection(target, 0, flags, callback)
+    emitter.signal(name).connectPlainConnection(target, 0, flags, callback)
 
   /** Suspends until the signal fires. */
   suspend fun await() {
-    awaitWith<Unit> { flags, resume -> owner.signal(name).connectPlainConnection(owner, 0, flags) { resume(Unit) } }
+    awaitWith<Unit> { flags, resume -> emitter.signal(name).connectPlainConnection(emitter, 0, flags) { resume(Unit) } }
   }
 
   /** Emits the signal. */
   fun emit() {
-    owner.emitSignal(name)
+    emitter.emitSignal(name)
   }
 }
 
 /** A signal with one argument. */
-class Signal1<A>(owner: GodotObject, name: String, private val a: SignalArgType<A>) : TypedSignal(owner, name) {
+class Signal1<A>(emitter: GodotObject, name: String, private val a: SignalArgType<A>) : TypedSignal(emitter, name) {
   /** Connects [callback], bound to [target]. */
   fun connect(target: GodotObject, callback: (A) -> Unit): SignalConnection =
     connect(target, GodotObject.ConnectFlags(0L), callback)
 
   /** Connects [callback], bound to [target], with [flags]. */
   fun connect(target: GodotObject, flags: GodotObject.ConnectFlags, callback: (A) -> Unit): SignalConnection =
-    a.connect(owner.signal(name), target, flags, callback)
+    a.connect(emitter.signal(name), target, flags, callback)
 
   /** Suspends until the signal fires and returns its argument. */
-  suspend fun await(): A = awaitWith { flags, resume -> a.connect(owner.signal(name), owner, flags, resume) }
+  suspend fun await(): A = awaitWith { flags, resume -> a.connect(emitter.signal(name), emitter, flags, resume) }
 
   /** Emits the signal. */
   fun emit(a: A) {
-    owner.emitSignal(name, this.a.write(a))
+    emitter.emitSignal(name, this.a.write(a))
   }
 }

@@ -475,14 +475,14 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
     }
 
     /** Signal `body_shape_entered(body_rid: RID, body: Node2D, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
-    val bodyShapeEntered: Signal4<RID, Node2D, Long, Long>
+    val bodyShapeEntered: Signal4<RID, Node2D?, Long, Long>
         @JvmName("bodyShapeEnteredTypedSignal")
-        get() = Signal4(this, "body_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.objectOf("Node2D") { Node2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+        get() = Signal4(this, "body_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Node2D") { Node2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
 
     /** Signal `body_shape_exited(body_rid: RID, body: Node2D, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
-    val bodyShapeExited: Signal4<RID, Node2D, Long, Long>
+    val bodyShapeExited: Signal4<RID, Node2D?, Long, Long>
         @JvmName("bodyShapeExitedTypedSignal")
-        get() = Signal4(this, "body_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.objectOf("Node2D") { Node2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+        get() = Signal4(this, "body_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Node2D") { Node2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
 
     /** Signal `body_entered(body: Node2D)`; see [TypedSignal]. */
     val bodyEntered: Signal1<Node2D>
@@ -495,14 +495,14 @@ class Area2D(handle: GodotHandle) : CollisionObject2D(handle) {
         get() = Signal1(this, "body_exited", SignalArgType.objectOf("Node2D") { Node2D(it) })
 
     /** Signal `area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
-    val areaShapeEntered: Signal4<RID, Area2D, Long, Long>
+    val areaShapeEntered: Signal4<RID, Area2D?, Long, Long>
         @JvmName("areaShapeEnteredTypedSignal")
-        get() = Signal4(this, "area_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.objectOf("Area2D") { Area2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+        get() = Signal4(this, "area_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Area2D") { Area2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
 
     /** Signal `area_shape_exited(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
-    val areaShapeExited: Signal4<RID, Area2D, Long, Long>
+    val areaShapeExited: Signal4<RID, Area2D?, Long, Long>
         @JvmName("areaShapeExitedTypedSignal")
-        get() = Signal4(this, "area_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.objectOf("Area2D") { Area2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+        get() = Signal4(this, "area_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Area2D") { Area2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
 
     /** Signal `area_entered(area: Area2D)`; see [TypedSignal]. */
     val areaEntered: Signal1<Area2D>

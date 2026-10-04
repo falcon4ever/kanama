@@ -1643,16 +1643,16 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     /** Signal `window_input(event: InputEvent)`; see [TypedSignal]. */
-    val windowInput: Signal1<InputEvent?>
+    val windowInput: Signal1<InputEvent>
         @JvmName("windowInputTypedSignal")
-        get() = Signal1(this, "window_input", SignalArgType.nullableObjectOf("InputEvent") { InputEvent(it) })
+        get() = Signal1(this, "window_input", SignalArgType.objectOf("InputEvent") { InputEvent(it) })
 
     /** Signal `nonclient_window_input(event: InputEvent)`; see [TypedSignal]. */
-    val nonclientWindowInput: Signal1<InputEvent?>
+    val nonclientWindowInput: Signal1<InputEvent>
         @JvmName("nonclientWindowInputTypedSignal")
-        get() = Signal1(this, "nonclient_window_input", SignalArgType.nullableObjectOf("InputEvent") { InputEvent(it) })
+        get() = Signal1(this, "nonclient_window_input", SignalArgType.objectOf("InputEvent") { InputEvent(it) })
 
-    /** Signal `files_dropped(files: PackedStringArray)`; see [TypedSignal]. */
+    /** Signal `files_dropped(files: PackedStringArray)`; see [TypedSignal]. On iOS a PackedStringArray argument is not delivered yet: a connection reports a script error. */
     val filesDropped: Signal1<List<String>>
         @JvmName("filesDroppedTypedSignal")
         get() = Signal1(this, "files_dropped", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))

@@ -2408,9 +2408,9 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         get() = Signal0(this, "resized")
 
     /** Signal `gui_input(event: InputEvent)`; see [TypedSignal]. */
-    val guiInput: Signal1<InputEvent?>
+    val guiInput: Signal1<InputEvent>
         @JvmName("guiInputTypedSignal")
-        get() = Signal1(this, "gui_input", SignalArgType.nullableObjectOf("InputEvent") { InputEvent(it) })
+        get() = Signal1(this, "gui_input", SignalArgType.objectOf("InputEvent") { InputEvent(it) })
 
     /** Signal `mouse_entered()`; see [TypedSignal]. */
     val mouseEntered: Signal0

@@ -4,6 +4,7 @@ import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.ValueLayout.ADDRESS
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
+import net.multigesture.kanama.api.SignalArgWriter
 import net.multigesture.kanama.binding.ScriptBridge
 import net.multigesture.kanama.ffi.GodotFFI
 
@@ -74,6 +75,13 @@ internal actual object ObjectRuntime {
 
   actual fun emitSignal(segment: RawSegment, signal: String, args: List<Any?>) {
     Signals.emitAny(segment, signal, args)
+  }
+
+  actual fun beginEmit(segment: RawSegment, signal: String, argumentCount: Int): SignalArgWriter =
+    SignalEmitFrame.begin(segment.address(), signal, argumentCount)
+
+  actual fun finishEmit(writer: SignalArgWriter, send: Boolean) {
+    SignalEmitFrame.finish(writer as SignalEmitFrame, send)
   }
 
   // A value set on a Kanama-script owner before its Kotlin instance exists is recorded and

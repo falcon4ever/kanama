@@ -66,7 +66,7 @@ class ScriptEditorBase(handle: GodotHandle) : VBoxContainer(handle) {
         @JvmName("goToHelpTypedSignal")
         get() = Signal1(this, "go_to_help", SignalArgType.STRING)
 
-    /** Signal `request_save_previous_state(state: Dictionary)`; see [TypedSignal]. */
+    /** Signal `request_save_previous_state(state: Dictionary)`; see [TypedSignal]. On iOS a Dictionary argument is not delivered yet: a connection reports a script error. */
     val requestSavePreviousState: Signal1<Map<Any?, Any?>>
         @JvmName("requestSavePreviousStateTypedSignal")
         get() = Signal1(this, "request_save_previous_state", SignalArgType.valueOf<Map<Any?, Any?>>("Dictionary", Map::class))

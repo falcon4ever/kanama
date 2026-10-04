@@ -929,7 +929,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("duplicateNodesRequestTypedSignal")
         get() = Signal0(this, "duplicate_nodes_request")
 
-    /** Signal `delete_nodes_request(nodes: typedarray::StringName)`; see [TypedSignal]. */
+    /** Signal `delete_nodes_request(nodes: typedarray::StringName)`; see [TypedSignal]. On iOS a typedarray::StringName argument is not delivered yet: a connection reports a script error. */
     val deleteNodesRequest: Signal1<List<String>>
         @JvmName("deleteNodesRequestTypedSignal")
         get() = Signal1(this, "delete_nodes_request", SignalArgType.valueOf<List<String>>("typedarray::StringName", List::class))
@@ -944,7 +944,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("nodeDeselectedTypedSignal")
         get() = Signal1(this, "node_deselected", SignalArgType.objectOf("Node") { Node(it) })
 
-    /** Signal `frame_rect_changed(frame: GraphFrame, new_rect: Rect2)`; see [TypedSignal]. */
+    /** Signal `frame_rect_changed(frame: GraphFrame, new_rect: Rect2)`; see [TypedSignal]. On iOS a Rect2 argument is not delivered yet: a connection reports a script error. */
     val frameRectChanged: Signal2<GraphFrame, Rect2>
         @JvmName("frameRectChangedTypedSignal")
         get() = Signal2(this, "frame_rect_changed", SignalArgType.objectOf("GraphFrame") { GraphFrame(it) }, SignalArgType.valueOf<Rect2>("Rect2", Rect2::class))
@@ -964,7 +964,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("endNodeMoveTypedSignal")
         get() = Signal0(this, "end_node_move")
 
-    /** Signal `graph_elements_linked_to_frame_request(elements: Array, frame: StringName)`; see [TypedSignal]. */
+    /** Signal `graph_elements_linked_to_frame_request(elements: Array, frame: StringName)`; see [TypedSignal]. On iOS a Array argument is not delivered yet: a connection reports a script error. */
     val graphElementsLinkedToFrameRequest: Signal2<List<Any?>, String>
         @JvmName("graphElementsLinkedToFrameRequestTypedSignal")
         get() = Signal2(this, "graph_elements_linked_to_frame_request", SignalArgType.valueOf<List<Any?>>("Array", List::class), SignalArgType.STRING)

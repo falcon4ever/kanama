@@ -4,6 +4,7 @@ import kotlin.coroutines.resume
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import net.multigesture.kanama.binding.runtime.ObjectRuntime
 
 /**
  * The arguments of one signal emission, as the platform received them (task 134 D4). Desktop and
@@ -49,6 +50,25 @@ internal interface SignalArgReader {
 internal class SignalArgumentException(message: String, cause: Throwable? = null) :
   IllegalArgumentException(message, cause)
 
+/**
+ * Where a typed signal's `emit(…)` writes its arguments (task 134 C review S5): desktop and Android
+ * build Godot's Variants in place in a per-thread native frame, iOS collects them for its emit path.
+ */
+internal interface SignalArgWriter {
+  fun long(index: Int, value: Long)
+
+  fun double(index: Int, value: Double)
+
+  fun bool(index: Int, value: Boolean)
+
+  fun string(index: Int, value: String)
+
+  fun obj(index: Int, value: GodotObject?)
+
+  /** Any other value, encoded as `emit_signal`'s untyped path encodes it. */
+  fun value(index: Int, value: Any?)
+}
+
 /** Wraps an emitted object handle in its Kotlin wrapper class. */
 fun interface SignalObjectWrapper<out T> {
   fun wrap(handle: GodotHandle): T?
@@ -74,6 +94,14 @@ abstract class SignalArgType<T> internal constructor(
   /** The value handed to Godot's `emit_signal`. */
   internal open fun write(value: T): Any? = value
 
+  /** Writes [value] as emission argument [index]. */
+  internal open fun put(writer: SignalArgWriter, index: Int, value: T) {
+    when (val raw = write(value)) {
+      is GodotObject -> writer.obj(index, raw)
+      else -> writer.value(index, raw)
+    }
+  }
+
   override fun toString(): String = "SignalArgType($godotType)"
 
   companion object {
@@ -81,24 +109,32 @@ abstract class SignalArgType<T> internal constructor(
     val LONG: SignalArgType<Long> =
       object : SignalArgType<Long>("int") {
         override fun read(args: SignalArgReader, index: Int): Long = args.long(index)
+
+        override fun put(writer: SignalArgWriter, index: Int, value: Long) = writer.long(index, value)
       }
 
     /** Godot `float`. */
     val DOUBLE: SignalArgType<Double> =
       object : SignalArgType<Double>("float") {
         override fun read(args: SignalArgReader, index: Int): Double = args.double(index)
+
+        override fun put(writer: SignalArgWriter, index: Int, value: Double) = writer.double(index, value)
       }
 
     /** Godot `bool`. */
     val BOOLEAN: SignalArgType<Boolean> =
       object : SignalArgType<Boolean>("bool") {
         override fun read(args: SignalArgReader, index: Int): Boolean = args.bool(index)
+
+        override fun put(writer: SignalArgWriter, index: Int, value: Boolean) = writer.bool(index, value)
       }
 
     /** Godot `String` or `StringName`. */
     val STRING: SignalArgType<String> =
       object : SignalArgType<String>("String") {
         override fun read(args: SignalArgReader, index: Int): String = args.string(index)
+
+        override fun put(writer: SignalArgWriter, index: Int, value: String) = writer.string(index, value)
       }
 
     /** An untyped (`Variant`) argument, decoded as `GodotObject.call` decodes a return. */
@@ -108,9 +144,15 @@ abstract class SignalArgType<T> internal constructor(
       }
 
     /**
-     * An object argument wrapped by [wrap] (`SignalArgType.objectOf { Node2D.fromHandle(it) }`).
-     * The wrapper borrows the object, like a registered function's object argument. A null object
-     * throws: use [nullableObjectOf] where the signal can emit `null`.
+     * An object argument wrapped by [wrap] (`SignalArgType.objectOf("Node2D") { Node2D(it) }`). A
+     * null object throws: use [nullableObjectOf] where the signal can emit `null`.
+     *
+     * A `RefCounted` argument (an `InputEvent`, a `Resource`) is OWNED: the wrapper takes a
+     * reference of its own (task 132: `close()` it, or the garbage collector releases it), because
+     * the value can outlive the emission -- a lambda keeps it (GDScript `kept = event`) and
+     * `await()` resumes a frame later, when Godot has dropped its own reference. Any other object
+     * (a `Node`) is a view, as in GDScript: a node freed in the frame its signal fired is gone by
+     * the time `await()` resumes, and a call through it reports the freed object.
      */
     fun <T : Any> objectOf(godotType: String, wrap: SignalObjectWrapper<T>): SignalArgType<T> =
       object : SignalArgType<T>(godotType) {
@@ -118,17 +160,23 @@ abstract class SignalArgType<T> internal constructor(
           val handle =
             args.objectHandle(index)
               ?: throw SignalArgumentException("argument ${index + 1}: expected $godotType, got null")
-          return wrap.wrap(handle)
+          return owning(wrap.wrap(handle))
             ?: throw SignalArgumentException("argument ${index + 1}: expected $godotType, got null")
         }
       }
 
-    /** An object argument that may be `null`. */
+    /** An object argument that may be `null`; ownership as for [objectOf]. */
     fun <T : Any> nullableObjectOf(godotType: String, wrap: SignalObjectWrapper<T>): SignalArgType<T?> =
       object : SignalArgType<T?>(godotType) {
         override fun read(args: SignalArgReader, index: Int): T? =
-          args.objectHandle(index)?.let { wrap.wrap(it) }
+          args.objectHandle(index)?.let { owning(wrap.wrap(it)) }
       }
+
+    /** A `RefCounted` wrapper takes its own reference (see [objectOf]); others pass through. */
+    private fun <T> owning(value: T): T {
+      if (value is RefCounted) RefCounted.retained(value)
+      return value
+    }
 
     /**
      * A Godot enum or bitfield carried as `int`, wrapped in its generated value class
@@ -139,6 +187,8 @@ abstract class SignalArgType<T> internal constructor(
         override fun read(args: SignalArgReader, index: Int): E = wrap(args.long(index))
 
         override fun write(value: E): Any? = raw(value)
+
+        override fun put(writer: SignalArgWriter, index: Int, value: E) = writer.long(index, raw(value))
       }
 
     /**
@@ -174,40 +224,40 @@ abstract class SignalArgType<T> internal constructor(
  */
 abstract class TypedSignal internal constructor(
   /** The object that emits this signal. */
-  val owner: GodotObject,
+  val emitter: GodotObject,
   /** Godot's name of the signal (`"body_entered"`). */
   val name: String,
   private val argumentCount: Int,
 ) {
   /** Connects this signal to the Godot-facing [method] on [target]; returns Godot's `Error`. */
   fun connect(target: GodotObject, method: String): GodotError =
-    owner.connect(name, target, method, GodotObject.ConnectFlags(0L))
+    emitter.connect(name, target, method, GodotObject.ConnectFlags(0L))
 
   /** Connects this signal to the Godot-facing [method] on [target] with [flags]. */
   fun connect(target: GodotObject, method: String, flags: GodotObject.ConnectFlags): GodotError =
-    owner.connect(name, target, method, flags)
+    emitter.connect(name, target, method, flags)
 
   /** Disconnects the [target]/[method] connection made by `connect(target, method)`. */
   fun disconnect(target: GodotObject, method: String) {
-    owner.disconnect(name, target, method)
+    emitter.disconnect(name, target, method)
   }
 
   /** Whether [target]'s [method] is connected to this signal. */
   fun isConnected(target: GodotObject, method: String): Boolean =
-    owner.isConnected(name, target, method)
+    emitter.isConnected(name, target, method)
 
   /** Whether anything is connected to this signal (Godot `Object.has_connections`). */
-  fun hasConnections(): Boolean = owner.hasConnections(name)
+  fun hasConnections(): Boolean = emitter.hasConnections(name)
 
   /** The untyped handle for this signal. */
-  fun untyped(): GodotSignal = owner.signal(name)
+  fun untyped(): GodotSignal = emitter.signal(name)
 
   internal fun connectArgs(
     target: GodotObject,
     flags: GodotObject.ConnectFlags,
     dispatch: (SignalArgReader) -> Unit,
   ): SignalConnection =
-    owner.signal(name).connectArgs(target, argumentCount, flags, null) { args ->
+    emitter.signal(name).connectArgs(target, argumentCount, flags, null) { args ->
       try {
         dispatch(args)
       } catch (e: SignalArgumentException) {
@@ -224,10 +274,10 @@ abstract class TypedSignal internal constructor(
   internal suspend fun <R> awaitArgs(decode: (SignalArgReader) -> R): R =
     suspendCancellableCoroutine { continuation ->
       val connection =
-        owner
+        emitter
           .signal(name)
           .connectArgs(
-            owner,
+            emitter,
             argumentCount,
             GodotObject.ConnectFlags.ONE_SHOT,
             onRelease = {
@@ -260,17 +310,28 @@ abstract class TypedSignal internal constructor(
       }
     }
 
-  internal fun emitArgs(vararg args: Any?) {
-    owner.emitSignal(name, *args)
+  /**
+   * Emits with [argumentCount] arguments written by [fill] straight into the platform's emission
+   * frame: no argument list, no boxing beyond the generic parameters (task 134 C review S5).
+   */
+  internal inline fun emitWith(fill: (SignalArgWriter) -> Unit) {
+    val writer = ObjectRuntime.beginEmit(emitter.segment, name, argumentCount)
+    var send = false
+    try {
+      fill(writer)
+      send = true
+    } finally {
+      ObjectRuntime.finishEmit(writer, send)
+    }
   }
 
-  override fun toString(): String = "Signal($name on $owner)"
+  override fun toString(): String = "Signal($name on $emitter)"
 }
 
 private val NO_FLAGS = GodotObject.ConnectFlags(0L)
 
 /** A signal without arguments (`Timer.timeout`, `BaseButton.pressed`). See [TypedSignal]. */
-class Signal0(owner: GodotObject, name: String) : TypedSignal(owner, name, 0) {
+class Signal0(emitter: GodotObject, name: String) : TypedSignal(emitter, name, 0) {
   /** Connects [callback], bound to [target]. */
   fun connect(target: GodotObject, callback: () -> Unit): SignalConnection = connect(target, NO_FLAGS, callback)
 
@@ -285,13 +346,13 @@ class Signal0(owner: GodotObject, name: String) : TypedSignal(owner, name, 0) {
 
   /** Emits the signal. */
   fun emit() {
-    emitArgs()
+    emitWith {}
   }
 }
 
 /** A signal with one argument (`Area2D.bodyEntered: Signal1<Node2D>`). See [TypedSignal]. */
-class Signal1<A>(owner: GodotObject, name: String, private val a: SignalArgType<A>) :
-  TypedSignal(owner, name, 1) {
+class Signal1<A>(emitter: GodotObject, name: String, private val a: SignalArgType<A>) :
+  TypedSignal(emitter, name, 1) {
   /** Connects [callback], bound to [target]. */
   fun connect(target: GodotObject, callback: (A) -> Unit): SignalConnection = connect(target, NO_FLAGS, callback)
 
@@ -304,17 +365,17 @@ class Signal1<A>(owner: GodotObject, name: String, private val a: SignalArgType<
 
   /** Emits the signal. */
   fun emit(a: A) {
-    emitArgs(this.a.write(a))
+    emitWith { w -> this.a.put(w, 0, a) }
   }
 }
 
 /** A signal with two arguments. See [TypedSignal]; [await] returns a [SignalArgs2] to destructure. */
 class Signal2<A, B>(
-  owner: GodotObject,
+  emitter: GodotObject,
   name: String,
   private val a: SignalArgType<A>,
   private val b: SignalArgType<B>,
-) : TypedSignal(owner, name, 2) {
+) : TypedSignal(emitter, name, 2) {
   /** Connects [callback], bound to [target]. */
   fun connect(target: GodotObject, callback: (A, B) -> Unit): SignalConnection = connect(target, NO_FLAGS, callback)
 
@@ -327,18 +388,21 @@ class Signal2<A, B>(
 
   /** Emits the signal. */
   fun emit(a: A, b: B) {
-    emitArgs(this.a.write(a), this.b.write(b))
+    emitWith { w ->
+      this.a.put(w, 0, a)
+      this.b.put(w, 1, b)
+    }
   }
 }
 
 /** A signal with three arguments. See [TypedSignal]. */
 class Signal3<A, B, C>(
-  owner: GodotObject,
+  emitter: GodotObject,
   name: String,
   private val a: SignalArgType<A>,
   private val b: SignalArgType<B>,
   private val c: SignalArgType<C>,
-) : TypedSignal(owner, name, 3) {
+) : TypedSignal(emitter, name, 3) {
   /** Connects [callback], bound to [target]. */
   fun connect(target: GodotObject, callback: (A, B, C) -> Unit): SignalConnection =
     connect(target, NO_FLAGS, callback)
@@ -353,19 +417,23 @@ class Signal3<A, B, C>(
 
   /** Emits the signal. */
   fun emit(a: A, b: B, c: C) {
-    emitArgs(this.a.write(a), this.b.write(b), this.c.write(c))
+    emitWith { w ->
+      this.a.put(w, 0, a)
+      this.b.put(w, 1, b)
+      this.c.put(w, 2, c)
+    }
   }
 }
 
 /** A signal with four arguments. See [TypedSignal]. */
 class Signal4<A, B, C, D>(
-  owner: GodotObject,
+  emitter: GodotObject,
   name: String,
   private val a: SignalArgType<A>,
   private val b: SignalArgType<B>,
   private val c: SignalArgType<C>,
   private val d: SignalArgType<D>,
-) : TypedSignal(owner, name, 4) {
+) : TypedSignal(emitter, name, 4) {
   /** Connects [callback], bound to [target]. */
   fun connect(target: GodotObject, callback: (A, B, C, D) -> Unit): SignalConnection =
     connect(target, NO_FLAGS, callback)
@@ -386,20 +454,25 @@ class Signal4<A, B, C, D>(
 
   /** Emits the signal. */
   fun emit(a: A, b: B, c: C, d: D) {
-    emitArgs(this.a.write(a), this.b.write(b), this.c.write(c), this.d.write(d))
+    emitWith { w ->
+      this.a.put(w, 0, a)
+      this.b.put(w, 1, b)
+      this.c.put(w, 2, c)
+      this.d.put(w, 3, d)
+    }
   }
 }
 
 /** A signal with five arguments. See [TypedSignal]. */
 class Signal5<A, B, C, D, E>(
-  owner: GodotObject,
+  emitter: GodotObject,
   name: String,
   private val a: SignalArgType<A>,
   private val b: SignalArgType<B>,
   private val c: SignalArgType<C>,
   private val d: SignalArgType<D>,
   private val e: SignalArgType<E>,
-) : TypedSignal(owner, name, 5) {
+) : TypedSignal(emitter, name, 5) {
   /** Connects [callback], bound to [target]. */
   fun connect(target: GodotObject, callback: (A, B, C, D, E) -> Unit): SignalConnection =
     connect(target, NO_FLAGS, callback)
@@ -422,7 +495,13 @@ class Signal5<A, B, C, D, E>(
 
   /** Emits the signal. */
   fun emit(a: A, b: B, c: C, d: D, e: E) {
-    emitArgs(this.a.write(a), this.b.write(b), this.c.write(c), this.d.write(d), this.e.write(e))
+    emitWith { w ->
+      this.a.put(w, 0, a)
+      this.b.put(w, 1, b)
+      this.c.put(w, 2, c)
+      this.d.put(w, 3, d)
+      this.e.put(w, 4, e)
+    }
   }
 }
 

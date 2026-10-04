@@ -134,14 +134,14 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     }
 
     /** Signal `pose_changed(pose: XRPose)`; see [TypedSignal]. */
-    val poseChanged: Signal1<XRPose?>
+    val poseChanged: Signal1<XRPose>
         @JvmName("poseChangedTypedSignal")
-        get() = Signal1(this, "pose_changed", SignalArgType.nullableObjectOf("XRPose") { XRPose(it) })
+        get() = Signal1(this, "pose_changed", SignalArgType.objectOf("XRPose") { XRPose(it) })
 
     /** Signal `pose_lost_tracking(pose: XRPose)`; see [TypedSignal]. */
-    val poseLostTracking: Signal1<XRPose?>
+    val poseLostTracking: Signal1<XRPose>
         @JvmName("poseLostTrackingTypedSignal")
-        get() = Signal1(this, "pose_lost_tracking", SignalArgType.nullableObjectOf("XRPose") { XRPose(it) })
+        get() = Signal1(this, "pose_lost_tracking", SignalArgType.objectOf("XRPose") { XRPose(it) })
 
     /** Signal `button_pressed(action_name: String)`; see [TypedSignal]. */
     val buttonPressed: Signal1<String>

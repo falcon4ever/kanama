@@ -316,7 +316,7 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
         ObjectCalls.ptrcallWithStringAndIntArg(setHttpsProxyBind, segment, host, port)
     }
 
-    /** Signal `request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray)`; see [TypedSignal]. */
+    /** Signal `request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray)`; see [TypedSignal]. On iOS a PackedByteArray/PackedStringArray argument is not delivered yet: a connection reports a script error. */
     val requestCompleted: Signal4<Long, Long, List<String>, ByteArray>
         @JvmName("requestCompletedTypedSignal")
         get() = Signal4(this, "request_completed", SignalArgType.LONG, SignalArgType.LONG, SignalArgType.valueOf<List<String>>("PackedStringArray", List::class), SignalArgType.valueOf<ByteArray>("PackedByteArray", ByteArray::class))

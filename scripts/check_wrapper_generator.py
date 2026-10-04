@@ -753,6 +753,28 @@ def check_typed_signals() -> int:
         for prop, got in hits:
             if got != n or (name is not None and prop != name):
                 wrong.append(f"{cls}.{signal}: {prop}: Signal{got} (expected {name}: Signal{n})")
+    # The nullability/type tables must name real object arguments (a Godot upgrade that renames a
+    # signal or moves an argument must not leave a silent no-op entry).
+    from generate_api_wrapper import (
+        SIGNAL_ARG_TYPE_OVERRIDES,
+        SIGNAL_NON_NULL_RESOURCE_ARGS,
+        SIGNAL_NULLABLE_OBJECT_ARGS,
+    )
+
+    declared = {
+        (cls["name"], sig["name"], index): arg["type"]
+        for cls in raw.get("classes", [])
+        for sig in cls.get("signals") or []
+        for index, arg in enumerate(sig.get("arguments") or [])
+    }
+    for table_name, table in (
+        ("SIGNAL_NULLABLE_OBJECT_ARGS", SIGNAL_NULLABLE_OBJECT_ARGS),
+        ("SIGNAL_NON_NULL_RESOURCE_ARGS", SIGNAL_NON_NULL_RESOURCE_ARGS),
+        ("SIGNAL_ARG_TYPE_OVERRIDES", SIGNAL_ARG_TYPE_OVERRIDES),
+    ):
+        for key in table:
+            if declared.get(key) not in api_classes:
+                wrong.append(f"{table_name} entry {key} is not an object argument of the API")
     if missing or wrong:
         for line in missing:
             print(f"[wrapper_generator] FAIL typed signal missing: {line}", file=sys.stderr)

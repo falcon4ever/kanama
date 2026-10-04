@@ -415,7 +415,7 @@ class EditorProperty(handle: GodotHandle) : Container(handle) {
         @JvmName("propertyChangedTypedSignal")
         get() = Signal4(this, "property_changed", SignalArgType.STRING, SignalArgType.VARIANT, SignalArgType.STRING, SignalArgType.BOOLEAN)
 
-    /** Signal `multiple_properties_changed(properties: PackedStringArray, value: Array)`; see [TypedSignal]. */
+    /** Signal `multiple_properties_changed(properties: PackedStringArray, value: Array)`; see [TypedSignal]. On iOS a Array/PackedStringArray argument is not delivered yet: a connection reports a script error. */
     val multiplePropertiesChanged: Signal2<List<String>, List<Any?>>
         @JvmName("multiplePropertiesChangedTypedSignal")
         get() = Signal2(this, "multiple_properties_changed", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class), SignalArgType.valueOf<List<Any?>>("Array", List::class))

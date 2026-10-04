@@ -97,6 +97,9 @@ object NativeCallSurface {
       "one_pointer_void" to FunctionDescriptor.ofVoid(ADDRESS),
       // variant_new_copy, string[_name]_new_with_utf8_chars, classdb_unregister_extension_class,
       // every variant from/to-type constructor and every builtin ptr constructor
+      // variant_new_nil / variant_destroy on an address held as a long: a typed signal emission
+      // builds its Variants in a per-thread frame (task 134 C review S5)
+      "one_address_void" to FunctionDescriptor.ofVoid(JAVA_LONG),
       "two_pointer_void" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS),
       // variant-to-type constructors on addresses held as longs (the typed signal reader, task 134)
       "two_address_void" to FunctionDescriptor.ofVoid(JAVA_LONG, JAVA_LONG),
@@ -105,6 +108,9 @@ object NativeCallSurface {
       "three_pointer_void" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS),
       // object_method_bind_ptrcall, classdb_register_extension_class6
       "ptrcall" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, ADDRESS),
+      // object_method_bind_call (Object.emit_signal) with every pointer as a long (task 134 C S5)
+      "method_bind_call_by_address" to
+        FunctionDescriptor.ofVoid(JAVA_LONG, JAVA_LONG, JAVA_LONG, JAVA_LONG, JAVA_LONG, JAVA_LONG),
       // classdb_register_extension_class_property
       "register_property" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, ADDRESS, ADDRESS),
       // classdb_register_extension_class_signal

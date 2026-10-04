@@ -36,9 +36,9 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /** Signal `completed(result: OpenXRFutureResult)`; see [TypedSignal]. */
-    val completed: Signal1<OpenXRFutureResult?>
+    val completed: Signal1<Any?>
         @JvmName("completedTypedSignal")
-        get() = Signal1(this, "completed", SignalArgType.nullableObjectOf("OpenXRFutureResult") { OpenXRFutureResult(it) })
+        get() = Signal1(this, "completed", SignalArgType.VARIANT)
 
     object Signals {
         const val completed: String = "completed"

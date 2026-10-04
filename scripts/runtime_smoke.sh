@@ -586,6 +586,9 @@ check "unregistered [0-9]+ extension class\\(es\\)"
 # task 134 D4 -- typed engine signals (typed_signal_smoke.tscn)
 check "TypedSignalSmoke sync typed_connect=true one_shot=1 receiver_freed_fired=0 emit_kotlin=\\(1\\.5, -2\\.0\\);3;hi emit_gdscript=\\(1\\.5, -2\\.0\\);3;hi;5,2,4 from_gdscript=\\(0\\.5, 4\\.0\\);1;from_gd wrong_type_skipped=true deferred_immediate=0"
 check "signal 'kanama_typed': argument 1: expected Vector2, got Long"
+# task 134 C review: P1 a RefCounted argument kept past its emission / returned by await is owned;
+# P2 a closed one-shot and cancelled awaits leave no connection; P6 a null body reaches the lambda.
+check "TypedSignalSmoke review kept_event_alive=true awaited_event_alive=true one_shot_closed_left=0 awaits_connected=5 awaits_cancelled_left=0 null_body_hits=1 null_body=true"
 check "TypedSignalSmoke async deferred_later=1 await_signal0=true await_pair=7,seven await_cancelled_on_free=true released=true"
 # task 133 -- script authoring like GDScript (script_access_smoke.tscn)
 check "ScriptAccessSmoke sync before_ready=true node=true wrong_type=true missing=true script=true no_script=true is_script=true as_script=true cast=true require_as=true preload=true preload_wrong=true instantiate=true tree=true orphan_tree=true"

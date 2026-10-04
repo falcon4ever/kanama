@@ -77,9 +77,9 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
         get() = Signal3(this, "ice_candidate_created", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.STRING)
 
     /** Signal `data_channel_received(channel: WebRTCDataChannel)`; see [TypedSignal]. */
-    val dataChannelReceived: Signal1<WebRTCDataChannel?>
+    val dataChannelReceived: Signal1<WebRTCDataChannel>
         @JvmName("dataChannelReceivedTypedSignal")
-        get() = Signal1(this, "data_channel_received", SignalArgType.nullableObjectOf("WebRTCDataChannel") { WebRTCDataChannel(it) })
+        get() = Signal1(this, "data_channel_received", SignalArgType.objectOf("WebRTCDataChannel") { WebRTCDataChannel(it) })
 
     object Signals {
         const val sessionDescriptionCreated: String = "session_description_created"

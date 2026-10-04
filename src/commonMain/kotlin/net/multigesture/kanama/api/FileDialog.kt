@@ -608,7 +608,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         @JvmName("fileSelectedTypedSignal")
         get() = Signal1(this, "file_selected", SignalArgType.STRING)
 
-    /** Signal `files_selected(paths: PackedStringArray)`; see [TypedSignal]. */
+    /** Signal `files_selected(paths: PackedStringArray)`; see [TypedSignal]. On iOS a PackedStringArray argument is not delivered yet: a connection reports a script error. */
     val filesSelected: Signal1<List<String>>
         @JvmName("filesSelectedTypedSignal")
         get() = Signal1(this, "files_selected", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))

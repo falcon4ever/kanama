@@ -177,7 +177,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
         @JvmName("peerAuthenticationFailedTypedSignal")
         get() = Signal1(this, "peer_authentication_failed", SignalArgType.LONG)
 
-    /** Signal `peer_packet(id: int, packet: PackedByteArray)`; see [TypedSignal]. */
+    /** Signal `peer_packet(id: int, packet: PackedByteArray)`; see [TypedSignal]. On iOS a PackedByteArray argument is not delivered yet: a connection reports a script error. */
     val peerPacket: Signal2<Long, ByteArray>
         @JvmName("peerPacketTypedSignal")
         get() = Signal2(this, "peer_packet", SignalArgType.LONG, SignalArgType.valueOf<ByteArray>("PackedByteArray", ByteArray::class))

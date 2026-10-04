@@ -1080,12 +1080,12 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
         @JvmName("targetReachedTypedSignal")
         get() = Signal0(this, "target_reached")
 
-    /** Signal `waypoint_reached(details: Dictionary)`; see [TypedSignal]. */
+    /** Signal `waypoint_reached(details: Dictionary)`; see [TypedSignal]. On iOS a Dictionary argument is not delivered yet: a connection reports a script error. */
     val waypointReached: Signal1<Map<Any?, Any?>>
         @JvmName("waypointReachedTypedSignal")
         get() = Signal1(this, "waypoint_reached", SignalArgType.valueOf<Map<Any?, Any?>>("Dictionary", Map::class))
 
-    /** Signal `link_reached(details: Dictionary)`; see [TypedSignal]. */
+    /** Signal `link_reached(details: Dictionary)`; see [TypedSignal]. On iOS a Dictionary argument is not delivered yet: a connection reports a script error. */
     val linkReached: Signal1<Map<Any?, Any?>>
         @JvmName("linkReachedTypedSignal")
         get() = Signal1(this, "link_reached", SignalArgType.valueOf<Map<Any?, Any?>>("Dictionary", Map::class))

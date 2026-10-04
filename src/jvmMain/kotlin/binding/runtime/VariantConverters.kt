@@ -79,6 +79,22 @@ object VariantConverters {
       )
     }
 
+  private val fromTypeByAddress = ConcurrentHashMap<Int, MethodHandle>()
+
+  /** `variant_from_type` for [type] on `long` addresses, `(long variant_out, long typed_in)`. */
+  fun variantFromTypeByAddress(type: VariantType): MethodHandle =
+    fromTypeByAddress.getOrPut(type.id) {
+      val addr = getFromTypeCtor.invoke(type.id) as MemorySegment
+      check(addr.address() != 0L) {
+        "get_variant_from_type_constructor(${type.name}) returned NULL"
+      }
+      GodotFFI.downcallHandle(
+        addr,
+        FunctionDescriptor.ofVoid(JAVA_LONG, JAVA_LONG),
+        "variant_from_type_constructor_by_address",
+      )
+    }
+
   /** `variant_get_type` on a Variant address held as a `long` (task 134 D4). */
   val variantTypeByAddress: MethodHandle by lazy {
     GodotFFI.lookup("variant_get_type", FunctionDescriptor.of(JAVA_INT, JAVA_LONG))

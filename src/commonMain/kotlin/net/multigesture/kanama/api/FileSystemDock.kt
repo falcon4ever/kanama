@@ -45,7 +45,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
         @JvmName("inheritTypedSignal")
         get() = Signal1(this, "inherit", SignalArgType.STRING)
 
-    /** Signal `instantiate(files: PackedStringArray)`; see [TypedSignal]. */
+    /** Signal `instantiate(files: PackedStringArray)`; see [TypedSignal]. On iOS a PackedStringArray argument is not delivered yet: a connection reports a script error. */
     val instantiate: Signal1<List<String>>
         @JvmName("instantiateTypedSignal")
         get() = Signal1(this, "instantiate", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))

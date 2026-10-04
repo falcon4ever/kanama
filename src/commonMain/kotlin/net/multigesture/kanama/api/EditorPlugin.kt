@@ -531,9 +531,9 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
     }
 
     /** Signal `scene_changed(scene_root: Node)`; see [TypedSignal]. */
-    val sceneChanged: Signal1<Node>
+    val sceneChanged: Signal1<Node?>
         @JvmName("sceneChangedTypedSignal")
-        get() = Signal1(this, "scene_changed", SignalArgType.objectOf("Node") { Node(it) })
+        get() = Signal1(this, "scene_changed", SignalArgType.nullableObjectOf("Node") { Node(it) })
 
     /** Signal `scene_closed(filepath: String)`; see [TypedSignal]. */
     val sceneClosed: Signal1<String>

@@ -3138,6 +3138,18 @@ SIGNAL_VALUE_TYPES: dict[str, tuple[str, str]] = {
     "typedarray::String": ("List<String>", "List::class"),
 }
 
+# Argument types the iOS shim does not marshal for a signal lambda yet (its PT-tagged cells carry
+# scalars, String/StringName/NodePath, Vector2/2i/3, Color, RID and objects): such a signal's typed
+# accessor says so in its KDoc, and the iOS reader reports the type by name (task 134 C review).
+IOS_UNMARSHALLED_SIGNAL_TYPES = {
+    "Dictionary",
+    "Array",
+    "PackedStringArray",
+    "PackedByteArray",
+    "Rect2",
+    "typedarray::StringName",
+}
+
 _HAND_MEMBER_CACHE: dict[str, set[str]] | None = None
 
 
@@ -3260,8 +3272,57 @@ def _signal_object_wrapper(type_name: str, wrapper_classes: set[str], api_classe
     return "GodotObject", "Object"
 
 
-def signal_arg_type(type_name: str, wrapper_classes: set[str], api_classes: dict[str, ApiClass]) -> tuple[str, str, set[str]]:
+# Nullability of emitted objects (task 134 C review S2). By default an object argument is non-null
+# unless it is Resource-like (the parameter policy); these tables record what Godot's source
+# actually emits, from a scan of every `emit_signal` site that passes an object argument
+# (Godot 4.7.2, `scene/`, `servers/`, `editor/`, `modules/`, `core/`):
+#   * SIGNAL_NULLABLE_OBJECT_ARGS -- non-Resource arguments Godot emits as null.
+#   * SIGNAL_NON_NULL_RESOURCE_ARGS -- Resource-like arguments Godot never emits as null.
+#   * SIGNAL_ARG_TYPE_OVERRIDES -- arguments whose emitted value is not the declared type.
+# Keyed by (declaring class, signal, argument index).
+SIGNAL_NULLABLE_OBJECT_ARGS: dict[tuple[str, str, int], str] = {
+    # `_body_inout` / `_area_inout` emit `(Node *)nullptr` for a body/area without an instance, and
+    # the exit path emits `obj` when the node is already gone (area_2d.cpp:177-179, 218-240,
+    # 288-290, 329-351; area_3d.cpp:234-236, 275-297, 440-442, 481-503).
+    ("Area2D", "body_shape_entered", 1): "area_2d.cpp:177/218",
+    ("Area2D", "body_shape_exited", 1): "area_2d.cpp:179/240",
+    ("Area2D", "area_shape_entered", 1): "area_2d.cpp:288/329",
+    ("Area2D", "area_shape_exited", 1): "area_2d.cpp:290/351",
+    ("Area3D", "body_shape_entered", 1): "area_3d.cpp:234/275",
+    ("Area3D", "body_shape_exited", 1): "area_3d.cpp:236/297",
+    ("Area3D", "area_shape_entered", 1): "area_3d.cpp:440/481",
+    ("Area3D", "area_shape_exited", 1): "area_3d.cpp:442/503",
+    # "If this scene is new and empty, the argument will be null" (editor_plugin.cpp:268).
+    ("EditorPlugin", "scene_changed", 0): "editor_plugin.cpp:268",
+}
+SIGNAL_NON_NULL_RESOURCE_ARGS: dict[tuple[str, str, int], str] = {
+    ("Control", "gui_input", 0): "control.cpp:2525 (the event being dispatched)",
+    ("CollisionObject2D", "input_event", 1): "collision_object_2d.cpp:542",
+    ("CollisionObject3D", "input_event", 1): "collision_object_3d.cpp:299",
+    ("Window", "window_input", 0): "window.cpp:2025",
+    ("Window", "nonclient_window_input", 0): "window.cpp:2011",
+    ("GDExtensionManager", "extension_loaded", 0): "gdextension_manager.cpp:69",
+    ("GDExtensionManager", "extension_unloading", 0): "gdextension_manager.cpp:84",
+    ("WebRTCPeerConnection", "data_channel_received", 0): "webrtc_peer_connection_js.cpp:70 (a new channel)",
+    ("XRPositionalTracker", "pose_changed", 0): "xr_positional_tracker.cpp:129",
+    ("XRPositionalTracker", "pose_lost_tracking", 0): "xr_positional_tracker.cpp:108",
+}
+SIGNAL_ARG_TYPE_OVERRIDES: dict[tuple[str, str, int], str] = {
+    # Declared OpenXRFutureResult, emitted as the future's result value, nil when cancelled
+    # (openxr_future_extension.cpp:63/74).
+    ("OpenXRFutureResult", "completed", 0): "Variant",
+}
+
+
+def signal_arg_type(
+    type_name: str,
+    wrapper_classes: set[str],
+    api_classes: dict[str, ApiClass],
+    key: tuple[str, str, int] | None = None,
+) -> tuple[str, str, set[str]]:
     """(Kotlin type, SignalArgType expression, imports) for one engine signal argument type."""
+    if key is not None and key in SIGNAL_ARG_TYPE_OVERRIDES:
+        type_name = SIGNAL_ARG_TYPE_OVERRIDES[key]
     if type_name == "int":
         return "Long", "SignalArgType.LONG", set()
     if type_name == "float":
@@ -3282,7 +3343,12 @@ def signal_arg_type(type_name: str, wrapper_classes: set[str], api_classes: dict
         return kotlin, f'SignalArgType.valueOf<{kotlin}>("{type_name}", {klass})', imports
     if type_name in api_classes or type_name == "Object":
         wrapper, _godot = _signal_object_wrapper(type_name, wrapper_classes, api_classes)
-        if is_resource_like(type_name, api_classes):
+        nullable = is_resource_like(type_name, api_classes)
+        if key is not None and key in SIGNAL_NON_NULL_RESOURCE_ARGS:
+            nullable = False
+        if key is not None and key in SIGNAL_NULLABLE_OBJECT_ARGS:
+            nullable = True
+        if nullable:
             return f"{wrapper}?", f'SignalArgType.nullableObjectOf("{type_name}") {{ {wrapper}(it) }}', set()
         return wrapper, f'SignalArgType.objectOf("{type_name}") {{ {wrapper}(it) }}', set()
     raise SystemExit(f"[generate_api_wrapper] no typed-signal mapping for argument type {type_name!r}")
@@ -3313,20 +3379,26 @@ def render_signal_accessors(
         kotlin_types: list[str] = []
         exprs: list[str] = []
         doc_args: list[str] = []
-        for arg in args:
+        for index, arg in enumerate(args):
             arg_type = str(arg.get("type") or "")
-            kotlin, expr, extra = signal_arg_type(arg_type, wrapper_classes, api_classes)
+            kotlin, expr, extra = signal_arg_type(arg_type, wrapper_classes, api_classes, (cls.name, raw, index))
             imports.update(extra)
             kotlin_types.append(kotlin)
             exprs.append(expr)
             doc_args.append(f"{arg.get('name')}: {arg_type}")
+        ios_gaps = sorted({str(arg.get("type")) for arg in args} & IOS_UNMARSHALLED_SIGNAL_TYPES)
         type_args = f"<{', '.join(kotlin_types)}>" if kotlin_types else ""
         signal_type = f"Signal{len(args)}{type_args}"
         ctor_args = ", ".join([owner, f'"{raw}"', *exprs])
         blocks.append(
             "\n".join(
                 [
-                    f"    /** Signal `{raw}({', '.join(doc_args)})`; see [TypedSignal]. */",
+                    (
+                        f"    /** Signal `{raw}({', '.join(doc_args)})`; see [TypedSignal]. On iOS a "
+                        f"{'/'.join(ios_gaps)} argument is not delivered yet: a connection reports a script error. */"
+                        if ios_gaps
+                        else f"    /** Signal `{raw}({', '.join(doc_args)})`; see [TypedSignal]. */"
+                    ),
                     f"    val {prop}: {signal_type}",
                     f'        @JvmName("{prop}TypedSignal")',
                     f"        get() = Signal{len(args)}({ctor_args})",
