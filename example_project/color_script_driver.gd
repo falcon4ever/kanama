@@ -33,3 +33,12 @@ func report(side: String, node: Node) -> void:
 		side, channels(from_scene), typeof(from_scene), row.get("tint"), row.get("solid"),
 		channels(default_value), channels(set_back), channels(mixed), channels(returned), seen,
 		node.received(), node.describe()])
+	# task 133 C3 -- HDR (> 1, < 0) and NaN channels through set/get, a function and a signal.
+	node.set("tint", Color(2.5, NAN, -0.5, 1.0))
+	var hdr_seen: Array[String] = []
+	var hdr_collect := func(color: Color) -> void: hdr_seen.append(channels(color))
+	node.connect("tinted", hdr_collect)
+	node.emit_tint()
+	node.disconnect("tinted", hdr_collect)
+	var hdr := "%s|%s|%s|%s" % [channels(node.get("tint")), channels(node.mix_with(Color(4, 0, 0, 1))), channels(node.current()), hdr_seen]
+	print("ColorScript %s hdr=%s" % [side, hdr])

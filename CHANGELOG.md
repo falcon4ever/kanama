@@ -56,11 +56,17 @@ Desktop, Android, iOS and Web.
 - **Web:** protocol 30 adds the `Color` export push arm (`kanamaWebSetColorProperty`); a `Color`
   rides the numeric argument channel, the packed return channel and the one-argument signal
   channel (`GodotSignal.connectColor`).
+- **Web:** NaN and the infinities cross the text channels (a pulled property, a packed return, a
+  one-argument signal) for `Double`, the vectors and `Color` in both directions; before, Kotlin's
+  `NaN` arrived in GDScript as `0.0` and GDScript's `nan` failed Kotlin's parse.
 - A registered function with a type Kanama does not marshal names Kanama's limit and the
   supported types (it said Godot could not pass the type).
 - **Behaviour change — constant folding follows Kotlin's types:** each subexpression is an `Int`,
-  `Long`, `Float` or `Double` as in Kotlin, so `5 / 2 + 0.5` folds to `2.5` (it folded to `3.0`)
-  and `1f / 3f` to Kotlin's float; `Float` and `Int` properties fold too.
+  `Long`, `Float` or `Double` as in Kotlin (an unsuffixed integer literal is an `Int` unless it
+  does not fit, whatever the property's type), evaluated in that type and widened to the property
+  at the end: `5 / 2 + 0.5` folds to `2.5` (it folded to `3.0`), `1f / 3f` to Kotlin's float, and
+  `val x: Long = 2147483647 + 1` to `-2147483648`, as Kotlin computes it. A `1d` literal (not
+  Kotlin) is not folded. `Float` and `Int` properties fold too.
 - **Autoloads:** the node is resolved once on the main thread and kept while alive (an instance-id
   check per read); a worker thread can read an autoload the main thread has resolved, and one it
   has not throws, naming the thread rule (before, every read queried the scene tree, which fails

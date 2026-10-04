@@ -188,6 +188,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     internal const val SIGNAL_DISPATCH_OBJECT = "_kanama_web_signal_dispatch_object"
     /** Packs one emitted scalar payload for [SIGNAL_DISPATCH_ONE] (task 80 slice 2). */
     internal const val SIGNAL_PACK_ARG = "_kanama_web_pack_signal_arg"
+    /** Task 133 C3: the proxy's parser of one text-channel decimal (`nan`/`inf`/`-inf` too). */
+    internal const val WEB_FLOAT = "_kanama_web_float"
+    /** Task 133 C3: [WEB_FLOAT] over a comma-separated list (replaces `split_floats`). */
+    internal const val WEB_FLOATS = "_kanama_web_floats"
 
     /**
      * The dispatch arm the proxy emits for a registered `@ScriptFunction`. The emitter's method
@@ -356,22 +360,28 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * encoding as `getPackedProperty`; QUATERNION adds `w` and BASIS packs its three COLUMNS in
      * x/y/z order, which is exactly the argument order of GDScript's `Basis(x, y, z)`.
      */
+    /** The runtime encoder of one decimal on the text channels (task 133 C3). */
+    internal const val PACKED_FLOAT = "net.multigesture.kanama.web.WebPackedFloats.encode"
+
+    /** `access.let { "<c1>,<c2>,..." }` with each component through [PACKED_FLOAT]. */
+    fun packedFloats(access: String, vararg components: String): String =
+      "$access.let { \"" + components.joinToString(",") { "\${$PACKED_FLOAT(it.$it)}" } + "\" }"
+
     fun packedReturnExpression(access: String, type: TypeMapping): String =
       when (type) {
         TypeMapping.STRING -> access
         TypeMapping.NODE_PATH -> "$access.path"
-        TypeMapping.INT,
-        TypeMapping.FLOAT -> "$access.toString()"
+        TypeMapping.INT -> "$access.toString()"
+        // Task 133 C3: decimals as GDScript spells NaN/±INF (WebPackedFloats, `_kanama_web_float`).
+        TypeMapping.FLOAT -> "$PACKED_FLOAT($access)"
         TypeMapping.BOOL -> "if ($access) \"1\" else \"0\""
-        TypeMapping.VECTOR2,
         TypeMapping.VECTOR2I -> "$access.let { \"\${it.x},\${it.y}\" }"
-        TypeMapping.VECTOR3 -> "$access.let { \"\${it.x},\${it.y},\${it.z}\" }"
-        TypeMapping.QUATERNION -> "$access.let { \"\${it.x},\${it.y},\${it.z},\${it.w}\" }"
-        TypeMapping.COLOR -> "$access.let { \"\${it.r},\${it.g},\${it.b},\${it.a}\" }"
+        TypeMapping.VECTOR2 -> packedFloats(access, "x", "y")
+        TypeMapping.VECTOR3 -> packedFloats(access, "x", "y", "z")
+        TypeMapping.QUATERNION -> packedFloats(access, "x", "y", "z", "w")
+        TypeMapping.COLOR -> packedFloats(access, "r", "g", "b", "a")
         TypeMapping.BASIS ->
-          "$access.let { " +
-            "\"\${it.x.x},\${it.x.y},\${it.x.z},\${it.y.x},\${it.y.y},\${it.y.z}," +
-            "\${it.z.x},\${it.z.y},\${it.z.z}\" }"
+          packedFloats(access, "x.x", "x.y", "x.z", "y.x", "y.y", "y.z", "z.x", "z.y", "z.z")
         else -> error("no packed return encoding for ${type.name}")
       }
 
@@ -1840,13 +1850,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             property.type == TypeMapping.NODE_PATH -> "$access.path"
             property.type == TypeMapping.INT ->
               "${webLongValue(access, property.godotEnum)}.toString()"
-            property.type == TypeMapping.FLOAT -> "$access.toString()"
+            property.type == TypeMapping.FLOAT -> "$PACKED_FLOAT($access)"
             property.type == TypeMapping.BOOL -> "if ($access) \"1\" else \"0\""
-            property.type == TypeMapping.VECTOR2 -> "$access.let { \"\${it.x},\${it.y}\" }"
+            property.type == TypeMapping.VECTOR2 -> packedFloats(access, "x", "y")
             property.type == TypeMapping.VECTOR2I -> "$access.let { \"\${it.x},\${it.y}\" }"
-            property.type == TypeMapping.VECTOR3 -> "$access.let { \"\${it.x},\${it.y},\${it.z}\" }"
-            property.type == TypeMapping.COLOR ->
-              "$access.let { \"\${it.r},\${it.g},\${it.b},\${it.a}\" }"
+            property.type == TypeMapping.VECTOR3 -> packedFloats(access, "x", "y", "z")
+            property.type == TypeMapping.COLOR -> packedFloats(access, "r", "g", "b", "a")
             property.type == TypeMapping.OBJECT && property.customScriptFqName != null ->
               if (property.nullable) "($access?.objectId?.value ?: 0).toString()"
               else "$access.objectId.value.toString()"
@@ -3945,6 +3954,24 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t_kanama_bridge.dispatchSignal1(_kanama_handle, callback_id, $SIGNAL_PACK_ARG(arg))"
     )
     appendLine()
+    // Task 133 C3: the text channels' decimals, NaN and the infinities included (Kotlin sends
+    // `nan`/`inf`/`-inf`, see WebPackedFloats; `split_floats` alone reads them as 0.0).
+    appendLine("func $WEB_FLOAT(text: String) -> float:")
+    appendLine("\tmatch text:")
+    appendLine("\t\t\"nan\", \"-nan\":")
+    appendLine("\t\t\treturn NAN")
+    appendLine("\t\t\"inf\":")
+    appendLine("\t\t\treturn INF")
+    appendLine("\t\t\"-inf\":")
+    appendLine("\t\t\treturn -INF")
+    appendLine("\treturn text.to_float()")
+    appendLine()
+    appendLine("func $WEB_FLOATS(packed: String) -> PackedFloat64Array:")
+    appendLine("\tvar values := PackedFloat64Array()")
+    appendLine("\tfor part in packed.split(\",\"):")
+    appendLine("\t\tvalues.append($WEB_FLOAT(part))")
+    appendLine("\treturn values")
+    appendLine()
     appendLine("func $SIGNAL_PACK_ARG(arg: Variant) -> String:")
     appendLine("\tmatch typeof(arg):")
     appendLine("\t\tTYPE_NIL:")
@@ -5024,10 +5051,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.STRING -> appendLine("\treturn _kanama_packed")
       TypeMapping.NODE_PATH -> appendLine("\treturn NodePath(_kanama_packed)")
       TypeMapping.INT -> appendLine("\treturn int(_kanama_packed)")
-      TypeMapping.FLOAT -> appendLine("\treturn float(_kanama_packed)")
+      TypeMapping.FLOAT -> appendLine("\treturn $WEB_FLOAT(_kanama_packed)")
       TypeMapping.BOOL -> appendLine("\treturn _kanama_packed == \"1\"")
       TypeMapping.VECTOR2 -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine("\treturn Vector2(_kanama_parts[0], _kanama_parts[1])")
       }
       TypeMapping.VECTOR2I -> {
@@ -5035,23 +5062,23 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         appendLine("\treturn Vector2i(int(_kanama_parts[0]), int(_kanama_parts[1]))")
       }
       TypeMapping.VECTOR3 -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine("\treturn Vector3(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2])")
       }
       TypeMapping.COLOR -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine(
           "\treturn Color(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2], _kanama_parts[3])"
         )
       }
       TypeMapping.QUATERNION -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine(
           "\treturn Quaternion(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2], _kanama_parts[3])"
         )
       }
       TypeMapping.BASIS -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine("\t# Packed as the three basis COLUMNS, which is Basis(x_axis, y_axis, z_axis).")
         appendLine(
           "\treturn Basis(Vector3(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2]), " +
@@ -5195,10 +5222,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         property.type == TypeMapping.STRING -> appendLine("\t$name = $packed")
         property.type == TypeMapping.NODE_PATH -> appendLine("\t$name = NodePath($packed)")
         property.type == TypeMapping.INT -> appendLine("\t$name = int($packed)")
-        property.type == TypeMapping.FLOAT -> appendLine("\t$name = float($packed)")
+        property.type == TypeMapping.FLOAT -> appendLine("\t$name = $WEB_FLOAT($packed)")
         property.type == TypeMapping.BOOL -> appendLine("\t$name = $packed == \"1\"")
         property.type == TypeMapping.VECTOR2 -> {
-          appendLine("\tvar _kanama_parts_$id := $packed.split_floats(\",\")")
+          appendLine("\tvar _kanama_parts_$id := $WEB_FLOATS($packed)")
           appendLine("\t$name = Vector2(_kanama_parts_$id[0], _kanama_parts_$id[1])")
         }
         property.type == TypeMapping.VECTOR2I -> {
@@ -5206,13 +5233,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine("\t$name = Vector2i(int(_kanama_parts_$id[0]), int(_kanama_parts_$id[1]))")
         }
         property.type == TypeMapping.VECTOR3 -> {
-          appendLine("\tvar _kanama_parts_$id := $packed.split_floats(\",\")")
+          appendLine("\tvar _kanama_parts_$id := $WEB_FLOATS($packed)")
           appendLine(
             "\t$name = Vector3(_kanama_parts_$id[0], _kanama_parts_$id[1], _kanama_parts_$id[2])"
           )
         }
         property.type == TypeMapping.COLOR -> {
-          appendLine("\tvar _kanama_parts_$id := $packed.split_floats(\",\")")
+          appendLine("\tvar _kanama_parts_$id := $WEB_FLOATS($packed)")
           appendLine(
             "\t$name = Color(_kanama_parts_$id[0], _kanama_parts_$id[1], _kanama_parts_$id[2], _kanama_parts_$id[3])"
           )

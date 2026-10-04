@@ -587,7 +587,9 @@ uid (a script's `.uid` file, a scene's header).
 the autoloads (and of the nodes in an autoload scene), from the new build, and runs
 their `_ready` again. Exported property values are kept; every other field starts
 from its initializer, as after a scene reload, so keep state that must survive a
-reload in exported properties or outside the script object.
+reload in exported properties or outside the script object. Hot reload runs in the
+editor process too (Build Scripts while the editor is open), so a `@Tool`
+autoload in the editor's tree is re-created the same way there.
 
 ## Script Inheritance
 

@@ -45,7 +45,11 @@ class ConstantFoldingTest {
     assertEquals("1.0471975511965976", ConstantFolding.foldDoubleLiteral("PI / 3.0"))
     // Int wraps at 32 bits like Kotlin; a Long property's literals are Longs.
     assertEquals((Int.MAX_VALUE + 1).toString(), ConstantFolding.foldIntLiteral("2147483647 + 1"))
-    assertEquals("2147483648", ConstantFolding.foldLongLiteral("2147483647 + 1"))
+    // Kotlin evaluates `val x: Long = 2147483647 + 1` in Int, then widens (task 133 C3 review).
+    assertEquals("-2147483648", ConstantFolding.foldLongLiteral("2147483647 + 1"))
+    assertEquals("-727379968", ConstantFolding.foldLongLiteral("1000000 * 1000000"))
+    assertEquals("6000000000", ConstantFolding.foldLongLiteral("3000000000 * 2"))
+    assertNull(ConstantFolding.foldDoubleLiteral("1d"), "Kotlin has no d suffix")
     assertEquals("2", ConstantFolding.foldIntLiteral("5 / 2"))
     assertNull(ConstantFolding.foldIntLiteral("5 / 0"))
     assertNull(ConstantFolding.foldLongLiteral("5 / 2 + 0.5"))
@@ -68,5 +72,42 @@ class ConstantFoldingTest {
     assertNull(ConstantFolding.foldDoubleLiteral("1.0 / 0.0"))
     assertNull(ConstantFolding.foldDoubleLiteral("1.0 +"))
     assertNull(ConstantFolding.foldDoubleLiteral("listOf(1.0)"))
+  }
+
+  /** The reviewer's probe (task 133 C3): each fold equals the value Kotlin computes. */
+  @Suppress("INTEGER_OVERFLOW", "DIVISION_BY_ZERO")
+  @Test
+  fun matchesKotlinOnTheReviewProbe() {
+    val long1: Long = 2147483647 + 1
+    val long2: Long = 1000000 * 1000000
+    val long3: Long = 3000000000 * 2
+    val rows =
+      listOf(
+        ConstantFolding.foldIntLiteral("2147483647 + 1") to (2147483647 + 1).toString(),
+        ConstantFolding.foldLongLiteral("2147483647 + 1") to long1.toString(),
+        ConstantFolding.foldLongLiteral("1000000 * 1000000") to long2.toString(),
+        ConstantFolding.foldLongLiteral("3000000000 * 2") to long3.toString(),
+        ConstantFolding.foldDoubleLiteral("5 / 2 + 0.5") to (5 / 2 + 0.5).toString(),
+        ConstantFolding.foldDoubleLiteral("-(7 / 2) * 1.5") to (-(7 / 2) * 1.5).toString(),
+        ConstantFolding.foldDoubleLiteral("2147483647 + 1 + 0.5") to
+          (2147483647 + 1 + 0.5).toString(),
+        ConstantFolding.foldDoubleLiteral("1f / 3 + 0.0") to (1f / 3 + 0.0).toString(),
+        ConstantFolding.foldDoubleLiteral("-1 / 2.0") to (-1 / 2.0).toString(),
+        ConstantFolding.foldDoubleLiteral("-2147483648 / 2 * 1.0") to
+          (-2147483648 / 2 * 1.0).toString(),
+        ConstantFolding.foldFloatLiteral("1f / 3f") to "${1f / 3f}f",
+        ConstantFolding.foldFloatLiteral("-1f / 3 * 2") to "${-1f / 3 * 2}f",
+        ConstantFolding.foldFloatLiteral("0.1f + 0.2f") to "${0.1f + 0.2f}f",
+        ConstantFolding.foldFloatLiteral("sqrt(2f)") to "${kotlin.math.sqrt(2f)}f",
+        ConstantFolding.foldIntLiteral("-7 / 2") to (-7 / 2).toString(),
+        ConstantFolding.foldIntLiteral("-(-2147483647 - 1)") to (-(-2147483647 - 1)).toString(),
+        ConstantFolding.foldIntLiteral("46341 * 46341") to (46341 * 46341).toString(),
+        ConstantFolding.foldLongLiteral("-9223372036854775807L - 1") to
+          (-9223372036854775807L - 1).toString(),
+        ConstantFolding.foldDoubleLiteral("Mathf.PI / 3.0") to (Math.PI / 3.0).toString(),
+      )
+    rows.forEachIndexed { i, (folded, kotlin) ->
+      assertEquals(kotlin.replace("E", "e"), folded, "row $i")
+    }
   }
 }

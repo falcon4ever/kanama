@@ -12,12 +12,13 @@ package net.multigesture.kanama.processor
  * keeps its own rules.
  *
  * Task 133 C2: every subexpression is typed and evaluated as Kotlin evaluates it — an unsuffixed
- * integer literal is an `Int` (a `Long` when it does not fit, or in a `Long` property's
- * initializer, where Kotlin's integer literal type follows the expected type), `3L` a `Long`, `1f`
- * a `Float`, a decimal a `Double`; a binary operation takes the wider operand type (Double >
- * Float > Long > Int), so `5 / 2 + 0.5` is `2 + 0.5 = 2.5` (integer division first) and `1f / 3f`
- * is the float `0.33333334`. Integer division truncates and `Int` wraps at 32 bits, as in Kotlin; a
- * division by an integer zero is not folded.
+ * integer literal is an `Int` (a `Long` only when it does not fit an `Int`), `3L` a `Long`, `1f` a
+ * `Float`, a decimal a `Double` (Kotlin has no `d` suffix); a binary operation takes the wider
+ * operand type (Double > Float > Long > Int), and the result is widened to the property's type at
+ * the end. So `5 / 2 + 0.5` is `2 + 0.5 = 2.5` (integer division first), `1f / 3f` is the float
+ * `0.33333334`, and `val x: Long = 2147483647 + 1` is `-2147483648` (Int arithmetic wraps at 32
+ * bits before the widening, as in Kotlin). Integer division truncates; a division by an integer
+ * zero is not folded.
  */
 internal object ConstantFolding {
 
@@ -25,7 +26,7 @@ internal object ConstantFolding {
 
   /** The folded Double default spelled as a literal both Kotlin and GDScript read back exactly. */
   fun foldDoubleLiteral(expression: String): String? {
-    val value = Parser(expression, longContext = false).parseAll() ?: return null
+    val value = Parser(expression).parseAll() ?: return null
     val double = value.toDouble()
     if (double.isNaN() || double.isInfinite()) return null
     return doubleLiteral(double)
@@ -33,20 +34,20 @@ internal object ConstantFolding {
 
   /** The folded `Long` default (`60 * 5` is `300`), or null for a non-integer expression. */
   fun foldLongLiteral(expression: String): String? {
-    val value = Parser(expression, longContext = true).parseAll() ?: return null
+    val value = Parser(expression).parseAll() ?: return null
     return (value as? Num.Integral)?.value?.toString()
   }
 
   /** The folded `Float` default as a Kotlin Float literal (`1f / 3f` is `0.33333334f`), or null. */
   fun foldFloatLiteral(expression: String): String? {
-    val value = Parser(expression, longContext = false).parseAll() as? Num.F ?: return null
+    val value = Parser(expression).parseAll() as? Num.F ?: return null
     if (value.value.isNaN() || value.value.isInfinite()) return null
     return value.value.toString().replace("E", "e") + "f"
   }
 
   /** The folded `Int` default (Kotlin's 32-bit arithmetic), or null. */
   fun foldIntLiteral(expression: String): String? {
-    val value = Parser(expression, longContext = false).parseAll() as? Num.I ?: return null
+    val value = Parser(expression).parseAll() as? Num.I ?: return null
     return value.value.toString()
   }
 
@@ -99,7 +100,7 @@ internal object ConstantFolding {
       is Num.D -> value.toFloat()
     }
 
-  private class Parser(private val text: String, private val longContext: Boolean) {
+  private class Parser(private val text: String) {
     private var pos = 0
 
     fun parseAll(): Num? {
@@ -303,11 +304,6 @@ internal object ConstantFolding {
           pos++
           Num.F(digits.toFloat())
         }
-        'd',
-        'D' -> {
-          pos++
-          Num.D(digits.toDouble())
-        }
         'L' -> {
           pos++
           require(!decimal)
@@ -316,7 +312,6 @@ internal object ConstantFolding {
         else ->
           when {
             decimal -> Num.D(digits.toDouble())
-            longContext -> Num.L(digits.toLong())
             else ->
               digits.toLong().let {
                 if (it in Int.MIN_VALUE..Int.MAX_VALUE) Num.I(it.toInt()) else Num.L(it)

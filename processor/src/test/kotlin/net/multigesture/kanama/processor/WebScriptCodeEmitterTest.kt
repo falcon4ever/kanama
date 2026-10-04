@@ -1465,7 +1465,16 @@ class WebScriptCodeEmitterTest {
       proxy.contains("var _kanama_packed := String(_kanama_bridge.callPacked(_kanama_handle, 6))"),
       proxy,
     )
-    assertTrue(proxy.contains("return float(_kanama_packed)"), proxy)
+    // Task 133 C3: decimals parse through the proxy's NaN/INF-aware helper.
+    assertTrue(proxy.contains("return _kanama_web_float(_kanama_packed)"), proxy)
+    assertTrue(proxy.contains("var _kanama_parts := _kanama_web_floats(_kanama_packed)"), proxy)
+    assertTrue(proxy.contains("\t\t\"inf\":\n\t\t\treturn INF"), proxy)
+    // An integer return stays an integer; only decimals go through the NaN/INF encoder.
+    assertEquals("x.toString()", WebScriptCodeEmitter.packedReturnExpression("x", TypeMapping.INT))
+    assertEquals(
+      "net.multigesture.kanama.web.WebPackedFloats.encode(x)",
+      WebScriptCodeEmitter.packedReturnExpression("x", TypeMapping.FLOAT),
+    )
 
     val registry =
       WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt"))).registrySource()
@@ -1477,11 +1486,16 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(
       registry.contains(
-        "5 -> (script as Enemy).aimTarget().let { \"\${it.x},\${it.y},\${it.z}\" }"
+        "5 -> (script as Enemy).aimTarget().let { \"\${net.multigesture.kanama.web.WebPackedFloats.encode(it.x)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.y)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.z)}\" }"
       ),
       registry,
     )
-    assertTrue(registry.contains("6 -> (script as Enemy).currentHealth().toString()"), registry)
+    assertTrue(
+      registry.contains(
+        "6 -> net.multigesture.kanama.web.WebPackedFloats.encode((script as Enemy).currentHealth())"
+      ),
+      registry,
+    )
   }
 
   @Test

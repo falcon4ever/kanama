@@ -411,10 +411,17 @@ done
 # connection), plus its property row and @ExportColorNoAlpha's hint 21: the Kotlin line must equal
 # the GDScript twin's line from the same run.
 check "ColorScript kotlin scene=0\\.25,0\\.5,0\\.123456[0-9]*,0\\.75 type=20 rows=20/0//20/21/ default=0\\.1[0-9]*,0\\.2[0-9]*,0\\.3[0-9]*,0\\.4[0-9]* "
-color_kotlin="$(grep -o "ColorScript kotlin .*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript kotlin //')"
-color_gdscript="$(grep -o "ColorScript gdscript .*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript gdscript //')"
+color_kotlin="$(grep -o "ColorScript kotlin scene=.*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript kotlin //')"
+color_gdscript="$(grep -o "ColorScript gdscript scene=.*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript gdscript //')"
 if [[ -z "$color_kotlin" || "$color_kotlin" != "$color_gdscript" ]]; then
   smoke_fail "Kotlin/GDScript Color script type mismatch" "kotlin: ${color_kotlin:-<missing>} gdscript: ${color_gdscript:-<missing>}"
+fi
+# task 133 C3 -- HDR and NaN channels (set/get, function, return, signal) match GDScript too.
+check "ColorScript kotlin hdr=2\\.5,nan,-0\\.5,1\\.0\\|"
+color_hdr_kotlin="$(grep -o "ColorScript kotlin hdr=.*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript kotlin //')"
+color_hdr_gdscript="$(grep -o "ColorScript gdscript hdr=.*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript gdscript //')"
+if [[ -z "$color_hdr_kotlin" || "$color_hdr_kotlin" != "$color_hdr_gdscript" ]]; then
+  smoke_fail "Kotlin/GDScript HDR/NaN Color mismatch" "kotlin: ${color_hdr_kotlin:-<missing>} gdscript: ${color_hdr_gdscript:-<missing>}"
 fi
 # task 134 B -- the generated probe pair (scripts/generate_builtin_ops.py): `pure=` hashes every
 # value-type operator and every Kotlin-implemented method over 256 fixed-seed random inputs,

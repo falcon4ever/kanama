@@ -168,7 +168,10 @@ class ColorScriptTypeTest {
     assertTrue(
       registry.contains("(script as Tinted).tint = net.multigesture.kanama.types.Color(r, g, b, a)")
     )
-    assertTrue(registry.contains("it.r},\${it.g},\${it.b},\${it.a}"), "pull packs four channels")
+    assertTrue(
+      registry.contains("net.multigesture.kanama.web.WebPackedFloats.encode(it.a)}"),
+      "pull packs four channels, NaN/INF spelled for GDScript",
+    )
     assertEquals(
       WebDispatchStatus.TYPED,
       WebScriptCodeEmitter.signalDispatch(model.signals.single()).status,
