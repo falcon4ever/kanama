@@ -293,7 +293,7 @@ case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sou
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],
      "src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt", "the remap stops rewriting `.invokeExact(` (the builtin-call downcall would reach ART)")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 29)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 30)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
