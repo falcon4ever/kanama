@@ -41,14 +41,26 @@ only `--write`.
 ### Changed — faster wrapper calls on desktop (task 131 item 16)
 
 - The downcall handles every wrapper call goes through (`object_method_bind_ptrcall`,
-  `object_get_instance_id`, the freed-object check's `object_get_instance_from_id`, and the String
-  argument/return helpers) are JVM constants called with `invokeExact`, instead of `by lazy`
-  handles called through the generic invoker; the freed-object check no longer allocates a
-  `MemorySegment` per call. Measured on the editor binary (Apple M1 Max, freed-object checks on as
+  `object_get_instance_id`, the freed-object check's `object_get_instance_from_id`,
+  `classdb_construct_object3`, and the String argument/return helpers) are JVM constants called
+  with `invokeExact`, instead of `by lazy` handles called through the generic invoker; the
+  freed-object check no longer allocates a `MemorySegment` per call. Measured on the editor binary (Apple M1 Max, freed-object checks on as
   in every debug build): a wrapper call ~28.5 → ~21 ns (~17 → ~13 ns with the check off), a
-  wrapper construction ~7 → ~4 ns; Bunnymark frame time V1 Sprites −10 %, V1 DrawTexture −11 %,
-  V2 −7 %, V3 −8 % (10,000 bunnies, 6 ABBA rounds, faster in every round). No behaviour change:
-  a call through a freed object still raises the same script error. Android shares the constant
+  wrapper construction ~7 → ~4 ns; Bunnymark frame time after a 1,500-frame warm-up V1 Sprites
+  −10 %, V1 DrawTexture −11 %, V2 −7 %, V3 −8 % (10,000 bunnies, 6 ABBA rounds, faster in every
+  round).
+- **Warm-up:** measured over frames 120–720 after the spawn (the default probe window), V1 Sprites
+  is **+24.5 % slower** (mean frame time; +36.7 % median), V1 DrawTexture −9 %, V2 −3 %, V3 −13 %.
+  The cause is the heap, not the call path: right after 10,000 bunnies are spawned, V1 Sprites
+  frames run ~35–50 % slower until the first young GC compacts the freshly allocated objects, in
+  the old build too. The new build allocates far less garbage per frame, so that GC comes later
+  (~2.6 s instead of ~1.4 s after start) and the slow phase lasts ~800 frames instead of ~300.
+  Per-frame cost in that phase is no higher than before (~2,400 µs vs ~2,500–3,000 µs); after
+  it, V1 Sprites is −10…−12 %. A smaller young
+  generation (`-Xmn64m`) removes the slow phase but costs 3–6× more young GCs and makes V3 and
+  the old build's steady state slightly slower, so the embedded JVM's GC sizing is unchanged.
+- No behaviour change: a call through a freed object still raises the same script error, and a
+  runtime entry point that fails to resolve is reported by its cause. Android shares the constant
   handles but keeps `invokeWithArguments` (Kotlin cannot emit an exact call against android.jar);
   iOS (direct C calls) and Web had no such overhead and are unchanged.
 
