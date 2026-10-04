@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 # android_apk_id.sh -- "the artifact this gate ran is the artifact it built" for the Android runners
-# (task 118). Source it (after gate_skip.sh); do not run it.
+# (task 118), and the one way they find the app's process. Source it (after gate_skip.sh); do not run it.
 #
 #   assert_apk_package_id <tag> <android-sdk-dir> <apk> <expected-package>
 #
@@ -45,4 +45,38 @@ assert_apk_package_id() {
     return 1
   fi
   echo "$tag APK application id verified: $actual"
+}
+
+# app_pid_once <adb> <package>: prints the pid of the running app, or nothing.
+# `pidof -s` is toybox's; Android 9 (API 28) has a toybox pidof, but not every build has `-s` (or any
+# pidof), so an empty answer falls back to `ps -A`, whose last column is the process name (= the package).
+app_pid_once() {
+  local adb="$1" package="$2" pid
+  # justified: a failing or missing pidof prints nothing, and the `ps -A` fallback below is the second opinion.
+  pid="$("$adb" shell pidof -s "$package" 2>/dev/null | tr -d '\r' || true)"
+  if [[ -z "$pid" ]]; then
+    # justified: an adb error leaves $pid empty; the caller retries until its deadline and then fails.
+    pid="$("$adb" shell ps -A 2>/dev/null | tr -d '\r' | awk -v p="$package" '$NF == p { print $2; exit }' || true)"
+  fi
+  printf '%s' "$pid"
+}
+
+# wait_for_app_pid <adb> <package> <timeout-seconds>: prints the FIRST pid the app shows, polling once a
+# second; returns 1 when none appears in time (the app never started or died instantly). The runners judge
+# `logcat --pid <this pid>`, not "is it still alive at second 30": a demo may legitimately quit on its own
+# (Bunnymark ends once its benchmark converges) while a crash is read from the log, not from liveness.
+wait_for_app_pid() {
+  local adb="$1" package="$2" timeout="$3" deadline pid
+  deadline=$((SECONDS + timeout))
+  while :; do
+    pid="$(app_pid_once "$adb" "$package")"
+    if [[ -n "$pid" ]]; then
+      printf '%s' "$pid"
+      return 0
+    fi
+    if (( SECONDS >= deadline )); then
+      return 1
+    fi
+    sleep 1
+  done
 }

@@ -125,6 +125,7 @@ adb_retry() {
     # (after 3 attempts adb_retry returns 1).
     "$ADB_BIN" kill-server >/dev/null 2>&1 || true
     sleep 1
+    # justified: best-effort daemon restart inside adb_retry; the retried command on the next loop turn is the check.
     "$ADB_BIN" start-server >/dev/null 2>&1 || true
     sleep 1
     attempt=$((attempt + 1))
@@ -321,19 +322,23 @@ adb_retry shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
 # still needs a human unlock.
 # justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below.
 adb_retry shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 || true
+# justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below.
 adb_retry shell wm dismiss-keyguard >/dev/null 2>&1 || true
 adb_retry shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
 PACKAGE_LAUNCHED=1
-sleep "$LAUNCH_WAIT"
-# justified: an empty pid is handled right below (the run fails), so pidof's own exit status adds nothing.
-APP_PID="$("$ADB_BIN" shell pidof -s "$PACKAGE_NAME" 2>/dev/null | tr -d '\r' || true)"
-if [[ -z "$APP_PID" ]]; then
-  # Task 118: this used to fall back to the whole device logcat, which can hold the startup lines of an app
-  # that has since crashed (a native crash prints no "FATAL EXCEPTION"). A gate judges the live process or fails.
+# Task 118: take the app's FIRST pid as soon as it appears and judge `logcat --pid <pid>` after the launch wait,
+# instead of requiring the process to be alive at the end of it (a demo may quit on its own; a crash is read
+# from the log). No pid within the wait means the app never started: fail, with the device log tail.
+launch_started=$SECONDS
+if ! APP_PID="$(wait_for_app_pid "$ADB_BIN" "$PACKAGE_NAME" "$LAUNCH_WAIT")"; then
   adb_retry logcat -d >"$LOG_FILE"
-  echo "[android_smoke] $PACKAGE_NAME is not running ${LAUNCH_WAIT}s after launch (crashed or never started); logcat: $LOG_FILE" >&2
+  echo "[android_smoke] $PACKAGE_NAME never showed a process within ${LAUNCH_WAIT}s of the launch (crashed on start or never started); logcat: $LOG_FILE" >&2
   tail -n 80 "$LOG_FILE" >&2
   exit 1
+fi
+launch_elapsed=$((SECONDS - launch_started))
+if (( launch_elapsed < LAUNCH_WAIT )); then
+  sleep $((LAUNCH_WAIT - launch_elapsed))
 fi
 adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
 
@@ -371,6 +376,7 @@ check_log_absent "ClassNotFoundException"
 check_log_absent "NoClassDefFoundError"
 check_log_absent "UnsatisfiedLinkError"
 check_log_absent "FATAL EXCEPTION"
+check_log_absent "Fatal signal [0-9]+"
 check_log_absent "Error loading GDExtension"
 check_log_absent "No \"arm64\" library found for GDExtension"
 

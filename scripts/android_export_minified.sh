@@ -314,20 +314,22 @@ fi
 "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
 "$ADB_BIN" shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
 PACKAGE_LAUNCHED=1
-sleep "$LAUNCH_WAIT"
-# justified: an empty pid is handled right below (the run fails), so pidof's own exit status adds nothing.
-APP_PID="$("$ADB_BIN" shell pidof -s "$PACKAGE_NAME" 2>/dev/null | tr -d '\r' || true)"
-if [[ -z "$APP_PID" ]]; then
-  # Task 118: this used to fall back to the whole device logcat, which can hold the startup lines of an app
-  # that has since crashed (a native crash prints no "FATAL EXCEPTION"). A gate judges the live process or fails.
+# Task 118: take the app's FIRST pid as soon as it appears and judge `logcat --pid <pid>` after the launch wait,
+# instead of requiring the process to be alive at the end of it (a demo may quit on its own; a crash is read
+# from the log). No pid within the wait means the app never started: fail, with the device log tail.
+launch_started=$SECONDS
+if ! APP_PID="$(wait_for_app_pid "$ADB_BIN" "$PACKAGE_NAME" "$LAUNCH_WAIT")"; then
   "$ADB_BIN" logcat -d >"$LOG_FILE"
-  echo "[android_minified] $PACKAGE_NAME is not running ${LAUNCH_WAIT}s after launch (crashed or never started); logcat: $LOG_FILE" >&2
+  echo "[android_minified] $PACKAGE_NAME never showed a process within ${LAUNCH_WAIT}s of the launch (crashed on start or never started); logcat: $LOG_FILE" >&2
   tail -n 80 "$LOG_FILE" >&2
   exit 1
 fi
+launch_elapsed=$((SECONDS - launch_started))
+if (( launch_elapsed < LAUNCH_WAIT )); then
+  sleep $((LAUNCH_WAIT - launch_elapsed))
+fi
 "$ADB_BIN" logcat --pid "$APP_PID" -d >"$LOG_FILE"
 
-# Positive: Kanama started past the PanamaPort FFI bootstrap and registered.
 check_log "Initializing Godot plugin KanamaAndroid"
 check_log "registered KanamaResourceFormatLoader for \\.kt"
 
@@ -337,5 +339,6 @@ check_log_absent "GDExtension initialization function 'kanama_entry' returned an
 check_log_absent "Error loading extension"
 check_log_absent "No loader found for resource: res://kotlin-src"
 check_log_absent "FATAL EXCEPTION"
+check_log_absent "Fatal signal [0-9]+"
 
 echo "[android_minified] PASS (R8-minified release boots Kanama)"

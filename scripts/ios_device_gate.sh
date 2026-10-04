@@ -441,6 +441,7 @@ run_demo_matrix_serial() {
         start_found=1
       else
         append_result "${demo_names[$i]}" "SKIP" "0" "resumed after this demo"
+        # justified: this demo was already recorded as a SKIP row (resumed after the --start-at demo).
         continue
       fi
     fi
@@ -483,6 +484,7 @@ run_demo_matrix_parallel() {
   for ((k = 0; k < BUILD_JOBS; k++)); do
     local root="$roots_dir/job$k"
     if [[ -e "$root" ]]; then
+      # justified: a throwaway worktree; if git cannot remove it the directory is deleted instead.
       git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 || rm -rf "$root"
     fi
     git -C "$ROOT_DIR" worktree add --detach --quiet "$root" HEAD
@@ -500,6 +502,7 @@ run_demo_matrix_parallel() {
         found=1
       else
         append_result "${demo_names[$i]}" "SKIP" "0" "resumed after this demo"
+        # justified: this demo was already recorded as a SKIP row (resumed after the --start-at demo).
         continue
       fi
     fi
@@ -512,6 +515,13 @@ run_demo_matrix_parallel() {
     prepare_demo_copy "$DEMOS_ROOT/${demo_dirs[$i]}" "${demo_apps[$i]}" >/dev/null
   done
   start_found=$found
+  # Task 118: marker files and a built .app left by an EARLIER run in this output dir must not stand in for
+  # this run's build: clear them before phase 1 so only a build of this run can create them.
+  local stale_i
+  for stale_i in ${selected[@]+"${selected[@]}"}; do
+    rm -f "$OUTPUT_DIR/${demo_apps[$stale_i]}.build.ok" "$OUTPUT_DIR/${demo_apps[$stale_i]}.build.failed"
+    rm -rf "$OUTPUT_DIR/${demo_apps[$stale_i]}/DerivedData/Build/Products/Debug-iphoneos/${demo_apps[$stale_i]}.app"
+  done
   # Round-robin the selected demos over the jobs; each job builds its share sequentially.
   local -a pids=()
   for ((k = 0; k < BUILD_JOBS; k++)); do
@@ -538,7 +548,8 @@ run_demo_matrix_parallel() {
     pids+=("$!")
   done
   local pid
-  # justified: each build job records .build.ok / .build.failed itself; a job without either is reported FAIL below.
+  # justified: a build job's subshell status is not the result; success is the .build.ok marker it writes, and phase 2
+  # records FAIL for every demo that has no .build.ok (a job that died writes neither marker).
   for pid in "${pids[@]}"; do wait "$pid" || true; done
   local build_ended
   build_ended="$(date +%s)"
@@ -550,6 +561,13 @@ run_demo_matrix_parallel() {
     local app="${demo_apps[$idx]}"
     if [[ -f "$OUTPUT_DIR/$app.build.failed" ]]; then
       append_result "${demo_names[$idx]}" "FAIL" "$(cat "$OUTPUT_DIR/$app.build.failed")" "$OUTPUT_DIR/$app.build.log"
+      # justified: the demo was just recorded as a FAIL row with its build log.
+      continue
+    fi
+    if [[ ! -f "$OUTPUT_DIR/$app.build.ok" ]]; then
+      echo "[ios_device_gate] no build result for ${demo_names[$idx]} (neither .build.ok nor .build.failed); see $OUTPUT_DIR/$app.build.log" >&2
+      append_result "${demo_names[$idx]}" "FAIL" "0" "$OUTPUT_DIR/$app.build.log"
+      # justified: the demo was just recorded as a FAIL row (no build result at all).
       continue
     fi
     uninstall_other_gate_bundles "$GATE_BUNDLE_ID"
