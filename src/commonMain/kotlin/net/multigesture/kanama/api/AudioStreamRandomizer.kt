@@ -96,7 +96,7 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return AudioStream.wrap(ret)
+        return AudioStream.wrapOwned(ret)
     }
 
     /**
@@ -270,9 +270,12 @@ class AudioStreamRandomizer(handle: GodotHandle) : AudioStream(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamRandomizer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamRandomizer? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamRandomizer? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamRandomizer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamRandomizer? =
             if (handle.address() == 0L) null else AudioStreamRandomizer(GodotHandle(handle))
 
         private const val ADD_STREAM_HASH = 1892018854L

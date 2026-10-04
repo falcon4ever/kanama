@@ -1304,7 +1304,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme
      */
     fun getTheme(): Theme? {
-        return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, segment))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getThemeBind, segment))
     }
 
     /**
@@ -1495,7 +1495,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_icon
      */
     fun getThemeIcon(name: String, themeType: String = ""): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, segment, name, themeType))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeIconBind, segment, name, themeType))
     }
 
     /**
@@ -1505,7 +1505,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_stylebox
      */
     fun getThemeStylebox(name: String, themeType: String = ""): StyleBox? {
-        return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, segment, name, themeType))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeStyleboxBind, segment, name, themeType))
     }
 
     /**
@@ -1515,7 +1515,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_font
      */
     fun getThemeFont(name: String, themeType: String = ""): Font? {
-        return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, segment, name, themeType))
+        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getThemeFontBind, segment, name, themeType))
     }
 
     /**
@@ -1693,7 +1693,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Control.get_theme_default_font
      */
     fun getThemeDefaultFont(): Font? {
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getThemeDefaultFontBind, segment))
     }
 
     /**

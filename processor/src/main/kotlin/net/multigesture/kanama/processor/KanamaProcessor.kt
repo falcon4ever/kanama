@@ -4175,13 +4175,20 @@ internal class ScriptCodeEmitter(
     sb.appendLine("                when (name) {")
     for (p in mutable) {
       sb.appendLine("                    ${nameVar(p.godotName)} -> {")
-      sb.appendLine("                        ${variantReadPropertyExpr(p, "value", "v")}")
-      sb.appendLine(
-        "                        ${cleanupPropertyExpr(p, "kt.${p.kotlinName}", "mutableSetOf()")}"
-      )
-      sb.appendLine(
-        "                        kt.${p.kotlinName} = v${scriptPropertyFromWideSuffix(p)}"
-      )
+      if (retainsOnSet(p)) {
+        // Task 132: the references this read takes belong to the owner's property, not to the
+        // Kotlin object (the GC may collect it before the owner dies). Once the assignment
+        // succeeded the runtime registers them under the property and releases the ones it held
+        // before; the owner's free releases them all.
+        sb.appendLine(
+          "                        ScriptBridge.retainScriptProperty(godotObject, \"${kotlinStringLiteral(p.godotName)}\", { ${variantReadPropertyExpr(p, "value", "read")}; read }) { v -> kt.${p.kotlinName} = v${scriptPropertyFromWideSuffix(p)} }"
+        )
+      } else {
+        sb.appendLine("                        ${variantReadPropertyExpr(p, "value", "v")}")
+        sb.appendLine(
+          "                        kt.${p.kotlinName} = v${scriptPropertyFromWideSuffix(p)}"
+        )
+      }
       sb.appendLine("                        true")
       sb.appendLine("                    }")
     }
@@ -4190,6 +4197,11 @@ internal class ScriptCodeEmitter(
     sb.appendLine("            },")
   }
 
+  // The free path's close of the closeable values the Kotlin object still holds, when the object is
+  // still alive: each wrapper's own reference (a resource the script assigned itself,
+  // `smokeScene = PackedScene.create()`, or the wrapper a setter read). The references a setter
+  // took for the property are the runtime registry's own and are released by the registry (see
+  // emitDispatchSet). Custom script values are script objects: nothing to close.
   private fun emitCleanupHelpers() {
     sb.appendLine("    private fun closeKanamaOwned(name: String, value: Any?) {")
     sb.appendLine("        when (value) {")
@@ -4213,54 +4225,20 @@ internal class ScriptCodeEmitter(
     sb.appendLine("    }")
     sb.appendLine()
     sb.appendLine("    internal fun cleanupKanamaOwnedProperties(kt: ${model.simpleName}) {")
-    sb.appendLine("        cleanupKanamaOwnedProperties(kt, mutableSetOf())")
-    sb.appendLine("    }")
-    sb.appendLine()
-    sb.appendLine(
-      "    internal fun cleanupKanamaOwnedProperties(kt: ${model.simpleName}, visited: MutableSet<Int>) {"
-    )
-    sb.appendLine("        if (!visited.add(System.identityHashCode(kt))) return")
     for (p in model.properties) {
-      sb.appendLine("        ${cleanupPropertyExpr(p, "kt.${p.kotlinName}", "visited")}")
+      if (holdsCustomScripts(p)) continue
+      sb.appendLine(
+        "        closeKanamaOwned(\"${kotlinStringLiteral(p.godotName)}\", kt.${p.kotlinName})"
+      )
     }
     sb.appendLine("    }")
     sb.appendLine()
   }
 
-  private fun cleanupPropertyExpr(
-    property: ScriptPropertyModel,
-    valueExpr: String,
-    visitedExpr: String,
-  ): String =
-    when {
-      // A script property that references another script instance owns only
-      // the retained reference to that object. The referenced script's own
-      // properties are cleaned up by its script instance free path.
-      property.customScriptFqName != null -> {
-        if (property.customScriptIsResource) {
-          "$valueExpr?.let { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }"
-        } else {
-          "Unit"
-        }
-      }
-      property.arrayElementCustomScriptFqName != null -> {
-        if (property.arrayElementCustomScriptIsResource) {
-          "$valueExpr.forEach { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }"
-        } else {
-          "Unit"
-        }
-      }
-      // Typed Map with custom resource-script values: release each retained value on free,
-      // mirroring the array custom-script-resource case above.
-      property.mapValueCustomScriptFqName != null -> {
-        if (property.mapValueCustomScriptIsResource) {
-          "$valueExpr.values.forEach { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }"
-        } else {
-          "Unit"
-        }
-      }
-      else -> "closeKanamaOwned(\"${kotlinStringLiteral(property.godotName)}\", $valueExpr)"
-    }
+  private fun holdsCustomScripts(property: ScriptPropertyModel): Boolean =
+    property.customScriptFqName != null ||
+      property.arrayElementCustomScriptFqName != null ||
+      property.mapValueCustomScriptFqName != null
 
   private fun emitDispatchGet() {
     if (model.properties.isEmpty() && model.toolButtons.isEmpty()) {
@@ -4388,6 +4366,24 @@ internal class ScriptCodeEmitter(
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Transform3D ?: net.multigesture.kanama.types.Transform3D.IDENTITY }"
       TypeMapping.PROJECTION ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Projection ?: net.multigesture.kanama.types.Projection.IDENTITY }"
+    }
+
+  /**
+   * True when [variantReadPropertyExpr] takes references for [property]: a resource wrapper (the
+   * retained read makes a `Resource` value owned), a custom resource script, or a `List`/`Map` of
+   * them. Those setters register what they took with `ScriptBridge.retainScriptProperty` (task
+   * 132).
+   */
+  private fun retainsOnSet(property: ScriptPropertyModel): Boolean =
+    when {
+      property.objectWrapperFqName != null -> true
+      property.arrayElementWrapperFqName != null -> true
+      property.customScriptFqName != null -> property.customScriptIsResource
+      property.arrayElementCustomScriptFqName != null -> property.arrayElementCustomScriptIsResource
+      property.mapKeyKotlinType != null ->
+        property.mapValueWrapperFqName in RESOURCE_WRAPPER_FROM_HANDLE ||
+          (property.mapValueCustomScriptFqName != null && property.mapValueCustomScriptIsResource)
+      else -> false
     }
 
   private fun variantReadPropertyExpr(

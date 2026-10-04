@@ -348,9 +348,12 @@ class CodeHighlighter(handle: GodotHandle) : SyntaxHighlighter(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CodeHighlighter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CodeHighlighter? =
+        internal fun wrapOwned(handle: RawSegment): CodeHighlighter? =
+            if (handle.address() == 0L) null else RefCounted.owned(CodeHighlighter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CodeHighlighter? =
             if (handle.address() == 0L) null else CodeHighlighter(GodotHandle(handle))
 
         private const val ADD_KEYWORD_COLOR_HASH = 1636512886L

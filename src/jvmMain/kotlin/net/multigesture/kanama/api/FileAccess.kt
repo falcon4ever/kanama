@@ -587,7 +587,7 @@ actual object FileAccess {
      */
     @JvmStatic
     fun open(path: String, flags: FileAccess.ModeFlags): FileAccessHandle? =
-        FileAccessHandle.wrap(ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, flags.value))
+        FileAccessHandle.wrapOwned(ObjectCalls.ptrcallWithStringAndLongArgsRetObject(openBind, MemorySegment.NULL, path, flags.value))
 
     /**
      * Creates a new `FileAccess` object and opens an encrypted file in write or read mode. You need to
@@ -604,7 +604,7 @@ actual object FileAccess {
         key: ByteArray,
         iv: ByteArray = ByteArray(0),
     ): FileAccessHandle? =
-        FileAccessHandle.wrap(
+        FileAccessHandle.wrapOwned(
             ObjectCalls.ptrcallWithStringLongByteArrayByteArrayArgsRetObject(
                 openEncryptedBind,
                 MemorySegment.NULL,
@@ -624,7 +624,7 @@ actual object FileAccess {
      */
     @JvmStatic
     fun openEncryptedWithPass(path: String, modeFlags: FileAccess.ModeFlags, pass: String): FileAccessHandle? =
-        FileAccessHandle.wrap(
+        FileAccessHandle.wrapOwned(
             ObjectCalls.ptrcallWithStringLongStringArgsRetObject(
                 openEncryptedWithPassBind,
                 MemorySegment.NULL,
@@ -645,7 +645,7 @@ actual object FileAccess {
      */
     @JvmStatic
     fun openCompressed(path: String, modeFlags: FileAccess.ModeFlags, compressionMode: FileAccess.CompressionMode = FileAccess.CompressionMode.FASTLZ): FileAccessHandle? =
-        FileAccessHandle.wrap(
+        FileAccessHandle.wrapOwned(
             ObjectCalls.ptrcallWithStringTwoLongArgsRetObject(
                 openCompressedBind,
                 MemorySegment.NULL,
@@ -666,7 +666,7 @@ actual object FileAccess {
      */
     @JvmStatic
     fun createTemp(modeFlags: FileAccess.ModeFlags, prefix: String = "", extension: String = "", keep: Boolean = false): FileAccessHandle? =
-        FileAccessHandle.wrap(
+        FileAccessHandle.wrapOwned(
             ObjectCalls.ptrcallWithLongTwoStringBoolArgsRetObject(
                 createTempBind,
                 MemorySegment.NULL,

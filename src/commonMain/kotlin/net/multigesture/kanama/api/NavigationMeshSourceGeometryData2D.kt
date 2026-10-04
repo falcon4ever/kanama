@@ -207,9 +207,12 @@ class NavigationMeshSourceGeometryData2D(handle: GodotHandle) : Resource(handle)
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationMeshSourceGeometryData2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): NavigationMeshSourceGeometryData2D? =
+        internal fun wrapOwned(handle: RawSegment): NavigationMeshSourceGeometryData2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(NavigationMeshSourceGeometryData2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): NavigationMeshSourceGeometryData2D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData2D(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L

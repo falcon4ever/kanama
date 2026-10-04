@@ -27,7 +27,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
 
     fun connectToHost(address: String, port: Int, channels: Int = 0, data: Int = 0): ENetPacketPeer? {
         checkOpen()
-        return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithStringAndThreeIntArgsRetObject(connectToHostBind, segment, address, port, channels, data))
+        return ENetPacketPeer.wrapOwned(ObjectCalls.ptrcallWithStringAndThreeIntArgsRetObject(connectToHostBind, segment, address, port, channels, data))
     }
 
     fun service(timeout: Int = 0): List<Any?> {
@@ -92,7 +92,7 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
 
     fun getPeers(): List<ENetPacketPeer> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getPeersBind, segment, ENetPacketPeer::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getPeersBind, segment, ENetPacketPeer::wrapBorrowed)
     }
 
     fun socketSend(destinationAddress: String, destinationPort: Int, packet: ByteArray) {
@@ -135,9 +135,12 @@ class ENetConnection(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ENetConnection? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ENetConnection? =
+        internal fun wrapOwned(handle: RawSegment): ENetConnection? =
+            if (handle.address() == 0L) null else RefCounted.owned(ENetConnection(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ENetConnection? =
             if (handle.address() == 0L) null else ENetConnection(GodotHandle(handle))
 
         private const val CREATE_HOST_BOUND_HASH = 1515002313L

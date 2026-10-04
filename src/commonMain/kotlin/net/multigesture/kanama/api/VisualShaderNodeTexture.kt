@@ -46,7 +46,7 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     fun setTextureType(value: VisualShaderNodeTexture.TextureType) {
@@ -87,9 +87,12 @@ class VisualShaderNodeTexture(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTexture? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture(GodotHandle(handle))
 
         private const val SET_SOURCE_HASH = 905262939L

@@ -16,9 +16,12 @@ class ResourceImporterDynamicFont(handle: GodotHandle) : ResourceImporter(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterDynamicFont? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterDynamicFont? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterDynamicFont? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterDynamicFont(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterDynamicFont? =
             if (handle.address() == 0L) null else ResourceImporterDynamicFont(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

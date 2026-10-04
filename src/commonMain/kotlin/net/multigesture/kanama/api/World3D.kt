@@ -95,7 +95,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnvironment(): Environment? {
         checkOpen()
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
+        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
     }
 
     /**
@@ -115,7 +115,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getFallbackEnvironment(): Environment? {
         checkOpen()
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackEnvironmentBind, segment))
+        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackEnvironmentBind, segment))
     }
 
     /**
@@ -135,7 +135,7 @@ class World3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCameraAttributes(): CameraAttributes? {
         checkOpen()
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     /**
@@ -153,9 +153,12 @@ class World3D(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): World3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): World3D? =
+        internal fun wrapOwned(handle: RawSegment): World3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(World3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): World3D? =
             if (handle.address() == 0L) null else World3D(GodotHandle(handle))
 
         private const val GET_SPACE_HASH = 2944877500L

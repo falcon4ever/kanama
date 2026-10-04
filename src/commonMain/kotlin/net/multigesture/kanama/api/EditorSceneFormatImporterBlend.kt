@@ -13,9 +13,12 @@ class EditorSceneFormatImporterBlend(handle: GodotHandle) : EditorSceneFormatImp
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorSceneFormatImporterBlend? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorSceneFormatImporterBlend? =
+        internal fun wrapOwned(handle: RawSegment): EditorSceneFormatImporterBlend? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorSceneFormatImporterBlend(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterBlend? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterBlend(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

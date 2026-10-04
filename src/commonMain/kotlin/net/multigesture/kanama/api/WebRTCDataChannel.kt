@@ -107,9 +107,12 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebRTCDataChannel? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WebRTCDataChannel? =
+        internal fun wrapOwned(handle: RawSegment): WebRTCDataChannel? =
+            if (handle.address() == 0L) null else RefCounted.owned(WebRTCDataChannel(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WebRTCDataChannel? =
             if (handle.address() == 0L) null else WebRTCDataChannel(GodotHandle(handle))
 
         private const val POLL_HASH = 166280745L

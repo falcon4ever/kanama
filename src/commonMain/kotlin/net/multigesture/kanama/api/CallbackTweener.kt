@@ -23,15 +23,18 @@ class CallbackTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(CallbackTweener.wrap(ret), "CallbackTweener.set_delay")
+        return requireGodotReturn(CallbackTweener.wrapOwned(ret), "CallbackTweener.set_delay")
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CallbackTweener? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CallbackTweener? =
+        internal fun wrapOwned(handle: RawSegment): CallbackTweener? =
+            if (handle.address() == 0L) null else RefCounted.owned(CallbackTweener(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CallbackTweener? =
             if (handle.address() == 0L) null else CallbackTweener(GodotHandle(handle))
 
         private const val SET_DELAY_HASH = 3008182292L

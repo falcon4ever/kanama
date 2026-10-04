@@ -285,9 +285,12 @@ class CameraAttributesPhysical(handle: GodotHandle) : CameraAttributes(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CameraAttributesPhysical? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CameraAttributesPhysical? =
+        internal fun wrapOwned(handle: RawSegment): CameraAttributesPhysical? =
+            if (handle.address() == 0L) null else RefCounted.owned(CameraAttributesPhysical(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CameraAttributesPhysical? =
             if (handle.address() == 0L) null else CameraAttributesPhysical(GodotHandle(handle))
 
         private const val SET_APERTURE_HASH = 373806689L

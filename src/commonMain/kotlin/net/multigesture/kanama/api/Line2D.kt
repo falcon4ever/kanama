@@ -238,7 +238,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_curve
      */
     fun getCurve(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     /**
@@ -276,7 +276,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_gradient
      */
     fun getGradient(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
     }
 
     /**
@@ -294,7 +294,7 @@ class Line2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Line2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**

@@ -132,9 +132,12 @@ class PhysicsMaterial(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PhysicsMaterial? =
+        internal fun wrapOwned(handle: RawSegment): PhysicsMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(PhysicsMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PhysicsMaterial? =
             if (handle.address() == 0L) null else PhysicsMaterial(GodotHandle(handle))
 
         private const val SET_FRICTION_HASH = 373806689L

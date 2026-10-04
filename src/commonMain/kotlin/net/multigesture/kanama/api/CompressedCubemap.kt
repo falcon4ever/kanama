@@ -15,9 +15,12 @@ class CompressedCubemap(handle: GodotHandle) : CompressedTextureLayered(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CompressedCubemap? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CompressedCubemap? =
+        internal fun wrapOwned(handle: RawSegment): CompressedCubemap? =
+            if (handle.address() == 0L) null else RefCounted.owned(CompressedCubemap(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CompressedCubemap? =
             if (handle.address() == 0L) null else CompressedCubemap(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

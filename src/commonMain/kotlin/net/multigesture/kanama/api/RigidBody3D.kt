@@ -262,7 +262,7 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: RigidBody3D.get_physics_material_override
      */
     fun getPhysicsMaterialOverride(): PhysicsMaterial? {
-        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, segment))
+        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialOverrideBind, segment))
     }
 
     /**

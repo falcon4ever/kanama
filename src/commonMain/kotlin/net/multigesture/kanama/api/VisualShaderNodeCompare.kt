@@ -98,9 +98,12 @@ class VisualShaderNodeCompare(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCompare? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeCompare? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeCompare? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeCompare(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCompare? =
             if (handle.address() == 0L) null else VisualShaderNodeCompare(GodotHandle(handle))
 
         private const val SET_COMPARISON_TYPE_HASH = 516558320L

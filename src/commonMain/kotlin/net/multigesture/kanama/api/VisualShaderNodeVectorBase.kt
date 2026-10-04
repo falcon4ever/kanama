@@ -39,9 +39,12 @@ open class VisualShaderNodeVectorBase(handle: GodotHandle) : VisualShaderNode(ha
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorBase? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVectorBase? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVectorBase? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVectorBase(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorBase? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorBase(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 1692596998L

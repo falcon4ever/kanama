@@ -455,9 +455,12 @@ class SystemFont(handle: GodotHandle) : Font(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SystemFont? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SystemFont? =
+        internal fun wrapOwned(handle: RawSegment): SystemFont? =
+            if (handle.address() == 0L) null else RefCounted.owned(SystemFont(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SystemFont? =
             if (handle.address() == 0L) null else SystemFont(GodotHandle(handle))
 
         private const val SET_ANTIALIASING_HASH = 1669900L

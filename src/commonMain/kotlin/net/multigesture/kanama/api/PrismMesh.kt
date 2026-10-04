@@ -147,9 +147,12 @@ class PrismMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PrismMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PrismMesh? =
+        internal fun wrapOwned(handle: RawSegment): PrismMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(PrismMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PrismMesh? =
             if (handle.address() == 0L) null else PrismMesh(GodotHandle(handle))
 
         private const val SET_LEFT_TO_RIGHT_HASH = 373806689L

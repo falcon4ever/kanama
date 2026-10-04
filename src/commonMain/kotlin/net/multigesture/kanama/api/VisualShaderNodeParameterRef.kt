@@ -28,9 +28,12 @@ class VisualShaderNodeParameterRef(handle: GodotHandle) : VisualShaderNode(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParameterRef? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParameterRef? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParameterRef? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParameterRef(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParameterRef? =
             if (handle.address() == 0L) null else VisualShaderNodeParameterRef(GodotHandle(handle))
 
         private const val SET_PARAMETER_NAME_HASH = 83702148L

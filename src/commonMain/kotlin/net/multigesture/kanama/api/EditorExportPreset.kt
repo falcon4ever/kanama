@@ -322,9 +322,12 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPreset? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPreset? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPreset? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPreset(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPreset? =
             if (handle.address() == 0L) null else EditorExportPreset(GodotHandle(handle))
 
         private const val HAS_HASH = 2619796661L

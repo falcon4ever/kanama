@@ -35,7 +35,7 @@ class MultiMeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MultiMeshInstance3D.get_multimesh
      */
     fun getMultimesh(): MultiMesh? {
-        return MultiMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, segment))
+        return MultiMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, segment))
     }
 
     companion object {

@@ -13,9 +13,12 @@ class VisualShaderNodeGlobalExpression(handle: GodotHandle) : VisualShaderNodeEx
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeGlobalExpression? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeGlobalExpression? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeGlobalExpression? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeGlobalExpression(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeGlobalExpression? =
             if (handle.address() == 0L) null else VisualShaderNodeGlobalExpression(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

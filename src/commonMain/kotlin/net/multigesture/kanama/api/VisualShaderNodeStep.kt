@@ -43,9 +43,12 @@ class VisualShaderNodeStep(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeStep? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeStep? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeStep? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeStep(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeStep? =
             if (handle.address() == 0L) null else VisualShaderNodeStep(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 715172489L

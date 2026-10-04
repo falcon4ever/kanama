@@ -76,9 +76,12 @@ class OpenXRActionSet(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRActionSet? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRActionSet? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRActionSet? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRActionSet(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRActionSet? =
             if (handle.address() == 0L) null else OpenXRActionSet(GodotHandle(handle))
 
         private const val SET_LOCALIZED_NAME_HASH = 83702148L

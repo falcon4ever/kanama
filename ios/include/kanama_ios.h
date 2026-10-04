@@ -56,6 +56,14 @@ int32_t kanama_ios_report_script_error(
     int32_t line
 );
 
+/*
+ * Task 132 — prints [message] to Godot's output through the `print` utility function, or
+ * `push_warning` when [warning] is non-zero, so runtime diagnostics (the GC-release log, the
+ * borrowed-close warning) reach the same log as on desktop. Returns 1 when printed, 0 when the
+ * engine API did not resolve (a fault is recorded).
+ */
+int32_t kanama_ios_godot_print(const char *message, int32_t warning);
+
 void kanama_ios_godot_ptrcall(
     int64_t method_bind,
     int64_t instance,
@@ -997,6 +1005,12 @@ void kanama_ios_godot_gpu_particles3d_restart(int64_t particles, int32_t keep_se
 void kanama_ios_godot_collision_shape3d_set_disabled(int64_t shape, int32_t disabled);
 
 int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint);
+
+/* Task 132: ResourceLoader.load with CACHE_MODE_IGNORE (an owned +1 the caller releases). */
+int64_t kanama_ios_godot_resource_loader_load_uncached(const char *path, const char *type_hint);
+
+/* Task 132 self-test: a Kanama Script object for [path] (refcount 1, the caller's), or 0. */
+int64_t kanama_ios_godot_create_script_object(const char *path);
 
 void kanama_ios_godot_sprite2d_set_texture(int64_t sprite, int64_t texture);
 

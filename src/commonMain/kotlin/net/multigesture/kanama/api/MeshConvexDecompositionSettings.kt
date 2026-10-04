@@ -382,9 +382,12 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MeshConvexDecompositionSettings? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MeshConvexDecompositionSettings? =
+        internal fun wrapOwned(handle: RawSegment): MeshConvexDecompositionSettings? =
+            if (handle.address() == 0L) null else RefCounted.owned(MeshConvexDecompositionSettings(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MeshConvexDecompositionSettings? =
             if (handle.address() == 0L) null else MeshConvexDecompositionSettings(GodotHandle(handle))
 
         private const val SET_MAX_CONCAVITY_HASH = 373806689L

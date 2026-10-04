@@ -201,7 +201,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_normal
      */
     fun getTextureNormal(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, segment))
     }
 
     /**
@@ -212,7 +212,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_pressed
      */
     fun getTexturePressed(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, segment))
     }
 
     /**
@@ -222,7 +222,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_hover
      */
     fun getTextureHover(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureHoverBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureHoverBind, segment))
     }
 
     /**
@@ -232,7 +232,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_disabled
      */
     fun getTextureDisabled(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureDisabledBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureDisabledBind, segment))
     }
 
     /**
@@ -246,7 +246,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_texture_focused
      */
     fun getTextureFocused(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureFocusedBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureFocusedBind, segment))
     }
 
     /**
@@ -256,7 +256,7 @@ class TextureButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: TextureButton.get_click_mask
      */
     fun getClickMask(): BitMap? {
-        return BitMap.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClickMaskBind, segment))
+        return BitMap.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getClickMaskBind, segment))
     }
 
     /**

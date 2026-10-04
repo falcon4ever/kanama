@@ -119,9 +119,12 @@ class VisualShaderNodeFloatParameter(handle: GodotHandle) : VisualShaderNodePara
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeFloatParameter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeFloatParameter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeFloatParameter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeFloatParameter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFloatParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeFloatParameter(GodotHandle(handle))
 
         private const val SET_HINT_HASH = 3712586466L

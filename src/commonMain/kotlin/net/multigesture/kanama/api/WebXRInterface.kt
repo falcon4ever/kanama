@@ -108,7 +108,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
 
     fun getInputSourceTracker(inputSourceId: Int): XRControllerTracker? {
         checkOpen()
-        return XRControllerTracker.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInputSourceTrackerBind, segment, inputSourceId))
+        return XRControllerTracker.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getInputSourceTrackerBind, segment, inputSourceId))
     }
 
     fun getInputSourceTargetRayMode(inputSourceId: Int): WebXRInterface.TargetRayMode {
@@ -165,9 +165,12 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebXRInterface? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WebXRInterface? =
+        internal fun wrapOwned(handle: RawSegment): WebXRInterface? =
+            if (handle.address() == 0L) null else RefCounted.owned(WebXRInterface(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WebXRInterface? =
             if (handle.address() == 0L) null else WebXRInterface(GodotHandle(handle))
 
         private const val IS_SESSION_SUPPORTED_HASH = 83702148L

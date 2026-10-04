@@ -48,9 +48,12 @@ class VisualShaderNodeVectorOp(handle: GodotHandle) : VisualShaderNodeVectorBase
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorOp? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVectorOp? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVectorOp? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVectorOp(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorOp? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorOp(GodotHandle(handle))
 
         private const val SET_OPERATOR_HASH = 3371507302L

@@ -24,9 +24,12 @@ class OpenXRSpatialComponentPolygon2DList(handle: GodotHandle) : OpenXRSpatialCo
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPolygon2DList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentPolygon2DList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentPolygon2DList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentPolygon2DList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPolygon2DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPolygon2DList(GodotHandle(handle))
 
         private const val GET_TRANSFORM_HASH = 1965739696L

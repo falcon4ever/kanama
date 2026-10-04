@@ -215,7 +215,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     ): PropertyTweener {
         checkOpen()
         return requireGodotReturn(
-            PropertyTweener.wrap(
+            PropertyTweener.wrapOwned(
                 ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
                     tweenPropertyBind,
                     segment,
@@ -240,7 +240,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     fun tweenInterval(time: Double): IntervalTweener {
         checkOpen()
         return requireGodotReturn(
-            IntervalTweener.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(tweenIntervalBind, segment, time)),
+            IntervalTweener.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(tweenIntervalBind, segment, time)),
             "Tween.tween_interval",
         )
     }
@@ -254,7 +254,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     fun tweenCallback(target: GodotObject, method: String): CallbackTweener {
         checkOpen()
         return requireGodotReturn(
-            CallbackTweener.wrap(
+            CallbackTweener.wrapOwned(
                 ObjectCalls.ptrcallWithCallableArgRetObject(tweenCallbackBind, segment, target.segment, method),
             ),
             "Tween.tween_callback",
@@ -280,7 +280,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     ): MethodTweener {
         checkOpen()
         return requireGodotReturn(
-            MethodTweener.wrap(
+            MethodTweener.wrapOwned(
                 ObjectCalls.ptrcallWithCallableVariantVariantDoubleArgsRetObject(
                     tweenMethodBind,
                     segment,
@@ -304,7 +304,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     fun tweenSubtween(subtween: Tween?): SubtweenTweener {
         checkOpen()
         return requireGodotReturn(
-            SubtweenTweener.wrap(
+            SubtweenTweener.wrapOwned(
                 ObjectCalls.ptrcallWithObjectArgRetObject(
                     tweenSubtweenBind,
                     segment,
@@ -328,7 +328,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
     fun tweenAwait(signal: GodotSignal): AwaitTweener {
         checkOpen()
         return requireGodotReturn(
-            AwaitTweener.wrap(
+            AwaitTweener.wrapOwned(
                 ObjectCalls.ptrcallWithSignalArgRetObject(tweenAwaitBind, segment, signal.owner.segment, signal.name),
             ),
             "Tween.tween_await",
@@ -577,7 +577,7 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
             releaseHandle(value)
             this
         } else {
-            Tween(GodotHandle(value))
+            RefCounted.owned(Tween(GodotHandle(value)))
         }
 
     object Signals {
@@ -750,7 +750,10 @@ actual class Tween internal constructor(handle: GodotHandle) : RefCounted(handle
             ObjectCalls.getMethodBind("Tween", "interpolate_value", INTERPOLATE_VALUE_HASH)
         }
 
-        internal fun wrap(handle: MemorySegment): Tween? =
+        internal fun wrapOwned(handle: MemorySegment): Tween? =
+            if (handle.address() == 0L) null else RefCounted.owned(Tween(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): Tween? =
             if (handle.address() == 0L) null else Tween(GodotHandle(handle))
     }
 }

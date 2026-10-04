@@ -348,6 +348,56 @@ The wrapper convention on desktop/Android:
   reference**; `close()` releases it (`unreference()` + destroy at zero).
   This matches the script-property retention path
   (`ScriptBridge.retainScriptResource`), which takes its own reference.
+- **Ownership is a constructor fact** (task 132 D1). A RefCounted wrapper class
+  has no `wrap`: its companion carries `wrapOwned` (the wrapper owns a `+1`)
+  and `wrapBorrowed` (a view), and `RefCounted.owned(wrapper)` marks a wrapper
+  built some other way (`create()`, a hand-written loader). The generator picks
+  one per site (`wrap_owned_helper` / `wrap_borrowed_helper`): RefCounted
+  returns, the self-return collapse and `create()` are owned; `fromHandle`,
+  the `from*` downcasts and typed-Array element callbacks (`X::wrapBorrowed`,
+  because `readArrayObjectsOwned` / iOS `ownedListElement` retain the element
+  and mark it owned) are borrowed. Hand-written and per-platform files follow
+  the same rule, and `refcounted_ownership_problems` in
+  `scripts/audit_generator_shape_policy.py` checks every site.
+- **Only an owned wrapper registers the GC fallback** (task 132 D2-D5,
+  `binding/runtime/OwnedReleases.kt`): a cleanup holding the raw handle and
+  instance id (never the wrapper) through `OwnedReleaseCleaner` -- one shared
+  `java.lang.ref.Cleaner` on desktop/Android (absent before Android API 33:
+  the fallback is off there), `kotlin.native.ref.createCleaner` on iOS. The
+  cleanup only enqueues on a lock-free queue; the main thread drains it once
+  per frame (`ScriptLanguage._frame` on desktop/Android,
+  `KanamaIosRuntime.frame()` on iOS) and at SCENE deinitialization after a
+  forced collection, before Godot's leak report. `close()` cancels the cleanup
+  first, so a `+1` is released once; a release whose object is already gone
+  (instance id no longer resolves) is skipped. `retainForKotlinWrapper()` makes
+  a borrowed wrapper owned, fallback included. `close()` disarms atomically
+  (`PendingRelease.tryDisarm`): if the cleanup won the race, close() leaves the
+  release to the drain. A wrapper built off the engine main thread is owned but
+  registers no fallback. `close()` on a wrapper that holds no reference of its
+  own (a borrowed view) releases nothing and warns in debug builds; the `from*`
+  downcasts take their own `+1` (`RefCounted.retained`).
+- **A script object keeps its RefCounted owner alive** (task 132 blocker 1,
+  `ScriptOwnerLinks.kt` on desktop/Android, `IosScriptInstance` in
+  `KanamaIosRuntime.kt` on iOS): C#'s `CSharpInstance` model. The instance of a
+  `KanamaScript` object holds a `+1` on its owner; the runtime's link to the
+  instance (`ObjectRegistry`, `ScriptBridge`'s owner maps) is strong while the
+  owner's count is above 1 and weak at 1, switched in `refcount_incremented` /
+  `refcount_decremented` (which now returns false at count 1). The script object
+  anchors the instance (`KanamaScript.kanamaInstanceAnchor`) and carries the
+  cleanup that queues the owner's release once it is unreachable. A plain script
+  class has no anchor and takes no `+1`; instead `OwnedReleases.drain` parks the
+  GC releases of its owner's owned wrappers until the script is detached (or
+  shutdown), the lifetime it had before the fallback. A collected instance whose owner the engine
+  references again before the release ran is rebuilt from the script factory,
+  as C#'s `_internal_new_managed` does, and refilled from an uncached load of
+  the owner's file -- both on the instance's first use (`materialize`), never in
+  `refcount_incremented` (Godot holds the ResourceCache lock and the
+  `ResourceLoader` mutex there) nor on the free path (`siFree` reads the link
+  without building; owner/script/placeholder metadata never builds). The drain runs owner-link
+  releases first and at once, and owned-wrapper releases within a ~1 ms frame
+  budget (the rest carries over); above 100,000 live registrations new owned
+  wrappers stop registering. Plain-class parking is keyed by owner and
+  re-checked only when that owner's script is detached (`UnparkHook`).
 - **Self-returning fluent methods collapse**: when the returned address equals
   the receiver's handle, the generated method releases the duplicate reference
   and returns `this` instead of minting a second owning wrapper (chained calls

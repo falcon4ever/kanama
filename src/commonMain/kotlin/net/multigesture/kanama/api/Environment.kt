@@ -610,7 +610,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getSky(): Sky? {
         checkOpen()
-        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyBind, segment))
+        return Sky.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkyBind, segment))
     }
 
     /**
@@ -2144,7 +2144,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getGlowMap(): Texture? {
         checkOpen()
-        return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGlowMapBind, segment))
+        return Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGlowMapBind, segment))
     }
 
     /**
@@ -2916,7 +2916,7 @@ class Environment(handle: GodotHandle) : Resource(handle) {
      */
     fun getAdjustmentColorCorrection(): Texture? {
         checkOpen()
-        return Texture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, segment))
+        return Texture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAdjustmentColorCorrectionBind, segment))
     }
 
     /**
@@ -3218,9 +3218,12 @@ class Environment(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Environment? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Environment? =
+        internal fun wrapOwned(handle: RawSegment): Environment? =
+            if (handle.address() == 0L) null else RefCounted.owned(Environment(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Environment? =
             if (handle.address() == 0L) null else Environment(GodotHandle(handle))
 
         private const val SET_BACKGROUND_HASH = 4071623990L

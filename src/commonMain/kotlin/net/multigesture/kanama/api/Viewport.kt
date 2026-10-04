@@ -332,7 +332,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_world_2d
      */
     fun getWorld2d(): World2D? {
-        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
+        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
     }
 
     /**
@@ -342,7 +342,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.find_world_2d
      */
     fun findWorld2d(): World2D? {
-        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld2dBind, segment))
+        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(findWorld2dBind, segment))
     }
 
     /**
@@ -760,7 +760,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_texture
      */
     fun getTexture(): ViewportTexture? {
-        return ViewportTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return ViewportTexture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -1514,7 +1514,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_world_3d
      */
     fun getWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
+        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
     }
 
     /**
@@ -1524,7 +1524,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.find_world_3d
      */
     fun findWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(findWorld3dBind, segment))
+        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(findWorld3dBind, segment))
     }
 
     /**
@@ -1867,7 +1867,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Viewport.get_vrs_texture
      */
     fun getVrsTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVrsTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getVrsTextureBind, segment))
     }
 
     // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d).

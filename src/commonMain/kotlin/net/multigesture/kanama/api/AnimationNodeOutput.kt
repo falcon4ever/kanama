@@ -15,9 +15,12 @@ class AnimationNodeOutput(handle: GodotHandle) : AnimationNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeOutput? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeOutput? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeOutput? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeOutput(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeOutput? =
             if (handle.address() == 0L) null else AnimationNodeOutput(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -154,7 +154,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     /**
@@ -284,7 +284,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_occluder_polygon
      */
     fun getOccluderPolygon(layerId: Int, polygonIndex: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getOccluderPolygonBind, segment, layerId, polygonIndex, flipH, flipV, transpose))
+        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getOccluderPolygonBind, segment, layerId, polygonIndex, flipH, flipV, transpose))
     }
 
     /**
@@ -303,7 +303,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_occluder
      */
     fun getOccluder(layerId: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getOccluderBind, segment, layerId, flipH, flipV, transpose))
+        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getOccluderBind, segment, layerId, flipH, flipV, transpose))
     }
 
     /**
@@ -521,7 +521,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_navigation_polygon
      */
     fun getNavigationPolygon(layerId: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): NavigationPolygon? {
-        return NavigationPolygon.wrap(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getNavigationPolygonBind, segment, layerId, flipH, flipV, transpose))
+        return NavigationPolygon.wrapOwned(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getNavigationPolygonBind, segment, layerId, flipH, flipV, transpose))
     }
 
     /**

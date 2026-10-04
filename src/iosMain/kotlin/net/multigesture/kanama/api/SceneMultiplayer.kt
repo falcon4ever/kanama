@@ -176,14 +176,17 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneMultiplayer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SceneMultiplayer? =
+        internal fun wrapOwned(handle: MemorySegment): SceneMultiplayer? =
+            if (handle.address() == 0L) null else RefCounted.owned(SceneMultiplayer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): SceneMultiplayer? =
             if (handle.address() == 0L) null else SceneMultiplayer(GodotHandle(handle))
 
         // Downcast a MultiplayerAPI to SceneMultiplayer (null if not).
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
-            api?.takeIf { it.isClass("SceneMultiplayer") }?.let { SceneMultiplayer(it.handle) }
+            api?.takeIf { it.isClass("SceneMultiplayer") }?.let { RefCounted.retained(SceneMultiplayer(it.handle)) }
 
         private const val SET_ROOT_PATH_HASH = 1348162250L
         private val setRootPathBind by lazy {

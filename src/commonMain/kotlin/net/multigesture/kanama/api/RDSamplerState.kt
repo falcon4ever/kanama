@@ -442,9 +442,12 @@ class RDSamplerState(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDSamplerState? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDSamplerState? =
+        internal fun wrapOwned(handle: RawSegment): RDSamplerState? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDSamplerState(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDSamplerState? =
             if (handle.address() == 0L) null else RDSamplerState(GodotHandle(handle))
 
         private const val SET_MAG_FILTER_HASH = 1493420382L

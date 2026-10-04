@@ -45,9 +45,12 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): HMACContext? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): HMACContext? =
+        internal fun wrapOwned(handle: RawSegment): HMACContext? =
+            if (handle.address() == 0L) null else RefCounted.owned(HMACContext(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): HMACContext? =
             if (handle.address() == 0L) null else HMACContext(GodotHandle(handle))
 
         private const val START_HASH = 3537364598L

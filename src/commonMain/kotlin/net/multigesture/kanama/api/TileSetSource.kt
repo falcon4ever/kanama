@@ -77,9 +77,12 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileSetSource? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TileSetSource? =
+        internal fun wrapOwned(handle: RawSegment): TileSetSource? =
+            if (handle.address() == 0L) null else RefCounted.owned(TileSetSource(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TileSetSource? =
             if (handle.address() == 0L) null else TileSetSource(GodotHandle(handle))
 
         private const val GET_TILES_COUNT_HASH = 3905245786L

@@ -147,7 +147,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun getPhysicsMaterial(): PhysicsMaterial? {
-        return PhysicsMaterial.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialBind, segment))
+        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPhysicsMaterialBind, segment))
     }
 
     fun setBakeNavigation(bakeNavigation: Boolean) {
@@ -171,7 +171,7 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun getMeshLibrary(): MeshLibrary? {
-        return MeshLibrary.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshLibraryBind, segment))
+        return MeshLibrary.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshLibraryBind, segment))
     }
 
     fun setCellSize(size: Vector3) {

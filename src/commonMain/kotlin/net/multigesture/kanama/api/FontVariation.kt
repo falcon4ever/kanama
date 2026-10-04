@@ -108,7 +108,7 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Font.wrap(ret)
+        return Font.wrapOwned(ret)
     }
 
     /**
@@ -299,9 +299,12 @@ class FontVariation(handle: GodotHandle) : Font(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FontVariation? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): FontVariation? =
+        internal fun wrapOwned(handle: RawSegment): FontVariation? =
+            if (handle.address() == 0L) null else RefCounted.owned(FontVariation(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): FontVariation? =
             if (handle.address() == 0L) null else FontVariation(GodotHandle(handle))
 
         private const val SET_BASE_FONT_HASH = 1262170328L

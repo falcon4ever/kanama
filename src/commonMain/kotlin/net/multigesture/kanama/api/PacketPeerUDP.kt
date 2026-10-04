@@ -158,9 +158,12 @@ class PacketPeerUDP(handle: GodotHandle) : PacketPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PacketPeerUDP? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PacketPeerUDP? =
+        internal fun wrapOwned(handle: RawSegment): PacketPeerUDP? =
+            if (handle.address() == 0L) null else RefCounted.owned(PacketPeerUDP(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PacketPeerUDP? =
             if (handle.address() == 0L) null else PacketPeerUDP(GodotHandle(handle))
 
         private const val BIND_HASH = 4051239242L

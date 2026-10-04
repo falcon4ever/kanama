@@ -102,9 +102,12 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AESContext? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AESContext? =
+        internal fun wrapOwned(handle: RawSegment): AESContext? =
+            if (handle.address() == 0L) null else RefCounted.owned(AESContext(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AESContext? =
             if (handle.address() == 0L) null else AESContext(GodotHandle(handle))
 
         private const val START_HASH = 3122411423L

@@ -42,9 +42,12 @@ class ColorPalette(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ColorPalette? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ColorPalette? =
+        internal fun wrapOwned(handle: RawSegment): ColorPalette? =
+            if (handle.address() == 0L) null else RefCounted.owned(ColorPalette(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ColorPalette? =
             if (handle.address() == 0L) null else ColorPalette(GodotHandle(handle))
 
         private const val SET_COLORS_HASH = 3546319833L

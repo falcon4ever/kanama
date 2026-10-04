@@ -74,9 +74,12 @@ class PCKPacker(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PCKPacker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PCKPacker? =
+        internal fun wrapOwned(handle: RawSegment): PCKPacker? =
+            if (handle.address() == 0L) null else RefCounted.owned(PCKPacker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PCKPacker? =
             if (handle.address() == 0L) null else PCKPacker(GodotHandle(handle))
 
         private const val PCK_START_HASH = 508410629L

@@ -81,7 +81,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTileScene(id: Int): PackedScene? {
         checkOpen()
-        return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSceneTileSceneBind, segment, id))
+        return PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSceneTileSceneBind, segment, id))
     }
 
     /**
@@ -128,9 +128,12 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileSetScenesCollectionSource? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TileSetScenesCollectionSource? =
+        internal fun wrapOwned(handle: RawSegment): TileSetScenesCollectionSource? =
+            if (handle.address() == 0L) null else RefCounted.owned(TileSetScenesCollectionSource(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TileSetScenesCollectionSource? =
             if (handle.address() == 0L) null else TileSetScenesCollectionSource(GodotHandle(handle))
 
         private const val GET_SCENE_TILES_COUNT_HASH = 2455072627L

@@ -81,9 +81,12 @@ class AudioStreamGeneratorPlayback(handle: GodotHandle) : AudioStreamPlaybackRes
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamGeneratorPlayback? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamGeneratorPlayback? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamGeneratorPlayback? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamGeneratorPlayback(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamGeneratorPlayback? =
             if (handle.address() == 0L) null else AudioStreamGeneratorPlayback(GodotHandle(handle))
 
         private const val PUSH_FRAME_HASH = 3975407249L

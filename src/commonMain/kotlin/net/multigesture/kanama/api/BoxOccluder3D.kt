@@ -41,9 +41,12 @@ class BoxOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BoxOccluder3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): BoxOccluder3D? =
+        internal fun wrapOwned(handle: RawSegment): BoxOccluder3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(BoxOccluder3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): BoxOccluder3D? =
             if (handle.address() == 0L) null else BoxOccluder3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

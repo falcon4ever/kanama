@@ -449,10 +449,12 @@ compile; they do not check the class, so prefer the typed forms.
 
 `castOrNull` and `cast` ask Godot (`Object.is_class`) every time, even when the
 wrapper's Kotlin class already matches (a wrapper minted with `Timer(node.handle)`
-proves nothing); only a cast to `GodotObject` skips the question. They return the
-same wrapper when it already is a `T`, else a new non-owning view of the same
-object. A cast result is never yours to close: close the original (the owned
-`RefCounted` return you cast from) and only that. They take a Kanama wrapper class (`Node3D`, `InputEventKey`,
+proves nothing); only a cast to `GodotObject` skips the question. A cast to a
+`RefCounted` class (`res.cast<Texture2D>()`) returns a new wrapper with a reference
+of its own, like the `from*` downcasts: kept in a field it keeps the object alive,
+and closing it (or forgetting it) releases only that reference, never the
+original's. A cast to any other class returns the same wrapper when it already is
+a `T`, else a new view of the same object. They take a Kanama wrapper class (`Node3D`, `InputEventKey`,
 `PackedScene`, ...); `isScript` / `asScript` take a Kotlin script class.
 Replace hand-written `Node3D(other.handle)` casts with them: an unchecked one
 calls `Node3D` methods on whatever the object really is.
@@ -542,6 +544,22 @@ script's coroutines (`launch { }`) drain their queues there once per frame.
 That is also the rule for your own threads: **hand results back to the main
 thread** with `MainThread.post` or a script coroutine before touching a
 node (see [Kotlin Style → Coroutines](style-guide.md#coroutines)).
+
+A `RefCounted` wrapper you get on another thread is still yours, but it gets
+**no garbage-collector fallback**: a worker can still be inside a call through
+it when the main thread would release it, so Kanama only registers the fallback
+for wrappers made on the main thread. That covers every owned wrapper a worker
+makes: a getter result, a loaded resource, and a `from*` downcast (which takes a
+reference of its own). **Close what you create or downcast on a worker**
+(`use { }`), or hand it to the main thread first; a forgotten one is never
+released ([Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release)).
+
+The other direction needs care too: a wrapper made on the main thread and
+handed to a worker is released by the main thread once the collector finds it
+unreachable — and the collector may decide that while the worker is still
+inside its last call through it. Keep such a wrapper reachable until the worker
+is done (close it after, from the main thread, or keep it in a field), rather
+than making the worker's call its last use.
 
 Kanama performs **no thread-affinity checks**. A wrapper method called from a
 `Dispatchers.Default` coroutine or a `Thread` you started ptrcalls the engine

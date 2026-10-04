@@ -138,9 +138,12 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorContextMenuPlugin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorContextMenuPlugin? =
+        internal fun wrapOwned(handle: RawSegment): EditorContextMenuPlugin? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorContextMenuPlugin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorContextMenuPlugin? =
             if (handle.address() == 0L) null else EditorContextMenuPlugin(GodotHandle(handle))
 
         private const val ADD_MENU_SHORTCUT_HASH = 851596305L

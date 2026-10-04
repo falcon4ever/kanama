@@ -106,9 +106,12 @@ class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GDScriptTextDocument? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GDScriptTextDocument? =
+        internal fun wrapOwned(handle: RawSegment): GDScriptTextDocument? =
+            if (handle.address() == 0L) null else RefCounted.owned(GDScriptTextDocument(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GDScriptTextDocument? =
             if (handle.address() == 0L) null else GDScriptTextDocument(GodotHandle(handle))
 
         private const val SHOW_NATIVE_SYMBOL_IN_EDITOR_HASH = 83702148L

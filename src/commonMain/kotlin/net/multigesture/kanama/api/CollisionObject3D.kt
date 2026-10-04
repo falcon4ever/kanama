@@ -331,7 +331,7 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionObject3D.shape_owner_get_shape
      */
     fun shapeOwnerGetShape(ownerId: Long, shapeId: Int): Shape3D? {
-        return Shape3D.wrap(ObjectCalls.ptrcallWithUInt32AndIntArgRetObject(shapeOwnerGetShapeBind, segment, ownerId, shapeId))
+        return Shape3D.wrapOwned(ObjectCalls.ptrcallWithUInt32AndIntArgRetObject(shapeOwnerGetShapeBind, segment, ownerId, shapeId))
     }
 
     /**

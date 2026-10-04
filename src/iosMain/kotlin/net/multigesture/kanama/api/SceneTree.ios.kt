@@ -17,7 +17,7 @@ fun SceneTree.createTween(): Tween =
     requireGodotReturn(
         ObjectCalls.ptrcallNoArgsRetObject(sceneTreeCreateTweenBind, segment)
             .takeIf { it.address() != 0L }
-            ?.let { Tween(GodotHandle(it)) },
+            ?.let { RefCounted.owned(Tween(GodotHandle(it))) },
         "SceneTree.create_tween",
     )
 

@@ -413,20 +413,23 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FastNoiseLite? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): FastNoiseLite? =
+        internal fun wrapOwned(handle: RawSegment): FastNoiseLite? =
+            if (handle.address() == 0L) null else RefCounted.owned(FastNoiseLite(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): FastNoiseLite? =
             if (handle.address() == 0L) null else FastNoiseLite(GodotHandle(handle))
 
         // Instantiate a FastNoiseLite.
         @JvmStatic
         fun create(): FastNoiseLite =
-            FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite")))
+            RefCounted.owned(FastNoiseLite(GodotHandle(ObjectCalls.constructObject("FastNoiseLite"))))
 
         // Downcast a Resource to FastNoiseLite (null if not).
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
-            if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null
+            if (value.isClass("FastNoiseLite")) RefCounted.retained(FastNoiseLite(value.handle)) else null
 
         private const val SET_NOISE_TYPE_HASH = 2624461392L
         private val setNoiseTypeBind by lazy {

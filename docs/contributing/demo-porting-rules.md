@@ -134,6 +134,10 @@ owner.setScript(script)
 val map = owner.kotlinScriptInstance<DataMap>() ?: error("missing DataMap")
 ```
 
+Keeping only `map` is enough: a script object that extends `KanamaScript` keeps
+its resource alive (task 132), so `owner` may be closed or dropped once the
+script object is in hand.
+
 Treat Kanama `.kt` scripts as trusted executable project code. This is the
 same security model as GDScript, C#, native GDExtensions, and editor plugins;
 do not run untrusted Godot projects with their addons/extensions enabled.
@@ -182,8 +186,9 @@ still holds. Which wrappers are yours is fixed by how you got them:
 - **Owned — close it.** `X.create()`, `ResourceLoader.load…`, and every
   `RefCounted`-typed method return, including plain getters such as
   `meshInstance.getMesh()` or `animationPlayer.getAnimation("walk")`. Not
-  closing one leaks the reference, and Godot prints `Leaked instance: <Class>`
-  at shutdown.
+  closing one keeps the reference until the garbage collector drops the
+  wrapper (task 132), so ported demos still close them: the demos are the
+  examples people copy, and Web has no collector fallback yet.
 - **Borrowed — never close it.** A view you minted around a handle you already
   had: `Resource.fromHandle(...)`, or a script-class constructor over an
   existing object.
@@ -220,8 +225,10 @@ setter takes its own reference, so after `meshInstance.setMesh(mesh)` a
 `RefCounted.close()` needs no opt-in: `@ManualGodotLifetimeApi` is deprecated
 and no longer applied, so drop any `@OptIn` for it from a port. The rule above
 is what `scripts/demo_parity_audit.py` in the demos repository enforces — it
-fails a `close()` on a borrowed view (`fromHandle`/`fromObject`) or on a live
-`Tween`, and never flags closing an owned return.
+fails a `close()` on a borrowed view (`fromHandle`) or on a live `Tween`, and
+never flags closing an owned return. A `from*` downcast (`fromObject`,
+`fromResource`) is owned since task 132: it takes its own reference, so closing
+it is correct (and forgetting it is a late release).
 
 ## Signals And Callbacks
 

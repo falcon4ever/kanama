@@ -13,9 +13,12 @@ class EditorExportPlatformLinuxBSD(handle: GodotHandle) : EditorExportPlatformPC
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformLinuxBSD? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformLinuxBSD? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformLinuxBSD? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformLinuxBSD(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformLinuxBSD? =
             if (handle.address() == 0L) null else EditorExportPlatformLinuxBSD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

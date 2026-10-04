@@ -45,9 +45,12 @@ class ConcavePolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ConcavePolygonShape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ConcavePolygonShape2D? =
+        internal fun wrapOwned(handle: RawSegment): ConcavePolygonShape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(ConcavePolygonShape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ConcavePolygonShape2D? =
             if (handle.address() == 0L) null else ConcavePolygonShape2D(GodotHandle(handle))
 
         private const val SET_SEGMENTS_HASH = 1509147220L

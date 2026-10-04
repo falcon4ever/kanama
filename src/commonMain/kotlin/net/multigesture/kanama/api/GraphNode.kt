@@ -174,7 +174,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_custom_icon_left
      */
     fun getSlotCustomIconLeft(slotIndex: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconLeftBind, segment, slotIndex))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconLeftBind, segment, slotIndex))
     }
 
     /**
@@ -268,7 +268,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_custom_icon_right
      */
     fun getSlotCustomIconRight(slotIndex: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconRightBind, segment, slotIndex))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconRightBind, segment, slotIndex))
     }
 
     /**

@@ -116,7 +116,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_pose
      */
     fun getPose(): XRPose? {
-        return XRPose.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPoseBind, segment))
+        return XRPose.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPoseBind, segment))
     }
 
     /**

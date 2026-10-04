@@ -65,15 +65,18 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ButtonGroup? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ButtonGroup? =
+        internal fun wrapOwned(handle: RawSegment): ButtonGroup? =
+            if (handle.address() == 0L) null else RefCounted.owned(ButtonGroup(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ButtonGroup? =
             if (handle.address() == 0L) null else ButtonGroup(GodotHandle(handle))
 
         // Instantiate a ButtonGroup.
         @JvmStatic
         fun create(): ButtonGroup =
-            ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup")))
+            RefCounted.owned(ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup"))))
 
         private const val GET_PRESSED_BUTTON_HASH = 3886434893L
         private val getPressedButtonBind by lazy {

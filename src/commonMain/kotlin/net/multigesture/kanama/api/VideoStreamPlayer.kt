@@ -99,7 +99,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream
      */
     fun getStream(): VideoStream? {
-        return VideoStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
+        return VideoStream.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
     }
 
     /**
@@ -360,7 +360,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_video_texture
      */
     fun getVideoTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVideoTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getVideoTextureBind, segment))
     }
 
     object Signals {

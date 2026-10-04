@@ -153,18 +153,21 @@ class GLTFPhysicsBody(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromNode(bodyNode: CollisionObject3D): GLTFPhysicsBody? {
-            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, bodyNode.segment))
+            return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, bodyNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsBody? {
-            return GLTFPhysicsBody.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFPhysicsBody.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFPhysicsBody? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFPhysicsBody? =
+        internal fun wrapOwned(handle: RawSegment): GLTFPhysicsBody? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFPhysicsBody(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFPhysicsBody? =
             if (handle.address() == 0L) null else GLTFPhysicsBody(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 420544174L

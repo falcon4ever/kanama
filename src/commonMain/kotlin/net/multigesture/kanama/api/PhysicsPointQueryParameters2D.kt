@@ -188,9 +188,12 @@ class PhysicsPointQueryParameters2D(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsPointQueryParameters2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PhysicsPointQueryParameters2D? =
+        internal fun wrapOwned(handle: RawSegment): PhysicsPointQueryParameters2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(PhysicsPointQueryParameters2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PhysicsPointQueryParameters2D? =
             if (handle.address() == 0L) null else PhysicsPointQueryParameters2D(GodotHandle(handle))
 
         private const val SET_POSITION_HASH = 743155724L

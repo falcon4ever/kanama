@@ -143,9 +143,12 @@ class JSON(handle: GodotHandle) : Resource(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): JSON? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): JSON? =
+        internal fun wrapOwned(handle: RawSegment): JSON? =
+            if (handle.address() == 0L) null else RefCounted.owned(JSON(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): JSON? =
             if (handle.address() == 0L) null else JSON(GodotHandle(handle))
 
         private const val STRINGIFY_HASH = 462733549L

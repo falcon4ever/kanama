@@ -158,9 +158,12 @@ class PhysicsPointQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsPointQueryParameters3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PhysicsPointQueryParameters3D? =
+        internal fun wrapOwned(handle: RawSegment): PhysicsPointQueryParameters3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(PhysicsPointQueryParameters3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PhysicsPointQueryParameters3D? =
             if (handle.address() == 0L) null else PhysicsPointQueryParameters3D(GodotHandle(handle))
 
         private const val SET_POSITION_HASH = 3460891852L

@@ -158,9 +158,12 @@ class AudioEffectPitchShift(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectPitchShift? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectPitchShift? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectPitchShift? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectPitchShift(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectPitchShift? =
             if (handle.address() == 0L) null else AudioEffectPitchShift(GodotHandle(handle))
 
         private const val SET_PITCH_SCALE_HASH = 373806689L

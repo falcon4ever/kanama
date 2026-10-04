@@ -56,7 +56,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightmapTextures(): List<TextureLayered> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightmapTexturesBind, segment, TextureLayered::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightmapTexturesBind, segment, TextureLayered::wrapBorrowed)
     }
 
     /**
@@ -76,7 +76,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getShadowmaskTextures(): List<TextureLayered> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getShadowmaskTexturesBind, segment, TextureLayered::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getShadowmaskTexturesBind, segment, TextureLayered::wrapBorrowed)
     }
 
     /**
@@ -160,7 +160,7 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightTexture(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, segment))
+        return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getLightTextureBind, segment))
     }
 
     /**
@@ -209,9 +209,12 @@ class LightmapGIData(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): LightmapGIData? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): LightmapGIData? =
+        internal fun wrapOwned(handle: RawSegment): LightmapGIData? =
+            if (handle.address() == 0L) null else RefCounted.owned(LightmapGIData(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): LightmapGIData? =
             if (handle.address() == 0L) null else LightmapGIData(GodotHandle(handle))
 
         private const val SET_LIGHTMAP_TEXTURES_HASH = 381264803L

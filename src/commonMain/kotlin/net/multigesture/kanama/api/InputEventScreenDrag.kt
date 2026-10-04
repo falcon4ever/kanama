@@ -277,9 +277,12 @@ class InputEventScreenDrag(handle: GodotHandle) : InputEventFromWindow(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventScreenDrag? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventScreenDrag? =
+        internal fun wrapOwned(handle: RawSegment): InputEventScreenDrag? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventScreenDrag(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventScreenDrag? =
             if (handle.address() == 0L) null else InputEventScreenDrag(GodotHandle(handle))
 
         private const val SET_INDEX_HASH = 1286410249L

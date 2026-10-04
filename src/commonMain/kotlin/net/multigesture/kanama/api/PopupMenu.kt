@@ -633,7 +633,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_icon
      */
     fun getItemIcon(index: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, index))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, index))
     }
 
     /**
@@ -791,7 +791,7 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      * Generated from Godot docs: PopupMenu.get_item_shortcut
      */
     fun getItemShortcut(index: Int): Shortcut? {
-        return Shortcut.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemShortcutBind, segment, index))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemShortcutBind, segment, index))
     }
 
     /**

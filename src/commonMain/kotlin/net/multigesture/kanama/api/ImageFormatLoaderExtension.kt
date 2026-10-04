@@ -34,9 +34,12 @@ class ImageFormatLoaderExtension(handle: GodotHandle) : ImageFormatLoader(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ImageFormatLoaderExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ImageFormatLoaderExtension? =
+        internal fun wrapOwned(handle: RawSegment): ImageFormatLoaderExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(ImageFormatLoaderExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ImageFormatLoaderExtension? =
             if (handle.address() == 0L) null else ImageFormatLoaderExtension(GodotHandle(handle))
 
         private const val ADD_FORMAT_LOADER_HASH = 3218959716L

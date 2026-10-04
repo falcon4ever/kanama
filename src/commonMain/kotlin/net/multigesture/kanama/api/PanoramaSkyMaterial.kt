@@ -47,7 +47,7 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getPanorama(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPanoramaBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPanoramaBind, segment))
     }
 
     /**
@@ -93,9 +93,12 @@ class PanoramaSkyMaterial(handle: GodotHandle) : Material(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PanoramaSkyMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PanoramaSkyMaterial? =
+        internal fun wrapOwned(handle: RawSegment): PanoramaSkyMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(PanoramaSkyMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PanoramaSkyMaterial? =
             if (handle.address() == 0L) null else PanoramaSkyMaterial(GodotHandle(handle))
 
         private const val SET_PANORAMA_HASH = 4051416890L

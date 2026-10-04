@@ -28,9 +28,12 @@ class FBXState(handle: GodotHandle) : GLTFState(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FBXState? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): FBXState? =
+        internal fun wrapOwned(handle: RawSegment): FBXState? =
+            if (handle.address() == 0L) null else RefCounted.owned(FBXState(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): FBXState? =
             if (handle.address() == 0L) null else FBXState(GodotHandle(handle))
 
         private const val GET_ALLOW_GEOMETRY_HELPER_NODES_HASH = 2240911060L

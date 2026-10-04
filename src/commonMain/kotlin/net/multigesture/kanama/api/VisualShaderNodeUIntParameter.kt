@@ -44,9 +44,12 @@ class VisualShaderNodeUIntParameter(handle: GodotHandle) : VisualShaderNodeParam
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeUIntParameter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeUIntParameter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeUIntParameter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeUIntParameter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeUIntParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeUIntParameter(GodotHandle(handle))
 
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L

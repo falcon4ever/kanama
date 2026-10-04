@@ -39,7 +39,7 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.get_multimesh
      */
     fun getMultimesh(): MultiMesh? {
-        return MultiMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, segment))
+        return MultiMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, segment))
     }
 
     /**
@@ -59,7 +59,7 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     object Signals {

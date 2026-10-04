@@ -105,7 +105,7 @@ class ShapeCast2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: ShapeCast2D.get_shape
      */
     fun getShape(): Shape2D? {
-        return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
+        return Shape2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**

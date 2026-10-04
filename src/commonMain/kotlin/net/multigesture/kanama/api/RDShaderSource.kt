@@ -120,9 +120,12 @@ class RDShaderSource(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDShaderSource? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDShaderSource? =
+        internal fun wrapOwned(handle: RawSegment): RDShaderSource? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDShaderSource(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDShaderSource? =
             if (handle.address() == 0L) null else RDShaderSource(GodotHandle(handle))
 
         private const val SET_STAGE_SOURCE_HASH = 620821314L

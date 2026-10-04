@@ -65,7 +65,7 @@ class GPUParticlesAttractorVectorField3D(handle: GodotHandle) : GPUParticlesAttr
      * Generated from Godot docs: GPUParticlesAttractorVectorField3D.get_texture
      */
     fun getTexture(): Texture3D? {
-        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     companion object {

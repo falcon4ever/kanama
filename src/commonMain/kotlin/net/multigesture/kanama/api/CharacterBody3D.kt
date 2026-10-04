@@ -638,7 +638,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_slide_collision
      */
     fun getSlideCollision(slideIdx: Int): KinematicCollision3D? {
-        return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlideCollisionBind, segment, slideIdx))
+        return KinematicCollision3D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSlideCollisionBind, segment, slideIdx))
     }
 
     /**
@@ -649,7 +649,7 @@ class CharacterBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      * Generated from Godot docs: CharacterBody3D.get_last_slide_collision
      */
     fun getLastSlideCollision(): KinematicCollision3D? {
-        return KinematicCollision3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, segment))
+        return KinematicCollision3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, segment))
     }
 
     /**

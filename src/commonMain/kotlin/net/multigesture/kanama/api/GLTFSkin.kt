@@ -163,7 +163,7 @@ class GLTFSkin(handle: GodotHandle) : Resource(handle) {
 
     fun getGodotSkin(): Skin? {
         checkOpen()
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGodotSkinBind, segment))
     }
 
     fun setGodotSkin(godotSkin: Skin?) {
@@ -174,9 +174,12 @@ class GLTFSkin(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFSkin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFSkin? =
+        internal fun wrapOwned(handle: RawSegment): GLTFSkin? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFSkin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFSkin? =
             if (handle.address() == 0L) null else GLTFSkin(GodotHandle(handle))
 
         private const val GET_SKIN_ROOT_HASH = 2455072627L

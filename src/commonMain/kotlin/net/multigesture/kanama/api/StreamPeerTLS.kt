@@ -68,7 +68,7 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return StreamPeer.wrap(ret)
+        return StreamPeer.wrapOwned(ret)
     }
 
     /**
@@ -127,9 +127,12 @@ class StreamPeerTLS(handle: GodotHandle) : StreamPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeerTLS? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StreamPeerTLS? =
+        internal fun wrapOwned(handle: RawSegment): StreamPeerTLS? =
+            if (handle.address() == 0L) null else RefCounted.owned(StreamPeerTLS(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StreamPeerTLS? =
             if (handle.address() == 0L) null else StreamPeerTLS(GodotHandle(handle))
 
         private const val POLL_HASH = 3218959716L

@@ -449,9 +449,12 @@ class XRHandTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRHandTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XRHandTracker? =
+        internal fun wrapOwned(handle: RawSegment): XRHandTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(XRHandTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XRHandTracker? =
             if (handle.address() == 0L) null else XRHandTracker(GodotHandle(handle))
 
         private const val SET_HAS_TRACKING_DATA_HASH = 2586408642L

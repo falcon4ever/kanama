@@ -571,7 +571,7 @@ object Engine {
      */
     @JvmStatic
     fun captureScriptBacktraces(includeVariables: Boolean = false): List<ScriptBacktrace> {
-        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(captureScriptBacktracesBind, singleton, includeVariables, ScriptBacktrace::wrap)
+        return ObjectCalls.ptrcallWithBoolArgRetTypedObjectList(captureScriptBacktracesBind, singleton, includeVariables, ScriptBacktrace::wrapBorrowed)
     }
 
     /**

@@ -235,9 +235,12 @@ class EditorFeatureProfile(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorFeatureProfile? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorFeatureProfile? =
+        internal fun wrapOwned(handle: RawSegment): EditorFeatureProfile? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorFeatureProfile(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorFeatureProfile? =
             if (handle.address() == 0L) null else EditorFeatureProfile(GodotHandle(handle))
 
         private const val SET_DISABLE_CLASS_HASH = 2524380260L

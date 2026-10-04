@@ -313,11 +313,11 @@ object ResourceLoader {
      */
     @JvmStatic
     fun loadThreadedGet(path: String): Resource? =
-        Resource.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadThreadedGetBind, singleton, path))
+        Resource.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(loadThreadedGetBind, singleton, path))
 
     @JvmStatic
     fun loadThreadedGetPackedScene(path: String): PackedScene? =
-        PackedScene.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadThreadedGetBind, singleton, path))
+        PackedScene.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(loadThreadedGetBind, singleton, path))
 
     /**
      * Loads a resource at the given `path`, caching the result for further access. The registered
@@ -341,31 +341,31 @@ object ResourceLoader {
      */
     @JvmStatic
     fun load(path: String, typeHint: String = "", cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): Resource? =
-        Resource.wrap(
+        Resource.wrapOwned(
             ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, typeHint, cacheMode.value),
         )
 
     @JvmStatic
     fun loadPackedScene(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): PackedScene? =
-        PackedScene.wrap(
+        PackedScene.wrapOwned(
             ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "PackedScene", cacheMode.value),
         )
 
     @JvmStatic
     fun loadTexture2D(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): Texture2D? =
-        Texture2D.wrap(
+        Texture2D.wrapOwned(
             ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "Texture2D", cacheMode.value),
         )
 
     @JvmStatic
     fun loadAudioStream(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): AudioStream? =
-        AudioStream.wrap(
+        AudioStream.wrapOwned(
             ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "AudioStream", cacheMode.value),
         )
 
     @JvmStatic
     fun loadLightmapGIData(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): LightmapGIData? =
-        LightmapGIData.wrap(
+        LightmapGIData.wrapOwned(
             ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(loadBind, singleton, path, "LightmapGIData", cacheMode.value),
         )
 
@@ -377,7 +377,7 @@ object ResourceLoader {
      */
     @JvmStatic
     fun getCachedRef(path: String): Resource? =
-        Resource.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getCachedRefBind, singleton, path))
+        Resource.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getCachedRefBind, singleton, path))
 
     /**
      * Registers a new `ResourceFormatLoader`. The ResourceLoader will use the ResourceFormatLoader as

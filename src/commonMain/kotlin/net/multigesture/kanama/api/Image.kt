@@ -571,7 +571,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Image.wrap(ret)
+        return Image.wrapOwned(ret)
     }
 
     /**
@@ -695,7 +695,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Image.wrap(ret)
+        return Image.wrapOwned(ret)
     }
 
     /**
@@ -1480,7 +1480,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create
          */
         fun create(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
+            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
         }
 
         /**
@@ -1490,7 +1490,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create_empty
          */
         fun createEmpty(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
+            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongArgsRetObject(createEmptyBind, NULL_SEGMENT, width, height, useMipmaps, format.value))
         }
 
         /**
@@ -1500,7 +1500,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.create_from_data
          */
         fun createFromData(width: Int, height: Int, useMipmaps: Boolean, format: Image.Format, data: ByteArray): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(createFromDataBind, NULL_SEGMENT, width, height, useMipmaps, format.value, data))
+            return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntBoolLongByteArrayArgsRetObject(createFromDataBind, NULL_SEGMENT, width, height, useMipmaps, format.value, data))
         }
 
         /**
@@ -1509,7 +1509,7 @@ class Image(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: Image.load_from_file
          */
         fun loadFromFile(path: String): Image? {
-            return Image.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
+            return Image.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
         }
 
         const val MAX_WIDTH: Long = 16777216L
@@ -1517,9 +1517,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Image? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Image? =
+        internal fun wrapOwned(handle: RawSegment): Image? =
+            if (handle.address() == 0L) null else RefCounted.owned(Image(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Image? =
             if (handle.address() == 0L) null else Image(GodotHandle(handle))
 
         private const val GET_WIDTH_HASH = 3905245786L

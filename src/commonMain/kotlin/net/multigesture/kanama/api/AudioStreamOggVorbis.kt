@@ -59,7 +59,7 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
 
     fun getPacketSequence(): OggPacketSequence? {
         checkOpen()
-        return OggPacketSequence.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPacketSequenceBind, segment))
+        return OggPacketSequence.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPacketSequenceBind, segment))
     }
 
     fun setLoop(enable: Boolean) {
@@ -124,18 +124,21 @@ class AudioStreamOggVorbis(handle: GodotHandle) : AudioStream(handle) {
 
     companion object {
         fun loadFromBuffer(streamData: ByteArray): AudioStreamOggVorbis? {
-            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData))
+            return AudioStreamOggVorbis.wrapOwned(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData))
         }
 
         fun loadFromFile(path: String): AudioStreamOggVorbis? {
-            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
+            return AudioStreamOggVorbis.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamOggVorbis? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamOggVorbis? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamOggVorbis? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamOggVorbis(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamOggVorbis? =
             if (handle.address() == 0L) null else AudioStreamOggVorbis(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 354904730L

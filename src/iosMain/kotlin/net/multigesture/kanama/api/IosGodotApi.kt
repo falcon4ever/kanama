@@ -429,7 +429,7 @@ actual class Tween(handle: GodotHandle) : RefCounted(handle) {
         requireGodotReturn(
             IosGodot.tweenTweenCallback(segment.address(), target.segment.address(), method)
                 .takeIf { it != 0L }
-                ?.let { CallbackTweener(GodotHandle(MemorySegment.ofAddress(it))) },
+                ?.let { RefCounted.owned(CallbackTweener(GodotHandle(MemorySegment.ofAddress(it)))) },
             "Tween.tween_callback",
         )
 
@@ -439,7 +439,7 @@ actual class Tween(handle: GodotHandle) : RefCounted(handle) {
         requireGodotReturn(
             IosGodot.tweenTweenMethod(segment.address(), target.segment.address(), method, from, to, duration)
                 .takeIf { it != 0L }
-                ?.let { MethodTweener(GodotHandle(MemorySegment.ofAddress(it))) },
+                ?.let { RefCounted.owned(MethodTweener(GodotHandle(MemorySegment.ofAddress(it)))) },
             "Tween.tween_method",
         )
 
@@ -455,7 +455,7 @@ actual class Tween(handle: GodotHandle) : RefCounted(handle) {
                 property,
                 finalValue,
                 duration,
-            ).takeIf { it.address() != 0L }?.let { PropertyTweener(GodotHandle(it)) },
+            ).takeIf { it.address() != 0L }?.let { RefCounted.owned(PropertyTweener(GodotHandle(it))) },
             "Tween.tween_property",
         )
 
@@ -506,13 +506,14 @@ class InputEventMouseButton(handle: GodotHandle) : InputEvent(handle) {
     companion object {
 
         fun from(value: GodotObject): InputEventMouseButton? =
-            if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle)
-            else if (value.isClass("InputEventScreenTouch")) InputEventMouseButton(value.handle)
+            // A downcast takes a +1 of its own (task 132), as every generated `from*` does.
+            if (value.isClass("InputEventMouseButton")) RefCounted.retained(InputEventMouseButton(value.handle))
+            else if (value.isClass("InputEventScreenTouch")) RefCounted.retained(InputEventMouseButton(value.handle))
             else null
 
         // Instantiate an InputEventMouseButton (owned: close() it, or `use { }`).
         fun create(): InputEventMouseButton =
-            InputEventMouseButton(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventMouseButton"))))
+            RefCounted.owned(InputEventMouseButton(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventMouseButton")))))
 
         private val setButtonIndexBind by lazy {
             ObjectCalls.getMethodBind("InputEventMouseButton", "set_button_index", 3624991109L)
@@ -689,27 +690,27 @@ object ResourceLoader {
 
     fun load(path: String): Resource? =
         IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let {
-            Resource(GodotHandle(MemorySegment.ofAddress(it)))
+            RefCounted.owned(Resource(GodotHandle(MemorySegment.ofAddress(it))))
         }
 
     fun loadTexture2D(path: String): Texture2D? =
         IosGodot.resourceLoaderLoad(path, "Texture2D").takeIf { it != 0L }?.let {
-            Texture2D(GodotHandle(MemorySegment.ofAddress(it)))
+            RefCounted.owned(Texture2D(GodotHandle(MemorySegment.ofAddress(it))))
         }
 
     fun loadAudioStream(path: String): AudioStream? =
         IosGodot.resourceLoaderLoad(path, "AudioStream").takeIf { it != 0L }?.let {
-            AudioStream(GodotHandle(MemorySegment.ofAddress(it)))
+            RefCounted.owned(AudioStream(GodotHandle(MemorySegment.ofAddress(it))))
         }
 
     fun loadPackedScene(path: String): PackedScene? =
         IosGodot.resourceLoaderLoad(path, "PackedScene").takeIf { it != 0L }?.let {
-            PackedScene(GodotHandle(MemorySegment.ofAddress(it)))
+            RefCounted.owned(PackedScene(GodotHandle(MemorySegment.ofAddress(it))))
         }
 
     fun loadLightmapGIData(path: String): LightmapGIData? =
         IosGodot.resourceLoaderLoad(path, "LightmapGIData").takeIf { it != 0L }?.let {
-            LightmapGIData(GodotHandle(MemorySegment.ofAddress(it)))
+            RefCounted.owned(LightmapGIData(GodotHandle(MemorySegment.ofAddress(it))))
         }
 
 
@@ -745,10 +746,10 @@ object ResourceLoader {
     // correctly). The generic Variant-call path returned a handle whose PackedScene.instantiate()
     // silently yielded null on device.
     fun loadThreadedGet(path: String): Resource? =
-        IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let { Resource(GodotHandle(MemorySegment.ofAddress(it))) }
+        IosGodot.resourceLoaderLoad(path, "").takeIf { it != 0L }?.let { RefCounted.owned(Resource(GodotHandle(MemorySegment.ofAddress(it)))) }
 
     fun loadThreadedGetPackedScene(path: String): PackedScene? =
-        IosGodot.resourceLoaderLoad(path, "PackedScene").takeIf { it != 0L }?.let { PackedScene(GodotHandle(MemorySegment.ofAddress(it))) }
+        IosGodot.resourceLoaderLoad(path, "PackedScene").takeIf { it != 0L }?.let { RefCounted.owned(PackedScene(GodotHandle(MemorySegment.ofAddress(it)))) }
 
     private val singleton by lazy { ObjectCalls.getSingleton("ResourceLoader") }
     private val loadThreadedRequestBind by lazy { ObjectCalls.getMethodBind("ResourceLoader", "load_threaded_request", 3614384323L) }

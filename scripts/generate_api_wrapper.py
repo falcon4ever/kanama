@@ -1471,7 +1471,7 @@ fun Node.createTween(): Tween =
     requireGodotReturn(
         ObjectCalls.ptrcallNoArgsRetObject(nodeCreateTweenBind, segment)
             .takeIf { it.address() != 0L }
-            ?.let { Tween(GodotHandle(it)) },
+            ?.let { RefCounted.owned(Tween(GodotHandle(it))) },
         "Node.create_tween",
     )
 
@@ -1489,7 +1489,7 @@ fun SceneTree.createTween(): Tween =
     requireGodotReturn(
         ObjectCalls.ptrcallNoArgsRetObject(sceneTreeCreateTweenBind, segment)
             .takeIf { it.address() != 0L }
-            ?.let { Tween(GodotHandle(it)) },
+            ?.let { RefCounted.owned(Tween(GodotHandle(it))) },
         "SceneTree.create_tween",
     )
 
@@ -1552,7 +1552,7 @@ fun PhysicsRayQueryParameters3D.Companion.create(
     collisionMask: Long = 4294967295L,
     exclude: List<RID> = emptyList(),
 ): PhysicsRayQueryParameters3D {
-    val query = PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D")))
+    val query = RefCounted.owned(PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"))))
     query.from = from
     query.to = to
     query.collisionMask = collisionMask
@@ -1654,7 +1654,12 @@ def wrapper_has_wrap(api_dir: Path, class_name: str) -> bool:
         path = directory / f"{class_name}.kt"
         if path.exists():
             text = path.read_text(encoding="utf-8")
-            return any(f"fun wrap(handle: {name})" in text for name in ("RawSegment", "MemorySegment"))
+            # A RefCounted wrapper has wrapOwned/wrapBorrowed instead of wrap (task 132 D1).
+            return any(
+                f"fun {helper}(handle: {name})" in text
+                for helper in ("wrap", "wrapOwned")
+                for name in ("RawSegment", "MemorySegment")
+            )
     return False
 
 
@@ -1769,6 +1774,27 @@ def emits_receiver_guard(class_name: str, method: ApiMethod, singleton: bool, ap
 
 def is_resource_like(type_name: str, api_classes: dict[str, ApiClass]) -> bool:
     return type_name in {"Resource", "RefCounted"} or "Resource" in ancestors(type_name, api_classes) or "RefCounted" in ancestors(type_name, api_classes)
+
+
+# Ownership is a constructor fact (task 132 D1). A RefCounted wrapper class has no `wrap`: its
+# companion carries `wrapOwned` (the wrapper owns a +1 and registers the fallback release) and
+# `wrapBorrowed` (a view, no +1). The rule the docs state ("Resource Ownership") picks one per
+# call site, and scripts/audit_generator_shape_policy.py (refcounted_ownership_problems) checks
+# every generated site against it:
+#   - a RefCounted-typed return of a ptrcall method, the self-return collapse, `create()`: OWNED
+#     (`X.wrapOwned(...)`, `RefCounted.owned(X(...))`);
+#   - `fromHandle`, `from*` downcasts: BORROWED;
+#   - a typed `Array` element callback: BORROWED (`X::wrapBorrowed`), because the ObjectCalls
+#     helper reads the Array through `readArrayObjectsOwned`, which retains each element and makes
+#     its wrapper owned (`retainForKotlinWrapper`).
+def wrap_owned_helper(wrapper_type: str, api_classes: dict[str, ApiClass]) -> str:
+    """`wrapOwned` for a RefCounted wrapper type, `wrap` for any other."""
+    return "wrapOwned" if is_resource_like(wrapper_type, api_classes) else "wrap"
+
+
+def wrap_borrowed_helper(wrapper_type: str, api_classes: dict[str, ApiClass]) -> str:
+    """`wrapBorrowed` for a RefCounted wrapper type, `wrap` for any other."""
+    return "wrapBorrowed" if is_resource_like(wrapper_type, api_classes) else "wrap"
 
 
 def arg_name(name: str, index: int) -> str:
@@ -2613,11 +2639,17 @@ def required_return_expression(expression: str, class_name: str, method: ApiMeth
 
 
 def render_return_expression(
-    call: str, method: ApiMethod, wrapper_classes: set[str], class_name: str = "", object_types: set[str] | None = None
+    call: str,
+    method: ApiMethod,
+    wrapper_classes: set[str],
+    class_name: str = "",
+    object_types: set[str] | None = None,
+    api_classes: dict[str, ApiClass] | None = None,
 ) -> str:
     return_wrapper = api_object_wrapper_type(method.return_type, wrapper_classes)
     if return_wrapper:
-        wrapped = f"{return_wrapper}.wrap({call})"
+        helper = wrap_owned_helper(return_wrapper, api_classes or {})
+        wrapped = f"{return_wrapper}.{helper}({call})"
         return required_return_expression(wrapped, class_name, method) if is_required_return(method) else wrapped
     if is_typed_enum(enum_kind_of(method.return_type), method.return_type):
         return f"{enum_type_ref(method.return_type)}({call})"
@@ -2712,14 +2744,14 @@ def render_method(
             raise ValueError(f"unsupported typed object-array wrapper for {return_array_element}")
         # the ObjectCalls callback is `(MemorySegment) -> T?`: that is `wrap`, not the public
         # `fromHandle(GodotHandle)` (task 104 step 1).
-        call_args.append(f"{return_wrapper}::wrap")
+        call_args.append(f"{return_wrapper}::{wrap_borrowed_helper(return_wrapper, api_classes)}")
     if shape.function == "ptrcallWithObjectArgs":
         receiver = singleton_expr if singleton else (_null_segment() if method.is_static else "segment")
         call = f"ObjectCalls.{shape.function}({bind_name}, {receiver}, listOf({', '.join(call_args)}))"
     else:
         receiver = singleton_expr if singleton else (_null_segment() if method.is_static else "segment")
         call = f"ObjectCalls.{shape.function}({', '.join([bind_name, receiver, *call_args])})"
-    return_expression = render_return_expression(call, method, wrapper_classes, class_name)
+    return_expression = render_return_expression(call, method, wrapper_classes, class_name, api_classes=api_classes)
     return_kind = method.logical_return_kind(object_types)
     return_type_text = (
         ""
@@ -2747,9 +2779,9 @@ def render_method(
                 "        }",
                 "        return "
                 + (
-                    required_return_expression(f"{collapse_wrapper}.wrap(ret)", class_name, method)
+                    required_return_expression(f"{collapse_wrapper}.wrapOwned(ret)", class_name, method)
                     if is_required_return(method)
-                    else f"{collapse_wrapper}.wrap(ret)"
+                    else f"{collapse_wrapper}.wrapOwned(ret)"
                 ),
                 "    }",
             ],
@@ -3111,8 +3143,33 @@ def has_api_subclasses(class_name: str, api_classes: dict[str, ApiClass]) -> boo
 NON_NULL_FROM_HANDLE_CLASSES = {"Resource"}
 
 
-def render_wrap_helpers(class_name: str) -> str:
+def render_wrap_helpers(class_name: str, refcounted: bool = False) -> str:
     lines = ["        @JvmStatic"] if _jvm_static() else []
+    if refcounted:
+        # Task 132 D1: no `wrap` on a RefCounted wrapper -- every site names its ownership.
+        from_handle = (
+            [
+                f"        fun fromHandle(handle: GodotHandle): {class_name} =",
+                f"            {class_name}(handle)",
+            ]
+            if class_name in NON_NULL_FROM_HANDLE_CLASSES
+            else [
+                f"        fun fromHandle(handle: GodotHandle): {class_name}? =",
+                "            wrapBorrowed(handle.segment)",
+            ]
+        )
+        lines.extend(
+            [
+                *from_handle,
+                "",
+                f"        internal fun wrapOwned(handle: {_segment_type()}): {class_name}? =",
+                f"            if (handle.address() == 0L) null else RefCounted.owned({class_name}(GodotHandle(handle)))",
+                "",
+                f"        internal fun wrapBorrowed(handle: {_segment_type()}): {class_name}? =",
+                f"            if (handle.address() == 0L) null else {class_name}(GodotHandle(handle))",
+            ],
+        )
+        return "\n".join(lines)
     if class_name in NON_NULL_FROM_HANDLE_CLASSES:
         lines.extend(
             [
@@ -3178,8 +3235,11 @@ def _factory_class_universe(class_name: str) -> bool:
     return class_name not in IOS_ONLY_GENERATED and class_name not in DESKTOP_ONLY_GENERATED
 
 
-def render_factory_helpers(class_name: str) -> str | None:
-    """The `create()` / `from*` companion helpers [class_name] declares in `FACTORY_HELPERS`."""
+def render_factory_helpers(class_name: str, refcounted: bool = False) -> str | None:
+    """The `create()` / `from*` companion helpers [class_name] declares in `FACTORY_HELPERS`.
+
+    A RefCounted `create()` hands back the constructing +1, so its wrapper is owned (task 132 D1);
+    the `from*` downcasts are borrowed views."""
     spec = FACTORY_HELPERS.get(class_name)
     if spec is None or not _factory_class_universe(class_name):
         return None
@@ -3192,21 +3252,28 @@ def render_factory_helpers(class_name: str) -> str | None:
                     f"        // Instantiate {_article(class_name)} {class_name}.",
                     *annotation,
                     f"        fun create(): {class_name} =",
-                    f"            {class_name}(GodotHandle({_construct_object(class_name)}))",
+                    (
+                        f"            RefCounted.owned({class_name}(GodotHandle({_construct_object(class_name)})))"
+                        if refcounted
+                        else f"            {class_name}(GodotHandle({_construct_object(class_name)}))"
+                    ),
                 ],
             ),
         )
     for downcast in spec.downcasts:
         param = downcast.param_name
+        # A RefCounted downcast takes a +1 of its own (task 132): a view kept in a field keeps the
+        # object alive like any other wrapper you can reach, whatever happens to the source wrapper.
+        view = (lambda h: f"RefCounted.retained({class_name}({h}))") if refcounted else (lambda h: f"{class_name}({h})")
         if downcast.nullable:
             body = [
                 f"        fun {downcast.name}({param}: {downcast.param_type}?): {class_name}? =",
-                f'            {param}?.takeIf {{ it.isClass("{class_name}") }}?.let {{ {class_name}(it.handle) }}',
+                f'            {param}?.takeIf {{ it.isClass("{class_name}") }}?.let {{ {view("it.handle")} }}',
             ]
         else:
             body = [
                 f"        fun {downcast.name}({param}: {downcast.param_type}): {class_name}? =",
-                f'            if ({param}.isClass("{class_name}")) {class_name}({param}.handle) else null',
+                f'            if ({param}.isClass("{class_name}")) {view(f"{param}.handle")} else null',
             ]
         blocks.append(
             "\n".join(
@@ -3490,14 +3557,14 @@ def render_draft(
         companion_constants = render_companion_constants(cls)
         if companion_constants:
             companion_sections.append(companion_constants)
-        companion_sections.append(render_wrap_helpers(cls.name))
+        companion_sections.append(render_wrap_helpers(cls.name, is_resource_like(cls.name, api_classes)))
         custom_companion_members = _companion_section(cls.name)
         if custom_companion_members:
             companion_sections.append(custom_companion_members)
         # After the custom section, not before it: a class with both keeps its hand-written section
         # above its factories (iOS `InputEventKey` did until task 128 A moved its Key constants to
         # the generated global `Key`).
-        factory_helpers = render_factory_helpers(cls.name)
+        factory_helpers = render_factory_helpers(cls.name, is_resource_like(cls.name, api_classes))
         if factory_helpers:
             companion_sections.append(factory_helpers)
         companion_sections.append("\n\n".join(binds) if binds else "        // No MethodBinds emitted yet.")

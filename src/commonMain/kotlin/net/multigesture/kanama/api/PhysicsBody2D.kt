@@ -26,7 +26,7 @@ open class PhysicsBody2D(handle: GodotHandle) : CollisionObject2D(handle) {
      * Generated from Godot docs: PhysicsBody2D.move_and_collide
      */
     fun moveAndCollide(motion: Vector2, testOnly: Boolean = false, safeMargin: Double = 0.08, recoveryAsCollision: Boolean = false): KinematicCollision2D? {
-        return KinematicCollision2D.wrap(ObjectCalls.ptrcallWithVector2BoolFloatBoolArgsRetObject(moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision))
+        return KinematicCollision2D.wrapOwned(ObjectCalls.ptrcallWithVector2BoolFloatBoolArgsRetObject(moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision))
     }
 
     /**

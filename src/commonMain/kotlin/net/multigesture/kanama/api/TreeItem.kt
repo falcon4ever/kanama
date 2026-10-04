@@ -353,7 +353,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_icon
      */
     fun getIcon(column: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getIconBind, segment, column))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getIconBind, segment, column))
     }
 
     /**
@@ -372,7 +372,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_icon_overlay
      */
     fun getIconOverlay(column: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getIconOverlayBind, segment, column))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getIconOverlayBind, segment, column))
     }
 
     /**
@@ -538,7 +538,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_stylebox
      */
     fun getCustomStylebox(column: Int): StyleBox? {
-        return StyleBox.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getCustomStyleboxBind, segment, column))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getCustomStyleboxBind, segment, column))
     }
 
     /**
@@ -740,7 +740,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_custom_font
      */
     fun getCustomFont(column: Int): Font? {
-        return Font.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getCustomFontBind, segment, column))
+        return Font.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getCustomFontBind, segment, column))
     }
 
     /**
@@ -883,7 +883,7 @@ class TreeItem(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TreeItem.get_button
      */
     fun getButton(column: Int, buttonIndex: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getButtonBind, segment, column, buttonIndex))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getButtonBind, segment, column, buttonIndex))
     }
 
     /**

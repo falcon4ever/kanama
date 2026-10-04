@@ -60,7 +60,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
 
     fun toResource(cacheShapes: Boolean = false): Shape3D? {
         checkOpen()
-        return Shape3D.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(toResourceBind, segment, cacheShapes))
+        return Shape3D.wrapOwned(ObjectCalls.ptrcallWithBoolArgRetObject(toResourceBind, segment, cacheShapes))
     }
 
     fun toDictionary(): Map<String, Any?> {
@@ -130,7 +130,7 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
 
     fun getImporterMesh(): ImporterMesh? {
         checkOpen()
-        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImporterMeshBind, segment))
+        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getImporterMeshBind, segment))
     }
 
     fun setImporterMesh(importerMesh: ImporterMesh?) {
@@ -140,22 +140,25 @@ class GLTFPhysicsShape(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromNode(shapeNode: CollisionShape3D): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, shapeNode.segment))
+            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, shapeNode.segment))
         }
 
         fun fromResource(shapeResource: Shape3D?): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromResourceBind, NULL_SEGMENT, shapeResource?.requireOpenHandle() ?: NULL_SEGMENT))
+            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromResourceBind, NULL_SEGMENT, shapeResource?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFPhysicsShape? {
-            return GLTFPhysicsShape.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFPhysicsShape.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFPhysicsShape? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFPhysicsShape? =
+        internal fun wrapOwned(handle: RawSegment): GLTFPhysicsShape? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFPhysicsShape(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFPhysicsShape? =
             if (handle.address() == 0L) null else GLTFPhysicsShape(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 3613751275L

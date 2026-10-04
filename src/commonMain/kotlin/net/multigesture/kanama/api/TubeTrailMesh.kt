@@ -231,15 +231,18 @@ class TubeTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TubeTrailMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TubeTrailMesh? =
+        internal fun wrapOwned(handle: RawSegment): TubeTrailMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(TubeTrailMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TubeTrailMesh? =
             if (handle.address() == 0L) null else TubeTrailMesh(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L

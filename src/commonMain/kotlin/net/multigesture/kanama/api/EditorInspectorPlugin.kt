@@ -50,9 +50,12 @@ class EditorInspectorPlugin(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorInspectorPlugin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorInspectorPlugin? =
+        internal fun wrapOwned(handle: RawSegment): EditorInspectorPlugin? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorInspectorPlugin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorInspectorPlugin? =
             if (handle.address() == 0L) null else EditorInspectorPlugin(GodotHandle(handle))
 
         private const val ADD_CUSTOM_CONTROL_HASH = 1496901182L

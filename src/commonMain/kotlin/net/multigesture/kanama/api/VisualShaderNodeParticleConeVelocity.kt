@@ -13,9 +13,12 @@ class VisualShaderNodeParticleConeVelocity(handle: GodotHandle) : VisualShaderNo
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleConeVelocity? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleConeVelocity? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleConeVelocity? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleConeVelocity(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleConeVelocity? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleConeVelocity(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

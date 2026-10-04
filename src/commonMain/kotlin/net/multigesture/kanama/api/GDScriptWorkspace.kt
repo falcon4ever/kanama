@@ -51,9 +51,12 @@ class GDScriptWorkspace(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GDScriptWorkspace? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GDScriptWorkspace? =
+        internal fun wrapOwned(handle: RawSegment): GDScriptWorkspace? =
+            if (handle.address() == 0L) null else RefCounted.owned(GDScriptWorkspace(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GDScriptWorkspace? =
             if (handle.address() == 0L) null else GDScriptWorkspace(GodotHandle(handle))
 
         private const val APPLY_NEW_SIGNAL_HASH = 3682583557L

@@ -15,9 +15,12 @@ class SkeletonProfileHumanoid(handle: GodotHandle) : SkeletonProfile(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonProfileHumanoid? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkeletonProfileHumanoid? =
+        internal fun wrapOwned(handle: RawSegment): SkeletonProfileHumanoid? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkeletonProfileHumanoid(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkeletonProfileHumanoid? =
             if (handle.address() == 0L) null else SkeletonProfileHumanoid(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -29,9 +29,12 @@ class VisualShaderNodeColorConstant(handle: GodotHandle) : VisualShaderNodeConst
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeColorConstant? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeColorConstant? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeColorConstant? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeColorConstant(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeColorConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeColorConstant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 2920490490L

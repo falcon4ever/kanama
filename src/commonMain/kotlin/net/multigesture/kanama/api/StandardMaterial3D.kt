@@ -15,15 +15,18 @@ class StandardMaterial3D(handle: GodotHandle) : BaseMaterial3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StandardMaterial3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StandardMaterial3D? =
+        internal fun wrapOwned(handle: RawSegment): StandardMaterial3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(StandardMaterial3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StandardMaterial3D? =
             if (handle.address() == 0L) null else StandardMaterial3D(GodotHandle(handle))
 
         // Instantiate a StandardMaterial3D.
         @JvmStatic
         fun create(): StandardMaterial3D =
-            StandardMaterial3D(GodotHandle(ObjectCalls.constructObject("StandardMaterial3D")))
+            RefCounted.owned(StandardMaterial3D(GodotHandle(ObjectCalls.constructObject("StandardMaterial3D"))))
 
         // No MethodBinds emitted yet.
     }

@@ -15,9 +15,12 @@ class XRControllerTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRControllerTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XRControllerTracker? =
+        internal fun wrapOwned(handle: RawSegment): XRControllerTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(XRControllerTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XRControllerTracker? =
             if (handle.address() == 0L) null else XRControllerTracker(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

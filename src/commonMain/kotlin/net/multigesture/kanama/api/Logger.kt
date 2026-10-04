@@ -52,9 +52,12 @@ class Logger(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Logger? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Logger? =
+        internal fun wrapOwned(handle: RawSegment): Logger? =
+            if (handle.address() == 0L) null else RefCounted.owned(Logger(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Logger? =
             if (handle.address() == 0L) null else Logger(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

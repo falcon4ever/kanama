@@ -98,7 +98,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     /**
@@ -216,9 +216,12 @@ class Sky(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Sky? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Sky? =
+        internal fun wrapOwned(handle: RawSegment): Sky? =
+            if (handle.address() == 0L) null else RefCounted.owned(Sky(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Sky? =
             if (handle.address() == 0L) null else Sky(GodotHandle(handle))
 
         private const val SET_RADIANCE_SIZE_HASH = 1512957179L

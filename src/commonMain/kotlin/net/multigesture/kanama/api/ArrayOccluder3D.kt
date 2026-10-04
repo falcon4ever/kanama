@@ -50,9 +50,12 @@ class ArrayOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ArrayOccluder3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ArrayOccluder3D? =
+        internal fun wrapOwned(handle: RawSegment): ArrayOccluder3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(ArrayOccluder3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ArrayOccluder3D? =
             if (handle.address() == 0L) null else ArrayOccluder3D(GodotHandle(handle))
 
         private const val SET_ARRAYS_HASH = 3233972621L

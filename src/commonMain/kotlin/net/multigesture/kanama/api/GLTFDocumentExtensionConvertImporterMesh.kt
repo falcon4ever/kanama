@@ -13,9 +13,12 @@ class GLTFDocumentExtensionConvertImporterMesh(handle: GodotHandle) : GLTFDocume
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFDocumentExtensionConvertImporterMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFDocumentExtensionConvertImporterMesh? =
+        internal fun wrapOwned(handle: RawSegment): GLTFDocumentExtensionConvertImporterMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFDocumentExtensionConvertImporterMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFDocumentExtensionConvertImporterMesh? =
             if (handle.address() == 0L) null else GLTFDocumentExtensionConvertImporterMesh(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

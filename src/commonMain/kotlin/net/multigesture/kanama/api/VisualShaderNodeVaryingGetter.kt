@@ -13,9 +13,12 @@ class VisualShaderNodeVaryingGetter(handle: GodotHandle) : VisualShaderNodeVaryi
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVaryingGetter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVaryingGetter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVaryingGetter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVaryingGetter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVaryingGetter? =
             if (handle.address() == 0L) null else VisualShaderNodeVaryingGetter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

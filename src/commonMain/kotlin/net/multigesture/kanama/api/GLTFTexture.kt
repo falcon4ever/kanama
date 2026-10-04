@@ -44,9 +44,12 @@ class GLTFTexture(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFTexture? =
+        internal fun wrapOwned(handle: RawSegment): GLTFTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFTexture? =
             if (handle.address() == 0L) null else GLTFTexture(GodotHandle(handle))
 
         private const val GET_SRC_IMAGE_HASH = 3905245786L

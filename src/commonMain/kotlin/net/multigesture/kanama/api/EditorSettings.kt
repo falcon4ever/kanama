@@ -209,7 +209,7 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getShortcut(path: String): Shortcut? {
         checkOpen()
-        return Shortcut.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getShortcutBind, segment, path))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getShortcutBind, segment, path))
     }
 
     /**
@@ -265,9 +265,12 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorSettings? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorSettings? =
+        internal fun wrapOwned(handle: RawSegment): EditorSettings? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorSettings(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorSettings? =
             if (handle.address() == 0L) null else EditorSettings(GodotHandle(handle))
 
         private const val HAS_SETTING_HASH = 3927539163L

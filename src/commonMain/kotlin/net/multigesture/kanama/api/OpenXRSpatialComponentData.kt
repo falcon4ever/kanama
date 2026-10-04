@@ -21,9 +21,12 @@ open class OpenXRSpatialComponentData(handle: GodotHandle) : RefCounted(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentData? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentData? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentData? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentData(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentData? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentData(GodotHandle(handle))
 
         private const val SET_CAPACITY_HASH = 1286410249L

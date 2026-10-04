@@ -133,7 +133,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemMesh(id: Int): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, segment, id))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemMeshBind, segment, id))
     }
 
     /**
@@ -163,7 +163,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemNavigationMesh(id: Int): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, segment, id))
+        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemNavigationMeshBind, segment, id))
     }
 
     /**
@@ -207,7 +207,7 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getItemPreview(id: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, segment, id))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemPreviewBind, segment, id))
     }
 
     /**
@@ -273,15 +273,18 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MeshLibrary? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MeshLibrary? =
+        internal fun wrapOwned(handle: RawSegment): MeshLibrary? =
+            if (handle.address() == 0L) null else RefCounted.owned(MeshLibrary(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MeshLibrary? =
             if (handle.address() == 0L) null else MeshLibrary(GodotHandle(handle))
 
         // Instantiate a MeshLibrary.
         @JvmStatic
         fun create(): MeshLibrary =
-            MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary")))
+            RefCounted.owned(MeshLibrary(GodotHandle(ObjectCalls.constructObject("MeshLibrary"))))
 
         private const val CREATE_ITEM_HASH = 1286410249L
         private val createItemBind by lazy {

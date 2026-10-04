@@ -61,7 +61,7 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Texture2D.wrap(ret)
+        return Texture2D.wrapOwned(ret)
     }
 
     /**
@@ -137,9 +137,12 @@ class AtlasTexture(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AtlasTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AtlasTexture? =
+        internal fun wrapOwned(handle: RawSegment): AtlasTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(AtlasTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AtlasTexture? =
             if (handle.address() == 0L) null else AtlasTexture(GodotHandle(handle))
 
         private const val SET_ATLAS_HASH = 4051416890L

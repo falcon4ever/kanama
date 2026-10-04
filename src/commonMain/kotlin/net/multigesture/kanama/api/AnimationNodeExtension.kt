@@ -36,9 +36,12 @@ class AnimationNodeExtension(handle: GodotHandle) : AnimationNode(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeExtension? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeExtension? =
             if (handle.address() == 0L) null else AnimationNodeExtension(GodotHandle(handle))
 
         private const val IS_LOOPING_HASH = 2035584311L

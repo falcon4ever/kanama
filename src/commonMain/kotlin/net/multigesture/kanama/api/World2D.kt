@@ -74,9 +74,12 @@ class World2D(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): World2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): World2D? =
+        internal fun wrapOwned(handle: RawSegment): World2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(World2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): World2D? =
             if (handle.address() == 0L) null else World2D(GodotHandle(handle))
 
         private const val GET_CANVAS_HASH = 2944877500L

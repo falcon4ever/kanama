@@ -53,6 +53,49 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 # task 133 -- node/script delegates, checked casts, preload, tree accessors and the script coroutine
 # scope; the scene quits itself once its async rows (wait, nextFrame, cancel on free) have printed.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_access_smoke.tscn --quit-after 5000 --verbose >>"$LOG_FILE" 2>&1
+# task 132 -- owned RefCounted wrappers dropped without close() are released by the GC fallback
+# (green), and stay leaked with the fallback off (red: KANAMA_GC_RELEASES=0, its own log, since its
+# shutdown reports the 10,000 leaked Resources on purpose). The scene quits itself once the count is
+# back; --quit-after is only the cap.
+OWNED_RELEASE_RED_LOG="${LOG_FILE}.owned_release_red"
+# task 132 blocker 1 -- a script object keeps its RefCounted owner alive (the City-Builder pattern:
+# load, keep only the script object, GC, use it), and the owner still dies once it is dropped. The
+# red run (KANAMA_SCRIPT_OWNER_LINKS=0: no owner link, the first task 132 commit) loses the owner.
+SCRIPT_OWNER_RED_LOG="${LOG_FILE}.script_owner_red"
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_owner_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
+KANAMA_SCRIPT_OWNER_LINKS=0 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_owner_smoke.tscn --quit-after 600 >"$SCRIPT_OWNER_RED_LOG" 2>&1
+# task 132 round 2 -- the ResourceCache re-reference window (the reviewer's probe): a cached resource
+# whose KanamaScript object was collected is loaded again before the drain; its rebuilt instance is
+# refilled from the file (GDScript re-parses it), never left at the Kotlin defaults.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://cache_recreate_probe.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
+# task 132 round 4 -- the same window, with the rebuilt instance never used before its owner dies:
+# nothing is constructed inside refcount_incremented (it runs under the loader locks) nor while
+# the owner is freed (803d04d6: after_reload=3, constructions_at_end=4).
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://refill_on_free_probe.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
+# task 132 (after the rebase) -- a property setter's references are the owner's, not the Kotlin
+# object's: a KanamaScript resource's List<KanamaScript resource> property, set, re-set, then the
+# owner dropped (its Kotlin object collected first) -> every element dies (883c936c: the elements
+# leaked, the City-Builder "resources still in use at exit"). Its --verbose leak report lands in the
+# main log, where `check_absent "Leaked instance: Resource:"` covers it too.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://property_retain_smoke.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
+# task 132 review -- what a property holds, over the script's lifetime: set_script(null) on a live
+# resource lets its script object (and its items) go (a9b495ac: swap_items_dead=false, pinned by
+# the cleaner); a setter on a worker thread; a Kotlin alias of an engine-set resource survives the
+# next set (a9b495ac: alias_valid=false); Node-typed exports take no reference.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://property_lifetime_smoke.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
+# task 132 D7 -- the same freed-object scene with the instance-binding check (opt-in), own log.
+FREED_BINDING_LOG="${LOG_FILE}.freed_binding"
+KANAMA_FREED_OBJECT_CHECKS=binding "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit >"$FREED_BINDING_LOG" 2>&1
+# The green run also turns kanama/debug/log_gc_releases on through a transient override.cfg (D5:
+# one "released by GC" line per creation site).
+OWNED_RELEASE_OVERRIDE="$PROJECT_DIR/override.cfg"
+printf '[kanama]\n\ndebug/log_gc_releases=true\n' >"$OWNED_RELEASE_OVERRIDE"
+trap 'rm -f "$OWNED_RELEASE_OVERRIDE"' EXIT
+OWNED_RELEASE_GREEN_LOG="${LOG_FILE}.owned_release_green"
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://owned_release_smoke.tscn --quit-after 600 --verbose >"$OWNED_RELEASE_GREEN_LOG" 2>&1
+cat "$OWNED_RELEASE_GREEN_LOG" >>"$LOG_FILE"
+rm -f "$OWNED_RELEASE_OVERRIDE"
+KANAMA_GC_RELEASES=0 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://owned_release_smoke.tscn --quit-after 600 >"$OWNED_RELEASE_RED_LOG" 2>&1
 
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
@@ -299,6 +342,33 @@ check_absent "Invalid call\. Nonexistent function"
 # after the object is freed. Before task 131 equal=false and set_size=3.
 # task 131 item 2 (F2) -- the editor binary is a debug build, so the freed-object check is on.
 check "\[kanama:kt\] freed-object checks: on"
+# task 132 -- the GC fallback release: 10,000 dropped owned Resources are gone again after GC +
+# drain (object count back to the baseline), and a getter's +1 that was closed and then collected
+# is released once (the mesh keeps exactly its two references).
+check "\[kanama:kt\] owned-reference GC releases: on \(java\.lang\.ref\.Cleaner\)"
+check "\[kanama:kt\] owned-reference GC releases: on \(java\.lang\.ref\.Cleaner, logging GC releases\)"
+check "OwnedReleaseSmoke dropped=10000"
+# D5: the 10,000 dropped Resources share one creation site, so one line names it.
+owned_drop_line="$(grep -n 'repeat(DROPPED_RESOURCES)' "$PROJECT_DIR/OwnedReleaseSmoke.kt" | cut -d: -f1)"
+check "released by GC: Resource \(created at OwnedReleaseSmoke\.kt:${owned_drop_line}\)"
+if [[ "$(grep -cF "released by GC: Resource (created at OwnedReleaseSmoke.kt:${owned_drop_line})" "$LOG_FILE")" != 1 ]]; then
+  smoke_fail "one GC-release line per creation site" "released by GC: Resource (created at OwnedReleaseSmoke.kt:${owned_drop_line})"
+fi
+check "OwnedReleaseSmoke baseline=[0-9]+ after_drop=[0-9]+ after_gc=[0-9]+ back_to_baseline=true mesh_refcount=2 "
+# A wrapper dropped just before quit() is released by the shutdown GC (D4, at the editor or scene
+# deinitialization level), so Godot's leak report names nothing; the drain is timed (no stall).
+if grep -Eq "Leaked instance|ObjectDB instances leaked|Resources still in use at exit" "$OWNED_RELEASE_GREEN_LOG"; then
+  echo "[runtime_smoke] FAIL -- a wrapper dropped before quit leaked:" >&2
+  grep -E "Leaked instance|leaked|still in use" "$OWNED_RELEASE_GREEN_LOG" >&2
+  exit 1
+fi
+check "shutdown GC releases \((editor|scene)\): [1-9][0-9]* in [0-9]+ ms"
+# The red run: with the fallback off the same drop stays leaked (and the mesh keeps the 100 +1s).
+if ! grep -Eq "OwnedReleaseSmoke baseline=[0-9]+ after_drop=[0-9]+ after_gc=[0-9]+ back_to_baseline=false mesh_refcount=102 " "$OWNED_RELEASE_RED_LOG"; then
+  echo "[runtime_smoke] FAIL -- the KANAMA_GC_RELEASES=0 red run did not leak as expected:" >&2
+  grep -E "OwnedReleaseSmoke|owned-reference GC releases" "$OWNED_RELEASE_RED_LOG" >&2 || tail -n 40 "$OWNED_RELEASE_RED_LOG" >&2
+  exit 1
+fi
 # Holding a freed wrapper is silent, as in GDScript: two exported-property reads and a script
 # method return of it give Godot null (no error; counted below).
 check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true"
@@ -323,6 +393,38 @@ check "FreedObjectSmoke backtraces valid=\[true(, true)*\] languages=\[[A-Za-z]"
 # Task 131 review: custom-script-typed exports (a KanamaScript type, a plain script type, a List
 # and a Map of them) whose nodes were freed read back as nil, without reading the freed owners.
 check "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"
+# task 132 round 2 -- the cache re-reference keeps the file's values (caeee78b: reload_read=10).
+check "CacheRecreateProbe saved=true first_read=4242 alive_before_reload=true same_object=true reload_read=4242 kotlin_cash=4242"
+check "RefillOnFreeProbe reload_same_object=true"
+check "RefillOnFreeProbe constructions_before_reload=2 after_reload=2 alive=true"
+check "RefillOnFreeProbe dead=true frames=[0-9]+ constructions_at_end=2 after_reload=2"
+check_absent "property values reset|recreated with its default property values"
+check "PropertyRetainSmoke held=2 old_released=true owner_dead=true items_dead=true frames=[0-9]+"
+check "PropertyLifetimeSmoke alias_valid=true node_paths_kept=true"
+check "PropertyLifetimeSmoke items reset_drop=1 held=20"
+check "PropertyLifetimeSmoke swap_items_dead=true swap_owner_alive=true swap_script_collected=true thread_owner_dead=true thread_items_dead=true old_dead=true freed_dead=true frames=[0-9]+"
+# task 132 blocker 1 -- script objects keep their owners (see the run above).
+check "ScriptOwnerSmoke saved=true loaded=true created=true"
+check "ScriptOwnerSmoke alive_after_gc=true engine_read=4242 resaved=true created_alive_after_gc=true created_read=77 plain_alive_after_gc=true"
+check "ScriptOwnerSmoke dies_after_drop=true created_dies_after_drop=true plain_dies_after_detach=true"
+if ! grep -Eq "ScriptOwnerSmoke alive_after_gc=false engine_read=null resaved=false created_alive_after_gc=false created_read=null" "$SCRIPT_OWNER_RED_LOG"; then
+  echo "[runtime_smoke] FAIL -- the KANAMA_SCRIPT_OWNER_LINKS=0 red run did not lose the owners:" >&2
+  grep -E "ScriptOwnerSmoke" "$SCRIPT_OWNER_RED_LOG" >&2 || tail -n 40 "$SCRIPT_OWNER_RED_LOG" >&2
+  exit 1
+fi
+# task 132 D7 -- KANAMA_FREED_OBJECT_CHECKS=binding: the instance-binding liveness flag gives the same
+# GDScript semantics as the instance-id lookup (silent holds, an error on a call).
+for pattern in \
+  "freed-object checks: on \(KANAMA_FREED_OBJECT_CHECKS=binding: instance binding\)" \
+  "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true" \
+  "FreedObjectSmoke caught=Invalid access to previously freed instance \(Node3D, instance id [0-9]+\)$" \
+  "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"; do
+  if ! grep -Eq -- "$pattern" "$FREED_BINDING_LOG"; then
+    echo "[runtime_smoke] FAIL -- binding-mode freed-object run is missing: $pattern" >&2
+    tail -n 60 "$FREED_BINDING_LOG" >&2
+    exit 1
+  fi
+done
 # RefCounted return-slot ownership (task 31): every RefCounted-typed ptrcall return
 # transfers +1 (required-meta included); self-returning fluent calls must collapse to
 # the receiver and release the duplicate, so all wrapper-visible deltas stay 0.
@@ -393,6 +495,9 @@ check "destroyed [0-9]+/[0-9]+ tracked KanamaScript object\\(s\\)"
 check "unregistered [0-9]+ extension class\\(es\\)"
 # task 133 -- script authoring like GDScript (script_access_smoke.tscn)
 check "ScriptAccessSmoke sync before_ready=true node=true wrong_type=true missing=true script=true no_script=true is_script=true as_script=true cast=true require_as=true preload=true preload_wrong=true instantiate=true tree=true orphan_tree=true"
+# task 132 -- a cast to a RefCounted class owns a reference, like the from* downcasts (883c936c:
+# the cast was a borrowed view and the object died when the original was closed).
+check "ScriptAccessSmoke cast_owns=true"
 check "ScriptAccessSmoke async wait=true next_frame=true freed_cancelled=true"
 check "ScriptAccessSmoke reready cached_until_ready=true re_resolved=true ready_count=2"
 # the tree accessors check tree membership first: no engine error of their own

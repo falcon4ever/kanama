@@ -138,18 +138,21 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventKey? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): InputEventKey? =
+        internal fun wrapOwned(handle: MemorySegment): InputEventKey? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventKey(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): InputEventKey? =
             if (handle.address() == 0L) null else InputEventKey(GodotHandle(handle))
 
         // Instantiate an InputEventKey.
         fun create(): InputEventKey =
-            InputEventKey(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey"))))
+            RefCounted.owned(InputEventKey(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventKey")))))
 
         // Downcast a GodotObject to InputEventKey (null if not).
         fun from(value: GodotObject): InputEventKey? =
-            if (value.isClass("InputEventKey")) InputEventKey(value.handle) else null
+            if (value.isClass("InputEventKey")) RefCounted.retained(InputEventKey(value.handle)) else null
 
         private const val SET_PRESSED_HASH = 2586408642L
         private val setPressedBind by lazy {

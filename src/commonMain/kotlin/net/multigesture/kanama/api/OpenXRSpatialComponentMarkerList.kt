@@ -40,9 +40,12 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentMarkerList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentMarkerList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentMarkerList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentMarkerList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentMarkerList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentMarkerList(GodotHandle(handle))
 
         private const val GET_MARKER_TYPE_HASH = 2627847866L

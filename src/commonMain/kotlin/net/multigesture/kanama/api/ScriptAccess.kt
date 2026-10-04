@@ -29,7 +29,15 @@ internal class GodotClassToken(
   private val table: GodotClassTable,
   private val index: Int,
 ) {
+  /** A view of [handle] as this class: no reference taken (a `Node`, or a holder that keeps one). */
   fun wrap(handle: GodotHandle): GodotObject = table.wrap(index, handle)
+
+  /** [wrap] for a cast result: a `RefCounted` one takes its own `+1` (task 132), as `from*` does. */
+  fun wrapRetained(handle: GodotHandle): GodotObject =
+    when (val view = table.wrap(index, handle)) {
+      is RefCounted -> RefCounted.retained(view)
+      else -> view
+    }
 }
 
 /** The lookup from a wrapper `KClass` to its [GodotClassToken], built on first use. */
@@ -64,15 +72,18 @@ internal object GodotClasses {
   /**
    * Always asks Godot (`Object.is_class`), except for `GodotObject`, which every object is: a wrapper
    * whose Kotlin class already is a `T` may have been minted unchecked (`Timer(node.handle)`), so its
-   * Kotlin type proves nothing. When it is a `T` and Godot agrees, the same wrapper is returned;
-   * otherwise a new non-owning view.
+   * Kotlin type proves nothing. A `RefCounted` result is a new wrapper that takes a reference of its
+   * own, as the `from*` downcasts do (task 132): kept in a field it keeps the object alive, closed
+   * or forgotten it releases only that reference. Any other result is the same wrapper when it
+   * already is a `T` and Godot agrees, else a new view.
    */
   @Suppress("UNCHECKED_CAST")
   fun <T : GodotObject> castOrNull(value: GodotObject, type: KClass<T>): T? {
     if (type == GodotObject::class) return value as T
     val token = token(type)
     if (!value.isClass(token.godotName)) return null
-    return if (type.isInstance(value)) value as T else token.wrap(value.handle) as T
+    if (value !is RefCounted && type.isInstance(value)) return value as T
+    return token.wrapRetained(value.handle) as T
   }
 
   fun <T : GodotObject> cast(value: GodotObject, type: KClass<T>): T =
@@ -148,9 +159,11 @@ internal fun describeDetached(node: Node): String = "${node.getClassName()} \"${
 
 /**
  * This object as a `T` when Godot says it is one (`Object.is_class`, asked every time except for
- * `T = GodotObject`), else `null`: GDScript's `x as Camera3D`. The result is the same wrapper when
- * it already is a `T`, else a new non-owning view of the same object. A cast result is never yours
- * to close: close the original (an owned `RefCounted` return) and only that.
+ * `T = GodotObject`), else `null`: GDScript's `x as Camera3D`. A `RefCounted` result (a resource
+ * cast: `res.castOrNull<Texture2D>()`) is a new wrapper with a reference of its own, like the
+ * `from*` downcasts: close it to release that reference early, or let the GC release it; the
+ * original is unaffected. Any other result is the same wrapper when it already is a `T`, else a new
+ * view of the same object (a `Node` has no reference to release).
  */
 inline fun <reified T : GodotObject> GodotObject.castOrNull(): T? = GodotClasses.castOrNull(this, T::class)
 

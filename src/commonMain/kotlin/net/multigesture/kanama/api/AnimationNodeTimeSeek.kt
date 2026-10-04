@@ -42,9 +42,12 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeTimeSeek? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeTimeSeek? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeTimeSeek? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeTimeSeek(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTimeSeek? =
             if (handle.address() == 0L) null else AnimationNodeTimeSeek(GodotHandle(handle))
 
         private const val SET_EXPLICIT_ELAPSE_HASH = 2586408642L

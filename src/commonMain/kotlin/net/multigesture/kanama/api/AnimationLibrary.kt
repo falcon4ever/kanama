@@ -59,7 +59,7 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimation(name: String): Animation? {
         checkOpen()
-        return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, segment, name))
+        return Animation.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, segment, name))
     }
 
     /**
@@ -92,9 +92,12 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationLibrary? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationLibrary? =
+        internal fun wrapOwned(handle: RawSegment): AnimationLibrary? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationLibrary(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationLibrary? =
             if (handle.address() == 0L) null else AnimationLibrary(GodotHandle(handle))
 
         private const val ADD_ANIMATION_HASH = 1811855551L

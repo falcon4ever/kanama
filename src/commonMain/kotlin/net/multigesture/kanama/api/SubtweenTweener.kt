@@ -24,15 +24,18 @@ class SubtweenTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(SubtweenTweener.wrap(ret), "SubtweenTweener.set_delay")
+        return requireGodotReturn(SubtweenTweener.wrapOwned(ret), "SubtweenTweener.set_delay")
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SubtweenTweener? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SubtweenTweener? =
+        internal fun wrapOwned(handle: RawSegment): SubtweenTweener? =
+            if (handle.address() == 0L) null else RefCounted.owned(SubtweenTweener(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SubtweenTweener? =
             if (handle.address() == 0L) null else SubtweenTweener(GodotHandle(handle))
 
         private const val SET_DELAY_HASH = 449181780L

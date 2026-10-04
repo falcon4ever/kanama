@@ -23,9 +23,12 @@ class OpenXRSpatialComponentBounded3DList(handle: GodotHandle) : OpenXRSpatialCo
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentBounded3DList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentBounded3DList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentBounded3DList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentBounded3DList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentBounded3DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentBounded3DList(GodotHandle(handle))
 
         private const val GET_CENTER_POSE_HASH = 1965739696L

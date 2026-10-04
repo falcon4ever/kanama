@@ -41,7 +41,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
 
     fun getAction(): OpenXRAction? {
         checkOpen()
-        return OpenXRAction.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionBind, segment))
+        return OpenXRAction.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getActionBind, segment))
     }
 
     fun setBindingPath(bindingPath: String) {
@@ -61,7 +61,7 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
 
     fun getBindingModifier(index: Int): OpenXRActionBindingModifier? {
         checkOpen()
-        return OpenXRActionBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, segment, index))
+        return OpenXRActionBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, segment, index))
     }
 
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
@@ -107,9 +107,12 @@ class OpenXRIPBinding(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRIPBinding? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRIPBinding? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRIPBinding? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRIPBinding(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRIPBinding? =
             if (handle.address() == 0L) null else OpenXRIPBinding(GodotHandle(handle))
 
         private const val SET_ACTION_HASH = 349361333L

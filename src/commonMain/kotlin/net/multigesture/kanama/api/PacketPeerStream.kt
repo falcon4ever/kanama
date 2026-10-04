@@ -47,7 +47,7 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getStreamPeer(): StreamPeer? {
         checkOpen()
-        return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPeerBind, segment))
+        return StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamPeerBind, segment))
     }
 
     fun setInputBufferMaxSize(maxSizeBytes: Int) {
@@ -73,9 +73,12 @@ class PacketPeerStream(handle: GodotHandle) : PacketPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PacketPeerStream? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PacketPeerStream? =
+        internal fun wrapOwned(handle: RawSegment): PacketPeerStream? =
+            if (handle.address() == 0L) null else RefCounted.owned(PacketPeerStream(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PacketPeerStream? =
             if (handle.address() == 0L) null else PacketPeerStream(GodotHandle(handle))
 
         private const val SET_STREAM_PEER_HASH = 3281897016L

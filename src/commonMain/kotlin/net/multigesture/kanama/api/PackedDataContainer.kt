@@ -35,9 +35,12 @@ class PackedDataContainer(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PackedDataContainer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PackedDataContainer? =
+        internal fun wrapOwned(handle: RawSegment): PackedDataContainer? =
+            if (handle.address() == 0L) null else RefCounted.owned(PackedDataContainer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PackedDataContainer? =
             if (handle.address() == 0L) null else PackedDataContainer(GodotHandle(handle))
 
         private const val PACK_HASH = 966674026L

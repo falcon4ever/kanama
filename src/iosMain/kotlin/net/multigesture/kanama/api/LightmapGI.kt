@@ -148,7 +148,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     fun getLightData(): LightmapGIData? {
-        return LightmapGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, segment))
+        return LightmapGIData.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, segment))
     }
 
     fun setBakeQuality(bakeQuality: LightmapGI.BakeQuality) {
@@ -204,7 +204,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     fun getEnvironmentCustomSky(): Sky? {
-        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentCustomSkyBind, segment))
+        return Sky.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentCustomSkyBind, segment))
     }
 
     fun setEnvironmentCustomColor(color: Color) {
@@ -316,7 +316,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     /**

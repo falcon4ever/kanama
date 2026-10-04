@@ -113,9 +113,12 @@ open class PacketPeer(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PacketPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PacketPeer? =
+        internal fun wrapOwned(handle: RawSegment): PacketPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(PacketPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PacketPeer? =
             if (handle.address() == 0L) null else PacketPeer(GodotHandle(handle))
 
         private const val GET_VAR_HASH = 3442865206L

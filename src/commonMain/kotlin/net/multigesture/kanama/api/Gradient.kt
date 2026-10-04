@@ -286,9 +286,12 @@ class Gradient(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Gradient? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Gradient? =
+        internal fun wrapOwned(handle: RawSegment): Gradient? =
+            if (handle.address() == 0L) null else RefCounted.owned(Gradient(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Gradient? =
             if (handle.address() == 0L) null else Gradient(GodotHandle(handle))
 
         private const val ADD_POINT_HASH = 3629403827L

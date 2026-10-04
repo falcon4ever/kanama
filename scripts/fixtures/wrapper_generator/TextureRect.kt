@@ -45,7 +45,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
     }
 
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     fun setExpandMode(expandMode: TextureRect.ExpandMode) {

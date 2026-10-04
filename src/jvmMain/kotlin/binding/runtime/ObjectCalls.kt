@@ -1432,7 +1432,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Material> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL) { ret ->
-      BuiltinTypes.readArrayObjectsOwned(ret, Material::wrap)
+      BuiltinTypes.readArrayObjectsOwned(ret, Material::wrapBorrowed)
     }
 
   fun ptrcallNoArgsRetTypedArea2DList(

@@ -160,9 +160,12 @@ open class CameraAttributes(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CameraAttributes? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CameraAttributes? =
+        internal fun wrapOwned(handle: RawSegment): CameraAttributes? =
+            if (handle.address() == 0L) null else RefCounted.owned(CameraAttributes(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CameraAttributes? =
             if (handle.address() == 0L) null else CameraAttributes(GodotHandle(handle))
 
         private const val SET_EXPOSURE_MULTIPLIER_HASH = 373806689L

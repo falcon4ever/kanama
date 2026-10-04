@@ -390,9 +390,12 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StreamPeer? =
+        internal fun wrapOwned(handle: RawSegment): StreamPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(StreamPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StreamPeer? =
             if (handle.address() == 0L) null else StreamPeer(GodotHandle(handle))
 
         private const val PUT_DATA_HASH = 680677267L

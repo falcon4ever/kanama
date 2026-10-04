@@ -35,7 +35,7 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
 
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun setUseAllSurfaces(enabled: Boolean) {
@@ -61,9 +61,12 @@ class VisualShaderNodeParticleMeshEmitter(handle: GodotHandle) : VisualShaderNod
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleMeshEmitter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleMeshEmitter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleMeshEmitter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleMeshEmitter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleMeshEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleMeshEmitter(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L

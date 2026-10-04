@@ -41,9 +41,12 @@ class WorldBoundaryShape3D(handle: GodotHandle) : Shape3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WorldBoundaryShape3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WorldBoundaryShape3D? =
+        internal fun wrapOwned(handle: RawSegment): WorldBoundaryShape3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(WorldBoundaryShape3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WorldBoundaryShape3D? =
             if (handle.address() == 0L) null else WorldBoundaryShape3D(GodotHandle(handle))
 
         private const val SET_PLANE_HASH = 3505987427L

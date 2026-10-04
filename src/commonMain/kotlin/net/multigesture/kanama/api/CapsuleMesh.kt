@@ -126,9 +126,12 @@ class CapsuleMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CapsuleMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CapsuleMesh? =
+        internal fun wrapOwned(handle: RawSegment): CapsuleMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(CapsuleMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CapsuleMesh? =
             if (handle.address() == 0L) null else CapsuleMesh(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L

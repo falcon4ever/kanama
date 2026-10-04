@@ -65,7 +65,7 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: AnimatedSprite3D.get_sprite_frames
      */
     fun getSpriteFrames(): SpriteFrames? {
-        return SpriteFrames.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, segment))
+        return SpriteFrames.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, segment))
     }
 
     /**

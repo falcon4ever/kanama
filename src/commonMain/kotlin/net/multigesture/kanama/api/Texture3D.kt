@@ -69,7 +69,7 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
      */
     fun getData(): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDataBind, segment, Image::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getDataBind, segment, Image::wrapBorrowed)
     }
 
     /**
@@ -84,15 +84,18 @@ open class Texture3D(handle: GodotHandle) : Texture(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Texture3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Texture3D? =
+        internal fun wrapOwned(handle: RawSegment): Texture3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(Texture3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Texture3D? =
             if (handle.address() == 0L) null else Texture3D(GodotHandle(handle))
 
         private const val GET_FORMAT_HASH = 3847873762L

@@ -13,9 +13,12 @@ class EditorSceneFormatImporterFBX2GLTF(handle: GodotHandle) : EditorSceneFormat
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorSceneFormatImporterFBX2GLTF? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorSceneFormatImporterFBX2GLTF? =
+        internal fun wrapOwned(handle: RawSegment): EditorSceneFormatImporterFBX2GLTF? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorSceneFormatImporterFBX2GLTF(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterFBX2GLTF? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterFBX2GLTF(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

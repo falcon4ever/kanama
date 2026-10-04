@@ -261,9 +261,12 @@ class CanvasItemMaterial(handle: GodotHandle) : Material(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CanvasItemMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CanvasItemMaterial? =
+        internal fun wrapOwned(handle: RawSegment): CanvasItemMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(CanvasItemMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CanvasItemMaterial? =
             if (handle.address() == 0L) null else CanvasItemMaterial(GodotHandle(handle))
 
         private const val SET_BLEND_MODE_HASH = 1786054936L

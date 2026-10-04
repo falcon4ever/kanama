@@ -29,15 +29,18 @@ class SkeletonModification2DStackHolder(handle: GodotHandle) : SkeletonModificat
      */
     fun getHeldModificationStack(): SkeletonModificationStack2D? {
         checkOpen()
-        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHeldModificationStackBind, segment))
+        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getHeldModificationStackBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonModification2DStackHolder? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkeletonModification2DStackHolder? =
+        internal fun wrapOwned(handle: RawSegment): SkeletonModification2DStackHolder? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkeletonModification2DStackHolder(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DStackHolder? =
             if (handle.address() == 0L) null else SkeletonModification2DStackHolder(GodotHandle(handle))
 
         private const val SET_HELD_MODIFICATION_STACK_HASH = 3907307132L

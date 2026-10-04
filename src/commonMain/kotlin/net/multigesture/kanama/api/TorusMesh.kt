@@ -118,9 +118,12 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TorusMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TorusMesh? =
+        internal fun wrapOwned(handle: RawSegment): TorusMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(TorusMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TorusMesh? =
             if (handle.address() == 0L) null else TorusMesh(GodotHandle(handle))
 
         private const val SET_INNER_RADIUS_HASH = 373806689L

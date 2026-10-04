@@ -13,9 +13,12 @@ class VisualShaderNodeFresnel(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeFresnel? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeFresnel? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeFresnel? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeFresnel(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFresnel? =
             if (handle.address() == 0L) null else VisualShaderNodeFresnel(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

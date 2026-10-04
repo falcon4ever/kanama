@@ -15,9 +15,12 @@ class AnimationNodeAdd3(handle: GodotHandle) : AnimationNodeSync(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeAdd3? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeAdd3? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeAdd3? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeAdd3(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeAdd3? =
             if (handle.address() == 0L) null else AnimationNodeAdd3(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

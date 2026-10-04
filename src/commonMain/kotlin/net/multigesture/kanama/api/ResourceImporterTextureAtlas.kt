@@ -16,9 +16,12 @@ class ResourceImporterTextureAtlas(handle: GodotHandle) : ResourceImporter(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterTextureAtlas? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterTextureAtlas? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterTextureAtlas? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterTextureAtlas(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterTextureAtlas? =
             if (handle.address() == 0L) null else ResourceImporterTextureAtlas(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

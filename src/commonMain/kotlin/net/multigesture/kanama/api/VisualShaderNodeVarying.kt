@@ -44,9 +44,12 @@ open class VisualShaderNodeVarying(handle: GodotHandle) : VisualShaderNode(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVarying? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVarying? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVarying? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVarying(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVarying? =
             if (handle.address() == 0L) null else VisualShaderNodeVarying(GodotHandle(handle))
 
         private const val SET_VARYING_NAME_HASH = 83702148L

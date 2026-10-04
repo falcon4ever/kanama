@@ -261,9 +261,12 @@ class GLTFNode(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFNode? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFNode? =
+        internal fun wrapOwned(handle: RawSegment): GLTFNode? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFNode(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFNode? =
             if (handle.address() == 0L) null else GLTFNode(GodotHandle(handle))
 
         private const val GET_ORIGINAL_NAME_HASH = 2841200299L

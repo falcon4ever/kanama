@@ -76,7 +76,7 @@ class NavigationRegion3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: NavigationRegion3D.get_navigation_mesh
      */
     fun getNavigationMesh(): NavigationMesh? {
-        return NavigationMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, segment))
+        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, segment))
     }
 
     /**

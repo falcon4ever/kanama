@@ -137,6 +137,16 @@ extern int32_t kanama_ios_runtime_script_instance_set_property_array(
     const int64_t *objects,
     int32_t count
 );
+// Task 132: after an object (or object-list) property set succeeded, the objects it now holds. The
+// runtime takes a reference on each RefCounted one and records it per (owner, property) in the
+// shared ScriptPropertyRetains registry (desktop's): a new set releases the previous ones, the
+// instance's free releases them all. A Node or other non-RefCounted object is never referenced.
+extern int32_t kanama_ios_runtime_script_instance_retain_property_objects(
+    int64_t instance_handle,
+    int32_t property_index,
+    const int64_t *objects,
+    int32_t count
+);
 // Integer Array property delivery (currently List<Enum> ordinals). This is separate from the
 // object-array entrypoint so an integer in malformed scene data can never become an object handle.
 extern int32_t kanama_ios_runtime_script_instance_set_property_int_array(
@@ -171,6 +181,10 @@ extern int32_t kanama_ios_runtime_script_instance_set_property_value(
     int32_t length
 );
 extern void kanama_ios_runtime_script_instance_free(int64_t instance_handle);
+// Task 132: a script instance on a RefCounted owner holds a +1 on it and switches its link to the
+// Kotlin script object strong (count > 1) / weak (count 1), as C#'s CSharpInstance does.
+extern void kanama_ios_runtime_script_instance_refcount_incremented(int64_t instance_handle);
+extern int32_t kanama_ios_runtime_script_instance_refcount_decremented(int64_t instance_handle);
 extern void kanama_ios_runtime_dispatch_callable(
     int64_t callback_id,
     int32_t argument_count,
@@ -257,8 +271,6 @@ typedef struct {
     GDExtensionObjectPtr owner_object;
     GDExtensionObjectPtr script_object;
     KanamaIosExtensionInstance *script;
-    GDExtensionObjectPtr referenced_objects[16];
-    int referenced_object_count;
 } KanamaIosScriptInstance;
 
 /*
@@ -5339,7 +5351,8 @@ static void kanama_ios_godot_ptrcall_object_bool_int_arg(
     }
     GDExtensionObjectPtr object_cell = object_arg;
     GDExtensionBool bool_cell = bool_arg;
-    int32_t int_cell = int_arg;
+    // Integer and enum ptrcall arguments are 64-bit cells (PtrToArg reads an int64_t), task 132.
+    int64_t int_cell = int_arg;
     const GDExtensionConstTypePtr args[3] = {
         (GDExtensionConstTypePtr)&object_cell,
         (GDExtensionConstTypePtr)&bool_cell,
@@ -5382,7 +5395,8 @@ static GDExtensionObjectPtr kanama_ios_godot_ptrcall_int_bool_arg_ret_object(
         kanama_ios_fault(__func__, "null-instance", NULL);
         return NULL;
     }
-    int32_t int_cell = int_arg;
+    // Integer and enum ptrcall arguments are 64-bit cells (PtrToArg reads an int64_t), task 132.
+    int64_t int_cell = int_arg;
     GDExtensionBool bool_cell = bool_arg;
     const GDExtensionConstTypePtr args[2] = {
         (GDExtensionConstTypePtr)&int_cell,
@@ -5672,7 +5686,8 @@ static void kanama_ios_godot_notify_postinitialize(GDExtensionObjectPtr object) 
         kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
-    int32_t notification = KANAMA_IOS_NOTIFICATION_POSTINITIALIZE;
+    // A 64-bit cell: PtrToArg reads an int64_t for every integer argument (task 132).
+    int64_t notification = KANAMA_IOS_NOTIFICATION_POSTINITIALIZE;
     GDExtensionBool reversed = 0;
     const GDExtensionConstTypePtr args[2] = {
         (GDExtensionConstTypePtr)&notification,
@@ -5821,6 +5836,44 @@ int64_t kanama_ios_godot_object_get_instance_id(int64_t object) {
 // output as `SCRIPT ERROR: <message>` / `at: <function> (<file>:<line>)`, and the debugger's Errors
 // tab, like a GDScript error. NULL strings are sent as "" (Godot formats them with %s). Returns 1
 // when the error reached the engine, 0 when the entry point did not resolve.
+// Task 132: the `print` / `push_warning` utility functions (both vararg, hash 2648703342), resolved
+// on first use.
+static GDExtensionPtrUtilityFunction g_utility_print = NULL;
+static GDExtensionPtrUtilityFunction g_utility_push_warning = NULL;
+
+int32_t kanama_ios_godot_print(const char *message, int32_t warning) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    GDExtensionPtrUtilityFunction *slot = warning != 0 ? &g_utility_push_warning : &g_utility_print;
+    if (*slot == NULL) {
+        GDExtensionInterfaceVariantGetPtrUtilityFunction get_utility =
+            (GDExtensionInterfaceVariantGetPtrUtilityFunction)kanama_ios_lookup("variant_get_ptr_utility_function");
+        if (get_utility == NULL) {
+            kanama_ios_fault(__func__, "api-unresolved", "variant_get_ptr_utility_function");
+            return 0;
+        }
+        uint64_t name_storage = 0;
+        kanama_ios_init_string_name(&name_storage, warning != 0 ? "push_warning" : "print");
+        *slot = get_utility((GDExtensionConstStringNamePtr)&name_storage, 2648703342);
+        kanama_ios_destroy_string_name(&name_storage);
+        if (*slot == NULL) {
+            kanama_ios_fault(__func__, "null-bind", warning != 0 ? "push_warning" : "print");
+            return 0;
+        }
+    }
+    uint64_t text_storage = 0;
+    uint64_t variant_storage[3] = {0, 0, 0};
+    kanama_ios_init_string(&text_storage, message != NULL ? message : "");
+    g_variant_from_string((GDExtensionUninitializedVariantPtr)variant_storage, (GDExtensionTypePtr)&text_storage);
+    const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)variant_storage };
+    (*slot)(NULL, args, 1);
+    g_variant_destroy((GDExtensionVariantPtr)variant_storage);
+    kanama_ios_destroy_string(&text_storage);
+    return 1;
+}
+
 int32_t kanama_ios_report_script_error(
     const char *description,
     const char *message,
@@ -6606,7 +6659,7 @@ int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type
 
     uint64_t path_storage = 0;
     uint64_t type_hint_storage = 0;
-    int32_t cache_mode = 1;
+    int64_t cache_mode = 1; // CACHE_MODE_REUSE; enum arguments are 64-bit cells in ptrcall (task 132)
     kanama_ios_init_string(&path_storage, path);
     kanama_ios_init_string(&type_hint_storage, type_hint != NULL ? type_hint : "");
     const GDExtensionConstTypePtr args[3] = {
@@ -6619,6 +6672,70 @@ int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type
     kanama_ios_destroy_string(&type_hint_storage);
     kanama_ios_destroy_string(&path_storage);
     return (int64_t)(intptr_t)ret;
+}
+
+// Task 132: ResourceLoader.load(path, type_hint, CACHE_MODE_IGNORE) -- a fresh copy of the file,
+// never the cached object (the refill of a script instance rebuilt after a collection). The
+// returned object carries the +1 of the Ref return slot; the caller releases it.
+int64_t kanama_ios_godot_resource_loader_load_uncached(const char *path, const char *type_hint) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (path == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "path");
+        return 0;
+    }
+    GDExtensionObjectPtr resource_loader = kanama_ios_resource_loader_singleton();
+    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
+        &g_resource_loader_load_bind,
+        "ResourceLoader",
+        "load",
+        KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH
+    );
+    if (resource_loader == NULL) {
+        kanama_ios_fault(__func__, "api-unresolved", "ResourceLoader singleton");
+        return 0;
+    }
+    if (method_bind == NULL) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return 0;
+    }
+    uint64_t path_storage = 0;
+    uint64_t type_hint_storage = 0;
+    int64_t cache_mode = 0; // ResourceLoader.CACHE_MODE_IGNORE (enum args are 64-bit in ptrcall)
+    kanama_ios_init_string(&path_storage, path);
+    kanama_ios_init_string(&type_hint_storage, type_hint != NULL ? type_hint : "");
+    const GDExtensionConstTypePtr args[3] = {
+        (GDExtensionConstTypePtr)&path_storage,
+        (GDExtensionConstTypePtr)&type_hint_storage,
+        (GDExtensionConstTypePtr)&cache_mode,
+    };
+    GDExtensionObjectPtr ret = NULL;
+    g_object_method_bind_ptrcall(method_bind, resource_loader, args, &ret);
+    kanama_ios_destroy_string(&type_hint_storage);
+    kanama_ios_destroy_string(&path_storage);
+    return (int64_t)(intptr_t)ret;
+}
+
+// Task 132 self-test: a Kanama Script object for [path] (the loader's construction path, without a
+// file), so the self-test can attach a script with set_script and let Godot drive the instance's
+// refcount callbacks. Returns the Script object (refcount 1, the caller's) or 0.
+static GDExtensionObjectPtr kanama_ios_construct_extension_object(KanamaIosClassKind kind);
+
+int64_t kanama_ios_godot_create_script_object(const char *path) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    if (path == NULL) {
+        kanama_ios_fault(__func__, "null-arg", "path");
+        return 0;
+    }
+    g_pending_script_resource_path = path;
+    GDExtensionObjectPtr script_object = kanama_ios_construct_extension_object(KANAMA_IOS_CLASS_SCRIPT);
+    g_pending_script_resource_path = NULL;
+    return (int64_t)(intptr_t)script_object;
 }
 
 void kanama_ios_godot_sprite2d_set_texture(int64_t sprite, int64_t texture) {
@@ -9845,15 +9962,6 @@ static GDExtensionBool kanama_ios_script_instance_false_1(GDExtensionScriptInsta
     return 0;
 }
 
-// refcount_decremented_func contract (script_instance.h): "return true if it can die".
-// The Kanama script instance holds no reference on its owner, so the last
-// unreference() must be allowed to destroy it; returning false makes every
-// scripted RefCounted immortal (die = die && script_ret in RefCounted::unreference).
-static GDExtensionBool kanama_ios_script_instance_true_1(GDExtensionScriptInstanceDataPtr data) {
-    (void)data;
-    return 1;
-}
-
 static GDExtensionBool kanama_ios_script_instance_false_2(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr name
@@ -10613,7 +10721,22 @@ static void kanama_ios_script_instance_to_string(
 }
 
 static void kanama_ios_script_instance_refcount_incremented(GDExtensionScriptInstanceDataPtr data) {
-    (void)data;
+    KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
+    if (instance == NULL || instance->runtime_handle == 0) {
+        return;
+    }
+    kanama_ios_runtime_script_instance_refcount_incremented(instance->runtime_handle);
+}
+
+// refcount_decremented_func contract (script_instance.h): "return true if it can die". The
+// Kotlin runtime answers: true at count 0; false at 1 while the instance holds its own +1 on a
+// RefCounted owner (the owner dies when the GC fallback releases it, task 132).
+static GDExtensionBool kanama_ios_script_instance_refcount_decremented(GDExtensionScriptInstanceDataPtr data) {
+    KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
+    if (instance == NULL || instance->runtime_handle == 0) {
+        return 1;
+    }
+    return kanama_ios_runtime_script_instance_refcount_decremented(instance->runtime_handle) != 0 ? 1 : 0;
 }
 
 static GDExtensionObjectPtr kanama_ios_script_instance_get_script(GDExtensionScriptInstanceDataPtr data) {
@@ -10631,37 +10754,10 @@ static GDExtensionScriptLanguagePtr kanama_ios_script_instance_get_language(GDEx
     return (GDExtensionScriptLanguagePtr)g_script_language_object;
 }
 
-static void kanama_ios_ref_retain(KanamaIosScriptInstance *instance, GDExtensionObjectPtr obj) {
-    if (obj == NULL || instance == NULL) return;
-    GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
-        &g_ref_counted_reference_bind, "RefCounted", "reference", KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
-    if (bind != NULL) {
-        GDExtensionBool result = 0;
-        g_object_method_bind_ptrcall(bind, obj, NULL, &result);
-    }
-    if (instance->referenced_object_count < 16) {
-        instance->referenced_objects[instance->referenced_object_count++] = obj;
-    }
-}
-
-static void kanama_ios_ref_release_all(KanamaIosScriptInstance *instance) {
-    if (instance == NULL) return;
-    GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
-        &g_ref_counted_unreference_bind, "RefCounted", "unreference", KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
-    for (int i = 0; i < instance->referenced_object_count; i++) {
-        if (instance->referenced_objects[i] != NULL && bind != NULL) {
-            GDExtensionBool result = 0;
-            g_object_method_bind_ptrcall(bind, instance->referenced_objects[i], NULL, &result);
-        }
-        instance->referenced_objects[i] = NULL;
-    }
-    instance->referenced_object_count = 0;
-}
-
 static void kanama_ios_script_instance_free(GDExtensionScriptInstanceDataPtr data) {
     KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
     if (instance != NULL) {
-        kanama_ios_ref_release_all(instance);
+        // The runtime's free releases the references the property sets took (task 132).
         kanama_ios_runtime_script_instance_free(instance->runtime_handle);
         free(instance);
     }
@@ -10876,10 +10972,16 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         ? g_variant_get_type(value)
         : KANAMA_IOS_VARIANT_TYPE_NIL;
     int64_t arg = 0;
+    // Task 132: an object (or nil) set records the object it now holds in the runtime's registry
+    // once the set succeeded (kanama_ios_runtime_script_instance_retain_property_objects). This
+    // shim never calls reference() itself: a ptrcall of RefCounted.reference on a Node writes
+    // into the Node (Godot's ptrcall casts blindly), and its old fixed 16-slot record leaked the
+    // rest and never released on a new set.
+    int object_set = 0;
     if (type == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
         GDExtensionObjectPtr obj = kanama_ios_variant_to_object(value);
         arg = (int64_t)(intptr_t)obj;
-        kanama_ios_ref_retain(instance, obj);
+        object_set = 1;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_INT) {
         arg = kanama_ios_variant_to_int64(value);
     } else if (type == KANAMA_IOS_VARIANT_TYPE_BOOL && g_variant_to_bool != NULL) {
@@ -10903,14 +11005,21 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_NIL) {
         arg = 0;
+        object_set = 1;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_ARRAY && g_variant_to_array != NULL) {
         kanama_ios_cache_array_methods();
         if (g_array_size_method == NULL || g_array_get_method == NULL) { return 0; }
         uint8_t raw_array[8] = {0};
+        // A copy of the value's Array: it shares (and references) the engine's array data, so it
+        // is destroyed on every path below. Before task 132's review it never was, so every Array
+        // set into a script property on iOS leaked, and with it a reference on each element.
         g_variant_to_array(raw_array, (GDExtensionVariantPtr)(intptr_t)value);
         int64_t size = 0;
         g_array_size_method(raw_array, NULL, &size, 0);
         if (size <= 0) {
+            if (g_array_destructor != NULL) {
+                g_array_destructor((GDExtensionTypePtr)raw_array);
+            }
             // Empty arrays carry no runtime element type. Ask the integer bridge first; it returns
             // false for object-list properties, in which case the existing object bridge handles it.
             int32_t ok = kanama_ios_runtime_script_instance_set_property_int_array(
@@ -10918,6 +11027,10 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
             if (!ok) {
                 ok = kanama_ios_runtime_script_instance_set_property_array(
                     instance->runtime_handle, property_index, NULL, 0);
+                if (ok) {
+                    kanama_ios_runtime_script_instance_retain_property_objects(
+                        instance->runtime_handle, property_index, NULL, 0);
+                }
             }
             return (GDExtensionBool)ok;
         }
@@ -10928,6 +11041,9 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
             free(objects);
             free(integers);
             free(strings);
+            if (g_array_destructor != NULL) {
+                g_array_destructor((GDExtensionTypePtr)raw_array);
+            }
             return 0;
         }
         int integer_compatible = 1;
@@ -10943,7 +11059,6 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
                 GDExtensionObjectPtr obj_ptr = NULL;
                 g_variant_to_object(&obj_ptr, (GDExtensionVariantPtr)ret_variant);
                 objects[i] = (int64_t)(intptr_t)obj_ptr;
-                kanama_ios_ref_retain(instance, obj_ptr);
                 integer_compatible = 0;
             } else if (elem_type == KANAMA_IOS_VARIANT_TYPE_INT) {
                 integers[i] = kanama_ios_variant_to_int64(
@@ -10985,6 +11100,10 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         if (!ok) {
             ok = kanama_ios_runtime_script_instance_set_property_array(
                 instance->runtime_handle, property_index, objects, (int32_t)size);
+            if (ok) {
+                kanama_ios_runtime_script_instance_retain_property_objects(
+                    instance->runtime_handle, property_index, objects, (int32_t)size);
+            }
         }
         for (int64_t i = 0; i < size; i++) {
             free((void *)strings[i]);
@@ -10992,6 +11111,11 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         free(strings);
         free(objects);
         free(integers);
+        // After the runtime took its references (retain_property_objects above): the engine's
+        // value and the registry now hold the elements, this copy no longer does.
+        if (g_array_destructor != NULL) {
+            g_array_destructor((GDExtensionTypePtr)raw_array);
+        }
         return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_NODE_PATH
                && g_variant_to_node_path != NULL
@@ -11093,6 +11217,10 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         property_index,
         arg
     );
+    if (ok && object_set) {
+        kanama_ios_runtime_script_instance_retain_property_objects(
+            instance->runtime_handle, property_index, arg != 0 ? &arg : NULL, arg != 0 ? 1 : 0);
+    }
     return (GDExtensionBool)ok;
 }
 
@@ -11144,7 +11272,7 @@ static GDExtensionScriptInstanceInfo3 g_script_instance_info = {
     kanama_ios_script_instance_notification,
     kanama_ios_script_instance_to_string,
     kanama_ios_script_instance_refcount_incremented,
-    kanama_ios_script_instance_true_1, /* refcount_decremented: owner may die at zero */
+    kanama_ios_script_instance_refcount_decremented,
     kanama_ios_script_instance_get_script,
     kanama_ios_script_instance_is_placeholder,
     kanama_ios_script_instance_set_property,

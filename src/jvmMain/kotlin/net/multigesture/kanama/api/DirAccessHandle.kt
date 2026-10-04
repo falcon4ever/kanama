@@ -39,9 +39,12 @@ class DirAccessHandle internal constructor(handle: GodotHandle) : RefCounted(han
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): DirAccessHandle? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): DirAccessHandle? =
+        internal fun wrapOwned(handle: MemorySegment): DirAccessHandle? =
+            if (handle.address() == 0L) null else RefCounted.owned(DirAccessHandle(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): DirAccessHandle? =
             if (handle.address() == 0L) null else DirAccessHandle(GodotHandle(handle))
     }
 }

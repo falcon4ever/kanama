@@ -29,7 +29,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateRsa(size: Int): CryptoKey? {
         checkOpen()
-        return CryptoKey.wrap(ObjectCalls.ptrcallWithIntArgRetObject(generateRsaBind, segment, size))
+        return CryptoKey.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(generateRsaBind, segment, size))
     }
 
     /**
@@ -44,7 +44,7 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
      */
     fun generateSelfSignedCertificate(key: CryptoKey?, issuerName: String = "CN=myserver,O=myorganisation,C=IT", notBefore: String = "20140101000000", notAfter: String = "20340101000000"): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrap(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(generateSelfSignedCertificateBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, issuerName, notBefore, notAfter))
+        return X509Certificate.wrapOwned(ObjectCalls.ptrcallWithObjectThreeStringArgsRetObject(generateSelfSignedCertificateBind, segment, key?.requireOpenHandle() ?: NULL_SEGMENT, issuerName, notBefore, notAfter))
     }
 
     /**
@@ -119,9 +119,12 @@ class Crypto(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Crypto? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Crypto? =
+        internal fun wrapOwned(handle: RawSegment): Crypto? =
+            if (handle.address() == 0L) null else RefCounted.owned(Crypto(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Crypto? =
             if (handle.address() == 0L) null else Crypto(GodotHandle(handle))
 
         private const val GENERATE_RANDOM_BYTES_HASH = 47165747L

@@ -178,7 +178,7 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
 
         @JvmStatic
         fun fromApi(api: MultiplayerAPI?): SceneMultiplayer? =
-            api?.takeIf { it.isClass("SceneMultiplayer") }?.let { SceneMultiplayer(it.handle) }
+            api?.takeIf { it.isClass("SceneMultiplayer") }?.let { RefCounted.retained(SceneMultiplayer(it.handle)) }
 
         private const val SET_ROOT_PATH_HASH = 1348162250L
         private val setRootPathBind by lazy {

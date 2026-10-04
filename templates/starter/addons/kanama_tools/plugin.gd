@@ -19,6 +19,9 @@ const MODE_BUILD := "build"
 const MODE_RUNTIME := "runtime"
 const SETTING_JDWP_ENABLED := "kanama/debug/jdwp_enabled"
 const SETTING_JDWP_PORT := "kanama/debug/jdwp_port"
+# Read by the Kanama runtime at startup: log each RefCounted the GC released because its owned
+# Kotlin wrapper was never closed, once per creation site (task 132).
+const SETTING_LOG_GC_RELEASES := "kanama/debug/log_gc_releases"
 const DEFAULT_JDWP_PORT := 5005
 const SYNC_BUTTON_IDLE_TEXT := "Build Scripts"
 const SYNC_BUTTON_BUSY_TEXT := "Building..."
@@ -278,6 +281,9 @@ func _ensure_project_settings() -> void:
         ProjectSettings.set_setting(SETTING_JDWP_ENABLED, false)
     if not ProjectSettings.has_setting(SETTING_JDWP_PORT):
         ProjectSettings.set_setting(SETTING_JDWP_PORT, DEFAULT_JDWP_PORT)
+    if not ProjectSettings.has_setting(SETTING_LOG_GC_RELEASES):
+        ProjectSettings.set_setting(SETTING_LOG_GC_RELEASES, false)
+    ProjectSettings.set_initial_value(SETTING_LOG_GC_RELEASES, false)
     ProjectSettings.set_initial_value(SETTING_JDWP_ENABLED, false)
     ProjectSettings.set_initial_value(SETTING_JDWP_PORT, DEFAULT_JDWP_PORT)
 
@@ -315,6 +321,10 @@ func _ensure_project_settings() -> void:
     })
     ProjectSettings.add_property_info({
         "name": SETTING_JDWP_ENABLED,
+        "type": TYPE_BOOL,
+    })
+    ProjectSettings.add_property_info({
+        "name": SETTING_LOG_GC_RELEASES,
         "type": TYPE_BOOL,
     })
     ProjectSettings.add_property_info({

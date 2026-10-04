@@ -26,7 +26,7 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
      */
     fun getProfile(): SkeletonProfile? {
         checkOpen()
-        return SkeletonProfile.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, segment))
+        return SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, segment))
     }
 
     /**
@@ -81,9 +81,12 @@ class BoneMap(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BoneMap? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): BoneMap? =
+        internal fun wrapOwned(handle: RawSegment): BoneMap? =
+            if (handle.address() == 0L) null else RefCounted.owned(BoneMap(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): BoneMap? =
             if (handle.address() == 0L) null else BoneMap(GodotHandle(handle))
 
         private const val GET_PROFILE_HASH = 4291782652L

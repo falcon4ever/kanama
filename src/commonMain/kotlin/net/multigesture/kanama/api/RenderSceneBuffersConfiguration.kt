@@ -282,9 +282,12 @@ class RenderSceneBuffersConfiguration(handle: GodotHandle) : RefCounted(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RenderSceneBuffersConfiguration? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RenderSceneBuffersConfiguration? =
+        internal fun wrapOwned(handle: RawSegment): RenderSceneBuffersConfiguration? =
+            if (handle.address() == 0L) null else RefCounted.owned(RenderSceneBuffersConfiguration(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersConfiguration? =
             if (handle.address() == 0L) null else RenderSceneBuffersConfiguration(GodotHandle(handle))
 
         private const val GET_RENDER_TARGET_HASH = 2944877500L

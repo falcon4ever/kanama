@@ -67,9 +67,12 @@ class Skin(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Skin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Skin? =
+        internal fun wrapOwned(handle: RawSegment): Skin? =
+            if (handle.address() == 0L) null else RefCounted.owned(Skin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Skin? =
             if (handle.address() == 0L) null else Skin(GodotHandle(handle))
 
         private const val SET_BIND_COUNT_HASH = 1286410249L

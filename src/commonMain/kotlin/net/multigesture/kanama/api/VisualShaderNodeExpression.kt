@@ -28,9 +28,12 @@ open class VisualShaderNodeExpression(handle: GodotHandle) : VisualShaderNodeGro
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeExpression? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeExpression? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeExpression? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeExpression(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeExpression? =
             if (handle.address() == 0L) null else VisualShaderNodeExpression(GodotHandle(handle))
 
         private const val SET_EXPRESSION_HASH = 83702148L

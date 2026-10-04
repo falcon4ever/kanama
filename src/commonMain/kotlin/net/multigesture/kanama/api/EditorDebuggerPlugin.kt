@@ -17,7 +17,7 @@ class EditorDebuggerPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSession(id: Int): EditorDebuggerSession? {
         checkOpen()
-        return EditorDebuggerSession.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSessionBind, segment, id))
+        return EditorDebuggerSession.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSessionBind, segment, id))
     }
 
     /**
@@ -34,9 +34,12 @@ class EditorDebuggerPlugin(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorDebuggerPlugin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorDebuggerPlugin? =
+        internal fun wrapOwned(handle: RawSegment): EditorDebuggerPlugin? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorDebuggerPlugin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorDebuggerPlugin? =
             if (handle.address() == 0L) null else EditorDebuggerPlugin(GodotHandle(handle))
 
         private const val GET_SESSION_HASH = 3061968499L

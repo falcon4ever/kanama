@@ -113,9 +113,12 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventScreenTouch? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventScreenTouch? =
+        internal fun wrapOwned(handle: RawSegment): InputEventScreenTouch? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventScreenTouch(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventScreenTouch? =
             if (handle.address() == 0L) null else InputEventScreenTouch(GodotHandle(handle))
 
         private const val SET_INDEX_HASH = 1286410249L

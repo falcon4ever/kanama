@@ -15,9 +15,12 @@ open class JointLimitation3D(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): JointLimitation3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): JointLimitation3D? =
+        internal fun wrapOwned(handle: RawSegment): JointLimitation3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(JointLimitation3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): JointLimitation3D? =
             if (handle.address() == 0L) null else JointLimitation3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

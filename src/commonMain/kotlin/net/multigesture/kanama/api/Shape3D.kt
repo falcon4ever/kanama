@@ -84,15 +84,18 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getDebugMesh(): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDebugMeshBind, segment))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDebugMeshBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Shape3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Shape3D? =
+        internal fun wrapOwned(handle: RawSegment): Shape3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(Shape3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Shape3D? =
             if (handle.address() == 0L) null else Shape3D(GodotHandle(handle))
 
         private const val SET_CUSTOM_SOLVER_BIAS_HASH = 373806689L

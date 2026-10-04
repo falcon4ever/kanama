@@ -26,9 +26,12 @@ class OpenXRSpatialQueryResultData(handle: GodotHandle) : OpenXRSpatialComponent
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialQueryResultData? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialQueryResultData? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialQueryResultData? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialQueryResultData(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialQueryResultData? =
             if (handle.address() == 0L) null else OpenXRSpatialQueryResultData(GodotHandle(handle))
 
         private const val GET_CAPACITY_HASH = 3905245786L

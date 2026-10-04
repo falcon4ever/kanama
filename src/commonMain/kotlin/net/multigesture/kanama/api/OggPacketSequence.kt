@@ -65,9 +65,12 @@ class OggPacketSequence(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OggPacketSequence? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OggPacketSequence? =
+        internal fun wrapOwned(handle: RawSegment): OggPacketSequence? =
+            if (handle.address() == 0L) null else RefCounted.owned(OggPacketSequence(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OggPacketSequence? =
             if (handle.address() == 0L) null else OggPacketSequence(GodotHandle(handle))
 
         private const val SET_PACKET_DATA_HASH = 381264803L

@@ -54,9 +54,12 @@ class X509Certificate(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): X509Certificate? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): X509Certificate? =
+        internal fun wrapOwned(handle: RawSegment): X509Certificate? =
+            if (handle.address() == 0L) null else RefCounted.owned(X509Certificate(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): X509Certificate? =
             if (handle.address() == 0L) null else X509Certificate(GodotHandle(handle))
 
         private const val SAVE_HASH = 166001499L

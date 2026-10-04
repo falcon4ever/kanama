@@ -24,9 +24,12 @@ class EditorResourcePreviewGenerator(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorResourcePreviewGenerator? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorResourcePreviewGenerator? =
+        internal fun wrapOwned(handle: RawSegment): EditorResourcePreviewGenerator? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorResourcePreviewGenerator(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorResourcePreviewGenerator? =
             if (handle.address() == 0L) null else EditorResourcePreviewGenerator(GodotHandle(handle))
 
         private const val REQUEST_DRAW_AND_WAIT_HASH = 145472570L

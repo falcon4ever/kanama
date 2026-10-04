@@ -209,9 +209,12 @@ class AudioEffectCompressor(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectCompressor? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectCompressor? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectCompressor? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectCompressor(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectCompressor? =
             if (handle.address() == 0L) null else AudioEffectCompressor(GodotHandle(handle))
 
         private const val SET_THRESHOLD_HASH = 373806689L

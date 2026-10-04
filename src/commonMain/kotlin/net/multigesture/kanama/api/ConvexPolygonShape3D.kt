@@ -41,9 +41,12 @@ class ConvexPolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ConvexPolygonShape3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ConvexPolygonShape3D? =
+        internal fun wrapOwned(handle: RawSegment): ConvexPolygonShape3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(ConvexPolygonShape3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ConvexPolygonShape3D? =
             if (handle.address() == 0L) null else ConvexPolygonShape3D(GodotHandle(handle))
 
         private const val SET_POINTS_HASH = 334873810L

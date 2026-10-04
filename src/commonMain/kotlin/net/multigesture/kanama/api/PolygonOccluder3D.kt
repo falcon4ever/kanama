@@ -45,9 +45,12 @@ class PolygonOccluder3D(handle: GodotHandle) : Occluder3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PolygonOccluder3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PolygonOccluder3D? =
+        internal fun wrapOwned(handle: RawSegment): PolygonOccluder3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(PolygonOccluder3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PolygonOccluder3D? =
             if (handle.address() == 0L) null else PolygonOccluder3D(GodotHandle(handle))
 
         private const val SET_POLYGON_HASH = 1509147220L

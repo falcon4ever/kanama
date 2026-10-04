@@ -91,9 +91,12 @@ class FileAccessHandle internal constructor(handle: GodotHandle) : RefCounted(ha
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FileAccessHandle? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): FileAccessHandle? =
+        internal fun wrapOwned(handle: MemorySegment): FileAccessHandle? =
+            if (handle.address() == 0L) null else RefCounted.owned(FileAccessHandle(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): FileAccessHandle? =
             if (handle.address() == 0L) null else FileAccessHandle(GodotHandle(handle))
     }
 }

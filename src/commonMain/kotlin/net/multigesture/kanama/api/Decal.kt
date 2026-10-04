@@ -166,7 +166,7 @@ class Decal(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Decal.get_texture
      */
     fun getTexture(type: Decal.DecalTexture): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, type.value))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, type.value))
     }
 
     /**

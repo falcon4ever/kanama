@@ -19,9 +19,12 @@ open class Tweener(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Tweener? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Tweener? =
+        internal fun wrapOwned(handle: RawSegment): Tweener? =
+            if (handle.address() == 0L) null else RefCounted.owned(Tweener(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Tweener? =
             if (handle.address() == 0L) null else Tweener(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

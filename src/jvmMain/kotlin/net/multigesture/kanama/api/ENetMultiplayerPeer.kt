@@ -39,18 +39,18 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
     fun getHost(): ENetConnection? {
         checkOpen()
-        return ENetConnection.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHostBind, segment))
+        return ENetConnection.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getHostBind, segment))
     }
 
     fun getPeer(id: Int): ENetPacketPeer? {
         checkOpen()
-        return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, id))
+        return ENetPacketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, id))
     }
 
     companion object {
         @JvmStatic
         fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("ENetMultiplayerPeer")))
+            RefCounted.owned(ENetMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("ENetMultiplayerPeer"))))
 
         private const val CREATE_SERVER_HASH = 2917761309L
         private val createServerBind by lazy {

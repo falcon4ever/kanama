@@ -150,9 +150,12 @@ class RDFramebufferPass(handle: GodotHandle) : RefCounted(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDFramebufferPass? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDFramebufferPass? =
+        internal fun wrapOwned(handle: RawSegment): RDFramebufferPass? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDFramebufferPass(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDFramebufferPass? =
             if (handle.address() == 0L) null else RDFramebufferPass(GodotHandle(handle))
 
         private const val SET_COLOR_ATTACHMENTS_HASH = 3614634198L

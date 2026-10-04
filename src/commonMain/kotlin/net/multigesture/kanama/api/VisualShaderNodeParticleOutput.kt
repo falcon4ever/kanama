@@ -13,9 +13,12 @@ class VisualShaderNodeParticleOutput(handle: GodotHandle) : VisualShaderNodeOutp
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleOutput? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleOutput? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleOutput? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleOutput(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleOutput? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleOutput(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

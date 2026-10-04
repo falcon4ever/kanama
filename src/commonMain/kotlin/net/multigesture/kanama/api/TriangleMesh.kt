@@ -66,9 +66,12 @@ class TriangleMesh(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TriangleMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TriangleMesh? =
+        internal fun wrapOwned(handle: RawSegment): TriangleMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(TriangleMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TriangleMesh? =
             if (handle.address() == 0L) null else TriangleMesh(GodotHandle(handle))
 
         private const val CREATE_FROM_FACES_HASH = 2637816732L

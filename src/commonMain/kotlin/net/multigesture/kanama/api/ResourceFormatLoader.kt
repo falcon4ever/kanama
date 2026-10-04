@@ -68,9 +68,12 @@ class ResourceFormatLoader(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceFormatLoader? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceFormatLoader? =
+        internal fun wrapOwned(handle: RawSegment): ResourceFormatLoader? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceFormatLoader(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceFormatLoader? =
             if (handle.address() == 0L) null else ResourceFormatLoader(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

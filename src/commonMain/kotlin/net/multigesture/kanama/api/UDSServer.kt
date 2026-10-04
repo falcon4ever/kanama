@@ -29,15 +29,18 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun takeConnection(): StreamPeerUDS? {
         checkOpen()
-        return StreamPeerUDS.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
+        return StreamPeerUDS.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): UDSServer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): UDSServer? =
+        internal fun wrapOwned(handle: RawSegment): UDSServer? =
+            if (handle.address() == 0L) null else RefCounted.owned(UDSServer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): UDSServer? =
             if (handle.address() == 0L) null else UDSServer(GodotHandle(handle))
 
         private const val LISTEN_HASH = 166001499L

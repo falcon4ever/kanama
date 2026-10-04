@@ -31,7 +31,7 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSamplePlayback(): AudioSamplePlayback? {
         checkOpen()
-        return AudioSamplePlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSamplePlaybackBind, segment))
+        return AudioSamplePlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSamplePlaybackBind, segment))
     }
 
     /**
@@ -110,9 +110,12 @@ open class AudioStreamPlayback(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlayback? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamPlayback? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamPlayback? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamPlayback(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlayback? =
             if (handle.address() == 0L) null else AudioStreamPlayback(GodotHandle(handle))
 
         private const val SET_SAMPLE_PLAYBACK_HASH = 3195455091L

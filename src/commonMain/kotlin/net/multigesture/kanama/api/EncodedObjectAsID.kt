@@ -42,9 +42,12 @@ class EncodedObjectAsID(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EncodedObjectAsID? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EncodedObjectAsID? =
+        internal fun wrapOwned(handle: RawSegment): EncodedObjectAsID? =
+            if (handle.address() == 0L) null else RefCounted.owned(EncodedObjectAsID(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EncodedObjectAsID? =
             if (handle.address() == 0L) null else EncodedObjectAsID(GodotHandle(handle))
 
         private const val SET_OBJECT_ID_HASH = 1286410249L

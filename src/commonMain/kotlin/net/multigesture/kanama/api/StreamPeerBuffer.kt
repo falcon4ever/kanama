@@ -99,15 +99,18 @@ class StreamPeerBuffer(handle: GodotHandle) : StreamPeer(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return StreamPeerBuffer.wrap(ret)
+        return StreamPeerBuffer.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeerBuffer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StreamPeerBuffer? =
+        internal fun wrapOwned(handle: RawSegment): StreamPeerBuffer? =
+            if (handle.address() == 0L) null else RefCounted.owned(StreamPeerBuffer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StreamPeerBuffer? =
             if (handle.address() == 0L) null else StreamPeerBuffer(GodotHandle(handle))
 
         private const val SEEK_HASH = 1286410249L

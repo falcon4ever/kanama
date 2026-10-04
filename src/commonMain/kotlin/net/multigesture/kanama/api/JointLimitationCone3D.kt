@@ -42,9 +42,12 @@ class JointLimitationCone3D(handle: GodotHandle) : JointLimitation3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): JointLimitationCone3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): JointLimitationCone3D? =
+        internal fun wrapOwned(handle: RawSegment): JointLimitationCone3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(JointLimitationCone3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): JointLimitationCone3D? =
             if (handle.address() == 0L) null else JointLimitationCone3D(GodotHandle(handle))
 
         private const val SET_ANGLE_HASH = 373806689L

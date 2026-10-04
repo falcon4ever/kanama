@@ -48,7 +48,7 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -93,15 +93,18 @@ class MeshTexture(handle: GodotHandle) : Texture2D(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Texture2D.wrap(ret)
+        return Texture2D.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MeshTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MeshTexture? =
+        internal fun wrapOwned(handle: RawSegment): MeshTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(MeshTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MeshTexture? =
             if (handle.address() == 0L) null else MeshTexture(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L
