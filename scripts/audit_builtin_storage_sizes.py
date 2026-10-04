@@ -214,7 +214,8 @@ def audit_ios_shim() -> list[str]:
     KANAMA_IOS_PACKED_ARRAY_OPAQUE_SIZE (16 on 64-bit), not a bare 8-byte cell. A too-small
     slot overflows the ptrcall return-encode and crashes reading CowData metadata on device."""
     if not IOS_SHIM.exists():
-        return []
+        # The shim moving or being renamed must not turn this audit into a quiet no-op.
+        return [f"iOS shim not found at {IOS_SHIM.relative_to(ROOT)}; the Packed*Array slot audit did not run"]
     content = IOS_SHIM.read_text(encoding="utf-8")
     errors: list[str] = []
     rel = IOS_SHIM.relative_to(ROOT)

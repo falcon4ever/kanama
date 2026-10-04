@@ -15,6 +15,11 @@ catch a path baked into a compiled payload.
 Usage:
     python3 check_no_local_paths.py <export-dir> --forbid <absolute-path>...
                                     [--allow-file <relative-path>]...
+    python3 check_no_local_paths.py --self-test
+
+`--self-test` is this gate's red run (task 118): it builds an export-shaped tree in a scratch directory,
+requires a clean tree to pass, then plants a forbidden path in a text file and in a binary file and
+requires the scan to find both, and requires `--allow-file` to silence exactly the allowed one.
 """
 
 from __future__ import annotations
@@ -58,7 +63,35 @@ def scan(export_dir: str, forbidden: list[str], allowed: set[str]) -> list[str]:
     return problems
 
 
+def self_test() -> int:
+    import tempfile
+
+    forbidden = ["/Users/redrun/build-workspace"]
+    with tempfile.TemporaryDirectory() as scratch:
+        with open(os.path.join(scratch, "clean.js"), "w", encoding="utf-8") as handle:
+            handle.write("console.log('no paths here');\n")
+        if scan(scratch, forbidden, set()):
+            print("check_no_local_paths --self-test FAIL: a clean tree was reported dirty", file=sys.stderr)
+            return 1
+        with open(os.path.join(scratch, "leak.js"), "w", encoding="utf-8") as handle:
+            handle.write("const root = '/Users/redrun/build-workspace/out';\n")
+        with open(os.path.join(scratch, "payload.wasm"), "wb") as handle:
+            handle.write(b"\x00asm\x01\x00\x00\x00/Users/redrun/build-workspace/classes\x00")
+        problems = scan(scratch, forbidden, set())
+        if len(problems) != 2 or not any("leak.js" in p for p in problems) or not any("payload.wasm" in p for p in problems):
+            print(f"check_no_local_paths --self-test FAIL: expected the text and the binary leak, got {problems}", file=sys.stderr)
+            return 1
+        remaining = scan(scratch, forbidden, {"leak.js"})
+        if len(remaining) != 1 or "payload.wasm" not in remaining[0]:
+            print(f"check_no_local_paths --self-test FAIL: --allow-file must silence only leak.js, got {remaining}", file=sys.stderr)
+            return 1
+    print("check_no_local_paths --self-test: PASS (clean tree green; text and binary leaks both found; allow-file exact)")
+    return 0
+
+
 def main(argv: list[str]) -> int:
+    if argv == ["--self-test"]:
+        return self_test()
     if not argv:
         print(
             "usage: check_no_local_paths.py <export-dir> --forbid <path>... "

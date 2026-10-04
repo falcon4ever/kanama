@@ -21,7 +21,9 @@ HEADER = ROOT / "gdextension" / "gdextension_interface.h"
 
 # Each backend and the source it binds GDExtension functions from (as quoted lookup strings).
 BACKENDS: dict[str, list[Path]] = {
-    "desktop/Android (JVM)": [ROOT / "src" / "main"],
+    # src/main stopped existing with the KMP move (task 104 step 3); this entry then matched no file and the
+    # desktop leg of the gate checked nothing ("bound: desktop/Android=0") until task 118 noticed.
+    "desktop/Android (JVM)": [ROOT / "src" / "jvmMain"],
     "iOS (Kotlin/Native)": [ROOT / "ios" / "bootstrap" / "kanama_ios_shim.c"],
 }
 
@@ -74,6 +76,9 @@ def main() -> int:
     for backend, paths in BACKENDS.items():
         bound = bound_functions(paths, all_fns)
         per_backend[backend] = bound
+        # A backend that binds nothing is a path that moved, not a clean backend (the vacuous-gate trap).
+        if not bound:
+            failures.append(f"[vacuous] {backend}: no GDExtension function binding found under {[str(p.relative_to(ROOT)) for p in paths]}; did the source move?")
         for fn, sample in sorted(bound.items()):
             if fn in deprecated:
                 failures.append(f"[deprecated] {backend} binds deprecated '{fn}' ({sample}) — migrate to the newest variant")

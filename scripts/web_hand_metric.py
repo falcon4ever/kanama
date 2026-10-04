@@ -96,7 +96,7 @@ def _interesting(name: str) -> bool:
 def _count(path: Path) -> int:
     try:
         return path.read_bytes().count(b"\n")
-    except OSError:
+    except OSError:  # justified: a size metric for a report, not a gate; an unreadable file counts as 0 lines
         return 0
 
 

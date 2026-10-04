@@ -32,9 +32,16 @@ BACKUP="$(mktemp /tmp/kanama_hello_backup.XXXXXX)"
 cp "$SCRIPT_FILE" "$BACKUP"
 
 restore() {
+  local status=$?
   cp "$BACKUP" "$SCRIPT_FILE"
-  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null || true
+  # A failed re-sync would leave the mutated scripts jar in the example project for the NEXT gate, so it
+  # fails THIS run (task 118): the exit status of an EXIT trap that calls `exit` is the script's.
+  if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then
+    echo "[$(basename "$0" .sh)] FAIL: restoring the example addon jar failed; run ./gradlew syncExampleAddonJar before the next gate" >&2
+    status=1
+  fi
   rm -f "$BACKUP"
+  exit "$status"
 }
 trap restore EXIT
 

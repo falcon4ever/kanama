@@ -104,7 +104,7 @@ fi
 
 cleanup() {
   if [[ "$created_work_dir" -eq 1 && "$keep_work_dir" -ne 1 ]]; then
-    rm -rf "$work_dir" 2>/dev/null || true
+    rm -rf "$work_dir" 2>/dev/null || true  # justified: scratch-dir cleanup after the verdict
   fi
 }
 trap cleanup EXIT

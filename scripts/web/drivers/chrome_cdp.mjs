@@ -301,6 +301,17 @@ async function main() {
       deviceScaleFactor: 1,
       mobile: false,
     });
+    // KANAMA_WEB_CPU_THROTTLE=<rate >= 1>: slow the page's CPU by that factor (CDP
+    // Emulation.setCPUThrottlingRate). The gate's own red-run knob for timing-dependent defects: the web3d
+    // teardown race (task 118) showed up only on a slower CI Chrome, and this makes a local Chrome that
+    // slow on demand. Unset = no throttling; an unusable value fails the run instead of being ignored.
+    if (process.env.KANAMA_WEB_CPU_THROTTLE) {
+      const rate = Number(process.env.KANAMA_WEB_CPU_THROTTLE);
+      if (!Number.isFinite(rate) || rate < 1) {
+        throw new Error(`chrome_cdp: KANAMA_WEB_CPU_THROTTLE must be a number >= 1 (got ${process.env.KANAMA_WEB_CPU_THROTTLE})`);
+      }
+      await call("Emulation.setCPUThrottlingRate", { rate });
+    }
 
     // Transport the demo modules use, independent of CDP specifics.
     //

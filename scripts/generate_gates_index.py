@@ -50,8 +50,8 @@ CI_DEFAULT_WHERE = "PR + push to main (ci.yml `local-ci`); local"
 
 # Stages whose reach differs from "every local_ci run", keyed by stage name.
 STAGE_WHERE_OVERRIDES = {
-    "wrapper KDoc staleness check (4.7-stable)": "local only when a Godot `doc/classes` checkout is present (`GODOT_DOCS`); CI prints a skip line",
-    "claim audit (task 85 aggregator)": "PR + push to main (ci.yml `local-ci`); local. The task-index check inside it runs only where `kanama-tasks` exists and is reported SKIPPED elsewhere",
+    "wrapper KDoc staleness check (4.7-stable)": "local only when a Godot `doc/classes` checkout is present (`GODOT_DOCS`); on CI it prints `SKIP: kdoc-staleness` and is allowed to skip only through `KANAMA_ALLOW_SKIP` in ci.yml",
+    "claim audit (task 85 aggregator)": "PR + push to main (ci.yml `local-ci`); local. The task-index check inside it runs only where `kanama-tasks` exists; elsewhere it prints `SKIP: task-index`, and CI allows that skip only through `KANAMA_ALLOW_SKIP` in ci.yml",
     "bootstrap cmake build": "PR + push to main; local when cmake is installed (`--skip-bootstrap` skips)",
     "mkdocs strict build": "PR + push to main via the `docs (mkdocs strict)` job (`local-ci` passes `--skip-docs`); local when mkdocs is installed",
     "Linux native bootstrap preflight: file": "PR + push to main (Linux runner); Linux hosts only",
@@ -417,7 +417,7 @@ def is_shallow() -> bool:
         ["git", "-C", str(ROOT), "rev-parse", "--is-shallow-repository"],
         capture_output=True,
         text=True,
-        check=False,
+        check=False,  # justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself
     )
     return out.stdout.strip() == "true"
 
@@ -435,7 +435,7 @@ def first_landed(path: str, cache: dict[str, str], carried: dict[str, str] | Non
         ["git", "-C", str(ROOT), "log", "--diff-filter=A", "--follow", "--format=%ad", "--date=short", "--", path],
         capture_output=True,
         text=True,
-        check=False,
+        check=False,  # justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page
     ).stdout.split()
     cache[path] = out[-1] if out else "—"
     return cache[path]
@@ -590,6 +590,7 @@ def main() -> int:
         print(markdown, end="")
         return 0
     if args.check:
+        # justified: a missing file reads as "" and so compares as stale: the check fails
         current = args.markdown.read_text(encoding="utf-8") if args.markdown.exists() else ""
         if current != markdown:
             print(f"{TAG} FAIL stale gates index: {args.markdown}", file=sys.stderr)

@@ -119,7 +119,7 @@ def render_markdown(
 
     try:
         display_draft_dir = draft_dir.relative_to(ROOT)
-    except ValueError:
+    except ValueError:  # justified: only the path shown in the report text; no verdict reads it
         display_draft_dir = draft_dir
     display_draft_dir_text = display_draft_dir.as_posix()
 

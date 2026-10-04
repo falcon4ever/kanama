@@ -92,6 +92,7 @@ if [[ "$PIN" != *.stable ]]; then
   exit 1
 fi
 
+# justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below.
 BIN_VERSION="$("$GODOT_BIN" --version 2>/dev/null | grep -E '^[0-9]' | tail -n 1)"
 if [[ "$BIN_VERSION" != "$PIN" && "$BIN_VERSION" != "$PIN".* ]]; then
   echo "[upgrade_godot] FAIL: binary reports '$BIN_VERSION' but kanamaGodotVersion=$PIN." >&2
@@ -124,6 +125,7 @@ if [[ -z "$GODOT_DOCS_DIR" || ! -d "$GODOT_DOCS_DIR" ]]; then
 fi
 
 # Guard against syncing KDoc from a mismatched Godot source tree.
+# justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below.
 DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"
 if [[ -f "$DOCS_VERSION_PY" ]]; then
   DOCS_VERSION="$(python3 - "$DOCS_VERSION_PY" <<'EOF'
@@ -162,6 +164,7 @@ if [[ $DRY_RUN -eq 1 ]]; then
 else
   allowed_dirty="^..[[:space:]]+(gradle\.properties|\.github/workflows/package\.yml)$"
 fi
+# justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change).
 unexpected="$(printf '%s\n' "$STATUS_BEFORE" | grep -v '^??' | grep -vE "$allowed_dirty" | grep -v '^$' || true)"
 if [[ -n "$unexpected" ]]; then
   echo "[upgrade_godot] FAIL: working tree has unexpected tracked changes:" >&2
@@ -319,6 +322,7 @@ if [[ $DRY_RUN -eq 1 ]]; then
   STATUS_AFTER="$(git -C "$ROOT_DIR" status --porcelain)"
   if [[ "$STATUS_AFTER" != "$STATUS_BEFORE" ]]; then
     echo "[upgrade_godot] FAIL: --dry-run changed the tree:" >&2
+    # justified: diff exits 1 on a difference, which is the very thing being printed; the next line exits 1.
     diff <(printf '%s\n' "$STATUS_BEFORE") <(printf '%s\n' "$STATUS_AFTER") >&2 || true
     exit 1
   fi

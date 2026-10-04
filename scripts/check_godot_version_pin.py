@@ -35,9 +35,9 @@ def main() -> int:
     failures: list[str] = []
 
     # CI workflows: every GODOT_VERSION must equal the dash form. package.yml is the release
-    # tag; ci.yml and web.yml download the binary and export templates by it, so a stale one
+    # tag; ci.yml, web.yml and gate-red-runs-nightly.yml download the binary and export templates by it, so a stale one
     # silently gates the whole tree on the previous Godot.
-    for wf in ("package.yml", "ci.yml", "web.yml"):
+    for wf in ("package.yml", "ci.yml", "web.yml", "gate-red-runs-nightly.yml"):
         text = (ROOT / ".github/workflows" / wf).read_text()
         m = re.search(r"^\s*GODOT_VERSION:\s*(\S+)\s*$", text, re.MULTILINE)
         if not m:

@@ -213,7 +213,7 @@ for demo in "${DEMOS[@]}"; do
     source_after="$(checksum "$project_dir" --exclude .git --exclude .godot)"
     if [[ "$source_before" != "$source_after" ]]; then
       echo "[web_fresh_checkout] $demo: export MUTATED the demo source tree" >&2
-      git -C "$DEMOS_DIR" status --short >&2 || true
+      git -C "$DEMOS_DIR" status --short >&2 || true  # justified: diagnostics; FAILED=1 above already decided
       FAILED=1
     fi
     if [[ -n "$(git -C "$DEMOS_DIR" status --porcelain -- "$project_subdir")" ]]; then

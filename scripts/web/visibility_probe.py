@@ -144,7 +144,7 @@ def main(argv: list[str]) -> int:
         browser.terminate()
         try:
             browser.wait(timeout=10)
-        except subprocess.TimeoutExpired:
+        except subprocess.TimeoutExpired:  # justified: the browser ignored terminate(); escalating to kill() IS the handling
             browser.kill()
         server.shutdown()
         shutil.rmtree(profile, ignore_errors=True)
@@ -180,7 +180,7 @@ def main(argv: list[str]) -> int:
                 print("visibility_probe: browser output tail:", file=sys.stderr)
                 print(tail, file=sys.stderr)
         except OSError:
-            pass
+            pass  # justified: the browser-output tail is diagnostics only; this branch returns 2 (INCONCLUSIVE) regardless
         print(f"visibility_probe: browser exit code {browser.returncode}", file=sys.stderr)
         return 2
     label, message = verdict

@@ -117,18 +117,20 @@ FAILED=0
 
 cleanup() {
   local status=$?
-  # Terminate the driver's whole process group (it owns the browser it spawned).
+  # Terminate the driver's whole process group (it owns the browser it spawned). Every `|| true` and
+  # `2>/dev/null` in this function is justified (and marked): it runs after the verdict, `$status` is the
+  # verdict's exit code, and a process that is already gone is the success case of a kill.
   if [[ -n "$DRIVER_PID" ]] && kill -0 "$DRIVER_PID" 2>/dev/null; then
-    kill -TERM -- "-$DRIVER_PID" 2>/dev/null || kill -TERM "$DRIVER_PID" 2>/dev/null || true
+    kill -TERM -- "-$DRIVER_PID" 2>/dev/null || kill -TERM "$DRIVER_PID" 2>/dev/null || true  # justified: cleanup after the verdict; the process may already be gone
     for _ in 1 2 3 4 5 6 7 8 9 10; do
       kill -0 "$DRIVER_PID" 2>/dev/null || break
       sleep 0.2
     done
-    kill -KILL -- "-$DRIVER_PID" 2>/dev/null || kill -KILL "$DRIVER_PID" 2>/dev/null || true
+    kill -KILL -- "-$DRIVER_PID" 2>/dev/null || kill -KILL "$DRIVER_PID" 2>/dev/null || true  # justified: cleanup after the verdict; the process may already be gone
   fi
   if [[ -n "$SERVER_PID" ]] && kill -0 "$SERVER_PID" 2>/dev/null; then
-    kill -TERM "$SERVER_PID" 2>/dev/null || true
-    wait "$SERVER_PID" 2>/dev/null || true
+    kill -TERM "$SERVER_PID" 2>/dev/null || true  # justified: cleanup after the verdict; the process may already be gone
+    wait "$SERVER_PID" 2>/dev/null || true  # justified: cleanup after the verdict; the process may already be gone
   fi
   if [[ "$FAILED" -ne 0 || "$status" -ne 0 ]]; then
     echo "web_export_smoke: FAILED -- logs preserved:" >&2
@@ -210,9 +212,9 @@ while :; do
   fi
   if [[ "$(date +%s)" -ge "$DEADLINE" ]]; then
     echo "web_export_smoke: driver exceeded ${TIMEOUT}s (+grace); terminating" >&2
-    kill -TERM -- "-$DRIVER_PID" 2>/dev/null || kill -TERM "$DRIVER_PID" 2>/dev/null || true
+    kill -TERM -- "-$DRIVER_PID" 2>/dev/null || kill -TERM "$DRIVER_PID" 2>/dev/null || true  # justified: killing a driver that timed out; the `fail` just below is the verdict
     sleep 1
-    kill -KILL -- "-$DRIVER_PID" 2>/dev/null || kill -KILL "$DRIVER_PID" 2>/dev/null || true
+    kill -KILL -- "-$DRIVER_PID" 2>/dev/null || kill -KILL "$DRIVER_PID" 2>/dev/null || true  # justified: killing a driver that timed out; the `fail` just below is the verdict
     DRIVER_PID=""
     fail "driver timed out after ${TIMEOUT}s (see $DRIVER_LOG)"
   fi

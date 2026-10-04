@@ -90,8 +90,10 @@ def main() -> int:
     for root in args.roots:
         base = pathlib.Path(root)
         if not base.exists():
-            print(f"[unapplied_annotations] SKIP missing root: {base}")
-            continue
+            # An explicit root that is not there is a broken invocation (a demos checkout that moved),
+            # not something to step over: the scan would quietly cover less than it was asked to.
+            print(f"[unapplied_annotations] FAIL missing root: {base}", file=sys.stderr)
+            return 2
         files.extend(
             p
             for p in base.rglob("*.kt")
