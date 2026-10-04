@@ -221,6 +221,8 @@ object KanamaBinding {
     System.err.println("[kanama:kt] deinitialize: level=$level")
     if (level == INITIALIZATION_SCENE) {
       KanamaHotReload.shutdown()
+      // The preload cache's references (task 133) go before the engine's leak check.
+      runCatching { net.multigesture.kanama.api.Preloads.releaseAll() }
       KanamaResourceFormatLoader.unregister()
       KanamaResourceFormatSaver.unregister()
       KanamaScript.destroyConstructedScripts()

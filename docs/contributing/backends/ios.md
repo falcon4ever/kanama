@@ -160,7 +160,8 @@ The proven runtime stayed; the hand-written API was replaced with generated wrap
   `expect object ObjectCalls` (every helper the tree calls), so the compiler proves
   iOS implements each one.
 - The hand-written layer is now only genuinely bespoke runtime pieces:
-  `KanamaScript` base, `KanamaScope`, `Input`/InputMap glue, the signal/Callable
+  the internal `KanamaScope` behind `KanamaScript.scriptScope` (the `KanamaScript`
+  base itself is common code since task 133), `Input`/InputMap glue, the signal/Callable
   registry, lifecycle. Everything else is generated.
 
 ## Contract: generic ptrcall dispatch (iOS ObjectCalls)

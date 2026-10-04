@@ -262,7 +262,7 @@ mirrors crossings:
 
 ### Coroutine frame scheduler (one advance per engine frame, no demo opt-in)
 
-`kanamaScope.launch { … delaySeconds(…) … }` queues its continuation on one
+A script's `launch { … delaySeconds(…) … }` queues its continuation on one
 global scheduler. Nothing runs a queued continuation except the per-frame pump,
 so a demo whose pump never fires never resumes a delay — and nothing throws,
 because nothing failed: the work simply never runs.

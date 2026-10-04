@@ -10,7 +10,6 @@ import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodType
 import java.util.concurrent.ConcurrentHashMap
-import net.multigesture.kanama.api.KanamaCoroutineOwner
 import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.GodotStructs
@@ -783,11 +782,23 @@ object ScriptBridge {
   // --- Notification ---
 
   @JvmStatic
-  fun siNotification(_data: MemorySegment, _what: Int, _reversed: Byte) {
+  fun siNotification(data: MemorySegment, what: Int, _reversed: Byte) {
     // Processing is enabled once when the script instance is created. Re-enabling it from
     // ENTER_TREE or READY notifications would override a script's setProcess(false) or
     // setPhysicsProcess(false), including authority-gated multiplayer input scripts.
+    //
+    // ENTER_TREE of a node that is not ready yet means `_ready` follows: a new ready cycle, after
+    // which the KanamaScript node/script delegates re-resolve (task 133; GDScript re-runs
+    // @onready).
+    // READY itself reaches the script instance only after `_ready` ran, which is too late.
+    if (what == NOTIFICATION_ENTER_TREE) {
+      val script = si(data)?.kotlinObject as? net.multigesture.kanama.api.KanamaScript<*> ?: return
+      runCatching { script.onEnterTree() }
+        .onFailure { ScriptErrors.report(it, "${scriptLabel(si(data))}._enter_tree ready cycle") }
+    }
   }
+
+  private const val NOTIFICATION_ENTER_TREE = 10
 
   // --- Method arg count ---
 
@@ -822,11 +833,12 @@ object ScriptBridge {
   fun siFree(data: MemorySegment) {
     val handle = data.address()
     val scriptInstance = si(data)
-    (scriptInstance?.kotlinObject as? KanamaCoroutineOwner)?.let { owner ->
-      runCatching { owner.kanamaScope.cancel() }
+    // The script's coroutines end with the instance (task 133: KanamaScript.scriptScope).
+    (scriptInstance?.kotlinObject as? net.multigesture.kanama.api.KanamaScript<*>)?.let { script ->
+      runCatching { script.disposeScriptScope() }
         .onFailure { error ->
           System.err.println(
-            "[kanama:kt] failed to cancel KanamaScope during siFree: ${error.message}"
+            "[kanama:kt] failed to cancel the script scope during siFree: ${error.message}"
           )
         }
     }

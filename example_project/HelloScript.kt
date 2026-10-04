@@ -45,8 +45,6 @@ import net.multigesture.kanama.api.GeometryInstance3D
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Input
-import net.multigesture.kanama.api.KanamaCoroutineOwner
-import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.LineEdit
@@ -106,9 +104,7 @@ enum class SmokeDifficulty {
 @ScriptClass(attachTo = "Node")
 @GlobalClass
 @Tool
-class HelloScript(godotObject: GodotHandle) :
-  KanamaScript<Node>(godotObject, ::Node), KanamaCoroutineOwner {
-  override val kanamaScope = KanamaScope()
+class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
 
   @ExportCategory("Inspector Metadata")
   @ExportGroup("Smoke Properties")
@@ -1234,7 +1230,7 @@ class HelloScript(godotObject: GodotHandle) :
     selfNode
       .signal(HelloScriptNames.Signals.smokeChecked)
       .disconnect(selfNode, HelloScriptNames.Methods.onSmokeChecked)
-    kanamaScope.launch(start = CoroutineStart.UNDISPATCHED) {
+    scriptScope.launch(start = CoroutineStart.UNDISPATCHED) {
       smokeCoroutineStarted = true
       MainThread.awaitNextFrame()
       SceneTree.delaySeconds(0.001)

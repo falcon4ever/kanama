@@ -1,5 +1,11 @@
 package net.multigesture.kanama.api
 
+import kotlin.coroutines.resume
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.web.KanamaWebScript
 
 /**
@@ -31,6 +37,59 @@ abstract class KanamaScript<T : GodotObject>(
   protected val self: T = wrapper(godotObject)
 
   inline fun <R> selfAs(ctor: (GodotHandle) -> R): R = ctor(godotObject)
+
+  // The script coroutine scope (task 133), as on desktop, Android and iOS. Scripts are constructed
+  // inside their own owner scope (WebInstanceRegistry.create), so the owner is captured here and the
+  // scope, created on first use, binds to this script and not to whichever callback launches.
+  private val scopeOwner: Int = WebFrameScheduler.currentOwnerOrZero()
+  private var scopeOrNull: KanamaScope? = null
+  private var scopeDisposed = false
+
+  /**
+   * This script's coroutine scope: it runs on the frame scheduler, is created on first use, and is
+   * cancelled when the script object is freed. [launch] is the short form of `scriptScope.launch`.
+   */
+  val scriptScope: CoroutineScope
+    get() {
+      scopeOrNull?.let {
+        return it
+      }
+      val scope = KanamaScope(scopeOwner)
+      if (scopeDisposed) scope.cancel()
+      scopeOrNull = scope
+      return scope
+    }
+
+  /** Starts [block] as a coroutine of this script; it stops when the script object is freed. */
+  fun launch(block: suspend CoroutineScope.() -> Unit): Job = scriptScope.launch(block = block)
+
+  /**
+   * Suspends for [seconds] of frame time (on Web, the frame scheduler's `SceneTree.delaySeconds`).
+   * The parameters mirror native `wait`; like Web `SceneTree.createTimer`, only the GDScript
+   * defaults (`processAlways = true`, `ignoreTimeScale = false`) are supported.
+   */
+  suspend fun wait(seconds: Double, processAlways: Boolean = true, ignoreTimeScale: Boolean = false) {
+    require(processAlways) { "Web wait supports only processAlways = true" }
+    require(!ignoreTimeScale) { "Web wait supports only ignoreTimeScale = false" }
+    SceneTree.delaySeconds(seconds)
+  }
+
+  /** Suspends until the next frame. */
+  suspend fun nextFrame() {
+    suspendCancellableCoroutine { continuation ->
+      MainThread.post { if (continuation.isActive) continuation.resume(Unit) }
+    }
+  }
+
+  /** Cancels every coroutine this script has running; a later [launch] starts fresh. */
+  fun cancelCoroutines() {
+    scopeOrNull?.coroutineContext?.cancelChildren()
+  }
+
+  internal override fun onFree() {
+    scopeDisposed = true
+    scopeOrNull?.cancel()
+  }
 }
 
 /**

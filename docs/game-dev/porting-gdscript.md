@@ -20,6 +20,39 @@ Ports should stay close to the original GDScript behavior. If a port needs
 different logic to work, prefer fixing Kanama and recording the blocker instead
 of leaving a project-specific workaround.
 
+## GDScript to Kotlin Mapping
+
+The everyday script constructs, inside a `KanamaScript<T>` subclass (see
+[Writing Kotlin Scripts](scripts.md) for each one):
+
+| GDScript | Kotlin |
+|---|---|
+| `extends CharacterBody3D` | `@ScriptClass(attachTo = "CharacterBody3D") class Player(godotObject: GodotHandle) : KanamaScript<CharacterBody3D>(godotObject, ::CharacterBody3D)` |
+| `self.position` | `self.position` (`this` is the Kotlin script object) |
+| `@onready var timer: Timer = $ScoreTimer` | `private val timer by node<Timer>("ScoreTimer")` |
+| `@onready var skin: SophiaSkin = %SophiaSkin` (script class) | `private val skin by script<SophiaSkin>("%SophiaSkin")` |
+| `$Path` / `get_node(path)` used once | `self.requireAs<Timer>("Path")` |
+| `get_node_or_null(path) as Timer` | `self.getNodeAs<Timer>("Path")` |
+| `x as Camera3D` | `x.castOrNull<Camera3D>()` |
+| `var cam: Camera3D = x` | `x.cast<Camera3D>()` |
+| `body is Player` (script class) | `body.isScript<Player>()` |
+| `body as Player` (script class) | `body.asScript<Player>()` |
+| `const BULLET = preload("res://bullet.tscn")` | `private val bullet by preload<PackedScene>("res://bullet.tscn")` |
+| `var b: RigidBody3D = BULLET.instantiate()` | `val b = bullet.instantiateAs<RigidBody3D>()` |
+| `var c: Coin = COIN.instantiate()` (script root) | `val c = coin.instantiateScript<Coin>()`, node: `c.self` |
+| `get_tree()` / `get_viewport()` / `get_parent()` | `self.tree` / `self.viewport` / `self.parentNode` |
+| `await get_tree().create_timer(1.0).timeout` | `launch { wait(1.0); ... }` |
+| `await get_tree().process_frame` | `launch { nextFrame(); ... }` |
+| `await $Timer.timeout` | `launch { timer.signal(Timer.Signals.timeout).await(self); ... }` |
+| `func _ready():` | `@OnReady fun ready()` |
+| `func _input(event):` | `@OnInput fun input(event: InputEvent)` |
+| `func show_message(text):` | `fun showMessage(text: String)` (every public function is registered) |
+| `@export var speed := 5.0` | `@Export var speed = 5.0` |
+
+A function that `await`s in GDScript becomes a `launch { }` block: everything
+after the first suspension runs on a later frame, and the block stops when the
+script's object is freed.
+
 ## Porting Checklist
 
 - `@Export` names register as `snake_case` in Godot. `.tscn` values
@@ -37,10 +70,13 @@ of leaving a project-specific workaround.
   annotation on a function of any name (`@OnReady fun ready()`); a function
   still named `_process` without one is a build error. Input handlers take the
   typed event: `@OnInput fun input(event: InputEvent)`.
-- For instanced scenes, prefer `getAsOrNull(path, ::ParentType)` unless the
-  exact imported root class is known and stable.
-- Prefer `requireAs` when the original scene requires a node to exist. Use
-  `getAsOrNull` only when the original behavior was optional.
+- For instanced scenes, look a node up as the class Godot actually created
+  (`node<Node3D>(path)` for an imported GLB root) unless the exact imported root
+  class is known and stable.
+- Prefer `node<T>()` / `requireAs<T>()` when the original scene requires a node to
+  exist. Use `getNodeAs<T>()` only when the original behavior was optional.
+- Preserve type checks: `if body is Player` is `body.isScript<Player>()`, not a
+  `hasMethod(...)` probe or a node-name test.
 - Keep `GodotObject.call(...)` at true mixed-language boundaries, such as a
   GDScript autoload kept during an incremental port. Use typed wrappers and
   direct Kotlin calls for known Kanama scripts.
@@ -82,7 +118,7 @@ Mixed projects are valid while you migrate. A Kanama script can call a retained
 GDScript autoload through the normal Godot object API:
 
 ```kotlin
-self.getAsOrNull("/root/Audio", ::Node)
+self.getNodeAs<Node>("/root/Audio")
     ?.call("play", path)
 ```
 
@@ -93,7 +129,7 @@ Exported `NodePath` values are a good first step when the original script used
 @Export var targetPath: NodePath = NodePath(".")
 
 private val target by lazy {
-    self.requireAs(targetPath, ::Node3D)
+    self.requireAs<Node3D>(targetPath.path)
 }
 ```
 

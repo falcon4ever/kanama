@@ -278,8 +278,8 @@ started from the Dock or Finder shows them nowhere.
 
 On desktop, Android and iOS, an exception that escapes your code at an engine
 boundary (a script method, a lifecycle callback such as `_ready` or `_process`,
-a signal lambda, a property accessor, a `MainThread` task, a `KanamaScope`
-coroutine) does not crash the game. Kanama catches it, prints the full stack trace to stderr, and reports it to
+a signal lambda, a property accessor, a `MainThread` task, a script coroutine
+started with `launch`) does not crash the game. Kanama catches it, prints the full stack trace to stderr, and reports it to
 Godot as a script error, the way a GDScript runtime error is reported. Godot's
 log shows (desktop console output):
 
@@ -409,36 +409,121 @@ where the target is a GDScript object or an intentionally dynamic autoload.
 
 ## Node Lookup
 
-GDScript's `$NodeName` shorthand does not exist in Kanama. Use exported
-`@Export` references (preferred) or typed lookup helpers:
+GDScript's `@onready var timer: Timer = $ScoreTimer` is a `node<T>()` delegate:
 
 ```kotlin
-// Preferred: let the inspector wire it
-@Export var label: Label? = null
-
-// Manual lookup for required scene structure
-val label = self.requireAs("Label", ::Label)
+private val scoreTimer by node<Timer>("ScoreTimer")
+private val animationPlayer by node<AnimationPlayer>("Character/AnimationPlayer")
+private val camera by node<Camera3D>("%Camera3D")          // scene-unique names work too
+private val player by script<Player>("Player")             // the Kotlin script on that node
 ```
 
-Nested paths use the same slash-separated `NodePath` strings that Godot scene
-files and GDScript use:
+The node is looked up on first read and cached, like an `@onready` variable that
+GDScript assigns just before `_ready`. The read must therefore come once the node
+is ready (in `@OnReady` or later). The cache lasts until the next `_ready`: after
+`request_ready()` and a re-entry, the next read looks the node up again, as GDScript
+re-runs its `@onready` initializers. Every lookup also takes a `NodePath`. Each delegate checks what it finds and throws an
+`IllegalStateException` that names the property:
 
-```gdscript
-@onready var animation_player = $Character/AnimationPlayer
-```
+- read before ready: `Main.scoreTimer: node("ScoreTimer") was read before /root/Main was ready`;
+- missing node: `Main.scoreTimer: no node at "ScoreTimer" under /root/Main`;
+- wrong class: `Main.scoreTimer: node "ScoreTimer" is a Node2D, not a Timer`;
+- `script<T>()` on a node without that script: `... has no Kotlin script, not Player`.
+
+For a one-off lookup, `self.requireAs<T>(path)` throws the same way and
+`self.getNodeAs<T>(path)` returns `null` when the path is missing or the node is
+another class (GDScript `get_node_or_null(path) as T`). Exported references
+(`@Export var label: Label? = null`) remain the inspector-wired option.
+
+The older `self.requireAs(path, ::Label)` and `getAsOrNull(path, ::Label)` still
+compile; they do not check the class, so prefer the typed forms.
+
+## Casts and Script Checks
+
+| GDScript | Kotlin |
+|---|---|
+| `var cam := x as Camera3D` | `val cam = x.castOrNull<Camera3D>()` (`null` when it is not one) |
+| `var cam: Camera3D = x` | `val cam = x.cast<Camera3D>()` (throws `ClassCastException`) |
+| `if body is Player:` | `if (body.isScript<Player>())` |
+| `var p := body as Player` | `val p = body.asScript<Player>()` |
+
+`castOrNull` and `cast` ask Godot (`Object.is_class`) every time, even when the
+wrapper's Kotlin class already matches (a wrapper minted with `Timer(node.handle)`
+proves nothing); only a cast to `GodotObject` skips the question. They return the
+same wrapper when it already is a `T`, else a new non-owning view of the same
+object. A cast result is never yours to close: close the original (the owned
+`RefCounted` return you cast from) and only that. They take a Kanama wrapper class (`Node3D`, `InputEventKey`,
+`PackedScene`, ...); `isScript` / `asScript` take a Kotlin script class.
+Replace hand-written `Node3D(other.handle)` casts with them: an unchecked one
+calls `Node3D` methods on whatever the object really is.
+
+## Preload and Instancing
 
 ```kotlin
-private val animationPlayer by lazy {
-    self.requireAs("Character/AnimationPlayer", ::AnimationPlayer)
+private val bulletScene by preload<PackedScene>("res://bullet.tscn")   // const BULLET = preload(...)
+
+fun shoot() {
+    val bullet = bulletScene.instantiateAs<RigidBody3D>()   // root node, class-checked
+    val coin = coinScene.instantiateScript<Coin>()          // the Kotlin script on the root
+    self.addChild(coin.self)
 }
 ```
 
-Use `requireAs` for nodes that must exist for the scene to work. Use
-`getAsOrNull` when the node is optional:
+`preload` loads the resource on first read and keeps it for the rest of the
+process, shared by every script that preloads the same path, as a GDScript
+`preload` constant does; do not `close()` it. A missing file or a resource of
+another class throws. Give an absolute `res://` or `uid://` path. The cache is keyed
+by the path text, so preloading one resource by both its `res://` path and its
+`uid://` holds it twice; that is harmless, it is the same object. `instantiateAs<T>()` and `instantiateScript<T>()` free the
+instance and throw when its root is not what you asked for.
+
+## Tree Accessors
+
+`self.tree`, `self.viewport` and `self.parentNode` are the non-null forms of
+`getTree()`, `getViewport()` and `getParent()`: they throw an
+`IllegalStateException` (`Node "Sub" is not inside the tree`, or `... has no
+parent`) where GDScript's `get_tree()` fails. They check the tree membership
+first, so Godot logs no error of its own.
 
 ```kotlin
-val optionalMarker = self.getAsOrNull("Markers/Spawn", ::Node3D)
+self.tree.callGroup("mobs", "queue_free")      // was requireNotNull(self.getTree())
 ```
+
+## Await
+
+A script launches coroutines on its own scope and suspends in them the way a
+GDScript function `await`s:
+
+| GDScript | Kotlin, inside `launch { }` |
+|---|---|
+| `await get_tree().create_timer(1.0).timeout` | `wait(1.0)` |
+| `await get_tree().process_frame` | `nextFrame()` |
+| `await $MessageTimer.timeout` | `messageTimer.signal(Timer.Signals.timeout).await(self)` |
+
+```kotlin
+fun showGameOver() {
+    launch {
+        showMessage("Game Over")
+        messageTimer.signal(Timer.Signals.timeout).await(self)
+        wait(1.0)
+        startButton.show()
+    }
+}
+```
+
+The scope runs on the main thread and is cancelled when the script's Godot
+object is freed, so a coroutine never touches a freed node. Leaving the tree does
+not cancel it (GDScript does not either); `cancelCoroutines()` does. `wait` uses a
+`SceneTree` timer with GDScript's `create_timer` defaults: it keeps running while the
+tree is paused and follows `Engine.time_scale`. `wait(1.0, processAlways = false)`
+pauses with the game, and `ignoreTimeScale = true` ignores the time scale. On Web it
+is the frame scheduler's delay (the defaults only). `scriptScope` is the scope itself, for other `kotlinx.coroutines` builders.
+See [Kotlin Style → Coroutines](style-guide.md#coroutines).
+
+**Web.** The Web backend has `launch`, `wait`, `nextFrame`, `isScript`,
+`asScript` and the tree accessors; the `node`/`script`/`preload` delegates,
+`castOrNull`/`cast`, `requireAs<T>`/`getNodeAs<T>` and the `instantiate*` helpers
+are desktop, Android and iOS only for now.
 
 ## Cross-Script References
 
@@ -452,10 +537,10 @@ Godot calls into Kanama on whichever thread made the call, and Kanama runs it
 there. For the scene tree that is the engine's main thread: every callback a
 script receives — `@OnReady`, `@OnProcess`, `@OnPhysicsProcess`,
 registered functions called from GDScript, signal callbacks, `@OverrideVirtual` —
-arrives on the main thread, `initialize` ran there, and `MainThread.post` /
-`KanamaScope` (`KanamaDispatchers.Main`) drain their queues there once per frame.
+arrives on the main thread, `initialize` ran there, and `MainThread.post` and a
+script's coroutines (`launch { }`) drain their queues there once per frame.
 That is also the rule for your own threads: **hand results back to the main
-thread** with `MainThread.post` or a `kanamaScope` coroutine before touching a
+thread** with `MainThread.post` or a script coroutine before touching a
 node (see [Kotlin Style → Coroutines](style-guide.md#coroutines)).
 
 Kanama performs **no thread-affinity checks**. A wrapper method called from a

@@ -21,8 +21,9 @@ object KanamaDispatchers {
 }
 
 /**
- * The coroutine scope of a script (see [KanamaCoroutineOwner]); cancelled when the script instance
- * is freed.
+ * The coroutine scope behind `KanamaScript.scriptScope` (task 133): main-thread dispatch and a
+ * [SupervisorJob]; the free path cancels it. Internal since task 133 removed
+ * `KanamaCoroutineOwner`; a script launches with `KanamaScript.launch`.
  *
  * An exception that escapes a coroutine launched here is reported as a Godot script error with the
  * game's file and line, like an exception from a script method (task 131 item 10); before, it went
@@ -30,7 +31,7 @@ object KanamaDispatchers {
  * failure to the one coroutine. A [CoroutineExceptionHandler] in a `launch` context replaces this
  * one, as usual.
  */
-class KanamaScope(
+internal class KanamaScope(
     private val job: Job = SupervisorJob(),
     dispatcher: CoroutineDispatcher = KanamaDispatchers.Main,
 ) : CoroutineScope, AutoCloseable {
@@ -43,10 +44,6 @@ class KanamaScope(
     override fun close() {
         cancel()
     }
-}
-
-interface KanamaCoroutineOwner {
-    val kanamaScope: KanamaScope
 }
 
 /**

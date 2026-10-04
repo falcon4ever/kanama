@@ -1075,7 +1075,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       val superFq = superDecl.qualifiedName?.asString() ?: continue
       if (!superFq.startsWith("net.multigesture.kanama.api.")) continue
       // KanamaScript is the supported script base; api-package interfaces
-      // (e.g. KanamaCoroutineOwner) are implementable by design.
+      // (e.g. GodotEnumValue) are implementable by design.
       if (superFq == KANAMA_API_SCRIPT_FQN) continue
       if ((superDecl as? KSClassDeclaration)?.classKind != ClassKind.CLASS) continue
       val wrapperName = superDecl.simpleName.asString()
@@ -2869,7 +2869,6 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
     freeInstance()
     getVirtualFunction()
     virtualCallFunctions()
-    coroutineScopeHelpers()
     methodUpcalls()
     propertyUpcalls()
     classClose()
@@ -3284,22 +3283,9 @@ internal class CodeEmitter(private val model: ClassModel, private val registrarN
           }
         sb.appendLine("        kotlinInstance.${v.kotlinMethodName}(${argVars.joinToString(", ")})")
       }
-      if (v.virtualName == "_exit_tree") {
-        sb.appendLine("        cancelKanamaScope(kotlinInstance)")
-      }
       sb.appendLine("    }")
       sb.appendLine()
     }
-  }
-
-  private fun coroutineScopeHelpers() {
-    if (model.virtuals.none { it.virtualName == "_exit_tree" }) return
-    sb.appendLine("    private fun cancelKanamaScope(instance: Any) {")
-    sb.appendLine(
-      "        (instance as? net.multigesture.kanama.api.KanamaCoroutineOwner)?.kanamaScope?.cancel()"
-    )
-    sb.appendLine("    }")
-    sb.appendLine()
   }
 
   private fun methodUpcalls() {
@@ -3496,7 +3482,6 @@ internal class ScriptCodeEmitter(
     internedNames()
     registerFunction()
     factory()
-    coroutineScopeHelpers()
     emitCleanupHelpers()
     objectClose()
     signalHelpers()
@@ -4127,9 +4112,6 @@ internal class ScriptCodeEmitter(
       } else {
         sb.append("kt.${v.kotlinMethodName}($callArgs)")
       }
-      if (v.virtualName == "_exit_tree") {
-        sb.append("; cancelKanamaScope(kt)")
-      }
       sb.appendLine("; true }")
     }
     for (m in model.methods) {
@@ -4181,16 +4163,6 @@ internal class ScriptCodeEmitter(
     }
     sb.appendLine("                                true")
     sb.appendLine("                            }")
-  }
-
-  private fun coroutineScopeHelpers() {
-    if (model.virtuals.none { it.virtualName == "_exit_tree" }) return
-    sb.appendLine("    private fun cancelKanamaScope(instance: Any) {")
-    sb.appendLine(
-      "        (instance as? net.multigesture.kanama.api.KanamaCoroutineOwner)?.kanamaScope?.cancel()"
-    )
-    sb.appendLine("    }")
-    sb.appendLine()
   }
 
   private fun emitDispatchSet() {

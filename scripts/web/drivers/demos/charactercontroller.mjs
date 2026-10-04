@@ -202,7 +202,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   //
   // Keep walking until the player leaves the platform and falls. The level's KillPlane is an
   // Area3D whose body_entered handler does NOT emit straight away: it defers one frame through
-  // `kanamaScope.launch { delaySeconds(0.0) }` -- the Web spelling of desktop's
+  // `launch { delaySeconds(0.0) }` (the script's own scope) -- the Web spelling of desktop's
   // MainThread.awaitNextFrame -- because Godot forbids restructuring nodes inside a physics
   // callback. Only then does it emit kill_plane_touched, which teleports the player back to its
   // start position with zero velocity.
@@ -254,7 +254,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   // autoload's `flag_reached`, emitted through Godot itself (the bridge's no-args signal
   // crossing, the same one Kotlin uses). Everything downstream is the real chain --
   // FlagReachedScreen's connected Kotlin lambda launches
-  // `kanamaScope.launch { delaySeconds(2.0); play("fade_in"); await(animation_finished);
+  // `launch { delaySeconds(2.0); play("fade_in"); await(animation_finished);
   // reloadCurrentScene() }`.
   //
   // The observable is the LEVEL RELOAD: every script in the scene is torn down and readied
