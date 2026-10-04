@@ -25,7 +25,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
      *
      * Generated from Godot docs: AnimationNodeBlendTree.add_node
      */
-    fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0f, 0f)) {
+    fun addNode(name: String, node: AnimationNode?, position: Vector2 = Vector2(0.0, 0.0)) {
         checkOpen()
         ObjectCalls.ptrcallWithStringNameObjectAndVector2Arg(addNodeBind, segment, name, node?.requireOpenHandle() ?: NULL_SEGMENT, position)
     }

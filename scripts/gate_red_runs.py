@@ -333,6 +333,9 @@ case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode, extra: Int) {")],
      "unannounced source break", "a public signature changes without a CHANGELOG `Source break` line")
+case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
+     [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],
+     "unannounced source break", "the generated Real.kt (a build.gradle.kts template) changes a public signature")
 case("check_typed_enums.py", py("check_typed_enums.py"),
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Long) {")],
      "typed_enums] FAIL", "an enum parameter goes back to a raw Long")

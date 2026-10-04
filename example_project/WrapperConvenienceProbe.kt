@@ -221,7 +221,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     tooltipPlugin.requestThumbnail("res://kanama_probe.res", textureRect)
     inspectorPlugin.addCustomControl(control)
     inspectorPlugin.addPropertyEditor("kanama_probe", control)
-    gizmo.addLines(emptyList(), null, modulate = Color(1f, 1f, 1f))
+    gizmo.addLines(emptyList(), null, modulate = Color(1.0, 1.0, 1.0))
     gizmo.addMesh(null, null, Transform3D.IDENTITY, null)
     gizmo.addCollisionSegments(emptyList())
     gizmo.addHandles(emptyList(), null, emptyList())
@@ -231,7 +231,7 @@ class WrapperConvenienceProbe(val godotObject: GodotHandle) {
     gizmo.getSubgizmoSelection()
     gizmo.getNode3d()
     gizmo.getPlugin()
-    gizmoPlugin.createMaterial("kanama_probe", Color(1f, 1f, 1f))
+    gizmoPlugin.createMaterial("kanama_probe", Color(1.0, 1.0, 1.0))
     gizmoPlugin.addMaterial("kanama_probe", material)
     gizmoPlugin.getMaterial("kanama_probe", gizmo)
     // Indexed properties (set_texture/get_texture with a bound index) are now generated;

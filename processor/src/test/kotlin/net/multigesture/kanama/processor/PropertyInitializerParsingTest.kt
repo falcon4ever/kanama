@@ -94,4 +94,22 @@ class PropertyInitializerParsingTest {
     assertEquals(null, initializerOf("node", "lateinit var node: Node3D"))
     assertEquals(null, initializerOf("other", "var mismatchedName = 1"))
   }
+
+  @Test
+  fun decimalVectorDefaultsAreEmittedAsDoubleLiterals() {
+    // Task 134: vector components are Double, so a `0.001f` default reaches the registrar (and the
+    // Web proxy's GDScript) as the Double literal, not a Float routed through the Number overload.
+    assertEquals(
+      "net.multigesture.kanama.types.Vector2(0.001, 1.0)",
+      normalizeScriptPropertyDefaultLiteral("Vector2(0.001f, 1f)", TypeMapping.VECTOR2),
+    )
+    assertEquals(
+      "net.multigesture.kanama.types.Vector3(1.0, -2.5, 3.0)",
+      normalizeScriptPropertyDefaultLiteral("Vector3(1, -2.5, 3.0)", TypeMapping.VECTOR3),
+    )
+    assertEquals(
+      "net.multigesture.kanama.types.Vector3i(1, 2, 3)",
+      normalizeScriptPropertyDefaultLiteral("Vector3i(1, 2, 3)", TypeMapping.VECTOR3I),
+    )
+  }
 }

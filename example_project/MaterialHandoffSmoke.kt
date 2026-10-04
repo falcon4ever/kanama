@@ -57,14 +57,14 @@ class MaterialHandoffSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotO
     // Sink 1 — MeshInstance3D.setSurfaceOverrideMaterial (issue #91's exact path).
     val miSurface = freshBox()
     StandardMaterial3D.create()
-      .apply { albedoColor = Color(1f, 0f, 0f) }
+      .apply { albedoColor = Color(1.0, 0.0, 0.0) }
       .use { miSurface.setSurfaceOverrideMaterial(0, it) }
     val surfaceHasMaterial = savedSceneHasMaterial("surface", miSurface)
 
     // Sink 2 — GeometryInstance3D.materialOverride (a different Ref<Material> slot).
     val miOverride = freshBox()
     StandardMaterial3D.create()
-      .apply { albedoColor = Color(0f, 1f, 0f) }
+      .apply { albedoColor = Color(0.0, 1.0, 0.0) }
       .use { miOverride.materialOverride = it }
     val overrideHasMaterial = savedSceneHasMaterial("override", miOverride)
 

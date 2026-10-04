@@ -25,6 +25,9 @@ data class AABB(
    */
   val size: Vector3,
 ) {
+  /** Godot's `str(b)`: `[P: (0.0, 0.0, 0.0), S: (1.0, 1.0, 1.0)]`. */
+  override fun toString(): String = "[P: $position, S: $size]"
+
   /** Godot-style fuzzy compare: true if position and size are approximately equal. */
   /**
    * Returns `true` if this bounding box and `aabb` are approximately equal, by calling
@@ -50,7 +53,7 @@ data class AABB(
   val end: Vector3
     get() = position + size
 
-  fun volume(): Double = (size.x * size.y * size.z).toDouble()
+  fun volume(): Double = widenReal(size.rawX * size.rawY * size.rawZ)
 
   /**
    * Returns `true` if the bounding box contains the given `point`. By convention, points exactly on

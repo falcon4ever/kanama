@@ -13,15 +13,16 @@ import kotlin.math.abs
  * exact `==`: floating-point results from the engine (transforms, normalized vectors, `looking_at`,
  * …) rarely land on an exact literal.
  *
- * One body for every backend (task 104 step 2): `real_t` is the platform's `Real.kt` alias.
+ * One body for every backend (task 104 step 2). Components are `Double` in every build (task 134),
+ * so this is Godot's double-precision `is_equal_approx`, with the same epsilon.
  */
-internal val CMP_EPSILON: real_t = GodotReal.fromNumber(0.00001)
+internal val CMP_EPSILON: Double = 0.00001
 
-internal fun isEqualApprox(a: real_t, b: real_t): Boolean {
+internal fun isEqualApprox(a: Double, b: Double): Boolean {
   if (a == b) return true // includes -0.0 == 0.0; also short-circuits infinities
   var tolerance = CMP_EPSILON * abs(a)
   if (tolerance < CMP_EPSILON) tolerance = CMP_EPSILON
   return abs(a - b) < tolerance
 }
 
-internal fun isZeroApprox(value: real_t): Boolean = abs(value) < CMP_EPSILON
+internal fun isZeroApprox(value: Double): Boolean = abs(value) < CMP_EPSILON

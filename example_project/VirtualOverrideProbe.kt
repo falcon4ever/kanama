@@ -19,9 +19,9 @@ import net.multigesture.kanama.types.Vector2
 class VirtualOverrideProbe(godotObject: GodotHandle) :
   KanamaScript<Control>(godotObject, ::Control) {
 
-  @OverrideVirtual fun _get_minimum_size(): Vector2 = Vector2(64.0f, 32.0f)
+  @OverrideVirtual fun _get_minimum_size(): Vector2 = Vector2(64.0, 32.0)
 
-  @OverrideVirtual fun _has_point(at: Vector2): Boolean = at.x >= 0.0f && at.y >= 0.0f
+  @OverrideVirtual fun _has_point(at: Vector2): Boolean = at.x >= 0.0 && at.y >= 0.0
 
   // task 13 — non-POD (String) virtual return: exercises variantWriteRetExpr's STRING path
   // (init/destroy-after-read) on desktop and the callVReturning String encode on iOS.
@@ -37,7 +37,7 @@ class VirtualOverrideProbe(godotObject: GodotHandle) :
   // iOS the per-runtime-type encodeIosReturn dispatch handles the concrete value (here a String).
   // `_get_drag_data` is a Control virtual returning Variant (drag-and-drop payload).
   @OverrideVirtual
-  fun _get_drag_data(at: Vector2): Any? = if (at.x < 0f) null else "drag:${at.x.toInt()}"
+  fun _get_drag_data(at: Vector2): Any? = if (at.x < 0.0) null else "drag:${at.x.toInt()}"
 
   // task 29 — RID virtual return (the largest remaining family, 56 virtuals): boxed via
   // initVariantFromAny's RID path. `_get_focused_accessibility_element` is a Node virtual.

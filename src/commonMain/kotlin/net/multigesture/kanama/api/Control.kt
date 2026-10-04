@@ -1828,7 +1828,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_tooltip
      */
-    fun getTooltip(atPosition: Vector2 = Vector2(0f, 0f)): String {
+    fun getTooltip(atPosition: Vector2 = Vector2(0.0, 0.0)): String {
         return ObjectCalls.ptrcallWithVector2ArgRetString(getTooltipBind, segment, atPosition)
     }
 
@@ -1882,7 +1882,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      *
      * Generated from Godot docs: Control.get_cursor_shape
      */
-    fun getCursorShape(atPosition: Vector2 = Vector2(0f, 0f)): Control.CursorShape {
+    fun getCursorShape(atPosition: Vector2 = Vector2(0.0, 0.0)): Control.CursorShape {
         return Control.CursorShape(ObjectCalls.ptrcallWithVector2ArgRetLong(getCursorShapeBind, segment, atPosition))
     }
 

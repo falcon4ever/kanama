@@ -49,6 +49,11 @@ data class Basis(
   val z: Vector3,
 ) {
   /**
+   * Godot's `str(b)`: the columns, `[X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0)]`.
+   */
+  override fun toString(): String = "[X: $x, Y: $y, Z: $z]"
+
+  /**
    * Builds the rotation basis for [quaternion] (matches Godot's `Basis(Quaternion)` constructor).
    */
   constructor(quaternion: Quaternion) : this(columnsFromQuaternion(quaternion))
@@ -127,12 +132,7 @@ data class Basis(
    */
   fun getRotationQuaternion(): Quaternion {
     val c = BuiltinCalls.call(getRotationQuaternionBind, toGodotRealArray(), 4, emptyList())
-    return Quaternion(
-      GodotReal.fromC(c[0]),
-      GodotReal.fromC(c[1]),
-      GodotReal.fromC(c[2]),
-      GodotReal.fromC(c[3]),
-    )
+    return Quaternion.raw(c[0], c[1], c[2], c[3])
   }
 
   /**
@@ -191,15 +191,15 @@ data class Basis(
   // Column-major real_t values, matching the ObjectCalls Basis ptrcall layout.
   private fun toGodotRealArray(): GodotRealArray =
     GodotRealArray(9).also {
-      it[0] = GodotReal.toC(x.x)
-      it[1] = GodotReal.toC(y.x)
-      it[2] = GodotReal.toC(z.x)
-      it[3] = GodotReal.toC(x.y)
-      it[4] = GodotReal.toC(y.y)
-      it[5] = GodotReal.toC(z.y)
-      it[6] = GodotReal.toC(x.z)
-      it[7] = GodotReal.toC(y.z)
-      it[8] = GodotReal.toC(z.z)
+      it[0] = x.rawX
+      it[1] = y.rawX
+      it[2] = z.rawX
+      it[3] = x.rawY
+      it[4] = y.rawY
+      it[5] = z.rawY
+      it[6] = x.rawZ
+      it[7] = y.rawZ
+      it[8] = z.rawZ
     }
 
   companion object {
@@ -217,7 +217,7 @@ data class Basis(
      *
      * Generated from Godot docs: Basis.IDENTITY
      */
-    val IDENTITY = Basis(Vector3(1f, 0f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f))
+    val IDENTITY = Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0))
 
     // The hash keys the signature SHAPE, the name selects the method: inverse, transposed and
     // orthonormalized are all no-arg -> Self and share one hash.
@@ -308,44 +308,37 @@ data class Basis(
 
     // Godot `Basis::set_quaternion`: builds the 3 column axes from a quaternion. rows[i][j] in
     // the engine is component i of column j here, so the engine rows are transposed into columns.
-    // Exact arithmetic (no epsilon, no normalization), so it stays in Kotlin.
-    private fun columnsFromQuaternion(q: Quaternion): Triple<Vector3, Vector3, Vector3> {
-      val d = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w
-      val s = 2.0 / d
-      val xs = q.x * s
-      val ys = q.y * s
-      val zs = q.z * s
-      val wx = q.w * xs
-      val wy = q.w * ys
-      val wz = q.w * zs
-      val xx = q.x * xs
-      val xy = q.x * ys
-      val xz = q.x * zs
-      val yy = q.y * ys
-      val yz = q.y * zs
-      val zz = q.z * zs
-      return Triple(
-        Vector3(1.0 - (yy + zz), xy + wz, xz - wy),
-        Vector3(xy - wz, 1.0 - (xx + zz), yz + wx),
-        Vector3(xz + wy, yz - wx, 1.0 - (xx + yy)),
-      )
-    }
+    // Exact arithmetic (no epsilon, no normalization), so it stays in Kotlin, in `real_t` like
+    // the engine, so the result is the engine's to the bit.
+    private fun columnsFromQuaternion(q: Quaternion): Triple<Vector3, Vector3, Vector3> =
+      // Godot's rows[i][j] is component i of column j here: the rows are transposed into columns.
+      realBasisFromQuaternion(q.rawX, q.rawY, q.rawZ, q.rawW) {
+        r00,
+        r01,
+        r02,
+        r10,
+        r11,
+        r12,
+        r20,
+        r21,
+        r22 ->
+        Triple(Vector3.raw(r00, r10, r20), Vector3.raw(r01, r11, r21), Vector3.raw(r02, r12, r22))
+      }
 
     private fun vector3Array(v: Vector3): GodotRealArray =
       GodotRealArray(3).also {
-        it[0] = GodotReal.toC(v.x)
-        it[1] = GodotReal.toC(v.y)
-        it[2] = GodotReal.toC(v.z)
+        it[0] = v.rawX
+        it[1] = v.rawY
+        it[2] = v.rawZ
       }
 
-    private fun vector3From(c: GodotRealArray): Vector3 =
-      Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]), GodotReal.fromC(c[2]))
+    private fun vector3From(c: GodotRealArray): Vector3 = Vector3.raw(c[0], c[1], c[2])
 
     private fun fromGodotRealArray(c: GodotRealArray): Basis =
       Basis(
-        Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[3]), GodotReal.fromC(c[6])),
-        Vector3(GodotReal.fromC(c[1]), GodotReal.fromC(c[4]), GodotReal.fromC(c[7])),
-        Vector3(GodotReal.fromC(c[2]), GodotReal.fromC(c[5]), GodotReal.fromC(c[8])),
+        Vector3.raw(c[0], c[3], c[6]),
+        Vector3.raw(c[1], c[4], c[7]),
+        Vector3.raw(c[2], c[5], c[8]),
       )
   }
 }

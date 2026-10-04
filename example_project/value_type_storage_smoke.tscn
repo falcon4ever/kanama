@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ValueTypeStorageSmoke.kt" id="1"]
+[ext_resource type="Script" path="res://value_type_storage_ref.gd" id="2"]
+
+[node name="ValueTypeStorageSmoke" type="Node2D"]
+script = ExtResource("1")
+
+[node name="GDScriptReference" type="Node2D" parent="."]
+script = ExtResource("2")

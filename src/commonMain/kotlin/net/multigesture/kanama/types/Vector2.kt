@@ -1,5 +1,3 @@
-@file:Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-
 package net.multigesture.kanama.types
 
 import kotlin.jvm.JvmInline
@@ -24,19 +22,11 @@ private const val CLAMP_HASH = 318031021L
  *
  * Generated from Godot docs: Vector2
  */
-data class Vector2(
-  /**
-   * The vector's X component. Also accessible by using the index position `[0]`.
-   *
-   * Generated from Godot docs: Vector2.x
-   */
-  val x: real_t,
-  /**
-   * The vector's Y component. Also accessible by using the index position `[1]`.
-   *
-   * Generated from Godot docs: Vector2.y
-   */
-  val y: real_t,
+class Vector2
+private constructor(
+  internal val rawX: GodotRealStorage,
+  internal val rawY: GodotRealStorage,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector2 (scripts/generate_api_wrapper.py — do not edit) =====
   /**
@@ -68,22 +58,52 @@ data class Vector2(
 
   // ===== END GENERATED ENUMS: Vector2 =====
 
-  constructor(x: Number, y: Number) : this(GodotReal.fromNumber(x), GodotReal.fromNumber(y))
+  /** A vector stored at Godot's `real_t` width: each component is rounded to it, as in Godot. */
+  constructor(x: Double, y: Double) : this(narrowReal(x), narrowReal(y), RawStorage)
 
-  // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
-  // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal vectors hash equal.
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (other !is Vector2) return false
-    return (x == other.x || (x.isNaN() && other.x.isNaN())) &&
-      (y == other.y || (y.isNaN() && other.y.isNaN()))
-  }
+  /** GDScript's `Vector2(1, 2)`: integer components. */
+  constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
 
-  override fun hashCode(): Int {
-    var result = (x + 0.0f).hashCode()
-    result = 31 * result + (y + 0.0f).hashCode()
-    return result
-  }
+  // GDScript's mixed `Vector2(x, 0)`: every Int/Double mix, so exactly one overload matches a
+  // call and none boxes (hand-written: the value types have no generator path for constructors).
+  constructor(x: Int, y: Double) : this(x.toDouble(), y)
+
+  constructor(x: Double, y: Int) : this(x, y.toDouble())
+
+  /**
+   * The vector's X component. Also accessible by using the index position `[0]`.
+   *
+   * Generated from Godot docs: Vector2.x
+   */
+  val x: Double
+    get() = widenReal(rawX)
+
+  /**
+   * The vector's Y component. Also accessible by using the index position `[1]`.
+   *
+   * Generated from Godot docs: Vector2.y
+   */
+  val y: Double
+    get() = widenReal(rawY)
+
+  operator fun component1(): Double = x
+
+  operator fun component2(): Double = y
+
+  /** This vector with some components replaced. */
+  fun copy(x: Double = this.x, y: Double = this.y): Vector2 = Vector2(x, y)
+
+  // Godot's `==` on the stored components (signed zero equal, -0.0 == 0.0); NaN equals NaN to keep
+  // the JVM equals contract reflexive. hashCode canonicalizes signed zero so equal vectors hash
+  // equal.
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Vector2 && storedEquals(rawX, other.rawX) && storedEquals(rawY, other.rawY))
+
+  override fun hashCode(): Int = 31 * storedHash(rawX) + storedHash(rawY)
+
+  /** Godot's `str(v)`: `(0.1, 0.2)`. */
+  override fun toString(): String = "(${godotRealString(x, true)}, ${godotRealString(y, true)})"
 
   /** Godot `Vector2.is_equal_approx`: per-component fuzzy compare (CMP_EPSILON tolerance). */
   /**
@@ -105,35 +125,32 @@ data class Vector2(
    */
   fun isZeroApprox(): Boolean = isZeroApprox(x) && isZeroApprox(y)
 
-  operator fun plus(other: Vector2): Vector2 = Vector2(x + other.x, y + other.y)
+  operator fun plus(other: Vector2): Vector2 = raw(rawX + other.rawX, rawY + other.rawY)
 
-  operator fun minus(other: Vector2): Vector2 = Vector2(x - other.x, y - other.y)
+  operator fun minus(other: Vector2): Vector2 = raw(rawX - other.rawX, rawY - other.rawY)
 
-  operator fun times(scale: Number): Vector2 =
-    Vector2(x.toDouble() * scale.toDouble(), y.toDouble() * scale.toDouble())
+  // A scalar operand is a `real_t` in Godot (`Vector2 * float` narrows the float first).
+  operator fun times(scale: Double): Vector2 = scaled(narrowReal(scale))
 
-  operator fun times(scale: Double): Vector2 =
-    Vector2(GodotReal.fromDouble(x.toDouble() * scale), GodotReal.fromDouble(y.toDouble() * scale))
+  operator fun times(scale: Float): Vector2 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Float): Vector2 =
-    Vector2(
-      GodotReal.fromDouble(x.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() * scale.toDouble()),
-    )
+  operator fun times(scale: Int): Vector2 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Number): Vector2 =
-    Vector2(x.toDouble() / scale.toDouble(), y.toDouble() / scale.toDouble())
+  operator fun times(scale: Long): Vector2 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Double): Vector2 =
-    Vector2(GodotReal.fromDouble(x.toDouble() / scale), GodotReal.fromDouble(y.toDouble() / scale))
+  operator fun div(scale: Double): Vector2 = divided(narrowReal(scale))
 
-  operator fun div(scale: Float): Vector2 =
-    Vector2(
-      GodotReal.fromDouble(x.toDouble() / scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() / scale.toDouble()),
-    )
+  operator fun div(scale: Float): Vector2 = divided(narrowReal(scale.toDouble()))
 
-  operator fun unaryMinus(): Vector2 = Vector2(-x, -y)
+  operator fun div(scale: Int): Vector2 = divided(narrowReal(scale.toDouble()))
+
+  operator fun div(scale: Long): Vector2 = divided(narrowReal(scale.toDouble()))
+
+  private fun scaled(s: GodotRealStorage): Vector2 = raw(rawX * s, rawY * s)
+
+  private fun divided(s: GodotRealStorage): Vector2 = raw(rawX / s, rawY / s)
+
+  operator fun unaryMinus(): Vector2 = raw(-rawX, -rawY)
 
   /**
    * Returns the squared length (squared magnitude) of this vector. This method runs faster than
@@ -142,14 +159,16 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.length_squared
    */
-  fun lengthSquared(): Double = (x * x + y * y).toDouble()
+  fun lengthSquared(): Double = widenReal(rawLengthSquared())
+
+  private fun rawLengthSquared(): GodotRealStorage = realDot(rawX, rawY, rawX, rawY)
 
   /**
    * Returns the length (magnitude) of this vector.
    *
    * Generated from Godot docs: Vector2.length
    */
-  fun length(): Double = sqrt(lengthSquared())
+  fun length(): Double = widenReal(sqrt(rawLengthSquared()))
 
   /**
    * Returns the result of scaling the vector to unit length. Equivalent to `v / v.length()`.
@@ -159,8 +178,12 @@ data class Vector2(
    * Generated from Godot docs: Vector2.normalized
    */
   fun normalized(): Vector2 {
-    val len = length()
-    return if (len == 0.0) ZERO else this / len
+    return realNormalize(
+      rawX.isFinite() && rawY.isFinite(),
+      rawLengthSquared(),
+      { ZERO },
+      { len -> raw(rawX / len, rawY / len) },
+    )
   }
 
   /**
@@ -174,7 +197,7 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.dot
    */
-  fun dot(other: Vector2): Double = (x * other.x + y * other.y).toDouble()
+  fun dot(other: Vector2): Double = widenReal(realDot(rawX, rawY, other.rawX, other.rawY))
 
   /**
    * Returns the Euclidean distance (https://en.wikipedia.org/wiki/Euclidean_distance) between this
@@ -203,7 +226,7 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.angle
    */
-  fun angle(): Double = atan2(y.toDouble(), x.toDouble())
+  fun angle(): Double = widenReal(atan2(rawY, rawX))
 
   /**
    * Returns the result of the linear interpolation between this vector and `to` by amount `weight`.
@@ -262,14 +285,18 @@ data class Vector2(
       )
     )
 
-  fun withX(value: Number): Vector2 = Vector2(value, y)
+  fun withX(value: Double): Vector2 = raw(narrowReal(value), rawY)
 
-  fun withY(value: Number): Vector2 = Vector2(x, value)
+  fun withY(value: Double): Vector2 = raw(rawX, narrowReal(value))
+
+  fun withX(value: Int): Vector2 = withX(value.toDouble())
+
+  fun withY(value: Int): Vector2 = withY(value.toDouble())
 
   private fun toGodotRealArray(): GodotRealArray =
     GodotRealArray(2).also {
-      it[0] = GodotReal.toC(x)
-      it[1] = GodotReal.toC(y)
+      it[0] = rawX
+      it[1] = rawY
     }
 
   companion object {
@@ -282,44 +309,46 @@ data class Vector2(
     }
     private val clampBind by lazy { BuiltinCalls.getBuiltinMethod(VT_VECTOR2, "clamp", CLAMP_HASH) }
 
-    private fun fromGodotRealArray(c: GodotRealArray): Vector2 =
-      Vector2(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]))
+    private fun fromGodotRealArray(c: GodotRealArray): Vector2 = raw(c[0], c[1])
+
+    /** A vector from components already at the storage width (marshalling; no conversion). */
+    internal fun raw(x: GodotRealStorage, y: GodotRealStorage): Vector2 = Vector2(x, y, RawStorage)
 
     /**
      * Zero vector, a vector with all components set to `0`.
      *
      * Generated from Godot docs: Vector2.ZERO
      */
-    val ZERO = Vector2(0f, 0f)
+    val ZERO = Vector2(0.0, 0.0)
     /**
      * One vector, a vector with all components set to `1`.
      *
      * Generated from Godot docs: Vector2.ONE
      */
-    val ONE = Vector2(1f, 1f)
+    val ONE = Vector2(1.0, 1.0)
     /**
      * Up unit vector. Y is down in 2D, so this vector points -Y.
      *
      * Generated from Godot docs: Vector2.UP
      */
-    val UP = Vector2(0f, -1f)
+    val UP = Vector2(0.0, -1.0)
     /**
      * Down unit vector. Y is down in 2D, so this vector points +Y.
      *
      * Generated from Godot docs: Vector2.DOWN
      */
-    val DOWN = Vector2(0f, 1f)
+    val DOWN = Vector2(0.0, 1.0)
     /**
      * Left unit vector. Represents the direction of left.
      *
      * Generated from Godot docs: Vector2.LEFT
      */
-    val LEFT = Vector2(-1f, 0f)
+    val LEFT = Vector2(-1.0, 0.0)
     /**
      * Right unit vector. Represents the direction of right.
      *
      * Generated from Godot docs: Vector2.RIGHT
      */
-    val RIGHT = Vector2(1f, 0f)
+    val RIGHT = Vector2(1.0, 0.0)
   }
 }

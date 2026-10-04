@@ -129,7 +129,11 @@ kotlin {
                 outputFileName = "kanama-web-spike.js"
                 sourceMaps = false
             }
+            // The unit tests run on Node (below); a browser test run would need Karma + Chrome.
+            testTask { enabled = false }
         }
+        // Task 134 A2: the value types' unit test (src/wasmJsTest) runs on Node, not in a browser.
+        nodejs()
         binaries.executable()
     }
 
@@ -139,10 +143,19 @@ kotlin {
             // same source declarations compile for Wasm. A post-GO common API migration can turn
             // :annotations into a real KMP dependency without coupling that refactor to the spike.
             kotlin.srcDir(rootProject.file("annotations/src/main/kotlin"))
+            // Task 134 A2: the value types' storage, printing and real_t formulas are ONE source with
+            // the native types (src/commonMain/.../types/shared); WebReal.kt supplies the float32
+            // `GodotRealStorage`, `narrowReal` and `widenReal` the native side generates.
+            kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/types/shared"))
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(project(":kanama-common-api"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+            }
+        }
+        val wasmJsTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
             }
         }
         val wasmJsMain by getting {

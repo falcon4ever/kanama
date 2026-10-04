@@ -18,9 +18,9 @@ class RenderSceneDataVirtualReturnProbe(val godotObject: GodotHandle) {
   @OverrideVirtual
   fun _get_cam_projection(): Projection =
     Projection(
-      Vector4(1.0f, 0.0f, 0.0f, 0.0f),
-      Vector4(0.0f, 2.0f, 0.0f, 0.0f),
-      Vector4(0.0f, 0.0f, 3.0f, 0.0f),
-      Vector4(0.0f, 0.0f, 0.0f, 4.0f),
+      Vector4(1.0, 0.0, 0.0, 0.0),
+      Vector4(0.0, 2.0, 0.0, 0.0),
+      Vector4(0.0, 0.0, 3.0, 0.0),
+      Vector4(0.0, 0.0, 0.0, 4.0),
     )
 }

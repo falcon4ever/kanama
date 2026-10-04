@@ -539,7 +539,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.apply_central_impulse
      */
-    fun applyCentralImpulse(impulse: Vector2 = Vector2(0f, 0f)) {
+    fun applyCentralImpulse(impulse: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithVector2Arg(applyCentralImpulseBind, segment, impulse)
     }
 
@@ -551,7 +551,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.apply_impulse
      */
-    fun applyImpulse(impulse: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun applyImpulse(impulse: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyImpulseBind, segment, impulse, position)
     }
 
@@ -585,7 +585,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.apply_force
      */
-    fun applyForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun applyForce(force: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyForceBind, segment, force, position)
     }
 
@@ -618,7 +618,7 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      *
      * Generated from Godot docs: RigidBody2D.add_constant_force
      */
-    fun addConstantForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun addConstantForce(force: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithTwoVector2Args(addConstantForceBind, segment, force, position)
     }
 

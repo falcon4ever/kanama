@@ -41,7 +41,7 @@ class WebSpikeScript(objectId: GodotHandle) : KanamaWebScript(objectId) {
   @GodotName("_draw")
   fun draw() {
     val texture = drawTexture ?: return
-    self().drawTexture(texture, Vector2(32.0, 32.0), Color(1.0f, 1.0f, 1.0f, 1.0f))
+    self().drawTexture(texture, Vector2(32.0, 32.0), Color(1.0, 1.0, 1.0, 1.0))
   }
 
   fun echo(value: Long): Long = value

@@ -55,6 +55,8 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://signal_leak_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 131 items 2 + 6 -- wrapper equality and a call through a wrapper of a freed object.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 134 A2 -- value types store Godot's width: Kotlin and GDScript print the same three lines.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_storage_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 133 -- node/script delegates, checked casts, preload, tree accessors and the script coroutine
 # scope; the scene quits itself once its async rows (wait, nextFrame, cancel on free) have printed.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_access_smoke.tscn --quit-after 5000 --verbose >>"$LOG_FILE" 2>&1
@@ -280,7 +282,7 @@ check "AudioStreamPlayer found=true paused=false volume=-6\\.020599842071533 lin
 check "AnimationPlayer found=true active=true deterministic=true mixer_process=1 mixer_method=1 mixer_discrete=2 polyphony=3 root_local=true root_pos_len=[0-9]+ root_scale_len=[0-9]+ root_pos_acc_len=[0-9]+ root_scale_acc_len=[0-9]+"
 check "AnimationPlayer playback blend=0\\.25 auto_capture=true auto_duration=0\\.5 playing=false animation_active=(true|false) speed_scale=1\\.5 playing_speed=0\\.0 movie_quit=false current_len=0 assigned_len=0 position=0\\.0 length=0\\.0 has_section=false section_start=-1\\.0 section_end=-1\\.0 process=1 method=1"
 check "MeshInstance3D found=true layer_mask=7 sorting=2\\.0 sorting_aabb=true shadows=0 lod=1\\.25 transparency=0\\.25 visibility=1\\.0,100\\.0 fade=1 extra_cull=0\\.5 lightmap_texel=1\\.5 ignore_occlusion=true surfaces=1 blend_shapes=0 mesh_box=true mesh_size=1\\.5,2\\.5,3\\.5 mesh_subdivide=1,2,3 mesh_flip=true mesh_uv2=true mesh_uv2_padding=2\\.0"
-check "Material3D override=true overlay=true surface=true albedo=0\\.1,0\\.2,0\\.3,0\\.75 metallic=0\\.4000000059604645 roughness=0\\.6000000238418579 shading=0 transparency=1 cull=2 priority=2"
+check "Material3D override=true overlay=true surface=true albedo=0\\.10000000149011612,0\\.20000000298023224,0\\.30000001192092896,0\\.75 metallic=0\\.4000000059604645 roughness=0\\.6000000238418579 shading=0 transparency=1 cull=2 priority=2"
 check "InstancedMesh raw_class=MeshInstance3D is_class_match=true typed_lookup=true"
 # Non-tool script must run normally in game mode (placeholder gating only kicks in
 # under Engine.is_editor_hint()).
@@ -376,6 +378,21 @@ if ! grep -Eq "OwnedReleaseSmoke baseline=[0-9]+ after_drop=[0-9]+ after_gc=[0-9
 fi
 # Holding a freed wrapper is silent, as in GDScript: two exported-property reads and a script
 # method return of it give Godot null (no error; counted below).
+# task 134 A2 -- a position written and read back is `==` (its x is not `== 0.1`, as in GDScript),
+# toString() is GDScript's str(), and Kotlin-side arithmetic has the engine's float32 bits: each
+# Kotlin line must equal the GDScript line printed in the same run (value_type_storage_ref.gd).
+# The parity row hashes the float32 bits of every operation the docs call bit-identical over 256
+# fixed-seed random inputs, per operation, so one differing bit in one result fails the row.
+check "ValueTypeStorage kotlin roundtrip_eq=true str=\\(0\\.1, 0\\.2\\) x_eq_literal=false$"
+check "ValueTypeStorage kotlin str=\\(0\\.1, 0\\.2\\)\\|\\(1\\.0, 2\\.0, 3\\.0\\)\\|\\(12345\\.68, -0\\.000001\\)\\|"
+check "ValueTypeStorage kotlin parity=n=256 v2_add=[0-9a-f]+ "
+for vts_row in roundtrip_eq str bits parity; do
+  vts_kotlin="$(grep -o "ValueTypeStorage kotlin ${vts_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^ValueTypeStorage kotlin //')"
+  vts_gdscript="$(grep -o "ValueTypeStorage gdscript ${vts_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^ValueTypeStorage gdscript //')"
+  if [[ -z "$vts_kotlin" || "$vts_kotlin" != "$vts_gdscript" ]]; then
+    smoke_fail "Kotlin/GDScript value-type mismatch (${vts_row})" "kotlin: ${vts_kotlin:-<missing>} gdscript: ${vts_gdscript:-<missing>}"
+  fi
+done
 check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true"
 # A call through the freed wrapper throws IllegalStateException instead of dereferencing the dead
 # pointer (before task 131: a use-after-free, typically a native crash and no line below at all).
@@ -457,7 +474,7 @@ check_absent "Leaked instance: SubtweenTweener"
 check_absent "Leaked instance: Tween:"
 check "Node controls ready=(true|false) in_group=true group_removed=true group_set=true group_flags=true processing_after_set=true physics_processing_after_set=true processing_input=true shortcut_input=true unhandled_input=true unhandled_key_input=true multiplayer_authority=[0-9-]+ is_multiplayer_authority=(true|false)"
 check "Node scalar_controls process_priority=3 physics_process_priority=4 displayed_folded=true unique_name=true editor_description_len=17 tree_node_count_positive=true"
-check "Vector helpers v3_len=5\\.0 v3_norm=0\\.0,0\\.6,0\\.8 v3_dot=32\\.0 v3_cross=0\\.0,0\\.0,1\\.0 v3_lerp=1\\.0,2\\.0,3\\.0 v3_limited=2\\.0,0\\.0,0\\.0 v3_distance=2\\.0 v2_len=5\\.0 v2_angle=0\\.0 v2_lerp=1\\.0,1\\.5 v3_withx=9\\.0,2\\.0,3\\.0 v3_withy=1\\.0,9\\.0,3\\.0 v3_withz=1\\.0,2\\.0,9\\.0 v2_withx=9\\.0,2\\.0 v2_withy=1\\.0,9\\.0"
+check "Vector helpers v3_len=5\\.0 v3_norm=0\\.0,0\\.6000000238418579,0\\.800000011920929 v3_dot=32\\.0 v3_cross=0\\.0,0\\.0,1\\.0 v3_lerp=1\\.0,2\\.0,3\\.0 v3_limited=2\\.0,0\\.0,0\\.0 v3_distance=2\\.0 v2_len=5\\.0 v2_angle=0\\.0 v2_lerp=1\\.0,1\\.5 v3_withx=9\\.0,2\\.0,3\\.0 v3_withy=1\\.0,9\\.0,3\\.0 v3_withz=1\\.0,2\\.0,9\\.0 v2_withx=9\\.0,2\\.0 v2_withy=1\\.0,9\\.0"
 # task 128 A follow-up — a typed enum through Object.set / ConfigFile.setValue is encoded as INT.
 check "typed enum dynamic set=1 config_roundtrip=3$"
 # task 128 C — InputEventMouseButton.create(): typed button read back, attached to an action, the
@@ -465,7 +482,7 @@ check "typed enum dynamic set=1 config_roundtrip=3$"
 check "input mouse_button read_back=true has_event=true survives_close=true erased=true$"
 check "Node process_modes mode=3 thread_group=1 thread_messages=3 thread_order=2 internal=true physics_internal=true physics_interp_mode=2 physics_interp=false physics_interp_enabled=(true|false) auto_translate=2 can_auto_translate=false scene_load_flag=true scene_load_flag_reset=false typed_mode=true typed_flags_physics=true"
 check "Object introspection can_revert_name=(true|false) missing_meta=false missing_user_signal=false has_queue_free=true queue_free_args=0 has_script_changed=true script_changed_connections=(true|false) signal_connect=0 signal_callback=Node signal_lambda=Node script_signal_connect=0 script_signal_callback=helper coroutine_started=true blocking=true blocking_after_reset=false translate_disabled=false translate_enabled=true"
-check "Object call autoload_present=true describe=audio:3:true:1\\.5:1 add=9 negate=true object=Node returned=Node resource=StandardMaterial3D v2=3\\.0,5\\.0 v3=3\\.0,5\\.0,7\\.0 color=0\\.2,0\\.4,0\\.6,0\\.4 quat=-0\\.1,-0\\.2,-0\\.3,-0\\.4 v4=-1\\.0,-2\\.0,-3\\.0,-4\\.0 rect2=1\\.0,2\\.0,13\\.0,24\\.0 aabb=1\\.0,2\\.0,3\\.0,14\\.0,25\\.0,36\\.0 plane=-1\\.0,-0\\.0,-0\\.0,-5\\.0 basis=2\\.0,2\\.0,2\\.0 t3d=11\\.0,22\\.0,33\\.0 t2d=15\\.0,26\\.0 proj=1\\.0,-13\\.0,-14\\.0,-15\\.0,-16\\.0 v2i=-2,-3 v3i=-2,-3,-4 v4i=-1,-2,-3,-4 rect2i=1,2,13,24 np_described=np:3:foo/bar/baz"
+check "Object call autoload_present=true describe=audio:3:true:1\\.5:1 add=9 negate=true object=Node returned=Node resource=StandardMaterial3D v2=3\\.0,5\\.0 v3=3\\.0,5\\.0,7\\.0 color=0\\.20000000298023224,0\\.4000000059604645,0\\.6000000238418579,0\\.4000000059604645 quat=-0\\.10000000149011612,-0\\.20000000298023224,-0\\.30000001192092896,-0\\.4000000059604645 v4=-1\\.0,-2\\.0,-3\\.0,-4\\.0 rect2=1\\.0,2\\.0,13\\.0,24\\.0 aabb=1\\.0,2\\.0,3\\.0,14\\.0,25\\.0,36\\.0 plane=-1\\.0,-0\\.0,-0\\.0,-5\\.0 basis=2\\.0,2\\.0,2\\.0 t3d=11\\.0,22\\.0,33\\.0 t2d=15\\.0,26\\.0 proj=1\\.0,-13\\.0,-14\\.0,-15\\.0,-16\\.0 v2i=-2,-3 v3i=-2,-3,-4 v4i=-1,-2,-3,-4 rect2i=1,2,13,24 np_described=np:3:foo/bar/baz"
 check "UI wrappers ui_present=true pos=8\\.0,12\\.0 size=260\\.0,120\\.0 min=180\\.0,80\\.0 mouse_filter=1 visible_before=true hidden=false shown=true label=kanama label button=kanama button toggle=true pressed=true disabled=false focus_mode=2 focused=true"
 check "UI metadata option_item=option-meta option_selected=option-meta option_id=10 tab_count=1 tab_title=Alpha tab_metadata=tab-meta line_bidi_options=0"
 check "Dynamic UI label=dynamic label button=dynamic button label_pos=12\\.0,32\\.0 button_pos=12\\.0,56\\.0 child_count=[0-9]+"

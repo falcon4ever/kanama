@@ -420,8 +420,8 @@ class Main(godotObject: GodotHandle) :
     val sun = self.getAsOrNull(NodePath("Sun"), ::Node3D) ?: return 0L
     val tween = self.createTween() ?: return 0L
     val tweener =
-      tween.tweenProperty(sun, "light_color", Color(1f, 1f, 1f, 1f), 0.05) ?: return 0L
-    val chained = tweener.from(Color(0.5f, 0.5f, 0.5f, 1f))
+      tween.tweenProperty(sun, "light_color", Color(1.0, 1.0, 1.0, 1.0), 0.05) ?: return 0L
+    val chained = tweener.from(Color(0.5, 0.5, 0.5, 1.0))
     return if (chained.handle.value == tweener.handle.value) 1L else 0L
   }
 
@@ -531,8 +531,8 @@ class Main(godotObject: GodotHandle) :
     if (probeInt == 1234L) mask = mask or 16L
     if (probeFloat == 0.5) mask = mask or 32L
     if (probeBool) mask = mask or 64L
-    if (probeVector2 == Vector2(1f, 2f)) mask = mask or 128L
-    if (probeVector3 == Vector3(3f, 4f, 5f)) mask = mask or 256L
+    if (probeVector2 == Vector2(1.0, 2.0)) mask = mask or 128L
+    if (probeVector3 == Vector3(3.0, 4.0, 5.0)) mask = mask or 256L
     if (probeVector2i == Vector2i(6, 7)) mask = mask or 512L
     if (probeObject != null) mask = mask or 1024L
     if (probeStringArray == listOf("a", "b")) mask = mask or 2048L

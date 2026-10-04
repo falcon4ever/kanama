@@ -65,7 +65,7 @@ class BuiltinCallsFacadeTest {
   fun noArgCallSizesTheReturnFromTheBase() {
     FakeGodot.bootstrapOnce()
     val method = BuiltinCalls.getBuiltinMethod(VT_BASIS, "inverse", INVERSE_HASH)
-    val base = GodotRealArray(9) { GodotReal.fromNumber(it + 1) }
+    val base = GodotRealArray(9) { GodotReal.toC((it + 1).toDouble()) }
 
     val result = BuiltinCalls.callNoArgsFloat32(method, base)
 
@@ -123,10 +123,9 @@ class BuiltinCallsFacadeTest {
   }
 
   private fun realsOf(vararg values: Double): GodotRealArray =
-    GodotRealArray(values.size) { GodotReal.fromDouble(values[it]) }
+    GodotRealArray(values.size) { GodotReal.toC(values[it]) }
 
-  private fun doubleAt(values: GodotRealArray, index: Int): Double =
-    GodotReal.toC(values[index]).toDouble()
+  private fun doubleAt(values: GodotRealArray, index: Int): Double = GodotReal.fromC(values[index])
 
   private companion object {
     const val TOLERANCE = 1e-6
@@ -244,8 +243,7 @@ private object FakeGodot {
     if (lastBaseWasNull) {
       val out = ret.reinterpret(GodotReal.SIZE_BYTES * 9)
       for (i in 0 until 9) {
-        val value =
-          if (i < 3) GodotRealSegment.readIndex(first, i.toLong()) else GodotReal.fromDouble(0.0)
+        val value = if (i < 3) GodotRealSegment.readIndex(first, i.toLong()) else 0.0
         GodotRealSegment.writeIndex(out, i.toLong(), value)
       }
       return
@@ -254,9 +252,9 @@ private object FakeGodot {
     val weight = argAt(args, 1).reinterpret(JAVA_DOUBLE.byteSize()).get(JAVA_DOUBLE, 0)
     val out = ret.reinterpret(GodotReal.SIZE_BYTES * 3)
     for (i in 0 until 3) {
-      val start = GodotReal.toC(GodotRealSegment.readIndex(baseBuf, i.toLong())).toDouble()
-      val delta = GodotReal.toC(GodotRealSegment.readIndex(first, i.toLong())).toDouble()
-      GodotRealSegment.writeIndex(out, i.toLong(), GodotReal.fromDouble(start + delta * weight))
+      val start = GodotRealSegment.readIndex(baseBuf, i.toLong())
+      val delta = GodotRealSegment.readIndex(first, i.toLong())
+      GodotRealSegment.writeIndex(out, i.toLong(), start + delta * weight)
     }
   }
 

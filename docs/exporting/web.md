@@ -45,11 +45,9 @@ the project checkout:
    desktop build compiles. A script is directly Wasm-compatible when written
    portably: the constructor takes `GodotHandle` (a zero-cost value class over the
    backend's own handle — an FFM `MemorySegment` on JVM/Android and iOS, a
-   generation-tagged registry id on Web); numeric
-   reads of vector fields go through `.toDouble()` where the value is passed
-   as a parameter (desktop fields are single-precision `real_t`, Web's are
-   `Double` — mixed arithmetic widens automatically, bare parameter passes do
-   not); raw pointer identity (`handle.address()`) is replaced by
+   generation-tagged registry id on Web); vector and color components are
+   `Double` on every backend, so no numeric conversion is needed; raw pointer
+   identity (`handle.address()`) is replaced by
    `isSameInstance()`; and no JVM-only APIs are used.
 2. **`<project>/web/kotlin-src/`** — per-file overrides. A file here replaces
    the same-named shared file in the Web build. Use it for scripts that are

@@ -2949,7 +2949,7 @@ object DisplayServer {
      * Generated from Godot docs: DisplayServer.cursor_set_custom_image
      */
     @JvmStatic
-    fun cursorSetCustomImage(cursor: Resource?, shape: DisplayServer.CursorShape = DisplayServer.CursorShape.ARROW, hotspot: Vector2 = Vector2(0f, 0f)) {
+    fun cursorSetCustomImage(cursor: Resource?, shape: DisplayServer.CursorShape = DisplayServer.CursorShape.ARROW, hotspot: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithObjectLongAndVector2Arg(cursorSetCustomImageBind, singleton, cursor?.requireOpenHandle() ?: NULL_SEGMENT, shape.value, hotspot)
     }
 
