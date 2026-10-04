@@ -1,0 +1,83 @@
+name: gate-red-runs-nightly
+
+# The slow half of the gate red runs (task 118): the smokes that drive Godot and Gradle (tool_smoke,
+# runtime_smoke, both hot-reload smokes, the scene-check and JDK-lookup self-tests, the bootstrap and
+# Gradle-template gates), each shown red on a known-bad input and green again, in a throwaway worktree.
+# The fast set runs on every PR that touches scripts/ or the workflows (ci.yml, `gate-red-runs`).
+on:
+  schedule:
+    # 03:40 UTC daily; off the hour to avoid the scheduler's peak queue.
+    - cron: "40 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gate-red-runs-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Dash form of kanamaGodotVersion in gradle.properties (the single-source pin).
+  GODOT_VERSION: 4.7.2-stable
+
+jobs:
+  slow:
+    name: gate red runs (--slow)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Install CLI dependencies
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ripgrep
+
+      - name: Cache Godot binary and Web export template
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-web-${{ env.GODOT_VERSION }}-linux-x86_64
+
+      - name: Download Godot and the Web export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p "$HOME/godot"
+          godot_zip="$(mktemp)"
+          curl -fL -o "$godot_zip" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          unzip -q "$godot_zip" -d "$HOME/godot"
+          rm -f "$godot_zip"
+          tpz="$(mktemp)"
+          curl -fL -o "$tpz" \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q -j "$tpz" "templates/web_nothreads_release.zip" -d "$HOME/godot"
+          rm -f "$tpz"
+
+      # Must run even on a cache hit: the scene-check self-test exports a fixture for Web headless.
+      - name: Install the Web export template
+        shell: bash
+        run: |
+          template_dir="$HOME/.local/share/godot/export_templates/${GODOT_VERSION/-/.}"
+          mkdir -p "$template_dir"
+          cp "$HOME/godot/web_nothreads_release.zip" "$template_dir/"
+
+      - name: Run every gate red run, slow ones included
+        shell: bash
+        run: |
+          godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
+          chmod +x "$godot_bin"
+          # sync_kdoc needs a Godot docs checkout, which this runner does not have: skipped by name.
+          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip sync_kdoc

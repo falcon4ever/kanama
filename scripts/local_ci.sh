@@ -438,6 +438,11 @@ stage "shell script lint (shellcheck)"
 # prints install instructions and exits 2 when shellcheck is absent.
 "$ROOT_DIR/scripts/check_shell_lint.sh"
 
+stage "swallowed-failure audit (task 118)"
+# Every `|| true`, `2>/dev/null`, `except ...: pass` in the gate scripts is justified in the code (a
+# `# justified:` comment) or fatal; the audit table in scripts/README-gates.md is generated from those comments.
+python3 "$ROOT_DIR/scripts/audit_swallowed_failures.py"
+
 stage "JDK install-location table parity (kanama#277)"
 python3 "$ROOT_DIR/scripts/check_jdk_locations_parity.py"
 

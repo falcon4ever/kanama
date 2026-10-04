@@ -10,13 +10,17 @@
 # on screen is the whole record. Never write "skipping X" to stdout and carry on: that is a green
 # for a check that did not run. Callers write `gate_skip id "why" || exit 1` (or `return 1`).
 gate_skip() {
-  local id="$1" reason="$2" allowed
+  local id="$1" reason="$2" ci entry
+  local -a allowed
   echo "SKIP: ${id}: ${reason}"
-  case "${CI:-}" in
-    true | 1)
+  # Same rules as gate_skip.py: CI is true/1/yes in any case; KANAMA_ALLOW_SKIP entries are trimmed.
+  ci="$(printf '%s' "${CI:-}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+  case "$ci" in
+    true | 1 | yes)
       IFS=',' read -r -a allowed <<<"${KANAMA_ALLOW_SKIP:-}"
-      local entry
       for entry in ${allowed[@]+"${allowed[@]}"}; do
+        entry="${entry#"${entry%%[![:space:]]*}"}"
+        entry="${entry%"${entry##*[![:space:]]}"}"
         if [[ "$entry" == "$id" ]]; then
           echo "SKIP: ${id}: allowed by KANAMA_ALLOW_SKIP in CI" >&2
           return 0

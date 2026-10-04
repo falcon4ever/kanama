@@ -2618,6 +2618,7 @@ if [[ "$physical_device" -eq 1 ]]; then
   sleep "$post_wait"
   # justified: stopping our own console stream after the capture window; it may already have exited.
   kill "$launch_pid" >/dev/null 2>&1 || true
+  # justified: stopping our own console stream after the capture window; it may already have exited.
   wait "$launch_pid" >/dev/null 2>&1 || true
   launch_pid=""
 else
@@ -2667,6 +2668,7 @@ else
   if [[ -n "$launch_pid" ]]; then
     # justified: stopping our own console stream after the capture window; it may already have exited.
     kill "$launch_pid" >/dev/null 2>&1 || true
+    # justified: stopping our own console stream after the capture window; it may already have exited.
     wait "$launch_pid" >/dev/null 2>&1 || true
   fi
 fi

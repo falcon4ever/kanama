@@ -270,6 +270,7 @@ for demo in "${DEMOS[@]}"; do
       echo "[web_ci_matrix] $demo: EXPORT FAILED" >&2
       FAILED=1
       record_unrun_demo "$demo" "export failed"
+      # justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set.
       continue
     fi
   fi
@@ -278,6 +279,7 @@ for demo in "${DEMOS[@]}"; do
     echo "[web_ci_matrix] $demo: no export at $export_dir" >&2
     FAILED=1
     record_unrun_demo "$demo" "no export at $export_dir"
+    # justified: the demo was just recorded as a failed cell (`record_unrun_demo`) and FAILED=1 is set.
     continue
   fi
 

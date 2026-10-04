@@ -1,7 +1,7 @@
 """The one way a Python gate may skip a check (task 118); the shell twin is scripts/gate_skip.sh.
 
-`skip(check_id, reason)` always prints `SKIP: <id>: <reason>`. Under CI (`CI=true`, which GitHub
-Actions sets) it then raises SystemExit(1) -- a skipped check is a red run there -- unless the id is
+`skip(check_id, reason)` always prints `SKIP: <id>: <reason>`. Under CI (`CI` true/1/yes in any case; GitHub
+Actions sets `CI=true`) it then raises SystemExit(1) -- a skipped check is a red run there -- unless the id is
 listed in the comma-separated `KANAMA_ALLOW_SKIP`. Outside CI it returns, and the SKIP line on
 screen is the record. Never print "skipping X" and carry on: that is a green for a check that did
 not run.
@@ -15,7 +15,7 @@ import sys
 
 def skip(check_id: str, reason: str) -> None:
     print(f"SKIP: {check_id}: {reason}")
-    if os.environ.get("CI", "") not in ("true", "1"):
+    if os.environ.get("CI", "").strip().lower() not in ("true", "1", "yes"):
         return
     allowed = {entry.strip() for entry in os.environ.get("KANAMA_ALLOW_SKIP", "").split(",") if entry.strip()}
     if check_id in allowed:

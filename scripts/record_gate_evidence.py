@@ -28,15 +28,20 @@ from check_gate_evidence import LEDGER, RESULTS, TAG, current_pin, load_ledger
 
 
 def head_sha() -> str:
+    """The commit the gate ran on. A ledger line with no commit is not evidence of a run on anything, so
+    this refuses (task 118) instead of writing "unknown"; run it from a git checkout."""
     try:
-        return subprocess.run(
+        sha = subprocess.run(
             ["git", "-C", str(LEDGER.parent.parent), "rev-parse", "HEAD"],
             capture_output=True,
             text=True,
             check=True,
         ).stdout.strip()
-    except (OSError, subprocess.CalledProcessError):  # justified: the ledger line says "unknown"; the recorder is not a verdict
-        return "unknown"
+    except (OSError, subprocess.CalledProcessError) as error:
+        raise SystemExit(f"{TAG.replace('check', 'record')} FAIL cannot read the commit the gate ran on ({error}); refusing to ledger an unknown commit") from error
+    if not sha:
+        raise SystemExit(f"{TAG.replace('check', 'record')} FAIL git printed no commit; refusing to ledger an unknown commit")
+    return sha
 
 
 def main() -> int:

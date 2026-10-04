@@ -31,18 +31,22 @@ cp "$SCRIPT_FILE" "$BACKUP"
 GODOT_PID=""
 
 restore() {
+  local status=$?
   if [[ -n "$GODOT_PID" ]] && kill -0 "$GODOT_PID" 2>/dev/null; then
     # justified: cleanup of our own child after the verdict; it may already be gone.
     kill "$GODOT_PID" 2>/dev/null || true
+    # justified: cleanup of our own child after the verdict; it may already be gone.
     wait "$GODOT_PID" 2>/dev/null || true
   fi
   cp "$BACKUP" "$SCRIPT_FILE"
-  # The verdict is already printed. A failed re-sync would leave the mutated scripts jar in the example project
-  # for the NEXT gate, so say so loudly instead of discarding it (task 118).
+  # A failed re-sync would leave the mutated scripts jar in the example project for the NEXT gate, so it
+  # fails THIS run (task 118): the exit status of an EXIT trap that calls `exit` is the script's.
   if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then
-    echo "[$(basename "$0" .sh)] WARNING: restoring the example addon jar failed; run ./gradlew syncExampleAddonJar before the next gate" >&2
+    echo "[$(basename "$0" .sh)] FAIL: restoring the example addon jar failed; run ./gradlew syncExampleAddonJar before the next gate" >&2
+    status=1
   fi
   rm -f "$BACKUP" "$SIGNAL_FILE" "$STAGE_FILE"
+  exit "$status"
 }
 trap restore EXIT
 

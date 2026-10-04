@@ -81,6 +81,7 @@ fake_jdk() {
   # justified: conf/ and legal/ are optional JDK parts; a JDK without them is still a valid fixture, and the
   # scenario's libjvm lookup (the thing under test) decides.
   ln -s "$REAL_JDK/conf" "$dir/conf" 2>/dev/null || true
+  # justified: legal/ is an optional JDK part, like conf/ above; the scenario's libjvm lookup decides.
   ln -s "$REAL_JDK/legal" "$dir/legal" 2>/dev/null || true
   if [[ "$flavour" == "nolibjvm" ]]; then
     mkdir -p "$dir/lib"

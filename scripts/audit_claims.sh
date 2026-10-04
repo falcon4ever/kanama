@@ -102,6 +102,11 @@ require_script "web protocol pin agreement" "$ROOT_DIR/scripts/check_protocol_pi
 #    does not have).
 if ! require_script "unapplied lifecycle annotations" "$ROOT_DIR/scripts/check_unapplied_annotations.py"; then
   :
+elif [[ -n "${KANAMA_DEMOS_DIR:-}" && ! -d "$KANAMA_DEMOS_DIR" ]]; then
+  # Task 118: a demos directory that was asked for and is not there used to fall through to "kanama only".
+  echo "── unapplied lifecycle annotations -- FAIL: KANAMA_DEMOS_DIR is set but is not a directory: ${KANAMA_DEMOS_DIR}"
+  RESULTS+=("FAIL    unapplied lifecycle annotations (KANAMA_DEMOS_DIR missing: ${KANAMA_DEMOS_DIR})")
+  ran=$((ran + 1)); failed=$((failed + 1))
 elif [[ -d "${KANAMA_DEMOS_DIR:-/nonexistent}" ]]; then
   check "unapplied lifecycle annotations (kanama + demos)" \
     python3 "$ROOT_DIR/scripts/check_unapplied_annotations.py" "$ROOT_DIR" "${KANAMA_DEMOS_DIR}"
