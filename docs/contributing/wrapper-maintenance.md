@@ -360,6 +360,18 @@ The wrapper convention on desktop/Android:
   `requireGodotReturn` (see "Required object returns" below); other generated
   object returns stay nullable. The whole `Tweener` family is generated since
   task 117 P2'.
+- A method returning a **typed `Array` of RefCounted** hands back an Array that the
+  ptrcall helper destroys right after decoding it, which drops the Array's own
+  reference to each element — for an element nobody else holds
+  (`Engine.captureScriptBacktraces()`), the object dies there. So the decode is
+  the owning one: desktop `BuiltinTypes.readArrayObjectsOwned` retains each
+  RefCounted element (`retainForKotlinWrapper`) before the destroy, and the iOS
+  shim's `kanama_ios_godot_ptrcall_ret_object_handles` does the same in C; the
+  element wrapper owns that `+1`. RefCounted-ness of an untyped element is read
+  from bit 63 of its instance id (`ObjectID::is_ref_counted`), so the test costs
+  no engine call. A decode that fails midway releases what it retained.
+  `scripts/audit_generator_shape_policy.py` fails on any bare `readArrayObjects`
+  in `ObjectCalls` (task 131).
 - Wrappers minted from **Variant-path** returns or `fromHandle` casts borrow;
   a release there underflows. Self-collapse must therefore
   sit on a ptrcall object-return helper, never on `callWithVariantArgs`

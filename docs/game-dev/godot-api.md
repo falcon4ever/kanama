@@ -246,10 +246,19 @@ Same call, different outcome, because the number of other owners differs.
 
 | Category | What it covers | What to do |
 |---|---|---|
-| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, and `@ScriptProperty` reads of resource-typed fields and collections | `close()` it, or `use { }` |
+| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), and `@ScriptProperty` reads of resource-typed fields and collections | `close()` it, or `use { }` — for a list, each element (`list.forEach { it.close() }`) |
 | **Borrowed view** | A wrapper *you* mint around a handle you already have: `Resource.fromHandle(...)`, `Resource.fromObject(...)`, a script-class constructor wrapping an existing handle | **Never** `close()` — it releases a reference you never took |
-| **Engine-owned, live** | A `createTween()` still running, anything living in the scene tree | Use the Godot lifecycle (`kill()`, `queueFree()`), not `close()` |
+| **Engine-owned, live** | A running `Tween` (from `createTween()` or an element of `getProcessedTweens()`), anything living in the scene tree | To **stop** it use the Godot lifecycle (`kill()`, `queueFree()`): `close()` never stops it. Your wrapper of a tween is still an owned `+1` — close it when you stop using that wrapper (see below) |
 | **Nodes and plain `Object`s** | Anything not `RefCounted` — no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
+
+**Tweens, precisely.** The `SceneTree` holds its own reference to every tween it
+processes, so a tween runs until it finishes or is killed whatever your wrappers
+do. `close()` on a tween wrapper releases only *your* reference — it never stops
+the tween, and a closed wrapper cannot be called again. So: `kill()` to stop a
+tween; `close()` (after `kill()`, or once you no longer call it) to release your
+wrapper; and for the elements of `SceneTree.getProcessedTweens()`, which are
+owned `+1`s of tweens that keep running, close each one when you are done
+reading it — that does not affect the tweens.
 
 The awkward-looking case — a getter you must close — is the common one, and it is
 safe precisely because the node still holds its own reference. Handing an owned

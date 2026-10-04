@@ -5,11 +5,15 @@ package net.multigesture.kanama.binding.runtime
  *
  * `GodotObject`, `RefCounted` and `GodotCallable` are written ONCE, by hand, in
  * `src/commonMain/kotlin/net/multigesture/kanama/api/` (common code since task 117 P4′). Every body
- * there is a ptrcall through [ObjectCalls] except these four hooks, which each backend implements
+ * there is a ptrcall through [ObjectCalls] except these hooks, which each backend implements
  * differently — so they are the whole seam, and the compiler holds both backends to it the way it
  * holds them to [ObjectCalls] and [BuiltinCalls]:
  * - [instanceIdOf]: the engine instance id `GodotObject` captures once at construction (desktop:
  *   the `object_get_instance_id` interface downcall; iOS: the shim's entry of the same name);
+ * - [isLive]: whether the object a wrapper captured is still alive -- the freed-object check behind
+ *   every wrapper call while [FreedObjectChecks.enabled] (task 131 item 2; desktop: the
+ *   `object_get_instance_from_id` interface downcall; iOS: the shim's entry over the same
+ *   function);
  * - [emitSignal]: `Object.emit_signal(name, *args)` (desktop: `Signals.emitAny`, a Variant
  *   method-bind call; iOS: the shim's single-argument fast paths, else the Variant `emit_signal`);
  * - [onPropertySet] and [onSetScript]: desktop's `ScriptBridge` script-property buffering, which
@@ -26,6 +30,13 @@ package net.multigesture.kanama.binding.runtime
 internal expect object ObjectRuntime {
   /** The engine instance id of the live object behind [segment]. */
   fun instanceIdOf(segment: RawSegment): Long
+
+  /**
+   * True when [instanceId] still resolves to the object at [segment]
+   * (`object_get_instance_from_id`). Never dereferences [segment], so it is safe to ask about a
+   * freed object.
+   */
+  fun isLive(segment: RawSegment, instanceId: Long): Boolean
 
   /** `Object.emit_signal([signal], *[args])` on the object behind [segment]. */
   fun emitSignal(segment: RawSegment, signal: String, args: List<Any?>)

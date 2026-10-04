@@ -245,7 +245,7 @@ object KanamaResourceFormatSaver {
       rRet.reinterpret(4).set(JAVA_INT, 0, ERROR_CANT_CREATE)
       return
     }
-    val source = ObjectCalls.ptrcallNoArgsRetString(getSourceBind, resourceObj)
+    val savedSource = ObjectCalls.ptrcallNoArgsRetString(getSourceBind, resourceObj)
     val absolute = globalizeResPath(path)
     if (absolute == null) {
       System.err.println(
@@ -255,6 +255,7 @@ object KanamaResourceFormatSaver {
       return
     }
     try {
+      val source = fillTemplatePackage(resourceObj, savedSource, path, Paths.get(absolute))
       val target = Paths.get(absolute)
       val parent = target.parent
       if (parent != null) {
@@ -277,6 +278,39 @@ object KanamaResourceFormatSaver {
       )
       rRet.reinterpret(4).set(JAVA_INT, 0, ERROR_CANT_CREATE)
     }
+  }
+
+  /**
+   * A New Script template (task 131 item 5) is saved for the first time: replace its package
+   * placeholder with the package most scripts in [target]'s directory declare, else one derived
+   * from [resPath] ([KanamaScriptTemplate.packageFor]), and give the script that source too, so the
+   * script editor opens what the file holds. Any other source is returned unchanged.
+   */
+  private fun fillTemplatePackage(
+    resourceObj: MemorySegment,
+    source: String,
+    resPath: String,
+    target: java.nio.file.Path,
+  ): String {
+    if (!KanamaScriptTemplate.hasPackagePlaceholder(source)) return source
+    val siblingPackages =
+      runCatching {
+          target
+            .toFile()
+            .parentFile
+            ?.listFiles()
+            .orEmpty()
+            .filter { it.name.endsWith(".kt") && it != target.toFile() }
+            .mapNotNull { KanamaScriptTemplate.declaredPackage(it.readText()) }
+        }
+        .getOrDefault(emptyList())
+    val filled =
+      KanamaScriptTemplate.withPackage(
+        source,
+        KanamaScriptTemplate.packageFor(resPath, siblingPackages),
+      )
+    KanamaScript.byObjectAddress(resourceObj.address())?.sourceCode = filled
+    return filled
   }
 
   @JvmStatic

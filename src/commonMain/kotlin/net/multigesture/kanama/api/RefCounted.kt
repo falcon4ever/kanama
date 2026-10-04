@@ -72,10 +72,12 @@ open class RefCounted internal constructor(
      * `unreference()`, and destroy only if that dropped the count to zero.
      *
      * Every `RefCounted`-typed return you receive — `create()`, `ResourceLoader.load…`,
-     * and plain getters such as `getMesh()` — is a `+1` you own and must close (or `use { }`).
-     * Do not close a wrapper you minted yourself over a handle you already had
-     * (`fromHandle`/`fromObject`) or a live `Tween` (use `kill()`); see
-     * `docs/game-dev/godot-api.md` "Resource Ownership".
+     * plain getters such as `getMesh()`, and each element of a returned typed `Array`
+     * (`getMaterials()`, `getProcessedTweens()`) — is a `+1` you own and must close (or
+     * `use { }`). Do not close a wrapper you minted yourself over a handle you already had
+     * (`fromHandle`/`fromObject`). `close()` never stops a `Tween` (the SceneTree holds its own
+     * reference while it runs): `kill()` stops it, `close()` releases your wrapper once you no
+     * longer call it; see `docs/game-dev/godot-api.md` "Resource Ownership".
      */
     override fun close() {
         if (closed || wrapperReferenceReleased) return

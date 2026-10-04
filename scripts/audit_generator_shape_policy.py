@@ -85,6 +85,10 @@ DYNAMIC_TYPED_OBJECT_ARRAY_HELPERS = {
     ),
 }
 
+DYNAMIC_TYPED_OBJECT_ARRAY_HELPERS_BY_OBJECT = {
+    untyped: typed for typed, untyped in DYNAMIC_TYPED_OBJECT_ARRAY_HELPERS.items()
+}
+
 DYNAMIC_TYPED_OBJECT_ARRAY_ARG_HELPERS = {
     "ptrcallWithObjectListArg",
     "ptrcallWithObjectListArgRetLong",
@@ -346,53 +350,85 @@ def audit_shape(function_text: str, args: tuple[str, ...], ret: str) -> list[str
     return errors
 
 
-def audit_typed_object_array_helpers(content: str) -> list[str]:
+# Task 131 (S5 + review 2): every ptrcall-returned object Array is destroyed right after the
+# decode, so the decode must be the OWNING one (RefCounted elements retained before the destroy).
+# Matched exactly: `readArrayObjectsOwned` passes, a bare `readArrayObjects` call or reference fails.
+BARE_ARRAY_OBJECTS_DECODE = re.compile(r"\breadArrayObjects\b(?!Owned)")
+# A typed helper that maps an untyped helper's wrappers (`.mapNotNull { wrapper(it.segment) }`)
+# leaks: the owned +1 sits on the discarded untyped wrapper. Typed helpers decode directly.
+TYPED_MAP_FROM_UNTYPED = re.compile(r"wrapper\(it\.segment\)")
+
+
+def audit_owned_array_decodes(content: str) -> list[str]:
     errors: list[str] = []
+    for number, line in enumerate(content.splitlines(), start=1):
+        if BARE_ARRAY_OBJECTS_DECODE.search(line):
+            errors.append(
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{number}: decodes a returned "
+                "object Array with readArrayObjects; use BuiltinTypes.readArrayObjectsOwned (the "
+                "Array is destroyed after the decode, task 131 S5)"
+            )
+        if TYPED_MAP_FROM_UNTYPED.search(line):
+            errors.append(
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{number}: maps an untyped "
+                "object list through `wrapper(it.segment)`; decode directly with "
+                "BuiltinTypes.readArrayObjectsOwned(..., wrapper)"
+            )
+    return errors
+
+
+def audit_typed_object_array_helpers(content: str) -> list[str]:
+    errors: list[str] = audit_owned_array_decodes(content)
     for typed_helper, object_helper in DYNAMIC_TYPED_OBJECT_ARRAY_HELPERS.items():
         object_result = find_function_text(content, object_helper)
         if object_result is None:
             errors.append(f"dynamic typed object-array helper {typed_helper} references missing {object_helper}")
             continue
         object_line, object_text = object_result
-        if "BuiltinTypes.readArrayObjects" not in object_text and "BuiltinTypes::readArrayObjects" not in object_text:
-            errors.append(
-                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{object_line}: "
-                f"{object_helper} does not decode through readArrayObjects",
-            )
-        if "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in object_text and "callArrayReturn(" not in object_text:
-            errors.append(
-                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{object_line}: "
-                f"{object_helper} does not destroy Array storage",
-            )
-
         typed_result = find_function_text(content, typed_helper)
         if typed_result is None:
             errors.append(f"dynamic typed object-array helper {typed_helper} is missing")
             continue
         typed_line, typed_text = typed_result
-        if object_helper in typed_text:
-            if ".mapNotNull" not in typed_text or "wrapper(it.segment)" not in typed_text:
-                errors.append(
-                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
-                    f"{typed_helper} does not map through nullable typed wrappers",
-                )
-        else:
-            if "BuiltinTypes.readArrayObjects(" not in typed_text or ", wrapper)" not in typed_text:
-                errors.append(
-                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
-                    f"{typed_helper} does not decode directly through nullable typed wrappers",
-                )
-            if "callArrayReturn(" not in typed_text and "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in typed_text:
-                errors.append(
-                    f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
-                    f"{typed_helper} does not destroy Array storage",
-                )
+        # The untyped helper either delegates to the typed one or decodes owned itself.
+        if typed_helper not in object_text and "readArrayObjectsOwned" not in object_text:
+            errors.append(
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{object_line}: "
+                f"{object_helper} neither delegates to {typed_helper} nor decodes through "
+                "readArrayObjectsOwned",
+            )
+        if typed_helper not in object_text and (
+            "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in object_text
+            and "callArrayReturn(" not in object_text
+        ):
+            errors.append(
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{object_line}: "
+                f"{object_helper} does not destroy Array storage",
+            )
+        if "readArrayObjectsOwned(" not in typed_text or "wrapper)" not in typed_text:
+            errors.append(
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
+                f"{typed_helper} does not decode directly through nullable typed wrappers "
+                f"with BuiltinTypes.readArrayObjectsOwned",
+            )
+        if "callArrayReturn(" not in typed_text and "BuiltinTypes.destroyTyped(VariantType.ARRAY" not in typed_text:
+            errors.append(
+                f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{typed_line}: "
+                f"{typed_helper} does not destroy Array storage",
+            )
     for object_arg_helper in sorted(DYNAMIC_TYPED_OBJECT_ARRAY_ARG_HELPERS):
         result = find_function_text(content, object_arg_helper)
         if result is None:
             errors.append(f"dynamic typed object-array argument helper {object_arg_helper} is missing")
             continue
         line, function_text = result
+        # An untyped list-returning helper that delegates to its typed twin (task 131 review 2) is
+        # checked through that twin, which holds the body.
+        typed_twin = DYNAMIC_TYPED_OBJECT_ARRAY_HELPERS_BY_OBJECT.get(object_arg_helper)
+        if typed_twin is not None and typed_twin in function_text:
+            twin = find_function_text(content, typed_twin)
+            if twin is not None:
+                line, function_text = twin
         if "BuiltinTypes.initArrayOfObjects(" not in function_text:
             errors.append(
                 f"src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:{line}: "

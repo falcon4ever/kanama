@@ -810,6 +810,17 @@ CLASS_POLICY: dict[str, dict] = {
   fun isSameInstance(other: GodotObject): Boolean =
     backendHandle.backendToken() == other.backendHandle.backendToken()
 
+  /**
+   * Token identity (task 131 item 6), the same test as [isSameInstance]: wrappers that carry the
+   * same Web handle token are equal, whatever their class. The Web bridge mints a token per
+   * crossing site, not per Godot object, and does not expose the engine instance id cheaply, so two
+   * tokens for one object are NOT equal here (desktop/Android/iOS compare the instance id).
+   */
+  override fun equals(other: Any?): Boolean =
+    this === other || (other is GodotObject && isSameInstance(other))
+
+  override fun hashCode(): Int = backendHandle.backendToken().hashCode()
+
   fun signal(name: String): GodotSignal = GodotSignal(this, name)
 
   /**

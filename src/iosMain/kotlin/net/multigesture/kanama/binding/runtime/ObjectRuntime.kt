@@ -13,6 +13,9 @@ internal actual object ObjectRuntime {
   actual fun instanceIdOf(segment: RawSegment): Long =
     IosGodot.objectGetInstanceId(segment.address())
 
+  actual fun isLive(segment: RawSegment, instanceId: Long): Boolean =
+    IosGodot.objectIsLive(segment.address(), instanceId)
+
   actual fun emitSignal(segment: RawSegment, signal: String, args: List<Any?>) {
     val instance = segment.address()
     val single = args.singleOrNull()

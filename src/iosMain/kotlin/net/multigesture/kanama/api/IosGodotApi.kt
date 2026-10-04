@@ -115,9 +115,18 @@ abstract class KanamaScript<Self : Any>(
 }
 
 // KANAMA-IOS-HANDWRITTEN: [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json.
+// An exception escaping a coroutine is reported as a Godot script error with the game's file:line
+// (task 131 item 10), like desktop; before, the default handler terminated the app.
 class KanamaScope : CoroutineScope {
     private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + job
+    override val coroutineContext: CoroutineContext =
+        Dispatchers.Main + job + kotlinx.coroutines.CoroutineExceptionHandler { context, throwable ->
+            val name = context[kotlinx.coroutines.CoroutineName]?.name
+            IosScriptErrors.report(
+                throwable,
+                if (name.isNullOrEmpty()) "KanamaScope coroutine" else "KanamaScope coroutine $name",
+            )
+        }
 
     fun cancel() {
         job.cancel()
@@ -873,6 +882,9 @@ internal object IosGodot {
 
     fun isInstanceIdValid(instanceId: Long): Boolean =
         kanama_ios_godot_is_instance_id_valid(instanceId) != 0
+
+    fun objectIsLive(objectHandle: Long, instanceId: Long): Boolean =
+        net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_is_live(objectHandle, instanceId) != 0
 
     fun nodeIsInGroup(node: Long, groupName: String): Boolean =
         kanama_ios_godot_node_is_in_group(node, groupName) != 0

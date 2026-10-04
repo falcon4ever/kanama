@@ -28,6 +28,7 @@ import net.multigesture.kanama.api.GodotEnumValue
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
+import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.IosScriptErrors
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
@@ -182,8 +183,20 @@ internal object KanamaIosRuntime {
     return 1
   }
 
+  @OptIn(ExperimentalForeignApi::class)
   fun initialize(level: Int) {
     log("initialize: level=$level")
+    if (level == 2) {
+      // The freed-object check before every wrapper call (task 131 item 2): on in debug builds.
+      // Logged on every start (the device check reads it); a detection problem is named, never a
+      // silent fallback.
+      val status =
+        FreedObjectChecks.configure(
+          lookupAvailable =
+            net.multigesture.kanama.ios.cinterop.kanama_ios_godot_instance_lookup_available() != 0
+        )
+      log("freed-object checks: $status")
+    }
   }
 
   fun deinitialize(level: Int) {
@@ -368,6 +381,19 @@ internal object KanamaIosRuntime {
     return "${path.substringAfterLast('/').removeSuffix(".kt")}.$methodName"
   }
 
+  /**
+   * `<script> property <name> <op>` for a contained property-accessor error (task 131 item 11), the
+   * label desktop's ScriptBridge reports for the same failure.
+   */
+  fun scriptPropertyLabel(handle: Long, propertyIndex: Int, op: String): String {
+    val instance = scriptInstances[handle]
+    val path = instance?.resource?.path ?: "<script>"
+    val name =
+      instance?.resource?.descriptor?.properties?.getOrNull(propertyIndex)?.name
+        ?: "<property $propertyIndex>"
+    return "${path.substringAfterLast('/').removeSuffix(".kt")} property $name $op"
+  }
+
   fun readyScriptInstance(handle: Long) {
     val instance = scriptInstances[handle]
     if (instance == null) {
@@ -453,6 +479,9 @@ internal object KanamaIosRuntime {
         log(
           "property get threw handle=$handle index=$propertyIndex path=${instance.resource.path}: $t"
         )
+        // Reported like desktop's siGet failure (task 131 item 11): a Godot script error with the
+        // game file:line, not only this log line.
+        IosScriptErrors.report(t, scriptPropertyLabel(handle, propertyIndex, "get"))
         null
       }
     if (value !== KanamaIosNoProperty) {
@@ -625,6 +654,16 @@ internal object KanamaIosRuntime {
   private class ThrowingProbeScript : KanamaIosScriptBridge {
     override fun callV(methodName: String, args: List<Any?>): Boolean =
       throw IllegalStateException("kanama self-test: deliberate script method failure")
+
+    // Task 131 item 11: the self-test drives the property-set @CName exports with these.
+    override fun setProperty(propertyIndex: Int, value: Long): Boolean =
+      throw IllegalStateException("kanama self-test: deliberate property setter failure")
+
+    override fun setPropertyString(propertyIndex: Int, value: String): Boolean =
+      throw IllegalStateException("kanama self-test: deliberate property setter failure")
+
+    override fun getProperty(propertyIndex: Int): Any? =
+      throw IllegalStateException("kanama self-test: deliberate property getter failure")
   }
 
   private class BuiltInProbeScript(private val ownerObject: Long) : KanamaIosScriptBridge {
@@ -881,6 +920,28 @@ fun kanamaIosRuntimeScriptInstanceReady(instanceHandle: Long) {
   }
 }
 
+/**
+ * Runs one property-set @CName export's body (task 131 item 11): an exception crossing a @CName
+ * export terminates the app, so a throwing setter (or decode) is contained, printed and reported as
+ * a Godot script error with the Kotlin file:line instead. Like desktop's ScriptBridge.siSet it then
+ * answers 1 -- the property is the script's, the write was rejected and the old value kept --
+ * because 0 would tell Godot the script has no such property.
+ */
+private inline fun containPropertySet(
+  instanceHandle: Long,
+  propertyIndex: Int,
+  set: () -> Boolean,
+): Int =
+  try {
+    if (set()) 1 else 0
+  } catch (t: Throwable) {
+    IosScriptErrors.report(
+      t,
+      KanamaIosRuntime.scriptPropertyLabel(instanceHandle, propertyIndex, "set"),
+    )
+    1
+  }
+
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_set_property")
 fun kanamaIosRuntimeScriptInstanceSetProperty(
@@ -888,7 +949,9 @@ fun kanamaIosRuntimeScriptInstanceSetProperty(
   propertyIndex: Int,
   value: Long,
 ): Int =
-  if (KanamaIosRuntime.setScriptInstanceProperty(instanceHandle, propertyIndex, value)) 1 else 0
+  containPropertySet(instanceHandle, propertyIndex) {
+    KanamaIosRuntime.setScriptInstanceProperty(instanceHandle, propertyIndex, value)
+  }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_script_instance_get_property")
@@ -899,10 +962,25 @@ fun kanamaIosRuntimeScriptInstanceGetProperty(
   retBuf: CPointer<ByteVar>?,
 ): Int {
   retTag?.set(0, IOS_PT_VOID)
-  val value = KanamaIosRuntime.getScriptInstanceProperty(instanceHandle, propertyIndex)
-  if (value === KanamaIosNoProperty) return 0
-  encodeIosReturn(value, retTag, retBuf)
-  return if (retTag != null && retTag[0] != IOS_PT_VOID) 1 else 0
+  // The read AND the encode run inside this containment (task 131 B1): an exception crossing a
+  // @CName export terminates the app. Like desktop's ScriptBridge.siGet, a failure is reported and
+  // the property reads as nil (a 0 handle PT_OBJECT-tagged, which the C side boxes as nil).
+  return try {
+    val value = KanamaIosRuntime.getScriptInstanceProperty(instanceHandle, propertyIndex)
+    if (value === KanamaIosNoProperty) return 0
+    encodeIosReturn(value, retTag, retBuf)
+    if (retTag != null && retTag[0] != IOS_PT_VOID) 1 else 0
+  } catch (t: Throwable) {
+    IosScriptErrors.report(
+      t,
+      KanamaIosRuntime.scriptPropertyLabel(instanceHandle, propertyIndex, "get"),
+    )
+    if (retTag != null && retBuf != null) {
+      retBuf.reinterpret<LongVar>()[0] = 0L
+      retTag[0] = IOS_PT_OBJECT
+      1
+    } else 0
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -912,9 +990,10 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyString(
   propertyIndex: Int,
   value: CPointer<ByteVar>?,
 ): Int {
-  val str = value?.toKString() ?: ""
-  return if (KanamaIosRuntime.setScriptInstancePropertyString(instanceHandle, propertyIndex, str)) 1
-  else 0
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val str = value?.toKString() ?: ""
+    KanamaIosRuntime.setScriptInstancePropertyString(instanceHandle, propertyIndex, str)
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -925,15 +1004,15 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyArray(
   objects: CPointer<LongVar>?,
   count: Int,
 ): Int {
-  val values =
-    if (objects == null || count <= 0) {
-      LongArray(0)
-    } else {
-      LongArray(count) { i -> objects[i] }
-    }
-  return if (KanamaIosRuntime.setScriptInstancePropertyArray(instanceHandle, propertyIndex, values))
-    1
-  else 0
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val values =
+      if (objects == null || count <= 0) {
+        LongArray(0)
+      } else {
+        LongArray(count) { i -> objects[i] }
+      }
+    KanamaIosRuntime.setScriptInstancePropertyArray(instanceHandle, propertyIndex, values)
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -944,17 +1023,15 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyIntArray(
   values: CPointer<LongVar>?,
   count: Int,
 ): Int {
-  val ordinals =
-    if (values == null || count <= 0) {
-      LongArray(0)
-    } else {
-      LongArray(count) { i -> values[i] }
-    }
-  return if (
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val ordinals =
+      if (values == null || count <= 0) {
+        LongArray(0)
+      } else {
+        LongArray(count) { i -> values[i] }
+      }
     KanamaIosRuntime.setScriptInstancePropertyIntArray(instanceHandle, propertyIndex, ordinals)
-  )
-    1
-  else 0
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -965,17 +1042,15 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyStringArray(
   strings: CPointer<CPointerVar<ByteVar>>?,
   count: Int,
 ): Int {
-  val values: List<String> =
-    if (strings == null || count <= 0) {
-      emptyList()
-    } else {
-      List(count) { i -> strings[i]?.toKString() ?: "" }
-    }
-  return if (
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val values: List<String> =
+      if (strings == null || count <= 0) {
+        emptyList()
+      } else {
+        List(count) { i -> strings[i]?.toKString() ?: "" }
+      }
     KanamaIosRuntime.setScriptInstancePropertyStringArray(instanceHandle, propertyIndex, values)
-  )
-    1
-  else 0
+  }
 }
 
 // PT_* tags — must match the KANAMA_IOS_PT_* enum in kanama_ios_shim.c. NODE_PATH/STRING ship a
@@ -1091,10 +1166,10 @@ fun kanamaIosRuntimeScriptInstanceSetPropertyValue(
   bytes: CPointer<ByteVar>?,
   length: Int,
 ): Int {
-  val value = decodeIosPropertyValue(ptTag, bytes, length) ?: return 0
-  return if (KanamaIosRuntime.setScriptInstancePropertyValue(instanceHandle, propertyIndex, value))
-    1
-  else 0
+  return containPropertySet(instanceHandle, propertyIndex) {
+    val value = decodeIosPropertyValue(ptTag, bytes, length) ?: return 0
+    KanamaIosRuntime.setScriptInstancePropertyValue(instanceHandle, propertyIndex, value)
+  }
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
@@ -1139,6 +1214,15 @@ fun kanamaIosRuntimeScriptInstanceCallV(
   }
 }
 
+/**
+ * The owner handle a `@ScriptClass` value encodes as: its captured `self` wrapper through
+ * [FreedObjectChecks.valueSegment] (0, nil, once the owner was freed), else the raw owner handle (a
+ * script whose `self` is not an engine wrapper).
+ */
+internal fun scriptValueAddress(script: KanamaScript<*>): Long =
+  (script.self as? GodotObject)?.let { FreedObjectChecks.valueSegment(it).address() }
+    ?: script.godotObject.segment.address()
+
 // Encode a value-returning virtual/method result into the C return scratch as PT-tagged bytes,
 // matching kanama_ios_pt_arg_to_variant's reads (Phase 5.3b). Unsupported/Unit -> PT_VOID.
 @OptIn(ExperimentalForeignApi::class)
@@ -1178,18 +1262,23 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
       retTag[0] = IOS_PT_FLOAT64
     }
     // Engine wrapper (task 115): ship the object handle; the C side boxes it as an Object
-    // Variant (g_variant_from_object, which takes a reference for RefCounted). requireOpenHandle
-    // throws for a closed RefCounted (the getter's try/catch turns that into nil) instead of
-    // shipping a freed pointer. Used by getProperty of Object-typed @ScriptProperty
-    // (`Object.get("shooter")`) and by Object-returning methods/virtuals.
+    // Variant (g_variant_from_object, which takes a reference for RefCounted). A wrapper whose
+    // object was freed ships 0, which the C side boxes as nil -- silently, as GDScript reads a
+    // freed
+    // object as null (task 131 item 2). A closed RefCounted throws its closed-handle error; every
+    // @CName export that encodes catches it and answers nil instead. Used by getProperty of
+    // Object-typed @ScriptProperty (`Object.get("shooter")`) and by Object-returning
+    // methods/virtuals.
     is GodotObject -> {
-      retBuf.reinterpret<LongVar>()[0] = value.requireOpenHandle().address()
+      retBuf.reinterpret<LongVar>()[0] = FreedObjectChecks.valueSegment(value).address()
       retTag[0] = IOS_PT_OBJECT
     }
     // A @ScriptClass instance answers as its owner object (node_paths-exported script refs), the
     // same identity desktop's generated getter pre-wraps as GodotObject(it.godotObject).
+    // A freed owner ships 0 (nil), decided by the `self` wrapper captured at script creation,
+    // never by reading the owner (task 131 item 2).
     is KanamaScript<*> -> {
-      retBuf.reinterpret<LongVar>()[0] = value.godotObject.segment.address()
+      retBuf.reinterpret<LongVar>()[0] = scriptValueAddress(value)
       retTag[0] = IOS_PT_OBJECT
     }
     is Vector2 -> {
@@ -1628,8 +1717,10 @@ internal object IosReturnContainerScratch {
       is RID -> Pair(IOS_PT_RID, int64Bytes(value.value))
       // Wrapper / @ScriptClass elements ship their owner handle; the C array/dictionary builders
       // box PT_OBJECT elements as Object Variants (task 115; `List<Node>` returns were nil before).
-      is GodotObject -> Pair(IOS_PT_OBJECT, int64Bytes(value.requireOpenHandle().address()))
-      is KanamaScript<*> -> Pair(IOS_PT_OBJECT, int64Bytes(value.godotObject.segment.address()))
+      // A freed element ships 0 (nil), silently (task 131 item 2).
+      is GodotObject ->
+        Pair(IOS_PT_OBJECT, int64Bytes(FreedObjectChecks.valueSegment(value).address()))
+      is KanamaScript<*> -> Pair(IOS_PT_OBJECT, int64Bytes(scriptValueAddress(value)))
       // task 100 parcel 10: a PackedByteArray value (OggPacketSequence packet data inside an
       // Array[Array]) travels as its raw bytes; the C boxer rebuilds the packed array.
       is ByteArray -> Pair(IOS_PT_PACKED_BYTE_ARRAY, value)
