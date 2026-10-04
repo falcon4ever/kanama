@@ -3,6 +3,7 @@ package net.multigesture.kanama.binding.runtime
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout.ADDRESS
+import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
 import java.lang.invoke.MethodType
 import java.util.concurrent.ConcurrentHashMap
@@ -21,19 +22,37 @@ import net.multigesture.kanama.ffi.GodotFFI
  * targets must be public JVM statics, and an `actual` declares nothing public its `expect` lacks.
  */
 internal object InstanceBindings {
-  /** `void *object_get_instance_binding(GDExtensionObjectPtr, void *token, const callbacks *)`. */
-  private val objectGetInstanceBinding: MethodHandle by lazy {
-    GodotFFI.lookup(
-      "object_get_instance_binding",
-      FunctionDescriptor.of(ADDRESS, ADDRESS, ADDRESS, ADDRESS),
-    )
+  /**
+   * The per-construction binding lookup as JVM constants (task 131 item 16): `@JvmField` in an
+   * `object` is a `static final` field the JIT folds, called through `invokeExact` on its exact
+   * type, and the binding key comes back as a `long` (64-bit targets only), so a lookup allocates
+   * no `MemorySegment`. Initialized on first use ([available]), after `GodotFFI.bootstrap`.
+   */
+  private object Lookup {
+    /**
+     * `void *object_get_instance_binding(GDExtensionObjectPtr, void *token, const callbacks *)`:
+     * `(MemorySegment, MemorySegment, MemorySegment)J`.
+     */
+    @JvmField
+    val GET_INSTANCE_BINDING: MethodHandle = run {
+      check(ADDRESS.byteSize() == 8L) {
+        "object_get_instance_binding returns its pointer as a 64-bit long; this platform's " +
+          "pointers are ${ADDRESS.byteSize()} bytes"
+      }
+      GodotFFI.lookup(
+        "object_get_instance_binding",
+        FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, ADDRESS),
+      )
+    }
+
+    /** Kanama's binding token: the address of a byte only this runtime owns. */
+    @JvmField val TOKEN: MemorySegment = GodotFFI.arena.allocate(8L, 8L)
+
+    /** `GDExtensionInstanceBindingCallbacks { create, free, reference }` (reference: none). */
+    @JvmField val CALLBACKS: MemorySegment = bindingCallbacks()
   }
 
-  /** Kanama's binding token: the address of a byte only this runtime owns. */
-  private val bindingToken: MemorySegment by lazy { GodotFFI.arena.allocate(8L, 8L) }
-
-  /** `GDExtensionInstanceBindingCallbacks { create, free, reference }` (reference: none). */
-  private val bindingCallbacks: MemorySegment by lazy {
+  private fun bindingCallbacks(): MemorySegment {
     val create =
       Upcalls.stub(
         InstanceBindings::class.java,
@@ -57,7 +76,7 @@ internal object InstanceBindings {
         ),
         FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS),
       )
-    GodotFFI.arena.allocate(ADDRESS.byteSize() * 3, ADDRESS.byteAlignment()).also {
+    return GodotFFI.arena.allocate(ADDRESS.byteSize() * 3, ADDRESS.byteAlignment()).also {
       it.set(ADDRESS, 0L, create)
       it.set(ADDRESS, ADDRESS.byteSize(), free)
       it.set(ADDRESS, ADDRESS.byteSize() * 2, MemorySegment.NULL)
@@ -69,20 +88,19 @@ internal object InstanceBindings {
 
   /**
    * Resolves the binding entry point and builds the callbacks once, when the freed-object check is
-   * configured: false keeps the instance-id lookup.
+   * configured: false keeps the instance-id lookup. A holder that fails to initialize throws
+   * `ExceptionInInitializerError` (no message of its own), so the line names its cause.
    */
   fun available(): Boolean =
-    runCatching {
-        objectGetInstanceBinding
-        bindingCallbacks
+    runCatching { Lookup.CALLBACKS }
+      .onFailure {
+        System.err.println("[kanama:kt] object_get_instance_binding: ${(it.cause ?: it).message}")
       }
-      .onFailure { System.err.println("[kanama:kt] object_get_instance_binding: ${it.message}") }
       .isSuccess
 
   fun liveFlagOf(segment: RawSegment): LiveFlag {
     val key =
-      (objectGetInstanceBinding.invoke(segment, bindingToken, bindingCallbacks) as MemorySegment)
-        .address()
+      Lookup.GET_INSTANCE_BINDING.invokeExact(segment, Lookup.TOKEN, Lookup.CALLBACKS) as Long
     return liveFlags[key] ?: LiveFlag.freed()
   }
 

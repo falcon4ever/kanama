@@ -40,6 +40,16 @@ object KanamaAndroidRemap {
             needle = ".invoke(",
             replacement = ".invokeWithArguments(",
         ),
+        // Task 131 item 16: desktop calls its hot handles with `invokeExact`. Kotlin compiles that
+        // as a signature-polymorphic call only against the JDK; against android.jar it becomes a
+        // plain varargs `invokeExact(Object[])`, which ART rejects (WrongMethodTypeException), so
+        // Android keeps `invokeWithArguments` for these too. The post-remap audit forbids any
+        // `.invokeExact(` that survives.
+        Rule(
+            name = "panama-method-handle-invoke-exact",
+            needle = ".invokeExact(",
+            replacement = ".invokeWithArguments(",
+        ),
         Rule(
             name = "kotlin-registration-callback-invoke",
             needle = "registerAll.invokeWithArguments",
@@ -120,6 +130,7 @@ object KanamaAndroidRemap {
         "callbacks[id]?.invokeWithArguments",
         "SignalCallbackRegistry.invokeWithArguments",
         "?.invokeWithArguments(",
+        ".invokeExact(",
     )
 
     /**

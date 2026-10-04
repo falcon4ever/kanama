@@ -28,15 +28,58 @@ object GodotStrings {
   /** String storage is an opaque `CowData<char32_t> *`. Also 8 bytes. */
   private const val STRING_SIZE = 8L
 
-  private val stringNameNew by lazy {
-    GodotFFI.lookup("string_name_new_with_utf8_chars", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS))
+  // The per-call String handles as JVM constants (task 131 item 16): `@JvmField` in an `object` is
+  // a `static final` field the JIT folds, called through `invokeExact` on its exact type (no
+  // generic invoker or `asType` per String argument or return).
+  // Each holder resolves its own entry point on first use (after `GodotFFI.bootstrap`), so one
+  // missing entry point does not take the others down. Unlike `by lazy`, a failed resolution is not
+  // retried: the first use throws `ExceptionInInitializerError` (its cause is the lookup's error)
+  // and every later use `NoClassDefFoundError`. Kanama's containment catches `Throwable`, and the
+  // script error report names the cause (`ScriptErrors.reportFor`); see ObjectCalls.
+
+  /** `string_name_new_with_utf8_chars`: `(MemorySegment, MemorySegment)V`. */
+  private object StringNameNew {
+    @JvmField
+    val HANDLE: MethodHandle =
+      GodotFFI.lookup(
+        "string_name_new_with_utf8_chars",
+        FunctionDescriptor.ofVoid(ADDRESS, ADDRESS),
+      )
+  }
+
+  /** `string_new_with_utf8_chars`: `(MemorySegment, MemorySegment)V`. */
+  private object StringNew {
+    @JvmField
+    val HANDLE: MethodHandle =
+      GodotFFI.lookup("string_new_with_utf8_chars", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS))
+  }
+
+  /** `string_to_utf8_chars`: `(MemorySegment, MemorySegment, J)J`. */
+  private object StringToUtf8 {
+    @JvmField
+    val HANDLE: MethodHandle =
+      GodotFFI.lookup(
+        "string_to_utf8_chars",
+        FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, JAVA_LONG),
+      )
+  }
+
+  /** The String ptr destructor from `variant_get_ptr_destructor(STRING)`: `(MemorySegment)V`. */
+  private object StringDestructor {
+    @JvmField val HANDLE: MethodHandle = ptrDestructor(VariantType.STRING, "string_destructor")
+  }
+
+  // Block-bodied, so each invokeExact is a statement and compiles to the handle's exact `...V`
+  // type (as the last expression of a lambda it would be typed `Object` and fail at run time).
+  private fun newStringName(dest: MemorySegment, utf8: MemorySegment) {
+    StringNameNew.HANDLE.invokeExact(dest, utf8)
+  }
+
+  private fun newString(dest: MemorySegment, utf8: MemorySegment) {
+    StringNew.HANDLE.invokeExact(dest, utf8)
   }
 
   private val ownedStringNames = LinkedHashMap<String, MemorySegment>()
-
-  private val stringNew by lazy {
-    GodotFFI.lookup("string_new_with_utf8_chars", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS))
-  }
 
   fun makeStringName(value: String): MemorySegment {
     return synchronized(ownedStringNames) {
@@ -44,7 +87,7 @@ object GodotStrings {
         ?: run {
           val storage = GodotFFI.arena.allocate(STRING_NAME_SIZE, 8)
           val cString = GodotFFI.arena.allocateFrom(value)
-          stringNameNew.invoke(storage, cString)
+          newStringName(storage, cString)
           ownedStringNames[value] = storage
           storage
         }
@@ -54,7 +97,7 @@ object GodotStrings {
   fun makeString(value: String): MemorySegment {
     val storage = GodotFFI.arena.allocate(STRING_SIZE, 8)
     val cString = GodotFFI.arena.allocateFrom(value)
-    stringNew.invoke(storage, cString)
+    newString(storage, cString)
     return storage
   }
 
@@ -73,13 +116,6 @@ object GodotStrings {
 
   // ---- Transient String helpers (caller-managed lifetime) ----
 
-  private val stringToUtf8 by lazy {
-    GodotFFI.lookup(
-      "string_to_utf8_chars",
-      FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, JAVA_LONG),
-    )
-  }
-
   /**
    * `variant_get_ptr_destructor(type_id)` → returns a `void(*)(void*)` destructor for the given
    * variant type. We call it once for STRING (id=4) and cache the handle.
@@ -88,16 +124,15 @@ object GodotStrings {
     GodotFFI.lookup("variant_get_ptr_destructor", FunctionDescriptor.of(ADDRESS, JAVA_INT))
   }
 
-  private val stringDestructor: MethodHandle by lazy {
-    val fn = getPtrDestructor.invoke(VariantType.STRING.id) as MemorySegment
-    check(fn.address() != 0L) { "variant_get_ptr_destructor(STRING) returned NULL" }
-    GodotFFI.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS), "string_destructor")
+  private fun ptrDestructor(type: VariantType, label: String): MethodHandle {
+    val fn = getPtrDestructor.invoke(type.id) as MemorySegment
+    check(fn.address() != 0L) { "variant_get_ptr_destructor(${type.name}) returned NULL" }
+    return GodotFFI.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS), label)
   }
 
+  // Teardown only (destroyOwnedStringNames), so it stays lazy.
   private val stringNameDestructor: MethodHandle by lazy {
-    val fn = getPtrDestructor.invoke(VariantType.STRING_NAME.id) as MemorySegment
-    check(fn.address() != 0L) { "variant_get_ptr_destructor(STRING_NAME) returned NULL" }
-    GodotFFI.downcallHandle(fn, FunctionDescriptor.ofVoid(ADDRESS), "string_name_destructor")
+    ptrDestructor(VariantType.STRING_NAME, "string_name_destructor")
   }
 
   /**
@@ -106,7 +141,7 @@ object GodotStrings {
    * allocating ourselves.
    */
   fun initStringName(dest: MemorySegment, value: String) {
-    Arena.ofConfined().use { arena -> stringNameNew.invoke(dest, arena.allocateFrom(value)) }
+    Arena.ofConfined().use { arena -> newStringName(dest, arena.allocateFrom(value)) }
   }
 
   /**
@@ -118,7 +153,7 @@ object GodotStrings {
    * [destroyString] in that case.
    */
   fun initString(dest: MemorySegment, value: String) {
-    Arena.ofConfined().use { arena -> stringNew.invoke(dest, arena.allocateFrom(value)) }
+    Arena.ofConfined().use { arena -> newString(dest, arena.allocateFrom(value)) }
   }
 
   /**
@@ -127,11 +162,11 @@ object GodotStrings {
    * is borrowed (ptrcall const arg).
    */
   fun readString(strPtr: MemorySegment): String {
-    val length = stringToUtf8.invoke(strPtr, MemorySegment.NULL, 0L) as Long
+    val length = StringToUtf8.HANDLE.invokeExact(strPtr, MemorySegment.NULL, 0L) as Long
     if (length <= 0L) return ""
     Arena.ofConfined().use { arena ->
       val buf = arena.allocate(length + 1)
-      stringToUtf8.invoke(strPtr, buf, length + 1)
+      StringToUtf8.HANDLE.invokeExact(strPtr, buf, length + 1) as Long
       return buf.reinterpret(length + 1).getString(0, Charsets.UTF_8)
     }
   }
@@ -167,7 +202,7 @@ object GodotStrings {
 
   /** Release a Godot String's internal buffer. Call after [initString] or variantToType(STRING). */
   fun destroyString(strPtr: MemorySegment) {
-    stringDestructor.invoke(strPtr)
+    StringDestructor.HANDLE.invokeExact(strPtr)
   }
 
   /** Release all StringName storage owned by this runtime. */

@@ -199,7 +199,18 @@ flowchart LR
 - **Downcalls (JVM → Godot)** — `Linker.downcallHandle(addr, descriptor)`
   produces a `MethodHandle` the JIT can inline through. Used for everything:
   `classdb_register_extension_class6`, `object_method_bind_call`,
-  `variant_new_copy`, etc.
+  `variant_new_copy`, etc. The handles every wrapper call goes through
+  (`object_method_bind_ptrcall`, `object_get_instance_id`, the freed-object
+  check's `object_get_instance_from_id`, the String helpers) are JVM constants —
+  `@JvmField` in a holder `object`, so `static final` — called with
+  `invokeExact` on their exact type: the JIT folds them into the call site, with
+  no `Lazy` read, generic invoker or `asType` per call (task 131 item 16). A
+  pointer the caller only compares comes back as `JAVA_LONG`, so it allocates no
+  `MemorySegment`. Keep each `invokeExact` a statement in a block-bodied function
+  (`ObjectCalls.bindPtrcall`): as the last expression of a lambda or a `try`,
+  Kotlin types it `Object` and the call throws `WrongMethodTypeException`.
+  Android rewrites `invokeExact` to `invokeWithArguments` in its source remap
+  (see `backends/android.md`).
 - **Upcalls (Godot → JVM)** — `Linker.upcallStub(handle, descriptor, arena)`
   produces a function pointer that, when called from C, lands inside a JVM
   method. Used for: lifecycle callbacks (`initialize`, `deinitialize`),
