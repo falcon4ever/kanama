@@ -423,9 +423,9 @@ text as a hint.
 
   | Godot type group | ptrcall layout | notes |
   |---|---|---|
-  | real_t structs: Vector2/3/4, Rect2, Plane, Quaternion, AABB, Basis, Transform2D/3D, Projection | N× **float32** (single-prec) | components are `real_t` storage, `Double` in Kotlin: narrow/widen through `GodotReal.toC`/`fromC` (`GodotRealVar`) |
+  | real_t structs: Vector2/3/4, Rect2, Plane, Quaternion, AABB, Basis, Transform2D/3D, Projection | N× **float32** (single-prec) | components are `real_t` storage in Kotlin too (`Double` properties over `GodotRealStorage` fields): the cells take the stored `rawX`… values and reads build through the `raw` factories, unconverted (`GodotRealVar`) |
   | int structs: Vector2i/3i/4i, Rect2i | N× **int32** (4B) | NOT widened — unlike scalar ints |
-  | Color | 4× **float32** | always float32 (not real_t); `Double` in Kotlin, `.toFloat()` / `.toDouble()` at the cell |
+  | Color | 4× **float32** | always float32 (not real_t), also in the Kotlin `Color`'s storage: `rawR`… and `Color.raw`, unconverted |
   | Object, RID | 8B pointer/handle | |
   | String, StringName, NodePath | constructed C-side from a string | CONSTRUCT tag |
   | Callable, Signal, Dictionary, Array, Packed* | opaque handle | defer / skip initially |

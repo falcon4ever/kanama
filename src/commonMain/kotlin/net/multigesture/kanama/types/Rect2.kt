@@ -23,6 +23,9 @@ data class Rect2(
    */
   val size: Vector2,
 ) {
+  /** Godot's `str(r)`: `[P: (0.0, 0.0), S: (1.0, 1.0)]`. */
+  override fun toString(): String = "[P: $position, S: $size]"
+
   /** Godot-style fuzzy compare: true if position and size are approximately equal. */
   /**
    * Returns `true` if this rectangle and `rect` are approximately equal, by calling
@@ -48,7 +51,7 @@ data class Rect2(
   val end: Vector2
     get() = position + size
 
-  fun area(): Double = size.x * size.y
+  fun area(): Double = GodotReal.fromC(size.rawX * size.rawY)
 
   /**
    * Returns `true` if the rectangle contains the given `point`. By convention, points on the right

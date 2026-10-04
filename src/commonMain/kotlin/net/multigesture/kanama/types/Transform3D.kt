@@ -37,6 +37,12 @@ data class Transform3D(
    */
   val origin: Vector3,
 ) {
+  /**
+   * Godot's `str(t)`: the basis columns and the origin, `[X: (1.0, 0.0, 0.0), …, O: (0.0, 0.0,
+   * 0.0)]`.
+   */
+  override fun toString(): String = "[X: ${basis.x}, Y: ${basis.y}, Z: ${basis.z}, O: $origin]"
+
   /** Godot-style fuzzy compare: true if basis and origin are approximately equal. */
   /**
    * Returns `true` if this transform and `xform` are approximately equal, by running
@@ -173,18 +179,18 @@ data class Transform3D(
   // Column-major real_t values, matching the ObjectCalls Transform3D ptrcall layout.
   private fun toGodotRealArray(): GodotRealArray =
     GodotRealArray(12).also {
-      it[0] = GodotReal.toC(basis.x.x)
-      it[1] = GodotReal.toC(basis.y.x)
-      it[2] = GodotReal.toC(basis.z.x)
-      it[3] = GodotReal.toC(basis.x.y)
-      it[4] = GodotReal.toC(basis.y.y)
-      it[5] = GodotReal.toC(basis.z.y)
-      it[6] = GodotReal.toC(basis.x.z)
-      it[7] = GodotReal.toC(basis.y.z)
-      it[8] = GodotReal.toC(basis.z.z)
-      it[9] = GodotReal.toC(origin.x)
-      it[10] = GodotReal.toC(origin.y)
-      it[11] = GodotReal.toC(origin.z)
+      it[0] = basis.x.rawX
+      it[1] = basis.y.rawX
+      it[2] = basis.z.rawX
+      it[3] = basis.x.rawY
+      it[4] = basis.y.rawY
+      it[5] = basis.z.rawY
+      it[6] = basis.x.rawZ
+      it[7] = basis.y.rawZ
+      it[8] = basis.z.rawZ
+      it[9] = origin.rawX
+      it[10] = origin.rawY
+      it[11] = origin.rawZ
     }
 
   companion object {
@@ -225,20 +231,20 @@ data class Transform3D(
 
     private fun vector3Array(v: Vector3): GodotRealArray =
       GodotRealArray(3).also {
-        it[0] = GodotReal.toC(v.x)
-        it[1] = GodotReal.toC(v.y)
-        it[2] = GodotReal.toC(v.z)
+        it[0] = v.rawX
+        it[1] = v.rawY
+        it[2] = v.rawZ
       }
 
     private fun fromGodotRealArray(c: GodotRealArray): Transform3D =
       Transform3D(
         basis =
           Basis(
-            Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[3]), GodotReal.fromC(c[6])),
-            Vector3(GodotReal.fromC(c[1]), GodotReal.fromC(c[4]), GodotReal.fromC(c[7])),
-            Vector3(GodotReal.fromC(c[2]), GodotReal.fromC(c[5]), GodotReal.fromC(c[8])),
+            Vector3.raw(c[0], c[3], c[6]),
+            Vector3.raw(c[1], c[4], c[7]),
+            Vector3.raw(c[2], c[5], c[8]),
           ),
-        origin = Vector3(GodotReal.fromC(c[9]), GodotReal.fromC(c[10]), GodotReal.fromC(c[11])),
+        origin = Vector3.raw(c[9], c[10], c[11]),
       )
   }
 }

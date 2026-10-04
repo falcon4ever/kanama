@@ -5,21 +5,58 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-data class Vector2(val x: Double, val y: Double) {
-  constructor(x: Number, y: Number) : this(x.toDouble(), y.toDouble())
+/**
+ * Godot's Vector2. Components are `Double` in every signature and stored as float32, Godot's
+ * `real_t` in Web builds, so equality, printing and basic arithmetic match GDScript's (task 134).
+ */
+class Vector2
+private constructor(
+  internal val rawX: Float,
+  internal val rawY: Float,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
+) {
+  constructor(x: Double, y: Double) : this(x.toFloat(), y.toFloat(), RawStorage)
+
+  constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
+
+  val x: Double
+    get() = rawX.toDouble()
+
+  val y: Double
+    get() = rawY.toDouble()
+
+  operator fun component1(): Double = x
+
+  operator fun component2(): Double = y
+
+  fun copy(x: Double = this.x, y: Double = this.y): Vector2 = Vector2(x, y)
+
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Vector2 && storedEquals(rawX, other.rawX) && storedEquals(rawY, other.rawY))
+
+  override fun hashCode(): Int = 31 * storedHash(rawX) + storedHash(rawY)
+
+  /** Godot's `str(v)`: `(0.1, 0.2)`. */
+  override fun toString(): String =
+    "(${godotRealString(rawX, true)}, ${godotRealString(rawY, true)})"
 
   operator fun plus(other: Vector2): Vector2 = Vector2(x + other.x, y + other.y)
 
   operator fun minus(other: Vector2): Vector2 = Vector2(x - other.x, y - other.y)
 
-  operator fun times(scalar: Number): Vector2 =
-    Vector2(x * scalar.toDouble(), y * scalar.toDouble())
+  // A scalar operand is a `real_t` (float32) in Godot: narrowed first, like `Vector2 * float`.
+  operator fun times(scalar: Double): Vector2 = real(scalar).let { s -> Vector2(x * s, y * s) }
 
-  operator fun times(scalar: Double): Vector2 = Vector2(x * scalar, y * scalar)
+  operator fun times(scalar: Int): Vector2 = times(scalar.toDouble())
 
-  operator fun div(scalar: Number): Vector2 = Vector2(x / scalar.toDouble(), y / scalar.toDouble())
+  operator fun times(scalar: Long): Vector2 = times(scalar.toDouble())
 
-  operator fun div(scalar: Double): Vector2 = Vector2(x / scalar, y / scalar)
+  operator fun div(scalar: Double): Vector2 = real(scalar).let { s -> Vector2(x / s, y / s) }
+
+  operator fun div(scalar: Int): Vector2 = div(scalar.toDouble())
+
+  operator fun div(scalar: Long): Vector2 = div(scalar.toDouble())
 
   fun length(): Double = sqrt(x * x + y * y)
 
@@ -28,9 +65,13 @@ data class Vector2(val x: Double, val y: Double) {
   fun lerp(to: Vector2, weight: Double): Vector2 =
     Vector2(x + (to.x - x) * weight, y + (to.y - y) * weight)
 
-  fun withX(value: Number): Vector2 = Vector2(value.toDouble(), y)
+  fun withX(value: Double): Vector2 = Vector2(value, y)
 
-  fun withY(value: Number): Vector2 = Vector2(x, value.toDouble())
+  fun withY(value: Double): Vector2 = Vector2(x, value)
+
+  fun withX(value: Int): Vector2 = withX(value.toDouble())
+
+  fun withY(value: Int): Vector2 = withY(value.toDouble())
 
   fun normalized(): Vector2 {
     val len = length()
@@ -54,18 +95,69 @@ data class Vector2(val x: Double, val y: Double) {
   }
 }
 
-data class Vector3(val x: Double, val y: Double, val z: Double) {
-  constructor(x: Number, y: Number, z: Number) : this(x.toDouble(), y.toDouble(), z.toDouble())
+/** Godot's Vector3: `Double` in every signature, stored as float32 (Godot's Web `real_t`). */
+class Vector3
+private constructor(
+  internal val rawX: Float,
+  internal val rawY: Float,
+  internal val rawZ: Float,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
+) {
+  constructor(
+    x: Double,
+    y: Double,
+    z: Double,
+  ) : this(x.toFloat(), y.toFloat(), z.toFloat(), RawStorage)
+
+  constructor(x: Int, y: Int, z: Int) : this(x.toDouble(), y.toDouble(), z.toDouble())
+
+  val x: Double
+    get() = rawX.toDouble()
+
+  val y: Double
+    get() = rawY.toDouble()
+
+  val z: Double
+    get() = rawZ.toDouble()
+
+  operator fun component1(): Double = x
+
+  operator fun component2(): Double = y
+
+  operator fun component3(): Double = z
+
+  fun copy(x: Double = this.x, y: Double = this.y, z: Double = this.z): Vector3 = Vector3(x, y, z)
+
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Vector3 &&
+        storedEquals(rawX, other.rawX) &&
+        storedEquals(rawY, other.rawY) &&
+        storedEquals(rawZ, other.rawZ))
+
+  override fun hashCode(): Int = 31 * (31 * storedHash(rawX) + storedHash(rawY)) + storedHash(rawZ)
+
+  /** Godot's `str(v)`: `(0.1, 0.2, 0.3)`. */
+  override fun toString(): String =
+    "(${godotRealString(rawX, true)}, ${godotRealString(rawY, true)}, ${godotRealString(rawZ, true)})"
 
   operator fun plus(other: Vector3): Vector3 = Vector3(x + other.x, y + other.y, z + other.z)
 
   operator fun minus(other: Vector3): Vector3 = Vector3(x - other.x, y - other.y, z - other.z)
 
-  operator fun times(scalar: Number): Vector3 =
-    Vector3(x * scalar.toDouble(), y * scalar.toDouble(), z * scalar.toDouble())
+  // A scalar operand is a `real_t` (float32) in Godot: narrowed first, like `Vector3 * float`.
+  operator fun times(scalar: Double): Vector3 =
+    real(scalar).let { s -> Vector3(x * s, y * s, z * s) }
 
-  operator fun div(scalar: Number): Vector3 =
-    Vector3(x / scalar.toDouble(), y / scalar.toDouble(), z / scalar.toDouble())
+  operator fun times(scalar: Int): Vector3 = times(scalar.toDouble())
+
+  operator fun times(scalar: Long): Vector3 = times(scalar.toDouble())
+
+  operator fun div(scalar: Double): Vector3 = real(scalar).let { s -> Vector3(x / s, y / s, z / s) }
+
+  operator fun div(scalar: Int): Vector3 = div(scalar.toDouble())
+
+  operator fun div(scalar: Long): Vector3 = div(scalar.toDouble())
 
   fun length(): Double = sqrt(x * x + y * y + z * z)
 
@@ -99,11 +191,17 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
     return if (len <= delta || len < 1e-8) to else this + difference / len * delta
   }
 
-  fun withX(value: Number): Vector3 = Vector3(value.toDouble(), y, z)
+  fun withX(value: Double): Vector3 = Vector3(value, y, z)
 
-  fun withY(value: Number): Vector3 = Vector3(x, value.toDouble(), z)
+  fun withY(value: Double): Vector3 = Vector3(x, value, z)
 
-  fun withZ(value: Number): Vector3 = Vector3(x, y, value.toDouble())
+  fun withZ(value: Double): Vector3 = Vector3(x, y, value)
+
+  fun withX(value: Int): Vector3 = withX(value.toDouble())
+
+  fun withY(value: Int): Vector3 = withY(value.toDouble())
+
+  fun withZ(value: Int): Vector3 = withZ(value.toDouble())
 
   fun normalized(): Vector3 {
     val len = length()
@@ -146,19 +244,80 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
   }
 }
 
-data class Rect2(val position: Vector2, val size: Vector2)
+data class Rect2(val position: Vector2, val size: Vector2) {
+  /** Godot's `str(r)`: `[P: (0.0, 0.0), S: (1.0, 1.0)]`. */
+  override fun toString(): String = "[P: $position, S: $size]"
+}
 
 /**
- * Godot's Color. Components are `Double` like every decimal value Kanama exposes (task 134); the
- * engine stores them as float32 and the Web backend narrows at the bridge.
+ * Godot's Color: channels are `Double` in every signature and stored as float32, as Godot stores
+ * them in every build, so equality and printing match GDScript's (task 134).
  */
-data class Color(val r: Double, val g: Double, val b: Double, val a: Double = 1.0) {
+class Color
+private constructor(
+  internal val rawR: Float,
+  internal val rawG: Float,
+  internal val rawB: Float,
+  internal val rawA: Float,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
+) {
   constructor(
-    r: Number,
-    g: Number,
-    b: Number,
-    a: Number = 1.0,
+    r: Double,
+    g: Double,
+    b: Double,
+    a: Double = 1.0,
+  ) : this(r.toFloat(), g.toFloat(), b.toFloat(), a.toFloat(), RawStorage)
+
+  constructor(
+    r: Int,
+    g: Int,
+    b: Int,
+    a: Int = 1,
   ) : this(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
+
+  val r: Double
+    get() = rawR.toDouble()
+
+  val g: Double
+    get() = rawG.toDouble()
+
+  val b: Double
+    get() = rawB.toDouble()
+
+  val a: Double
+    get() = rawA.toDouble()
+
+  operator fun component1(): Double = r
+
+  operator fun component2(): Double = g
+
+  operator fun component3(): Double = b
+
+  operator fun component4(): Double = a
+
+  fun copy(r: Double = this.r, g: Double = this.g, b: Double = this.b, a: Double = this.a): Color =
+    Color(r, g, b, a)
+
+  // Godot's `==` on the stored channels: -0.0 == 0.0 (the old data-class equals said otherwise).
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Color &&
+        storedEquals(rawR, other.rawR) &&
+        storedEquals(rawG, other.rawG) &&
+        storedEquals(rawB, other.rawB) &&
+        storedEquals(rawA, other.rawA))
+
+  override fun hashCode(): Int {
+    var result = storedHash(rawR)
+    result = 31 * result + storedHash(rawG)
+    result = 31 * result + storedHash(rawB)
+    result = 31 * result + storedHash(rawA)
+    return result
+  }
+
+  /** Godot's `str(c)`: four decimals at most, `(1.0, 0.5, 0.0, 1.0)`. */
+  override fun toString(): String =
+    "(${godotNum(r, 4)}, ${godotNum(g, 4)}, ${godotNum(b, 4)}, ${godotNum(a, 4)})"
 }
 
 data class Vector3i(val x: Int, val y: Int, val z: Int) {
@@ -168,8 +327,26 @@ data class Vector3i(val x: Int, val y: Int, val z: Int) {
 }
 
 /** Godot's Plane in Hessian normal form: [normal] and signed distance [d] from the origin. */
-class Plane(val normal: Vector3, val d: Double) {
-  constructor(normal: Vector3, d: Number) : this(normal, d.toDouble())
+class Plane
+private constructor(
+  val normal: Vector3,
+  internal val rawD: Float,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
+) {
+  constructor(normal: Vector3, d: Double) : this(normal, d.toFloat(), RawStorage)
+
+  constructor(normal: Vector3, d: Int) : this(normal, d.toDouble())
+
+  val d: Double
+    get() = rawD.toDouble()
+
+  override fun equals(other: Any?): Boolean =
+    this === other || (other is Plane && normal == other.normal && storedEquals(rawD, other.rawD))
+
+  override fun hashCode(): Int = 31 * normal.hashCode() + storedHash(rawD)
+
+  /** Godot's `str(p)`: `[N: (0.0, 1.0, 0.0), D: 0]`. */
+  override fun toString(): String = "[N: $normal, D: ${godotRealString(rawD, false)}]"
 
   /**
    * Godot's intersects_ray: the intersection of the ray [from] + t * [dir] with this plane, or null
@@ -201,7 +378,69 @@ data class Rect2i(val position: Vector2i, val size: Vector2i) {
 }
 
 /** Rotation quaternion backing Basis decomposition and slerp (Godot layout: x, y, z, w). */
-data class Quaternion(val x: Double, val y: Double, val z: Double, val w: Double) {
+class Quaternion
+private constructor(
+  internal val rawX: Float,
+  internal val rawY: Float,
+  internal val rawZ: Float,
+  internal val rawW: Float,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
+) {
+  constructor(
+    x: Double,
+    y: Double,
+    z: Double,
+    w: Double,
+  ) : this(x.toFloat(), y.toFloat(), z.toFloat(), w.toFloat(), RawStorage)
+
+  val x: Double
+    get() = rawX.toDouble()
+
+  val y: Double
+    get() = rawY.toDouble()
+
+  val z: Double
+    get() = rawZ.toDouble()
+
+  val w: Double
+    get() = rawW.toDouble()
+
+  operator fun component1(): Double = x
+
+  operator fun component2(): Double = y
+
+  operator fun component3(): Double = z
+
+  operator fun component4(): Double = w
+
+  fun copy(
+    x: Double = this.x,
+    y: Double = this.y,
+    z: Double = this.z,
+    w: Double = this.w,
+  ): Quaternion = Quaternion(x, y, z, w)
+
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Quaternion &&
+        storedEquals(rawX, other.rawX) &&
+        storedEquals(rawY, other.rawY) &&
+        storedEquals(rawZ, other.rawZ) &&
+        storedEquals(rawW, other.rawW))
+
+  override fun hashCode(): Int {
+    var result = storedHash(rawX)
+    result = 31 * result + storedHash(rawY)
+    result = 31 * result + storedHash(rawZ)
+    result = 31 * result + storedHash(rawW)
+    return result
+  }
+
+  /** Godot's `str(q)`: `(0, 0, 0, 1)`. */
+  override fun toString(): String =
+    "(${godotRealString(rawX, false)}, ${godotRealString(rawY, false)}, " +
+      "${godotRealString(rawZ, false)}, ${godotRealString(rawW, false)})"
+
   fun normalized(): Quaternion {
     val len = sqrt(x * x + y * y + z * z + w * w)
     return if (len > 0.0) Quaternion(x / len, y / len, z / len, w / len) else IDENTITY
@@ -244,9 +483,15 @@ data class Quaternion(val x: Double, val y: Double, val z: Double, val w: Double
  * the x/y/z axes are COLUMNS). Pure Kotlin — composes from the mirrored rotation/scale snapshots
  * without an engine crossing.
  */
-class Basis internal constructor(internal val m: DoubleArray) {
+class Basis internal constructor(private val stored: FloatArray) {
+  /** Row-major 3x3, widened from the float32 storage for the Double math below. */
+  internal val m: DoubleArray
+    get() = DoubleArray(9) { stored[it].toDouble() }
+
+  internal constructor(m: DoubleArray) : this(FloatArray(9) { m[it].toFloat() })
+
   init {
-    require(m.size == 9)
+    require(stored.size == 9)
   }
 
   /** Godot's axis constructor: [xAxis]/[yAxis]/[zAxis] are the matrix COLUMNS. */
@@ -255,7 +500,17 @@ class Basis internal constructor(internal val m: DoubleArray) {
     yAxis: Vector3,
     zAxis: Vector3,
   ) : this(
-    doubleArrayOf(xAxis.x, yAxis.x, zAxis.x, xAxis.y, yAxis.y, zAxis.y, xAxis.z, yAxis.z, zAxis.z)
+    floatArrayOf(
+      xAxis.rawX,
+      yAxis.rawX,
+      zAxis.rawX,
+      xAxis.rawY,
+      yAxis.rawY,
+      zAxis.rawY,
+      xAxis.rawZ,
+      yAxis.rawZ,
+      zAxis.rawZ,
+    )
   )
 
   constructor(
@@ -287,9 +542,9 @@ class Basis internal constructor(internal val m: DoubleArray) {
 
   operator fun times(v: Vector3): Vector3 =
     Vector3(
-      m[0] * v.x + m[1] * v.y + m[2] * v.z,
-      m[3] * v.x + m[4] * v.y + m[5] * v.z,
-      m[6] * v.x + m[7] * v.y + m[8] * v.z,
+      stored[0] * v.x + stored[1] * v.y + stored[2] * v.z,
+      stored[3] * v.x + stored[4] * v.y + stored[5] * v.z,
+      stored[6] * v.x + stored[7] * v.y + stored[8] * v.z,
     )
 
   /** Row-major matrix product (this applied after [other] in xform order). */
@@ -310,9 +565,31 @@ class Basis internal constructor(internal val m: DoubleArray) {
   fun inverse(): Basis = transposed()
 
   fun transposed(): Basis =
-    Basis(doubleArrayOf(m[0], m[3], m[6], m[1], m[4], m[7], m[2], m[5], m[8]))
+    Basis(
+      floatArrayOf(
+        stored[0],
+        stored[3],
+        stored[6],
+        stored[1],
+        stored[4],
+        stored[7],
+        stored[2],
+        stored[5],
+        stored[8],
+      )
+    )
 
-  fun getColumn(index: Int): Vector3 = Vector3(m[index], m[3 + index], m[6 + index])
+  fun getColumn(index: Int): Vector3 =
+    Vector3(stored[index].toDouble(), stored[3 + index].toDouble(), stored[6 + index].toDouble())
+
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Basis && (0 until 9).all { storedEquals(stored[it], other.stored[it]) })
+
+  override fun hashCode(): Int = (0 until 9).fold(0) { acc, i -> 31 * acc + storedHash(stored[i]) }
+
+  /** Godot's `str(b)`: the columns, `[X: (1.0, 0.0, 0.0), Y: …, Z: …]`. */
+  override fun toString(): String = "[X: $x, Y: $y, Z: $z]"
 
   /** Godot's basis.x/y/z axis properties (matrix COLUMNS). */
   val x: Vector3
@@ -349,22 +626,25 @@ class Basis internal constructor(internal val m: DoubleArray) {
   }
 
   fun determinant(): Double =
-    m[0] * (m[4] * m[8] - m[5] * m[7]) - m[1] * (m[3] * m[8] - m[5] * m[6]) +
-      m[2] * (m[3] * m[7] - m[4] * m[6])
+    // Godot's real_t (float32) arithmetic on the stored values.
+    (stored[0] * (stored[4] * stored[8] - stored[5] * stored[7]) -
+        stored[1] * (stored[3] * stored[8] - stored[5] * stored[6]) +
+        stored[2] * (stored[3] * stored[7] - stored[4] * stored[6]))
+      .toDouble()
 
   /** Godot's scaled(): rows scaled componentwise (scale applied on the left). */
   fun scaled(scale: Vector3): Basis =
     Basis(
       doubleArrayOf(
-        m[0] * scale.x,
-        m[1] * scale.x,
-        m[2] * scale.x,
-        m[3] * scale.y,
-        m[4] * scale.y,
-        m[5] * scale.y,
-        m[6] * scale.z,
-        m[7] * scale.z,
-        m[8] * scale.z,
+        stored[0] * scale.x,
+        stored[1] * scale.x,
+        stored[2] * scale.x,
+        stored[3] * scale.y,
+        stored[4] * scale.y,
+        stored[5] * scale.y,
+        stored[6] * scale.z,
+        stored[7] * scale.z,
+        stored[8] * scale.z,
       )
     )
 
@@ -470,6 +750,9 @@ class Basis internal constructor(internal val m: DoubleArray) {
 
 /** Basis + origin. Pure Kotlin — the engine side sees only the decomposed writes. */
 data class Transform3D(val basis: Basis, val origin: Vector3) {
+  /** Godot's `str(t)`: `[X: (1.0, 0.0, 0.0), Y: …, Z: …, O: (0.0, 0.0, 0.0)]`. */
+  override fun toString(): String = "[X: ${basis.x}, Y: ${basis.y}, Z: ${basis.z}, O: $origin]"
+
   /** Godot's xform: rotate/scale then translate. */
   operator fun times(v: Vector3): Vector3 = basis * v + origin
 

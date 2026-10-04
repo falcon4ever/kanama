@@ -287,11 +287,15 @@ Godot uses two related but different floating-point layouts at the FFM
 boundary:
 
 - **Value-type components** are stored as `real_t` in engine buffers.
-  `Vector2`, `Vector3`, `Basis`, `Transform3D`, and similar built-ins hold
-  `Double` in Kotlin in every build (task 134); the generated `GodotReal` layout
-  is the storage width only — `Float` for normal single-precision Godot builds,
-  `Double` for `precision=double` builds — and `GodotReal.toC`/`fromC` and
-  `GodotRealSegment` narrow on the way in and widen on the way out.
+  `Vector2`, `Vector3`, `Basis`, `Transform3D`, and similar built-ins expose
+  `Double` in Kotlin and store their components at the same width (task 134):
+  the generated internal `GodotRealStorage` — `Float` for normal single-precision
+  Godot builds, `Double` for `precision=double` builds (`Color` is always
+  `Float`). Constructors round with `GodotReal.toC`, properties widen with
+  `GodotReal.fromC`, and the marshalling moves the stored values unconverted
+  (`GodotRealSegment.readRaw`/`writeRaw`, the value types' internal `raw`
+  factories and `rawX`… fields); `GodotRealSegment.readIndex`/`writeIndex` are the
+  `Double` pair the generated script registrars use.
 - **Scalar `float` method parameters and return values** use the Variant float
   ABI slot, which is 64-bit. In `ObjectCalls`, helpers for scalar method
   arguments named `float` must allocate/read `JAVA_DOUBLE`, not `JAVA_FLOAT`.

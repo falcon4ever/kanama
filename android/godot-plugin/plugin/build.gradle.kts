@@ -41,7 +41,7 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
         // The root module generates the real_t storage width into commonMain (`generateKanamaReal`)
         // and the Panama accessors into jvmMain (`generateKanamaRealSegment`); neither is a tracked
         // source file, so the Android tree writes both here, single precision, with the remapped
-        // FFM package. Components are Double (task 134); only the engine buffers are float32.
+        // FFM package. Value types store components at this width and expose them as Double (task 134).
         val realFile = androidKanamaSources.get().file(
             "net/multigesture/kanama/types/Real.kt",
         ).asFile
@@ -55,6 +55,8 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
             |
             |typealias GodotRealArray = FloatArray
             |
+            |internal typealias GodotRealStorage = Float
+            |
             |object GodotReal {
             |    const val SIZE_BYTES: Long = 4L
             |    const val ALIGN_BYTES: Long = 4L
@@ -62,10 +64,19 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
             |    fun toC(value: Double): Float = value.toFloat()
             |    fun fromC(value: Float): Double = value.toDouble()
             |
+            |    internal const val IS_SINGLE: Boolean = true
+            |
             |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
             |}
             |
             |object GodotRealSegment {
+            |    internal fun readRaw(segment: MemorySegment, index: Long): Float =
+            |        segment.get(JAVA_FLOAT, index * GodotReal.SIZE_BYTES)
+            |
+            |    internal fun writeRaw(segment: MemorySegment, index: Long, value: Float) {
+            |        segment.set(JAVA_FLOAT, index * GodotReal.SIZE_BYTES, value)
+            |    }
+            |
             |    fun readIndex(segment: MemorySegment, index: Long): Double =
             |        segment.get(JAVA_FLOAT, index * GodotReal.SIZE_BYTES).toDouble()
             |

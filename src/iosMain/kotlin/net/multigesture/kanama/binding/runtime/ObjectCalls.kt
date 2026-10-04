@@ -122,6 +122,7 @@ import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.GodotReal
+import net.multigesture.kanama.types.GodotRealStorage
 import net.multigesture.kanama.types.GodotRealVar
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.Plane
@@ -915,14 +916,14 @@ actual object ObjectCalls {
     memScoped {
       val ret = allocArray<GodotRealVar>(2)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VECTOR2, ret)
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+      Vector2.raw(ret[0], ret[1])
     }
 
   actual fun ptrcallNoArgsRetVector3(methodBind: MemorySegment, instance: MemorySegment): Vector3 =
     memScoped {
       val ret = allocArray<GodotRealVar>(3)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VECTOR3, ret)
-      Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+      Vector3.raw(ret[0], ret[1], ret[2])
     }
 
   // Vector2i (2x int32, 8 bytes total): components are int32 NOT widened — struct
@@ -952,7 +953,7 @@ actual object ObjectCalls {
     memScoped {
       val ret = allocArray<FloatVar>(4)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_COLOR, ret)
-      Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+      Color.raw(ret[0], ret[1], ret[2], ret[3])
     }
 
   // Rect2 (4x float32, 16 bytes): position.x, position.y, size.x, size.y.
@@ -961,10 +962,7 @@ actual object ObjectCalls {
     memScoped {
       val ret = allocArray<GodotRealVar>(4)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_RECT2, ret)
-      Rect2(
-        Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-        Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-      )
+      Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
     }
 
   // String return: a Godot String can't ride the fixed ret_out of the generic
@@ -1277,7 +1275,7 @@ actual object ObjectCalls {
         2 * real,
       )
     val p = buf.reinterpret<GodotRealVar>()
-    List(n) { Vector2(GodotReal.fromC(p[it * 2]), GodotReal.fromC(p[it * 2 + 1])) }
+    List(n) { Vector2.raw(p[it * 2], p[it * 2 + 1]) }
   }
 
   fun ptrcallRetPackedVector3List(
@@ -1299,13 +1297,7 @@ actual object ObjectCalls {
         3 * real,
       )
     val p = buf.reinterpret<GodotRealVar>()
-    List(n) {
-      Vector3(
-        GodotReal.fromC(p[it * 3]),
-        GodotReal.fromC(p[it * 3 + 1]),
-        GodotReal.fromC(p[it * 3 + 2]),
-      )
-    }
+    List(n) { Vector3.raw(p[it * 3], p[it * 3 + 1], p[it * 3 + 2]) }
   }
 
   fun ptrcallRetPackedColorList(
@@ -1326,14 +1318,7 @@ actual object ObjectCalls {
         16,
       )
     val p = buf.reinterpret<FloatVar>()
-    List(n) {
-      Color(
-        p[it * 4].toDouble(),
-        p[it * 4 + 1].toDouble(),
-        p[it * 4 + 2].toDouble(),
-        p[it * 4 + 3].toDouble(),
-      )
-    }
+    List(n) { Color.raw(p[it * 4], p[it * 4 + 1], p[it * 4 + 2], p[it * 4 + 3]) }
   }
 
   // task 100 (parcel 6) — Dictionary / Array returns on any audited arg shape. Same arg cells as
@@ -1384,26 +1369,13 @@ actual object ObjectCalls {
           // follow-up.
           VT_OBJECT ->
             if (len >= 8) GodotObject.wrap(MemorySegment.ofAddress(i64At(start))) else null
-          VT_VECTOR2 ->
-            if (len >= 8) Vector2(GodotReal.fromC(f32At(start)), GodotReal.fromC(f32At(start + 4)))
-            else null
+          VT_VECTOR2 -> if (len >= 8) Vector2.raw(f32At(start), f32At(start + 4)) else null
           VT_VECTOR2I -> if (len >= 8) Vector2i(i32LE(b, start), i32LE(b, start + 4)) else null
           VT_VECTOR3 ->
-            if (len >= 12)
-              Vector3(
-                GodotReal.fromC(f32At(start)),
-                GodotReal.fromC(f32At(start + 4)),
-                GodotReal.fromC(f32At(start + 8)),
-              )
-            else null
+            if (len >= 12) Vector3.raw(f32At(start), f32At(start + 4), f32At(start + 8)) else null
           VT_COLOR ->
             if (len >= 16)
-              Color(
-                f32At(start).toDouble(),
-                f32At(start + 4).toDouble(),
-                f32At(start + 8).toDouble(),
-                f32At(start + 12).toDouble(),
-              )
+              Color.raw(f32At(start), f32At(start + 4), f32At(start + 8), f32At(start + 12))
             else null
           VT_ARRAY -> if (len >= 4) ContainerBlob(b, start).array() else null
           VT_DICTIONARY -> if (len >= 4) ContainerBlob(b, start).dictionary() else null
@@ -1425,36 +1397,22 @@ actual object ObjectCalls {
           VT_PACKED_VECTOR2_ARRAY ->
             List(len / 8) {
               val o = start + it * 8
-              Vector2(GodotReal.fromC(f32At(o)), GodotReal.fromC(f32At(o + 4)))
+              Vector2.raw(f32At(o), f32At(o + 4))
             }
           VT_PACKED_VECTOR3_ARRAY ->
             List(len / 12) {
               val o = start + it * 12
-              Vector3(
-                GodotReal.fromC(f32At(o)),
-                GodotReal.fromC(f32At(o + 4)),
-                GodotReal.fromC(f32At(o + 8)),
-              )
+              Vector3.raw(f32At(o), f32At(o + 4), f32At(o + 8))
             }
           VT_PACKED_COLOR_ARRAY ->
             List(len / 16) {
               val o = start + it * 16
-              Color(
-                f32At(o).toDouble(),
-                f32At(o + 4).toDouble(),
-                f32At(o + 8).toDouble(),
-                f32At(o + 12).toDouble(),
-              )
+              Color.raw(f32At(o), f32At(o + 4), f32At(o + 8), f32At(o + 12))
             }
           VT_PACKED_VECTOR4_ARRAY ->
             List(len / 16) {
               val o = start + it * 16
-              Vector4(
-                GodotReal.fromC(f32At(o)),
-                GodotReal.fromC(f32At(o + 4)),
-                GodotReal.fromC(f32At(o + 8)),
-                GodotReal.fromC(f32At(o + 12)),
-              )
+              Vector4.raw(f32At(o), f32At(o + 4), f32At(o + 8), f32At(o + 12))
             }
           // task 100 parcel 10: a PackedByteArray element carries its raw bytes.
           VT_PACKED_BYTE_ARRAY -> b.copyOfRange(start, end)
@@ -1763,7 +1721,7 @@ actual object ObjectCalls {
     argCount: Int,
   ): List<Plane> = memScoped {
     typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_PLANE) { b, o, _ ->
-      Plane(Vector3(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8)), realLE(b, o + 12))
+      Plane.raw(Vector3.raw(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8)), realLE(b, o + 12))
     }
   }
 
@@ -1775,7 +1733,7 @@ actual object ObjectCalls {
     argCount: Int,
   ): List<Vector2> = memScoped {
     typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_VECTOR2) { b, o, _ ->
-      Vector2(realLE(b, o), realLE(b, o + 4))
+      Vector2.raw(realLE(b, o), realLE(b, o + 4))
     }
   }
 
@@ -1787,7 +1745,7 @@ actual object ObjectCalls {
     argCount: Int,
   ): List<Vector3> = memScoped {
     typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_VECTOR3) { b, o, _ ->
-      Vector3(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8))
+      Vector3.raw(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8))
     }
   }
 
@@ -1799,7 +1757,10 @@ actual object ObjectCalls {
     argCount: Int,
   ): List<Rect2> = memScoped {
     typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_RECT2) { b, o, _ ->
-      Rect2(Vector2(realLE(b, o), realLE(b, o + 4)), Vector2(realLE(b, o + 8), realLE(b, o + 12)))
+      Rect2(
+        Vector2.raw(realLE(b, o), realLE(b, o + 4)),
+        Vector2.raw(realLE(b, o + 8), realLE(b, o + 12)),
+      )
     }
   }
 
@@ -1814,8 +1775,12 @@ actual object ObjectCalls {
     typedList(methodBind, instance, argTypes, argPtrs, argCount, PT_TRANSFORM3D) { b, o, _ ->
       fun r(i: Int) = realLE(b, o + 4 * i)
       Transform3D(
-        Basis(Vector3(r(0), r(3), r(6)), Vector3(r(1), r(4), r(7)), Vector3(r(2), r(5), r(8))),
-        Vector3(r(9), r(10), r(11)),
+        Basis(
+          Vector3.raw(r(0), r(3), r(6)),
+          Vector3.raw(r(1), r(4), r(7)),
+          Vector3.raw(r(2), r(5), r(8)),
+        ),
+        Vector3.raw(r(9), r(10), r(11)),
       )
     }
   }
@@ -1834,7 +1799,7 @@ actual object ObjectCalls {
         emptyList()
       } else {
         val n = i32LE(b, o)
-        List(n) { Vector2(realLE(b, o + 4 + it * 8), realLE(b, o + 8 + it * 8)) }
+        List(n) { Vector2.raw(realLE(b, o + 4 + it * 8), realLE(b, o + 8 + it * 8)) }
       }
     }
   }
@@ -2050,8 +2015,8 @@ actual object ObjectCalls {
       }
       is Vector2 -> {
         val c = allocArray<GodotRealVar>(2)
-        c[0] = GodotReal.toC(value.x)
-        c[1] = GodotReal.toC(value.y)
+        c[0] = value.rawX
+        c[1] = value.rawY
         desc.tag = PT_VECTOR2
         desc.ptr = c
       }
@@ -2064,18 +2029,18 @@ actual object ObjectCalls {
       }
       is Vector3 -> {
         val c = allocArray<GodotRealVar>(3)
-        c[0] = GodotReal.toC(value.x)
-        c[1] = GodotReal.toC(value.y)
-        c[2] = GodotReal.toC(value.z)
+        c[0] = value.rawX
+        c[1] = value.rawY
+        c[2] = value.rawZ
         desc.tag = PT_VECTOR3
         desc.ptr = c
       }
       is Color -> {
         val c = allocArray<FloatVar>(4)
-        c[0] = value.r.toFloat()
-        c[1] = value.g.toFloat()
-        c[2] = value.b.toFloat()
-        c[3] = value.a.toFloat()
+        c[0] = value.rawR
+        c[1] = value.rawG
+        c[2] = value.rawB
+        c[3] = value.rawA
         desc.tag = PT_COLOR
         desc.ptr = c
       }
@@ -2401,7 +2366,7 @@ actual object ObjectCalls {
       ((b[o + 2].toInt() and 0xFF) shl 16) or
       ((b[o + 3].toInt() and 0xFF) shl 24)
 
-  private fun realLE(b: ByteArray, o: Int) = GodotReal.fromC(Float.fromBits(i32LE(b, o)))
+  private fun realLE(b: ByteArray, o: Int): GodotRealStorage = Float.fromBits(i32LE(b, o))
 
   // Array[Plane] -> List<Plane> (e.g. Camera3D.get_frustum). Each record is 4 float32 LE
   // (normal.x, normal.y, normal.z, d). Phase 2.7i.
@@ -2410,7 +2375,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Plane> =
     retTypedArrayBlob(methodBind, instance, PT_PLANE) { b, o, _ ->
-      Plane(Vector3(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8)), realLE(b, o + 12))
+      Plane.raw(Vector3.raw(realLE(b, o), realLE(b, o + 4), realLE(b, o + 8)), realLE(b, o + 12))
     }
 
   // Generic Array -> List<Any?> (Phase 2.7j). The C side serializes each element as a
@@ -2480,8 +2445,8 @@ actual object ObjectCalls {
     val n = values.size
     val floats = allocArray<GodotRealVar>(if (n > 0) n * 2 else 1)
     for (i in 0 until n) {
-      floats[i * 2] = GodotReal.toC(values[i].x)
-      floats[i * 2 + 1] = GodotReal.toC(values[i].y)
+      floats[i * 2] = values[i].rawX
+      floats[i * 2 + 1] = values[i].rawY
     }
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
@@ -2503,10 +2468,10 @@ actual object ObjectCalls {
     val n = values.size
     val floats = allocArray<FloatVar>(if (n > 0) n * 4 else 1)
     for (i in 0 until n) {
-      floats[i * 4] = values[i].r.toFloat()
-      floats[i * 4 + 1] = values[i].g.toFloat()
-      floats[i * 4 + 2] = values[i].b.toFloat()
-      floats[i * 4 + 3] = values[i].a.toFloat()
+      floats[i * 4] = values[i].rawR
+      floats[i * 4 + 1] = values[i].rawG
+      floats[i * 4 + 2] = values[i].rawB
+      floats[i * 4 + 3] = values[i].rawA
     }
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
@@ -2525,8 +2490,8 @@ actual object ObjectCalls {
     val n = values.size
     val floats = allocArray<GodotRealVar>(if (n > 0) n * 2 else 1)
     for (i in 0 until n) {
-      floats[i * 2] = GodotReal.toC(values[i].x)
-      floats[i * 2 + 1] = GodotReal.toC(values[i].y)
+      floats[i * 2] = values[i].rawX
+      floats[i * 2 + 1] = values[i].rawY
     }
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
@@ -2538,10 +2503,10 @@ actual object ObjectCalls {
     val n = values.size
     val floats = allocArray<FloatVar>(if (n > 0) n * 4 else 1)
     for (i in 0 until n) {
-      floats[i * 4] = values[i].r.toFloat()
-      floats[i * 4 + 1] = values[i].g.toFloat()
-      floats[i * 4 + 2] = values[i].b.toFloat()
-      floats[i * 4 + 3] = values[i].a.toFloat()
+      floats[i * 4] = values[i].rawR
+      floats[i * 4 + 1] = values[i].rawG
+      floats[i * 4 + 2] = values[i].rawB
+      floats[i * 4 + 3] = values[i].rawA
     }
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
@@ -2599,9 +2564,9 @@ actual object ObjectCalls {
     val n = values.size
     val floats = allocArray<FloatVar>(if (n > 0) n * 3 else 1)
     for (i in 0 until n) {
-      floats[i * 3] = values[i].x.toFloat()
-      floats[i * 3 + 1] = values[i].y.toFloat()
-      floats[i * 3 + 2] = values[i].z.toFloat()
+      floats[i * 3] = values[i].rawX
+      floats[i * 3 + 1] = values[i].rawY
+      floats[i * 3 + 2] = values[i].rawZ
     }
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
@@ -2739,18 +2704,18 @@ actual object ObjectCalls {
         Pair(
           PT_TRANSFORM3D,
           float32Bytes(
-            GodotReal.toC(t.basis.x.x),
-            GodotReal.toC(t.basis.y.x),
-            GodotReal.toC(t.basis.z.x),
-            GodotReal.toC(t.basis.x.y),
-            GodotReal.toC(t.basis.y.y),
-            GodotReal.toC(t.basis.z.y),
-            GodotReal.toC(t.basis.x.z),
-            GodotReal.toC(t.basis.y.z),
-            GodotReal.toC(t.basis.z.z),
-            GodotReal.toC(t.origin.x),
-            GodotReal.toC(t.origin.y),
-            GodotReal.toC(t.origin.z),
+            t.basis.x.rawX,
+            t.basis.y.rawX,
+            t.basis.z.rawX,
+            t.basis.x.rawY,
+            t.basis.y.rawY,
+            t.basis.z.rawY,
+            t.basis.x.rawZ,
+            t.basis.y.rawZ,
+            t.basis.z.rawZ,
+            t.origin.rawX,
+            t.origin.rawY,
+            t.origin.rawZ,
           ),
         )
       },
@@ -2761,15 +2726,7 @@ actual object ObjectCalls {
       VT_PLANE_TYPE,
       null,
       values.map {
-        Pair(
-          PT_PLANE,
-          float32Bytes(
-            GodotReal.toC(it.normal.x),
-            GodotReal.toC(it.normal.y),
-            GodotReal.toC(it.normal.z),
-            GodotReal.toC(it.d),
-          ),
-        )
+        Pair(PT_PLANE, float32Bytes(it.normal.rawX, it.normal.rawY, it.normal.rawZ, it.rawD))
       },
     )
 
@@ -2782,8 +2739,8 @@ actual object ObjectCalls {
       values.map { inner ->
         val floats = FloatArray(inner.size * 2)
         for ((i, v) in inner.withIndex()) {
-          floats[2 * i] = GodotReal.toC(v.x)
-          floats[2 * i + 1] = GodotReal.toC(v.y)
+          floats[2 * i] = v.rawX
+          floats[2 * i + 1] = v.rawY
         }
         Pair(PT_PACKED_VECTOR2_ARRAY, int32Bytes(inner.size) + float32Bytes(*floats))
       },
@@ -2879,10 +2836,10 @@ actual object ObjectCalls {
 
   private fun MemScope.colorCell(c: Color): CPointer<FloatVar> {
     val cell = allocArray<FloatVar>(4)
-    cell[0] = c.r.toFloat()
-    cell[1] = c.g.toFloat()
-    cell[2] = c.b.toFloat()
-    cell[3] = c.a.toFloat()
+    cell[0] = c.rawR
+    cell[1] = c.rawG
+    cell[2] = c.rawB
+    cell[3] = c.rawA
     return cell
   }
 
@@ -3023,9 +2980,7 @@ actual object ObjectCalls {
         buf,
         count,
       )
-      List(count.toInt()) {
-        Vector2(GodotReal.fromC(buf[it * 2]), GodotReal.fromC(buf[it * 2 + 1]))
-      }
+      List(count.toInt()) { Vector2.raw(buf[it * 2], buf[it * 2 + 1]) }
     }
   }
 
@@ -3042,12 +2997,7 @@ actual object ObjectCalls {
       val buf = allocArray<FloatVar>(count * 4)
       ptrcallNoArgsRetPackedColorArrayDispatch(methodBind.address(), instance.address(), buf, count)
       List(count.toInt()) {
-        Color(
-          buf[it * 4].toDouble(),
-          buf[it * 4 + 1].toDouble(),
-          buf[it * 4 + 2].toDouble(),
-          buf[it * 4 + 3].toDouble(),
-        )
+        Color.raw(buf[it * 4], buf[it * 4 + 1], buf[it * 4 + 2], buf[it * 4 + 3])
       }
     }
   }
@@ -3295,8 +3245,8 @@ actual object ObjectCalls {
     value: Vector2,
   ) = memScoped {
     val cell = allocArray<GodotRealVar>(2)
-    cell[0] = GodotReal.toC(value.x)
-    cell[1] = GodotReal.toC(value.y)
+    cell[0] = value.rawX
+    cell[1] = value.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -3311,9 +3261,9 @@ actual object ObjectCalls {
     value: Vector3,
   ) = memScoped {
     val cell = allocArray<GodotRealVar>(3)
-    cell[0] = GodotReal.toC(value.x)
-    cell[1] = GodotReal.toC(value.y)
-    cell[2] = GodotReal.toC(value.z)
+    cell[0] = value.rawX
+    cell[1] = value.rawY
+    cell[2] = value.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -3358,10 +3308,10 @@ actual object ObjectCalls {
   actual fun ptrcallWithColorArg(methodBind: MemorySegment, instance: MemorySegment, color: Color) =
     memScoped {
       val cell = allocArray<FloatVar>(4)
-      cell[0] = color.r.toFloat()
-      cell[1] = color.g.toFloat()
-      cell[2] = color.b.toFloat()
-      cell[3] = color.a.toFloat()
+      cell[0] = color.rawR
+      cell[1] = color.rawG
+      cell[2] = color.rawB
+      cell[3] = color.rawA
       val types = allocArray<IntVar>(1)
       types[0] = PT_COLOR
       val ptrs = allocArray<COpaquePointerVar>(1)
@@ -3373,10 +3323,10 @@ actual object ObjectCalls {
   actual fun ptrcallWithRect2Arg(methodBind: MemorySegment, instance: MemorySegment, value: Rect2) =
     memScoped {
       val cell = allocArray<GodotRealVar>(4)
-      cell[0] = GodotReal.toC(value.position.x)
-      cell[1] = GodotReal.toC(value.position.y)
-      cell[2] = GodotReal.toC(value.size.x)
-      cell[3] = GodotReal.toC(value.size.y)
+      cell[0] = value.position.rawX
+      cell[1] = value.position.rawY
+      cell[2] = value.size.rawX
+      cell[3] = value.size.rawY
       val types = allocArray<IntVar>(1)
       types[0] = PT_RECT2
       val ptrs = allocArray<COpaquePointerVar>(1)
@@ -3469,10 +3419,8 @@ actual object ObjectCalls {
         emptyMap()
       } else {
         val result = HashMap<String, Any?>()
-        result["position"] =
-          Vector3(GodotReal.fromC(f32(4)), GodotReal.fromC(f32(8)), GodotReal.fromC(f32(12)))
-        result["normal"] =
-          Vector3(GodotReal.fromC(f32(16)), GodotReal.fromC(f32(20)), GodotReal.fromC(f32(24)))
+        result["position"] = Vector3.raw(f32(4), f32(8), f32(12))
+        result["normal"] = Vector3.raw(f32(16), f32(20), f32(24))
         val colliderHandle = i64(28)
         if (colliderHandle != 0L) result["collider"] = MemorySegment.ofAddress(colliderHandle)
         result["collider_id"] = i64(36)
@@ -3593,7 +3541,7 @@ actual object ObjectCalls {
       VT_VECTOR2 ->
         if (outStrLen.value >= 8L) {
           val b = outStr.readBytes(8)
-          Vector2(realLE(b, 0), realLE(b, 4))
+          Vector2.raw(realLE(b, 0), realLE(b, 4))
         } else null
       VT_VECTOR2I ->
         if (outStrLen.value >= 8L) {
@@ -3603,16 +3551,16 @@ actual object ObjectCalls {
       VT_VECTOR3 ->
         if (outStrLen.value >= 12L) {
           val b = outStr.readBytes(12)
-          Vector3(realLE(b, 0), realLE(b, 4), realLE(b, 8))
+          Vector3.raw(realLE(b, 0), realLE(b, 4), realLE(b, 8))
         } else null
       VT_COLOR ->
         if (outStrLen.value >= 16L) {
           val b = outStr.readBytes(16)
-          Color(
-            Float.fromBits(i32LE(b, 0)).toDouble(),
-            Float.fromBits(i32LE(b, 4)).toDouble(),
-            Float.fromBits(i32LE(b, 8)).toDouble(),
-            Float.fromBits(i32LE(b, 12)).toDouble(),
+          Color.raw(
+            Float.fromBits(i32LE(b, 0)),
+            Float.fromBits(i32LE(b, 4)),
+            Float.fromBits(i32LE(b, 8)),
+            Float.fromBits(i32LE(b, 12)),
           )
         } else null
       else -> null
@@ -3685,8 +3633,8 @@ actual object ObjectCalls {
         }
         is Vector2 -> {
           val c = allocArray<GodotRealVar>(2)
-          c[0] = GodotReal.toC(a.x)
-          c[1] = GodotReal.toC(a.y)
+          c[0] = a.rawX
+          c[1] = a.rawY
           tags[i] = PT_VECTOR2
           ptrs[i] = c.reinterpret<CPointed>()
         }
@@ -3699,18 +3647,18 @@ actual object ObjectCalls {
         }
         is Vector3 -> {
           val c = allocArray<GodotRealVar>(3)
-          c[0] = GodotReal.toC(a.x)
-          c[1] = GodotReal.toC(a.y)
-          c[2] = GodotReal.toC(a.z)
+          c[0] = a.rawX
+          c[1] = a.rawY
+          c[2] = a.rawZ
           tags[i] = PT_VECTOR3
           ptrs[i] = c.reinterpret<CPointed>()
         }
         is Color -> {
           val c = allocArray<FloatVar>(4)
-          c[0] = a.r.toFloat()
-          c[1] = a.g.toFloat()
-          c[2] = a.b.toFloat()
-          c[3] = a.a.toFloat()
+          c[0] = a.rawR
+          c[1] = a.rawG
+          c[2] = a.rawB
+          c[3] = a.rawA
           tags[i] = PT_COLOR
           ptrs[i] = c.reinterpret<CPointed>()
         }
@@ -4198,10 +4146,7 @@ actual object ObjectCalls {
     memScoped {
       val ret = allocArray<GodotRealVar>(6)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_AABB, ret)
-      AABB(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
-        Vector3(GodotReal.fromC(ret[3]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
-      )
+      AABB(Vector3.raw(ret[0], ret[1], ret[2]), Vector3.raw(ret[3], ret[4], ret[5]))
     }
 
   actual fun ptrcallNoArgsRetArrayList(
@@ -4214,9 +4159,9 @@ actual object ObjectCalls {
       val ret = allocArray<GodotRealVar>(9)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_BASIS, ret)
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       )
     }
 
@@ -4277,10 +4222,7 @@ actual object ObjectCalls {
     memScoped {
       val ret = allocArray<GodotRealVar>(4)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_PLANE, ret)
-      Plane(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
-        GodotReal.fromC(ret[3]),
-      )
+      Plane.raw(Vector3.raw(ret[0], ret[1], ret[2]), ret[3])
     }
 
   actual fun ptrcallNoArgsRetProjection(
@@ -4290,30 +4232,10 @@ actual object ObjectCalls {
     val ret = allocArray<GodotRealVar>(16)
     ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_PROJECTION, ret)
     Projection(
-      Vector4(
-        GodotReal.fromC(ret[0]),
-        GodotReal.fromC(ret[1]),
-        GodotReal.fromC(ret[2]),
-        GodotReal.fromC(ret[3]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[4]),
-        GodotReal.fromC(ret[5]),
-        GodotReal.fromC(ret[6]),
-        GodotReal.fromC(ret[7]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[8]),
-        GodotReal.fromC(ret[9]),
-        GodotReal.fromC(ret[10]),
-        GodotReal.fromC(ret[11]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[12]),
-        GodotReal.fromC(ret[13]),
-        GodotReal.fromC(ret[14]),
-        GodotReal.fromC(ret[15]),
-      ),
+      Vector4.raw(ret[0], ret[1], ret[2], ret[3]),
+      Vector4.raw(ret[4], ret[5], ret[6], ret[7]),
+      Vector4.raw(ret[8], ret[9], ret[10], ret[11]),
+      Vector4.raw(ret[12], ret[13], ret[14], ret[15]),
     )
   }
 
@@ -4323,12 +4245,7 @@ actual object ObjectCalls {
   ): Quaternion = memScoped {
     val ret = allocArray<GodotRealVar>(4)
     ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_QUATERNION, ret)
-    Quaternion(
-      GodotReal.fromC(ret[0]),
-      GodotReal.fromC(ret[1]),
-      GodotReal.fromC(ret[2]),
-      GodotReal.fromC(ret[3]),
-    )
+    Quaternion.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallNoArgsRetRID(methodBind: MemorySegment, instance: MemorySegment): RID =
@@ -4363,9 +4280,9 @@ actual object ObjectCalls {
     val ret = allocArray<GodotRealVar>(6)
     ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_TRANSFORM2D, ret)
     Transform2D(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-      Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+      Vector2.raw(ret[0], ret[1]),
+      Vector2.raw(ret[2], ret[3]),
+      Vector2.raw(ret[4], ret[5]),
     )
   }
 
@@ -4377,11 +4294,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -4418,23 +4335,18 @@ actual object ObjectCalls {
     memScoped {
       val ret = allocArray<GodotRealVar>(4)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_VECTOR4, ret)
-      Vector4(
-        GodotReal.fromC(ret[0]),
-        GodotReal.fromC(ret[1]),
-        GodotReal.fromC(ret[2]),
-        GodotReal.fromC(ret[3]),
-      )
+      Vector4.raw(ret[0], ret[1], ret[2], ret[3])
     }
 
   actual fun ptrcallWithAABBArg(methodBind: MemorySegment, instance: MemorySegment, value: AABB) =
     memScoped {
       val c0 = allocArray<GodotRealVar>(6)
-      c0[0] = GodotReal.toC(value.position.x)
-      c0[1] = GodotReal.toC(value.position.y)
-      c0[2] = GodotReal.toC(value.position.z)
-      c0[3] = GodotReal.toC(value.size.x)
-      c0[4] = GodotReal.toC(value.size.y)
-      c0[5] = GodotReal.toC(value.size.z)
+      c0[0] = value.position.rawX
+      c0[1] = value.position.rawY
+      c0[2] = value.position.rawZ
+      c0[3] = value.size.rawX
+      c0[4] = value.size.rawY
+      c0[5] = value.size.rawZ
       val types = allocArray<IntVar>(1)
       types[0] = PT_AABB
       val ptrs = allocArray<COpaquePointerVar>(1)
@@ -4449,12 +4361,12 @@ actual object ObjectCalls {
     value: AABB,
   ): List<Vector3i> = memScoped {
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(value.position.x)
-    c0[1] = GodotReal.toC(value.position.y)
-    c0[2] = GodotReal.toC(value.position.z)
-    c0[3] = GodotReal.toC(value.size.x)
-    c0[4] = GodotReal.toC(value.size.y)
-    c0[5] = GodotReal.toC(value.size.z)
+    c0[0] = value.position.rawX
+    c0[1] = value.position.rawY
+    c0[2] = value.position.rawZ
+    c0[3] = value.size.rawX
+    c0[4] = value.size.rawY
+    c0[5] = value.size.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_AABB
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -4469,12 +4381,12 @@ actual object ObjectCalls {
     scenario: RID,
   ): List<Long> = memScoped {
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(aabb.position.x)
-    c0[1] = GodotReal.toC(aabb.position.y)
-    c0[2] = GodotReal.toC(aabb.position.z)
-    c0[3] = GodotReal.toC(aabb.size.x)
-    c0[4] = GodotReal.toC(aabb.size.y)
-    c0[5] = GodotReal.toC(aabb.size.z)
+    c0[0] = aabb.position.rawX
+    c0[1] = aabb.position.rawY
+    c0[2] = aabb.position.rawZ
+    c0[3] = aabb.size.rawX
+    c0[4] = aabb.size.rawY
+    c0[5] = aabb.size.rawZ
     val c1 = alloc<LongVar>()
     c1.value = scenario.value
     val types = allocArray<IntVar>(2)
@@ -4584,18 +4496,18 @@ actual object ObjectCalls {
   ) = memScoped {
     val c0 = packArrayBlob(values)
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_ARRAY
     types[1] = PT_TRANSFORM3D
@@ -4609,15 +4521,15 @@ actual object ObjectCalls {
   actual fun ptrcallWithBasisArg(methodBind: MemorySegment, instance: MemorySegment, value: Basis) =
     memScoped {
       val c0 = allocArray<GodotRealVar>(9)
-      c0[0] = GodotReal.toC(value.x.x)
-      c0[1] = GodotReal.toC(value.y.x)
-      c0[2] = GodotReal.toC(value.z.x)
-      c0[3] = GodotReal.toC(value.x.y)
-      c0[4] = GodotReal.toC(value.y.y)
-      c0[5] = GodotReal.toC(value.z.y)
-      c0[6] = GodotReal.toC(value.x.z)
-      c0[7] = GodotReal.toC(value.y.z)
-      c0[8] = GodotReal.toC(value.z.z)
+      c0[0] = value.x.rawX
+      c0[1] = value.y.rawX
+      c0[2] = value.z.rawX
+      c0[3] = value.x.rawY
+      c0[4] = value.y.rawY
+      c0[5] = value.z.rawY
+      c0[6] = value.x.rawZ
+      c0[7] = value.y.rawZ
+      c0[8] = value.z.rawZ
       val types = allocArray<IntVar>(1)
       types[0] = PT_BASIS
       val ptrs = allocArray<COpaquePointerVar>(1)
@@ -4633,15 +4545,15 @@ actual object ObjectCalls {
   ): Int = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(9)
-    c0[0] = GodotReal.toC(value.x.x)
-    c0[1] = GodotReal.toC(value.y.x)
-    c0[2] = GodotReal.toC(value.z.x)
-    c0[3] = GodotReal.toC(value.x.y)
-    c0[4] = GodotReal.toC(value.y.y)
-    c0[5] = GodotReal.toC(value.z.y)
-    c0[6] = GodotReal.toC(value.x.z)
-    c0[7] = GodotReal.toC(value.y.z)
-    c0[8] = GodotReal.toC(value.z.z)
+    c0[0] = value.x.rawX
+    c0[1] = value.y.rawX
+    c0[2] = value.z.rawX
+    c0[3] = value.x.rawY
+    c0[4] = value.y.rawY
+    c0[5] = value.z.rawY
+    c0[6] = value.x.rawZ
+    c0[7] = value.y.rawZ
+    c0[8] = value.z.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_BASIS
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -5603,12 +5515,12 @@ actual object ObjectCalls {
     val c2 = alloc<DoubleVar>()
     c2.value = firstDouble
     val c3 = allocArray<GodotRealVar>(6)
-    c3[0] = GodotReal.toC(transformValue.x.x)
-    c3[1] = GodotReal.toC(transformValue.x.y)
-    c3[2] = GodotReal.toC(transformValue.y.x)
-    c3[3] = GodotReal.toC(transformValue.y.y)
-    c3[4] = GodotReal.toC(transformValue.origin.x)
-    c3[5] = GodotReal.toC(transformValue.origin.y)
+    c3[0] = transformValue.x.rawX
+    c3[1] = transformValue.x.rawY
+    c3[2] = transformValue.y.rawX
+    c3[3] = transformValue.y.rawY
+    c3[4] = transformValue.origin.rawX
+    c3[5] = transformValue.origin.rawY
     val c4 = alloc<LongVar>()
     c4.value = secondInt.toLong()
     val c5 = alloc<LongVar>()
@@ -5704,9 +5616,9 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM2D, ret)
     Transform2D(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-      Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+      Vector2.raw(ret[0], ret[1]),
+      Vector2.raw(ret[2], ret[3]),
+      Vector2.raw(ret[4], ret[5]),
     )
   }
 
@@ -5728,7 +5640,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithDoubleAndBoolArgRetVector3(
@@ -5749,7 +5661,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithDoubleAndBoolArgs(
@@ -5781,10 +5693,10 @@ actual object ObjectCalls {
     val c0 = alloc<DoubleVar>()
     c0.value = value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_FLOAT64
     types[1] = PT_COLOR
@@ -5903,11 +5815,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -5938,7 +5850,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+    Color.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithDoubleArgRetInt(
@@ -5987,7 +5899,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithDoubleArgRetVector3(
@@ -6003,7 +5915,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithDoubleVector2TwoDoubleArgs(
@@ -6017,8 +5929,8 @@ actual object ObjectCalls {
     val c0 = alloc<DoubleVar>()
     c0.value = firstDouble
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<DoubleVar>()
     c2.value = secondDouble
     val c3 = alloc<DoubleVar>()
@@ -6118,25 +6030,25 @@ actual object ObjectCalls {
     fifth: Vector3,
   ): Any? = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
-    c2[2] = GodotReal.toC(third.z)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
+    c2[2] = third.rawZ
     val c3 = allocArray<GodotRealVar>(3)
-    c3[0] = GodotReal.toC(fourth.x)
-    c3[1] = GodotReal.toC(fourth.y)
-    c3[2] = GodotReal.toC(fourth.z)
+    c3[0] = fourth.rawX
+    c3[1] = fourth.rawY
+    c3[2] = fourth.rawZ
     val c4 = allocArray<GodotRealVar>(3)
-    c4[0] = GodotReal.toC(fifth.x)
-    c4[1] = GodotReal.toC(fifth.y)
-    c4[2] = GodotReal.toC(fifth.z)
+    c4[0] = fifth.rawX
+    c4[1] = fifth.rawY
+    c4[2] = fifth.rawZ
     val types = allocArray<IntVar>(5)
     types[0] = PT_VECTOR3
     types[1] = PT_VECTOR3
@@ -6477,7 +6389,7 @@ actual object ObjectCalls {
     ptrs[3] = positiveY.cstr.ptr.reinterpret<CPointed>()
     ptrs[4] = c4.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 5, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList(
@@ -6526,17 +6438,17 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(fourth.x)
-    c3[1] = GodotReal.toC(fourth.y)
+    c3[0] = fourth.rawX
+    c3[1] = fourth.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_VECTOR2
     types[1] = PT_VECTOR2
@@ -6560,17 +6472,17 @@ actual object ObjectCalls {
     fourth: Vector2,
   ): List<Vector2> = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(fourth.x)
-    c3[1] = GodotReal.toC(fourth.y)
+    c3[0] = fourth.rawX
+    c3[1] = fourth.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_VECTOR2
     types[1] = PT_VECTOR2
@@ -6593,17 +6505,17 @@ actual object ObjectCalls {
     fourth: Vector2,
   ): Any? = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(fourth.x)
-    c3[1] = GodotReal.toC(fourth.y)
+    c3[0] = fourth.rawX
+    c3[1] = fourth.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_VECTOR2
     types[1] = PT_VECTOR2
@@ -6626,21 +6538,21 @@ actual object ObjectCalls {
     fourth: Vector3,
   ): List<Vector3> = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
-    c2[2] = GodotReal.toC(third.z)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
+    c2[2] = third.rawZ
     val c3 = allocArray<GodotRealVar>(3)
-    c3[0] = GodotReal.toC(fourth.x)
-    c3[1] = GodotReal.toC(fourth.y)
-    c3[2] = GodotReal.toC(fourth.z)
+    c3[0] = fourth.rawX
+    c3[1] = fourth.rawY
+    c3[2] = fourth.rawZ
     val types = allocArray<IntVar>(4)
     types[0] = PT_VECTOR3
     types[1] = PT_VECTOR3
@@ -6664,21 +6576,21 @@ actual object ObjectCalls {
   ): Vector3 = memScoped {
     val ret = allocArray<GodotRealVar>(3)
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
-    c2[2] = GodotReal.toC(third.z)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
+    c2[2] = third.rawZ
     val c3 = allocArray<GodotRealVar>(3)
-    c3[0] = GodotReal.toC(fourth.x)
-    c3[1] = GodotReal.toC(fourth.y)
-    c3[2] = GodotReal.toC(fourth.z)
+    c3[0] = fourth.rawX
+    c3[1] = fourth.rawY
+    c3[2] = fourth.rawZ
     val types = allocArray<IntVar>(4)
     types[0] = PT_VECTOR3
     types[1] = PT_VECTOR3
@@ -6690,7 +6602,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithIntAndArrayArg(
@@ -6769,10 +6681,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithIntAndBoolArgs(
@@ -6867,10 +6776,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value.toLong()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_COLOR
@@ -7038,7 +6947,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithIntAndDoubleArgRetVector3(
@@ -7059,7 +6968,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithIntAndLongArgs(
@@ -7311,10 +7220,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = intValue.toLong()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(value.normal.x)
-    c1[1] = GodotReal.toC(value.normal.y)
-    c1[2] = GodotReal.toC(value.normal.z)
-    c1[3] = GodotReal.toC(value.d)
+    c1[0] = value.normal.rawX
+    c1[1] = value.normal.rawY
+    c1[2] = value.normal.rawZ
+    c1[3] = value.rawD
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_PLANE
@@ -7334,10 +7243,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = intArg.toLong()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
-    c1[2] = GodotReal.toC(value.z)
-    c1[3] = GodotReal.toC(value.w)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
+    c1[2] = value.rawZ
+    c1[3] = value.rawW
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_QUATERNION
@@ -7377,10 +7286,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = index.toLong()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(value.position.x)
-    c1[1] = GodotReal.toC(value.position.y)
-    c1[2] = GodotReal.toC(value.size.x)
-    c1[3] = GodotReal.toC(value.size.y)
+    c1[0] = value.position.rawX
+    c1[1] = value.position.rawY
+    c1[2] = value.size.rawX
+    c1[3] = value.size.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_RECT2
@@ -7614,12 +7523,12 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value.toLong()
     val c1 = allocArray<GodotRealVar>(6)
-    c1[0] = GodotReal.toC(transform.x.x)
-    c1[1] = GodotReal.toC(transform.x.y)
-    c1[2] = GodotReal.toC(transform.y.x)
-    c1[3] = GodotReal.toC(transform.y.y)
-    c1[4] = GodotReal.toC(transform.origin.x)
-    c1[5] = GodotReal.toC(transform.origin.y)
+    c1[0] = transform.x.rawX
+    c1[1] = transform.x.rawY
+    c1[2] = transform.y.rawX
+    c1[3] = transform.y.rawY
+    c1[4] = transform.origin.rawX
+    c1[5] = transform.origin.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_TRANSFORM2D
@@ -7639,18 +7548,18 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = intArg.toLong()
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transformArg.basis.x.x)
-    c1[1] = GodotReal.toC(transformArg.basis.y.x)
-    c1[2] = GodotReal.toC(transformArg.basis.z.x)
-    c1[3] = GodotReal.toC(transformArg.basis.x.y)
-    c1[4] = GodotReal.toC(transformArg.basis.y.y)
-    c1[5] = GodotReal.toC(transformArg.basis.z.y)
-    c1[6] = GodotReal.toC(transformArg.basis.x.z)
-    c1[7] = GodotReal.toC(transformArg.basis.y.z)
-    c1[8] = GodotReal.toC(transformArg.basis.z.z)
-    c1[9] = GodotReal.toC(transformArg.origin.x)
-    c1[10] = GodotReal.toC(transformArg.origin.y)
-    c1[11] = GodotReal.toC(transformArg.origin.z)
+    c1[0] = transformArg.basis.x.rawX
+    c1[1] = transformArg.basis.y.rawX
+    c1[2] = transformArg.basis.z.rawX
+    c1[3] = transformArg.basis.x.rawY
+    c1[4] = transformArg.basis.y.rawY
+    c1[5] = transformArg.basis.z.rawY
+    c1[6] = transformArg.basis.x.rawZ
+    c1[7] = transformArg.basis.y.rawZ
+    c1[8] = transformArg.basis.z.rawZ
+    c1[9] = transformArg.origin.rawX
+    c1[10] = transformArg.origin.rawY
+    c1[11] = transformArg.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_TRANSFORM3D
@@ -7766,10 +7675,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithIntAndVector2Arg(
@@ -7781,8 +7687,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value.toLong()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_VECTOR2
@@ -7888,9 +7794,9 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = intArg.toLong()
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
-    c1[2] = GodotReal.toC(value.z)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
+    c1[2] = value.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_VECTOR3
@@ -7943,9 +7849,9 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BASIS, ret)
     Basis(
-      Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-      Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-      Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+      Vector3.raw(ret[0], ret[3], ret[6]),
+      Vector3.raw(ret[1], ret[4], ret[7]),
+      Vector3.raw(ret[2], ret[5], ret[8]),
     )
   }
 
@@ -8006,7 +7912,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+    Color.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithIntArgRetDictionary(
@@ -8171,10 +8077,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_PLANE, ret)
-    Plane(
-      Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
-      GodotReal.fromC(ret[3]),
-    )
+    Plane.raw(Vector3.raw(ret[0], ret[1], ret[2]), ret[3])
   }
 
   actual fun ptrcallWithIntArgRetQuaternion(
@@ -8190,12 +8093,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_QUATERNION, ret)
-    Quaternion(
-      GodotReal.fromC(ret[0]),
-      GodotReal.fromC(ret[1]),
-      GodotReal.fromC(ret[2]),
-      GodotReal.fromC(ret[3]),
-    )
+    Quaternion.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithIntArgRetRID(
@@ -8228,10 +8126,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithIntArgRetRect2i(
@@ -8306,9 +8201,9 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM2D, ret)
     Transform2D(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-      Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+      Vector2.raw(ret[0], ret[1]),
+      Vector2.raw(ret[2], ret[3]),
+      Vector2.raw(ret[4], ret[5]),
     )
   }
 
@@ -8327,11 +8222,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -8378,7 +8273,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithIntArgRetVector2i(
@@ -8424,7 +8319,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithIntArgRetVector3i(
@@ -8533,19 +8428,19 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = leftType.toLong()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = leftColor.r.toFloat()
-    c3[1] = leftColor.g.toFloat()
-    c3[2] = leftColor.b.toFloat()
-    c3[3] = leftColor.a.toFloat()
+    c3[0] = leftColor.rawR
+    c3[1] = leftColor.rawG
+    c3[2] = leftColor.rawB
+    c3[3] = leftColor.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (rightEnabled) 1 else 0
     val c5 = alloc<LongVar>()
     c5.value = rightType.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = rightColor.r.toFloat()
-    c6[1] = rightColor.g.toFloat()
-    c6[2] = rightColor.b.toFloat()
-    c6[3] = rightColor.a.toFloat()
+    c6[0] = rightColor.rawR
+    c6[1] = rightColor.rawG
+    c6[2] = rightColor.rawB
+    c6[3] = rightColor.rawA
     val c7 = alloc<LongVar>()
     c7.value = leftIcon.address()
     val c8 = alloc<LongVar>()
@@ -8717,10 +8612,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value.toLong()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_COLOR
@@ -8741,10 +8636,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = index.toLong()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val c2 = alloc<ByteVar>()
     c2.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(3)
@@ -8808,12 +8703,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_QUATERNION, ret)
-    Quaternion(
-      GodotReal.fromC(ret[0]),
-      GodotReal.fromC(ret[1]),
-      GodotReal.fromC(ret[2]),
-      GodotReal.fromC(ret[3]),
-    )
+    Quaternion.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithIntDoubleBoolArgsRetVariantScalar(
@@ -8863,7 +8753,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithIntDoubleLongTwoBoolArgsRetInt(
@@ -8951,10 +8841,10 @@ actual object ObjectCalls {
     val c1 = alloc<DoubleVar>()
     c1.value = doubleArg
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(quaternion.x)
-    c2[1] = GodotReal.toC(quaternion.y)
-    c2[2] = GodotReal.toC(quaternion.z)
-    c2[3] = GodotReal.toC(quaternion.w)
+    c2[0] = quaternion.rawX
+    c2[1] = quaternion.rawY
+    c2[2] = quaternion.rawZ
+    c2[3] = quaternion.rawW
     val types = allocArray<IntVar>(3)
     types[0] = PT_INT64
     types[1] = PT_FLOAT64
@@ -9085,9 +8975,9 @@ actual object ObjectCalls {
     val c1 = alloc<DoubleVar>()
     c1.value = doubleArg
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
-    c2[2] = GodotReal.toC(vector.z)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
+    c2[2] = vector.rawZ
     val types = allocArray<IntVar>(3)
     types[0] = PT_INT64
     types[1] = PT_FLOAT64
@@ -9353,15 +9243,15 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = index.toLong()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(first.position.x)
-    c1[1] = GodotReal.toC(first.position.y)
-    c1[2] = GodotReal.toC(first.size.x)
-    c1[3] = GodotReal.toC(first.size.y)
+    c1[0] = first.position.rawX
+    c1[1] = first.position.rawY
+    c1[2] = first.size.rawX
+    c1[3] = first.size.rawY
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(second.position.x)
-    c2[1] = GodotReal.toC(second.position.y)
-    c2[2] = GodotReal.toC(second.size.x)
-    c2[3] = GodotReal.toC(second.size.y)
+    c2[0] = second.position.rawX
+    c2[1] = second.position.rawY
+    c2[2] = second.size.rawX
+    c2[3] = second.size.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_INT64
     types[1] = PT_RECT2
@@ -9511,12 +9401,12 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = index.toLong()
     val c1 = allocArray<GodotRealVar>(6)
-    c1[0] = GodotReal.toC(transform.x.x)
-    c1[1] = GodotReal.toC(transform.x.y)
-    c1[2] = GodotReal.toC(transform.y.x)
-    c1[3] = GodotReal.toC(transform.y.y)
-    c1[4] = GodotReal.toC(transform.origin.x)
-    c1[5] = GodotReal.toC(transform.origin.y)
+    c1[0] = transform.x.rawX
+    c1[1] = transform.x.rawY
+    c1[2] = transform.y.rawX
+    c1[3] = transform.y.rawY
+    c1[4] = transform.origin.rawX
+    c1[5] = transform.origin.rawY
     val c2 = alloc<DoubleVar>()
     c2.value = amount
     val c3 = alloc<ByteVar>()
@@ -9546,18 +9436,18 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = index.toLong()
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val c2 = alloc<DoubleVar>()
     c2.value = amount
     val c3 = alloc<ByteVar>()
@@ -9628,11 +9518,11 @@ actual object ObjectCalls {
     val c2 = alloc<DoubleVar>()
     c2.value = secondDouble
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(firstVector.x)
-    c3[1] = GodotReal.toC(firstVector.y)
+    c3[0] = firstVector.rawX
+    c3[1] = firstVector.rawY
     val c4 = allocArray<GodotRealVar>(2)
-    c4[0] = GodotReal.toC(secondVector.x)
-    c4[1] = GodotReal.toC(secondVector.y)
+    c4[0] = secondVector.rawX
+    c4[1] = secondVector.rawY
     val types = allocArray<IntVar>(5)
     types[0] = PT_INT64
     types[1] = PT_FLOAT64
@@ -10056,10 +9946,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithIntVector2iIntArgsRetVector2(
@@ -10086,7 +9973,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithIntVector2iIntObjectArgs(
@@ -10166,10 +10053,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = secondInt.toLong()
     val c3 = allocArray<GodotRealVar>(4)
-    c3[0] = GodotReal.toC(rect.position.x)
-    c3[1] = GodotReal.toC(rect.position.y)
-    c3[2] = GodotReal.toC(rect.size.x)
-    c3[3] = GodotReal.toC(rect.size.y)
+    c3[0] = rect.position.rawX
+    c3[1] = rect.position.rawY
+    c3[2] = rect.size.rawX
+    c3[3] = rect.size.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_INT64
     types[1] = PT_VECTOR2I
@@ -10200,8 +10087,8 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = secondInt.toLong()
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(vector.x)
-    c3[1] = GodotReal.toC(vector.y)
+    c3[0] = vector.rawX
+    c3[1] = vector.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_INT64
     types[1] = PT_VECTOR2I
@@ -10402,9 +10289,9 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = intArg.toLong()
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
-    c1[2] = GodotReal.toC(value.z)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
+    c1[2] = value.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_VECTOR3
@@ -10502,10 +10389,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_COLOR
@@ -10787,7 +10674,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithLongAndNodePathArg(
@@ -10946,18 +10833,18 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_TRANSFORM3D
@@ -11250,8 +11137,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(point.x)
-    c1[1] = GodotReal.toC(point.y)
+    c1[0] = point.rawX
+    c1[1] = point.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_VECTOR2
@@ -11271,9 +11158,9 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(point.x)
-    c1[1] = GodotReal.toC(point.y)
-    c1[2] = GodotReal.toC(point.z)
+    c1[0] = point.rawX
+    c1[1] = point.rawY
+    c1[2] = point.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_VECTOR3
@@ -11509,11 +11396,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -11546,7 +11433,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithLongArgRetVector3(
@@ -11562,7 +11449,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithLongArrayArrayListDictionaryLongArgs(
@@ -11951,8 +11838,8 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = second.toLong()
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_INT64
     types[1] = PT_INT64
@@ -11978,8 +11865,8 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = objectArg.address()
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector2Arg.x)
-    c2[1] = GodotReal.toC(vector2Arg.y)
+    c2[0] = vector2Arg.rawX
+    c2[1] = vector2Arg.rawY
     val c3 = alloc<LongVar>()
     c3.value = intArg.toLong()
     val types = allocArray<IntVar>(4)
@@ -12056,10 +11943,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = list
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_RECT2
@@ -12335,10 +12222,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = longValue
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<LongVar>()
     c4.value = objectArg.address()
     val c5 = packVariantDesc(variantValue)
@@ -12414,8 +12301,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(point.x)
-    c1[1] = GodotReal.toC(point.y)
+    c1[0] = point.rawX
+    c1[1] = point.rawY
     val c2 = alloc<DoubleVar>()
     c2.value = weight
     val types = allocArray<IntVar>(3)
@@ -12440,9 +12327,9 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(point.x)
-    c1[1] = GodotReal.toC(point.y)
-    c1[2] = GodotReal.toC(point.z)
+    c1[0] = point.rawX
+    c1[1] = point.rawY
+    c1[2] = point.rawZ
     val c2 = alloc<DoubleVar>()
     c2.value = weight
     val types = allocArray<IntVar>(3)
@@ -12669,10 +12556,10 @@ actual object ObjectCalls {
     second: Int,
   ) = memScoped {
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<LongVar>()
     c2.value = first.toLong()
     val c3 = alloc<LongVar>()
@@ -13099,10 +12986,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_OBJECT
     types[1] = PT_RECT2
@@ -13249,18 +13136,18 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transformArg.basis.x.x)
-    c1[1] = GodotReal.toC(transformArg.basis.y.x)
-    c1[2] = GodotReal.toC(transformArg.basis.z.x)
-    c1[3] = GodotReal.toC(transformArg.basis.x.y)
-    c1[4] = GodotReal.toC(transformArg.basis.y.y)
-    c1[5] = GodotReal.toC(transformArg.basis.z.y)
-    c1[6] = GodotReal.toC(transformArg.basis.x.z)
-    c1[7] = GodotReal.toC(transformArg.basis.y.z)
-    c1[8] = GodotReal.toC(transformArg.basis.z.z)
-    c1[9] = GodotReal.toC(transformArg.origin.x)
-    c1[10] = GodotReal.toC(transformArg.origin.y)
-    c1[11] = GodotReal.toC(transformArg.origin.z)
+    c1[0] = transformArg.basis.x.rawX
+    c1[1] = transformArg.basis.y.rawX
+    c1[2] = transformArg.basis.z.rawX
+    c1[3] = transformArg.basis.x.rawY
+    c1[4] = transformArg.basis.y.rawY
+    c1[5] = transformArg.basis.z.rawY
+    c1[6] = transformArg.basis.x.rawZ
+    c1[7] = transformArg.basis.y.rawZ
+    c1[8] = transformArg.basis.z.rawZ
+    c1[9] = transformArg.origin.rawX
+    c1[10] = transformArg.origin.rawY
+    c1[11] = transformArg.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_OBJECT
     types[1] = PT_TRANSFORM3D
@@ -13319,10 +13206,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithObjectAndVariantArgRetLong(
@@ -13532,9 +13416,9 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM2D, ret)
     Transform2D(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-      Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+      Vector2.raw(ret[0], ret[1]),
+      Vector2.raw(ret[2], ret[3]),
+      Vector2.raw(ret[4], ret[5]),
     )
   }
 
@@ -13846,10 +13730,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val c2 = alloc<LongVar>()
     c2.value = longValue
     val c3 = alloc<ByteVar>()
@@ -13879,10 +13763,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val c2 = alloc<ByteVar>()
     c2.value = if (firstBool) 1 else 0
     val c3 = alloc<ByteVar>()
@@ -13913,10 +13797,10 @@ actual object ObjectCalls {
     val c1 = alloc<DoubleVar>()
     c1.value = value
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val types = allocArray<IntVar>(3)
     types[0] = PT_OBJECT
     types[1] = PT_FLOAT64
@@ -14049,18 +13933,18 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = intArg.toLong()
     val c2 = allocArray<GodotRealVar>(12)
-    c2[0] = GodotReal.toC(transformArg.basis.x.x)
-    c2[1] = GodotReal.toC(transformArg.basis.y.x)
-    c2[2] = GodotReal.toC(transformArg.basis.z.x)
-    c2[3] = GodotReal.toC(transformArg.basis.x.y)
-    c2[4] = GodotReal.toC(transformArg.basis.y.y)
-    c2[5] = GodotReal.toC(transformArg.basis.z.y)
-    c2[6] = GodotReal.toC(transformArg.basis.x.z)
-    c2[7] = GodotReal.toC(transformArg.basis.y.z)
-    c2[8] = GodotReal.toC(transformArg.basis.z.z)
-    c2[9] = GodotReal.toC(transformArg.origin.x)
-    c2[10] = GodotReal.toC(transformArg.origin.y)
-    c2[11] = GodotReal.toC(transformArg.origin.z)
+    c2[0] = transformArg.basis.x.rawX
+    c2[1] = transformArg.basis.y.rawX
+    c2[2] = transformArg.basis.z.rawX
+    c2[3] = transformArg.basis.x.rawY
+    c2[4] = transformArg.basis.y.rawY
+    c2[5] = transformArg.basis.z.rawY
+    c2[6] = transformArg.basis.x.rawZ
+    c2[7] = transformArg.basis.y.rawZ
+    c2[8] = transformArg.basis.z.rawZ
+    c2[9] = transformArg.origin.rawX
+    c2[10] = transformArg.origin.rawY
+    c2[11] = transformArg.origin.rawZ
     val types = allocArray<IntVar>(3)
     types[0] = PT_OBJECT
     types[1] = PT_INT64
@@ -14284,8 +14168,8 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = longArg
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector2Arg.x)
-    c2[1] = GodotReal.toC(vector2Arg.y)
+    c2[0] = vector2Arg.rawX
+    c2[1] = vector2Arg.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_OBJECT
     types[1] = PT_INT64
@@ -14571,17 +14455,17 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<ByteVar>()
     c2.value = if (tile) 1 else 0
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (transpose) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -15039,17 +14923,17 @@ actual object ObjectCalls {
     val c2 = alloc<DoubleVar>()
     c2.value = height
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<LongVar>()
     c4.value = inlineAlign
     val c5 = allocArray<GodotRealVar>(4)
-    c5[0] = GodotReal.toC(region.position.x)
-    c5[1] = GodotReal.toC(region.position.y)
-    c5[2] = GodotReal.toC(region.size.x)
-    c5[3] = GodotReal.toC(region.size.y)
+    c5[0] = region.position.rawX
+    c5[1] = region.position.rawY
+    c5[2] = region.size.rawX
+    c5[3] = region.size.rawY
     val c6 = packVariantDesc(key)
     val c7 = alloc<ByteVar>()
     c7.value = if (pad) 1 else 0
@@ -15154,20 +15038,20 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(first.position.x)
-    c1[1] = GodotReal.toC(first.position.y)
-    c1[2] = GodotReal.toC(first.size.x)
-    c1[3] = GodotReal.toC(first.size.y)
+    c1[0] = first.position.rawX
+    c1[1] = first.position.rawY
+    c1[2] = first.size.rawX
+    c1[3] = first.size.rawY
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(second.position.x)
-    c2[1] = GodotReal.toC(second.position.y)
-    c2[2] = GodotReal.toC(second.size.x)
-    c2[3] = GodotReal.toC(second.size.y)
+    c2[0] = second.position.rawX
+    c2[1] = second.position.rawY
+    c2[2] = second.size.rawX
+    c2[3] = second.size.rawY
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val types = allocArray<IntVar>(4)
     types[0] = PT_OBJECT
     types[1] = PT_RECT2
@@ -15196,20 +15080,20 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(first.position.x)
-    c1[1] = GodotReal.toC(first.position.y)
-    c1[2] = GodotReal.toC(first.size.x)
-    c1[3] = GodotReal.toC(first.size.y)
+    c1[0] = first.position.rawX
+    c1[1] = first.position.rawY
+    c1[2] = first.size.rawX
+    c1[3] = first.size.rawY
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(second.position.x)
-    c2[1] = GodotReal.toC(second.position.y)
-    c2[2] = GodotReal.toC(second.size.x)
-    c2[3] = GodotReal.toC(second.size.y)
+    c2[0] = second.position.rawX
+    c2[1] = second.position.rawY
+    c2[2] = second.size.rawX
+    c2[3] = second.size.rawY
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<DoubleVar>()
     c4.value = firstDouble
     val c5 = alloc<DoubleVar>()
@@ -15249,20 +15133,20 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(first.position.x)
-    c1[1] = GodotReal.toC(first.position.y)
-    c1[2] = GodotReal.toC(first.size.x)
-    c1[3] = GodotReal.toC(first.size.y)
+    c1[0] = first.position.rawX
+    c1[1] = first.position.rawY
+    c1[2] = first.size.rawX
+    c1[3] = first.size.rawY
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(second.position.x)
-    c2[1] = GodotReal.toC(second.position.y)
-    c2[2] = GodotReal.toC(second.size.x)
-    c2[3] = GodotReal.toC(second.size.y)
+    c2[0] = second.position.rawX
+    c2[1] = second.position.rawY
+    c2[2] = second.size.rawX
+    c2[3] = second.size.rawY
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (tile) 1 else 0
     val c5 = alloc<ByteVar>()
@@ -15295,13 +15179,13 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val types = allocArray<IntVar>(3)
     types[0] = PT_OBJECT
     types[1] = PT_VECTOR2
@@ -15325,8 +15209,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = obj.address()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<LongVar>()
     c2.value = intArg.toLong()
     val types = allocArray<IntVar>(4)
@@ -15356,15 +15240,15 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = index.toLong()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val c5 = alloc<DoubleVar>()
     c5.value = size
     val types = allocArray<IntVar>(6)
@@ -15403,8 +15287,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = alignment
     val c4 = alloc<DoubleVar>()
@@ -15412,10 +15296,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = fontSize.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r.toFloat()
-    c6[1] = color.g.toFloat()
-    c6[2] = color.b.toFloat()
-    c6[3] = color.a.toFloat()
+    c6[0] = color.rawR
+    c6[1] = color.rawG
+    c6[2] = color.rawB
+    c6[3] = color.rawA
     val c7 = alloc<LongVar>()
     c7.value = justification
     val c8 = alloc<LongVar>()
@@ -15473,8 +15357,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = alignment
     val c4 = alloc<DoubleVar>()
@@ -15486,10 +15370,10 @@ actual object ObjectCalls {
     val c7 = alloc<LongVar>()
     c7.value = outlineSize.toLong()
     val c8 = allocArray<FloatVar>(4)
-    c8[0] = color.r.toFloat()
-    c8[1] = color.g.toFloat()
-    c8[2] = color.b.toFloat()
-    c8[3] = color.a.toFloat()
+    c8[0] = color.rawR
+    c8[1] = color.rawG
+    c8[2] = color.rawB
+    c8[3] = color.rawA
     val c9 = alloc<LongVar>()
     c9.value = breakFlags
     val c10 = alloc<LongVar>()
@@ -15554,8 +15438,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = alignment
     val c4 = alloc<DoubleVar>()
@@ -15565,10 +15449,10 @@ actual object ObjectCalls {
     val c6 = alloc<LongVar>()
     c6.value = maxLines.toLong()
     val c7 = allocArray<FloatVar>(4)
-    c7[0] = color.r.toFloat()
-    c7[1] = color.g.toFloat()
-    c7[2] = color.b.toFloat()
-    c7[3] = color.a.toFloat()
+    c7[0] = color.rawR
+    c7[1] = color.rawG
+    c7[2] = color.rawB
+    c7[3] = color.rawA
     val c8 = alloc<LongVar>()
     c8.value = breakFlags
     val c9 = alloc<LongVar>()
@@ -15630,8 +15514,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = alignment
     val c4 = alloc<DoubleVar>()
@@ -15641,10 +15525,10 @@ actual object ObjectCalls {
     val c6 = alloc<LongVar>()
     c6.value = outlineSize.toLong()
     val c7 = allocArray<FloatVar>(4)
-    c7[0] = color.r.toFloat()
-    c7[1] = color.g.toFloat()
-    c7[2] = color.b.toFloat()
-    c7[3] = color.a.toFloat()
+    c7[0] = color.rawR
+    c7[1] = color.rawG
+    c7[2] = color.rawB
+    c7[3] = color.rawA
     val c8 = alloc<LongVar>()
     c8.value = justification
     val c9 = alloc<LongVar>()
@@ -15697,17 +15581,17 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = firstIndex.toLong()
     val c4 = alloc<LongVar>()
     c4.value = secondIndex.toLong()
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r.toFloat()
-    c5[1] = color.g.toFloat()
-    c5[2] = color.b.toFloat()
-    c5[3] = color.a.toFloat()
+    c5[0] = color.rawR
+    c5[1] = color.rawG
+    c5[2] = color.rawB
+    c5[3] = color.rawA
     val c6 = alloc<DoubleVar>()
     c6.value = size
     val types = allocArray<IntVar>(7)
@@ -16200,10 +16084,10 @@ actual object ObjectCalls {
   ): List<Vector3> = memScoped {
     val c0 = packVector3Desc(points)
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(plane.normal.x)
-    c1[1] = GodotReal.toC(plane.normal.y)
-    c1[2] = GodotReal.toC(plane.normal.z)
-    c1[3] = GodotReal.toC(plane.d)
+    c1[0] = plane.normal.rawX
+    c1[1] = plane.normal.rawY
+    c1[2] = plane.normal.rawZ
+    c1[3] = plane.rawD
     val types = allocArray<IntVar>(2)
     types[0] = PT_PACKED_VECTOR3_ARRAY
     types[1] = PT_PLANE
@@ -16221,18 +16105,18 @@ actual object ObjectCalls {
   ) = memScoped {
     val c0 = packVector3Desc(values)
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_PACKED_VECTOR3_ARRAY
     types[1] = PT_TRANSFORM3D
@@ -16299,10 +16183,10 @@ actual object ObjectCalls {
     val c2 = alloc<ByteVar>()
     c2.value = if (enabled) 1 else 0
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val types = allocArray<IntVar>(4)
     types[0] = PT_PACKED_VECTOR3_ARRAY
     types[1] = PT_OBJECT
@@ -16416,10 +16300,10 @@ actual object ObjectCalls {
   actual fun ptrcallWithPlaneArg(methodBind: MemorySegment, instance: MemorySegment, value: Plane) =
     memScoped {
       val c0 = allocArray<GodotRealVar>(4)
-      c0[0] = GodotReal.toC(value.normal.x)
-      c0[1] = GodotReal.toC(value.normal.y)
-      c0[2] = GodotReal.toC(value.normal.z)
-      c0[3] = GodotReal.toC(value.d)
+      c0[0] = value.normal.rawX
+      c0[1] = value.normal.rawY
+      c0[2] = value.normal.rawZ
+      c0[3] = value.rawD
       val types = allocArray<IntVar>(1)
       types[0] = PT_PLANE
       val ptrs = allocArray<COpaquePointerVar>(1)
@@ -16465,10 +16349,10 @@ actual object ObjectCalls {
     value: Quaternion,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(4)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
-    c0[3] = GodotReal.toC(value.w)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
+    c0[3] = value.rawW
     val types = allocArray<IntVar>(1)
     types[0] = PT_QUATERNION
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -16486,12 +16370,12 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(6)
-    c1[0] = GodotReal.toC(value.position.x)
-    c1[1] = GodotReal.toC(value.position.y)
-    c1[2] = GodotReal.toC(value.position.z)
-    c1[3] = GodotReal.toC(value.size.x)
-    c1[4] = GodotReal.toC(value.size.y)
-    c1[5] = GodotReal.toC(value.size.z)
+    c1[0] = value.position.rawX
+    c1[1] = value.position.rawY
+    c1[2] = value.position.rawZ
+    c1[3] = value.size.rawX
+    c1[4] = value.size.rawY
+    c1[5] = value.size.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_AABB
@@ -16530,15 +16414,15 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(9)
-    c1[0] = GodotReal.toC(value.x.x)
-    c1[1] = GodotReal.toC(value.y.x)
-    c1[2] = GodotReal.toC(value.z.x)
-    c1[3] = GodotReal.toC(value.x.y)
-    c1[4] = GodotReal.toC(value.y.y)
-    c1[5] = GodotReal.toC(value.z.y)
-    c1[6] = GodotReal.toC(value.x.z)
-    c1[7] = GodotReal.toC(value.y.z)
-    c1[8] = GodotReal.toC(value.z.z)
+    c1[0] = value.x.rawX
+    c1[1] = value.y.rawX
+    c1[2] = value.z.rawX
+    c1[3] = value.x.rawY
+    c1[4] = value.y.rawY
+    c1[5] = value.z.rawY
+    c1[6] = value.x.rawZ
+    c1[7] = value.y.rawZ
+    c1[8] = value.z.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_BASIS
@@ -16640,10 +16524,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_COLOR
@@ -16811,7 +16695,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
-    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+    Color.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithRIDAndIntArgRetDictionary(
@@ -16957,9 +16841,9 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM2D, ret)
     Transform2D(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-      Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+      Vector2.raw(ret[0], ret[1]),
+      Vector2.raw(ret[2], ret[3]),
+      Vector2.raw(ret[4], ret[5]),
     )
   }
 
@@ -16983,11 +16867,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -17028,7 +16912,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithRIDAndIntArgRetVector3(
@@ -17049,7 +16933,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithRIDAndLongArg(
@@ -17367,7 +17251,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithRIDAndLongArgRetVector2i(
@@ -17593,10 +17477,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(value.position.x)
-    c1[1] = GodotReal.toC(value.position.y)
-    c1[2] = GodotReal.toC(value.size.x)
-    c1[3] = GodotReal.toC(value.size.y)
+    c1[0] = value.position.rawX
+    c1[1] = value.position.rawY
+    c1[2] = value.size.rawX
+    c1[3] = value.size.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_RECT2
@@ -17810,12 +17694,12 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(6)
-    c1[0] = GodotReal.toC(value.x.x)
-    c1[1] = GodotReal.toC(value.x.y)
-    c1[2] = GodotReal.toC(value.y.x)
-    c1[3] = GodotReal.toC(value.y.y)
-    c1[4] = GodotReal.toC(value.origin.x)
-    c1[5] = GodotReal.toC(value.origin.y)
+    c1[0] = value.x.rawX
+    c1[1] = value.x.rawY
+    c1[2] = value.y.rawX
+    c1[3] = value.y.rawY
+    c1[4] = value.origin.rawX
+    c1[5] = value.origin.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_TRANSFORM2D
@@ -17835,18 +17719,18 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(value.basis.x.x)
-    c1[1] = GodotReal.toC(value.basis.y.x)
-    c1[2] = GodotReal.toC(value.basis.z.x)
-    c1[3] = GodotReal.toC(value.basis.x.y)
-    c1[4] = GodotReal.toC(value.basis.y.y)
-    c1[5] = GodotReal.toC(value.basis.z.y)
-    c1[6] = GodotReal.toC(value.basis.x.z)
-    c1[7] = GodotReal.toC(value.basis.y.z)
-    c1[8] = GodotReal.toC(value.basis.z.z)
-    c1[9] = GodotReal.toC(value.origin.x)
-    c1[10] = GodotReal.toC(value.origin.y)
-    c1[11] = GodotReal.toC(value.origin.z)
+    c1[0] = value.basis.x.rawX
+    c1[1] = value.basis.y.rawX
+    c1[2] = value.basis.z.rawX
+    c1[3] = value.basis.x.rawY
+    c1[4] = value.basis.y.rawY
+    c1[5] = value.basis.z.rawY
+    c1[6] = value.basis.x.rawZ
+    c1[7] = value.basis.y.rawZ
+    c1[8] = value.basis.z.rawZ
+    c1[9] = value.origin.rawX
+    c1[10] = value.origin.rawY
+    c1[11] = value.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_TRANSFORM3D
@@ -18151,7 +18035,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithRIDAndTwoObjectArgsRetBool(
@@ -18290,11 +18174,11 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(first.x)
-    c1[1] = GodotReal.toC(first.y)
+    c1[0] = first.rawX
+    c1[1] = first.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(second.x)
-    c2[1] = GodotReal.toC(second.y)
+    c2[0] = second.rawX
+    c2[1] = second.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_VECTOR2
@@ -18317,13 +18201,13 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(first.x)
-    c1[1] = GodotReal.toC(first.y)
-    c1[2] = GodotReal.toC(first.z)
+    c1[0] = first.rawX
+    c1[1] = first.rawY
+    c1[2] = first.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(second.x)
-    c2[1] = GodotReal.toC(second.y)
-    c2[2] = GodotReal.toC(second.z)
+    c2[0] = second.rawX
+    c2[1] = second.rawY
+    c2[2] = second.rawZ
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_VECTOR3
@@ -18478,11 +18362,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -18582,10 +18466,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithRIDAndVariantArgRetVector2i(
@@ -18617,8 +18498,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_VECTOR2
@@ -18639,8 +18520,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_VECTOR2
@@ -18662,8 +18543,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_VECTOR2
@@ -18684,8 +18565,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_VECTOR2
@@ -18693,7 +18574,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithRIDAndVector2iArg(
@@ -18768,9 +18649,9 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
-    c1[2] = GodotReal.toC(value.z)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
+    c1[2] = value.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_VECTOR3
@@ -18791,9 +18672,9 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
-    c1[2] = GodotReal.toC(value.z)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
+    c1[2] = value.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_VECTOR3
@@ -18815,9 +18696,9 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
-    c1[2] = GodotReal.toC(value.z)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
+    c1[2] = value.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_VECTOR3
@@ -18838,9 +18719,9 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
-    c1[2] = GodotReal.toC(value.z)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
+    c1[2] = value.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_VECTOR3
@@ -18848,7 +18729,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithRIDArg(methodBind: MemorySegment, instance: MemorySegment, value: RID) =
@@ -18876,10 +18757,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_AABB, ret)
-    AABB(
-      Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2])),
-      Vector3(GodotReal.fromC(ret[3]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
-    )
+    AABB(Vector3.raw(ret[0], ret[1], ret[2]), Vector3.raw(ret[3], ret[4], ret[5]))
   }
 
   actual fun ptrcallWithRIDArgRetArray(
@@ -19161,10 +19039,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithRIDArgRetString(
@@ -19195,9 +19070,9 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM2D, ret)
     Transform2D(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-      Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+      Vector2.raw(ret[0], ret[1]),
+      Vector2.raw(ret[2], ret[3]),
+      Vector2.raw(ret[4], ret[5]),
     )
   }
 
@@ -19216,11 +19091,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -19283,7 +19158,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithRIDArgRetVector2i(
@@ -19329,7 +19204,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithRIDArgRetVector3i(
@@ -19368,10 +19243,10 @@ actual object ObjectCalls {
     val c1 = alloc<ByteVar>()
     c1.value = if (enabled) 1 else 0
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<DoubleVar>()
     c3.value = first
     val c4 = alloc<DoubleVar>()
@@ -19526,15 +19401,15 @@ actual object ObjectCalls {
     val c2 = alloc<DoubleVar>()
     c2.value = firstDouble
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = firstColor.r.toFloat()
-    c3[1] = firstColor.g.toFloat()
-    c3[2] = firstColor.b.toFloat()
-    c3[3] = firstColor.a.toFloat()
+    c3[0] = firstColor.rawR
+    c3[1] = firstColor.rawG
+    c3[2] = firstColor.rawB
+    c3[3] = firstColor.rawA
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = secondColor.r.toFloat()
-    c4[1] = secondColor.g.toFloat()
-    c4[2] = secondColor.b.toFloat()
-    c4[3] = secondColor.a.toFloat()
+    c4[0] = secondColor.rawR
+    c4[1] = secondColor.rawG
+    c4[2] = secondColor.rawB
+    c4[3] = secondColor.rawA
     val c5 = alloc<DoubleVar>()
     c5.value = secondDouble
     val c6 = alloc<DoubleVar>()
@@ -19818,10 +19693,10 @@ actual object ObjectCalls {
     val c1 = alloc<ByteVar>()
     c1.value = if (enabled) 1 else 0
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(rect.position.x)
-    c2[1] = GodotReal.toC(rect.position.y)
-    c2[2] = GodotReal.toC(rect.size.x)
-    c2[3] = GodotReal.toC(rect.size.y)
+    c2[0] = rect.position.rawX
+    c2[1] = rect.position.rawY
+    c2[2] = rect.size.rawX
+    c2[3] = rect.size.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_BOOL
@@ -19850,10 +19725,10 @@ actual object ObjectCalls {
     val c1 = alloc<ByteVar>()
     c1.value = if (value) 1 else 0
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(rect.position.x)
-    c2[1] = GodotReal.toC(rect.position.y)
-    c2[2] = GodotReal.toC(rect.size.x)
-    c2[3] = GodotReal.toC(rect.size.y)
+    c2[0] = rect.position.rawX
+    c2[1] = rect.position.rawY
+    c2[2] = rect.size.rawX
+    c2[3] = rect.size.rawY
     val c3 = alloc<KanamaIosCallableArgDesc>()
     c3.object_handle = firstCallableObject.address()
     c3.method = firstCallableMethod.cstr.ptr
@@ -20155,10 +20030,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val c2 = alloc<DoubleVar>()
     c2.value = energy
     val types = allocArray<IntVar>(3)
@@ -20187,10 +20062,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val c2 = alloc<LongVar>()
     c2.value = first
     val c3 = alloc<LongVar>()
@@ -20230,10 +20105,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val c2 = alloc<LongVar>()
     c2.value = firstLong
     val c3 = alloc<DoubleVar>()
@@ -20412,8 +20287,8 @@ actual object ObjectCalls {
     val c1 = alloc<DoubleVar>()
     c1.value = firstDouble
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val c3 = alloc<DoubleVar>()
     c3.value = secondDouble
     val c4 = alloc<DoubleVar>()
@@ -20546,10 +20421,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = value.toLong()
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -20647,12 +20522,12 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = value.toLong()
     val c2 = allocArray<GodotRealVar>(6)
-    c2[0] = GodotReal.toC(transform.x.x)
-    c2[1] = GodotReal.toC(transform.x.y)
-    c2[2] = GodotReal.toC(transform.y.x)
-    c2[3] = GodotReal.toC(transform.y.y)
-    c2[4] = GodotReal.toC(transform.origin.x)
-    c2[5] = GodotReal.toC(transform.origin.y)
+    c2[0] = transform.x.rawX
+    c2[1] = transform.x.rawY
+    c2[2] = transform.y.rawX
+    c2[3] = transform.y.rawY
+    c2[4] = transform.origin.rawX
+    c2[5] = transform.origin.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -20677,18 +20552,18 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = value.toLong()
     val c2 = allocArray<GodotRealVar>(12)
-    c2[0] = GodotReal.toC(transform.basis.x.x)
-    c2[1] = GodotReal.toC(transform.basis.y.x)
-    c2[2] = GodotReal.toC(transform.basis.z.x)
-    c2[3] = GodotReal.toC(transform.basis.x.y)
-    c2[4] = GodotReal.toC(transform.basis.y.y)
-    c2[5] = GodotReal.toC(transform.basis.z.y)
-    c2[6] = GodotReal.toC(transform.basis.x.z)
-    c2[7] = GodotReal.toC(transform.basis.y.z)
-    c2[8] = GodotReal.toC(transform.basis.z.z)
-    c2[9] = GodotReal.toC(transform.origin.x)
-    c2[10] = GodotReal.toC(transform.origin.y)
-    c2[11] = GodotReal.toC(transform.origin.z)
+    c2[0] = transform.basis.x.rawX
+    c2[1] = transform.basis.y.rawX
+    c2[2] = transform.basis.z.rawX
+    c2[3] = transform.basis.x.rawY
+    c2[4] = transform.basis.y.rawY
+    c2[5] = transform.basis.z.rawY
+    c2[6] = transform.basis.x.rawZ
+    c2[7] = transform.basis.y.rawZ
+    c2[8] = transform.basis.z.rawZ
+    c2[9] = transform.origin.rawX
+    c2[10] = transform.origin.rawY
+    c2[11] = transform.origin.rawZ
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -20737,9 +20612,9 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = value.toLong()
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
-    c2[2] = GodotReal.toC(vector.z)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
+    c2[2] = vector.rawZ
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -20789,8 +20664,8 @@ actual object ObjectCalls {
     val c3 = alloc<DoubleVar>()
     c3.value = doubleArg
     val c4 = allocArray<GodotRealVar>(2)
-    c4[0] = GodotReal.toC(vector.x)
-    c4[1] = GodotReal.toC(vector.y)
+    c4[0] = vector.rawX
+    c4[1] = vector.rawY
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -21053,10 +20928,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = rid.value
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = packTypedRIDArrayDesc(secondRids)
     val c5 = alloc<LongVar>()
     c5.value = intValue.toLong()
@@ -21293,10 +21168,10 @@ actual object ObjectCalls {
     val c4 = alloc<LongVar>()
     c4.value = clearStencilValue
     val c5 = allocArray<GodotRealVar>(4)
-    c5[0] = GodotReal.toC(region.position.x)
-    c5[1] = GodotReal.toC(region.position.y)
-    c5[2] = GodotReal.toC(region.size.x)
-    c5[3] = GodotReal.toC(region.size.y)
+    c5[0] = region.position.rawX
+    c5[1] = region.position.rawY
+    c5[2] = region.size.rawX
+    c5[3] = region.size.rawY
     val c6 = alloc<LongVar>()
     c6.value = breadcrumb
     val types = allocArray<IntVar>(7)
@@ -21463,15 +21338,15 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = firstLong
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val c3 = alloc<LongVar>()
     c3.value = secondLong
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -21504,8 +21379,8 @@ actual object ObjectCalls {
     c2[0] = vector.x
     c2[1] = vector.y
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(advance.x)
-    c3[1] = GodotReal.toC(advance.y)
+    c3[0] = advance.rawX
+    c3[1] = advance.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -21570,7 +21445,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithRIDObjectIntArgs(
@@ -22124,33 +21999,33 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(12)
-    c2[0] = GodotReal.toC(firstTransform.basis.x.x)
-    c2[1] = GodotReal.toC(firstTransform.basis.y.x)
-    c2[2] = GodotReal.toC(firstTransform.basis.z.x)
-    c2[3] = GodotReal.toC(firstTransform.basis.x.y)
-    c2[4] = GodotReal.toC(firstTransform.basis.y.y)
-    c2[5] = GodotReal.toC(firstTransform.basis.z.y)
-    c2[6] = GodotReal.toC(firstTransform.basis.x.z)
-    c2[7] = GodotReal.toC(firstTransform.basis.y.z)
-    c2[8] = GodotReal.toC(firstTransform.basis.z.z)
-    c2[9] = GodotReal.toC(firstTransform.origin.x)
-    c2[10] = GodotReal.toC(firstTransform.origin.y)
-    c2[11] = GodotReal.toC(firstTransform.origin.z)
+    c2[0] = firstTransform.basis.x.rawX
+    c2[1] = firstTransform.basis.y.rawX
+    c2[2] = firstTransform.basis.z.rawX
+    c2[3] = firstTransform.basis.x.rawY
+    c2[4] = firstTransform.basis.y.rawY
+    c2[5] = firstTransform.basis.z.rawY
+    c2[6] = firstTransform.basis.x.rawZ
+    c2[7] = firstTransform.basis.y.rawZ
+    c2[8] = firstTransform.basis.z.rawZ
+    c2[9] = firstTransform.origin.rawX
+    c2[10] = firstTransform.origin.rawY
+    c2[11] = firstTransform.origin.rawZ
     val c3 = alloc<LongVar>()
     c3.value = thirdRid.value
     val c4 = allocArray<GodotRealVar>(12)
-    c4[0] = GodotReal.toC(secondTransform.basis.x.x)
-    c4[1] = GodotReal.toC(secondTransform.basis.y.x)
-    c4[2] = GodotReal.toC(secondTransform.basis.z.x)
-    c4[3] = GodotReal.toC(secondTransform.basis.x.y)
-    c4[4] = GodotReal.toC(secondTransform.basis.y.y)
-    c4[5] = GodotReal.toC(secondTransform.basis.z.y)
-    c4[6] = GodotReal.toC(secondTransform.basis.x.z)
-    c4[7] = GodotReal.toC(secondTransform.basis.y.z)
-    c4[8] = GodotReal.toC(secondTransform.basis.z.z)
-    c4[9] = GodotReal.toC(secondTransform.origin.x)
-    c4[10] = GodotReal.toC(secondTransform.origin.y)
-    c4[11] = GodotReal.toC(secondTransform.origin.z)
+    c4[0] = secondTransform.basis.x.rawX
+    c4[1] = secondTransform.basis.y.rawX
+    c4[2] = secondTransform.basis.z.rawX
+    c4[3] = secondTransform.basis.x.rawY
+    c4[4] = secondTransform.basis.y.rawY
+    c4[5] = secondTransform.basis.z.rawY
+    c4[6] = secondTransform.basis.x.rawZ
+    c4[7] = secondTransform.basis.y.rawZ
+    c4[8] = secondTransform.basis.z.rawZ
+    c4[9] = secondTransform.origin.rawX
+    c4[10] = secondTransform.origin.rawY
+    c4[11] = secondTransform.origin.rawZ
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_RID
@@ -22179,17 +22054,17 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<ByteVar>()
     c2.value = if (tile) 1 else 0
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (transpose) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -22219,15 +22094,15 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<ByteVar>()
     c3.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -22254,10 +22129,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<LongVar>()
     c2.value = index.toLong()
     val types = allocArray<IntVar>(3)
@@ -22285,19 +22160,19 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<LongVar>()
     c2.value = texture.value
     val c3 = alloc<ByteVar>()
     c3.value = if (tile) 1 else 0
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val c5 = alloc<ByteVar>()
     c5.value = if (transpose) 1 else 0
     val types = allocArray<IntVar>(6)
@@ -22330,22 +22205,22 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<LongVar>()
     c2.value = texture.value
     val c3 = allocArray<GodotRealVar>(4)
-    c3[0] = GodotReal.toC(srcRect.position.x)
-    c3[1] = GodotReal.toC(srcRect.position.y)
-    c3[2] = GodotReal.toC(srcRect.size.x)
-    c3[3] = GodotReal.toC(srcRect.size.y)
+    c3[0] = srcRect.position.rawX
+    c3[1] = srcRect.position.rawY
+    c3[2] = srcRect.size.rawX
+    c3[3] = srcRect.size.rawY
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_RECT2
@@ -22377,22 +22252,22 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<LongVar>()
     c2.value = texture.value
     val c3 = allocArray<GodotRealVar>(4)
-    c3[0] = GodotReal.toC(srcRect.position.x)
-    c3[1] = GodotReal.toC(srcRect.position.y)
-    c3[2] = GodotReal.toC(srcRect.size.x)
-    c3[3] = GodotReal.toC(srcRect.size.y)
+    c3[0] = srcRect.position.rawX
+    c3[1] = srcRect.position.rawY
+    c3[2] = srcRect.size.rawX
+    c3[3] = srcRect.size.rawY
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val c5 = alloc<LongVar>()
     c5.value = intValue.toLong()
     val c6 = alloc<DoubleVar>()
@@ -22435,22 +22310,22 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<LongVar>()
     c2.value = texture.value
     val c3 = allocArray<GodotRealVar>(4)
-    c3[0] = GodotReal.toC(srcRect.position.x)
-    c3[1] = GodotReal.toC(srcRect.position.y)
-    c3[2] = GodotReal.toC(srcRect.size.x)
-    c3[3] = GodotReal.toC(srcRect.size.y)
+    c3[0] = srcRect.position.rawX
+    c3[1] = srcRect.position.rawY
+    c3[2] = srcRect.size.rawX
+    c3[3] = srcRect.size.rawY
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val c5 = alloc<ByteVar>()
     c5.value = if (tile) 1 else 0
     val c6 = alloc<ByteVar>()
@@ -22493,10 +22368,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = allocArray<IntVar>(4)
     c2[0] = screenRect.position.x
     c2[1] = screenRect.position.y
@@ -22509,8 +22384,8 @@ actual object ObjectCalls {
     val c5 = alloc<ByteVar>()
     c5.value = if (secondBool) 1 else 0
     val c6 = allocArray<GodotRealVar>(2)
-    c6[0] = GodotReal.toC(vector.x)
-    c6[1] = GodotReal.toC(vector.y)
+    c6[0] = vector.rawX
+    c6[1] = vector.rawY
     val c7 = alloc<DoubleVar>()
     c7.value = firstDouble
     val c8 = alloc<DoubleVar>()
@@ -22839,10 +22714,10 @@ actual object ObjectCalls {
     val c3 = alloc<ByteVar>()
     c3.value = if (third) 1 else 0
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_BOOL
@@ -22938,14 +22813,14 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(first.x)
-    c1[1] = GodotReal.toC(first.y)
+    c1[0] = first.rawX
+    c1[1] = first.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(second.x)
-    c2[1] = GodotReal.toC(second.y)
+    c2[0] = second.rawX
+    c2[1] = second.rawY
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(third.x)
-    c3[1] = GodotReal.toC(third.y)
+    c3[0] = third.rawX
+    c3[1] = third.rawY
     val c4 = alloc<LongVar>()
     c4.value = firstBody.value
     val c5 = alloc<LongVar>()
@@ -22983,25 +22858,25 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val c2 = allocArray<GodotRealVar>(6)
-    c2[0] = GodotReal.toC(bounds.position.x)
-    c2[1] = GodotReal.toC(bounds.position.y)
-    c2[2] = GodotReal.toC(bounds.position.z)
-    c2[3] = GodotReal.toC(bounds.size.x)
-    c2[4] = GodotReal.toC(bounds.size.y)
-    c2[5] = GodotReal.toC(bounds.size.z)
+    c2[0] = bounds.position.rawX
+    c2[1] = bounds.position.rawY
+    c2[2] = bounds.position.rawZ
+    c2[3] = bounds.size.rawX
+    c2[4] = bounds.size.rawY
+    c2[5] = bounds.size.rawZ
     val c3 = allocArray<IntVar>(3)
     c3[0] = size.x
     c3[1] = size.y
@@ -23045,32 +22920,32 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transformValue.basis.x.x)
-    c1[1] = GodotReal.toC(transformValue.basis.y.x)
-    c1[2] = GodotReal.toC(transformValue.basis.z.x)
-    c1[3] = GodotReal.toC(transformValue.basis.x.y)
-    c1[4] = GodotReal.toC(transformValue.basis.y.y)
-    c1[5] = GodotReal.toC(transformValue.basis.z.y)
-    c1[6] = GodotReal.toC(transformValue.basis.x.z)
-    c1[7] = GodotReal.toC(transformValue.basis.y.z)
-    c1[8] = GodotReal.toC(transformValue.basis.z.z)
-    c1[9] = GodotReal.toC(transformValue.origin.x)
-    c1[10] = GodotReal.toC(transformValue.origin.y)
-    c1[11] = GodotReal.toC(transformValue.origin.z)
+    c1[0] = transformValue.basis.x.rawX
+    c1[1] = transformValue.basis.y.rawX
+    c1[2] = transformValue.basis.z.rawX
+    c1[3] = transformValue.basis.x.rawY
+    c1[4] = transformValue.basis.y.rawY
+    c1[5] = transformValue.basis.z.rawY
+    c1[6] = transformValue.basis.x.rawZ
+    c1[7] = transformValue.basis.y.rawZ
+    c1[8] = transformValue.basis.z.rawZ
+    c1[9] = transformValue.origin.rawX
+    c1[10] = transformValue.origin.rawY
+    c1[11] = transformValue.origin.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(vectorValue.x)
-    c2[1] = GodotReal.toC(vectorValue.y)
-    c2[2] = GodotReal.toC(vectorValue.z)
+    c2[0] = vectorValue.rawX
+    c2[1] = vectorValue.rawY
+    c2[2] = vectorValue.rawZ
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = firstColor.r.toFloat()
-    c3[1] = firstColor.g.toFloat()
-    c3[2] = firstColor.b.toFloat()
-    c3[3] = firstColor.a.toFloat()
+    c3[0] = firstColor.rawR
+    c3[1] = firstColor.rawG
+    c3[2] = firstColor.rawB
+    c3[3] = firstColor.rawA
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = secondColor.r.toFloat()
-    c4[1] = secondColor.g.toFloat()
-    c4[2] = secondColor.b.toFloat()
-    c4[3] = secondColor.a.toFloat()
+    c4[0] = secondColor.rawR
+    c4[1] = secondColor.rawG
+    c4[2] = secondColor.rawB
+    c4[3] = secondColor.rawA
     val c5 = alloc<LongVar>()
     c5.value = flags
     val types = allocArray<IntVar>(6)
@@ -23135,8 +23010,8 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = second
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(vector.x)
-    c3[1] = GodotReal.toC(vector.y)
+    c3[0] = vector.rawX
+    c3[1] = vector.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -23276,20 +23151,20 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(first.position.x)
-    c1[1] = GodotReal.toC(first.position.y)
-    c1[2] = GodotReal.toC(first.size.x)
-    c1[3] = GodotReal.toC(first.size.y)
+    c1[0] = first.position.rawX
+    c1[1] = first.position.rawY
+    c1[2] = first.size.rawX
+    c1[3] = first.size.rawY
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(second.position.x)
-    c2[1] = GodotReal.toC(second.position.y)
-    c2[2] = GodotReal.toC(second.size.x)
-    c2[3] = GodotReal.toC(second.size.y)
+    c2[0] = second.position.rawX
+    c2[1] = second.position.rawY
+    c2[2] = second.size.rawX
+    c2[3] = second.size.rawY
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (tile) 1 else 0
     val c5 = alloc<ByteVar>()
@@ -23329,23 +23204,23 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(firstRect.position.x)
-    c1[1] = GodotReal.toC(firstRect.position.y)
-    c1[2] = GodotReal.toC(firstRect.size.x)
-    c1[3] = GodotReal.toC(firstRect.size.y)
+    c1[0] = firstRect.position.rawX
+    c1[1] = firstRect.position.rawY
+    c1[2] = firstRect.size.rawX
+    c1[3] = firstRect.size.rawY
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(secondRect.position.x)
-    c2[1] = GodotReal.toC(secondRect.position.y)
-    c2[2] = GodotReal.toC(secondRect.size.x)
-    c2[3] = GodotReal.toC(secondRect.size.y)
+    c2[0] = secondRect.position.rawX
+    c2[1] = secondRect.position.rawY
+    c2[2] = secondRect.size.rawX
+    c2[3] = secondRect.size.rawY
     val c3 = alloc<LongVar>()
     c3.value = texture.value
     val c4 = allocArray<GodotRealVar>(2)
-    c4[0] = GodotReal.toC(firstVector.x)
-    c4[1] = GodotReal.toC(firstVector.y)
+    c4[0] = firstVector.rawX
+    c4[1] = firstVector.rawY
     val c5 = allocArray<GodotRealVar>(2)
-    c5[0] = GodotReal.toC(secondVector.x)
-    c5[1] = GodotReal.toC(secondVector.y)
+    c5[0] = secondVector.rawX
+    c5[1] = secondVector.rawY
     val c6 = alloc<LongVar>()
     c6.value = firstLong
     val c7 = alloc<LongVar>()
@@ -23353,10 +23228,10 @@ actual object ObjectCalls {
     val c8 = alloc<ByteVar>()
     c8.value = if (enabled) 1 else 0
     val c9 = allocArray<FloatVar>(4)
-    c9[0] = color.r.toFloat()
-    c9[1] = color.g.toFloat()
-    c9[2] = color.b.toFloat()
-    c9[3] = color.a.toFloat()
+    c9[0] = color.rawR
+    c9[1] = color.rawG
+    c9[2] = color.rawB
+    c9[3] = color.rawA
     val types = allocArray<IntVar>(10)
     types[0] = PT_RID
     types[1] = PT_RECT2
@@ -23425,11 +23300,11 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(from.x)
-    c1[1] = GodotReal.toC(from.y)
+    c1[0] = from.rawX
+    c1[1] = from.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(to.x)
-    c2[1] = GodotReal.toC(to.y)
+    c2[0] = to.rawX
+    c2[1] = to.rawY
     val c3 = alloc<ByteVar>()
     c3.value = if (optimize) 1 else 0
     val c4 = alloc<LongVar>()
@@ -23462,16 +23337,16 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(first.x)
-    c1[1] = GodotReal.toC(first.y)
+    c1[0] = first.rawX
+    c1[1] = first.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(second.x)
-    c2[1] = GodotReal.toC(second.y)
+    c2[0] = second.rawX
+    c2[1] = second.rawY
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<DoubleVar>()
     c4.value = width
     val c5 = alloc<ByteVar>()
@@ -23506,11 +23381,11 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(first.x)
-    c1[1] = GodotReal.toC(first.y)
+    c1[0] = first.rawX
+    c1[1] = first.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(second.x)
-    c2[1] = GodotReal.toC(second.y)
+    c2[0] = second.rawX
+    c2[1] = second.rawY
     val c3 = alloc<LongVar>()
     c3.value = firstBody.value
     val c4 = alloc<LongVar>()
@@ -23543,13 +23418,13 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(first.x)
-    c1[1] = GodotReal.toC(first.y)
-    c1[2] = GodotReal.toC(first.z)
+    c1[0] = first.rawX
+    c1[1] = first.rawY
+    c1[2] = first.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(second.x)
-    c2[1] = GodotReal.toC(second.y)
-    c2[2] = GodotReal.toC(second.z)
+    c2[0] = second.rawX
+    c2[1] = second.rawY
+    c2[2] = second.rawZ
     val c3 = alloc<ByteVar>()
     c3.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -23563,7 +23438,7 @@ actual object ObjectCalls {
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithRIDTwoVector3BoolUInt32ArgsRetPackedVector3List(
@@ -23578,13 +23453,13 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(from.x)
-    c1[1] = GodotReal.toC(from.y)
-    c1[2] = GodotReal.toC(from.z)
+    c1[0] = from.rawX
+    c1[1] = from.rawY
+    c1[2] = from.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(to.x)
-    c2[1] = GodotReal.toC(to.y)
-    c2[2] = GodotReal.toC(to.z)
+    c2[0] = to.rawX
+    c2[1] = to.rawY
+    c2[2] = to.rawZ
     val c3 = alloc<ByteVar>()
     c3.value = if (optimize) 1 else 0
     val c4 = alloc<LongVar>()
@@ -23627,7 +23502,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithRIDUInt32BoolArgsRetVector3(
@@ -23653,7 +23528,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithRIDUInt32ByteArrayArgsRetLong(
@@ -23742,10 +23617,10 @@ actual object ObjectCalls {
     val c8 = alloc<LongVar>()
     c8.value = clearStencil
     val c9 = allocArray<GodotRealVar>(4)
-    c9[0] = GodotReal.toC(region.position.x)
-    c9[1] = GodotReal.toC(region.position.y)
-    c9[2] = GodotReal.toC(region.size.x)
-    c9[3] = GodotReal.toC(region.size.y)
+    c9[0] = region.position.rawX
+    c9[1] = region.position.rawY
+    c9[2] = region.size.rawX
+    c9[3] = region.size.rawY
     val c10 = packTypedRIDArrayDesc(storageTextures)
     val types = allocArray<IntVar>(11)
     types[0] = PT_RID
@@ -23814,8 +23689,8 @@ actual object ObjectCalls {
     c0.value = rid.value
     val c1 = packVariantDesc(value)
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val c3 = alloc<LongVar>()
     c3.value = longValue
     val c4 = alloc<DoubleVar>()
@@ -23851,8 +23726,8 @@ actual object ObjectCalls {
     c0.value = rid.value
     val c1 = packVariantDesc(value)
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val c3 = alloc<LongVar>()
     c3.value = firstLong
     val c4 = alloc<LongVar>()
@@ -23888,13 +23763,13 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<ByteVar>()
     c3.value = if (transpose) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -23922,13 +23797,13 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<DoubleVar>()
     c3.value = doubleValue
     val types = allocArray<IntVar>(4)
@@ -23957,15 +23832,15 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<DoubleVar>()
     c2.value = firstDouble
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -23994,8 +23869,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<LongVar>()
     c2.value = index.toLong()
     val types = allocArray<IntVar>(3)
@@ -24022,15 +23897,15 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<LongVar>()
     c2.value = intValue.toLong()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<DoubleVar>()
     c4.value = doubleValue
     val types = allocArray<IntVar>(5)
@@ -24062,20 +23937,20 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<LongVar>()
     c2.value = intValue.toLong()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = firstColor.r.toFloat()
-    c3[1] = firstColor.g.toFloat()
-    c3[2] = firstColor.b.toFloat()
-    c3[3] = firstColor.a.toFloat()
+    c3[0] = firstColor.rawR
+    c3[1] = firstColor.rawG
+    c3[2] = firstColor.rawB
+    c3[3] = firstColor.rawA
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = secondColor.r.toFloat()
-    c4[1] = secondColor.g.toFloat()
-    c4[2] = secondColor.b.toFloat()
-    c4[3] = secondColor.a.toFloat()
+    c4[0] = secondColor.rawR
+    c4[1] = secondColor.rawG
+    c4[2] = secondColor.rawB
+    c4[3] = secondColor.rawA
     val c5 = alloc<DoubleVar>()
     c5.value = doubleValue
     val types = allocArray<IntVar>(6)
@@ -24114,8 +23989,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = alignment
     val c4 = alloc<DoubleVar>()
@@ -24123,10 +23998,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = fontSize.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r.toFloat()
-    c6[1] = color.g.toFloat()
-    c6[2] = color.b.toFloat()
-    c6[3] = color.a.toFloat()
+    c6[0] = color.rawR
+    c6[1] = color.rawG
+    c6[2] = color.rawB
+    c6[3] = color.rawA
     val c7 = alloc<LongVar>()
     c7.value = justification
     val c8 = alloc<LongVar>()
@@ -24184,8 +24059,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = alignment
     val c4 = alloc<DoubleVar>()
@@ -24197,10 +24072,10 @@ actual object ObjectCalls {
     val c7 = alloc<LongVar>()
     c7.value = outlineSize.toLong()
     val c8 = allocArray<FloatVar>(4)
-    c8[0] = color.r.toFloat()
-    c8[1] = color.g.toFloat()
-    c8[2] = color.b.toFloat()
-    c8[3] = color.a.toFloat()
+    c8[0] = color.rawR
+    c8[1] = color.rawG
+    c8[2] = color.rawB
+    c8[3] = color.rawA
     val c9 = alloc<LongVar>()
     c9.value = breakFlags
     val c10 = alloc<LongVar>()
@@ -24265,8 +24140,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = alignment
     val c4 = alloc<DoubleVar>()
@@ -24276,10 +24151,10 @@ actual object ObjectCalls {
     val c6 = alloc<LongVar>()
     c6.value = maxLines.toLong()
     val c7 = allocArray<FloatVar>(4)
-    c7[0] = color.r.toFloat()
-    c7[1] = color.g.toFloat()
-    c7[2] = color.b.toFloat()
-    c7[3] = color.a.toFloat()
+    c7[0] = color.rawR
+    c7[1] = color.rawG
+    c7[2] = color.rawB
+    c7[3] = color.rawA
     val c8 = alloc<LongVar>()
     c8.value = breakFlags
     val c9 = alloc<LongVar>()
@@ -24341,8 +24216,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c3 = alloc<LongVar>()
     c3.value = alignment
     val c4 = alloc<DoubleVar>()
@@ -24352,10 +24227,10 @@ actual object ObjectCalls {
     val c6 = alloc<LongVar>()
     c6.value = outlineSize.toLong()
     val c7 = allocArray<FloatVar>(4)
-    c7[0] = color.r.toFloat()
-    c7[1] = color.g.toFloat()
-    c7[2] = color.b.toFloat()
-    c7[3] = color.a.toFloat()
+    c7[0] = color.rawR
+    c7[1] = color.rawG
+    c7[2] = color.rawB
+    c7[3] = color.rawA
     val c8 = alloc<LongVar>()
     c8.value = justification
     val c9 = alloc<LongVar>()
@@ -24409,8 +24284,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c2 = alloc<LongVar>()
     c2.value = char.toLong()
     val c3 = alloc<LongVar>()
@@ -24418,10 +24293,10 @@ actual object ObjectCalls {
     val c4 = alloc<LongVar>()
     c4.value = outlineSize.toLong()
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r.toFloat()
-    c5[1] = color.g.toFloat()
-    c5[2] = color.b.toFloat()
-    c5[3] = color.a.toFloat()
+    c5[0] = color.rawR
+    c5[1] = color.rawG
+    c5[2] = color.rawB
+    c5[3] = color.rawA
     val c6 = alloc<DoubleVar>()
     c6.value = oversampling
     val types = allocArray<IntVar>(7)
@@ -24456,18 +24331,18 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = firstColor.r.toFloat()
-    c2[1] = firstColor.g.toFloat()
-    c2[2] = firstColor.b.toFloat()
-    c2[3] = firstColor.a.toFloat()
+    c2[0] = firstColor.rawR
+    c2[1] = firstColor.rawG
+    c2[2] = firstColor.rawB
+    c2[3] = firstColor.rawA
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = secondColor.r.toFloat()
-    c3[1] = secondColor.g.toFloat()
-    c3[2] = secondColor.b.toFloat()
-    c3[3] = secondColor.a.toFloat()
+    c3[0] = secondColor.rawR
+    c3[1] = secondColor.rawG
+    c3[2] = secondColor.rawB
+    c3[3] = secondColor.rawA
     val c4 = alloc<DoubleVar>()
     c4.value = doubleValue
     val types = allocArray<IntVar>(5)
@@ -24499,17 +24374,17 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<DoubleVar>()
     c2.value = firstDouble
     val c3 = alloc<DoubleVar>()
     c3.value = secondDouble
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val c5 = alloc<ByteVar>()
     c5.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(6)
@@ -24543,17 +24418,17 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<LongVar>()
     c2.value = firstInt.toLong()
     val c3 = alloc<LongVar>()
     c3.value = secondInt.toLong()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val c5 = alloc<DoubleVar>()
     c5.value = doubleValue
     val types = allocArray<IntVar>(6)
@@ -24588,17 +24463,17 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(position.x)
-    c1[1] = GodotReal.toC(position.y)
+    c1[0] = position.rawX
+    c1[1] = position.rawY
     val c2 = alloc<LongVar>()
     c2.value = char.toLong()
     val c3 = alloc<LongVar>()
     c3.value = fontSize.toLong()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r.toFloat()
-    c4[1] = color.g.toFloat()
-    c4[2] = color.b.toFloat()
-    c4[3] = color.a.toFloat()
+    c4[0] = color.rawR
+    c4[1] = color.rawG
+    c4[2] = color.rawB
+    c4[3] = color.rawA
     val c5 = alloc<DoubleVar>()
     c5.value = oversampling
     val types = allocArray<IntVar>(6)
@@ -24630,8 +24505,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(anchor.x)
-    c1[1] = GodotReal.toC(anchor.y)
+    c1[0] = anchor.rawX
+    c1[1] = anchor.rawY
     val c2 = alloc<LongVar>()
     c2.value = firstBody.value
     val c3 = alloc<LongVar>()
@@ -24808,10 +24683,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithRIDVector2iLongArgsRetVector2(
@@ -24838,7 +24710,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithRIDVector2iLongObjectArgs(
@@ -24918,10 +24790,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = longValue
     val c3 = allocArray<GodotRealVar>(4)
-    c3[0] = GodotReal.toC(rect.position.x)
-    c3[1] = GodotReal.toC(rect.position.y)
-    c3[2] = GodotReal.toC(rect.size.x)
-    c3[3] = GodotReal.toC(rect.size.y)
+    c3[0] = rect.position.rawX
+    c3[1] = rect.position.rawY
+    c3[2] = rect.size.rawX
+    c3[3] = rect.size.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_RID
     types[1] = PT_VECTOR2I
@@ -24952,8 +24824,8 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = longValue
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(value.x)
-    c3[1] = GodotReal.toC(value.y)
+    c3[0] = value.rawX
+    c3[1] = value.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_RID
     types[1] = PT_VECTOR2I
@@ -25005,10 +24877,10 @@ actual object ObjectCalls {
     value: Rect2,
   ): List<Map<String, Any?>> = memScoped {
     val c0 = allocArray<GodotRealVar>(4)
-    c0[0] = GodotReal.toC(value.position.x)
-    c0[1] = GodotReal.toC(value.position.y)
-    c0[2] = GodotReal.toC(value.size.x)
-    c0[3] = GodotReal.toC(value.size.y)
+    c0[0] = value.position.rawX
+    c0[1] = value.position.rawY
+    c0[2] = value.size.rawX
+    c0[3] = value.size.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_RECT2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -25023,10 +24895,10 @@ actual object ObjectCalls {
   ): Int = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(4)
-    c0[0] = GodotReal.toC(value.position.x)
-    c0[1] = GodotReal.toC(value.position.y)
-    c0[2] = GodotReal.toC(value.size.x)
-    c0[3] = GodotReal.toC(value.size.y)
+    c0[0] = value.position.rawX
+    c0[1] = value.position.rawY
+    c0[2] = value.size.rawX
+    c0[3] = value.size.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_RECT2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -25045,15 +24917,15 @@ actual object ObjectCalls {
     antialiased: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(4)
-    c0[0] = GodotReal.toC(rect.position.x)
-    c0[1] = GodotReal.toC(rect.position.y)
-    c0[2] = GodotReal.toC(rect.size.x)
-    c0[3] = GodotReal.toC(rect.size.y)
+    c0[0] = rect.position.rawX
+    c0[1] = rect.position.rawY
+    c0[2] = rect.size.rawX
+    c0[3] = rect.size.rawY
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val c2 = alloc<ByteVar>()
     c2.value = if (filled) 1 else 0
     val c3 = alloc<DoubleVar>()
@@ -25111,10 +24983,10 @@ actual object ObjectCalls {
     c0[2] = rectValue.size.x
     c0[3] = rectValue.size.y
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_RECT2I
     types[1] = PT_COLOR
@@ -25242,10 +25114,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = firstObject.address()
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<LongVar>()
     c3.value = intValue.toLong()
     val c4 = alloc<LongVar>()
@@ -25284,10 +25156,10 @@ actual object ObjectCalls {
     val c1 = packTypedObjectArrayDesc(firstValues)
     val c2 = packTypedObjectArrayDesc(secondValues)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<LongVar>()
     c4.value = intValue.toLong()
     val c5 = alloc<LongVar>()
@@ -25534,10 +25406,10 @@ actual object ObjectCalls {
     color: Color,
   ) = memScoped {
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_STRING
     types[1] = PT_COLOR
@@ -26013,18 +25885,18 @@ actual object ObjectCalls {
     transform: Transform3D,
   ) = memScoped {
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_STRING
     types[1] = PT_TRANSFORM3D
@@ -26229,7 +26101,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+    Color.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithStringArgRetDictionary(
@@ -26525,10 +26397,10 @@ actual object ObjectCalls {
     third: Boolean,
   ) = memScoped {
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val c2 = alloc<ByteVar>()
     c2.value = if (first) 1 else 0
     val c3 = alloc<ByteVar>()
@@ -26945,7 +26817,7 @@ actual object ObjectCalls {
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrs[6] = c6.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 7, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2(
@@ -26999,7 +26871,7 @@ actual object ObjectCalls {
     ptrs[7] = c7.ptr.reinterpret<CPointed>()
     ptrs[8] = c8.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 9, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithStringLongObjectTwoBoolArgs(
@@ -27192,10 +27064,10 @@ actual object ObjectCalls {
     color: Color,
   ) = memScoped {
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_STRING_NAME
     types[1] = PT_COLOR
@@ -27481,8 +27353,8 @@ actual object ObjectCalls {
     value: Vector2,
   ) = memScoped {
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(value.x)
-    c1[1] = GodotReal.toC(value.y)
+    c1[0] = value.rawX
+    c1[1] = value.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_STRING_NAME
     types[1] = PT_VECTOR2
@@ -27531,7 +27403,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+    Color.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithStringNameArgRetDictionaryList(
@@ -27664,7 +27536,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithStringNameArrayArgs(
@@ -28125,8 +27997,8 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = objectArg.address()
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_STRING_NAME
     types[1] = PT_OBJECT
@@ -28337,26 +28209,26 @@ actual object ObjectCalls {
     longValue: Long,
   ) = memScoped {
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(firstVector.x)
-    c2[1] = GodotReal.toC(firstVector.y)
-    c2[2] = GodotReal.toC(firstVector.z)
+    c2[0] = firstVector.rawX
+    c2[1] = firstVector.rawY
+    c2[2] = firstVector.rawZ
     val c3 = allocArray<GodotRealVar>(3)
-    c3[0] = GodotReal.toC(secondVector.x)
-    c3[1] = GodotReal.toC(secondVector.y)
-    c3[2] = GodotReal.toC(secondVector.z)
+    c3[0] = secondVector.rawX
+    c3[1] = secondVector.rawY
+    c3[2] = secondVector.rawZ
     val c4 = alloc<LongVar>()
     c4.value = longValue
     val types = allocArray<IntVar>(5)
@@ -28502,10 +28374,10 @@ actual object ObjectCalls {
     val c2 = alloc<ByteVar>()
     c2.value = if (enabled) 1 else 0
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val types = allocArray<IntVar>(4)
     types[0] = PT_STRING
     types[1] = PT_OBJECT
@@ -28585,22 +28457,22 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = firstSize.toLong()
     val c3 = allocArray<GodotRealVar>(4)
-    c3[0] = GodotReal.toC(rect.position.x)
-    c3[1] = GodotReal.toC(rect.position.y)
-    c3[2] = GodotReal.toC(rect.size.x)
-    c3[3] = GodotReal.toC(rect.size.y)
+    c3[0] = rect.position.rawX
+    c3[1] = rect.position.rawY
+    c3[2] = rect.size.rawX
+    c3[3] = rect.size.rawY
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = firstColor.r.toFloat()
-    c4[1] = firstColor.g.toFloat()
-    c4[2] = firstColor.b.toFloat()
-    c4[3] = firstColor.a.toFloat()
+    c4[0] = firstColor.rawR
+    c4[1] = firstColor.rawG
+    c4[2] = firstColor.rawB
+    c4[3] = firstColor.rawA
     val c5 = alloc<LongVar>()
     c5.value = secondSize.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = secondColor.r.toFloat()
-    c6[1] = secondColor.g.toFloat()
-    c6[2] = secondColor.b.toFloat()
-    c6[3] = secondColor.a.toFloat()
+    c6[0] = secondColor.rawR
+    c6[1] = secondColor.rawG
+    c6[2] = secondColor.rawB
+    c6[3] = secondColor.rawA
     val types = allocArray<IntVar>(7)
     types[0] = PT_STRING
     types[1] = PT_OBJECT
@@ -28636,10 +28508,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = intValue.toLong()
     val c3 = allocArray<GodotRealVar>(4)
-    c3[0] = GodotReal.toC(rect.position.x)
-    c3[1] = GodotReal.toC(rect.position.y)
-    c3[2] = GodotReal.toC(rect.size.x)
-    c3[3] = GodotReal.toC(rect.size.y)
+    c3[0] = rect.position.rawX
+    c3[1] = rect.position.rawY
+    c3[2] = rect.size.rawX
+    c3[3] = rect.size.rawY
     val types = allocArray<IntVar>(5)
     types[0] = PT_STRING
     types[1] = PT_OBJECT
@@ -28993,10 +28865,10 @@ actual object ObjectCalls {
     third: Int,
   ) = memScoped {
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val c2 = alloc<LongVar>()
     c2.value = type
     val c3 = alloc<LongVar>()
@@ -29539,8 +29411,8 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = third.toLong()
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(vector.x)
-    c3[1] = GodotReal.toC(vector.y)
+    c3[0] = vector.rawX
+    c3[1] = vector.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_INT64
     types[1] = PT_INT64
@@ -29656,7 +29528,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithThreeIntArgsRetVector2i(
@@ -30229,14 +30101,14 @@ actual object ObjectCalls {
     value: Int,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
     val c3 = alloc<LongVar>()
     c3.value = value.toLong()
     val types = allocArray<IntVar>(4)
@@ -30262,14 +30134,14 @@ actual object ObjectCalls {
   ): Vector2 = memScoped {
     val ret = allocArray<GodotRealVar>(2)
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_VECTOR2
     types[1] = PT_VECTOR2
@@ -30279,7 +30151,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithThreeVector2DoubleArgsRetDouble(
@@ -30292,14 +30164,14 @@ actual object ObjectCalls {
   ): Double = memScoped {
     val ret = alloc<DoubleVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
     val c3 = alloc<DoubleVar>()
     c3.value = value
     val types = allocArray<IntVar>(4)
@@ -30353,17 +30225,17 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
-    c2[2] = GodotReal.toC(third.z)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
+    c2[2] = third.rawZ
     val c3 = alloc<ByteVar>()
     c3.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -30389,17 +30261,17 @@ actual object ObjectCalls {
     value: Int,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
-    c2[2] = GodotReal.toC(third.z)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
+    c2[2] = third.rawZ
     val c3 = alloc<LongVar>()
     c3.value = value.toLong()
     val types = allocArray<IntVar>(4)
@@ -30425,17 +30297,17 @@ actual object ObjectCalls {
   ): Vector3 = memScoped {
     val ret = allocArray<GodotRealVar>(3)
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
-    c2[2] = GodotReal.toC(third.z)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
+    c2[2] = third.rawZ
     val types = allocArray<IntVar>(3)
     types[0] = PT_VECTOR3
     types[1] = PT_VECTOR3
@@ -30445,7 +30317,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithThreeVector3DoubleArgsRetPackedVector3List(
@@ -30457,17 +30329,17 @@ actual object ObjectCalls {
     value: Double,
   ): List<Vector3> = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(third.x)
-    c2[1] = GodotReal.toC(third.y)
-    c2[2] = GodotReal.toC(third.z)
+    c2[0] = third.rawX
+    c2[1] = third.rawY
+    c2[2] = third.rawZ
     val c3 = alloc<DoubleVar>()
     c3.value = value
     val types = allocArray<IntVar>(4)
@@ -30489,12 +30361,12 @@ actual object ObjectCalls {
     value: Transform2D,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(value.x.x)
-    c0[1] = GodotReal.toC(value.x.y)
-    c0[2] = GodotReal.toC(value.y.x)
-    c0[3] = GodotReal.toC(value.y.y)
-    c0[4] = GodotReal.toC(value.origin.x)
-    c0[5] = GodotReal.toC(value.origin.y)
+    c0[0] = value.x.rawX
+    c0[1] = value.x.rawY
+    c0[2] = value.y.rawX
+    c0[3] = value.y.rawY
+    c0[4] = value.origin.rawX
+    c0[5] = value.origin.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_TRANSFORM2D
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -30512,21 +30384,21 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(first.x.x)
-    c0[1] = GodotReal.toC(first.x.y)
-    c0[2] = GodotReal.toC(first.y.x)
-    c0[3] = GodotReal.toC(first.y.y)
-    c0[4] = GodotReal.toC(first.origin.x)
-    c0[5] = GodotReal.toC(first.origin.y)
+    c0[0] = first.x.rawX
+    c0[1] = first.x.rawY
+    c0[2] = first.y.rawX
+    c0[3] = first.y.rawY
+    c0[4] = first.origin.rawX
+    c0[5] = first.origin.rawY
     val c1 = alloc<LongVar>()
     c1.value = objectArg.address()
     val c2 = allocArray<GodotRealVar>(6)
-    c2[0] = GodotReal.toC(second.x.x)
-    c2[1] = GodotReal.toC(second.x.y)
-    c2[2] = GodotReal.toC(second.y.x)
-    c2[3] = GodotReal.toC(second.y.y)
-    c2[4] = GodotReal.toC(second.origin.x)
-    c2[5] = GodotReal.toC(second.origin.y)
+    c2[0] = second.x.rawX
+    c2[1] = second.x.rawY
+    c2[2] = second.y.rawX
+    c2[3] = second.y.rawY
+    c2[4] = second.origin.rawX
+    c2[5] = second.origin.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_TRANSFORM2D
     types[1] = PT_OBJECT
@@ -30547,21 +30419,21 @@ actual object ObjectCalls {
     second: Transform2D,
   ): List<Vector2> = memScoped {
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(first.x.x)
-    c0[1] = GodotReal.toC(first.x.y)
-    c0[2] = GodotReal.toC(first.y.x)
-    c0[3] = GodotReal.toC(first.y.y)
-    c0[4] = GodotReal.toC(first.origin.x)
-    c0[5] = GodotReal.toC(first.origin.y)
+    c0[0] = first.x.rawX
+    c0[1] = first.x.rawY
+    c0[2] = first.y.rawX
+    c0[3] = first.y.rawY
+    c0[4] = first.origin.rawX
+    c0[5] = first.origin.rawY
     val c1 = alloc<LongVar>()
     c1.value = objectArg.address()
     val c2 = allocArray<GodotRealVar>(6)
-    c2[0] = GodotReal.toC(second.x.x)
-    c2[1] = GodotReal.toC(second.x.y)
-    c2[2] = GodotReal.toC(second.y.x)
-    c2[3] = GodotReal.toC(second.y.y)
-    c2[4] = GodotReal.toC(second.origin.x)
-    c2[5] = GodotReal.toC(second.origin.y)
+    c2[0] = second.x.rawX
+    c2[1] = second.x.rawY
+    c2[2] = second.y.rawX
+    c2[3] = second.y.rawY
+    c2[4] = second.origin.rawX
+    c2[5] = second.origin.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_TRANSFORM2D
     types[1] = PT_OBJECT
@@ -30582,15 +30454,15 @@ actual object ObjectCalls {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(transform.x.x)
-    c0[1] = GodotReal.toC(transform.x.y)
-    c0[2] = GodotReal.toC(transform.y.x)
-    c0[3] = GodotReal.toC(transform.y.y)
-    c0[4] = GodotReal.toC(transform.origin.x)
-    c0[5] = GodotReal.toC(transform.origin.y)
+    c0[0] = transform.x.rawX
+    c0[1] = transform.x.rawY
+    c0[2] = transform.y.rawX
+    c0[3] = transform.y.rawY
+    c0[4] = transform.origin.rawX
+    c0[5] = transform.origin.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_TRANSFORM2D
     types[1] = PT_VECTOR2
@@ -30612,15 +30484,15 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(transformValue.x.x)
-    c0[1] = GodotReal.toC(transformValue.x.y)
-    c0[2] = GodotReal.toC(transformValue.y.x)
-    c0[3] = GodotReal.toC(transformValue.y.y)
-    c0[4] = GodotReal.toC(transformValue.origin.x)
-    c0[5] = GodotReal.toC(transformValue.origin.y)
+    c0[0] = transformValue.x.rawX
+    c0[1] = transformValue.x.rawY
+    c0[2] = transformValue.y.rawX
+    c0[3] = transformValue.y.rawY
+    c0[4] = transformValue.origin.rawX
+    c0[5] = transformValue.origin.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vectorValue.x)
-    c1[1] = GodotReal.toC(vectorValue.y)
+    c1[0] = vectorValue.rawX
+    c1[1] = vectorValue.rawY
     val c2 = alloc<LongVar>()
     c2.value = objectArg.address()
     val c3 = alloc<DoubleVar>()
@@ -30654,27 +30526,27 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(firstTransform.x.x)
-    c0[1] = GodotReal.toC(firstTransform.x.y)
-    c0[2] = GodotReal.toC(firstTransform.y.x)
-    c0[3] = GodotReal.toC(firstTransform.y.y)
-    c0[4] = GodotReal.toC(firstTransform.origin.x)
-    c0[5] = GodotReal.toC(firstTransform.origin.y)
+    c0[0] = firstTransform.x.rawX
+    c0[1] = firstTransform.x.rawY
+    c0[2] = firstTransform.y.rawX
+    c0[3] = firstTransform.y.rawY
+    c0[4] = firstTransform.origin.rawX
+    c0[5] = firstTransform.origin.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(firstMotion.x)
-    c1[1] = GodotReal.toC(firstMotion.y)
+    c1[0] = firstMotion.rawX
+    c1[1] = firstMotion.rawY
     val c2 = alloc<LongVar>()
     c2.value = objectArg.address()
     val c3 = allocArray<GodotRealVar>(6)
-    c3[0] = GodotReal.toC(secondTransform.x.x)
-    c3[1] = GodotReal.toC(secondTransform.x.y)
-    c3[2] = GodotReal.toC(secondTransform.y.x)
-    c3[3] = GodotReal.toC(secondTransform.y.y)
-    c3[4] = GodotReal.toC(secondTransform.origin.x)
-    c3[5] = GodotReal.toC(secondTransform.origin.y)
+    c3[0] = secondTransform.x.rawX
+    c3[1] = secondTransform.x.rawY
+    c3[2] = secondTransform.y.rawX
+    c3[3] = secondTransform.y.rawY
+    c3[4] = secondTransform.origin.rawX
+    c3[5] = secondTransform.origin.rawY
     val c4 = allocArray<GodotRealVar>(2)
-    c4[0] = GodotReal.toC(secondMotion.x)
-    c4[1] = GodotReal.toC(secondMotion.y)
+    c4[0] = secondMotion.rawX
+    c4[1] = secondMotion.rawY
     val types = allocArray<IntVar>(5)
     types[0] = PT_TRANSFORM2D
     types[1] = PT_VECTOR2
@@ -30701,27 +30573,27 @@ actual object ObjectCalls {
     secondMotion: Vector2,
   ): List<Vector2> = memScoped {
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(firstTransform.x.x)
-    c0[1] = GodotReal.toC(firstTransform.x.y)
-    c0[2] = GodotReal.toC(firstTransform.y.x)
-    c0[3] = GodotReal.toC(firstTransform.y.y)
-    c0[4] = GodotReal.toC(firstTransform.origin.x)
-    c0[5] = GodotReal.toC(firstTransform.origin.y)
+    c0[0] = firstTransform.x.rawX
+    c0[1] = firstTransform.x.rawY
+    c0[2] = firstTransform.y.rawX
+    c0[3] = firstTransform.y.rawY
+    c0[4] = firstTransform.origin.rawX
+    c0[5] = firstTransform.origin.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(firstMotion.x)
-    c1[1] = GodotReal.toC(firstMotion.y)
+    c1[0] = firstMotion.rawX
+    c1[1] = firstMotion.rawY
     val c2 = alloc<LongVar>()
     c2.value = objectArg.address()
     val c3 = allocArray<GodotRealVar>(6)
-    c3[0] = GodotReal.toC(secondTransform.x.x)
-    c3[1] = GodotReal.toC(secondTransform.x.y)
-    c3[2] = GodotReal.toC(secondTransform.y.x)
-    c3[3] = GodotReal.toC(secondTransform.y.y)
-    c3[4] = GodotReal.toC(secondTransform.origin.x)
-    c3[5] = GodotReal.toC(secondTransform.origin.y)
+    c3[0] = secondTransform.x.rawX
+    c3[1] = secondTransform.x.rawY
+    c3[2] = secondTransform.y.rawX
+    c3[3] = secondTransform.y.rawY
+    c3[4] = secondTransform.origin.rawX
+    c3[5] = secondTransform.origin.rawY
     val c4 = allocArray<GodotRealVar>(2)
-    c4[0] = GodotReal.toC(secondMotion.x)
-    c4[1] = GodotReal.toC(secondMotion.y)
+    c4[0] = secondMotion.rawX
+    c4[1] = secondMotion.rawY
     val types = allocArray<IntVar>(5)
     types[0] = PT_TRANSFORM2D
     types[1] = PT_VECTOR2
@@ -30747,25 +30619,25 @@ actual object ObjectCalls {
     flags: Long,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(6)
-    c0[0] = GodotReal.toC(transformValue.x.x)
-    c0[1] = GodotReal.toC(transformValue.x.y)
-    c0[2] = GodotReal.toC(transformValue.y.x)
-    c0[3] = GodotReal.toC(transformValue.y.y)
-    c0[4] = GodotReal.toC(transformValue.origin.x)
-    c0[5] = GodotReal.toC(transformValue.origin.y)
+    c0[0] = transformValue.x.rawX
+    c0[1] = transformValue.x.rawY
+    c0[2] = transformValue.y.rawX
+    c0[3] = transformValue.y.rawY
+    c0[4] = transformValue.origin.rawX
+    c0[5] = transformValue.origin.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vectorValue.x)
-    c1[1] = GodotReal.toC(vectorValue.y)
+    c1[0] = vectorValue.rawX
+    c1[1] = vectorValue.rawY
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = firstColor.r.toFloat()
-    c2[1] = firstColor.g.toFloat()
-    c2[2] = firstColor.b.toFloat()
-    c2[3] = firstColor.a.toFloat()
+    c2[0] = firstColor.rawR
+    c2[1] = firstColor.rawG
+    c2[2] = firstColor.rawB
+    c2[3] = firstColor.rawA
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = secondColor.r.toFloat()
-    c3[1] = secondColor.g.toFloat()
-    c3[2] = secondColor.b.toFloat()
-    c3[3] = secondColor.a.toFloat()
+    c3[0] = secondColor.rawR
+    c3[1] = secondColor.rawG
+    c3[2] = secondColor.rawB
+    c3[3] = secondColor.rawA
     val c4 = alloc<LongVar>()
     c4.value = flags
     val types = allocArray<IntVar>(5)
@@ -30796,29 +30668,29 @@ actual object ObjectCalls {
     indices: List<Int>,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(12)
-    c0[0] = GodotReal.toC(transform.basis.x.x)
-    c0[1] = GodotReal.toC(transform.basis.y.x)
-    c0[2] = GodotReal.toC(transform.basis.z.x)
-    c0[3] = GodotReal.toC(transform.basis.x.y)
-    c0[4] = GodotReal.toC(transform.basis.y.y)
-    c0[5] = GodotReal.toC(transform.basis.z.y)
-    c0[6] = GodotReal.toC(transform.basis.x.z)
-    c0[7] = GodotReal.toC(transform.basis.y.z)
-    c0[8] = GodotReal.toC(transform.basis.z.z)
-    c0[9] = GodotReal.toC(transform.origin.x)
-    c0[10] = GodotReal.toC(transform.origin.y)
-    c0[11] = GodotReal.toC(transform.origin.z)
+    c0[0] = transform.basis.x.rawX
+    c0[1] = transform.basis.y.rawX
+    c0[2] = transform.basis.z.rawX
+    c0[3] = transform.basis.x.rawY
+    c0[4] = transform.basis.y.rawY
+    c0[5] = transform.basis.z.rawY
+    c0[6] = transform.basis.x.rawZ
+    c0[7] = transform.basis.y.rawZ
+    c0[8] = transform.basis.z.rawZ
+    c0[9] = transform.origin.rawX
+    c0[10] = transform.origin.rawY
+    c0[11] = transform.origin.rawZ
     val c1 = allocArray<GodotRealVar>(6)
-    c1[0] = GodotReal.toC(bounds.position.x)
-    c1[1] = GodotReal.toC(bounds.position.y)
-    c1[2] = GodotReal.toC(bounds.position.z)
-    c1[3] = GodotReal.toC(bounds.size.x)
-    c1[4] = GodotReal.toC(bounds.size.y)
-    c1[5] = GodotReal.toC(bounds.size.z)
+    c1[0] = bounds.position.rawX
+    c1[1] = bounds.position.rawY
+    c1[2] = bounds.position.rawZ
+    c1[3] = bounds.size.rawX
+    c1[4] = bounds.size.rawY
+    c1[5] = bounds.size.rawZ
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(size.x)
-    c2[1] = GodotReal.toC(size.y)
-    c2[2] = GodotReal.toC(size.z)
+    c2[0] = size.rawX
+    c2[1] = size.rawY
+    c2[2] = size.rawZ
     val c3 = packByteDesc(firstData)
     val c4 = packByteDesc(secondData)
     val c5 = packByteDesc(thirdData)
@@ -30851,18 +30723,18 @@ actual object ObjectCalls {
   ): Long = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(12)
-    c0[0] = GodotReal.toC(transformValue.basis.x.x)
-    c0[1] = GodotReal.toC(transformValue.basis.y.x)
-    c0[2] = GodotReal.toC(transformValue.basis.z.x)
-    c0[3] = GodotReal.toC(transformValue.basis.x.y)
-    c0[4] = GodotReal.toC(transformValue.basis.y.y)
-    c0[5] = GodotReal.toC(transformValue.basis.z.y)
-    c0[6] = GodotReal.toC(transformValue.basis.x.z)
-    c0[7] = GodotReal.toC(transformValue.basis.y.z)
-    c0[8] = GodotReal.toC(transformValue.basis.z.z)
-    c0[9] = GodotReal.toC(transformValue.origin.x)
-    c0[10] = GodotReal.toC(transformValue.origin.y)
-    c0[11] = GodotReal.toC(transformValue.origin.z)
+    c0[0] = transformValue.basis.x.rawX
+    c0[1] = transformValue.basis.y.rawX
+    c0[2] = transformValue.basis.z.rawX
+    c0[3] = transformValue.basis.x.rawY
+    c0[4] = transformValue.basis.y.rawY
+    c0[5] = transformValue.basis.z.rawY
+    c0[6] = transformValue.basis.x.rawZ
+    c0[7] = transformValue.basis.y.rawZ
+    c0[8] = transformValue.basis.z.rawZ
+    c0[9] = transformValue.origin.rawX
+    c0[10] = transformValue.origin.rawY
+    c0[11] = transformValue.origin.rawZ
     val c1 = alloc<DoubleVar>()
     c1.value = doubleValue
     val types = allocArray<IntVar>(2)
@@ -30883,18 +30755,18 @@ actual object ObjectCalls {
   ): Transform3D = memScoped {
     val ret = allocArray<GodotRealVar>(12)
     val c0 = allocArray<GodotRealVar>(12)
-    c0[0] = GodotReal.toC(transformValue.basis.x.x)
-    c0[1] = GodotReal.toC(transformValue.basis.y.x)
-    c0[2] = GodotReal.toC(transformValue.basis.z.x)
-    c0[3] = GodotReal.toC(transformValue.basis.x.y)
-    c0[4] = GodotReal.toC(transformValue.basis.y.y)
-    c0[5] = GodotReal.toC(transformValue.basis.z.y)
-    c0[6] = GodotReal.toC(transformValue.basis.x.z)
-    c0[7] = GodotReal.toC(transformValue.basis.y.z)
-    c0[8] = GodotReal.toC(transformValue.basis.z.z)
-    c0[9] = GodotReal.toC(transformValue.origin.x)
-    c0[10] = GodotReal.toC(transformValue.origin.y)
-    c0[11] = GodotReal.toC(transformValue.origin.z)
+    c0[0] = transformValue.basis.x.rawX
+    c0[1] = transformValue.basis.y.rawX
+    c0[2] = transformValue.basis.z.rawX
+    c0[3] = transformValue.basis.x.rawY
+    c0[4] = transformValue.basis.y.rawY
+    c0[5] = transformValue.basis.z.rawY
+    c0[6] = transformValue.basis.x.rawZ
+    c0[7] = transformValue.basis.y.rawZ
+    c0[8] = transformValue.basis.z.rawZ
+    c0[9] = transformValue.origin.rawX
+    c0[10] = transformValue.origin.rawY
+    c0[11] = transformValue.origin.rawZ
     val c1 = alloc<LongVar>()
     c1.value = longValue
     val types = allocArray<IntVar>(2)
@@ -30906,11 +30778,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -30920,18 +30792,18 @@ actual object ObjectCalls {
     value: Transform3D,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(12)
-    c0[0] = GodotReal.toC(value.basis.x.x)
-    c0[1] = GodotReal.toC(value.basis.y.x)
-    c0[2] = GodotReal.toC(value.basis.z.x)
-    c0[3] = GodotReal.toC(value.basis.x.y)
-    c0[4] = GodotReal.toC(value.basis.y.y)
-    c0[5] = GodotReal.toC(value.basis.z.y)
-    c0[6] = GodotReal.toC(value.basis.x.z)
-    c0[7] = GodotReal.toC(value.basis.y.z)
-    c0[8] = GodotReal.toC(value.basis.z.z)
-    c0[9] = GodotReal.toC(value.origin.x)
-    c0[10] = GodotReal.toC(value.origin.y)
-    c0[11] = GodotReal.toC(value.origin.z)
+    c0[0] = value.basis.x.rawX
+    c0[1] = value.basis.y.rawX
+    c0[2] = value.basis.z.rawX
+    c0[3] = value.basis.x.rawY
+    c0[4] = value.basis.y.rawY
+    c0[5] = value.basis.z.rawY
+    c0[6] = value.basis.x.rawZ
+    c0[7] = value.basis.y.rawZ
+    c0[8] = value.basis.z.rawZ
+    c0[9] = value.origin.rawX
+    c0[10] = value.origin.rawY
+    c0[11] = value.origin.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_TRANSFORM3D
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -30962,18 +30834,18 @@ actual object ObjectCalls {
     indices: List<Int>,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(12)
-    c0[0] = GodotReal.toC(transform.basis.x.x)
-    c0[1] = GodotReal.toC(transform.basis.y.x)
-    c0[2] = GodotReal.toC(transform.basis.z.x)
-    c0[3] = GodotReal.toC(transform.basis.x.y)
-    c0[4] = GodotReal.toC(transform.basis.y.y)
-    c0[5] = GodotReal.toC(transform.basis.z.y)
-    c0[6] = GodotReal.toC(transform.basis.x.z)
-    c0[7] = GodotReal.toC(transform.basis.y.z)
-    c0[8] = GodotReal.toC(transform.basis.z.z)
-    c0[9] = GodotReal.toC(transform.origin.x)
-    c0[10] = GodotReal.toC(transform.origin.y)
-    c0[11] = GodotReal.toC(transform.origin.z)
+    c0[0] = transform.basis.x.rawX
+    c0[1] = transform.basis.y.rawX
+    c0[2] = transform.basis.z.rawX
+    c0[3] = transform.basis.x.rawY
+    c0[4] = transform.basis.y.rawY
+    c0[5] = transform.basis.z.rawY
+    c0[6] = transform.basis.x.rawZ
+    c0[7] = transform.basis.y.rawZ
+    c0[8] = transform.basis.z.rawZ
+    c0[9] = transform.origin.rawX
+    c0[10] = transform.origin.rawY
+    c0[11] = transform.origin.rawZ
     val c1 = packVector2Desc(points)
     val c2 = packInt32Desc(indices)
     val types = allocArray<IntVar>(3)
@@ -30998,18 +30870,18 @@ actual object ObjectCalls {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = allocArray<GodotRealVar>(12)
-    c0[0] = GodotReal.toC(transformValue.basis.x.x)
-    c0[1] = GodotReal.toC(transformValue.basis.y.x)
-    c0[2] = GodotReal.toC(transformValue.basis.z.x)
-    c0[3] = GodotReal.toC(transformValue.basis.x.y)
-    c0[4] = GodotReal.toC(transformValue.basis.y.y)
-    c0[5] = GodotReal.toC(transformValue.basis.z.y)
-    c0[6] = GodotReal.toC(transformValue.basis.x.z)
-    c0[7] = GodotReal.toC(transformValue.basis.y.z)
-    c0[8] = GodotReal.toC(transformValue.basis.z.z)
-    c0[9] = GodotReal.toC(transformValue.origin.x)
-    c0[10] = GodotReal.toC(transformValue.origin.y)
-    c0[11] = GodotReal.toC(transformValue.origin.z)
+    c0[0] = transformValue.basis.x.rawX
+    c0[1] = transformValue.basis.y.rawX
+    c0[2] = transformValue.basis.z.rawX
+    c0[3] = transformValue.basis.x.rawY
+    c0[4] = transformValue.basis.y.rawY
+    c0[5] = transformValue.basis.z.rawY
+    c0[6] = transformValue.basis.x.rawZ
+    c0[7] = transformValue.basis.y.rawZ
+    c0[8] = transformValue.basis.z.rawZ
+    c0[9] = transformValue.origin.rawX
+    c0[10] = transformValue.origin.rawY
+    c0[11] = transformValue.origin.rawZ
     val c1 = alloc<LongVar>()
     c1.value = rid.value
     val c2 = alloc<LongVar>()
@@ -31038,22 +30910,22 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(12)
-    c0[0] = GodotReal.toC(transformValue.basis.x.x)
-    c0[1] = GodotReal.toC(transformValue.basis.y.x)
-    c0[2] = GodotReal.toC(transformValue.basis.z.x)
-    c0[3] = GodotReal.toC(transformValue.basis.x.y)
-    c0[4] = GodotReal.toC(transformValue.basis.y.y)
-    c0[5] = GodotReal.toC(transformValue.basis.z.y)
-    c0[6] = GodotReal.toC(transformValue.basis.x.z)
-    c0[7] = GodotReal.toC(transformValue.basis.y.z)
-    c0[8] = GodotReal.toC(transformValue.basis.z.z)
-    c0[9] = GodotReal.toC(transformValue.origin.x)
-    c0[10] = GodotReal.toC(transformValue.origin.y)
-    c0[11] = GodotReal.toC(transformValue.origin.z)
+    c0[0] = transformValue.basis.x.rawX
+    c0[1] = transformValue.basis.y.rawX
+    c0[2] = transformValue.basis.z.rawX
+    c0[3] = transformValue.basis.x.rawY
+    c0[4] = transformValue.basis.y.rawY
+    c0[5] = transformValue.basis.z.rawY
+    c0[6] = transformValue.basis.x.rawZ
+    c0[7] = transformValue.basis.y.rawZ
+    c0[8] = transformValue.basis.z.rawZ
+    c0[9] = transformValue.origin.rawX
+    c0[10] = transformValue.origin.rawY
+    c0[11] = transformValue.origin.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(vectorValue.x)
-    c1[1] = GodotReal.toC(vectorValue.y)
-    c1[2] = GodotReal.toC(vectorValue.z)
+    c1[0] = vectorValue.rawX
+    c1[1] = vectorValue.rawY
+    c1[2] = vectorValue.rawZ
     val c2 = alloc<LongVar>()
     c2.value = objectArg.address()
     val c3 = alloc<DoubleVar>()
@@ -31090,32 +30962,32 @@ actual object ObjectCalls {
     flags: Long,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(12)
-    c0[0] = GodotReal.toC(transformValue.basis.x.x)
-    c0[1] = GodotReal.toC(transformValue.basis.y.x)
-    c0[2] = GodotReal.toC(transformValue.basis.z.x)
-    c0[3] = GodotReal.toC(transformValue.basis.x.y)
-    c0[4] = GodotReal.toC(transformValue.basis.y.y)
-    c0[5] = GodotReal.toC(transformValue.basis.z.y)
-    c0[6] = GodotReal.toC(transformValue.basis.x.z)
-    c0[7] = GodotReal.toC(transformValue.basis.y.z)
-    c0[8] = GodotReal.toC(transformValue.basis.z.z)
-    c0[9] = GodotReal.toC(transformValue.origin.x)
-    c0[10] = GodotReal.toC(transformValue.origin.y)
-    c0[11] = GodotReal.toC(transformValue.origin.z)
+    c0[0] = transformValue.basis.x.rawX
+    c0[1] = transformValue.basis.y.rawX
+    c0[2] = transformValue.basis.z.rawX
+    c0[3] = transformValue.basis.x.rawY
+    c0[4] = transformValue.basis.y.rawY
+    c0[5] = transformValue.basis.z.rawY
+    c0[6] = transformValue.basis.x.rawZ
+    c0[7] = transformValue.basis.y.rawZ
+    c0[8] = transformValue.basis.z.rawZ
+    c0[9] = transformValue.origin.rawX
+    c0[10] = transformValue.origin.rawY
+    c0[11] = transformValue.origin.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(vectorValue.x)
-    c1[1] = GodotReal.toC(vectorValue.y)
-    c1[2] = GodotReal.toC(vectorValue.z)
+    c1[0] = vectorValue.rawX
+    c1[1] = vectorValue.rawY
+    c1[2] = vectorValue.rawZ
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = firstColor.r.toFloat()
-    c2[1] = firstColor.g.toFloat()
-    c2[2] = firstColor.b.toFloat()
-    c2[3] = firstColor.a.toFloat()
+    c2[0] = firstColor.rawR
+    c2[1] = firstColor.rawG
+    c2[2] = firstColor.rawB
+    c2[3] = firstColor.rawA
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = secondColor.r.toFloat()
-    c3[1] = secondColor.g.toFloat()
-    c3[2] = secondColor.b.toFloat()
-    c3[3] = secondColor.a.toFloat()
+    c3[0] = secondColor.rawR
+    c3[1] = secondColor.rawG
+    c3[2] = secondColor.rawB
+    c3[3] = secondColor.rawA
     val c4 = alloc<LongVar>()
     c4.value = flags
     val types = allocArray<IntVar>(5)
@@ -31288,15 +31160,15 @@ actual object ObjectCalls {
     second: Color,
   ) = memScoped {
     val c0 = allocArray<FloatVar>(4)
-    c0[0] = first.r.toFloat()
-    c0[1] = first.g.toFloat()
-    c0[2] = first.b.toFloat()
-    c0[3] = first.a.toFloat()
+    c0[0] = first.rawR
+    c0[1] = first.rawG
+    c0[2] = first.rawB
+    c0[3] = first.rawA
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = second.r.toFloat()
-    c1[1] = second.g.toFloat()
-    c1[2] = second.b.toFloat()
-    c1[3] = second.a.toFloat()
+    c1[0] = second.rawR
+    c1[1] = second.rawG
+    c1[2] = second.rawB
+    c1[3] = second.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_COLOR
     types[1] = PT_COLOR
@@ -31355,7 +31227,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithTwoDoubleArgs(
@@ -31547,10 +31419,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = second.toLong()
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val types = allocArray<IntVar>(3)
     types[0] = PT_INT64
     types[1] = PT_INT64
@@ -31697,10 +31569,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = second.toLong()
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(value.x)
-    c2[1] = GodotReal.toC(value.y)
-    c2[2] = GodotReal.toC(value.z)
-    c2[3] = GodotReal.toC(value.w)
+    c2[0] = value.rawX
+    c2[1] = value.rawY
+    c2[2] = value.rawZ
+    c2[3] = value.rawW
     val types = allocArray<IntVar>(3)
     types[0] = PT_INT64
     types[1] = PT_INT64
@@ -31858,9 +31730,9 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = second.toLong()
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(value.x)
-    c2[1] = GodotReal.toC(value.y)
-    c2[2] = GodotReal.toC(value.z)
+    c2[0] = value.rawX
+    c2[1] = value.rawY
+    c2[2] = value.rawZ
     val types = allocArray<IntVar>(3)
     types[0] = PT_INT64
     types[1] = PT_INT64
@@ -31951,7 +31823,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
-    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+    Color.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithTwoIntArgsRetDouble(
@@ -32114,12 +31986,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_QUATERNION, ret)
-    Quaternion(
-      GodotReal.fromC(ret[0]),
-      GodotReal.fromC(ret[1]),
-      GodotReal.fromC(ret[2]),
-      GodotReal.fromC(ret[3]),
-    )
+    Quaternion.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithTwoIntArgsRetRect2i(
@@ -32218,7 +32085,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithTwoIntArgsRetVector2i(
@@ -32279,7 +32146,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithTwoIntBoolLongArgsRetObject(
@@ -32399,10 +32266,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondInt.toLong()
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<LongVar>()
     c3.value = longValue
     val c4 = alloc<ByteVar>()
@@ -32470,10 +32337,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = longArg
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -32510,10 +32377,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = longArg
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -32754,8 +32621,8 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = second.toLong()
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val c3 = alloc<DoubleVar>()
     c3.value = value
     val types = allocArray<IntVar>(4)
@@ -32826,7 +32693,7 @@ actual object ObjectCalls {
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithTwoIntVector2iVector2Args(
@@ -32845,8 +32712,8 @@ actual object ObjectCalls {
     c2[0] = vector2i.x
     c2[1] = vector2i.y
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(vector2.x)
-    c3[1] = GodotReal.toC(vector2.y)
+    c3[0] = vector2.rawX
+    c3[1] = vector2.rawY
     val types = allocArray<IntVar>(4)
     types[0] = PT_INT64
     types[1] = PT_INT64
@@ -33131,12 +32998,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_QUATERNION, ret)
-    Quaternion(
-      GodotReal.fromC(ret[0]),
-      GodotReal.fromC(ret[1]),
-      GodotReal.fromC(ret[2]),
-      GodotReal.fromC(ret[3]),
-    )
+    Quaternion.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithTwoLongArgsRetRID(
@@ -33179,7 +33041,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithTwoLongArgsRetVector3(
@@ -33200,7 +33062,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithTwoLongStringArgs(
@@ -33536,17 +33398,17 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondObject.address()
     val c2 = allocArray<GodotRealVar>(6)
-    c2[0] = GodotReal.toC(transform.x.x)
-    c2[1] = GodotReal.toC(transform.x.y)
-    c2[2] = GodotReal.toC(transform.y.x)
-    c2[3] = GodotReal.toC(transform.y.y)
-    c2[4] = GodotReal.toC(transform.origin.x)
-    c2[5] = GodotReal.toC(transform.origin.y)
+    c2[0] = transform.x.rawX
+    c2[1] = transform.x.rawY
+    c2[2] = transform.y.rawX
+    c2[3] = transform.y.rawY
+    c2[4] = transform.origin.rawX
+    c2[5] = transform.origin.rawY
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val types = allocArray<IntVar>(4)
     types[0] = PT_OBJECT
     types[1] = PT_OBJECT
@@ -33574,18 +33436,18 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondObject.address()
     val c2 = allocArray<GodotRealVar>(12)
-    c2[0] = GodotReal.toC(transform.basis.x.x)
-    c2[1] = GodotReal.toC(transform.basis.y.x)
-    c2[2] = GodotReal.toC(transform.basis.z.x)
-    c2[3] = GodotReal.toC(transform.basis.x.y)
-    c2[4] = GodotReal.toC(transform.basis.y.y)
-    c2[5] = GodotReal.toC(transform.basis.z.y)
-    c2[6] = GodotReal.toC(transform.basis.x.z)
-    c2[7] = GodotReal.toC(transform.basis.y.z)
-    c2[8] = GodotReal.toC(transform.basis.z.z)
-    c2[9] = GodotReal.toC(transform.origin.x)
-    c2[10] = GodotReal.toC(transform.origin.y)
-    c2[11] = GodotReal.toC(transform.origin.z)
+    c2[0] = transform.basis.x.rawX
+    c2[1] = transform.basis.y.rawX
+    c2[2] = transform.basis.z.rawX
+    c2[3] = transform.basis.x.rawY
+    c2[4] = transform.basis.y.rawY
+    c2[5] = transform.basis.z.rawY
+    c2[6] = transform.basis.x.rawZ
+    c2[7] = transform.basis.y.rawZ
+    c2[8] = transform.basis.z.rawZ
+    c2[9] = transform.origin.rawX
+    c2[10] = transform.origin.rawY
+    c2[11] = transform.origin.rawZ
     val c3 = alloc<LongVar>()
     c3.value = thirdObject.address()
     val types = allocArray<IntVar>(4)
@@ -33675,12 +33537,12 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(6)
-    c2[0] = GodotReal.toC(transform.x.x)
-    c2[1] = GodotReal.toC(transform.x.y)
-    c2[2] = GodotReal.toC(transform.y.x)
-    c2[3] = GodotReal.toC(transform.y.y)
-    c2[4] = GodotReal.toC(transform.origin.x)
-    c2[5] = GodotReal.toC(transform.origin.y)
+    c2[0] = transform.x.rawX
+    c2[1] = transform.x.rawY
+    c2[2] = transform.y.rawX
+    c2[3] = transform.y.rawY
+    c2[4] = transform.origin.rawX
+    c2[5] = transform.origin.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_RID
@@ -33705,8 +33567,8 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(value.x)
-    c2[1] = GodotReal.toC(value.y)
+    c2[0] = value.rawX
+    c2[1] = value.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_RID
@@ -33918,15 +33780,15 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = firstLong
     val c3 = allocArray<GodotRealVar>(2)
-    c3[0] = GodotReal.toC(vector.x)
-    c3[1] = GodotReal.toC(vector.y)
+    c3[0] = vector.rawX
+    c3[1] = vector.rawY
     val c4 = alloc<LongVar>()
     c4.value = secondLong
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r.toFloat()
-    c5[1] = color.g.toFloat()
-    c5[2] = color.b.toFloat()
-    c5[3] = color.a.toFloat()
+    c5[0] = color.rawR
+    c5[1] = color.rawG
+    c5[2] = color.rawB
+    c5[3] = color.rawA
     val c6 = alloc<DoubleVar>()
     c6.value = doubleValue
     val types = allocArray<IntVar>(7)
@@ -33962,10 +33824,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = second.value
     val c2 = allocArray<GodotRealVar>(4)
-    c2[0] = GodotReal.toC(rect.position.x)
-    c2[1] = GodotReal.toC(rect.position.y)
-    c2[2] = GodotReal.toC(rect.size.x)
-    c2[3] = GodotReal.toC(rect.size.y)
+    c2[0] = rect.position.rawX
+    c2[1] = rect.position.rawY
+    c2[2] = rect.size.rawX
+    c2[3] = rect.size.rawY
     val c3 = alloc<LongVar>()
     c3.value = index.toLong()
     val types = allocArray<IntVar>(4)
@@ -34037,17 +33899,17 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(firstVector.x)
-    c2[1] = GodotReal.toC(firstVector.y)
-    c2[2] = GodotReal.toC(firstVector.z)
+    c2[0] = firstVector.rawX
+    c2[1] = firstVector.rawY
+    c2[2] = firstVector.rawZ
     val c3 = allocArray<GodotRealVar>(3)
-    c3[0] = GodotReal.toC(secondVector.x)
-    c3[1] = GodotReal.toC(secondVector.y)
-    c3[2] = GodotReal.toC(secondVector.z)
+    c3[0] = secondVector.rawX
+    c3[1] = secondVector.rawY
+    c3[2] = secondVector.rawZ
     val c4 = allocArray<GodotRealVar>(3)
-    c4[0] = GodotReal.toC(thirdVector.x)
-    c4[1] = GodotReal.toC(thirdVector.y)
-    c4[2] = GodotReal.toC(thirdVector.z)
+    c4[0] = thirdVector.rawX
+    c4[1] = thirdVector.rawY
+    c4[2] = thirdVector.rawZ
     val c5 = alloc<LongVar>()
     c5.value = firstUInt
     val c6 = alloc<LongVar>()
@@ -34093,12 +33955,12 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(6)
-    c2[0] = GodotReal.toC(transform.x.x)
-    c2[1] = GodotReal.toC(transform.x.y)
-    c2[2] = GodotReal.toC(transform.y.x)
-    c2[3] = GodotReal.toC(transform.y.y)
-    c2[4] = GodotReal.toC(transform.origin.x)
-    c2[5] = GodotReal.toC(transform.origin.y)
+    c2[0] = transform.x.rawX
+    c2[1] = transform.x.rawY
+    c2[2] = transform.y.rawX
+    c2[3] = transform.y.rawY
+    c2[4] = transform.origin.rawX
+    c2[5] = transform.origin.rawY
     val c3 = alloc<ByteVar>()
     c3.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -34129,17 +33991,17 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(6)
-    c2[0] = GodotReal.toC(transform.x.x)
-    c2[1] = GodotReal.toC(transform.x.y)
-    c2[2] = GodotReal.toC(transform.y.x)
-    c2[3] = GodotReal.toC(transform.y.y)
-    c2[4] = GodotReal.toC(transform.origin.x)
-    c2[5] = GodotReal.toC(transform.origin.y)
+    c2[0] = transform.x.rawX
+    c2[1] = transform.x.rawY
+    c2[2] = transform.y.rawX
+    c2[3] = transform.y.rawY
+    c2[4] = transform.origin.rawX
+    c2[5] = transform.origin.rawY
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<LongVar>()
     c4.value = thirdRid.value
     val types = allocArray<IntVar>(5)
@@ -34171,18 +34033,18 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(12)
-    c2[0] = GodotReal.toC(transform.basis.x.x)
-    c2[1] = GodotReal.toC(transform.basis.y.x)
-    c2[2] = GodotReal.toC(transform.basis.z.x)
-    c2[3] = GodotReal.toC(transform.basis.x.y)
-    c2[4] = GodotReal.toC(transform.basis.y.y)
-    c2[5] = GodotReal.toC(transform.basis.z.y)
-    c2[6] = GodotReal.toC(transform.basis.x.z)
-    c2[7] = GodotReal.toC(transform.basis.y.z)
-    c2[8] = GodotReal.toC(transform.basis.z.z)
-    c2[9] = GodotReal.toC(transform.origin.x)
-    c2[10] = GodotReal.toC(transform.origin.y)
-    c2[11] = GodotReal.toC(transform.origin.z)
+    c2[0] = transform.basis.x.rawX
+    c2[1] = transform.basis.y.rawX
+    c2[2] = transform.basis.z.rawX
+    c2[3] = transform.basis.x.rawY
+    c2[4] = transform.basis.y.rawY
+    c2[5] = transform.basis.z.rawY
+    c2[6] = transform.basis.x.rawZ
+    c2[7] = transform.basis.y.rawZ
+    c2[8] = transform.basis.z.rawZ
+    c2[9] = transform.origin.rawX
+    c2[10] = transform.origin.rawY
+    c2[11] = transform.origin.rawZ
     val c3 = alloc<ByteVar>()
     c3.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -34250,15 +34112,15 @@ actual object ObjectCalls {
     val c3 = alloc<LongVar>()
     c3.value = secondLong
     val c4 = allocArray<GodotRealVar>(2)
-    c4[0] = GodotReal.toC(vector.x)
-    c4[1] = GodotReal.toC(vector.y)
+    c4[0] = vector.rawX
+    c4[1] = vector.rawY
     val c5 = alloc<LongVar>()
     c5.value = thirdLong
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r.toFloat()
-    c6[1] = color.g.toFloat()
-    c6[2] = color.b.toFloat()
-    c6[3] = color.a.toFloat()
+    c6[0] = color.rawR
+    c6[1] = color.rawG
+    c6[2] = color.rawB
+    c6[3] = color.rawA
     val c7 = alloc<DoubleVar>()
     c7.value = doubleValue
     val types = allocArray<IntVar>(8)
@@ -34299,17 +34161,17 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val c3 = alloc<DoubleVar>()
     c3.value = firstDouble
     val c4 = alloc<DoubleVar>()
     c4.value = secondDouble
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r.toFloat()
-    c5[1] = color.g.toFloat()
-    c5[2] = color.b.toFloat()
-    c5[3] = color.a.toFloat()
+    c5[0] = color.rawR
+    c5[1] = color.rawG
+    c5[2] = color.rawB
+    c5[3] = color.rawA
     val c6 = alloc<DoubleVar>()
     c6.value = thirdDouble
     val types = allocArray<IntVar>(7)
@@ -34349,8 +34211,8 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(vector.x)
-    c2[1] = GodotReal.toC(vector.y)
+    c2[0] = vector.rawX
+    c2[1] = vector.rawY
     val c3 = alloc<DoubleVar>()
     c3.value = firstDouble
     val c4 = alloc<DoubleVar>()
@@ -34358,10 +34220,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = longValue
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r.toFloat()
-    c6[1] = color.g.toFloat()
-    c6[2] = color.b.toFloat()
-    c6[3] = color.a.toFloat()
+    c6[0] = color.rawR
+    c6[1] = color.rawG
+    c6[2] = color.rawB
+    c6[3] = color.rawA
     val c7 = alloc<DoubleVar>()
     c7.value = thirdDouble
     val types = allocArray<IntVar>(8)
@@ -34400,15 +34262,15 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondRid.value
     val c2 = allocArray<GodotRealVar>(3)
-    c2[0] = GodotReal.toC(firstVector.x)
-    c2[1] = GodotReal.toC(firstVector.y)
-    c2[2] = GodotReal.toC(firstVector.z)
+    c2[0] = firstVector.rawX
+    c2[1] = firstVector.rawY
+    c2[2] = firstVector.rawZ
     val c3 = alloc<LongVar>()
     c3.value = thirdRid.value
     val c4 = allocArray<GodotRealVar>(3)
-    c4[0] = GodotReal.toC(secondVector.x)
-    c4[1] = GodotReal.toC(secondVector.y)
-    c4[2] = GodotReal.toC(secondVector.z)
+    c4[0] = secondVector.rawX
+    c4[1] = secondVector.rawY
+    c4[2] = secondVector.rawZ
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_RID
@@ -34751,10 +34613,10 @@ actual object ObjectCalls {
     enabled: Boolean,
   ) = memScoped {
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<ByteVar>()
     c3.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -34925,10 +34787,10 @@ actual object ObjectCalls {
     color: Color,
   ) = memScoped {
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val types = allocArray<IntVar>(3)
     types[0] = PT_STRING_NAME
     types[1] = PT_STRING_NAME
@@ -35051,7 +34913,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
-    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+    Color.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithTwoStringNameArgsRetDictionary(
@@ -35734,11 +35596,11 @@ actual object ObjectCalls {
     second: Vector2,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR2
     types[1] = PT_VECTOR2
@@ -35756,11 +35618,11 @@ actual object ObjectCalls {
     second: Vector2,
   ): List<Vector2> = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR2
     types[1] = PT_VECTOR2
@@ -35780,16 +35642,16 @@ actual object ObjectCalls {
     antialiased: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<DoubleVar>()
     c3.value = width
     val c4 = alloc<ByteVar>()
@@ -35822,16 +35684,16 @@ actual object ObjectCalls {
     secondBool: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<DoubleVar>()
     c3.value = firstDouble
     val c4 = alloc<DoubleVar>()
@@ -35869,11 +35731,11 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
     val c2 = alloc<DoubleVar>()
     c2.value = value
     val types = allocArray<IntVar>(3)
@@ -35899,11 +35761,11 @@ actual object ObjectCalls {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(from.x)
-    c0[1] = GodotReal.toC(from.y)
+    c0[0] = from.rawX
+    c0[1] = from.rawY
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(to.x)
-    c1[1] = GodotReal.toC(to.y)
+    c1[0] = to.rawX
+    c1[1] = to.rawY
     val c2 = alloc<LongVar>()
     c2.value = mask
     val c3 = packTypedRIDArrayDesc(exclude)
@@ -36097,13 +35959,13 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = alloc<ByteVar>()
     c2.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(3)
@@ -36125,13 +35987,13 @@ actual object ObjectCalls {
     second: Vector3,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR3
     types[1] = PT_VECTOR3
@@ -36149,13 +36011,13 @@ actual object ObjectCalls {
     second: Vector3,
   ): Map<String, Any?> = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR3
     types[1] = PT_VECTOR3
@@ -36173,13 +36035,13 @@ actual object ObjectCalls {
   ): Vector2 = memScoped {
     val ret = allocArray<GodotRealVar>(2)
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR3
     types[1] = PT_VECTOR3
@@ -36187,7 +36049,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithTwoVector3PlaneListArgsRetPackedVector3List(
@@ -36198,13 +36060,13 @@ actual object ObjectCalls {
     planes: List<Plane>,
   ): List<Vector3> = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(from.x)
-    c0[1] = GodotReal.toC(from.y)
-    c0[2] = GodotReal.toC(from.z)
+    c0[0] = from.rawX
+    c0[1] = from.rawY
+    c0[2] = from.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(to.x)
-    c1[1] = GodotReal.toC(to.y)
-    c1[2] = GodotReal.toC(to.z)
+    c1[0] = to.rawX
+    c1[1] = to.rawY
+    c1[2] = to.rawZ
     val c2 = packTypedPlaneArrayDesc(planes)
     val types = allocArray<IntVar>(3)
     types[0] = PT_VECTOR3
@@ -36225,13 +36087,13 @@ actual object ObjectCalls {
     scenario: RID,
   ): List<Long> = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(from.x)
-    c0[1] = GodotReal.toC(from.y)
-    c0[2] = GodotReal.toC(from.z)
+    c0[0] = from.rawX
+    c0[1] = from.rawY
+    c0[2] = from.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(to.x)
-    c1[1] = GodotReal.toC(to.y)
-    c1[2] = GodotReal.toC(to.z)
+    c1[0] = to.rawX
+    c1[1] = to.rawY
+    c1[2] = to.rawZ
     val c2 = alloc<LongVar>()
     c2.value = scenario.value
     val types = allocArray<IntVar>(3)
@@ -36254,13 +36116,13 @@ actual object ObjectCalls {
     secondDouble: Double,
   ): List<Vector3> = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
-    c0[2] = GodotReal.toC(first.z)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
+    c0[2] = first.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(second.x)
-    c1[1] = GodotReal.toC(second.y)
-    c1[2] = GodotReal.toC(second.z)
+    c1[0] = second.rawX
+    c1[1] = second.rawY
+    c1[2] = second.rawZ
     val c2 = alloc<DoubleVar>()
     c2.value = firstDouble
     val c3 = alloc<DoubleVar>()
@@ -36289,13 +36151,13 @@ actual object ObjectCalls {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(from.x)
-    c0[1] = GodotReal.toC(from.y)
-    c0[2] = GodotReal.toC(from.z)
+    c0[0] = from.rawX
+    c0[1] = from.rawY
+    c0[2] = from.rawZ
     val c1 = allocArray<GodotRealVar>(3)
-    c1[0] = GodotReal.toC(to.x)
-    c1[1] = GodotReal.toC(to.y)
-    c1[2] = GodotReal.toC(to.z)
+    c1[0] = to.rawX
+    c1[1] = to.rawY
+    c1[2] = to.rawZ
     val c2 = alloc<LongVar>()
     c2.value = mask
     val c3 = packTypedRIDArrayDesc(exclude)
@@ -36555,12 +36417,12 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = intArg
     val c1 = allocArray<GodotRealVar>(6)
-    c1[0] = GodotReal.toC(transform.x.x)
-    c1[1] = GodotReal.toC(transform.x.y)
-    c1[2] = GodotReal.toC(transform.y.x)
-    c1[3] = GodotReal.toC(transform.y.y)
-    c1[4] = GodotReal.toC(transform.origin.x)
-    c1[5] = GodotReal.toC(transform.origin.y)
+    c1[0] = transform.x.rawX
+    c1[1] = transform.x.rawY
+    c1[2] = transform.y.rawX
+    c1[3] = transform.y.rawY
+    c1[4] = transform.origin.rawX
+    c1[5] = transform.origin.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_TRANSFORM2D
@@ -36580,18 +36442,18 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = intArg
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_TRANSFORM3D
@@ -36611,8 +36473,8 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_VECTOR2
@@ -36744,30 +36606,10 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_PROJECTION, ret)
     Projection(
-      Vector4(
-        GodotReal.fromC(ret[0]),
-        GodotReal.fromC(ret[1]),
-        GodotReal.fromC(ret[2]),
-        GodotReal.fromC(ret[3]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[4]),
-        GodotReal.fromC(ret[5]),
-        GodotReal.fromC(ret[6]),
-        GodotReal.fromC(ret[7]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[8]),
-        GodotReal.fromC(ret[9]),
-        GodotReal.fromC(ret[10]),
-        GodotReal.fromC(ret[11]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[12]),
-        GodotReal.fromC(ret[13]),
-        GodotReal.fromC(ret[14]),
-        GodotReal.fromC(ret[15]),
-      ),
+      Vector4.raw(ret[0], ret[1], ret[2], ret[3]),
+      Vector4.raw(ret[4], ret[5], ret[6], ret[7]),
+      Vector4.raw(ret[8], ret[9], ret[10], ret[11]),
+      Vector4.raw(ret[12], ret[13], ret[14], ret[15]),
     )
   }
 
@@ -36799,9 +36641,9 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM2D, ret)
     Transform2D(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-      Vector2(GodotReal.fromC(ret[4]), GodotReal.fromC(ret[5])),
+      Vector2.raw(ret[0], ret[1]),
+      Vector2.raw(ret[2], ret[3]),
+      Vector2.raw(ret[4], ret[5]),
     )
   }
 
@@ -36820,11 +36662,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -36841,7 +36683,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithUInt32ArgRetVector3(
@@ -36857,7 +36699,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithUInt32ByteArrayLongArgsRetRID(
@@ -37086,30 +36928,10 @@ actual object ObjectCalls {
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_PROJECTION, ret)
     Projection(
-      Vector4(
-        GodotReal.fromC(ret[0]),
-        GodotReal.fromC(ret[1]),
-        GodotReal.fromC(ret[2]),
-        GodotReal.fromC(ret[3]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[4]),
-        GodotReal.fromC(ret[5]),
-        GodotReal.fromC(ret[6]),
-        GodotReal.fromC(ret[7]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[8]),
-        GodotReal.fromC(ret[9]),
-        GodotReal.fromC(ret[10]),
-        GodotReal.fromC(ret[11]),
-      ),
-      Vector4(
-        GodotReal.fromC(ret[12]),
-        GodotReal.fromC(ret[13]),
-        GodotReal.fromC(ret[14]),
-        GodotReal.fromC(ret[15]),
-      ),
+      Vector4.raw(ret[0], ret[1], ret[2], ret[3]),
+      Vector4.raw(ret[4], ret[5], ret[6], ret[7]),
+      Vector4.raw(ret[8], ret[9], ret[10], ret[11]),
+      Vector4.raw(ret[12], ret[13], ret[14], ret[15]),
     )
   }
 
@@ -37123,18 +36945,18 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<GodotRealVar>(12)
-    c1[0] = GodotReal.toC(transform.basis.x.x)
-    c1[1] = GodotReal.toC(transform.basis.y.x)
-    c1[2] = GodotReal.toC(transform.basis.z.x)
-    c1[3] = GodotReal.toC(transform.basis.x.y)
-    c1[4] = GodotReal.toC(transform.basis.y.y)
-    c1[5] = GodotReal.toC(transform.basis.z.y)
-    c1[6] = GodotReal.toC(transform.basis.x.z)
-    c1[7] = GodotReal.toC(transform.basis.y.z)
-    c1[8] = GodotReal.toC(transform.basis.z.z)
-    c1[9] = GodotReal.toC(transform.origin.x)
-    c1[10] = GodotReal.toC(transform.origin.y)
-    c1[11] = GodotReal.toC(transform.origin.z)
+    c1[0] = transform.basis.x.rawX
+    c1[1] = transform.basis.y.rawX
+    c1[2] = transform.basis.z.rawX
+    c1[3] = transform.basis.x.rawY
+    c1[4] = transform.basis.y.rawY
+    c1[5] = transform.basis.z.rawY
+    c1[6] = transform.basis.x.rawZ
+    c1[7] = transform.basis.y.rawZ
+    c1[8] = transform.basis.z.rawZ
+    c1[9] = transform.origin.rawX
+    c1[10] = transform.origin.rawY
+    c1[11] = transform.origin.rawZ
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_TRANSFORM3D
@@ -37144,11 +36966,11 @@ actual object ObjectCalls {
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_TRANSFORM3D, ret)
     Transform3D(
       Basis(
-        Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-        Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-        Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+        Vector3.raw(ret[0], ret[3], ret[6]),
+        Vector3.raw(ret[1], ret[4], ret[7]),
+        Vector3.raw(ret[2], ret[5], ret[8]),
       ),
-      Vector3(GodotReal.fromC(ret[9]), GodotReal.fromC(ret[10]), GodotReal.fromC(ret[11])),
+      Vector3.raw(ret[9], ret[10], ret[11]),
     )
   }
 
@@ -37333,10 +37155,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_RECT2, ret)
-    Rect2(
-      Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1])),
-      Vector2(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[3])),
-    )
+    Rect2(Vector2.raw(ret[0], ret[1]), Vector2.raw(ret[2], ret[3]))
   }
 
   actual fun ptrcallWithVariantArgRetString(
@@ -37378,17 +37197,17 @@ actual object ObjectCalls {
     val c4 = alloc<DoubleVar>()
     c4.value = height
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r.toFloat()
-    c5[1] = color.g.toFloat()
-    c5[2] = color.b.toFloat()
-    c5[3] = color.a.toFloat()
+    c5[0] = color.rawR
+    c5[1] = color.rawG
+    c5[2] = color.rawB
+    c5[3] = color.rawA
     val c6 = alloc<LongVar>()
     c6.value = inlineAlign
     val c7 = allocArray<GodotRealVar>(4)
-    c7[0] = GodotReal.toC(region.position.x)
-    c7[1] = GodotReal.toC(region.position.y)
-    c7[2] = GodotReal.toC(region.size.x)
-    c7[3] = GodotReal.toC(region.size.y)
+    c7[0] = region.position.rawX
+    c7[1] = region.position.rawY
+    c7[2] = region.size.rawX
+    c7[3] = region.size.rawY
     val c8 = alloc<ByteVar>()
     c8.value = if (pad) 1 else 0
     val c10 = alloc<LongVar>()
@@ -37484,8 +37303,8 @@ actual object ObjectCalls {
     val ret = alloc<ByteVar>()
     val c0 = packVariantDesc(value)
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<LongVar>()
     c2.value = longValue
     val c3 = alloc<DoubleVar>()
@@ -37516,8 +37335,8 @@ actual object ObjectCalls {
     val ret = alloc<ByteVar>()
     val c0 = packVariantDesc(value)
     val c1 = allocArray<GodotRealVar>(2)
-    c1[0] = GodotReal.toC(vector.x)
-    c1[1] = GodotReal.toC(vector.y)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
     val c2 = alloc<LongVar>()
     c2.value = longValue
     val c3 = alloc<LongVar>()
@@ -37547,8 +37366,8 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val c1 = alloc<ByteVar>()
     c1.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(2)
@@ -37569,8 +37388,8 @@ actual object ObjectCalls {
   ): Int = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val c1 = alloc<ByteVar>()
     c1.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(2)
@@ -37591,8 +37410,8 @@ actual object ObjectCalls {
   ): Long = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val c1 = alloc<ByteVar>()
     c1.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(2)
@@ -37612,8 +37431,8 @@ actual object ObjectCalls {
     value: Double,
   ): Map<String, Any?> = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val c1 = alloc<DoubleVar>()
     c1.value = value
     val types = allocArray<IntVar>(2)
@@ -37633,8 +37452,8 @@ actual object ObjectCalls {
   ): Vector3 = memScoped {
     val ret = allocArray<GodotRealVar>(3)
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val c1 = alloc<DoubleVar>()
     c1.value = value
     val types = allocArray<IntVar>(2)
@@ -37644,7 +37463,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithVector2AndIntArg(
@@ -37654,8 +37473,8 @@ actual object ObjectCalls {
     value: Int,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val c1 = alloc<LongVar>()
     c1.value = value.toLong()
     val types = allocArray<IntVar>(2)
@@ -37675,8 +37494,8 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -37692,8 +37511,8 @@ actual object ObjectCalls {
   ): Double = memScoped {
     val ret = alloc<DoubleVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -37709,8 +37528,8 @@ actual object ObjectCalls {
   ): Int = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -37726,8 +37545,8 @@ actual object ObjectCalls {
   ): Long = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -37744,8 +37563,8 @@ actual object ObjectCalls {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -37761,14 +37580,14 @@ actual object ObjectCalls {
   ): Vector2 = memScoped {
     val ret = allocArray<GodotRealVar>(2)
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithVector2ArgRetVector2i(
@@ -37778,8 +37597,8 @@ actual object ObjectCalls {
   ): Vector2i = memScoped {
     val ret = allocArray<IntVar>(2)
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -37795,14 +37614,14 @@ actual object ObjectCalls {
   ): Vector3 = memScoped {
     val ret = allocArray<GodotRealVar>(3)
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR2
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithVector2BoolFloatBoolArgsRetObject(
@@ -37816,8 +37635,8 @@ actual object ObjectCalls {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val c1 = alloc<ByteVar>()
     c1.value = if (firstBool) 1 else 0
     val c2 = alloc<DoubleVar>()
@@ -37849,15 +37668,15 @@ actual object ObjectCalls {
     antialiased: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(position.x)
-    c0[1] = GodotReal.toC(position.y)
+    c0[0] = position.rawX
+    c0[1] = position.rawY
     val c1 = alloc<DoubleVar>()
     c1.value = radius
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r.toFloat()
-    c2[1] = color.g.toFloat()
-    c2[2] = color.b.toFloat()
-    c2[3] = color.a.toFloat()
+    c2[0] = color.rawR
+    c2[1] = color.rawG
+    c2[2] = color.rawB
+    c2[3] = color.rawA
     val c3 = alloc<ByteVar>()
     c3.value = if (filled) 1 else 0
     val c4 = alloc<DoubleVar>()
@@ -37890,13 +37709,13 @@ actual object ObjectCalls {
     second: Vector2,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(first.x)
-    c0[1] = GodotReal.toC(first.y)
+    c0[0] = first.rawX
+    c0[1] = first.rawY
     val c1 = alloc<DoubleVar>()
     c1.value = value
     val c2 = allocArray<GodotRealVar>(2)
-    c2[0] = GodotReal.toC(second.x)
-    c2[1] = GodotReal.toC(second.y)
+    c2[0] = second.rawX
+    c2[1] = second.rawY
     val types = allocArray<IntVar>(3)
     types[0] = PT_VECTOR2
     types[1] = PT_FLOAT64
@@ -37923,8 +37742,8 @@ actual object ObjectCalls {
     enabled: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val c1 = alloc<DoubleVar>()
     c1.value = firstDouble
     val c2 = alloc<DoubleVar>()
@@ -37936,10 +37755,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = intValue.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r.toFloat()
-    c6[1] = color.g.toFloat()
-    c6[2] = color.b.toFloat()
-    c6[3] = color.a.toFloat()
+    c6[0] = color.rawR
+    c6[1] = color.rawG
+    c6[2] = color.rawB
+    c6[3] = color.rawA
     val c7 = alloc<DoubleVar>()
     c7.value = fifthDouble
     val c8 = alloc<ByteVar>()
@@ -37976,8 +37795,8 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val c1 = packVector2Desc(values)
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR2
@@ -37998,8 +37817,8 @@ actual object ObjectCalls {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
     val c1 = packVector2Desc(points)
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR2
@@ -38019,13 +37838,13 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(point.x)
-    c0[1] = GodotReal.toC(point.y)
+    c0[0] = point.rawX
+    c0[1] = point.rawY
     val c1 = allocArray<GodotRealVar>(4)
-    c1[0] = GodotReal.toC(rect.position.x)
-    c1[1] = GodotReal.toC(rect.position.y)
-    c1[2] = GodotReal.toC(rect.size.x)
-    c1[3] = GodotReal.toC(rect.size.y)
+    c1[0] = rect.position.rawX
+    c1[1] = rect.position.rawY
+    c1[2] = rect.size.rawX
+    c1[3] = rect.size.rawY
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR2
     types[1] = PT_RECT2
@@ -38049,8 +37868,8 @@ actual object ObjectCalls {
     enabled: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val c1 = alloc<DoubleVar>()
     c1.value = firstDouble
     val c2 = alloc<DoubleVar>()
@@ -38060,10 +37879,10 @@ actual object ObjectCalls {
     val c4 = alloc<LongVar>()
     c4.value = intValue.toLong()
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r.toFloat()
-    c5[1] = color.g.toFloat()
-    c5[2] = color.b.toFloat()
-    c5[3] = color.a.toFloat()
+    c5[0] = color.rawR
+    c5[1] = color.rawG
+    c5[2] = color.rawB
+    c5[3] = color.rawA
     val c6 = alloc<DoubleVar>()
     c6.value = fourthDouble
     val c7 = alloc<ByteVar>()
@@ -38102,17 +37921,17 @@ actual object ObjectCalls {
     antialiased: Boolean,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(position.x)
-    c0[1] = GodotReal.toC(position.y)
+    c0[0] = position.rawX
+    c0[1] = position.rawY
     val c1 = alloc<DoubleVar>()
     c1.value = width
     val c2 = alloc<DoubleVar>()
     c2.value = height
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r.toFloat()
-    c3[1] = color.g.toFloat()
-    c3[2] = color.b.toFloat()
-    c3[3] = color.a.toFloat()
+    c3[0] = color.rawR
+    c3[1] = color.rawG
+    c3[2] = color.rawB
+    c3[3] = color.rawA
     val c4 = alloc<ByteVar>()
     c4.value = if (filled) 1 else 0
     val c5 = alloc<DoubleVar>()
@@ -38150,8 +37969,8 @@ actual object ObjectCalls {
   ): Int = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(2)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
     val c1 = alloc<DoubleVar>()
     c1.value = firstDouble
     val c2 = alloc<DoubleVar>()
@@ -38207,10 +38026,10 @@ actual object ObjectCalls {
     c0[0] = vector.x
     c0[1] = vector.y
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r.toFloat()
-    c1[1] = color.g.toFloat()
-    c1[2] = color.b.toFloat()
-    c1[3] = color.a.toFloat()
+    c1[0] = color.rawR
+    c1[1] = color.rawG
+    c1[2] = color.rawB
+    c1[3] = color.rawA
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR2I
     types[1] = PT_COLOR
@@ -38522,7 +38341,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
+    Color.raw(ret[0], ret[1], ret[2], ret[3])
   }
 
   actual fun ptrcallWithVector2iArgRetDouble(
@@ -38608,7 +38427,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithVector2iArgRetVector2i(
@@ -38782,9 +38601,9 @@ actual object ObjectCalls {
   ): Long = memScoped {
     val ret = alloc<LongVar>()
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
     val c1 = alloc<ByteVar>()
     c1.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(2)
@@ -38804,9 +38623,9 @@ actual object ObjectCalls {
     amount: Double,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
     val c1 = alloc<DoubleVar>()
     c1.value = amount
     val types = allocArray<IntVar>(2)
@@ -38826,9 +38645,9 @@ actual object ObjectCalls {
   ): Boolean = memScoped {
     val ret = alloc<ByteVar>()
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -38844,9 +38663,9 @@ actual object ObjectCalls {
   ): Double = memScoped {
     val ret = alloc<DoubleVar>()
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -38861,9 +38680,9 @@ actual object ObjectCalls {
     value: Vector3,
   ): List<Plane> = memScoped {
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -38878,15 +38697,15 @@ actual object ObjectCalls {
   ): Vector2 = memScoped {
     val ret = allocArray<GodotRealVar>(2)
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR2, ret)
-    Vector2(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]))
+    Vector2.raw(ret[0], ret[1])
   }
 
   actual fun ptrcallWithVector3ArgRetVector3(
@@ -38896,15 +38715,15 @@ actual object ObjectCalls {
   ): Vector3 = memScoped {
     val ret = allocArray<GodotRealVar>(3)
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithVector3ArgRetVector3i(
@@ -38914,9 +38733,9 @@ actual object ObjectCalls {
   ): Vector3i = memScoped {
     val ret = allocArray<IntVar>(3)
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR3
     val ptrs = allocArray<COpaquePointerVar>(1)
@@ -38937,9 +38756,9 @@ actual object ObjectCalls {
     val ret = alloc<LongVar>()
     ret.value = 0
     val c0 = allocArray<GodotRealVar>(3)
-    c0[0] = GodotReal.toC(vector.x)
-    c0[1] = GodotReal.toC(vector.y)
-    c0[2] = GodotReal.toC(vector.z)
+    c0[0] = vector.rawX
+    c0[1] = vector.rawY
+    c0[2] = vector.rawZ
     val c1 = alloc<ByteVar>()
     c1.value = if (firstBool) 1 else 0
     val c2 = alloc<DoubleVar>()
@@ -39001,9 +38820,9 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BASIS, ret)
     Basis(
-      Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[3]), GodotReal.fromC(ret[6])),
-      Vector3(GodotReal.fromC(ret[1]), GodotReal.fromC(ret[4]), GodotReal.fromC(ret[7])),
-      Vector3(GodotReal.fromC(ret[2]), GodotReal.fromC(ret[5]), GodotReal.fromC(ret[8])),
+      Vector3.raw(ret[0], ret[3], ret[6]),
+      Vector3.raw(ret[1], ret[4], ret[7]),
+      Vector3.raw(ret[2], ret[5], ret[8]),
     )
   }
 
@@ -39040,7 +38859,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_VECTOR3, ret)
-    Vector3(GodotReal.fromC(ret[0]), GodotReal.fromC(ret[1]), GodotReal.fromC(ret[2]))
+    Vector3.raw(ret[0], ret[1], ret[2])
   }
 
   actual fun ptrcallWithVector3iArgRetVector3i(
@@ -39110,10 +38929,10 @@ actual object ObjectCalls {
     value: Vector4,
   ) = memScoped {
     val c0 = allocArray<GodotRealVar>(4)
-    c0[0] = GodotReal.toC(value.x)
-    c0[1] = GodotReal.toC(value.y)
-    c0[2] = GodotReal.toC(value.z)
-    c0[3] = GodotReal.toC(value.w)
+    c0[0] = value.rawX
+    c0[1] = value.rawY
+    c0[2] = value.rawZ
+    c0[3] = value.rawW
     val types = allocArray<IntVar>(1)
     types[0] = PT_VECTOR4
     val ptrs = allocArray<COpaquePointerVar>(1)

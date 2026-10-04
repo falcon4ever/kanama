@@ -42,7 +42,6 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_set_first_node_in_group_text
 import net.multigesture.kanama.types.Color
-import net.multigesture.kanama.types.GodotReal
 import net.multigesture.kanama.types.GodotRealVar
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.RID
@@ -1572,7 +1571,7 @@ internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
     IOS_PT_FLOAT64 -> ptr.reinterpret<DoubleVar>()[0]
     IOS_PT_VECTOR2 -> {
       val f = ptr.reinterpret<GodotRealVar>()
-      Vector2(GodotReal.fromC(f[0]), GodotReal.fromC(f[1]))
+      Vector2.raw(f[0], f[1])
     }
     IOS_PT_VECTOR2I -> {
       val n = ptr.reinterpret<IntVar>()
@@ -1580,11 +1579,11 @@ internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
     }
     IOS_PT_VECTOR3 -> {
       val f = ptr.reinterpret<GodotRealVar>()
-      Vector3(GodotReal.fromC(f[0]), GodotReal.fromC(f[1]), GodotReal.fromC(f[2]))
+      Vector3.raw(f[0], f[1], f[2])
     }
     IOS_PT_COLOR -> {
       val f = ptr.reinterpret<FloatVar>()
-      Color(f[0].toDouble(), f[1].toDouble(), f[2].toDouble(), f[3].toDouble())
+      Color.raw(f[0], f[1], f[2], f[3])
     }
     IOS_PT_STRING -> ptr.toKString()
     IOS_PT_NODE_PATH -> NodePath(ptr.toKString())
@@ -1601,15 +1600,15 @@ internal fun decodeIosPropertyValue(ptTag: Int, bytes: CPointer<ByteVar>?, lengt
     IOS_PT_NODE_PATH -> NodePath(bytes.readBytes(if (length >= 0) length else 0).decodeToString())
     IOS_PT_VECTOR2 -> {
       val f = bytes.reinterpret<GodotRealVar>()
-      Vector2(GodotReal.fromC(f[0]), GodotReal.fromC(f[1]))
+      Vector2.raw(f[0], f[1])
     }
     IOS_PT_VECTOR3 -> {
       val f = bytes.reinterpret<GodotRealVar>()
-      Vector3(GodotReal.fromC(f[0]), GodotReal.fromC(f[1]), GodotReal.fromC(f[2]))
+      Vector3.raw(f[0], f[1], f[2])
     }
     IOS_PT_COLOR -> {
       val f = bytes.reinterpret<FloatVar>()
-      Color(f[0].toDouble(), f[1].toDouble(), f[2].toDouble(), f[3].toDouble())
+      Color.raw(f[0], f[1], f[2], f[3])
     }
     else -> null
   }
@@ -1741,8 +1740,8 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
     }
     is Vector2 -> {
       val f = retBuf.reinterpret<GodotRealVar>()
-      f[0] = GodotReal.toC(value.x)
-      f[1] = GodotReal.toC(value.y)
+      f[0] = value.rawX
+      f[1] = value.rawY
       retTag[0] = IOS_PT_VECTOR2
     }
     is Vector2i -> {
@@ -1754,9 +1753,9 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
     // task 29 — Vector3 POD return (3x real_t, 12 bytes inline in the 32-byte scratch).
     is Vector3 -> {
       val f = retBuf.reinterpret<GodotRealVar>()
-      f[0] = GodotReal.toC(value.x)
-      f[1] = GodotReal.toC(value.y)
-      f[2] = GodotReal.toC(value.z)
+      f[0] = value.rawX
+      f[1] = value.rawY
+      f[2] = value.rawZ
       retTag[0] = IOS_PT_VECTOR3
     }
     // task 29 — RID passthrough return (a single uint64 inline in the scratch).
@@ -2046,8 +2045,8 @@ private object IosReturnPackedDescScratch {
   fun encodeVector2s(values: List<Vector2>): CPointer<ByteVar> {
     val b = header(values.size, 8)
     for (i in values.indices) {
-      putInt32LE(b, 16 + i * 8, GodotReal.toC(values[i].x).toRawBits())
-      putInt32LE(b, 16 + i * 8 + 4, GodotReal.toC(values[i].y).toRawBits())
+      putInt32LE(b, 16 + i * 8, values[i].rawX.toRawBits())
+      putInt32LE(b, 16 + i * 8 + 4, values[i].rawY.toRawBits())
     }
     return b
   }
@@ -2055,9 +2054,9 @@ private object IosReturnPackedDescScratch {
   fun encodeVector3s(values: List<Vector3>): CPointer<ByteVar> {
     val b = header(values.size, 12)
     for (i in values.indices) {
-      putInt32LE(b, 16 + i * 12, GodotReal.toC(values[i].x).toRawBits())
-      putInt32LE(b, 16 + i * 12 + 4, GodotReal.toC(values[i].y).toRawBits())
-      putInt32LE(b, 16 + i * 12 + 8, GodotReal.toC(values[i].z).toRawBits())
+      putInt32LE(b, 16 + i * 12, values[i].rawX.toRawBits())
+      putInt32LE(b, 16 + i * 12 + 4, values[i].rawY.toRawBits())
+      putInt32LE(b, 16 + i * 12 + 8, values[i].rawZ.toRawBits())
     }
     return b
   }
@@ -2065,10 +2064,10 @@ private object IosReturnPackedDescScratch {
   fun encodeColors(values: List<Color>): CPointer<ByteVar> {
     val b = header(values.size, 16)
     for (i in values.indices) {
-      putInt32LE(b, 16 + i * 16, values[i].r.toFloat().toRawBits())
-      putInt32LE(b, 16 + i * 16 + 4, values[i].g.toFloat().toRawBits())
-      putInt32LE(b, 16 + i * 16 + 8, values[i].b.toFloat().toRawBits())
-      putInt32LE(b, 16 + i * 16 + 12, values[i].a.toFloat().toRawBits())
+      putInt32LE(b, 16 + i * 16, values[i].rawR.toRawBits())
+      putInt32LE(b, 16 + i * 16 + 4, values[i].rawG.toRawBits())
+      putInt32LE(b, 16 + i * 16 + 8, values[i].rawB.toRawBits())
+      putInt32LE(b, 16 + i * 16 + 12, values[i].rawA.toRawBits())
     }
     return b
   }
@@ -2158,24 +2157,15 @@ internal object IosReturnContainerScratch {
       is Float -> Pair(IOS_PT_FLOAT64, int64Bytes(value.toDouble().toRawBits()))
       is Double -> Pair(IOS_PT_FLOAT64, int64Bytes(value.toRawBits()))
       is String -> Pair(IOS_PT_STRING, value.encodeToByteArray())
-      is Vector2 ->
-        Pair(IOS_PT_VECTOR2, float32Bytes(GodotReal.toC(value.x), GodotReal.toC(value.y)))
+      is Vector2 -> Pair(IOS_PT_VECTOR2, float32Bytes(value.rawX, value.rawY))
       is Vector2i -> {
         val out = ByteArray(8)
         putInt32LE(out, 0, value.x)
         putInt32LE(out, 4, value.y)
         Pair(IOS_PT_VECTOR2I, out)
       }
-      is Vector3 ->
-        Pair(
-          IOS_PT_VECTOR3,
-          float32Bytes(GodotReal.toC(value.x), GodotReal.toC(value.y), GodotReal.toC(value.z)),
-        )
-      is Color ->
-        Pair(
-          IOS_PT_COLOR,
-          float32Bytes(value.r.toFloat(), value.g.toFloat(), value.b.toFloat(), value.a.toFloat()),
-        )
+      is Vector3 -> Pair(IOS_PT_VECTOR3, float32Bytes(value.rawX, value.rawY, value.rawZ))
+      is Color -> Pair(IOS_PT_COLOR, float32Bytes(value.rawR, value.rawG, value.rawB, value.rawA))
       is RID -> Pair(IOS_PT_RID, int64Bytes(value.value))
       // Wrapper / @ScriptClass elements ship their owner handle; the C array/dictionary builders
       // box PT_OBJECT elements as Object Variants (task 115; `List<Node>` returns were nil before).
@@ -2399,13 +2389,7 @@ internal fun kanamaIosVirtualPackedVector3ReturnSelfTest(values: List<Vector3>):
         ((bytes[off + 3].toInt() and 0xFF) shl 24)
     return Float.fromBits(bits)
   }
-  return List(values.size) { i ->
-    Vector3(
-      GodotReal.fromC(f32(i * 12)),
-      GodotReal.fromC(f32(i * 12 + 4)),
-      GodotReal.fromC(f32(i * 12 + 8)),
-    )
-  }
+  return List(values.size) { i -> Vector3.raw(f32(i * 12), f32(i * 12 + 4), f32(i * 12 + 8)) }
 }
 
 // Dictionary/Array blob round-trips: returns "key=tag:payloadLen" / "tag:payloadLen" summaries in

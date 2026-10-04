@@ -6,25 +6,54 @@ package net.multigesture.kanama.types
  *
  * Generated from Godot docs: Color
  */
-data class Color(
+class Color
+private constructor(
+  internal val rawR: Float,
+  internal val rawG: Float,
+  internal val rawB: Float,
+  internal val rawA: Float,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
+) {
+  /** A color stored as Godot stores it, float32 per channel (in every build): each is rounded. */
+  constructor(
+    r: Double,
+    g: Double,
+    b: Double,
+    a: Double = 1.0,
+  ) : this(r.toFloat(), g.toFloat(), b.toFloat(), a.toFloat(), RawStorage)
+
+  /** GDScript's `Color(1, 1, 1)`: integer channels. */
+  constructor(
+    r: Int,
+    g: Int,
+    b: Int,
+    a: Int = 1,
+  ) : this(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
+
   /**
    * The color's red component, typically on the range of 0 to 1.
    *
    * Generated from Godot docs: Color.r
    */
-  val r: Double,
+  val r: Double
+    get() = rawR.toDouble()
+
   /**
    * The color's green component, typically on the range of 0 to 1.
    *
    * Generated from Godot docs: Color.g
    */
-  val g: Double,
+  val g: Double
+    get() = rawG.toDouble()
+
   /**
    * The color's blue component, typically on the range of 0 to 1.
    *
    * Generated from Godot docs: Color.b
    */
-  val b: Double,
+  val b: Double
+    get() = rawB.toDouble()
+
   /**
    * The color's alpha component, typically on the range of 0 to 1. A value of 0 means that the
    * color is fully transparent. A value of 1 means that the color is fully opaque. Note: The alpha
@@ -33,31 +62,47 @@ data class Color(
    *
    * Generated from Godot docs: Color.a
    */
-  val a: Double = 1.0,
-) {
-  constructor(
-    r: Number,
-    g: Number,
-    b: Number,
-    a: Number = 1.0,
-  ) : this(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
+  val a: Double
+    get() = rawA.toDouble()
 
-  // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
-  // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal colors hash equal.
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (other !is Color) return false
-    return (r == other.r || (r.isNaN() && other.r.isNaN())) &&
-      (g == other.g || (g.isNaN() && other.g.isNaN())) &&
-      (b == other.b || (b.isNaN() && other.b.isNaN())) &&
-      (a == other.a || (a.isNaN() && other.a.isNaN()))
-  }
+  operator fun component1(): Double = r
+
+  operator fun component2(): Double = g
+
+  operator fun component3(): Double = b
+
+  operator fun component4(): Double = a
+
+  /** This color with some channels replaced. */
+  fun copy(r: Double = this.r, g: Double = this.g, b: Double = this.b, a: Double = this.a): Color =
+    Color(r, g, b, a)
+
+  // Godot's `==` on the stored channels (signed zero equal, -0.0 == 0.0); NaN equals NaN to keep
+  // the JVM equals contract reflexive. hashCode canonicalizes signed zero so equal colors hash
+  // equal.
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Color &&
+        storedEquals(rawR, other.rawR) &&
+        storedEquals(rawG, other.rawG) &&
+        storedEquals(rawB, other.rawB) &&
+        storedEquals(rawA, other.rawA))
 
   override fun hashCode(): Int {
-    var result = (r + 0.0).hashCode()
-    result = 31 * result + (g + 0.0).hashCode()
-    result = 31 * result + (b + 0.0).hashCode()
-    result = 31 * result + (a + 0.0).hashCode()
+    var result = storedHash(rawR)
+    result = 31 * result + storedHash(rawG)
+    result = 31 * result + storedHash(rawB)
+    result = 31 * result + storedHash(rawA)
     return result
+  }
+
+  /** Godot's `str(c)`: four decimals at most, `(1.0, 0.5, 0.0, 1.0)`. */
+  override fun toString(): String =
+    "(${godotColorChannelString(rawR)}, ${godotColorChannelString(rawG)}, " +
+      "${godotColorChannelString(rawB)}, ${godotColorChannelString(rawA)})"
+
+  internal companion object {
+    /** A color from float32 channels (marshalling; no conversion). */
+    fun raw(r: Float, g: Float, b: Float, a: Float): Color = Color(r, g, b, a, RawStorage)
   }
 }

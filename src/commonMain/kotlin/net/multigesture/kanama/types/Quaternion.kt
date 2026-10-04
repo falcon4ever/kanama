@@ -20,62 +20,105 @@ private const val FROM_EULER_HASH = 4053467903L
  *
  * Generated from Godot docs: Quaternion
  */
-data class Quaternion(
+class Quaternion
+private constructor(
+  internal val rawX: GodotRealStorage,
+  internal val rawY: GodotRealStorage,
+  internal val rawZ: GodotRealStorage,
+  internal val rawW: GodotRealStorage,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
+) {
+  /** A quaternion stored at Godot's `real_t` width: each component is rounded to it. */
+  constructor(
+    x: Double,
+    y: Double,
+    z: Double,
+    w: Double,
+  ) : this(GodotReal.toC(x), GodotReal.toC(y), GodotReal.toC(z), GodotReal.toC(w), RawStorage)
+
+  /** GDScript's `Quaternion(0, 0, 0, 1)`: integer components. */
+  constructor(
+    x: Int,
+    y: Int,
+    z: Int,
+    w: Int,
+  ) : this(x.toDouble(), y.toDouble(), z.toDouble(), w.toDouble())
+
   /**
    * X component of the quaternion. This is the value along the "imaginary" `i` axis. Note:
    * Quaternion components should usually not be manipulated directly.
    *
    * Generated from Godot docs: Quaternion.x
    */
-  val x: Double,
+  val x: Double
+    get() = GodotReal.fromC(rawX)
+
   /**
    * Y component of the quaternion. This is the value along the "imaginary" `j` axis. Note:
    * Quaternion components should usually not be manipulated directly.
    *
    * Generated from Godot docs: Quaternion.y
    */
-  val y: Double,
+  val y: Double
+    get() = GodotReal.fromC(rawY)
+
   /**
    * Z component of the quaternion. This is the value along the "imaginary" `k` axis. Note:
    * Quaternion components should usually not be manipulated directly.
    *
    * Generated from Godot docs: Quaternion.z
    */
-  val z: Double,
+  val z: Double
+    get() = GodotReal.fromC(rawZ)
+
   /**
    * W component of the quaternion. This is the "real" part. Note: Quaternion components should
    * usually not be manipulated directly.
    *
    * Generated from Godot docs: Quaternion.w
    */
-  val w: Double,
-) {
-  constructor(
-    x: Number,
-    y: Number,
-    z: Number,
-    w: Number,
-  ) : this(x.toDouble(), y.toDouble(), z.toDouble(), w.toDouble())
+  val w: Double
+    get() = GodotReal.fromC(rawW)
 
-  // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
-  // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal quaternions hash
+  operator fun component1(): Double = x
+
+  operator fun component2(): Double = y
+
+  operator fun component3(): Double = z
+
+  operator fun component4(): Double = w
+
+  /** This quaternion with some components replaced. */
+  fun copy(
+    x: Double = this.x,
+    y: Double = this.y,
+    z: Double = this.z,
+    w: Double = this.w,
+  ): Quaternion = Quaternion(x, y, z, w)
+
+  // Godot's `==` on the stored components (signed zero equal, -0.0 == 0.0); NaN equals NaN to keep
+  // the JVM equals contract reflexive. hashCode canonicalizes signed zero so equal values hash
   // equal.
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (other !is Quaternion) return false
-    return (x == other.x || (x.isNaN() && other.x.isNaN())) &&
-      (y == other.y || (y.isNaN() && other.y.isNaN())) &&
-      (z == other.z || (z.isNaN() && other.z.isNaN())) &&
-      (w == other.w || (w.isNaN() && other.w.isNaN()))
-  }
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Quaternion &&
+        storedEquals(rawX, other.rawX) &&
+        storedEquals(rawY, other.rawY) &&
+        storedEquals(rawZ, other.rawZ) &&
+        storedEquals(rawW, other.rawW))
 
   override fun hashCode(): Int {
-    var result = (x + 0.0).hashCode()
-    result = 31 * result + (y + 0.0).hashCode()
-    result = 31 * result + (z + 0.0).hashCode()
-    result = 31 * result + (w + 0.0).hashCode()
+    var result = storedHash(rawX)
+    result = 31 * result + storedHash(rawY)
+    result = 31 * result + storedHash(rawZ)
+    result = 31 * result + storedHash(rawW)
     return result
   }
+
+  /** Godot's `str(q)`: `(0, 0, 0, 1)` (no `.0` on whole numbers, unlike the vectors). */
+  override fun toString(): String =
+    "(${godotRealString(x, false)}, ${godotRealString(y, false)}, " +
+      "${godotRealString(z, false)}, ${godotRealString(w, false)})"
 
   /** Godot `Quaternion.is_equal_approx`: per-component fuzzy compare (CMP_EPSILON tolerance). */
   /**
@@ -96,14 +139,17 @@ data class Quaternion(
    *
    * Generated from Godot docs: Quaternion.length_squared
    */
-  fun lengthSquared(): Double = x * x + y * y + z * z + w * w
+  fun lengthSquared(): Double = GodotReal.fromC(rawLengthSquared())
+
+  private fun rawLengthSquared(): GodotRealStorage =
+    rawX * rawX + rawY * rawY + rawZ * rawZ + rawW * rawW
 
   /**
    * Returns this quaternion's length, also called magnitude.
    *
    * Generated from Godot docs: Quaternion.length
    */
-  fun length(): Double = sqrt(lengthSquared())
+  fun length(): Double = GodotReal.fromC(sqrt(rawLengthSquared()))
 
   /**
    * Returns a copy of this quaternion, normalized so that its length is `1.0`. See also
@@ -112,19 +158,27 @@ data class Quaternion(
    * Generated from Godot docs: Quaternion.normalized
    */
   fun normalized(): Quaternion {
-    val len = length()
-    return if (len == 0.0) IDENTITY else Quaternion(x / len, y / len, z / len, w / len)
+    // Godot: `*this / length()`, which multiplies by `1 / length` in `real_t`.
+    val len = sqrt(rawLengthSquared())
+    if (len == GodotReal.toC(0.0)) return IDENTITY
+    val inverseLength = GodotReal.toC(1.0) / len
+    return raw(
+      rawX * inverseLength,
+      rawY * inverseLength,
+      rawZ * inverseLength,
+      rawW * inverseLength,
+    )
   }
 
   operator fun times(other: Quaternion): Quaternion =
-    Quaternion(
-      w * other.x + x * other.w + y * other.z - z * other.y,
-      w * other.y - x * other.z + y * other.w + z * other.x,
-      w * other.z + x * other.y - y * other.x + z * other.w,
-      w * other.w - x * other.x - y * other.y - z * other.z,
+    raw(
+      rawW * other.rawX + rawX * other.rawW + rawY * other.rawZ - rawZ * other.rawY,
+      rawW * other.rawY - rawX * other.rawZ + rawY * other.rawW + rawZ * other.rawX,
+      rawW * other.rawZ + rawX * other.rawY - rawY * other.rawX + rawZ * other.rawW,
+      rawW * other.rawW - rawX * other.rawX - rawY * other.rawY - rawZ * other.rawZ,
     )
 
-  operator fun unaryMinus(): Quaternion = Quaternion(-x, -y, -z, -w)
+  operator fun unaryMinus(): Quaternion = raw(-rawX, -rawY, -rawZ, -rawW)
 
   /**
    * Returns the inverse version of this quaternion, inverting the sign of every component except
@@ -141,7 +195,8 @@ data class Quaternion(
    *
    * Generated from Godot docs: Quaternion.dot
    */
-  fun dot(other: Quaternion): Double = x * other.x + y * other.y + z * other.z + w * other.w
+  fun dot(other: Quaternion): Double =
+    GodotReal.fromC(rawX * other.rawX + rawY * other.rawY + rawZ * other.rawZ + rawW * other.rawW)
 
   /**
    * Performs a spherical-linear interpolation with the `to` quaternion, given a `weight` and
@@ -161,10 +216,10 @@ data class Quaternion(
 
   private fun toGodotRealArray(): GodotRealArray =
     GodotRealArray(4).also {
-      it[0] = GodotReal.toC(x)
-      it[1] = GodotReal.toC(y)
-      it[2] = GodotReal.toC(z)
-      it[3] = GodotReal.toC(w)
+      it[0] = rawX
+      it[1] = rawY
+      it[2] = rawZ
+      it[3] = rawW
     }
 
   companion object {
@@ -206,21 +261,23 @@ data class Quaternion(
             BArg.Floats(
               PT_VECTOR3,
               GodotRealArray(3).also {
-                it[0] = GodotReal.toC(euler.x)
-                it[1] = GodotReal.toC(euler.y)
-                it[2] = GodotReal.toC(euler.z)
+                it[0] = euler.rawX
+                it[1] = euler.rawY
+                it[2] = euler.rawZ
               },
             )
           ),
         )
       )
 
-    private fun fromGodotRealArray(c: GodotRealArray): Quaternion =
-      Quaternion(
-        GodotReal.fromC(c[0]),
-        GodotReal.fromC(c[1]),
-        GodotReal.fromC(c[2]),
-        GodotReal.fromC(c[3]),
-      )
+    private fun fromGodotRealArray(c: GodotRealArray): Quaternion = raw(c[0], c[1], c[2], c[3])
+
+    /** A quaternion from components already at the storage width (marshalling; no conversion). */
+    internal fun raw(
+      x: GodotRealStorage,
+      y: GodotRealStorage,
+      z: GodotRealStorage,
+      w: GodotRealStorage,
+    ): Quaternion = Quaternion(x, y, z, w, RawStorage)
   }
 }

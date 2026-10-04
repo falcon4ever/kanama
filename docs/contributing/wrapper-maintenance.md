@@ -932,7 +932,7 @@ python3 scripts/audit_ptrcall_helper_layouts.py
 ```
 
 Godot's scalar `float` ptrcall slot is 64-bit (`JAVA_DOUBLE`) even when
-single-precision `real_t` value components are float32 in engine buffers (they are
-`Double` in Kotlin and narrowed by `GodotRealSegment`); every helper with a
+single-precision `real_t` value components are float32 in engine buffers (and in the
+value types' storage; `GodotRealSegment.readRaw`/`writeRaw` move them); every helper with a
 scalar float slot must use `JAVA_DOUBLE`, and only `Color` component storage may
 use `JAVA_FLOAT`.

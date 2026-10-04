@@ -171,8 +171,10 @@ assigned yet. Unconditional `!!` will crash the editor.
 - Decimal literals: use `Double` — `Vector3(0.0, 1.0, 0.0)`, `Color(1.0, 0.5, 0.0)`; no `f`
   suffixes and no `.toFloat()` / `.toDouble()` between components, `delta` and scalar arguments
   (all `Double`)
-- Compare vectors read back from the engine with `isEqualApprox`: the engine stores them as
-  float32
+- Compare decimals with `isEqualApprox`, as in GDScript: components are stored as float32, so
+  `Vector2(0.1, 0.2).x == 0.1` is `false` (while `v == Vector2(0.1, 0.2)` is `true`)
+- Integer components need no `.0` (`Vector3(0, 1, 0)`), but a call that mixes them with decimals
+  does (`Vector3(speed, 0.0, 0.0)`)
 - Use `withX()` / `withY()` / `withZ()` to change one component without constructing a full new vector
 
 ```kotlin

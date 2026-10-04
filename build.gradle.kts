@@ -153,9 +153,16 @@ val generateKanamaReal by
                 |typealias GodotRealArray = ${storage}Array
                 |
                 |/**
-                | * The engine's `real_t` storage width and the conversions at the marshalling boundary.
-                | * Value-type components are `Double`; [toC] narrows one to the engine's width on the way
-                | * in and [fromC] widens it on the way out. Kanama builds default to single precision,
+                | * One component at the engine's `real_t` storage width: the field type of every value
+                | * type (`Vector2`…`Projection`). Public members stay `Double`; this is internal.
+                | */
+                |internal typealias GodotRealStorage = $storage
+                |
+                |/**
+                | * The engine's `real_t` storage width and the conversions between it and `Double`.
+                | * Value types store their components at this width (like Godot, GDScript and C#) and
+                | * expose them as `Double`; [toC] narrows a `Double` to the width (on store) and [fromC]
+                | * widens a stored value (on read). Kanama builds default to single precision,
                 | * matching normal Godot builds; compile with `-PkanamaPrecision=double` for Godot builds
                 | * made with `precision=double` (desktop only; iOS supports single precision only).
                 | */
@@ -163,11 +170,14 @@ val generateKanamaReal by
                 |    const val SIZE_BYTES: Long = ${if (isDouble) "8L" else "4L"}
                 |    const val ALIGN_BYTES: Long = ${if (isDouble) "8L" else "4L"}
                 |
-                |    /** A component into a [GodotRealArray] cell: narrowed to the engine's width. */
+                |    /** A `Double` narrowed to the engine's width (rounded to nearest). */
                 |    fun toC(value: Double): $storage = ${if (isDouble) "value" else "value.toFloat()"}
                 |
-                |    /** A [GodotRealArray] cell out to a component: widened to `Double`. */
+                |    /** A stored value widened to `Double` (exact). */
                 |    fun fromC(value: $storage): Double = ${if (isDouble) "value" else "value.toDouble()"}
+                |
+                |    /** `true` when `real_t` is float32 (Godot's default `precision=single`). */
+                |    internal const val IS_SINGLE: Boolean = ${!isDouble}
                 |
                 |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
                 |}
@@ -209,12 +219,21 @@ val generateKanamaRealSegment by
                 |import java.lang.foreign.ValueLayout.$layoutName
                 |
                 |/**
-                | * The Panama half of [GodotReal]: a `Double` component in and out of a raw engine
-                | * buffer at the engine's `real_t` storage width (narrowed on write, widened on read).
-                | * Desktop and Android only — `java.lang.foreign` has no common name, so these two
-                | * functions cannot live on the common [GodotReal] object.
+                | * The Panama half of [GodotReal]: a component in and out of a raw engine buffer at the
+                | * engine's `real_t` storage width. [readIndex]/[writeIndex] take `Double` (widened on
+                | * read, narrowed on write; generated script registrars use them); Kanama's own
+                | * marshalling uses [readRaw]/[writeRaw], which move the stored value with no
+                | * conversion. Desktop and Android only — `java.lang.foreign` has no common name, so
+                | * these functions cannot live on the common [GodotReal] object.
                 | */
                 |object GodotRealSegment {
+                |    internal fun readRaw(segment: MemorySegment, index: Long): GodotRealStorage =
+                |        segment.get($layoutName, index * GodotReal.SIZE_BYTES)
+                |
+                |    internal fun writeRaw(segment: MemorySegment, index: Long, value: GodotRealStorage) {
+                |        segment.set($layoutName, index * GodotReal.SIZE_BYTES, value)
+                |    }
+                |
                 |    fun readIndex(segment: MemorySegment, index: Long): Double =
                 |        segment.get($layoutName, index * GodotReal.SIZE_BYTES)$widen
                 |

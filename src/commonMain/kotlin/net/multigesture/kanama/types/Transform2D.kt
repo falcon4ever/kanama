@@ -31,6 +31,9 @@ data class Transform2D(
    */
   val origin: Vector2,
 ) {
+  /** Godot's `str(t)`: `[X: (1.0, 0.0), Y: (0.0, 1.0), O: (0.0, 0.0)]`. */
+  override fun toString(): String = "[X: $x, Y: $y, O: $origin]"
+
   /** Godot-style fuzzy compare: true if every column is approximately equal. */
   /**
    * Returns `true` if this transform and `xform` are approximately equal, by running

@@ -114,35 +114,57 @@ Kept by: `scripts/audit_wrapper_signatures.py` and `scripts/audit_wrapper_abi_po
 
 Current rule (since task 134):
 
-- Every decimal value a script reads or writes on its own is `Double`, on every platform, as in
-  GDScript, where `float` is 64-bit:
+- Every decimal value a script reads or writes is `Double` in every signature, on every platform,
+  as in GDScript, where `float` is 64-bit:
     - a scalar `float` argument, return or property (`SCALAR_KOTLIN_TYPES` in
       `scripts/generate_api_wrapper.py`, `FLOAT_POLICIES` in `scripts/wrapper_model.py`): Godot
       passes it as a 64-bit double;
     - the components of the value types (`Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane`,
-      `Basis`, `Transform2D/3D`, `Rect2`, `AABB`, `Projection`) and of `Color`. Kotlin-side math on
-      them is done in `Double`.
-- The engine's storage width is unchanged: value-type components are Godot's `real_t` (float32 in
-  the single-precision builds Kanama ships, float64 for a `precision=double` desktop build compiled
-  with `-PkanamaPrecision=double`), and `Color` is always float32. The marshalling layer narrows a
-  component on the way in and widens it on the way out (`GodotReal.toC`/`fromC`,
-  `GodotRealSegment` on desktop/Android, the iOS `ObjectCalls` packing, the Web bridge) — the same
-  conversion GDScript does at the same boundary. `real_t` is not a public type.
-- A value read back from the engine is therefore float32-quantized: `Vector2(0.1, 0.2)` written
-  to a property reads back as `(0.10000000149011612, 0.20000000298023224)`. Compare engine
-  results with `isEqualApprox`, not `==` (which only holds for values exact in float32, such as
-  `0.5` or `1.25`). Kotlin computes in `Double` while Godot's C++ computes in `real_t`, so a result
-  can differ from the engine's in the last bits.
+      `Basis`, `Transform2D/3D`, `Rect2`, `AABB`, `Projection`) and of `Color`: constructors,
+      properties, operators and methods take and return `Double`.
+- **A value type stores its components at Godot's width**, exactly as Godot, GDScript and C# do:
+  Godot's `real_t` for the vectors and transforms (float32 in the default build, float64 when
+  Kanama is built with `-PkanamaPrecision=double` for a `precision=double` engine) and float32 for
+  `Color`, in every build. A constructor or `copy` rounds each component to that width; a property
+  widens the stored value back to `Double`. The storage type is the generated, internal
+  `GodotRealStorage` (`Real.kt`, from `generateKanamaReal`).
+- So Kotlin behaves like GDScript:
+    - `node.position = v; node.position == v` is `true`: the marshalling layer moves the stored
+      bits unchanged (`GodotRealSegment.readRaw`/`writeRaw` on desktop/Android, the iOS
+      `ObjectCalls` packing; the Web bridge passes the widened value, which is exact).
+    - `==` and `hashCode` compare the stored values with Godot's `==` (`-0.0 == 0.0`; `NaN`
+      equals itself only to keep the JVM `equals` contract).
+    - `toString()` prints what GDScript's `str(v)` prints: `(0.1, 0.2)`, `(1.0, 2.0, 3.0)`,
+      Quaternion `(0, 0, 0, 1)`, Color `(1.0, 0.5, 0.0, 1.0)` (at most four decimals), Plane
+      `[N: (0.0, 1.0, 0.0), D: 0]`, Basis/Transform columns `[X: …, Y: …, Z: …, O: …]`.
+    - One arithmetic operation gives Godot's result bit for bit: it is computed on the stored
+      operands and rounded to the storage width on store (one float32 operation on float32 inputs
+      equals the Double operation rounded to float32), and a scalar operand is narrowed to
+      `real_t` first, as `Vector2 * float` does in Godot. `dot`, `length`, `cross`,
+      `normalized`, `Quaternion * Quaternion` and Basis-from-Quaternion follow Godot's formulas
+      in `real_t`. Methods computed by the engine (`lerp`, `rotated`, `slerp`, ...) return the
+      engine's stored result.
+- **The same caveat as GDScript:** `v.x = 0.1` (or `Vector2(0.1, 0.2)`) stores the float32
+  nearest to 0.1, so `v.x == 0.1` is `false` in a float32 build, while `v == Vector2(0.1, 0.2)`
+  is `true` (both sides are stored). Compare decimals with `isEqualApprox`; values exact in
+  float32 (`0.5`, `1.25`, small integers) compare equal either way.
+- Integer components construct without boxing: `Vector3(0, 1, 0)`, `Color(1, 1, 1)`,
+  `Plane(Vector3.UP, 0)` (an `Int` overload beside the `Double` one; the operators take `Int`, `Long`,
+  `Double` and `Float` scalars). Mixing the two in one call needs Double literals:
+  `Vector3(speed, 0.0, 0.0)`. There is no `Number` overload: it boxed every argument, a hidden
+  allocation in a per-frame loop.
 - Packed bulk data keeps compact 32-bit storage: `PackedFloat32Array` is `List<Float>`,
   `PackedFloat64Array` is `List<Double>`. The elements of `PackedVector2/3/4Array` and
-  `PackedColorArray` (and mesh arrays) are the ordinary value types, so a `List<Vector3>` read
-  from a `PackedVector3Array` has `Double` components, widened from the float32 storage.
-- The `Number` constructor overloads (`Vector3(0, 1, 0)`, `Color(1, 1, 1)`) stay for integer
-  literals; prefer Double literals (`Vector3(0.0, 1.0, 0.0)`), which call the primary constructor
-  directly.
+  `PackedColorArray` (and mesh arrays) are the ordinary value types.
+- **Double precision** (`-PkanamaPrecision=double`, desktop only): compiles and the JVM tests
+  pass, but it is not tested end to end against a `precision=double` engine, and two known
+  marshalling sizes assume single precision (the hard-coded 24-byte Variant size and the `Rect2`
+  cell size in `ObjectCalls`).
 
-Kept by: the value types' signatures in `api-snapshots/types.txt` / `web-types.txt` and the
-`RealStorageWidthTest` boundary test.
+Kept by: the value types' signatures in `api-snapshots/types.txt` / `web-types.txt`, the
+`RealStorageWidthTest` unit test (storage, equality, `toString` against Godot's strings, real_t
+arithmetic) and the `value_type_storage_smoke` rows of `scripts/runtime_smoke.sh`, which compare
+an engine round trip, `str(v)` and a few operations with GDScript's in the same run.
 
 ## 5. Enums and bitfields
 

@@ -55,6 +55,8 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://signal_leak_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 131 items 2 + 6 -- wrapper equality and a call through a wrapper of a freed object.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 134 A2 -- value types store Godot's width: Kotlin and GDScript print the same three lines.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_storage_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 133 -- node/script delegates, checked casts, preload, tree accessors and the script coroutine
 # scope; the scene quits itself once its async rows (wait, nextFrame, cancel on free) have printed.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_access_smoke.tscn --quit-after 5000 --verbose >>"$LOG_FILE" 2>&1
@@ -376,6 +378,18 @@ if ! grep -Eq "OwnedReleaseSmoke baseline=[0-9]+ after_drop=[0-9]+ after_gc=[0-9
 fi
 # Holding a freed wrapper is silent, as in GDScript: two exported-property reads and a script
 # method return of it give Godot null (no error; counted below).
+# task 134 A2 -- a position written and read back is `==` (its x is not `== 0.1`, as in GDScript),
+# toString() is GDScript's str(), and Kotlin-side arithmetic has the engine's float32 bits: each
+# Kotlin line must equal the GDScript line printed in the same run (value_type_storage_ref.gd).
+check "ValueTypeStorage kotlin roundtrip_eq=true str=\\(0\\.1, 0\\.2\\) x_eq_literal=false$"
+check "ValueTypeStorage kotlin str=\\(0\\.1, 0\\.2\\)\\|\\(1\\.0, 2\\.0, 3\\.0\\)\\|\\(12345\\.68, -0\\.000001\\)\\|"
+for vts_row in roundtrip_eq str bits; do
+  vts_kotlin="$(grep -o "ValueTypeStorage kotlin ${vts_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^ValueTypeStorage kotlin //')"
+  vts_gdscript="$(grep -o "ValueTypeStorage gdscript ${vts_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^ValueTypeStorage gdscript //')"
+  if [[ -z "$vts_kotlin" || "$vts_kotlin" != "$vts_gdscript" ]]; then
+    smoke_fail "Kotlin/GDScript value-type mismatch (${vts_row})" "kotlin: ${vts_kotlin:-<missing>} gdscript: ${vts_gdscript:-<missing>}"
+  fi
+done
 check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true"
 # A call through the freed wrapper throws IllegalStateException instead of dereferencing the dead
 # pointer (before task 131: a use-after-free, typically a native crash and no line below at all).
@@ -457,7 +471,7 @@ check_absent "Leaked instance: SubtweenTweener"
 check_absent "Leaked instance: Tween:"
 check "Node controls ready=(true|false) in_group=true group_removed=true group_set=true group_flags=true processing_after_set=true physics_processing_after_set=true processing_input=true shortcut_input=true unhandled_input=true unhandled_key_input=true multiplayer_authority=[0-9-]+ is_multiplayer_authority=(true|false)"
 check "Node scalar_controls process_priority=3 physics_process_priority=4 displayed_folded=true unique_name=true editor_description_len=17 tree_node_count_positive=true"
-check "Vector helpers v3_len=5\\.0 v3_norm=0\\.0,0\\.6,0\\.8 v3_dot=32\\.0 v3_cross=0\\.0,0\\.0,1\\.0 v3_lerp=1\\.0,2\\.0,3\\.0 v3_limited=2\\.0,0\\.0,0\\.0 v3_distance=2\\.0 v2_len=5\\.0 v2_angle=0\\.0 v2_lerp=1\\.0,1\\.5 v3_withx=9\\.0,2\\.0,3\\.0 v3_withy=1\\.0,9\\.0,3\\.0 v3_withz=1\\.0,2\\.0,9\\.0 v2_withx=9\\.0,2\\.0 v2_withy=1\\.0,9\\.0"
+check "Vector helpers v3_len=5\\.0 v3_norm=0\\.0,0\\.6000000238418579,0\\.800000011920929 v3_dot=32\\.0 v3_cross=0\\.0,0\\.0,1\\.0 v3_lerp=1\\.0,2\\.0,3\\.0 v3_limited=2\\.0,0\\.0,0\\.0 v3_distance=2\\.0 v2_len=5\\.0 v2_angle=0\\.0 v2_lerp=1\\.0,1\\.5 v3_withx=9\\.0,2\\.0,3\\.0 v3_withy=1\\.0,9\\.0,3\\.0 v3_withz=1\\.0,2\\.0,9\\.0 v2_withx=9\\.0,2\\.0 v2_withy=1\\.0,9\\.0"
 # task 128 A follow-up — a typed enum through Object.set / ConfigFile.setValue is encoded as INT.
 check "typed enum dynamic set=1 config_roundtrip=3$"
 # task 128 C — InputEventMouseButton.create(): typed button read back, attached to an action, the

@@ -101,6 +101,10 @@ class Surface:
     sources: tuple[str, ...]  # directories relative to the root, read recursively
     what: str  # one line for the snapshot header
     package: str = API_PACKAGE  # declarations in this package are named without it
+    # Gradle tasks in the root build.gradle.kts whose `"""...""".trimMargin()` template IS a source
+    # file of this surface (the generated `Real.kt` / `RealSegment.kt`), read rendered for the
+    # default single-precision build: no Gradle run needed, and a template change is a signature change.
+    rendered: tuple[str, ...] = ()
 
     @property
     def snapshot(self) -> str:
@@ -117,8 +121,10 @@ SURFACES = (
     Surface(
         "types",
         ("src/commonMain/kotlin/net/multigesture/kanama/types",),
-        "the builtin value types every native backend shares (Vector2/3/4, Color, Basis, Transform3D, ...)",
+        "the builtin value types every native backend shares (Vector2/3/4, Color, Basis, Transform3D, ...) "
+        "and the generated real_t storage helpers (GodotReal, GodotRealArray, GodotRealSegment)",
         TYPES_PACKAGE,
+        rendered=("generateKanamaReal", "generateKanamaRealSegment"),
     ),
     Surface(
         "jvm",
@@ -793,9 +799,16 @@ class Parser:
             i = self.skip_ws(j, newlines=False)
         ctor_line = None
         ctor_props: list[str] = []
-        ctor = re.compile(
+        ctor_re = re.compile(
             r"((?:@[\w.:]+(?:\((?:[^()]|\([^()]*\))*\))?\s+|(?:public|private|internal|protected)\s+)*)(constructor\s*)?\("
-        ).match(text, i)
+        )
+        ctor = ctor_re.match(text, i)
+        if not ctor:
+            # ktfmt puts a modified primary constructor on the line after the name
+            # (`class Vector2` / `private constructor(`); the `constructor` keyword makes it unambiguous.
+            wrapped = ctor_re.match(text, self.skip_ws(i))
+            if wrapped and wrapped.group(2):
+                ctor = wrapped
         if ctor:
             open_paren = ctor.end() - 1
             close = src.closers[open_paren]
@@ -911,6 +924,37 @@ def resolve_forwarders(decls: list[Decl]) -> None:
             queue += supertypes.get(cls, [])
 
 
+# The single-precision values of the expressions the Real.kt templates interpolate.
+RENDERED_REAL_VALUES = {"storage": "Float", "layoutName": "JAVA_FLOAT", "widen": ".toDouble()", "narrow": ".toFloat()"}
+
+
+def rendered_sources(root: Path, surface: Surface) -> list[tuple[str, str]]:
+    """(label, Kotlin text) of each `rendered` template, as the default build generates it."""
+    if not surface.rendered:
+        return []
+    build = (root / "build.gradle.kts").read_text(encoding="utf-8")
+    out: list[tuple[str, str]] = []
+    for task in surface.rendered:
+        start = build.find(f"val {task} by")
+        if start < 0:
+            raise ParseError(f"build.gradle.kts: no `val {task} by` task (the Real.kt generator moved)")
+        open_quote = build.find('"""', start)
+        close_quote = build.find('"""', open_quote + 3)
+        if open_quote < 0 or close_quote < 0:
+            raise ParseError(f"build.gradle.kts: `{task}` has no triple-quoted template")
+        text = "\n".join(re.sub(r"^\s*\|", "", line) for line in build[open_quote + 3 : close_quote].split("\n"))
+        text = re.sub(r'\$\{if \(isDouble\) "([^"]*)" else "([^"]*)"\}', r"\2", text)
+        text = text.replace("${!isDouble}", "true")
+        for name, value in RENDERED_REAL_VALUES.items():
+            text = text.replace("${" + name + "}", value).replace("$" + name, value)
+        leftover = re.search(r"\$\{?[\w!]", text)
+        if leftover:
+            raise ParseError(f"build.gradle.kts: `{task}` template interpolates `{leftover.group(0)}...`, "
+                             "which RENDERED_REAL_VALUES does not render")
+        out.append((f"build.gradle.kts ({task}, rendered single precision)", text.strip("\n") + "\n"))
+    return out
+
+
 def surface_files(root: Path, surface: Surface) -> list[Path]:
     files: list[Path] = []
     for source in surface.sources:
@@ -939,6 +983,14 @@ def surface_lines(root: Path, surface: Surface) -> SurfaceResult:
             raise ParseError(f"{rel}: {error}") from None
         src = Source(path, rel, text)
         parser = Parser(src, package_prefix(text, surface.package))
+        parser.parse_body(0, len(text), "")
+        decls += parser.decls
+    for label, raw in rendered_sources(root, surface):
+        try:
+            text = compact(raw)
+        except ParseError as error:
+            raise ParseError(f"{label}: {error}") from None
+        parser = Parser(Source(root / "build.gradle.kts", label, text), package_prefix(text, surface.package))
         parser.parse_body(0, len(text), "")
         decls += parser.decls
     resolve_forwarders(decls)

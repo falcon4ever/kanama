@@ -34,6 +34,9 @@ data class Projection(
    */
   val w: Vector4,
 ) {
+  /** Godot's `str(p)`: the four columns, `[X: (1.0, 0.0, 0.0, 0.0), Y: …, W: …]`. */
+  override fun toString(): String = "[X: $x, Y: $y, Z: $z, W: $w]"
+
   // ===== BEGIN GENERATED ENUMS: Projection (scripts/generate_api_wrapper.py — do not edit) =====
   /**
    * Godot's `Projection.Planes` enum as a typed value: `.value` is the raw number Godot uses, and

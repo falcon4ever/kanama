@@ -86,11 +86,7 @@ actual object BuiltinCalls {
         MemorySegment.NULL
       } else {
         val buf = arena.allocate(GodotReal.SIZE_BYTES * base.size, GodotReal.ALIGN_BYTES)
-        for (i in base.indices) GodotRealSegment.writeIndex(
-          buf,
-          i.toLong(),
-          GodotReal.fromC(base[i]),
-        )
+        for (i in base.indices) GodotRealSegment.writeRaw(buf, i.toLong(), base[i])
         buf
       }
     val argArray =
@@ -110,7 +106,7 @@ actual object BuiltinCalls {
         val size = if (arg.values.isNotEmpty()) arg.values.size else 1
         val buf = arena.allocate(GodotReal.SIZE_BYTES * size, GodotReal.ALIGN_BYTES)
         for (i in arg.values.indices) {
-          GodotRealSegment.writeIndex(buf, i.toLong(), GodotReal.fromC(arg.values[i]))
+          GodotRealSegment.writeRaw(buf, i.toLong(), arg.values[i])
         }
         buf
       }
@@ -145,7 +141,7 @@ actual object BuiltinCalls {
       val size = if (retCount > 0) retCount else 1
       val ret = arena.allocate(GodotReal.SIZE_BYTES * size, GodotReal.ALIGN_BYTES)
       invokeBuiltin(arena, methodPtr, base, args, ret)
-      GodotRealArray(retCount) { GodotReal.toC(GodotRealSegment.readIndex(ret, it.toLong())) }
+      GodotRealArray(retCount) { GodotRealSegment.readRaw(ret, it.toLong()) }
     }
 
   /**
