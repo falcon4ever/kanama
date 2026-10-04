@@ -1,15 +1,6 @@
 package net.multigesture.kanama.types
 
 import kotlin.math.sqrt
-import net.multigesture.kanama.binding.runtime.BArg
-import net.multigesture.kanama.binding.runtime.BuiltinCalls
-import net.multigesture.kanama.binding.runtime.PT_QUATERNION
-import net.multigesture.kanama.binding.runtime.PT_VECTOR3
-import net.multigesture.kanama.binding.runtime.VT_QUATERNION
-
-private const val SLERP_HASH = 1773590316L
-private const val INVERSE_HASH = 4274879941L
-private const val FROM_EULER_HASH = 4053467903L
 
 // One body for every backend (task 104 step 2): `inverse`, `slerp` and `from_euler` are computed by
 // the engine through BuiltinCalls (their shortest-arc and non-unit handling is the engine's), the
@@ -158,9 +149,9 @@ private constructor(
    * Generated from Godot docs: Quaternion.normalized
    */
   fun normalized(): Quaternion {
-    // Godot: `*this / length()`, which multiplies by `1 / length` in `real_t`.
+    // Godot: `*this / length()`, which multiplies by `1 / length` in `real_t` -- a zero
+    // quaternion gives NaN components, as in Godot (the edge parity row checks it).
     val len = sqrt(rawLengthSquared())
-    if (len == narrowReal(0.0)) return IDENTITY
     val inverseLength = narrowReal(1.0) / len
     return raw(
       rawX * inverseLength,
@@ -184,15 +175,6 @@ private constructor(
   operator fun unaryMinus(): Quaternion = raw(-rawX, -rawY, -rawZ, -rawW)
 
   /**
-   * Returns the inverse version of this quaternion, inverting the sign of every component except
-   * `w`.
-   *
-   * Generated from Godot docs: Quaternion.inverse
-   */
-  fun inverse(): Quaternion =
-    fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(inverseBind, toGodotRealArray()))
-
-  /**
    * Returns the dot product between this quaternion and `with`. This is equivalent to `(quat.x *
    * with.x) + (quat.y * with.y) + (quat.z * with.z) + (quat.w * with.w)`.
    *
@@ -201,31 +183,258 @@ private constructor(
   fun dot(other: Quaternion): Double =
     widenReal(realDot(rawX, rawY, rawZ, rawW, other.rawX, other.rawY, other.rawZ, other.rawW))
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Quaternion (generate_builtin_ops.py) =====
+  operator fun unaryPlus(): Quaternion = this
+
+  operator fun times(scalar: Int): Quaternion = times(scalar.toDouble())
+
+  operator fun times(scalar: Long): Quaternion = times(scalar.toDouble())
+
+  operator fun div(scalar: Int): Quaternion = div(scalar.toDouble())
+
+  operator fun div(scalar: Long): Quaternion = div(scalar.toDouble())
+
+  operator fun times(scalar: Double): Quaternion {
+    val s = narrowReal(scalar)
+    return raw(rawX * s, rawY * s, rawZ * s, rawW * s)
+  }
+
+  operator fun div(scalar: Double): Quaternion {
+    val s = narrowReal(1.0) / narrowReal(scalar)
+    return raw(rawX * s, rawY * s, rawZ * s, rawW * s)
+  }
+
+  operator fun times(other: Vector3): Vector3 = quaternionXform(this, other)
+
+  operator fun plus(other: Quaternion): Quaternion =
+    raw(rawX + other.rawX, rawY + other.rawY, rawZ + other.rawZ, rawW + other.rawW)
+
+  operator fun minus(other: Quaternion): Quaternion =
+    raw(rawX - other.rawX, rawY - other.rawY, rawZ - other.rawZ, rawW - other.rawW)
+
+  /**
+   * Returns `true` if this quaternion is normalized. See also `normalized`.
+   *
+   * Generated from Godot docs: Quaternion.is_normalized
+   */
+  fun isNormalized(): Boolean {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(QuaternionMethods.isNormalized, 0)
+    return f.retBool()
+  }
+
+  /**
+   * Returns `true` if this quaternion is finite, by calling `@GlobalScope.is_finite` on each
+   * component.
+   *
+   * Generated from Godot docs: Quaternion.is_finite
+   */
+  fun isFinite(): Boolean = rawX.isFinite() && rawY.isFinite() && rawZ.isFinite() && rawW.isFinite()
+
+  /**
+   * Returns the inverse version of this quaternion, inverting the sign of every component except
+   * `w`.
+   *
+   * Generated from Godot docs: Quaternion.inverse
+   */
+  fun inverse(): Quaternion {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(QuaternionMethods.inverse, 0)
+    return f.retQuaternion()
+  }
+
+  /**
+   * Returns the logarithm of this quaternion. Multiplies this quaternion's rotation axis by its
+   * rotation angle, and stores the result in the returned quaternion's vector part (`x`, `y`, and
+   * `z`). The returned quaternion's real part (`w`) is always `0.0`.
+   *
+   * Generated from Godot docs: Quaternion.log
+   */
+  fun log(): Quaternion {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(QuaternionMethods.log, 0)
+    return f.retQuaternion()
+  }
+
+  /**
+   * Returns the exponential of this quaternion. The rotation axis of the result is the normalized
+   * rotation axis of this quaternion, the angle of the result is the length of the vector part of
+   * this quaternion.
+   *
+   * Generated from Godot docs: Quaternion.exp
+   */
+  fun exp(): Quaternion {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(QuaternionMethods.exp, 0)
+    return f.retQuaternion()
+  }
+
+  /**
+   * Returns the angle between this quaternion and `to`. This is the magnitude of the angle you
+   * would need to rotate by to get from one to the other. Note: The magnitude of the floating-point
+   * error for this method is abnormally high, so methods such as `is_zero_approx` will not work
+   * reliably.
+   *
+   * Generated from Godot docs: Quaternion.angle_to
+   */
+  fun angleTo(to: Quaternion): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, to)
+    f.call(QuaternionMethods.angleTo, 1)
+    return f.retDouble()
+  }
+
   /**
    * Performs a spherical-linear interpolation with the `to` quaternion, given a `weight` and
    * returns the result. Both this quaternion and `to` must be normalized.
    *
    * Generated from Godot docs: Quaternion.slerp
    */
-  fun slerp(to: Quaternion, weight: Double): Quaternion =
-    fromGodotRealArray(
-      BuiltinCalls.call(
-        slerpBind,
-        toGodotRealArray(),
-        4,
-        listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight)),
-      )
-    )
+  fun slerp(to: Quaternion, weight: Double): Quaternion {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, to)
+    f.putDouble(2, weight)
+    f.call(QuaternionMethods.slerp, 2)
+    return f.retQuaternion()
+  }
 
-  private fun toGodotRealArray(): GodotRealArray =
-    GodotRealArray(4).also {
-      it[0] = rawX
-      it[1] = rawY
-      it[2] = rawZ
-      it[3] = rawW
-    }
+  /**
+   * Performs a spherical-linear interpolation with the `to` quaternion, given a `weight` and
+   * returns the result. Unlike `slerp`, this method does not check if the rotation path is smaller
+   * than 90 degrees. Both this quaternion and `to` must be normalized.
+   *
+   * Generated from Godot docs: Quaternion.slerpni
+   */
+  fun slerpni(to: Quaternion, weight: Double): Quaternion {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, to)
+    f.putDouble(2, weight)
+    f.call(QuaternionMethods.slerpni, 2)
+    return f.retQuaternion()
+  }
+
+  /**
+   * Performs a spherical cubic interpolation between quaternions `pre_a`, this vector, `b`, and
+   * `post_b`, by the given amount `weight`.
+   *
+   * Generated from Godot docs: Quaternion.spherical_cubic_interpolate
+   */
+  fun sphericalCubicInterpolate(
+    b: Quaternion,
+    preA: Quaternion,
+    postB: Quaternion,
+    weight: Double,
+  ): Quaternion {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, b)
+    f.put(2, preA)
+    f.put(3, postB)
+    f.putDouble(4, weight)
+    f.call(QuaternionMethods.sphericalCubicInterpolate, 4)
+    return f.retQuaternion()
+  }
+
+  /**
+   * Performs a spherical cubic interpolation between quaternions `pre_a`, this vector, `b`, and
+   * `post_b`, by the given amount `weight`. It can perform smoother interpolation than
+   * `spherical_cubic_interpolate` by the time values.
+   *
+   * Generated from Godot docs: Quaternion.spherical_cubic_interpolate_in_time
+   */
+  fun sphericalCubicInterpolateInTime(
+    b: Quaternion,
+    preA: Quaternion,
+    postB: Quaternion,
+    weight: Double,
+    bT: Double,
+    preAT: Double,
+    postBT: Double,
+  ): Quaternion {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, b)
+    f.put(2, preA)
+    f.put(3, postB)
+    f.putDouble(4, weight)
+    f.putDouble(5, bT)
+    f.putDouble(6, preAT)
+    f.putDouble(7, postBT)
+    f.call(QuaternionMethods.sphericalCubicInterpolateInTime, 7)
+    return f.retQuaternion()
+  }
+
+  /**
+   * Returns this quaternion's rotation as a `Vector3` of Euler angles
+   * (https://en.wikipedia.org/wiki/Euler_angles), in radians. The order of each consecutive
+   * rotation can be changed with `order` (see `EulerOrder` constants). In Godot, Euler angles
+   * always use intrinsic order. By default, the intrinsic YXZ convention is used
+   * (`EulerOrder.YXZ`): since we are decomposing, local Z (roll) is calculated first, then local X
+   * (pitch), and lastly local Y (yaw). When using the opposite method `from_euler` to compose a
+   * rotation, this order is reversed.
+   *
+   * Generated from Godot docs: Quaternion.get_euler
+   */
+  fun getEuler(order: Long = 2L): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putLong(1, order)
+    f.call(QuaternionMethods.getEuler, 1)
+    return f.retVector3()
+  }
+
+  /**
+   * Returns the rotation axis of the rotation represented by this quaternion.
+   *
+   * Generated from Godot docs: Quaternion.get_axis
+   */
+  fun getAxis(): Vector3 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(QuaternionMethods.getAxis, 0)
+    return f.retVector3()
+  }
+
+  /**
+   * Returns the angle of the rotation represented by this quaternion. Note: The quaternion must be
+   * normalized.
+   *
+   * Generated from Godot docs: Quaternion.get_angle
+   */
+  fun getAngle(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(QuaternionMethods.getAngle, 0)
+    return f.retDouble()
+  }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Quaternion =====
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Quaternion (generate_builtin_ops.py) =====
+    /**
+     * Constructs a new `Quaternion` from the given `Vector3` of Euler angles
+     * (https://en.wikipedia.org/wiki/Euler_angles), in radians. In Godot, Euler angles always use
+     * intrinsic order. This method always uses the intrinsic YXZ convention (`EulerOrder.YXZ`).
+     *
+     * Generated from Godot docs: Quaternion.from_euler
+     */
+    fun fromEuler(euler: Vector3): Quaternion {
+      val f = builtinFrame()
+      f.put(1, euler)
+      f.callStatic(QuaternionMethods.fromEuler, 1)
+      return f.retQuaternion()
+    }
+
+    // ===== END GENERATED BUILTIN STATICS: Quaternion =====
+
     /**
      * The identity quaternion, representing no rotation. This has the same rotation as
      * `Basis.IDENTITY`. If a `Vector3` is rotated (multiplied) by this quaternion, it does not
@@ -235,45 +444,6 @@ private constructor(
      * Generated from Godot docs: Quaternion.IDENTITY
      */
     val IDENTITY = Quaternion(0.0, 0.0, 0.0, 1.0)
-
-    private val inverseBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_QUATERNION, "inverse", INVERSE_HASH)
-    }
-    private val slerpBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_QUATERNION, "slerp", SLERP_HASH)
-    }
-    private val fromEulerBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_QUATERNION, "from_euler", FROM_EULER_HASH)
-    }
-
-    /**
-     * Constructs a new `Quaternion` from the given `Vector3` of Euler angles
-     * (https://en.wikipedia.org/wiki/Euler_angles), in radians. In Godot, Euler angles always use
-     * intrinsic order. This method always uses the intrinsic YXZ convention (`EulerOrder.YXZ`).
-     *
-     * Generated from Godot docs: Quaternion.from_euler
-     */
-    fun fromEuler(euler: Vector3): Quaternion =
-      // `Quaternion.from_euler` is a *static* builtin, so the call passes an empty base.
-      fromGodotRealArray(
-        BuiltinCalls.call(
-          fromEulerBind,
-          GodotRealArray(0),
-          4,
-          listOf(
-            BArg.Floats(
-              PT_VECTOR3,
-              GodotRealArray(3).also {
-                it[0] = euler.rawX
-                it[1] = euler.rawY
-                it[2] = euler.rawZ
-              },
-            )
-          ),
-        )
-      )
-
-    private fun fromGodotRealArray(c: GodotRealArray): Quaternion = raw(c[0], c[1], c[2], c[3])
 
     /** A quaternion from components already at the storage width (marshalling; no conversion). */
     internal fun raw(

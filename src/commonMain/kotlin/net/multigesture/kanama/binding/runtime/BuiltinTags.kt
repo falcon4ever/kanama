@@ -37,3 +37,10 @@ const val PT_VECTOR3 = 8
 const val PT_TRANSFORM3D = 19
 
 const val PT_QUATERNION = 20
+
+// Task 134 B: the iOS builtin-call frame passes argument slots as POD (PT_INT32 is passthrough in
+// the
+// shim) and a String argument as a C string the shim builds the Godot String from.
+const val PT_INT32 = 2
+
+const val PT_STRING = 16

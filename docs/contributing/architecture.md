@@ -312,9 +312,9 @@ check the ABI shape, not only the display name. `JAVA_FLOAT` in
 `Color`, while scalar method `float` helpers should use `JAVA_DOUBLE`.
 
 The same split runs through the value types themselves, and it is the reason
-they can be shared: a value type marshals as a `GodotRealArray` — a flat buffer
-of components at the `real_t` storage width, aliased once per build in `Real.kt` — while a scalar
-`float` argument travels as `BArg.Real`, the 8-byte double.
+they can be shared: a value type is written into a builtin-call frame slot as its components at
+the `real_t` storage width (`BuiltinFrame.putReal`; int32 for `Vector2i`-style types, float32 for
+`Color`), while a scalar `float` argument travels as an 8-byte double (`putDouble`).
 
 ## The object handle and the raw pointer
 
@@ -346,32 +346,37 @@ fragment beside the generated wrapper tree: the JVM target, the two iOS targets 
 task all compile those files (task 104 step 2). Only `Real.kt` is per platform —
 generated at build time on desktop, hand-written on iOS, written by the plugin
 build script on Android. The Web backend keeps its
-own `WebValueTypes.kt`; it could adopt the shared bodies later behind a
-pure-Kotlin `BuiltinCalls`.
+own `WebValueTypes.kt`, which shares the pure-Kotlin bodies (`types/shared`, and the members
+`scripts/generate_builtin_ops.py` emits into both) but has no engine-call path yet (task 134
+parcel D).
 
 A value type is a Kotlin `data class` of `Double` components, immutable, with
 `equals`/`hashCode` following GDScript's `==` (signed zero equal, NaN reflexive,
 signed zero canonicalized in the hash). Methods split by who computes them:
 
-- **Engine-computed**, through the one facade
-  `net.multigesture.kanama.binding.runtime.BuiltinCalls`: everything whose result
-  depends on Godot's own edge-case handling — `Basis.orthonormalized` /
-  `getEuler` / `getScale`, `Transform3D.inverse` / `interpolateWith` /
-  `lookingAt`, `Quaternion.slerp` / `inverse`, `Vector3.rotated` / `moveToward`,
-  `Vector2.clamp`, and their kin. The facade resolves a builtin once
-  (`variant_get_ptr_builtin_method`), then calls it with the base and the
-  arguments as raw value buffers.
-- **Pure Kotlin**, one body, no round trip: exact arithmetic — operators, `dot`,
-  `cross`, `length`, `distanceTo`, `hasPoint`, and the `is_equal_approx` family
-  (which replicates `Math::is_equal_approx` exactly; see `ApproxMath.kt`).
+- **Pure Kotlin**, one body, no round trip: every operator and every method whose Godot
+  implementation is plain arithmetic (`dot`, `length`, `lerp`, `moveToward`, `slide`, `hasPoint`,
+  `intersects`, `Transform2D.inverse`, the `is_equal_approx` family, ...), ported with Godot's
+  operand order and computed at the stored width, so the result is Godot's to the bit (the runtime
+  smoke's builtin parity row proves each one against GDScript).
+- **Engine-computed**, through the builtin-call facade: everything with a transcendental or a long
+  body — `angle`, `rotated`, `slerp`, `Basis.getEuler` / `orthonormalized`,
+  `Transform3D.lookingAt` / `interpolateWith`, `Color.lightened`, and their kin. A
+  `BuiltinMethod` constant resolves the builtin once (`variant_get_ptr_builtin_method`); a call
+  takes the calling thread's next free `BuiltinFrame` (fixed native slots, nothing allocated),
+  writes the base and the arguments, calls (which gives the frame back), and reads the return slot.
+  The frames of a thread are a stack because a builtin can re-enter Kotlin while it runs (an engine
+  WARN/ERR reaches a GDScript logger that calls a script); the runtime smoke's builtin re-entry row
+  proves a nested call leaves the outer one intact.
 
-`BuiltinCalls` is `expect object BuiltinCalls` in the common fragment
-(`src/commonMain/.../binding/runtime/BuiltinCalls.expect.kt`, task 104 step 3) with one
-`actual` per backend — over Panama/FFM for desktop and Android, over the C shim for iOS —
-so the compiler proves the two halves agree. Android compiles a remapped copy of the common
-and JVM sources as a plain Kotlin library: the copy skips every `*.expect.kt` file and strips
-the `actual` modifier, which is also why an `expect` declaration carries no default argument
-(task 117 D24; `scripts/check_expect_no_defaults.py`).
+Both kinds are generated (`scripts/generate_builtin_ops.py`, task 134 B). The facade is
+`internal expect class BuiltinFrame` / `BuiltinMethod` in the common fragment
+(`src/commonMain/.../binding/runtime/BuiltinFrame.expect.kt`) with one `actual` per backend — one
+unbound FFM downcall called with `invokeExact` for desktop and Android, the C shim
+(`kanama_ios_godot_builtin_call`) for iOS — so the compiler proves the two halves agree. Android
+compiles a remapped copy of the common and JVM sources as a plain Kotlin library: the copy skips
+every `*.expect.kt` file and strips the `actual` modifier, which is also why an `expect`
+declaration carries no default argument (task 117 D24; `scripts/check_expect_no_defaults.py`).
 
 ## Object lifetime
 

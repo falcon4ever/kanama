@@ -38,6 +38,72 @@ only `--write`.
 
 ## Unreleased
 
+### Added — every value-type operator, method, constant and enum, generated from the Godot API (task 134 B)
+
+- **Operators:** every operator Godot declares for a value type is a Kotlin operator with GDScript's
+  meaning: `Transform3D * Transform3D`, `Basis * Basis`, `Quaternion * Vector3`, `transform * plane`
+  / `* aabb` / `* points` (a `List<Vector3>`), `Transform2D * Rect2`, `Projection * Vector4`, the
+  inverse forms (`point * transform`, `vector * basis`, `vector * quaternion`), `Vector2 * Vector2`
+  and `/`, `Vector2i`/`Vector3i`/`Vector4i` arithmetic including `%` and `* 0.5` (a `Vector2`, as in
+  GDScript), `Color` arithmetic (`-color` is Godot's inversion), `+v`, `<`/`<=`/`>`/`>=` on vectors
+  (component by component) and RIDs, and `2.0 * v` / `2 * v` (extension operators: new scripts
+  and the starter import `net.multigesture.kanama.types.*`). 167 of Godot's 749 builtin operators
+  are now Kotlin members (23 before); the other 582 are `==`/`!=` (`equals`), `not`, `in`, `**`
+  (Kotlin has no power operator: `x.pow(y)` / `GD.pow`) or belong to the classes Kotlin maps to
+  its own types (`String`, `List`, `Map`, arrays; their Godot methods are task 134 parcel D).
+- **Methods:** all 370 methods of the 16 value types and RID (74 of them before), camelCase:
+  `directionTo`, `moveToward`, `snapped`, `slerp`, `bezierInterpolate`, `Basis.fromScale`,
+  `Projection.createPerspective`, `Color.fromHsv`, `Color.toHtml`, `aabb.intersectsRay` (a
+  `Vector3?`), ... Operators and every method whose Godot implementation is plain arithmetic (`abs`,
+  `round`, `lerp`, `moveToward`, `slide`/`bounce`/`reflect`, `project`, `limitLength`, the
+  `Rect2`/`Rect2i`/`AABB` tests and merges, `Plane.project`, `Transform2D.inverse`, `Color.lerp`,
+  ...) run in Kotlin with Godot's own formulas at Godot's width; the rest (`angle`, `rotated`,
+  `slerp`, `getEuler`, `lightened`, ...) are computed by the engine through an allocation-free call
+  (one constant downcall; per thread a stack of native call frames, so a builtin that re-enters
+  Kotlin from an engine warning -- a GDScript logger calling a script -- cannot corrupt the call
+  in flight). Desktop, ns per call, Kotlin vs GDScript in
+  the same run: `angle` 13 vs 22, `Basis.getEuler` 23–34 vs 45, `Color.lightened` 14 vs 25; Kotlin
+  `lerp`/`moveToward`/`Rect2i.hasPoint` are inlined by the JIT.
+- **Constants and enums:** every builtin constant (210, 182 of them new: `Vector2i.LEFT`,
+  `Vector3i.FORWARD`, `Vector3.MODEL_FRONT`, `Basis.FLIP_X`, `Transform3D.FLIP_Y`,
+  `Plane.PLANE_XY`, `Vector2.INF`, `Vector2i.MIN`, all 146 named colors such as `Color.RED`) as
+  companion values, and the builtin enums (`Vector3.Axis`, `Projection.Planes`), on Web too for
+  the classes Web has.
+- **Proven against GDScript on every runtime smoke:** a generated probe pair hashes every
+  Kotlin-computed operator and method (335 entries, generated and hand-written) over 256
+  fixed-seed random inputs and again (317 entries) over ±0, NaN, ±INF, `.5` ties and 1e-30, every
+  engine-backed method (163) over 8, and every constant and enum value, and requires the Kotlin
+  hashes to equal GDScript's. The Web value types get the same Kotlin members for the classes Web
+  has (`Vector2`, `Vector3`, `Vector2i`, `Vector3i`, `Quaternion`, `Color`, `Plane`) and are checked
+  against Godot's recorded hashes in a Node test; Web's engine-computed methods follow with the Web
+  builtin-call path (parcel D).
+- **Gate:** `scripts/check_builtin_coverage.py` (a `local_ci.sh` stage) fails when a builtin
+  operator, method, constant or enum in `extension_api.json` has neither a Kotlin counterpart nor a
+  recorded reason; `scripts/generate_builtin_ops.py --check` fails when a generated member is
+  edited by hand.
+- **Where Kotlin differs** (godot-api.md): integer-vector division or `%` by zero throws
+  `ArithmeticException` (GDScript reports a division-by-zero error); `slide`/`bounce`/`reflect`
+  and `quaternion * vector` compute without Godot's debug-build "must be normalized" check, as a
+  release build does; vectors with a NaN component compare `false` for `<`/`<=` as in Godot but
+  `true` for `>`/`>=` (Godot: `false`), because Kotlin's comparisons share one `compareTo`.
+- A member with the same name now hides an extension function you declared on a value type
+  (Kotlin prefers members): rename such an extension if its meaning differs from Godot's.
+- `Transform2D.get_origin()` is the existing `origin` property.
+
+### Changed — value-type methods follow Godot exactly (task 134 B)
+
+- `Vector2.angle()` is computed by the engine: Kotlin's `atan2` differed from Godot's in the last
+  bit for 5.75 % of inputs. It costs ~13 ns per call on desktop (GDScript: ~22 ns).
+- `Quaternion.normalized()` of a zero quaternion gives NaN components, as in Godot (it returned
+  `IDENTITY`); `Rect2.hasPoint` and `AABB.hasPoint` add `position + size` at `real_t` width and
+  treat a NaN point as Godot does; Web `Plane.intersectsRay` uses Godot's epsilon.
+- **Source break:** `Vector3.maxAxisIndex()` returns `Long` (it returned `Int`), like every
+  Godot `int`; compare it with `Vector3.Axis.X.value` or a `Long` literal.
+- **Source break:** `Vector2`, `Vector3`, `Transform3D`: parameter names follow Godot's for the
+  members that moved into the generated set: `Vector2`/`Vector3` `limitLength(length = 1.0)` (was `maxLength`, no default),
+  `Vector3.bounce(n)` (was `normal`), `Vector3.reflect(line)`, Web `Vector3.limitLength(length)` (was `max`), `Transform3D.interpolateWith(xform,
+  weight)` (was `to`). Only calls that name the argument change.
+
 ### Changed — faster wrapper calls on desktop (task 131 item 16)
 
 - The downcall handles every wrapper call goes through (`object_method_bind_ptrcall`,
