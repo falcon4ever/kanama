@@ -120,7 +120,7 @@ class Source:
     def where(self, pos: int, root: Path) -> str:
         try:
             shown = self.path.relative_to(root)
-        except ValueError:
+        except ValueError:  # justified: only the path printed in a finding; no verdict reads it
             shown = self.path
         return f"{shown}:{self.line(pos)}"
 

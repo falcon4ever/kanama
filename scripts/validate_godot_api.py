@@ -191,6 +191,9 @@ def iter_call_bodies(content: str, name: str) -> list[tuple[str, int]]:
     return result
 
 
+DELIBERATE_WRONG_HASHES = {("Node3D", "set_visible", 1)}
+
+
 def validate_kotlin_hashes(
     root: Path,
     methods: dict[tuple[str, str], set[int]],
@@ -199,7 +202,17 @@ def validate_kotlin_hashes(
     builtin_constructors: dict[str, set[int]],
 ) -> list[str]:
     errors: list[str] = []
-    for path in sorted((root / "src/jvmMain/kotlin").rglob("*.kt")):
+    # Every Kotlin tree that carries MethodBind hashes: the desktop sources, and since task 117 P4' the
+    # shared wrapper tree under commonMain (which holds nearly all of them) and the iOS sources. This loop
+    # used to read src/jvmMain only, so a wrong hash in the generated tree passed (task 118).
+    kotlin_files = sorted(
+        path
+        for tree in ("src/jvmMain/kotlin", "src/commonMain/kotlin", "src/iosMain/kotlin")
+        for path in (root / tree).rglob("*.kt")
+    )
+    if not kotlin_files:
+        return [f"{root}: no Kotlin sources found under src/jvmMain, src/commonMain or src/iosMain"]
+    for path in kotlin_files:
         content = path.read_text(encoding="utf-8")
         constants = constants_for(content)
 
@@ -208,6 +221,11 @@ def validate_kotlin_hashes(
                 actual_hash = parse_int_token(token, constants, path)
             except ValueError as e:
                 errors.append(str(e))
+                continue
+
+            # The iOS self-test's fault probe looks up one bind with a WRONG hash on purpose, to prove the
+            # shim reports `bind-lookup-failed` (task 124). It is the only such site; name it exactly.
+            if (class_name, method_name, actual_hash) in DELIBERATE_WRONG_HASHES:
                 continue
 
             expected = methods.get((class_name, method_name))

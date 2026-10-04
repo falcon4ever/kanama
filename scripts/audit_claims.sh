@@ -21,12 +21,15 @@
 set -uo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/gate_skip.sh
+source "$ROOT_DIR/scripts/gate_skip.sh"
 TASKS_DIR="${KANAMA_TASKS_DIR:-}"
 if [[ -z "$TASKS_DIR" ]]; then
   # Default to the sibling of the MAIN checkout, not of this directory, so a linked
   # worktree (e.g. .claude/worktrees/<name>) still finds it -- the same rule
   # audit_stale_blockers.py uses. `--git-common-dir` is <main>/.git (relative ".git"
   # when run from the main checkout itself).
+  # justified: no git (a tarball) just means the sibling-of-this-checkout default below; a wrong guess surfaces as the task-index SKIP.
   common_dir="$(git -C "$ROOT_DIR" rev-parse --git-common-dir 2>/dev/null || true)"
   if [[ -n "$common_dir" ]]; then
     main_root="$(cd "$ROOT_DIR" && cd "$(dirname "$common_dir")" && pwd)"
@@ -43,13 +46,14 @@ failed=0
 skipped=0
 declare -a RESULTS=()
 
-# Every check runs only if its script is actually there. Without this the "everything was
-# skipped" guard below is UNREACHABLE -- the four core checks were unconditional, so `ran`
-# could never be 0 and the guard was decoration. Found by trying to falsify it.
+# Every check's script lives in this repo, so a missing one is a deleted or renamed gate: a FAIL
+# (task 118), never a skip. (It used to be recorded as SKIPPED and the run still exited 0.)
 require_script() {
   local label="$1" path="$2"
   if [[ ! -f "$path" ]]; then
-    skip "$label" "missing $path"
+    echo "── ${label} -- FAIL: the check script is missing: ${path}"
+    RESULTS+=("FAIL    ${label} (missing ${path})")
+    failed=$((failed + 1))
     return 1
   fi
   return 0
@@ -68,10 +72,13 @@ check() {
   echo
 }
 
+# Only the task-index check may skip (the tasks repo is local-only). gate_skip prints the
+# `SKIP:` line; under CI it also fails unless KANAMA_ALLOW_SKIP lists `task-index`.
 skip() {
   echo "── ${1} -- SKIPPED: ${2}"
   RESULTS+=("SKIP    ${1} (${2})")
   skipped=$((skipped + 1))
+  gate_skip task-index "${2}" || failed=$((failed + 1))
   echo
 }
 

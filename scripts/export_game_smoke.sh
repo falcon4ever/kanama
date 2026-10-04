@@ -130,7 +130,7 @@ work_dir="$(cd "$work_dir" && pwd -P)"
 
 cleanup() {
   if [[ "$created_work_dir" -eq 1 && "$keep_work_dir" != "1" ]]; then
-    rm -rf "$work_dir" 2>/dev/null || true
+    rm -rf "$work_dir" 2>/dev/null || true  # justified: scratch-dir cleanup after the verdict
   fi
 }
 trap cleanup EXIT
@@ -294,6 +294,7 @@ echo "[export_game_smoke] launching: $game_bin"
 # A PATH with no JDK on it. Windows needs its system directories to stay
 # reachable; everything else gets the bare minimum.
 if [[ "$preset_platform" == "Windows Desktop" ]]; then
+  # justified: the fallback is the standard Windows root; a wrong PATH makes the game fail to launch, which is the verdict.
   system_root="$(cygpath -u "${SYSTEMROOT:-C:\\Windows}" 2>/dev/null || printf '/c/Windows')"
   clean_path="$system_root/System32:$system_root:$system_root/System32/Wbem"
 else
@@ -345,6 +346,7 @@ check_absent() {
 }
 
 if [[ "$preset_platform" == "Windows Desktop" ]]; then
+  # justified: without cygpath the path is already native; a wrong one fails the launch below.
   export_dir_native="$(cygpath -m "$export_dir" 2>/dev/null || printf '%s' "$export_dir")"
 else
   export_dir_native="$export_dir"

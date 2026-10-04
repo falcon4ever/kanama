@@ -106,6 +106,7 @@ def main() -> int:
     validate_api(args.api)
     generated = render()
     if args.check:
+        # justified: a missing file reads as "" and so compares as drift: the check fails
         current = args.output.read_text() if args.output.is_file() else ""
         if current != generated:
             print(

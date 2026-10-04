@@ -298,6 +298,7 @@ def main() -> int:
     if args.table is not None:
         content = render_table(per_owner, specs, lock)
         if args.check:
+            # justified: a missing file reads as "" and so compares as stale: the check fails
             current = args.table.read_text(encoding="utf-8") if args.table.exists() else ""
             if current != content:
                 print(f"{TAG} FAIL {args.table} is stale; re-run with --table {args.table}", file=sys.stderr)

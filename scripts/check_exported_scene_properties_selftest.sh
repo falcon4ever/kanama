@@ -36,7 +36,9 @@ if [[ ! -d "$work/.godot/exported" ]]; then
 fi
 
 echo "[scene_check_selftest] green run: the override node's non-default value must be kept and checked"
+# justified: the exit status is not the verdict here; the PASS lines grepped from the captured output below are.
 green="$("$GODOT_BIN" --headless --path "$work" --script "$CHECK" 2>&1 || true)"
+# justified: echoing the evidence lines; the assertions on "$green" follow.
 printf '%s\n' "$green" | grep -E '^\[check_exported_scenes\]' | sed 's/^/    /' || true
 if ! printf '%s\n' "$green" | grep -q 'PASS: 2 converted scene(s)'; then
   echo "[scene_check_selftest] FAIL: expected PASS over 2 converted scenes" >&2
@@ -51,7 +53,9 @@ echo "[scene_check_selftest] red run: a source property the export never saw mus
 # Insert beside the existing override (a property line after the [editable] tag would not parse).
 # perl, not `sed -i`: BSD and GNU sed disagree on the in-place flag and this must run on Linux CI too.
 perl -pi -e 's/^amp = 0\.0$/amp = 0.0\nextra = 5/' "$work/main.tscn"
+# justified: here the check is EXPECTED to exit non-zero; the FAIL line grepped from the captured output below is the verdict.
 red="$("$GODOT_BIN" --headless --path "$work" --script "$CHECK" 2>&1 || true)"
+# justified: echoing the evidence lines; the assertion on "$red" follows.
 printf '%s\n' "$red" | grep -E '^\[check_exported_scenes\] FAIL' | sed 's/^/    /' || true
 if ! printf '%s\n' "$red" | grep -qE "FAIL res://main.tscn: node '[^']*inner' \(Node\) lost script property 'extra'"; then
   echo "[scene_check_selftest] FAIL: the missing override property was not reported" >&2

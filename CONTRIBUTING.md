@@ -60,6 +60,11 @@ python3 scripts/validate_godot_api.py --api extension_api.json
 ./scripts/local_ci.sh /path/to/godot-4.7.2-stable
 ```
 
+Gate scripts follow two rules (`scripts/README-gates.md`): a check that cannot run prints
+`SKIP: <id>: <reason>` and fails under CI unless the id is listed in `KANAMA_ALLOW_SKIP`, and no
+failure is swallowed (`|| true`, `2>/dev/null`) without a `# justified:` comment. A new gate ships with
+its red run: add a `case(...)` to `scripts/gate_red_runs.py` and a row to that README.
+
 Before release-facing changes, validate from isolated clones instead of your
 development worktree:
 

@@ -138,6 +138,7 @@ kanama_web_demo_is_known() {
   # fresh-checkout gate validates its --demo arguments against that mapping and
   # cannot export the spike (it has no exportWeb key), so leaving it unknown
   # there keeps that gate's rejection loud instead of failing mid-export.
+  # justified: a probe; the registry lookup's exit status is the answer (unknown demo), its stdout/stderr are noise.
   [[ "$1" == "spike" ]] || kanama_web_demo_project_dir "$1" >/dev/null 2>&1
 }
 

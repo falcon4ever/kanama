@@ -366,7 +366,7 @@ record = {
 if os.path.exists(result_path):
     try:
         envelope = json.load(open(result_path))
-    except (OSError, ValueError):
+    except (OSError, ValueError):  # justified: the envelope only decorates the evidence row; pass/fail comes from FAILED, not from this read
         envelope = None
     if isinstance(envelope, dict):
         browser = envelope.get("browser")
@@ -418,7 +418,7 @@ def git(repo, *args):
         out = subprocess.run(
             ["git", "-C", repo, *args], capture_output=True, text=True, check=True
         )
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, subprocess.CalledProcessError):  # justified: a commit id that cannot be read is recorded as null in the evidence; it is not a verdict
         return None
     return out.stdout.strip() or None
 

@@ -17,6 +17,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/gate_skip.sh
+source "$ROOT_DIR/scripts/gate_skip.sh"
 TAG="[check_jdk_lookup_parity]"
 PROJECT_DIR="$ROOT_DIR/example_project"
 
@@ -28,13 +30,15 @@ GODOT_BIN="$1"
 
 case "$(uname -s)" in
   MINGW* | MSYS* | CYGWIN*)
-    echo "$TAG skipped on Windows (symlink fixture); the location table is still checked by check_jdk_locations_parity.py"
+    # No CI lane runs this on Windows; if one ever does it must opt out by name (KANAMA_ALLOW_SKIP).
+    gate_skip jdk-lookup-parity-windows "symlink fixture needs a Unix host; the location table is still checked by check_jdk_locations_parity.py" || exit 1
     exit 0
     ;;
 esac
 
 REAL_JDK="${KANAMA_TEST_JDK:-${JAVA_HOME:-}}"
 if [[ -z "$REAL_JDK" && "$(uname -s)" == "Darwin" ]]; then
+  # justified: no JDK 25 leaves REAL_JDK empty, which the "need a real JDK 25+" check just below turns into exit 2.
   REAL_JDK="$(/usr/libexec/java_home -v 25 2>/dev/null || true)"
 fi
 if [[ -z "$REAL_JDK" || ! -d "$REAL_JDK/lib/server" ]]; then
@@ -74,6 +78,8 @@ fake_jdk() {
   mkdir -p "$dir"
   ln -s "$REAL_JDK/bin" "$dir/bin"
   ln -s "$REAL_JDK/include" "$dir/include"
+  # justified: conf/ and legal/ are optional JDK parts; a JDK without them is still a valid fixture, and the
+  # scenario's libjvm lookup (the thing under test) decides.
   ln -s "$REAL_JDK/conf" "$dir/conf" 2>/dev/null || true
   ln -s "$REAL_JDK/legal" "$dir/legal" 2>/dev/null || true
   if [[ "$flavour" == "nolibjvm" ]]; then
@@ -88,6 +94,8 @@ fake_jdk() {
 run_logged() {
   local log="$1"
   shift
+  # justified: a scenario whose JVM is not found makes Godot abort on purpose; the verdict is the libjvm line read
+  # from "$log" afterwards, never this exit status.
   ( "$@" >"$log" 2>&1 ) 2>/dev/null || true
 }
 
@@ -158,6 +166,7 @@ scenario() {
     echo "$TAG   bootstrap.c picked: '${boot_pick}'" >&2
     echo "$TAG   plugin picked:      '${plugin_pick}'" >&2
     echo "$TAG   --- bootstrap log tail" >&2
+    # justified: diagnostics on a scenario already counted as a failure above.
     grep -E "^\[kanama\]" "$boot_log" | tail -n 12 | sed 's/^/    | /' >&2 || true
     failures=$((failures + 1))
   fi

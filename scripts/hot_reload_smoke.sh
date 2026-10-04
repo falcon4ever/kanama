@@ -33,7 +33,11 @@ cp "$SCRIPT_FILE" "$BACKUP"
 
 restore() {
   cp "$BACKUP" "$SCRIPT_FILE"
-  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null || true
+  # The verdict is already printed. A failed re-sync would leave the mutated scripts jar in the example project
+  # for the NEXT gate, so say so loudly instead of discarding it (task 118).
+  if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then
+    echo "[$(basename "$0" .sh)] WARNING: restoring the example addon jar failed; run ./gradlew syncExampleAddonJar before the next gate" >&2
+  fi
   rm -f "$BACKUP"
 }
 trap restore EXIT

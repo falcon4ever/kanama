@@ -155,6 +155,9 @@ def scan_sites(text: str, sites: dict[str, int]) -> list[tuple[str | None, str, 
             try:
                 args, _ = balanced(text, text.index("(", match.end() - 1))
             except ValueError:
+                # A call whose argument list cannot be read is an unresolvable site (shape None),
+                # which the gate reports; stepping over it would leave a downcall unchecked.
+                found.append((None, callee, text.count("\n", 0, match.start()) + 1))
                 continue
             parts = split_top_level(args)
             shape = resolve(parts[position], aliases) if position < len(parts) else None

@@ -32,11 +32,16 @@ GODOT_PID=""
 
 restore() {
   if [[ -n "$GODOT_PID" ]] && kill -0 "$GODOT_PID" 2>/dev/null; then
+    # justified: cleanup of our own child after the verdict; it may already be gone.
     kill "$GODOT_PID" 2>/dev/null || true
     wait "$GODOT_PID" 2>/dev/null || true
   fi
   cp "$BACKUP" "$SCRIPT_FILE"
-  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null || true
+  # The verdict is already printed. A failed re-sync would leave the mutated scripts jar in the example project
+  # for the NEXT gate, so say so loudly instead of discarding it (task 118).
+  if ! "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null; then
+    echo "[$(basename "$0" .sh)] WARNING: restoring the example addon jar failed; run ./gradlew syncExampleAddonJar before the next gate" >&2
+  fi
   rm -f "$BACKUP" "$SIGNAL_FILE" "$STAGE_FILE"
 }
 trap restore EXIT
@@ -54,6 +59,7 @@ smoke_fail() {
   # Redirect order matters: `>&2` first duplicates the real stderr, then `2>/dev/null`
   # silences tail's own errors when the log does not exist yet. Reversing them points
   # stdout at /dev/null and silently drops the whole dump.
+  # justified: diagnostics only; the next lines print the reason and exit 1 either way.
   tail -n 160 "$LOG_FILE" >&2 2>/dev/null || true
   echo >&2
   echo "[hot_reload_in_process_smoke] FAIL -- $kind: $pattern" >&2

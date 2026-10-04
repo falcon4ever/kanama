@@ -309,6 +309,7 @@ jobs:
           fi
           mkdir -p "$templates"
           cp "godot-tools/${{ matrix.export_template }}" "$templates/"
+          # justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run.
           chmod +x "$templates/${{ matrix.export_template }}" || true
           ls -la "$templates"
 
@@ -325,6 +326,7 @@ jobs:
           else
             godot_bin="$PWD/godot-tools/Godot_v${GODOT_VERSION}_${{ matrix.godot_bin_suffix }}"
           fi
+          # justified: if the editor binary is not executable the smoke's own executable check on it fails the step.
           chmod +x "$godot_bin" || true
           scripts/export_game_smoke.sh \
             --runtime "$PWD/cross-runtime/runtime" \
@@ -414,6 +416,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
         run: |
+          # justified: `gh release view` is the existence probe; failing it means "create the release" on the next line.
           gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || \
             gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes "Kanama $GITHUB_REF_NAME"
           gh release upload "$GITHUB_REF_NAME" build/release-assets/*.zip --clobber
