@@ -364,7 +364,7 @@ case("audit_generator_object_policy.py", py("audit_generator_object_policy.py"),
      "UNSAFE_DEFAULT_EXCLUDES is missing", "the shell generator stops excluding `Object`", env=ENV_PY)
 case("audit_generator_shape_policy.py", py("audit_generator_shape_policy.py"),
      [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt", "BuiltinTypes.initDictionary(", "BuiltinTypes.initDictionaryRedRun(")],
-     "Dictionary argument is not initialized through BuiltinTypes.initDictionary", "a Dictionary-argument helper stops using the explicit initializer (script is in flight under task 132; red run only)", env=ENV_PY)
+     "Dictionary argument is not initialized through BuiltinTypes.initDictionary", "a Dictionary-argument helper stops using the explicit initializer", env=ENV_PY)
 case("audit_godot_object_script_paths.py", py("audit_godot_object_script_paths.py"),
      [Edit(f"{COMMON}/api/GodotObject.kt", "ptrcallWithStringNameAndVariantArg(objectSetBind", "ptrcallWithStringNameAndVariantArgX(objectSetBind")],
      "must call the Object.set MethodBind", "GodotObject.set stops calling the Object.set bind")
@@ -465,7 +465,7 @@ case("tool_smoke.sh (plugin copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(file)._readyX health=")],
-     "missing pattern", "the example script no longer logs its scene-delivered properties (script unchanged: in-flight task 132; red run only)",
+     "missing pattern", "the example script no longer logs its scene-delivered properties",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("hot_reload_smoke.sh", ["bash", "scripts/hot_reload_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(f)._ready health=")],

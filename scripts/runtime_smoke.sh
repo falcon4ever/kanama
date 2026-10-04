@@ -38,7 +38,12 @@ KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BI
 if ! grep -q '"class": &"SmokeResource"' "$GLOBAL_CLASS_CACHE" ||
    ! grep -q '"base": &"Resource"' "$GLOBAL_CLASS_CACHE"; then
   echo "[runtime_smoke] SmokeResource missing from global_script_class_cache.cfg (issue #39 regression)"
-  cat "$GLOBAL_CLASS_CACHE" 2>/dev/null || true
+  # Diagnostics only; the verdict is the exit 1 below. Say so when the cache was never written.
+  if [[ -f "$GLOBAL_CLASS_CACHE" ]]; then
+    cat "$GLOBAL_CLASS_CACHE"
+  else
+    echo "[runtime_smoke] $GLOBAL_CLASS_CACHE was not written at all"
+  fi
   exit 1
 fi
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit --verbose >"$LOG_FILE" 2>&1
@@ -382,6 +387,7 @@ check "^SCRIPT ERROR: java\.lang\.IllegalStateException: Invalid access to previ
 check "^ +at: FreedObjectSmoke\.callFreed \(res://FreedObjectSmoke\.kt:${freed_call_line}\)$"
 # Exactly one: the call. The property reads and the method return of the freed wrapper reported
 # nothing.
+# justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line.
 freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" || true)"
 if [[ "$freed_errors" != "1" ]]; then
   smoke_fail "freed-object script errors (want exactly 1)" "$freed_errors"

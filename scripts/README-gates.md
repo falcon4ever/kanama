@@ -63,10 +63,12 @@ task; the drivers' own failures surface as the result envelope's assertions.
 
 **Counts.** Before (origin/main): **214** sites in both repos. After: **192** in this repo and **25** in the demos
 repo (217 in all, after 9 sites were fixed and the new code of this task added its own, each justified). Every one has a verdict.
-This repo: **155** justified by a `# justified:` comment or a named idiom, **35** Python handlers that are loud (they raise or
-record the error), **2** deferred to in-flight task 132 (`runtime_smoke.sh` and `audit_generator_shape_policy.py`, which
-this task may not edit; the list is `DEFERRED` in `audit_swallowed_failures.py`: delete it when 132 lands). Demos: **25** justified,
-**0** loud. With the skip branches and vacuous gates in 1b, this task fixed **31** defects.
+This repo: **157** justified by a `# justified:` comment or a named idiom, **35** Python handlers that are loud (they raise or
+record the error). Nothing is deferred: the named `DEFERRED` list (`runtime_smoke.sh`, `audit_generator_shape_policy.py`,
+held back while task 132 owned them) is gone, and both files are audited like every other gate (`runtime_smoke.sh`: one site
+fixed, one justified; `audit_generator_shape_policy.py` has no swallow site, its `continue`s are filters and every missing
+helper is recorded as an error). Demos: **25** justified,
+**0** loud. With the skip branches and vacuous gates in 1b, this task fixed **32** defects.
 
 ### 1a. Sites in this repo (generated; `scripts/audit_swallowed_failures.py` checks it)
 
@@ -152,10 +154,10 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:199` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:241` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:243` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/generate_api_wrapper.py:1805` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1810` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1815` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1850` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1825` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1830` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1835` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1870` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_gates_index.py:376` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_gates_index.py:420` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
 | `scripts/generate_gates_index.py:438` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
@@ -201,12 +203,12 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:2979` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:48` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:207` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:659` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:662` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:664` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:702` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:718` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:731` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:663` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:666` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:668` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:706` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:722` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:735` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:114` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/package_install_smoke.sh:130` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:132` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |
@@ -214,8 +216,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:20` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:27` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:41` | `cat "$GLOBAL_CLASS_CACHE" 2>/dev/null \|\| true` | deferred: in-flight task 132 |
-| `scripts/runtime_smoke.sh:312` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | deferred: in-flight task 132 |
+| `scripts/runtime_smoke.sh:391` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/tool_smoke.sh:18` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:25` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -350,6 +351,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | 20 | `scripts/generate_gates_index.py`, `docs/reference/generated/gates.md` | The two skip descriptions said "CI prints a skip line". | Say what is now true; the page is regenerated. |
 | 21 | `scripts/web/drivers/chrome_cdp.mjs` | No way to make a Chrome run slower. | `KANAMA_WEB_CPU_THROTTLE=<rate>` (CDP `Emulation.setCPUThrottlingRate`); an unusable value fails the run. |
 | 22 | `scripts/web/drivers/demos/web3d.mjs` and the web3d fixture | The "teardown race" flake: see section 4 (it was a fixture defect, not a teardown race). | `parity_restore` probe + `levelUprightAfterParity` check + `KANAMA_WEB3D_EXTRA_PLAY_MS`. |
+| 23 | `scripts/runtime_smoke.sh` | The failure branch for a missing `SmokeResource` in the global class cache ended in `cat "$GLOBAL_CLASS_CACHE" 2>/dev/null \|\| true`: a cache that was never written printed nothing. | Says the cache was not written; the `grep -c \|\| true` for the freed-object error count is justified (its count is checked next). Task 132 landed, so the `DEFERRED` list is deleted. |
 
 ## 2. Red run per gate
 
@@ -398,7 +400,7 @@ every pull request that touches `scripts/` or `.github/workflows/` (gated by the
 | `audit_api_wrapper_inheritance.py` | a wrapper extends an unrelated handle type | `[api_wrapper_inheritance_audit] FAIL / - src/commonMain/kotlin/net/multigesture/kanama/api/CanvasItem.kt: CanvasItem extends RefCounted, but Godot inherits from Node` | green |
 | `audit_claims.sh` | one of the aggregated check scripts is deleted (it used to be a SKIPPED line and exit 0) | `── web protocol pin agreement -- FAIL: the check script is missing: scripts/check_protocol_pins.py / ── unapplied lifecycle annotations (kanama only)` | green |
 | `audit_generator_object_policy.py` | the shell generator stops excluding `Object` | `- generate_api_shell_wrappers.UNSAFE_DEFAULT_EXCLUDES is missing: Object` | green |
-| `audit_generator_shape_policy.py` | a Dictionary-argument helper stops using the explicit initializer (script is in flight under task 132; red run only) | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:635: ptrcallWithObjectAndDictionaryArg for ('Object', 'Dictionary') -> void: Dictionary argument is not initialized through BuiltinTypes.initDiction` | green |
+| `audit_generator_shape_policy.py` | a Dictionary-argument helper stops using the explicit initializer | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:635: ptrcallWithObjectAndDictionaryArg for ('Object', 'Dictionary') -> void: Dictionary argument is not initialized through BuiltinTypes.initDiction` | green |
 | `audit_godot_object_script_paths.py` | GodotObject.set stops calling the Object.set bind | `- GodotObject.set must call the Object.set MethodBind` | green |
 | `audit_ptrcall_helper_layouts.py` | a uint32 helper reads a 64-bit slot | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:3601: ptrcallNoArgsRetUInt32 uses JAVA_LONG but helper shape has no int64/enum/bitfield/RID slot` | green |
 | `audit_replicated_script_properties.py` | a scene replicates a property its Kotlin script does not export | `example_project/zz_redrun.tscn:.: zz_redrun.kt does not expose replicated property 'health'` | green |
@@ -429,7 +431,7 @@ every pull request that touches `scripts/` or `.github/workflows/` (gated by the
 | `web_export_smoke.sh (browser-floor)` | web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that) | `FAIL: below-floor expected exit 1, got 0 / stderr: coverage_report: FAIL — $TMPDIR/kanama-web-scaffold.8JbYG8/below-floor/result.json carries no exercisedMembe` | green |
 | `tool_smoke.sh` | the example script no longer logs its scene-delivered properties: the failure comes from the editor run's log, not the plugin-copy pre-check | `[tool_smoke] missing pattern: HelloScript\(file\)\._ready health=99 speed=5\.1 label=from_tscn / [tool_smoke] log tail:` | green |
 | `tool_smoke.sh (plugin copies)` | the example project's editor plugin drifts from the starter template's copy (the cheap pre-check) | `[tool_smoke] plugin copies differ: templates/starter/addons/kanama_tools/plugin.gd vs example_project/addons/kanama_tools/plugin.gd / [tool_smoke] log tail:` | green |
-| `runtime_smoke.sh` | the example script no longer logs its scene-delivered properties (script unchanged: in-flight task 132; red run only) | `[runtime_smoke] missing pattern: HelloScript\(file\)\._ready health=99 speed=5\.1 label=from_tscn difficulty=HARD / [runtime_smoke] log tail:` | green |
+| `runtime_smoke.sh` | the example script no longer logs its scene-delivered properties | `[runtime_smoke] missing pattern: HelloScript\(file\)\._ready health=99 speed=5\.1 label=from_tscn difficulty=HARD / [runtime_smoke] log tail:` | green |
 | `hot_reload_smoke.sh` | the reloadable script line the smoke rewrites is gone, so no marker can reach the log | `[hot_reload_smoke] missing marker: A / [kanama:kt] FileAccess numeric_fixture write8=true read8=127 write16=true be16=18-52 write32=true read32=16909060 write64=true read64=72623859790382856 write_dou` | green |
 | `check_exported_scene_properties_selftest.sh` | the scene check stops saying `lost script property` (its own red run is inside the self-test) | `[scene_check_selftest] FAIL: the missing override property was not reported` | green |
 | `check_bootstrap_jdk_resolution.sh` | the bootstrap's stale-JDK diagnostic changes text (its fail cases then match nothing) | `[check_bootstrap_jdk_resolution] FAIL env_stale_header -- output does not match: predates JDK 21 \(no JNI_VERSION_21\)` | green |
