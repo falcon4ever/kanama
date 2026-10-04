@@ -63,71 +63,148 @@ object RpcTransferMode {
 }
 
 /**
- * Godot property hint constants for inspector metadata.
+ * Godot's `PropertyHint` values (`PROPERTY_HINT_*`), every one Godot 4.7 declares.
  *
- * Use these in [Export] annotations instead of repeating raw `PROPERTY_HINT_*` integer values in
- * gameplay code.
+ * The typed export annotations ([ExportRange], [ExportFile], [ExportFlags2DPhysics], ...) build the
+ * hint and its hint string for you, as GDScript's `@export_*` annotations do; these constants are
+ * for [ExportCustom] (GDScript `@export_custom`), the escape hatch for a hint no typed annotation
+ * covers.
  */
 object PropertyHint {
-  /** No hint. Matches Godot's `PROPERTY_HINT_NONE`. */
+  /** No hint. `PROPERTY_HINT_NONE`. */
   const val NONE = 0
 
-  /** Numeric range hint. Matches Godot's `PROPERTY_HINT_RANGE`. */
+  /** Numeric range (`@ExportRange`). `PROPERTY_HINT_RANGE`. */
   const val RANGE = 1
 
-  /** Fixed-value enum hint. Matches Godot's `PROPERTY_HINT_ENUM`. */
+  /** Fixed-value enum (`@ExportEnum`). `PROPERTY_HINT_ENUM`. */
   const val ENUM = 2
 
-  /**
-   * Suggested enum values without restricting text input. Matches Godot's
-   * `PROPERTY_HINT_ENUM_SUGGESTION`.
-   */
+  /** Suggested values; arbitrary text is still accepted. `PROPERTY_HINT_ENUM_SUGGESTION`. */
   const val ENUM_SUGGESTION = 3
 
-  /** Exponential easing hint. Matches Godot's `PROPERTY_HINT_EXP_EASING`. */
+  /** Easing curve (`@ExportExpEasing`). `PROPERTY_HINT_EXP_EASING`. */
   const val EXP_EASING = 4
 
-  /** Bit flags hint. Matches Godot's `PROPERTY_HINT_FLAGS`. */
+  /** Linked x/y/z values (vectors). `PROPERTY_HINT_LINK`. */
+  const val LINK = 5
+
+  /** Bit flags (`@ExportFlags`). `PROPERTY_HINT_FLAGS`. */
   const val FLAGS = 6
 
-  /** File path relative to the project. Matches Godot's `PROPERTY_HINT_FILE`. */
+  /** 2D render layers (`@ExportFlags2DRender`). `PROPERTY_HINT_LAYERS_2D_RENDER`. */
+  const val LAYERS_2D_RENDER = 7
+
+  /** 2D physics layers (`@ExportFlags2DPhysics`). `PROPERTY_HINT_LAYERS_2D_PHYSICS`. */
+  const val LAYERS_2D_PHYSICS = 8
+
+  /** 2D navigation layers (`@ExportFlags2DNavigation`). `PROPERTY_HINT_LAYERS_2D_NAVIGATION`. */
+  const val LAYERS_2D_NAVIGATION = 9
+
+  /** 3D render layers (`@ExportFlags3DRender`). `PROPERTY_HINT_LAYERS_3D_RENDER`. */
+  const val LAYERS_3D_RENDER = 10
+
+  /** 3D physics layers (`@ExportFlags3DPhysics`). `PROPERTY_HINT_LAYERS_3D_PHYSICS`. */
+  const val LAYERS_3D_PHYSICS = 11
+
+  /** 3D navigation layers (`@ExportFlags3DNavigation`). `PROPERTY_HINT_LAYERS_3D_NAVIGATION`. */
+  const val LAYERS_3D_NAVIGATION = 12
+
+  /** Project file path, stored as a UID when possible (`@ExportFile`). `PROPERTY_HINT_FILE`. */
   const val FILE = 13
 
-  /** Directory path relative to the project. Matches Godot's `PROPERTY_HINT_DIR`. */
+  /** Project directory (`@ExportDir`). `PROPERTY_HINT_DIR`. */
   const val DIR = 14
 
-  /** Absolute file path. Matches Godot's `PROPERTY_HINT_GLOBAL_FILE`. */
+  /** Absolute file path (`@ExportGlobalFile`). `PROPERTY_HINT_GLOBAL_FILE`. */
   const val GLOBAL_FILE = 15
 
-  /** Absolute directory path. Matches Godot's `PROPERTY_HINT_GLOBAL_DIR`. */
+  /** Absolute directory (`@ExportGlobalDir`). `PROPERTY_HINT_GLOBAL_DIR`. */
   const val GLOBAL_DIR = 16
 
-  /** Resource type hint. Matches Godot's `PROPERTY_HINT_RESOURCE_TYPE`. */
+  /** Resource class (derived from the property type). `PROPERTY_HINT_RESOURCE_TYPE`. */
   const val RESOURCE_TYPE = 17
 
-  /** Multiline string hint. Matches Godot's `PROPERTY_HINT_MULTILINE_TEXT`. */
+  /** Multiline text (`@ExportMultiline`). `PROPERTY_HINT_MULTILINE_TEXT`. */
   const val MULTILINE_TEXT = 18
 
-  /** Placeholder text hint. Matches Godot's `PROPERTY_HINT_PLACEHOLDER_TEXT`. */
+  /** An `Expression` string. `PROPERTY_HINT_EXPRESSION`. */
+  const val EXPRESSION = 19
+
+  /** Placeholder text (`@ExportPlaceholder`). `PROPERTY_HINT_PLACEHOLDER_TEXT`. */
   const val PLACEHOLDER_TEXT = 20
 
-  /** Color without alpha hint. Matches Godot's `PROPERTY_HINT_COLOR_NO_ALPHA`. */
+  /** Color without alpha. `PROPERTY_HINT_COLOR_NO_ALPHA`. */
   const val COLOR_NO_ALPHA = 21
 
-  /** Typed-array hint string. Matches Godot's `PROPERTY_HINT_TYPE_STRING`. */
+  /** Object id. `PROPERTY_HINT_OBJECT_ID`. */
+  const val OBJECT_ID = 22
+
+  /** Typed-array element hint (derived from `List<T>`). `PROPERTY_HINT_TYPE_STRING`. */
   const val TYPE_STRING = 23
 
-  /** Node type hint. Matches Godot's `PROPERTY_HINT_NODE_TYPE`. */
-  const val NODE_TYPE = 34
+  /** Deprecated by Godot; kept for completeness. `PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE`. */
+  const val NODE_PATH_TO_EDITED_NODE = 24
+
+  /** Object too big to send (debugger). `PROPERTY_HINT_OBJECT_TOO_BIG`. */
+  const val OBJECT_TOO_BIG = 25
 
   /**
-   * Typed-dictionary hint string (`"<key>;<value>"`). Matches Godot's
-   * `PROPERTY_HINT_DICTIONARY_TYPE`.
+   * Allowed node classes of a `NodePath` (`@ExportNodePath`).
+   * `PROPERTY_HINT_NODE_PATH_VALID_TYPES`.
    */
+  const val NODE_PATH_VALID_TYPES = 26
+
+  /** Project save-file path. `PROPERTY_HINT_SAVE_FILE`. */
+  const val SAVE_FILE = 27
+
+  /** Absolute save-file path. `PROPERTY_HINT_GLOBAL_SAVE_FILE`. */
+  const val GLOBAL_SAVE_FILE = 28
+
+  /** Deprecated by Godot. `PROPERTY_HINT_INT_IS_OBJECTID`. */
+  const val INT_IS_OBJECTID = 29
+
+  /** Integer is a pointer. `PROPERTY_HINT_INT_IS_POINTER`. */
+  const val INT_IS_POINTER = 30
+
+  /** Array element type. `PROPERTY_HINT_ARRAY_TYPE`. */
+  const val ARRAY_TYPE = 31
+
+  /** Locale code. `PROPERTY_HINT_LOCALE_ID`. */
+  const val LOCALE_ID = 32
+
+  /** Localizable string dictionary. `PROPERTY_HINT_LOCALIZABLE_STRING`. */
+  const val LOCALIZABLE_STRING = 33
+
+  /** Node class (derived from the property type). `PROPERTY_HINT_NODE_TYPE`. */
+  const val NODE_TYPE = 34
+
+  /** Hide the quaternion editor. `PROPERTY_HINT_HIDE_QUATERNION_EDIT`. */
+  const val HIDE_QUATERNION_EDIT = 35
+
+  /** Masked text. `PROPERTY_HINT_PASSWORD`. */
+  const val PASSWORD = 36
+
+  /** Avoidance layers (`@ExportFlagsAvoidance`). `PROPERTY_HINT_LAYERS_AVOIDANCE`. */
+  const val LAYERS_AVOIDANCE = 37
+
+  /** Typed-dictionary hint string (derived from `Map<K, V>`). `PROPERTY_HINT_DICTIONARY_TYPE`. */
   const val DICTIONARY_TYPE = 38
 
-  /** Inspector tool button hint. Matches Godot's `PROPERTY_HINT_TOOL_BUTTON`. */
+  /** Inspector tool button (`@ExportToolButton`). `PROPERTY_HINT_TOOL_BUTTON`. */
   const val TOOL_BUTTON = 39
+
+  /** One-shot value the inspector resets. `PROPERTY_HINT_ONESHOT`. */
+  const val ONESHOT = 40
+
+  /** A group header with an enable checkbox. `PROPERTY_HINT_GROUP_ENABLE`. */
+  const val GROUP_ENABLE = 42
+
+  /** Input action name. `PROPERTY_HINT_INPUT_NAME`. */
+  const val INPUT_NAME = 43
+
+  /** Project file path stored as a raw path (`@ExportFilePath`). `PROPERTY_HINT_FILE_PATH`. */
+  const val FILE_PATH = 44
 }
 
 /** Godot property usage flag constants for inspector and serialization policy. */
@@ -154,24 +231,21 @@ object PropertyUsage {
  *
  * On a [ScriptClass] the property is routed through the script instance's `set` / `get` callbacks;
  * on a [RegisterClass] the processor emits `get_<name>` / `set_<name>` methods and registers the
- * property with ClassDB. (Kanama 0.5 merged `@ScriptProperty` and `@RegisterProperty` into this
- * annotation; their parameters were identical.)
+ * property with ClassDB.
+ *
+ * Inspector hints are their own annotations, as in GDScript, and export the property by themselves:
+ * `@ExportRange(0.0, 100.0, 1.0) var health = 100L` is GDScript's `@export_range(0, 100, 1) var
+ * health := 100`. Keep `@Export` next to one only to set [name] or [usage]. (Kanama 0.5 removed the
+ * raw `hint` / `hintString` parameters; [ExportCustom] is GDScript's `@export_custom` for a hint no
+ * typed annotation covers.)
  *
  * @property name Optional engine-facing property name (snake_case). Defaults to the Kotlin property
  *   name converted from camelCase.
- * @property hint PROPERTY_HINT_* constant. 0 = PROPERTY_HINT_NONE. Prefer [PropertyHint] constants
- *   over raw integers in user-facing code.
- * @property hintString Hint string (e.g. "0,100,1" for PROPERTY_HINT_RANGE).
  * @property usage PROPERTY_USAGE_* flags. Defaults to [PropertyUsage.DEFAULT].
  */
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Export(
-  val name: String = "",
-  val hint: Int = 0,
-  val hintString: String = "",
-  val usage: Int = PropertyUsage.DEFAULT,
-)
+annotation class Export(val name: String = "", val usage: Int = PropertyUsage.DEFAULT)
 
 /**
  * Marks a class as a tool script — its code runs in the editor too, not just at runtime. Equivalent

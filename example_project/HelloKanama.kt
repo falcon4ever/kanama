@@ -1,12 +1,12 @@
 package net.multigesture.kanama.example
 
 import net.multigesture.kanama.annotations.Export
+import net.multigesture.kanama.annotations.ExportRange
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnExitTree
 import net.multigesture.kanama.annotations.OnPhysicsProcess
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
-import net.multigesture.kanama.annotations.PropertyHint
 import net.multigesture.kanama.annotations.RegisterClass
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.annotations.Tool
@@ -24,7 +24,7 @@ class HelloKanama(val godotObject: GodotHandle) {
 
   private var pingCount: Long = 0
 
-  @Export(hint = PropertyHint.RANGE, hintString = "0,100,1") var counter: Long = 0
+  @ExportRange(0.0, 100.0, 1.0) var counter: Long = 0
 
   @Export var scale: Double = 1.0
 

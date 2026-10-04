@@ -271,14 +271,28 @@ internal object FunctionRegistration {
           if (kotlinNames.distinct().size == 1)
             "the ${kotlinNames.size} overloads of ${kotlinNames[0]}"
           else kotlinNames.joinToString(" and ")
+        if (godotName in LIFECYCLE_VIRTUALS.values && kotlinNames.distinct().size > 1) {
+          // Task 133 C: an engine virtual handled twice, often once in a superclass.
+          return@map "$owner: $who both handle the engine virtual '$godotName'. Keep one " +
+            "handler: override the superclass's function (call super) instead of adding another."
+        }
         "$owner: $who all register as the Godot " +
           "method '$godotName' (Godot has no overloads). Make all but one internal or private, " +
           "or give one @GodotName(\"...\")."
       }
 
-  /** The message for a registered function whose type Godot cannot carry. */
+  /**
+   * The message for a registered function whose type Kanama does not marshal (task 133 C2: the
+   * limit is Kanama's, not Godot's — Godot carries every Variant type).
+   */
   fun unsupportedTypeMessage(where: String, slot: String, typeName: String?): String =
-    "$where: $slot has type '$typeName', which Godot cannot pass to or from a registered " +
-      "function. Every public function of a script class is registered with Godot (Kanama 0.5); " +
-      "make it `internal` or `private` to keep it Kotlin-only, or use a supported type."
+    "$where: $slot has type '$typeName', which Kanama does not yet pass to or from a registered " +
+      "function (supported: $SUPPORTED_FUNCTION_TYPES). Every public function of a script class " +
+      "is registered with Godot (Kanama 0.5); make it `internal` or `private` to keep it " +
+      "Kotlin-only, or use a supported type."
+
+  /** The types a registered function's parameters and return take, as the message lists them. */
+  const val SUPPORTED_FUNCTION_TYPES: String =
+    "Long, Double, Boolean, String, NodePath, Vector2, Vector2i, Vector3, Vector3i, Quaternion, " +
+      "Basis, Color, a Godot enum, a node or GodotObject wrapper"
 }

@@ -132,10 +132,13 @@ object KanamaHotReload {
         val oldLoader = scriptClassLoader
         scriptClassLoader = newLoader
         lastScriptsJarMtime = mtime
+        // Task 133 C2: autoloads outlive the scene reload; give them the new build's objects.
+        val autoloads = AutoloadReload.recreate(oldLoader)
         retireLoader(oldLoader)
         System.err.println(
           "[kanama:kt] hot-reload: reloaded scripts from $scriptsJar " +
-            "(loader=${newLoader.reloadId}, old_loader=${oldLoader?.reloadId ?: 0}, rebound=$rebound)"
+            "(loader=${newLoader.reloadId}, old_loader=${oldLoader?.reloadId ?: 0}, rebound=$rebound, " +
+            "autoloads=$autoloads)"
         )
       } catch (t: Throwable) {
         KanamaScript.restoreScriptTemplates(previousTemplates)

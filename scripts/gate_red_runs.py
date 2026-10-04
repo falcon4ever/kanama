@@ -293,7 +293,7 @@ case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sou
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],
      "src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt", "the remap stops rewriting `.invokeExact(` (the builtin-call downcall would reach ART)")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 29)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 30)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
@@ -307,6 +307,10 @@ case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
 case("check_ios_no_silent_stubs.py", py("check_ios_no_silent_stubs.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n    fun redRun(): Boolean = false\n}\n")],
      "un-annotated silent stub", "a shared wrapper function whose whole body is a bare default, without a marker")
+case("check_hand_copies.py", py("check_hand_copies.py"),
+     [Edit(f"{IOS}/annotations/Annotations.kt", "annotation class ExportPlaceholder(val placeholder: String)",
+           "annotation class ExportPlaceholder(val text: String)")],
+     "@ExportPlaceholder parameters differ", "the iOS copy of an annotation renames a parameter")
 case("check_ios_shim_faults.py", py("check_ios_shim_faults.py"),
      [Edit("ios/bootstrap/kanama_ios_shim.c", '        kanama_ios_fault(__func__, "api-unresolved", NULL);', "        /* red run: guard returns silently */")],
      "returns without calling kanama_ios_fault", "a guarded early return in the iOS shim stops reporting its fault")
@@ -329,8 +333,8 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 29", "KANAMA_WEB_PROTOCOL_VERSION = 28")],
-     "protocol version disagrees", "the bridge pins protocol 28 while the emitter says 29")
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 30", "KANAMA_WEB_PROTOCOL_VERSION = 29")],
+     "protocol version disagrees", "the bridge pins protocol 29 while the emitter says 30")
 case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      [Edit("scripts/generate_api_wrapper.py", '    "PT_VOID": 0,', '    "PT_VOID": 99,')],
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")

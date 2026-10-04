@@ -133,9 +133,15 @@ Mixed projects are valid while you migrate. A Kanama script can call a retained
 GDScript autoload through the normal Godot object API:
 
 ```kotlin
-self.getNodeAs<Node>("/root/Audio")
-    ?.call("play", path)
+Autoloads.Audio.call("play", path)   // GDScript: Audio.play(path)
 ```
+
+A Kotlin autoload is typed to its script class, so `Autoloads.Settings.save()`
+needs no lookup or cast (see [Scripts → Autoloads](scripts.md#autoloads)). A
+script that `extends` another script class ports to a Kotlin subclass with no
+forwarding overrides (see [Scripts → Script Inheritance](scripts.md#script-inheritance)),
+and each `@export_*` annotation has a typed twin
+([Exports and Resources](properties-resources.md#export-hints)).
 
 Exported `NodePath` values are a good first step when the original script used
 `@export var target: NodePath`:

@@ -1602,6 +1602,10 @@ internal fun decodeIosPropertyValue(ptTag: Int, bytes: CPointer<ByteVar>?, lengt
       val f = bytes.reinterpret<GodotRealVar>()
       Vector2.raw(f[0], f[1])
     }
+    IOS_PT_VECTOR2I -> {
+      val n = bytes.reinterpret<IntVar>()
+      Vector2i(n[0], n[1])
+    }
     IOS_PT_VECTOR3 -> {
       val f = bytes.reinterpret<GodotRealVar>()
       Vector3.raw(f[0], f[1], f[2])

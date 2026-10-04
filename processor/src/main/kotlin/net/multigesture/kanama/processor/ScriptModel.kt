@@ -252,6 +252,13 @@ internal data class ScriptPropertyModel(
    * `"2/6:<hint>"` for a bitfield) whose elements are the Godot values.
    */
   val arrayElementGodotEnum: GodotEnumRef? = null,
+  /**
+   * True when [hint] / [hintString] come from a typed hint annotation (`@ExportRange`,
+   * `@ExportFile`, ..., task 133 C) rather than from the property type. The Web proxy declares such
+   * a hint verbatim (`@export_custom`); a type-derived hint is carried by the typed declaration.
+   * Not serialized: the JSON already carries the hint and hint string themselves.
+   */
+  val explicitHint: Boolean = false,
 )
 
 internal data class ScriptPropertyGroupModel(val name: String, val prefix: String, val usage: Int)

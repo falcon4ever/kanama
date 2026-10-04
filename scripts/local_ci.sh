@@ -449,6 +449,9 @@ stage "swallowed-failure audit (task 118)"
 # `# justified:` comment) or fatal; the audit table in scripts/README-gates.md is generated from those comments.
 python3 "$ROOT_DIR/scripts/audit_swallowed_failures.py"
 
+stage "hand-kept copies: iOS annotations, autoload KSP inputs (task 133 C2)"
+python3 "$ROOT_DIR/scripts/check_hand_copies.py"
+
 stage "JDK install-location table parity (kanama#277)"
 python3 "$ROOT_DIR/scripts/check_jdk_locations_parity.py"
 

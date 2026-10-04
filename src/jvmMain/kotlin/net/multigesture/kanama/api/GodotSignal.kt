@@ -54,6 +54,13 @@ internal actual constructor(
         // closure -- whenever it drops the connection (receiver or emitter freed, one-shot fired,
         // disconnected, failed connect). Task 131; the iOS shim works the same way.
         val error = GodotError(SignalCallables.connect(owner.segment, name, target.instanceId, id, flags.value))
+        if (error == GodotError.OK) {
+            // Task 133 C2: a hot reload disconnects the lambdas a re-created autoload made.
+            SignalCallbackRegistry.noteConnection(
+                id,
+                SignalCallbackRegistry.Connection(owner.segment.address(), owner.instanceId, name, target.instanceId),
+            )
+        }
         return SignalConnection(
             owner = owner,
             signal = name,

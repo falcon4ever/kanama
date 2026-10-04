@@ -34,7 +34,8 @@ abstract class KanamaScript<T : GodotObject>(
   val godotObject: GodotHandle,
   wrapper: (GodotHandle) -> T,
 ) : KanamaWebScript(godotObject) {
-  protected val self: T = wrapper(godotObject)
+  // Public as on desktop, Android and iOS (task 133 C: `Autoloads.Events.self` is the autoload node).
+  val self: T = wrapper(godotObject)
 
   inline fun <R> selfAs(ctor: (GodotHandle) -> R): R = ctor(godotObject)
 

@@ -1,11 +1,11 @@
 package com.example.game
 
+import net.multigesture.kanama.annotations.Export
+import net.multigesture.kanama.annotations.ExportRange
 import net.multigesture.kanama.annotations.GlobalClass
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
-import net.multigesture.kanama.annotations.PropertyHint
 import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.Tool
 import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
@@ -19,7 +19,7 @@ import net.multigesture.kanama.types.*
 @Tool
 class HelloScript(godotObject: GodotHandle) :
     KanamaScript<Node2D>(godotObject, ::Node2D) {
-    @Export(hint = PropertyHint.RANGE, hintString = "0,4,0.1")
+    @ExportRange(0.0, 4.0, 0.1)
     var spinSpeed: Double = 0.6
 
     @Export

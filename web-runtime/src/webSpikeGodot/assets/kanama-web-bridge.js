@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 29;
+  const KANAMA_WEB_PROTOCOL_VERSION = 30;
 
   function commandWordCount(opcode) {
     if (
@@ -850,6 +850,15 @@
         "property_set",
         `property#${propertyId}`,
         () => this.api.kanamaWebSetVector3Property(handle, propertyId, x, y, z),
+        0,
+      );
+    },
+    setColorProperty(handle, propertyId, r, g, b, a) {
+      return this.invoke(
+        handle,
+        "property_set",
+        `property#${propertyId}`,
+        () => this.api.kanamaWebSetColorProperty(handle, propertyId, r, g, b, a),
         0,
       );
     },

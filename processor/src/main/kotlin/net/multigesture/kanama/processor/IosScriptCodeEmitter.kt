@@ -57,6 +57,8 @@ private val iosReturnTypes =
     TypeMapping.VECTOR2,
     TypeMapping.VECTOR2I,
     TypeMapping.VECTOR3,
+    // Task 133 C2: Color returns ride encodeIosReturn's PT_COLOR (4x float32).
+    TypeMapping.COLOR,
     TypeMapping.STRING,
     TypeMapping.PACKED_STRING_ARRAY,
     // Variant returns reuse the per-runtime-type encodeIosReturn dispatch (audited inner types;
@@ -821,6 +823,8 @@ internal class IosScriptCodeEmitter(
       TypeMapping.VECTOR2,
       TypeMapping.VECTOR2I,
       TypeMapping.VECTOR3,
+      // Task 133 C2: the C call path tags a Color Variant PT_COLOR; decodeIosCallArg builds it.
+      TypeMapping.COLOR,
     )
 
   /**
@@ -928,11 +932,13 @@ internal class IosScriptCodeEmitter(
             // typed value. godotClassName stays empty (no setProperty Long case).
             TypeMapping.NODE_PATH,
             TypeMapping.VECTOR2,
-            TypeMapping.VECTOR3 -> {
+            TypeMapping.VECTOR2I,
+            TypeMapping.VECTOR3,
+            TypeMapping.COLOR -> {
               valueTypeClassName = type.kotlinType
               ""
             }
-            // Remaining value types (Vector2i/Vector3i/Quaternion/Basis/…) still lack a C
+            // Remaining value types (Vector3i/Quaternion/Basis/…) still lack a C
             // marshalling case: emit no setProperty case, keep the Kotlin default.
             else -> {
               exportSkip(
@@ -980,7 +986,9 @@ internal class IosScriptCodeEmitter(
         // a Vector2 `motion` or Vector3 `shoot_target`) on the authority peer — the value never
         // leaves the sending device. (String/NodePath have the identical defect; folded in here.)
         type == TypeMapping.VECTOR2 ||
+          type == TypeMapping.VECTOR2I ||
           type == TypeMapping.VECTOR3 ||
+          type == TypeMapping.COLOR ||
           type == TypeMapping.NODE_PATH ||
           type == TypeMapping.STRING -> "script.$kotlinName"
         else -> ""
@@ -1056,6 +1064,7 @@ internal class IosScriptCodeEmitter(
       TypeMapping.VECTOR3I -> 10
       TypeMapping.QUATERNION -> 15
       TypeMapping.BASIS -> 17
+      TypeMapping.COLOR -> 20
       TypeMapping.NODE_PATH -> 22
       TypeMapping.OBJECT -> 24
       TypeMapping.ARRAY -> 28

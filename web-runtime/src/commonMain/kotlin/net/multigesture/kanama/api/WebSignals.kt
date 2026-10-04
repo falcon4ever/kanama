@@ -2,10 +2,12 @@ package net.multigesture.kanama.api
 
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.web.WebObjectId
+import net.multigesture.kanama.web.WebPackedFloats
 import net.multigesture.kanama.web.webScriptInstance
 
 /**
@@ -198,7 +200,7 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
     callback: (Double) -> Unit,
   ): GodotError =
-    connectScalar(target, flags, { it.trim().toDouble() }, callback)
+    connectScalar(target, flags, { WebPackedFloats.decode(it) }, callback)
 
   /** Connects a one-`bool` signal, delivering the emitted value. */
   fun connectBoolean(
@@ -225,7 +227,7 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     connectScalar(
       target,
       flags,
-      { packed -> packed.split(',').let { Vector2(it[0].toDouble(), it[1].toDouble()) } },
+      { packed -> packed.split(',').let { Vector2(WebPackedFloats.decode(it[0]), WebPackedFloats.decode(it[1])) } },
       callback,
     )
 
@@ -255,7 +257,36 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
       flags,
       { packed ->
         packed.split(',').let {
-          Vector3(it[0].toDouble(), it[1].toDouble(), it[2].toDouble())
+          Vector3(
+            WebPackedFloats.decode(it[0]),
+            WebPackedFloats.decode(it[1]),
+            WebPackedFloats.decode(it[2]),
+          )
+        }
+      },
+      callback,
+    )
+
+  /**
+   * Connects a one-`Color` signal, delivering the emitted value (task 133 C2). The four float32
+   * channels cross as decimal text with enough digits to round back to the same float32.
+   */
+  fun connectColor(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (Color) -> Unit,
+  ): GodotError =
+    connectScalar(
+      target,
+      flags,
+      { packed ->
+        packed.split(',').let {
+          Color(
+            WebPackedFloats.decode(it[0]),
+            WebPackedFloats.decode(it[1]),
+            WebPackedFloats.decode(it[2]),
+            WebPackedFloats.decode(it[3]),
+          )
         }
       },
       callback,
