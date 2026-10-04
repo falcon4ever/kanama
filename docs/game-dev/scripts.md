@@ -449,10 +449,12 @@ compile; they do not check the class, so prefer the typed forms.
 
 `castOrNull` and `cast` ask Godot (`Object.is_class`) every time, even when the
 wrapper's Kotlin class already matches (a wrapper minted with `Timer(node.handle)`
-proves nothing); only a cast to `GodotObject` skips the question. They return the
-same wrapper when it already is a `T`, else a new non-owning view of the same
-object. A cast result is never yours to close: close the original (the owned
-`RefCounted` return you cast from) and only that. They take a Kanama wrapper class (`Node3D`, `InputEventKey`,
+proves nothing); only a cast to `GodotObject` skips the question. A cast to a
+`RefCounted` class (`res.cast<Texture2D>()`) returns a new wrapper with a reference
+of its own, like the `from*` downcasts: kept in a field it keeps the object alive,
+and closing it (or forgetting it) releases only that reference, never the
+original's. A cast to any other class returns the same wrapper when it already is
+a `T`, else a new view of the same object. They take a Kanama wrapper class (`Node3D`, `InputEventKey`,
 `PackedScene`, ...); `isScript` / `asScript` take a Kotlin script class.
 Replace hand-written `Node3D(other.handle)` casts with them: an unchecked one
 calls `Node3D` methods on whatever the object really is.

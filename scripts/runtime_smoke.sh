@@ -72,6 +72,12 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 # nothing is constructed inside refcount_incremented (it runs under the loader locks) nor while
 # the owner is freed (803d04d6: after_reload=3, constructions_at_end=4).
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://refill_on_free_probe.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
+# task 132 (after the rebase) -- a property setter's references are the owner's, not the Kotlin
+# object's: a KanamaScript resource's List<KanamaScript resource> property, set, re-set, then the
+# owner dropped (its Kotlin object collected first) -> every element dies (883c936c: the elements
+# leaked, the City-Builder "resources still in use at exit"). Its --verbose leak report lands in the
+# main log, where `check_absent "Leaked instance: Resource:"` covers it too.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://property_retain_smoke.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
 # task 132 D7 -- the same freed-object scene with the instance-binding check (opt-in), own log.
 FREED_BINDING_LOG="${LOG_FILE}.freed_binding"
 KANAMA_FREED_OBJECT_CHECKS=binding "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit >"$FREED_BINDING_LOG" 2>&1
@@ -388,6 +394,7 @@ check "RefillOnFreeProbe reload_same_object=true"
 check "RefillOnFreeProbe constructions_before_reload=2 after_reload=2 alive=true"
 check "RefillOnFreeProbe dead=true frames=[0-9]+ constructions_at_end=2 after_reload=2"
 check_absent "property values reset|recreated with its default property values"
+check "PropertyRetainSmoke held=2 old_released=true owner_dead=true items_dead=true frames=[0-9]+"
 # task 132 blocker 1 -- script objects keep their owners (see the run above).
 check "ScriptOwnerSmoke saved=true loaded=true created=true"
 check "ScriptOwnerSmoke alive_after_gc=true engine_read=4242 resaved=true created_alive_after_gc=true created_read=77 plain_alive_after_gc=true"
@@ -480,6 +487,9 @@ check "destroyed [0-9]+/[0-9]+ tracked KanamaScript object\\(s\\)"
 check "unregistered [0-9]+ extension class\\(es\\)"
 # task 133 -- script authoring like GDScript (script_access_smoke.tscn)
 check "ScriptAccessSmoke sync before_ready=true node=true wrong_type=true missing=true script=true no_script=true is_script=true as_script=true cast=true require_as=true preload=true preload_wrong=true instantiate=true tree=true orphan_tree=true"
+# task 132 -- a cast to a RefCounted class owns a reference, like the from* downcasts (883c936c:
+# the cast was a borrowed view and the object died when the original was closed).
+check "ScriptAccessSmoke cast_owns=true"
 check "ScriptAccessSmoke async wait=true next_frame=true freed_cancelled=true"
 check "ScriptAccessSmoke reready cached_until_ready=true re_resolved=true ready_count=2"
 # the tree accessors check tree membership first: no engine error of their own

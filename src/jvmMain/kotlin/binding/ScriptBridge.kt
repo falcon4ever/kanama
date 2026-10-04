@@ -67,6 +67,15 @@ object ScriptBridge {
   fun create(handle: Long): MemorySegment =
     scriptInstanceCreate3.invoke(info3, MemorySegment.ofAddress(handle)) as MemorySegment
 
+  /**
+   * Generated script-property setters (task 132): runs [read], the setter's decode, and registers
+   * the references it took under [owner]'s [property] (releasing the ones that property held
+   * before); the owner's `free` releases them whether or not the Kotlin script object is still
+   * alive. See [ScriptPropertyRetains].
+   */
+  fun <T> retainScriptProperty(owner: MemorySegment, property: String, read: () -> T): T =
+    ScriptPropertyRetains.capture(owner, property, read)
+
   fun kotlinObjectForOwner(ownerObject: MemorySegment): Any? =
     when (val value = kotlinObjectByOwnerAddress[ownerObject.address()]) {
       is ScriptOwnerLink -> {
@@ -911,6 +920,10 @@ object ScriptBridge {
           )
         }
     }
+    // What the property setters took (task 132): released here, not by the Kotlin object, which
+    // the GC may already have collected through the owner link.
+    val retainsOwner = scriptInstance?.ownerObject?.address() ?: link?.owner?.address()
+    if (retainsOwner != null) ScriptPropertyRetains.releaseOwner(retainsOwner)
     val scriptObject = (scriptInstance?.script ?: link?.script)?.godotObject ?: MemorySegment.NULL
     if (scriptObject.address() != 0L) {
       val unreferenceBind =

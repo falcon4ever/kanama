@@ -659,6 +659,15 @@ WRAPPER_SOURCE_DIRS = (
 )
 EXTENSION_API = ROOT / "extension_api.json"
 
+# Uses of a class token's borrowed view (`token.wrap(`) that are correct, each with its reason.
+TOKEN_WRAP = re.compile(r"\btoken\.wrap\(")
+ALLOWED_TOKEN_WRAPS = {
+    # node<T>(): T is a Node, which is never RefCounted.
+    ("ScriptAccess.kt", "val typed = token.wrap(node.handle) as T"),
+    # preload<T>(): the process-wide Preloads entry holds the +1 until shutdown.
+    ("ScriptAccess.kt", "val typed = token.wrap(resource.handle) as T"),
+}
+
 # Borrowed constructions that are correct, each with its reason.
 ALLOWED_BORROWED_CONSTRUCTIONS = {
     # The iOS self-test builds raw probe objects it destroys or hands to an owning helper itself.
@@ -798,8 +807,8 @@ def _ownership_problems_in(rel: str, stem: str, text: str, refcounted: set[str])
         if function_name in ("fromHandle", "wrapBorrowed"):
             continue  # the borrowed view, by definition
         if function_name == "wrap" and "GodotClassTable()" in text:
-            # Task 133 A's class-token tables: the checked casts (castOrNull, requireAs, ...) return
-            # a non-owning view of an object the caller already holds, by that parcel's contract.
+            # Task 133 A's class-token tables construct plain views; who owns one is decided where
+            # a token is used (TOKEN_WRAP below): a checked cast takes its own +1 (wrapRetained).
             continue
         if any(Path(rel).name == name and snippet in line for name, snippet in ALLOWED_BORROWED_CONSTRUCTIONS):
             continue
@@ -808,6 +817,25 @@ def _ownership_problems_in(rel: str, stem: str, text: str, refcounted: set[str])
             "fromHandle/wrapBorrowed: wrap it in RefCounted.owned(...) (it adopts a +1) or "
             "RefCounted.retained(...) (it takes one)"
         )
+
+    # Task 132: a checked cast (castOrNull / cast / requireAs / getNodeAs) returning a RefCounted
+    # wrapper takes its own +1, like the from* downcasts: it goes through
+    # GodotClassToken.wrapRetained, which must retain. A bare `token.wrap(` hands out a borrowed
+    # view and is allowed only where ALLOWED_TOKEN_WRAPS says why.
+    for match in TOKEN_WRAP.finditer(text):
+        line = line_at(match.start())
+        if any(Path(rel).name == name and snippet in line for name, snippet in ALLOWED_TOKEN_WRAPS):
+            continue
+        problems.append(
+            f"{where(match.start())}: token.wrap(...) hands out a borrowed view of a class-token "
+            "table; a checked cast's RefCounted result takes its own +1 (token.wrapRetained)"
+        )
+    for name, start, end in spans:
+        if name == "wrapRetained" and "RefCounted.retained(" not in text[start:end]:
+            problems.append(
+                f"{where(start)}: wrapRetained does not take a +1 for a RefCounted view "
+                "(RefCounted.retained): a checked cast kept in a field would dangle"
+            )
 
     # Functions whose result is owned must make it so (or hand it to one that does).
     for name, start, end in spans:
@@ -951,6 +979,12 @@ RED_RUNS: tuple[tuple[str, str, str], ...] = (
     ("R14 property decode without its retain", "binding/runtime/BuiltinTypes.kt",
      "  fun <T> readVariantObjectRetained(variant: MemorySegment, arena: Arena, wrapper: (MemorySegment) -> T?): T? =\n"
      "    readVariantObject(variant, arena, wrapper).also { value ->\n      if (value is Resource) {\n        Unit\n      }\n    }\n"),
+    ("R18 checked cast returns the table's borrowed view", "api/ScriptAccess.kt",
+     "  fun <T : GodotObject> castOrNull(value: GodotObject, type: KClass<T>): T? {\n"
+     "    val token = token(type)\n    if (!value.isClass(token.godotName)) return null\n"
+     "    return if (type.isInstance(value)) value as T else token.wrap(value.handle) as T\n  }\n"),
+    ("R19 wrapRetained that does not retain", "api/ScriptAccess.kt",
+     "  fun wrapRetained(handle: GodotHandle): GodotObject = table.wrap(index, handle)\n"),
 )
 
 

@@ -560,20 +560,24 @@ if ! rg -q 'propertyCount = 25' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property list count does not include metadata/tool-button entries" >&2
   exit 1
 fi
+# Task 132: a setter's references belong to the owner's property (the runtime registry), not to the
+# Kotlin object, so free releases them after the GC collected it. The Kotlin object releases none.
+for retained_property in smoke_scene smoke_resource smoke_resources; do
+  if ! rg -Fq "ScriptBridge.retainScriptProperty(godotObject, \"$retained_property\")" "$hello_script_registrar"; then
+    echo "[local_ci] generated setter of $retained_property does not register its references (ScriptBridge.retainScriptProperty)" >&2
+    exit 1
+  fi
+done
+if rg -q 'releaseRefCounted' "$hello_script_registrar"; then
+  echo "[local_ci] generated registrar still releases setter references through the Kotlin object" >&2
+  exit 1
+fi
 if ! rg -q 'cleanup = \{ cleanupKanamaOwnedProperties\(kt\) \}' "$hello_script_registrar"; then
   echo "[local_ci] generated script-property cleanup hook is missing" >&2
   exit 1
 fi
 if ! rg -q 'closeKanamaOwned\("smoke_scene", kt\.smokeScene\)' "$hello_script_registrar"; then
-  echo "[local_ci] generated script-property reassignment cleanup is missing" >&2
-  exit 1
-fi
-if ! rg -Fq 'kt.smokeResource?.let { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }' "$hello_script_registrar"; then
-  echo "[local_ci] generated custom Resource property cleanup does not release the retained handle" >&2
-  exit 1
-fi
-if ! rg -Fq 'kt.smokeResources.forEach { BuiltinTypes.releaseRefCounted(it.godotObject.segment) }' "$hello_script_registrar"; then
-  echo "[local_ci] generated custom Resource array cleanup does not release retained handles" >&2
+  echo "[local_ci] generated free-path close of a script-assigned resource is missing" >&2
   exit 1
 fi
 if rg -Fq 'SmokeResourceScriptRegistrar.cleanupKanamaOwnedProperties' "$hello_script_registrar"; then

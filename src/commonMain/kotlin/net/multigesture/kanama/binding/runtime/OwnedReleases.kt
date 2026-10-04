@@ -283,13 +283,21 @@ internal object OwnedReleases {
   /**
    * D4, at the deinitialization levels (before Godot's leak report): collect the wrappers that are
    * unreachable now, wait for their cleanup actions, and release them all, with no frame budget and
-   * the parked releases included. Returns how many it released.
+   * the parked releases included. Repeated while a round releases something (at most
+   * [SHUTDOWN_ROUNDS]): a release can free an owner whose script instance then gives back what its
+   * properties held, and those objects' script objects only become collectable in the next round
+   * (City-Builder: the map, then its 121 structures). Returns how many it released.
    */
   fun shutdown(): Int {
     if (!enabled) return 0
-    OwnedReleaseCleaner.collectGarbage(SHUTDOWN_WAIT_MILLIS)
-    var released = drain(Duration.INFINITE)
-    for (owner in parked.keys.toList()) released += unpark(owner)
+    var released = 0
+    for (round in 1..SHUTDOWN_ROUNDS) {
+      OwnedReleaseCleaner.collectGarbage(SHUTDOWN_WAIT_MILLIS)
+      var count = drain(Duration.INFINITE)
+      for (owner in parked.keys.toList()) count += unpark(owner)
+      released += count
+      if (count == 0) break
+    }
     return released
   }
 
@@ -319,6 +327,7 @@ internal object OwnedReleases {
   }
 
   private const val SHUTDOWN_WAIT_MILLIS = 500L
+  private const val SHUTDOWN_ROUNDS = 8
 
   // The instance-id lookup the freed-object check uses (task 131); when the backend could not
   // resolve it, the release goes ahead as it did before that check existed.

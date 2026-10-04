@@ -55,9 +55,10 @@ accessors now and the rest in a follow-up (see "Web" below).
   found.
 - **Checked casts**: `x.castOrNull<Camera3D>()` (GDScript `x as Camera3D`), `x.cast<Camera3D>()`
   (throws `ClassCastException`), `node.requireAs<Timer>(path)` and `node.getNodeAs<Timer>(path)`.
-  One `Object.is_class` call, made even when the wrapper's Kotlin class already matches; the result
-  is the same wrapper or a new non-owning view of the object, never yours to close (close the
-  original). `NodePath` overloads exist for `requireAs`, `getNodeAs`, `node` and `script`. They are backed by
+  One `Object.is_class` call, made even when the wrapper's Kotlin class already matches. A cast to a
+  `RefCounted` class returns a new wrapper with a reference of its own (task 132, like the `from*`
+  downcasts: close it or let the GC release it); any other result is the same wrapper or a new view
+  of the object. `NodePath` overloads exist for `requireAs`, `getNodeAs`, `node` and `script`. They are backed by
   generated class-token tables (`GodotClasses.kt`, `PlatformGodotClasses.kt`, from
   `scripts/generate_api_wrapper.py --write-tree`) built from class literals and constructor calls,
   so they need no reflection and survive R8. Size: the two desktop table classes are 54.6 KB of
@@ -213,6 +214,30 @@ accessors now and the rest in a follow-up (see "Web" below).
   ...): each takes a reference of its own, so a downcast kept in a field keeps the object alive.
   Closing one is now correct (it releases its own reference) and forgetting one is a late
   release.
+- **A script property's references belong to its resource or node, not to the Kotlin object.** A
+  property setter (`@Export var structures: List<DataStructure>`, a resource-typed field, a
+  `List`/`Map` of them) takes a reference on each value; those were given back by reading the
+  Kotlin property values when the script instance was freed, so once the collector had dropped a
+  `KanamaScript` object (the owner link above), every element leaked (the City-Builder demo: "244
+  resources still in use at exit" after Load). The runtime now records each setter's references
+  under (owner, property): setting the property again releases what it held before, and freeing
+  the instance releases them all, whether or not the Kotlin object is still alive. Plain script
+  classes and node scripts use the same record. A value the script assigned itself
+  (`smokeScene = PackedScene.create()`) is still closed when the instance is freed while the
+  Kotlin object lives, else released by the GC fallback. Smoke: `property_retain_smoke.tscn`
+  (red before: the elements outlived their owner). The shutdown collection now repeats while a
+  round releases something (at most 8 rounds): freeing a resource gives back its properties'
+  references, and those objects' script objects are only collectable in the next round
+  (City-Builder after Load, 30 GC frames, Save, Load: no resource in use at exit; the shutdown
+  releases took 78 ms in that run). iOS setters take no reference (they keep the
+  live script objects, which hold their own), so nothing changes there.
+- **Checked casts to a `RefCounted` class own their wrapper** (`res.cast<Texture2D>()`,
+  `castOrNull`), like the `from*` downcasts: the result takes a reference of its own, so a cast kept
+  in a field keeps the object alive after the original is closed. Casts to node classes are
+  unchanged. Cost on an Apple M1 Max (desktop debug build, 10,000 casts a frame, median of 100
+  frames): a `RefCounted` cast 320 ns before, about 400 ns now (a new wrapper, `reference()` and
+  the fallback registration; about 435 ns with its `close()`); a node cast unchanged at about
+  317 ns.
 - **`close()` on a borrowed view releases nothing** (`fromHandle`, a wrapper constructor over a
   handle): before, it released a reference the view never took, which could free an object
   someone else held. Debug builds print a warning naming the class.
@@ -224,7 +249,10 @@ accessors now and the rest in a follow-up (see "Web" below).
   plugin) logs each release the collector made, once per creation site:
   `released by GC: Mesh (created at Player.kt:42)`.
 - Android 8-12 debug installs have no `java.lang.ref.Cleaner`; there `close()` stays the only
-  release. Web keeps the explicit rule for now. `KANAMA_GC_RELEASES=0` in the game's environment
+  release. Web keeps the explicit rule for now: the GC fallback and the owner links do not exist on
+  Web yet, and Web's `RefCounted` is not `AutoCloseable` (only a dozen classes such as
+  `PackedScene`, `Texture2D` and `AudioStream` have `close()`), so code shared with Web cannot
+  `use { }` most `RefCounted` wrappers. `KANAMA_GC_RELEASES=0` in the game's environment
   turns the fallback off (a measurement knob). The shutdown collection runs at the editor and the
   scene deinitialization levels and is timed in the log; on Android it uses `Runtime.gc()`, which
   ART honours (`System.gc()` is ignored there without a finalization in between). The log

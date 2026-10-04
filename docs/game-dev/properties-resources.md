@@ -354,8 +354,11 @@ The **Web (Kotlin/Wasm)** backend reaches Godot over a JavaScript *handle bridge
 rather than an FFI pointer boundary: `close()`/`use { }` emits a release-handle
 command that drops the engine-side reference, but the bridge does not GC handles
 for you yet, so on Web a forgotten `close()` still keeps the reference until the
-owning script tears down. The same code, with its `use { }`, is correct on every
-backend. Only the mechanism differs; see
+owning script tears down: the GC fallback and the script-object owner links above
+do not exist on Web yet. On Web `RefCounted` itself is not `AutoCloseable`; only a
+dozen classes have `close()` (`PackedScene`, `Texture2D`, `AudioStream`, `Mesh`,
+`Material`, `ConfigFile`, ...), so code shared with Web cannot `use { }` most
+`RefCounted` wrappers. See
 [Web internals → RefCounted resource ownership](../contributing/backends/web.md).
 
 For more detail, see [Calling Godot APIs](godot-api.md#resource-ownership).

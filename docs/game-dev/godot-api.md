@@ -247,7 +247,7 @@ Same call, different outcome, because the number of other owners differs.
 
 | Category | What it covers | What to do |
 |---|---|---|
-| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), the `from*` downcasts (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`), and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }`, to release it early — for a list, each element (`list.forEach { it.close() }`). Forgotten, it is released after the GC drops the wrapper |
+| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), the `from*` downcasts (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`), the checked casts to a `RefCounted` class (`res.cast<Texture2D>()`, `castOrNull`), and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }`, to release it early — for a list, each element (`list.forEach { it.close() }`). Forgotten, it is released after the GC drops the wrapper |
 | **Borrowed view** | A wrapper *you* build over a raw handle you already have: `Resource.fromHandle(...)`, a wrapper constructor (`Mesh(other.handle)`), a script's own `self` | Keep the wrapper you got the handle from while you use the view: the view takes no reference. `close()` on it releases nothing (debug builds warn) |
 | **Engine-owned, live** | A running `Tween` (from `createTween()` or an element of `getProcessedTweens()`), anything living in the scene tree | To **stop** it use the Godot lifecycle (`kill()`, `queueFree()`): `close()` never stops it. Your wrapper of a tween is still an owned `+1` — close it when you stop using that wrapper (see below) |
 | **Nodes and plain `Object`s** | Anything not `RefCounted` — no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
@@ -272,9 +272,11 @@ conforms to this page, not the other way round.
 
 `@Export` reads are **owned**: the generated registrar takes its own
 reference when it reads a resource out of a property, an `Array`, or a
-`Dictionary`, and releases it when Godot frees the script instance. You do not
-need to close a property field you keep; you do close a temporary you read out
-of one and discard.
+`Dictionary`, and releases it when Godot frees the script instance, also when
+the garbage collector already dropped the script object (the reference belongs
+to the resource or node, not to the Kotlin object). Setting the property again
+releases what it held before. You do not need to close a property field you
+keep; you do close a temporary you read out of one and discard.
 
 ### A forgotten `close()` is a late release
 
@@ -312,8 +314,9 @@ a forgotten getter result from staying alive until shutdown.
   not make the JVM (or Kotlin/Native) collect any sooner, so their release can be
   much later than their size suggests. Close big resources yourself.
 - **At shutdown**, before Godot's leak report, Kanama runs a collection and
-  releases what it finds, so a dropped wrapper no longer shows up as
-  `Leaked instance` at exit. A wrapper you still hold in a field is still yours.
+  releases what it finds, again while a round still releases something (a freed
+  resource can free the resources its properties held), so a dropped wrapper no
+  longer shows up as `Leaked instance` at exit. A wrapper you still hold in a field is still yours.
 - **Which sites rely on it:** turn on the project setting
   `kanama/debug/log_gc_releases` (off by default) and every release made by the
   collector is logged once per creation site:
@@ -325,7 +328,7 @@ checks it on every run, while the Android and iOS device runs are still to be
 recorded. Android 8-12 debug installs have no `java.lang.ref.Cleaner`, so there
 `close()` stays the only release (Kanama's Android release builds need
 Android 13 anyway). Web keeps the explicit rule for
-now (see the Web note in
+now, and its `RefCounted` is not `AutoCloseable` (see the Web note in
 [Properties and Resources](properties-resources.md)). `KANAMA_GC_RELEASES=0` in
 the game's environment turns the fallback off, for measurements.
 
