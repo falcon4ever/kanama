@@ -37,6 +37,7 @@ import net.multigesture.kanama.binding.runtime.OwnedReleaseCleaner
 import net.multigesture.kanama.binding.runtime.OwnedReleases
 import net.multigesture.kanama.binding.runtime.PendingRelease
 import net.multigesture.kanama.binding.runtime.ReleaseHook
+import net.multigesture.kanama.binding.runtime.ScriptPropertyRetains
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_set_first_node_in_group_text
@@ -171,6 +172,9 @@ internal object KanamaIosRuntime {
   internal const val SCOPE_PROBE_SCRIPT_PATH = "res://kanama_ios_scope_probe.kt"
   // Task 132 self-test: a KanamaScript resource script, the owner-link row's probe.
   internal const val OWNER_LINK_PROBE_SCRIPT_PATH = "res://kanama_ios_owner_link_probe.kt"
+  // Task 132 review self-test probe: object, object-list and resource-list properties set through
+  // the engine (the shim's set path and the property-reference registry).
+  internal const val PROPERTY_RETAIN_PROBE_SCRIPT_PATH = "res://kanama_ios_property_retain_probe.kt"
   private const val LABEL_SET_TEXT_HASH = 83702148L
 
   private var initialized = false
@@ -224,7 +228,10 @@ internal object KanamaIosRuntime {
       runCatching { net.multigesture.kanama.api.Preloads.releaseAll() }
       // Task 132 D4: release what the GC can still collect before Godot's leak report runs.
       val released = runCatching { OwnedReleases.shutdown() }.getOrDefault(-1)
-      log("shutdown GC releases: $released (total ${OwnedReleases.releasedByGc})")
+      log(
+        "shutdown GC releases: $released (total ${OwnedReleases.releasedByGc}, " +
+          "rounds ${OwnedReleases.lastShutdownRounds})"
+      )
       val instances = scriptInstances.size
       val resources = scriptResources.size
       scriptInstances.clear()
@@ -597,9 +604,35 @@ internal object KanamaIosRuntime {
     return ok
   }
 
+  /**
+   * Task 132: the objects an object (or object-list) property set of [handle] now holds, after the
+   * set succeeded (the shim's `kanama_ios_runtime_script_instance_retain_property_objects`). One
+   * reference on each `RefCounted` object is taken and recorded per (owner, property) in the shared
+   * [ScriptPropertyRetains] registry, releasing what the property held before; the free releases
+   * them all. A Node or any other non-`RefCounted` object (instance id bit 63 clear) is never
+   * referenced: `RefCounted.reference` through ptrcall on it would write into the Node.
+   */
+  fun retainScriptInstancePropertyObjects(handle: Long, propertyIndex: Int, objects: LongArray) {
+    val instance = scriptInstances[handle] ?: return
+    val property =
+      instance.resource.descriptor?.properties?.getOrNull(propertyIndex)?.name ?: "#$propertyIndex"
+    val taken = ArrayList<MemorySegment>(objects.size)
+    for (address in objects) {
+      if (address == 0L || IosGodot.objectGetInstanceId(address) >= 0L) continue
+      val handleSegment = MemorySegment.ofAddress(address)
+      if (net.multigesture.kanama.api.RefCounted.retainHandle(handleSegment)) taken += handleSegment
+    }
+    ScriptPropertyRetains.register(instance.ownerObject, property, taken)
+  }
+
   fun freeScriptInstance(handle: Long) {
     val instance = scriptInstances[handle]
     if (instance != null) {
+      // What the property sets took (task 132), whether or not the script object still exists.
+      runCatching { ScriptPropertyRetains.releaseOwner(instance.ownerObject) }
+        .onFailure {
+          log("failed to release the property references of handle=$handle: ${it.message}")
+        }
       // Never build or refill an instance whose owner is going away.
       instance.lock.withLock {
         instance.needsBuild = false
@@ -652,6 +685,22 @@ internal object KanamaIosRuntime {
   }
 
   private fun builtInProbeDescriptor(path: String): KanamaIosScriptDescriptor? {
+    if (path == PROPERTY_RETAIN_PROBE_SCRIPT_PATH) {
+      return KanamaIosScriptDescriptor(
+        path = path,
+        baseType = "Resource",
+        methods = emptyList(),
+        properties =
+          listOf(
+            KanamaIosScriptProperty("node", variantType = 24),
+            KanamaIosScriptProperty("nodes", variantType = 28),
+            KanamaIosScriptProperty("items", variantType = 28),
+          ),
+        signals = emptyList(),
+        rpcConfigs = emptyList(),
+        factory = { _ -> PropertyRetainProbeBridge() },
+      )
+    }
     if (path == OWNER_LINK_PROBE_SCRIPT_PATH) {
       return KanamaIosScriptDescriptor(
         path = path,
@@ -1019,6 +1068,36 @@ internal object KanamaIosRuntime {
 
     override fun getProperty(propertyIndex: Int): Any? =
       if (propertyIndex == 0) script.cash else KanamaIosNoProperty
+  }
+
+  /**
+   * Task 132 review probe: a plain (non-`KanamaScript`) script on a Resource with a Node-typed
+   * property (0), a `List<Node>` (1) and a `List<Resource>` (2). It keeps the handles it is given,
+   * as a generated bridge keeps its wrappers; the references belong to the shared registry.
+   */
+  private class PropertyRetainProbeBridge : KanamaIosScriptBridge {
+    var node = 0L
+    var nodes = LongArray(0)
+    var items = LongArray(0)
+
+    override fun setProperty(propertyIndex: Int, value: Long): Boolean {
+      if (propertyIndex != 0) return false
+      node = value
+      return true
+    }
+
+    override fun setPropertyObjectArray(propertyIndex: Int, values: LongArray): Boolean =
+      when (propertyIndex) {
+        1 -> {
+          nodes = values
+          true
+        }
+        2 -> {
+          items = values
+          true
+        }
+        else -> false
+      }
   }
 
   private class ScopeProbeBridge(ownerObject: Long) : KanamaIosScriptBridge {
@@ -2349,6 +2428,30 @@ internal fun kanamaIosVariantReturnSelfTest(value: Any?): Int = memScoped {
   tag.value = IOS_PT_VOID
   encodeIosReturn(value, tag.ptr, buf)
   tag.value
+}
+
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+@CName("kanama_ios_runtime_script_instance_retain_property_objects")
+fun kanamaIosRuntimeScriptInstanceRetainPropertyObjects(
+  instanceHandle: Long,
+  propertyIndex: Int,
+  objects: CPointer<LongVar>?,
+  count: Int,
+): Int {
+  val values =
+    if (objects == null || count <= 0) LongArray(0) else LongArray(count) { i -> objects[i] }
+  // An exception must not cross the @CName boundary (it would terminate the app).
+  return runCatching {
+      KanamaIosRuntime.retainScriptInstancePropertyObjects(instanceHandle, propertyIndex, values)
+      1
+    }
+    .getOrElse { error ->
+      IosScriptErrors.report(
+        error,
+        KanamaIosRuntime.scriptPropertyLabel(instanceHandle, propertyIndex, "set"),
+      )
+      0
+    }
 }
 
 @OptIn(ExperimentalNativeApi::class)

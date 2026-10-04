@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
  * the Kotlin script object. The GC can collect a `KanamaScript` object before its owner dies (the
  * owner link goes weak at refcount 1), and a cleanup that read the Kotlin property values in `free`
  * then released nothing: City-Builder leaked every DataStructure of `structures`. The desktop
- * registrar now wraps each retaining read in `ScriptBridge.retainScriptProperty(owner, name)`,
+ * registrar now wraps each retaining read in `ScriptBridge.retainScriptProperty(owner, name, ...)`,
  * which registers what the read took and releases the property's previous references; the runtime
  * releases the owner's references in `free`. The generated free-path cleanup only closes what the
  * live Kotlin object holds itself.
@@ -84,9 +84,7 @@ class ScriptPropertyRetainsEmitTest {
     val source = desktopSource()
     for (p in retaining) {
       assertTrue(
-        source.contains(
-          "val v = ScriptBridge.retainScriptProperty(godotObject, \"${p.godotName}\") {"
-        ),
+        source.contains("ScriptBridge.retainScriptProperty(godotObject, \"${p.godotName}\", {"),
         "${p.godotName}: the setter's read is not registered under its property",
       )
     }
@@ -98,11 +96,12 @@ class ScriptPropertyRetainsEmitTest {
     // The read inside the capture is the retaining reader, and its result is what is assigned.
     assertTrue(
       source.contains(
-        "ScriptBridge.retainScriptProperty(godotObject, \"items\") { val read = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArrayRetainedHandles("
+        "ScriptBridge.retainScriptProperty(godotObject, \"items\", { val read = Arena.ofConfined().use { a -> BuiltinTypes.readVariantObjectArrayRetainedHandles("
       )
     )
     assertTrue(source.contains(".toMutableList(); read }"), "MutableList keeps its copy")
-    assertTrue(source.contains("kt.items = v"))
+    // The assignment runs inside the call: the old references go only once it succeeded.
+    assertTrue(source.contains("; read }) { v -> kt.items = v }"))
   }
 
   @Test
@@ -110,7 +109,7 @@ class ScriptPropertyRetainsEmitTest {
     val source = desktopSource()
     for (p in borrowing) {
       assertFalse(
-        source.contains("retainScriptProperty(godotObject, \"${p.godotName}\")"),
+        source.contains("retainScriptProperty(godotObject, \"${p.godotName}\""),
         "${p.godotName} takes no reference and must not replace a registry entry",
       )
     }
@@ -138,13 +137,15 @@ class ScriptPropertyRetainsEmitTest {
   }
 
   /**
-   * The iOS bridge's setters take no reference (the delivered handles are borrowed: an object
-   * wrapper is built over the handle, a custom script resolves to its live instance), so there is
-   * nothing to register and nothing a collected script object could leak. If an iOS setter ever
-   * retains, it needs the registry too: this test fails first.
+   * On iOS the references of an object property set are taken by the runtime, not by the generated
+   * bridge: the shim's set path hands the objects the property now holds to
+   * `KanamaIosRuntime.retainScriptInstancePropertyObjects`, which references the `RefCounted` ones
+   * and records them in the same `ScriptPropertyRetains` registry as desktop. The generated setters
+   * only keep the delivered handles (a wrapper over each handle, a custom script resolved to its
+   * live instance); a reference taken here as well would be released by nobody.
    */
   @Test
-  fun iosSettersTakeNoReference() {
+  fun iosGeneratedSettersLeaveTheReferencesToTheRuntime() {
     val errors = mutableListOf<String>()
     val source =
       IosScriptCodeEmitter(
@@ -154,7 +155,7 @@ class ScriptPropertyRetainsEmitTest {
         .registrySource()
     assertTrue(source.contains("override fun setPropertyObjectArray("), "fixture reaches iOS")
     for (taken in listOf("retainHandle", "retainForKotlinWrapper", "reference(", "retained(")) {
-      assertFalse(source.contains(taken), "an iOS setter takes a reference (`$taken`)")
+      assertFalse(source.contains(taken), "a generated iOS setter takes a reference (`$taken`)")
     }
   }
 }

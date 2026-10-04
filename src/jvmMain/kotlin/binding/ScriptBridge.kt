@@ -16,6 +16,7 @@ import net.multigesture.kanama.binding.runtime.GodotStructs
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.ScriptErrors
 import net.multigesture.kanama.binding.runtime.ScriptOwnerIds
+import net.multigesture.kanama.binding.runtime.ScriptPropertyRetains
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.binding.runtime.VariantConverters
@@ -68,13 +69,18 @@ object ScriptBridge {
     scriptInstanceCreate3.invoke(info3, MemorySegment.ofAddress(handle)) as MemorySegment
 
   /**
-   * Generated script-property setters (task 132): runs [read], the setter's decode, and registers
-   * the references it took under [owner]'s [property] (releasing the ones that property held
-   * before); the owner's `free` releases them whether or not the Kotlin script object is still
-   * alive. See [ScriptPropertyRetains].
+   * Generated script-property setters (task 132): runs [read], the setter's decode, then [assign]
+   * (the Kotlin field), and registers the references the read took under [owner]'s [property],
+   * releasing the ones that property held before -- only once the assignment succeeded. The owner's
+   * `free` releases them whether or not the Kotlin script object is still alive. See
+   * [ScriptPropertyRetains].
    */
-  fun <T> retainScriptProperty(owner: MemorySegment, property: String, read: () -> T): T =
-    ScriptPropertyRetains.capture(owner, property, read)
+  fun <T> retainScriptProperty(
+    owner: MemorySegment,
+    property: String,
+    read: () -> T,
+    assign: (T) -> Unit,
+  ) = ScriptPropertyCapture.capture(owner, property, read, assign)
 
   fun kotlinObjectForOwner(ownerObject: MemorySegment): Any? =
     when (val value = kotlinObjectByOwnerAddress[ownerObject.address()]) {
@@ -891,9 +897,18 @@ object ScriptBridge {
   fun siFree(data: MemorySegment) {
     val handle = data.address()
     val link = ObjectRegistry.get(handle) as? ScriptOwnerLink
-    // An owner that is not dying (script detached or replaced): drop the instance's +1 next frame.
-    link?.let { ScriptOwnerLinks.freed(it) }
+    // Read before the link lets go of it (ScriptOwnerLinks.freed detaches the instance).
     val scriptInstance = siWithoutBuild(data)
+    // An owner that is not dying (script detached or replaced): drop the instance's +1 next frame.
+    // Contained: nothing here may skip the releases below.
+    link?.let {
+      runCatching { ScriptOwnerLinks.freed(it) }
+        .onFailure { error ->
+          System.err.println(
+            "[kanama:kt] failed to detach the owner link in siFree: ${error.message}"
+          )
+        }
+    }
     // The script's coroutines end with the instance (task 133: KanamaScript.scriptScope).
     (scriptInstance?.kotlinObject as? net.multigesture.kanama.api.KanamaScript<*>)?.let { script ->
       runCatching { script.disposeScriptScope() }
@@ -923,7 +938,9 @@ object ScriptBridge {
     // What the property setters took (task 132): released here, not by the Kotlin object, which
     // the GC may already have collected through the owner link.
     val retainsOwner = scriptInstance?.ownerObject?.address() ?: link?.owner?.address()
-    if (retainsOwner != null) ScriptPropertyRetains.releaseOwner(retainsOwner)
+    if (retainsOwner != null) {
+      ScriptPropertyRetains.releaseOwner(retainsOwner)
+    }
     val scriptObject = (scriptInstance?.script ?: link?.script)?.godotObject ?: MemorySegment.NULL
     if (scriptObject.address() != 0L) {
       val unreferenceBind =

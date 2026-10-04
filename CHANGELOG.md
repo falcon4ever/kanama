@@ -215,22 +215,40 @@ accessors now and the rest in a follow-up (see "Web" below).
   Closing one is now correct (it releases its own reference) and forgetting one is a late
   release.
 - **A script property's references belong to its resource or node, not to the Kotlin object.** A
-  property setter (`@Export var structures: List<DataStructure>`, a resource-typed field, a
-  `List`/`Map` of them) takes a reference on each value; those were given back by reading the
-  Kotlin property values when the script instance was freed, so once the collector had dropped a
-  `KanamaScript` object (the owner link above), every element leaked (the City-Builder demo: "244
-  resources still in use at exit" after Load). The runtime now records each setter's references
-  under (owner, property): setting the property again releases what it held before, and freeing
-  the instance releases them all, whether or not the Kotlin object is still alive. Plain script
-  classes and node scripts use the same record. A value the script assigned itself
-  (`smokeScene = PackedScene.create()`) is still closed when the instance is freed while the
-  Kotlin object lives, else released by the GC fallback. Smoke: `property_retain_smoke.tscn`
-  (red before: the elements outlived their owner). The shutdown collection now repeats while a
-  round releases something (at most 8 rounds): freeing a resource gives back its properties'
-  references, and those objects' script objects are only collectable in the next round
-  (City-Builder after Load, 30 GC frames, Save, Load: no resource in use at exit; the shutdown
-  releases took 78 ms in that run). iOS setters take no reference (they keep the
-  live script objects, which hold their own), so nothing changes there.
+  property set (`@Export var structures: List<DataStructure>`, a resource-typed field, a
+  `List`/`Map` of them) takes a reference on each `RefCounted` value; those were given back by
+  reading the Kotlin property values when the script instance was freed, so once the collector had
+  dropped a `KanamaScript` object (the owner link above), every element leaked (the City-Builder
+  demo: "244 resources still in use at exit" after Load). The runtime now records each set's
+  references under (owner, property), one implementation for desktop, Android and iOS: setting the
+  property again releases what it held before (once the new value was assigned), and freeing the
+  instance releases them all, whether or not the Kotlin object is still alive. Plain script classes
+  and node scripts use the same record. These references are the runtime's own: the wrapper the
+  Kotlin property holds keeps its own reference, so a Kotlin alias of an old value
+  (`cached = holder.res`) stays valid after the engine sets the property again, as in GDScript, and
+  is released by its `close()` or the GC fallback. A value the script assigned itself
+  (`smokeScene = PackedScene.create()`) is still closed when the instance is freed while the Kotlin
+  object lives, else released by the GC fallback. A value Kotlin code replaces in the property, or
+  removes from a `MutableList` property, stays referenced by the record until the engine sets the
+  property again or the instance is freed. Smokes: `property_retain_smoke.tscn` (red before: the
+  elements outlived their owner), `property_lifetime_smoke.tscn`. The shutdown collection now
+  repeats while a round releases something (at most 8 rounds, counted in its log line): freeing a
+  resource gives back its properties' references, and those objects' script objects are only
+  collectable in the next round (City-Builder after Load, 30 GC frames, Save, Load: no resource in
+  use at exit; the shutdown releases took 78 ms in that run).
+- **iOS: setting a Node into a script property no longer corrupts it.** Since the iOS backend
+  landed, the shim called `RefCounted.reference()` on every object set into a script property;
+  Godot's ptrcall casts blindly, so on a Node it wrote into the Node's own fields (its
+  `scene_file_path`), and a later `unreference()` could crash. It also recorded at most 16
+  references per instance (City-Builder leaked about 106 structures per Load), never released them
+  when the property was set again, and the refill of a rebuilt instance took a second set. iOS now
+  uses the registry above: only `RefCounted` objects are referenced, with no cap. iOS self-test row
+  `property-retain` (desktop guard: `PropertyLifetimeSmoke node_paths_kept`).
+- **A script detached from a live resource no longer pins its script object.** `set_script(null)`
+  (or a script swap) on a `RefCounted` owner that lives on left the owner link strong, and the
+  script object's cleanup reached it: the detached Kotlin object, and everything its properties
+  held, stayed alive until exit. The free now lets go of the instance and drops that cleanup
+  (desktop and Android; iOS's cleanup never reached the instance).
 - **Checked casts to a `RefCounted` class own their wrapper** (`res.cast<Texture2D>()`,
   `castOrNull`), like the `from*` downcasts: the result takes a reference of its own, so a cast kept
   in a field keeps the object alive after the original is closed. Casts to node classes are

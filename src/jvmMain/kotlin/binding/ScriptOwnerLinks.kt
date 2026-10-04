@@ -92,6 +92,20 @@ internal class ScriptOwnerLink(
     pendingRefill = null
   }
 
+  /**
+   * The free path: let go of the instance. The cleanup registered on the script object reaches this
+   * link through its release's hook, so a link still STRONG here (the owner lives on: its script
+   * was detached or replaced) would keep the script object -- and everything its properties hold --
+   * reachable from the cleaner forever. Returns the instance it held, if any.
+   */
+  @Synchronized
+  fun detach(): KanamaScriptInstance? {
+    val si = instance()
+    strongInstance = null
+    weakInstance = WeakReference(null)
+    return si
+  }
+
   fun instance(): KanamaScriptInstance? = strongInstance ?: weakInstance.get()
 
   val isWeak: Boolean
@@ -359,11 +373,20 @@ internal object ScriptOwnerLinks {
       plainScriptOwners -= link.owner.address()
       OwnedReleases.unparkLater(link.owner, link.instanceId)
     }
-    if (!link.holdsOwnerRef) return
-    val pending = link.pending ?: return
+    val pending = link.pending
     // tryDisarm false: the cleanup already queued this release.
-    if (pending.tryDisarm()) {
+    if (link.holdsOwnerRef && pending != null && pending.tryDisarm()) {
       OwnedReleaseCleaner.enqueue(PendingRelease(link.owner, link.instanceId, null, link))
+    }
+    // The instance is gone: drop the link's hold on it and the script object's cleanup (its
+    // release is disarmed or already queued), so a detached script object is collected like any
+    // other object once game code drops it (a script detached from, or swapped on, a live owner).
+    val si = link.detach()
+    val script = si?.kotlinObject as? net.multigesture.kanama.api.KanamaScript<*>
+    val anchor = script?.kanamaInstanceAnchor as? ScriptInstanceAnchor
+    if (anchor != null && anchor.instance === si) {
+      script.kanamaInstanceAnchor = null
+      OwnedReleaseCleaner.cancel(anchor.registration)
     }
   }
 }

@@ -270,13 +270,20 @@ still yours to close. In the demos corpus this table is what
 view or a live tween and never flags closing an owned return; the audit
 conforms to this page, not the other way round.
 
-`@Export` reads are **owned**: the generated registrar takes its own
-reference when it reads a resource out of a property, an `Array`, or a
-`Dictionary`, and releases it when Godot frees the script instance, also when
-the garbage collector already dropped the script object (the reference belongs
-to the resource or node, not to the Kotlin object). Setting the property again
-releases what it held before. You do not need to close a property field you
-keep; you do close a temporary you read out of one and discard.
+`@Export` reads are **owned**: when the engine sets a property (a scene or
+`.tres` loads, the inspector, `set("prop", value)`), each resource value it
+holds, alone or in an `Array` or `Dictionary`, is kept alive the way GDScript
+keeps it. The runtime takes one reference per value for the property and
+releases it when the engine sets the property again or when Godot frees the
+script instance, also when the garbage collector already dropped the script
+object (that reference belongs to the resource or node, not to the Kotlin
+object). The wrapper the Kotlin field holds has a reference of its own, so a
+copy you keep elsewhere (`cached = res`) stays valid after the property changes;
+close it or let the collector release it. You do not need to close a property
+field you keep; you do close a temporary you read out of one and discard.
+Assigning the property from Kotlin, or removing an element from a `MutableList`
+property, does not release the runtime's reference to the old value: it is
+released at the next engine set of that property or when the instance is freed.
 
 ### A forgotten `close()` is a late release
 

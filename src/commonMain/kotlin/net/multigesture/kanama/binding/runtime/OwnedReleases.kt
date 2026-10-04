@@ -291,7 +291,9 @@ internal object OwnedReleases {
   fun shutdown(): Int {
     if (!enabled) return 0
     var released = 0
+    lastShutdownRounds = 0
     for (round in 1..SHUTDOWN_ROUNDS) {
+      lastShutdownRounds = round
       OwnedReleaseCleaner.collectGarbage(SHUTDOWN_WAIT_MILLIS)
       var count = drain(Duration.INFINITE)
       for (owner in parked.keys.toList()) count += unpark(owner)
@@ -300,6 +302,10 @@ internal object OwnedReleases {
     }
     return released
   }
+
+  /** The collect + drain rounds the last [shutdown] ran (the shutdown log line). */
+  var lastShutdownRounds: Int = 0
+    private set
 
   // Releases parked per plain script owner (see [drain]); main thread only. Re-checked only when
   // that owner's script is detached ([unparkLater]) or at shutdown, never by a per-frame scan.

@@ -230,13 +230,13 @@ open class RefCounted internal constructor(
         /**
          * Releases the `+1` return-slot reference carried by [handle] without minting a wrapper —
          * the generated self-return-collapse pattern calls this before returning `this` (task 31).
+         * True when that was the last reference and the object was destroyed.
          */
-        internal fun releaseHandle(handle: RawSegment) {
-            if (handle.address() != 0L) {
-                if (ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)) {
-                    ObjectCalls.destroyObject(handle)
-                }
-            }
+        internal fun releaseHandle(handle: RawSegment): Boolean {
+            if (handle.address() == 0L) return false
+            if (!ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, handle)) return false
+            ObjectCalls.destroyObject(handle)
+            return true
         }
     }
 }

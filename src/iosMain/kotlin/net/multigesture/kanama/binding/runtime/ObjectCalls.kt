@@ -41530,6 +41530,84 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     }
   }
 
+  // Task 132 review: the shim's property set path. A Node (or List<Node>) set into a script
+  // property takes no reference -- before, the shim called RefCounted.reference on every object,
+  // and
+  // Godot's ptrcall casts blindly, so the Node's scene_file_path was overwritten (and unreference
+  // later made it crash). More than 16 Resources set into a List property are each referenced once
+  // (the old record had 16 slots), a new set releases the old ones, and the owner's free releases
+  // the rest. The probe script is a plain class, so the owner dies as soon as it is closed.
+  run {
+    val scriptObject =
+      net.multigesture.kanama.ios.cinterop.kanama_ios_godot_create_script_object(
+        KanamaIosRuntime.PROPERTY_RETAIN_PROBE_SCRIPT_PATH
+      )
+    if (scriptObject == 0L) {
+      check("property-retain(probe script object created)", false)
+    } else {
+      val owner = net.multigesture.kanama.api.Resource.create()
+      val ownerAddress = owner.handle.segment.address()
+      owner.setScript(
+        net.multigesture.kanama.api.Resource.fromHandle(
+          GodotHandle(MemorySegment.ofAddress(scriptObject))
+        )
+      )
+      val target = GodotObject(GodotHandle(MemorySegment.ofAddress(ownerAddress)))
+      val nodeA =
+        net.multigesture.kanama.api.Node3D(GodotHandle(ObjectCalls.constructObject("Node3D")))
+      val nodeB =
+        net.multigesture.kanama.api.Node3D(GodotHandle(ObjectCalls.constructObject("Node3D")))
+      nodeA.setSceneFilePath("res://kanama_probe_a.tscn")
+      nodeB.setSceneFilePath("res://kanama_probe_b.tscn")
+      target.set("node", nodeA)
+      target.set("nodes", listOf(nodeA, nodeB))
+      val pathsKept =
+        nodeA.getSceneFilePath() == "res://kanama_probe_a.tscn" &&
+          nodeB.getSceneFilePath() == "res://kanama_probe_b.tscn"
+      val nodeRefs = ScriptPropertyRetains.countFor(ownerAddress)
+      target.set("node", null)
+      target.set("nodes", emptyList<Any?>())
+      val pathsKeptAfterClear =
+        nodeA.getSceneFilePath() == "res://kanama_probe_a.tscn" &&
+          nodeB.getSceneFilePath() == "res://kanama_probe_b.tscn"
+      ObjectCalls.destroyObject(nodeA.handle.segment)
+      ObjectCalls.destroyObject(nodeB.handle.segment)
+
+      fun setItems(count: Int): List<Long> {
+        val items = (1..count).map { net.multigesture.kanama.api.Resource.create() }
+        target.set("items", items)
+        val ids = items.map { it.instanceId }
+        items.forEach { it.close() }
+        return ids
+      }
+      val first = setItems(20)
+      val firstAlive = first.all { IosGodot.isInstanceIdValid(it) }
+      val second = setItems(20)
+      val firstReleased = first.none { IosGodot.isInstanceIdValid(it) }
+      val secondAlive = second.all { IosGodot.isInstanceIdValid(it) }
+      val held = ScriptPropertyRetains.countFor(ownerAddress)
+      val ownerId = owner.instanceId
+      owner.close()
+      val ownerDead = !IosGodot.isInstanceIdValid(ownerId)
+      val secondReleased = second.none { IosGodot.isInstanceIdValid(it) }
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST property-retain node_paths_kept=$pathsKept " +
+          "node_refs=$nodeRefs paths_kept_after_clear=$pathsKeptAfterClear first_alive=$firstAlive " +
+          "reset_releases_old=$firstReleased second_alive=$secondAlive held=$held " +
+          "owner_dead=$ownerDead free_releases_all=$secondReleased"
+      )
+      check(
+        "property-retain(a Node property set keeps scene_file_path)",
+        pathsKept && pathsKeptAfterClear,
+      )
+      check("property-retain(a Node property set takes no reference)", nodeRefs == 0)
+      check("property-retain(20 Resources set into a List are all held)", firstAlive && held == 20)
+      check("property-retain(a new set releases the old values)", firstReleased && secondAlive)
+      check("property-retain(the owner's free releases every value)", ownerDead && secondReleased)
+      RefCounted.releaseHandle(MemorySegment.ofAddress(scriptObject))
+    }
+  }
+
   // Task 132: a forgotten close() is a late release, not a leak. 1,000 owned Resources dropped
   // without close() are released once a GC has collected their wrappers and the main thread has
   // drained the releases (D2): none of their instance ids resolves any more. A second owned +1 that

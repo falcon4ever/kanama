@@ -4177,17 +4177,18 @@ internal class ScriptCodeEmitter(
       sb.appendLine("                    ${nameVar(p.godotName)} -> {")
       if (retainsOnSet(p)) {
         // Task 132: the references this read takes belong to the owner's property, not to the
-        // Kotlin object (the GC may collect it before the owner dies). The runtime registers them
-        // under the property, releases the ones it held before, and releases them all in free.
+        // Kotlin object (the GC may collect it before the owner dies). Once the assignment
+        // succeeded the runtime registers them under the property and releases the ones it held
+        // before; the owner's free releases them all.
         sb.appendLine(
-          "                        val v = ScriptBridge.retainScriptProperty(godotObject, \"${kotlinStringLiteral(p.godotName)}\") { ${variantReadPropertyExpr(p, "value", "read")}; read }"
+          "                        ScriptBridge.retainScriptProperty(godotObject, \"${kotlinStringLiteral(p.godotName)}\", { ${variantReadPropertyExpr(p, "value", "read")}; read }) { v -> kt.${p.kotlinName} = v${scriptPropertyFromWideSuffix(p)} }"
         )
       } else {
         sb.appendLine("                        ${variantReadPropertyExpr(p, "value", "v")}")
+        sb.appendLine(
+          "                        kt.${p.kotlinName} = v${scriptPropertyFromWideSuffix(p)}"
+        )
       }
-      sb.appendLine(
-        "                        kt.${p.kotlinName} = v${scriptPropertyFromWideSuffix(p)}"
-      )
       sb.appendLine("                        true")
       sb.appendLine("                    }")
     }
@@ -4196,11 +4197,11 @@ internal class ScriptCodeEmitter(
     sb.appendLine("            },")
   }
 
-  // The free path's close of the closeable values the Kotlin object still holds (a resource the
-  // script assigned itself, `smokeScene = PackedScene.create()`), when the object is still alive.
-  // What a setter took is not released here: the runtime registry owns those references (see
-  // emitDispatchSet), and a wrapper it already closed is no longer owned, so this close skips it.
-  // Custom script references are only the registry's: their Kotlin values are script objects.
+  // The free path's close of the closeable values the Kotlin object still holds, when the object is
+  // still alive: each wrapper's own reference (a resource the script assigned itself,
+  // `smokeScene = PackedScene.create()`, or the wrapper a setter read). The references a setter
+  // took for the property are the runtime registry's own and are released by the registry (see
+  // emitDispatchSet). Custom script values are script objects: nothing to close.
   private fun emitCleanupHelpers() {
     sb.appendLine("    private fun closeKanamaOwned(name: String, value: Any?) {")
     sb.appendLine("        when (value) {")

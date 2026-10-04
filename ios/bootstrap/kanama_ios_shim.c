@@ -137,6 +137,16 @@ extern int32_t kanama_ios_runtime_script_instance_set_property_array(
     const int64_t *objects,
     int32_t count
 );
+// Task 132: after an object (or object-list) property set succeeded, the objects it now holds. The
+// runtime takes a reference on each RefCounted one and records it per (owner, property) in the
+// shared ScriptPropertyRetains registry (desktop's): a new set releases the previous ones, the
+// instance's free releases them all. A Node or other non-RefCounted object is never referenced.
+extern int32_t kanama_ios_runtime_script_instance_retain_property_objects(
+    int64_t instance_handle,
+    int32_t property_index,
+    const int64_t *objects,
+    int32_t count
+);
 // Integer Array property delivery (currently List<Enum> ordinals). This is separate from the
 // object-array entrypoint so an integer in malformed scene data can never become an object handle.
 extern int32_t kanama_ios_runtime_script_instance_set_property_int_array(
@@ -261,8 +271,6 @@ typedef struct {
     GDExtensionObjectPtr owner_object;
     GDExtensionObjectPtr script_object;
     KanamaIosExtensionInstance *script;
-    GDExtensionObjectPtr referenced_objects[16];
-    int referenced_object_count;
 } KanamaIosScriptInstance;
 
 /*
@@ -10746,37 +10754,10 @@ static GDExtensionScriptLanguagePtr kanama_ios_script_instance_get_language(GDEx
     return (GDExtensionScriptLanguagePtr)g_script_language_object;
 }
 
-static void kanama_ios_ref_retain(KanamaIosScriptInstance *instance, GDExtensionObjectPtr obj) {
-    if (obj == NULL || instance == NULL) return;
-    GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
-        &g_ref_counted_reference_bind, "RefCounted", "reference", KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
-    if (bind != NULL) {
-        GDExtensionBool result = 0;
-        g_object_method_bind_ptrcall(bind, obj, NULL, &result);
-    }
-    if (instance->referenced_object_count < 16) {
-        instance->referenced_objects[instance->referenced_object_count++] = obj;
-    }
-}
-
-static void kanama_ios_ref_release_all(KanamaIosScriptInstance *instance) {
-    if (instance == NULL) return;
-    GDExtensionMethodBindPtr bind = kanama_ios_get_method_bind_cached(
-        &g_ref_counted_unreference_bind, "RefCounted", "unreference", KANAMA_IOS_REF_COUNTED_NOARGS_HASH);
-    for (int i = 0; i < instance->referenced_object_count; i++) {
-        if (instance->referenced_objects[i] != NULL && bind != NULL) {
-            GDExtensionBool result = 0;
-            g_object_method_bind_ptrcall(bind, instance->referenced_objects[i], NULL, &result);
-        }
-        instance->referenced_objects[i] = NULL;
-    }
-    instance->referenced_object_count = 0;
-}
-
 static void kanama_ios_script_instance_free(GDExtensionScriptInstanceDataPtr data) {
     KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
     if (instance != NULL) {
-        kanama_ios_ref_release_all(instance);
+        // The runtime's free releases the references the property sets took (task 132).
         kanama_ios_runtime_script_instance_free(instance->runtime_handle);
         free(instance);
     }
@@ -10991,10 +10972,16 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         ? g_variant_get_type(value)
         : KANAMA_IOS_VARIANT_TYPE_NIL;
     int64_t arg = 0;
+    // Task 132: an object (or nil) set records the object it now holds in the runtime's registry
+    // once the set succeeded (kanama_ios_runtime_script_instance_retain_property_objects). This
+    // shim never calls reference() itself: a ptrcall of RefCounted.reference on a Node writes
+    // into the Node (Godot's ptrcall casts blindly), and its old fixed 16-slot record leaked the
+    // rest and never released on a new set.
+    int object_set = 0;
     if (type == KANAMA_IOS_VARIANT_TYPE_OBJECT) {
         GDExtensionObjectPtr obj = kanama_ios_variant_to_object(value);
         arg = (int64_t)(intptr_t)obj;
-        kanama_ios_ref_retain(instance, obj);
+        object_set = 1;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_INT) {
         arg = kanama_ios_variant_to_int64(value);
     } else if (type == KANAMA_IOS_VARIANT_TYPE_BOOL && g_variant_to_bool != NULL) {
@@ -11018,6 +11005,7 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_NIL) {
         arg = 0;
+        object_set = 1;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_ARRAY && g_variant_to_array != NULL) {
         kanama_ios_cache_array_methods();
         if (g_array_size_method == NULL || g_array_get_method == NULL) { return 0; }
@@ -11033,6 +11021,10 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
             if (!ok) {
                 ok = kanama_ios_runtime_script_instance_set_property_array(
                     instance->runtime_handle, property_index, NULL, 0);
+                if (ok) {
+                    kanama_ios_runtime_script_instance_retain_property_objects(
+                        instance->runtime_handle, property_index, NULL, 0);
+                }
             }
             return (GDExtensionBool)ok;
         }
@@ -11058,7 +11050,6 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
                 GDExtensionObjectPtr obj_ptr = NULL;
                 g_variant_to_object(&obj_ptr, (GDExtensionVariantPtr)ret_variant);
                 objects[i] = (int64_t)(intptr_t)obj_ptr;
-                kanama_ios_ref_retain(instance, obj_ptr);
                 integer_compatible = 0;
             } else if (elem_type == KANAMA_IOS_VARIANT_TYPE_INT) {
                 integers[i] = kanama_ios_variant_to_int64(
@@ -11100,6 +11091,10 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         if (!ok) {
             ok = kanama_ios_runtime_script_instance_set_property_array(
                 instance->runtime_handle, property_index, objects, (int32_t)size);
+            if (ok) {
+                kanama_ios_runtime_script_instance_retain_property_objects(
+                    instance->runtime_handle, property_index, objects, (int32_t)size);
+            }
         }
         for (int64_t i = 0; i < size; i++) {
             free((void *)strings[i]);
@@ -11208,6 +11203,10 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         property_index,
         arg
     );
+    if (ok && object_set) {
+        kanama_ios_runtime_script_instance_retain_property_objects(
+            instance->runtime_handle, property_index, arg != 0 ? &arg : NULL, arg != 0 ? 1 : 0);
+    }
     return (GDExtensionBool)ok;
 }
 

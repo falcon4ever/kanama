@@ -17,7 +17,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.Resource
-import net.multigesture.kanama.binding.ScriptPropertyRetains
+import net.multigesture.kanama.binding.ScriptPropertyCapture
 import net.multigesture.kanama.ffi.GodotFFI
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -370,7 +370,7 @@ object BuiltinTypes {
     readVariantObject(variant, arena, wrapper).also { value ->
       if (value is Resource) {
         value.retainForKotlinWrapper()
-        ScriptPropertyRetains.recordWrapper(value)
+        ScriptPropertyCapture.retainForProperty(value.segment)
       }
     }
 
@@ -384,7 +384,7 @@ object BuiltinTypes {
     val handle = scratch.get(ADDRESS, 0)
     if (handle.address() == 0L) return null
     ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
-    ScriptPropertyRetains.recordHandle(handle)
+    ScriptPropertyCapture.recordHandle(handle)
     return wrapper(handle)
   }
 
@@ -411,7 +411,7 @@ object BuiltinTypes {
       values.forEach { value ->
         if (value is Resource) {
           value.retainForKotlinWrapper()
-          ScriptPropertyRetains.recordWrapper(value)
+          ScriptPropertyCapture.retainForProperty(value.segment)
         }
       }
     }
@@ -426,7 +426,7 @@ object BuiltinTypes {
     try {
       return readArrayObjects(scratch) { handle ->
         ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
-        ScriptPropertyRetains.recordHandle(handle)
+        ScriptPropertyCapture.recordHandle(handle)
         wrapper(handle)
       }
     } finally {
@@ -1834,7 +1834,7 @@ object BuiltinTypes {
       map.values.forEach { value ->
         if (value is Resource) {
           value.retainForKotlinWrapper()
-          ScriptPropertyRetains.recordWrapper(value)
+          ScriptPropertyCapture.retainForProperty(value.segment)
         }
       }
     }
@@ -1853,7 +1853,7 @@ object BuiltinTypes {
     try {
       return readDictionaryObjectValues(scratch) { handle ->
         ObjectCalls.ptrcallNoArgsRetBool(referenceBind, handle)
-        ScriptPropertyRetains.recordHandle(handle)
+        ScriptPropertyCapture.recordHandle(handle)
         wrapper(handle)
       }
     } finally {

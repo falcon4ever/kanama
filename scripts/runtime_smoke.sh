@@ -78,6 +78,11 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 # leaked, the City-Builder "resources still in use at exit"). Its --verbose leak report lands in the
 # main log, where `check_absent "Leaked instance: Resource:"` covers it too.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://property_retain_smoke.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
+# task 132 review -- what a property holds, over the script's lifetime: set_script(null) on a live
+# resource lets its script object (and its items) go (a9b495ac: swap_items_dead=false, pinned by
+# the cleaner); a setter on a worker thread; a Kotlin alias of an engine-set resource survives the
+# next set (a9b495ac: alias_valid=false); Node-typed exports take no reference.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://property_lifetime_smoke.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
 # task 132 D7 -- the same freed-object scene with the instance-binding check (opt-in), own log.
 FREED_BINDING_LOG="${LOG_FILE}.freed_binding"
 KANAMA_FREED_OBJECT_CHECKS=binding "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit >"$FREED_BINDING_LOG" 2>&1
@@ -395,6 +400,8 @@ check "RefillOnFreeProbe constructions_before_reload=2 after_reload=2 alive=true
 check "RefillOnFreeProbe dead=true frames=[0-9]+ constructions_at_end=2 after_reload=2"
 check_absent "property values reset|recreated with its default property values"
 check "PropertyRetainSmoke held=2 old_released=true owner_dead=true items_dead=true frames=[0-9]+"
+check "PropertyLifetimeSmoke alias_valid=true node_paths_kept=true"
+check "PropertyLifetimeSmoke swap_items_dead=true swap_owner_alive=true swap_script_collected=true thread_owner_dead=true thread_items_dead=true frames=[0-9]+"
 # task 132 blocker 1 -- script objects keep their owners (see the run above).
 check "ScriptOwnerSmoke saved=true loaded=true created=true"
 check "ScriptOwnerSmoke alive_after_gc=true engine_read=4242 resaved=true created_alive_after_gc=true created_read=77 plain_alive_after_gc=true"

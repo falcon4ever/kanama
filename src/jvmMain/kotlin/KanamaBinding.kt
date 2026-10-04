@@ -179,7 +179,7 @@ object KanamaBinding {
         val ms = (System.nanoTime() - start) / 1_000_000
         System.err.println(
           "[kanama:kt] shutdown GC releases ($level): $it in $ms ms " +
-            "(total ${OwnedReleases.releasedByGc})"
+            "(total ${OwnedReleases.releasedByGc}, rounds ${OwnedReleases.lastShutdownRounds})"
         )
       }
       .onFailure { System.err.println("[kanama:kt] shutdown GC releases failed: ${it.message}") }
