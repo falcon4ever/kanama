@@ -608,11 +608,11 @@ internal object KanamaIosRuntime {
       releaseOwnerRefLater(instance)
       ownerObjectToInstance.remove(instance.ownerObject)
       // The script's coroutines end with the instance (task 133: KanamaScript.scriptScope).
-      (instance.bridge.scriptInstance as? net.multigesture.kanama.api.KanamaScript<*>)?.let { script
-        ->
-        runCatching { script.disposeScriptScope() }
-          .onFailure { log("failed to cancel the script scope of handle=$handle: ${it.message}") }
-      }
+      (instance.bridgeWithoutBuild?.scriptInstance as? net.multigesture.kanama.api.KanamaScript<*>)
+        ?.let { script ->
+          runCatching { script.disposeScriptScope() }
+            .onFailure { log("failed to cancel the script scope of handle=$handle: ${it.message}") }
+        }
     }
     scriptInstances.remove(handle)
     log("freed script instance handle=$handle")

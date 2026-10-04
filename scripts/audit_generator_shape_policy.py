@@ -797,6 +797,10 @@ def _ownership_problems_in(rel: str, stem: str, text: str, refcounted: set[str])
         function_name = function[0] if function else ""
         if function_name in ("fromHandle", "wrapBorrowed"):
             continue  # the borrowed view, by definition
+        if function_name == "wrap" and "GodotClassTable()" in text:
+            # Task 133 A's class-token tables: the checked casts (castOrNull, requireAs, ...) return
+            # a non-owning view of an object the caller already holds, by that parcel's contract.
+            continue
         if any(Path(rel).name == name and snippet in line for name, snippet in ALLOWED_BORROWED_CONSTRUCTIONS):
             continue
         problems.append(
