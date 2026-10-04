@@ -35,14 +35,14 @@ internal class WebScopeOwner(val ownerHandle: Int) :
 }
 
 /**
- * A script's coroutine scope.
+ * A script's coroutine scope, behind `KanamaScript.scriptScope` (internal since task 133 removed
+ * `KanamaCoroutineOwner`).
  *
  * The owner defaults to the script being constructed: script instances are built inside their own
- * owner scope, so `override val kanamaScope = KanamaScope()` binds to the right script with no
- * ceremony at the call site. A scope built outside any script callback (handle 0) keeps the old
- * behaviour and is attributed to the ambient callback at dispatch time.
+ * owner scope, and `KanamaScript` captures that owner at construction. A scope built outside any
+ * script callback (handle 0) is attributed to the ambient callback at dispatch time.
  */
-class KanamaScope(private val ownerHandle: Int = WebFrameScheduler.currentOwnerOrZero()) :
+internal class KanamaScope(private val ownerHandle: Int = WebFrameScheduler.currentOwnerOrZero()) :
   CoroutineScope {
   private val job = SupervisorJob()
   override val coroutineContext: CoroutineContext =
@@ -51,10 +51,6 @@ class KanamaScope(private val ownerHandle: Int = WebFrameScheduler.currentOwnerO
   fun cancel() {
     job.cancel()
   }
-}
-
-interface KanamaCoroutineOwner {
-  val kanamaScope: KanamaScope
 }
 
 object MainThread {

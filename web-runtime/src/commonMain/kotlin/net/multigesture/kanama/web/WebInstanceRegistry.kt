@@ -26,7 +26,7 @@ internal class WebInstanceRegistry(
     slot.generation = nextGeneration(slot.generation)
     val handle = encode(slotIndex, slot.generation)
     // Construct the script inside its own owner scope. A script's property initializers run here,
-    // and `override val kanamaScope = KanamaScope()` is one of them: the scope must bind to the
+    // and `KanamaScript` captures the owner for its coroutine scope: the scope must bind to the
     // script being built, not to whichever callback happened to trigger the construction.
     slot.record =
       WebScriptRecord(

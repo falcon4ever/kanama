@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://ScriptAccessSmoke.kt" id="1"]
+[ext_resource type="Script" path="res://ScriptAccessTarget.kt" id="2"]
+
+[node name="ScriptAccessSmoke" type="Node"]
+script = ExtResource("1")
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="Marker" type="Node2D" parent="."]
+
+[node name="Target" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="Plain" type="Node" parent="."]

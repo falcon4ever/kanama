@@ -185,6 +185,7 @@ return is `GodotCallable?`.
 
 ```kotlin
 val tree = self.getTree() ?: return                  // not marked required: SceneTree?
+val sameTree = self.tree                             // non-null accessor: throws outside the tree (task 133)
 val root: Window = tree.getRoot()                    // required: Window, not Window?
 tweener.setTrans(Tween.TransitionType.SINE).setEase(Tween.EaseType.OUT)   // required fluent returns chain with `.`
 ```
@@ -313,7 +314,18 @@ Kept by: `scripts/audit_wrapper_signatures.py`, `scripts/audit_variant_marshalli
 ## 11. Handles and factories
 
 - `GodotHandle` is the one identity type game code passes around. Every generated class has a
-  public constructor from it, so a wrapper re-types another: `CharacterBody3D(body.handle)`.
+  public constructor from it, but that constructor does not check the class:
+  `CharacterBody3D(body.handle)` calls `CharacterBody3D` methods on whatever `body` really is.
+- **Checked casts** (task 133) re-type a wrapper safely: `body.castOrNull<CharacterBody3D>()` asks
+  Godot (`Object.is_class`) and returns `null` when the object is another class, `cast<T>()`
+  throws a `ClassCastException`, and `Node.requireAs<T>(path)` / `getNodeAs<T>(path)` check the
+  node they find. They ask Godot every time, also when the wrapper's Kotlin class already matches
+  (only `GodotObject` is not asked). The result is the same wrapper when it already is a `T`, else
+  a new non-owning view: a cast result is never yours to close; close the original. They are inline
+  reified functions backed by generated class-token tables (`GodotClasses.kt` for the shared tree,
+  `PlatformGodotClasses.kt` per platform; `class_token_entries_shared` /
+  `class_token_entries_platform`, `render_class_tokens`), built from class literals and constructor
+  calls, so they need no reflection and survive R8 renaming. Not yet on Web.
 - `X.fromHandle(handle)` wraps an existing object as a borrowed view
   ([Nullability](#6-nullability) has its return type).
 - `X.create()` and the `from*` downcasts (`ArrayMesh.fromResource(res)`,
@@ -323,11 +335,13 @@ Kept by: `scripts/audit_wrapper_signatures.py`, `scripts/audit_variant_marshalli
 ```kotlin
 val material = StandardMaterial3D.create()     // owned: close() it when done
 val mesh = ArrayMesh.fromResource(resource)    // null if it is not an ArrayMesh
+val body = collider.castOrNull<Node3D>() ?: return
 ```
 
 Kept by: `check_factory_helpers`, which every regeneration runs (the drift gate's included): a
 table key must be a class the generator renders, and no factory may be pasted by hand outside the
-table.
+table. The class-token tables are part of the generated tree, so the drift gate holds them to the
+generator, and `ClassTokenTableTest` checks that the shared table lists every shared class.
 
 ## 12. Names as constants
 

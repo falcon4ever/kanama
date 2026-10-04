@@ -73,7 +73,7 @@ Legend: `SUPPORTED` means validated in smoke tests or real demo ports.
 | Lambda signal callbacks | PARTIAL | Zero to three emitted arguments are supported. A lambda connection is a Godot custom Callable bound to its target and is released when Godot drops the connection (desktop, Android, iOS). |
 | Runtime custom resources | SUPPORTED | `newScriptInstance<T>()` creates a script-backed `Resource` from Kotlin (GDScript `.new()` parity); or create a Godot `Resource`, attach a loaded Kanama script, then resolve `kotlinScriptInstance<T>()`. `newScriptInstance` is desktop/Android only (deferred on iOS; use the attach-then-resolve path there). |
 | Inspector exports | PARTIAL | Scalars (including `Int`/`Float` narrow slots), strings, enums, enum lists, `NodePath`, groups/subgroups, common object/resource wrappers, typed node references, and selected arrays are supported across desktop, Android, and iOS, except typed `Map` (Dictionary) exports, which iOS does not deliver (the property keeps its Kotlin default there; see Typed exported dictionaries above). Flags and broader resource arrays remain intentionally conservative. |
-| Coroutines | SUPPORTED | `KanamaScope`, Godot main-thread dispatch, `awaitNextFrame`, `SceneTree.delaySeconds`, and signal awaits are available. |
+| Coroutines | SUPPORTED | Each `KanamaScript` has a main-thread scope cancelled when its object is freed: `launch { }`, `wait(seconds)`, `nextFrame()`, `MainThread.awaitNextFrame`, `SceneTree.delaySeconds`, and signal awaits are available. |
 
 ## Intentional Differences From C#
 

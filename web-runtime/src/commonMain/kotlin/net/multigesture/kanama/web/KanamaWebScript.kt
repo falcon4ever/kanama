@@ -31,7 +31,11 @@ abstract class KanamaWebScript(val objectId: WebObjectId) {
 
   internal fun close() {
     scope.cancel("Kanama Web script object was freed")
+    onFree()
   }
+
+  /** The free path for subclasses (task 133: `KanamaScript.scriptScope`). */
+  internal open fun onFree() {}
 }
 
 @PublishedApi internal expect fun webScriptInstance(objectId: Int): Any?

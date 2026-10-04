@@ -2,7 +2,6 @@ package web3d
 
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlinx.coroutines.launch
 import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.GodotName
 import net.multigesture.kanama.annotations.OnEnterTree
@@ -23,8 +22,6 @@ import net.multigesture.kanama.api.Input
 import net.multigesture.kanama.api.InputEventKey
 import net.multigesture.kanama.api.InputEventMouseButton
 import net.multigesture.kanama.api.InputMap
-import net.multigesture.kanama.api.KanamaCoroutineOwner
-import net.multigesture.kanama.api.KanamaScope
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Key
 import net.multigesture.kanama.api.MainThread
@@ -69,9 +66,9 @@ import net.multigesture.kanama.web.WebExperimentalGenericCall
  */
 @ScriptClass(attachTo = "Node3D")
 class Main(godotObject: GodotHandle) :
-  KanamaScript<Node3D>(godotObject, ::Node3D), KanamaCoroutineOwner {
-  /** Task 82: owns the coroutine conformance probe, so owner teardown cancels it. */
-  override val kanamaScope = KanamaScope()
+  KanamaScript<Node3D>(godotObject, ::Node3D) {
+  // Task 82: the script's own coroutine scope (KanamaScript.launch, task 133) owns the coroutine
+  // conformance probe, so owner teardown cancels it.
 
   /** Overridden in main.tscn to [ENTER_TREE_EXPORTED] — never the default — for the 66b proof. */
   @Export var enterTreeGreeting: String = "unset"
@@ -961,7 +958,7 @@ class Main(godotObject: GodotHandle) :
    */
   fun timerProbe() {
     timerMask = 1L
-    kanamaScope.launch {
+    launch {
       val timer = self.getTree().createTimer(0.05)
       if (timer != null) timerMask = timerMask or 2L
       timer?.signal(Timer.Signals.timeout)?.await(self, argumentCount = 0)
@@ -973,7 +970,7 @@ class Main(godotObject: GodotHandle) :
 
   fun coroutineProbe() {
     coroutineMask = 1L
-    kanamaScope.launch {
+    launch {
       coroutineMask = coroutineMask or 2L
       SceneTree.delaySeconds(0.0)
       coroutineMask = coroutineMask or 4L
