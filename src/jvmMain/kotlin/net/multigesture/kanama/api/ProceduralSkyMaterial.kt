@@ -404,7 +404,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
         // Downcast a Resource to ProceduralSkyMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ProceduralSkyMaterial? =
-            if (value.isClass("ProceduralSkyMaterial")) ProceduralSkyMaterial(value.handle) else null
+            if (value.isClass("ProceduralSkyMaterial")) RefCounted.retained(ProceduralSkyMaterial(value.handle)) else null
 
         private const val SET_SKY_TOP_COLOR_HASH = 2920490490L
         private val setSkyTopColorBind by lazy {

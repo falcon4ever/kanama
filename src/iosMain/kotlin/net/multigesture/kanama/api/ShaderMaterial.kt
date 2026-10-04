@@ -49,7 +49,7 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
 
         // Downcast a Resource to ShaderMaterial (null if not).
         fun fromResource(value: Resource?): ShaderMaterial? =
-            value?.takeIf { it.isClass("ShaderMaterial") }?.let { ShaderMaterial(it.handle) }
+            value?.takeIf { it.isClass("ShaderMaterial") }?.let { RefCounted.retained(ShaderMaterial(it.handle)) }
 
         private const val SET_SHADER_HASH = 3341921675L
         private val setShaderBind by lazy {

@@ -252,7 +252,7 @@ object DirAccess {
      */
     @JvmStatic
     fun open(path: String): DirAccessHandle? =
-        DirAccessHandle.wrap(ObjectCalls.ptrcallWithStringArgRetObject(openBind, MemorySegment.NULL, path))
+        DirAccessHandle.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(openBind, MemorySegment.NULL, path))
 
     /**
      * Creates a temporary directory. This directory will be freed when the returned `DirAccess` is
@@ -265,7 +265,7 @@ object DirAccess {
      */
     @JvmStatic
     fun createTemp(prefix: String = "", keep: Boolean = false): DirAccessHandle? =
-        DirAccessHandle.wrap(
+        DirAccessHandle.wrapOwned(
             ObjectCalls.ptrcallWithStringAndBoolArgRetObject(
                 createTempBind,
                 MemorySegment.NULL,

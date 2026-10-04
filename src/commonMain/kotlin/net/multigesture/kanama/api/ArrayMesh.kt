@@ -368,7 +368,7 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
         // Downcast a Resource to ArrayMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ArrayMesh? =
-            if (value.isClass("ArrayMesh")) ArrayMesh(value.handle) else null
+            if (value.isClass("ArrayMesh")) RefCounted.retained(ArrayMesh(value.handle)) else null
 
         private const val ADD_BLEND_SHAPE_HASH = 3304788590L
         private val addBlendShapeBind by lazy {

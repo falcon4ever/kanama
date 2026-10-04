@@ -173,17 +173,50 @@ accessors now and the rest in a follow-up (see "Web" below).
   a dropped getter result, `Tweener` or loaded resource no longer stays alive until exit or shows
   up as `Leaked instance`. `close()` and `use { }` are unchanged and still release at once: the
   rule is now "close to release early", not "must close". A closed wrapper is never released a
-  second time, and borrowed views (`fromHandle`, `fromObject`, values read through `call`/`get`)
-  are never released. Measured on an Apple M1 Max: registering the fallback adds about 20-80 ns to
-  each owned wrapper (`getMesh()` + `close()`), nothing to calls or to node wrappers; a script that
-  drops 10,000 owned `Resource`s is back to its object-count baseline within a few frames
-  (`scripts/runtime_smoke.sh`, `owned_release_smoke.tscn`).
+  second time, and borrowed views (`fromHandle`, wrapper constructors, values read through
+  `call`/`get`) are never released. Measured on an Apple M1 Max: registering the fallback adds
+  about 20-80 ns to each owned wrapper (`getMesh()` + `close()`), nothing to calls or to node
+  wrappers. How late the release comes depends on when the collector runs: with a forced
+  collection per frame, 10,000 dropped owned `Resource`s are back to the object-count baseline in
+  2-3 frames (`scripts/runtime_smoke.sh`, `owned_release_smoke.tscn`); with no forced collection
+  and 10,000 owned getter results dropped every frame, a dropped wrapper waited about 200 frames
+  on average (up to 3.7 million releases pending, some 40-70 ms frames when a big batch was
+  released), so close what you make in a loop.
+- **A script object keeps its resource alive**, as in GDScript. Holding the Kotlin object of a
+  resource script that extends `KanamaScript` (`ResourceLoader.load(path)?.kotlinScriptInstance<T>()`,
+  `newScriptInstance<T>().instance`) keeps the resource alive after the wrapper it came from is
+  closed or collected; dropping the script object then releases the resource. C#'s model: the
+  script instance holds a reference on its owner, and its link to the Kotlin object is strong
+  while the engine holds the owner and weak when only the script object does (switched in the
+  instance's `refcount_incremented` / `refcount_decremented`; desktop, Android and iOS). Without
+  it, the GC fallback freed the resource under a kept script object (the City-Builder demo's
+  Load-then-Save path). A plain script class (not a `KanamaScript`) cannot hold that link; a
+  resource carrying one keeps its pre-fallback lifetime instead (a forgotten wrapper of it is
+  released only when the script is detached or at shutdown, so a kept script object stays safe).
+  Smoke:
+  `script_owner_smoke.tscn` (red with `KANAMA_SCRIPT_OWNER_LINKS=0`, a measurement knob).
+- **The `from*` downcasts own their wrapper** (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`,
+  ...): each takes a reference of its own, so a downcast kept in a field keeps the object alive.
+  Closing one is now correct (it releases its own reference) and forgetting one is a late
+  release.
+- **`close()` on a borrowed view releases nothing** (`fromHandle`, a wrapper constructor over a
+  handle): before, it released a reference the view never took, which could free an object
+  someone else held. Debug builds print a warning naming the class.
+- **Wrappers made off the engine main thread get no GC fallback.** A worker can still be inside a
+  call through a wrapper when the main thread would release it, so only main-thread wrappers
+  register the fallback; close the ones you make on a worker (`use { }`). See
+  [Threads](docs/game-dev/scripts.md#threads).
 - **`kanama/debug/log_gc_releases`** (project setting, off by default, registered by the editor
   plugin) logs each release the collector made, once per creation site:
   `released by GC: Mesh (created at Player.kt:42)`.
 - Android 8-12 debug installs have no `java.lang.ref.Cleaner`; there `close()` stays the only
   release. Web keeps the explicit rule for now. `KANAMA_GC_RELEASES=0` in the game's environment
-  turns the fallback off (a measurement knob).
+  turns the fallback off (a measurement knob). The shutdown collection runs at the editor and the
+  scene deinitialization levels and is timed in the log; on Android it uses `Runtime.gc()`, which
+  ART honours (`System.gc()` is ignored there without a finalization in between). The log
+  setting's stack walk costs about 3.6 us per owned wrapper, so leave it off in builds you ship.
+  On iOS the runtime's messages now reach Godot's output (`print` / `push_warning`) instead of
+  stdout only.
 - `KANAMA_FREED_OBJECT_CHECKS=binding` (desktop/Android, a measurement knob) runs the freed-object
   check through an instance binding: one flag read per call instead of an engine lookup, in any
   build, at the price of a slower wrapper construction (~30 ns instead of ~11 ns). It is not the

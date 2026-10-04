@@ -196,11 +196,11 @@ class NoiseTexture2D internal constructor(handle: GodotHandle) : Texture2D(handl
 
         @JvmStatic
         fun fromObject(value: GodotObject): NoiseTexture2D? =
-            if (value.isClass("NoiseTexture2D")) NoiseTexture2D(value.handle) else null
+            if (value.isClass("NoiseTexture2D")) RefCounted.retained(NoiseTexture2D(value.handle)) else null
 
         @JvmStatic
         fun fromResource(value: Resource): NoiseTexture2D? =
-            if (value.isClass("NoiseTexture2D")) NoiseTexture2D(value.handle) else null
+            if (value.isClass("NoiseTexture2D")) RefCounted.retained(NoiseTexture2D(value.handle)) else null
 
         internal fun wrapOwned(handle: MemorySegment): NoiseTexture2D? =
             if (handle.address() == 0L) null else RefCounted.owned(NoiseTexture2D(GodotHandle(handle)))

@@ -136,7 +136,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
 
         // Downcast a GodotObject to InputEventMouseMotion (null if not).
         fun from(value: GodotObject): InputEventMouseMotion? =
-            if (value.isClass("InputEventMouseMotion")) InputEventMouseMotion(value.handle) else null
+            if (value.isClass("InputEventMouseMotion")) RefCounted.retained(InputEventMouseMotion(value.handle)) else null
 
         private const val SET_TILT_HASH = 743155724L
         private val setTiltBind by lazy {

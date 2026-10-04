@@ -429,7 +429,7 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         // Downcast a Resource to FastNoiseLite (null if not).
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
-            if (value.isClass("FastNoiseLite")) FastNoiseLite(value.handle) else null
+            if (value.isClass("FastNoiseLite")) RefCounted.retained(FastNoiseLite(value.handle)) else null
 
         private const val SET_NOISE_TYPE_HASH = 2624461392L
         private val setNoiseTypeBind by lazy {

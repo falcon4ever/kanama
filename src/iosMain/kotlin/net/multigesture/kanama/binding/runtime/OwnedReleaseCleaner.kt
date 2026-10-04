@@ -8,6 +8,7 @@ import kotlin.native.ref.Cleaner
 import kotlin.native.ref.createCleaner
 import kotlin.native.runtime.GC
 import kotlin.native.runtime.NativeRuntimeApi
+import platform.Foundation.NSThread
 import platform.posix.usleep
 
 /**
@@ -98,6 +99,18 @@ internal actual object OwnedReleaseCleaner {
   }
 
   actual fun log(message: String) {
-    println(message)
+    IosGodotOutput.print(message)
   }
+
+  actual fun warn(message: String) {
+    IosGodotOutput.warn(message)
+  }
+
+  // Kotlin/Native scripts run on the app's main thread, which is Godot's main thread on iOS.
+  actual fun noteMainThread() {}
+
+  actual fun isMainThread(): Boolean = NSThread.isMainThread
+
+  actual fun ownerHasPlainScript(address: Long): Boolean =
+    net.multigesture.kanama.ios.KanamaIosRuntime.ownerHasPlainScript(address)
 }

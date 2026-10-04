@@ -75,11 +75,11 @@ class ShaderMaterial internal constructor(handle: GodotHandle) : Material(handle
 
         @JvmStatic
         fun fromObject(value: GodotObject): ShaderMaterial? =
-            if (value.isClass("ShaderMaterial")) ShaderMaterial(value.handle) else null
+            if (value.isClass("ShaderMaterial")) RefCounted.retained(ShaderMaterial(value.handle)) else null
 
         @JvmStatic
         fun fromResource(value: Resource): ShaderMaterial? =
-            if (value.isClass("ShaderMaterial")) ShaderMaterial(value.handle) else null
+            if (value.isClass("ShaderMaterial")) RefCounted.retained(ShaderMaterial(value.handle)) else null
 
         internal fun wrapOwned(handle: MemorySegment): ShaderMaterial? =
             if (handle.address() == 0L) null else RefCounted.owned(ShaderMaterial(GodotHandle(handle)))

@@ -400,7 +400,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         // Downcast a GodotObject to Resource (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): Resource? =
-            if (value.isClass("Resource")) Resource(value.handle) else null
+            if (value.isClass("Resource")) RefCounted.retained(Resource(value.handle)) else null
 
         private const val SET_PATH_HASH = 83702148L
         private val setPathBind by lazy {

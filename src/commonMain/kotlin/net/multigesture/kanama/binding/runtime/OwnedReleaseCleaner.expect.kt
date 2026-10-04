@@ -49,4 +49,19 @@ internal expect object OwnedReleaseCleaner {
 
   /** Prints [message] to Godot's output (the D5 log). */
   fun log(message: String)
+
+  /** Reports [message] as a Godot warning (`push_warning`). */
+  fun warn(message: String)
+
+  /** Records the calling thread as the engine main thread (called at SCENE initialization). */
+  fun noteMainThread()
+
+  /** Whether the calling thread is the engine main thread; true before [noteMainThread] ran. */
+  fun isMainThread(): Boolean
+
+  /**
+   * Whether the object at [address] carries a script instance whose Kotlin object is a plain class
+   * (not a `KanamaScript`): its owned-wrapper releases are parked (see [OwnedReleases.drain]).
+   */
+  fun ownerHasPlainScript(address: Long): Boolean
 }

@@ -248,7 +248,17 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
   project setting `kanama/debug/log_gc_releases` logs each such release once per creation site.
 - Ownership is fixed where the wrapper is built: inside the runtime a `RefCounted` wrapper class
   has no `wrap`, only `wrapOwned` (a returned or constructing `+1`) and `wrapBorrowed` (a view),
-  so every generated and hand-written site states which one it builds.
+  so every generated and hand-written site states which one it builds. The `from*` downcasts take
+  a `+1` of their own (`RefCounted.retained`), so a downcast kept in a field keeps the object alive
+  whatever happens to the wrapper it came from. `fromHandle` and wrapper constructors stay borrowed
+  views; `close()` on one releases nothing (debug builds warn).
+- A Kotlin script object of a `KanamaScript` on a `RefCounted` owner keeps its owner alive, as in
+  GDScript: the instance holds a `+1` and its native link is strong above count 1 and weak at 1
+  (C#'s `CSharpInstance` model; desktop, Android 13+ and iOS). For a plain script class the GC
+  fallback does not release forgotten wrappers of its owner (until the script is detached or
+  shutdown), the lifetime it had before. See
+  [A script object keeps its resource alive](../game-dev/godot-api.md#a-script-object-keeps-its-resource-alive).
+- Wrappers made off the engine main thread get no GC fallback (close them).
 
 Kept by: the generator functions above; `refcounted_ownership_problems` in
 `scripts/audit_generator_shape_policy.py`, which checks every wrapper source for the owned/borrowed

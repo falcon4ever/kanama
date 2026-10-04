@@ -157,7 +157,7 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         // Downcast a Resource to SphereMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): SphereMesh? =
-            if (value.isClass("SphereMesh")) SphereMesh(value.handle) else null
+            if (value.isClass("SphereMesh")) RefCounted.retained(SphereMesh(value.handle)) else null
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

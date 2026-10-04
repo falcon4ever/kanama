@@ -45,6 +45,12 @@ object ObjectRegistry {
     return byHandle[handle]
   }
 
+  /** Replaces the object registered under [handle] (a recreated script instance, task 132). */
+  fun replace(handle: Long, instance: Any) {
+    byHandle[handle] = instance
+    setDense(handle, instance)
+  }
+
   fun unregister(handle: Long): Any? {
     clearDense(handle)
     return byHandle.remove(handle)

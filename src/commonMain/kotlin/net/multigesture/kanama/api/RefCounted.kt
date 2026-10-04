@@ -34,11 +34,17 @@ open class RefCounted internal constructor(
 ) : GodotObject(handle), AutoCloseable {
 
     private var closed = false
-    private var wrapperReferenceReleased = false
 
-    // The fallback release of the +1 this wrapper owns (task 132 D2), null for a borrowed view or
-    // once close() released it. [releaseRegistration] is the platform's cleaner registration
-    // (JVM `Cleaner.Cleanable`, Kotlin/Native `Cleaner`): it must live as long as this wrapper.
+    // True while this wrapper holds a +1 of its own (task 132 D1): set when it is built over a
+    // returned or constructing +1 ([owned], `wrapOwned`) or takes one ([retainForKotlinWrapper],
+    // [retained]); cleared when close() releases it. Tracked whether or not the GC fallback is on,
+    // so close() on a borrowed view never releases a reference the view did not take.
+    private var owned = false
+
+    // The fallback release of that +1 (task 132 D2): null for a borrowed view, once close()
+    // released it, while the fallback is off, or for a wrapper built off the main thread.
+    // [releaseRegistration] is the platform's cleaner registration (JVM `Cleaner.Cleanable`,
+    // Kotlin/Native `Cleaner`): it must live as long as this wrapper.
     private var pendingRelease: PendingRelease? = null
     private var releaseRegistration: Any? = null
 
@@ -72,42 +78,59 @@ open class RefCounted internal constructor(
     /**
      * Takes a `+1` reference on the underlying object for a Kotlin wrapper that outlives the call
      * that produced it (e.g. a resource read out of a typed Array/Dictionary, or a script resource
-     * retained by `ScriptBridge`). Balanced by [close]. Lifted here from the former standalone
-     * `Resource` root so both `RefCounted` and `Resource` share one lifetime policy.
+     * retained by `ScriptBridge`): the wrapper owns it from then on, fallback release included
+     * (task 132). Balanced by [close]. A no-op on a wrapper that already owns a reference.
      */
     internal fun retainForKotlinWrapper(): RawSegment {
         checkOpen()
+        if (owned) return segment
         ObjectCalls.ptrcallNoArgsRetBool(referenceBind, segment)
-        wrapperReferenceReleased = false
-        // The wrapper owns the +1 now: it gets the owned wrapper's fallback release (task 132 D1).
-        registerOwnedRelease()
+        markOwned()
         return segment
     }
 
     /**
      * Marks this wrapper as the owner of the `+1` its handle carries (task 132 D1) and registers
-     * the fallback release (D2). Idempotent; a no-op when the fallback is off
-     * ([OwnedReleases.enabled]).
+     * the fallback release (D2) unless the fallback is off or this is not the engine main thread
+     * (a wrapper built on a worker may still be in use there when the main thread would drain its
+     * release). Idempotent.
      */
-    internal fun registerOwnedRelease() {
+    internal fun markOwned() {
+        owned = true
         if (pendingRelease != null) return
         val release = OwnedReleases.newRelease(this) ?: return
-        releaseRegistration = OwnedReleases.register(this, release)
         pendingRelease = release
+        releaseRegistration = OwnedReleases.register(this, release)
+    }
+
+    /** True while this wrapper holds a `+1` of its own (tests, diagnostics). */
+    internal val isOwned: Boolean
+        get() = owned
+
+    // Test seam (OwnedReleases.firePendingForTest): the cleanup action, run now.
+    internal fun firePendingForTest(): Boolean {
+        val release = pendingRelease ?: return false
+        release.fire()
+        return true
     }
 
     /** True while this wrapper owns a `+1` whose fallback release is registered (tests). */
     internal val hasPendingRelease: Boolean
         get() = pendingRelease != null
 
-    // close() releases the +1 itself: the fallback must never run too (task 132 D3). Internal so
-    // the JVM unit tests can drive close()'s cancel without an engine.
-    internal fun cancelOwnedRelease() {
-        val release = pendingRelease ?: return
-        pendingRelease = null
+    /**
+     * close()'s cancel of the fallback (task 132 D3). False when the fallback won the race -- the
+     * cleaner already queued this +1, so the drain releases it and close() must not. Internal so
+     * the JVM unit tests can drive it without an engine.
+     */
+    internal fun cancelOwnedRelease(): Boolean {
+        val release = pendingRelease ?: return true
+        val won = release.tryDisarm()
         val registration = releaseRegistration
+        pendingRelease = null
         releaseRegistration = null
-        OwnedReleases.cancel(release, registration)
+        OwnedReleases.dropRegistration(registration)
+        return won
     }
 
     /**
@@ -115,17 +138,25 @@ open class RefCounted internal constructor(
      * `unreference()`, and destroy only if that dropped the count to zero.
      *
      * Every `RefCounted`-typed return you receive — `create()`, `ResourceLoader.load…`,
-     * plain getters such as `getMesh()`, and each element of a returned typed `Array`
-     * (`getMaterials()`, `getProcessedTweens()`) — is a `+1` you own and must close (or
-     * `use { }`). Do not close a wrapper you minted yourself over a handle you already had
-     * (`fromHandle`/`fromObject`). `close()` never stops a `Tween` (the SceneTree holds its own
-     * reference while it runs): `kill()` stops it, `close()` releases your wrapper once you no
-     * longer call it; see `docs/game-dev/godot-api.md` "Resource Ownership".
+     * plain getters such as `getMesh()`, each element of a returned typed `Array`
+     * (`getMaterials()`, `getProcessedTweens()`) and the `from*` downcasts — holds a `+1`
+     * of its own. Close it (or `use { }`) to release it early; one you forget is released
+     * after the garbage collector drops the wrapper. On a view built over a handle you
+     * already had (`fromHandle`, a wrapper constructor) close() releases nothing: the view
+     * took no reference (debug builds warn). `close()` never stops a `Tween` (the
+     * SceneTree holds its own reference while it runs): `kill()` stops it, `close()`
+     * releases your wrapper once you no longer call it; see `docs/game-dev/godot-api.md`
+     * "Resource Ownership".
      */
     override fun close() {
-        if (closed || wrapperReferenceReleased) return
-        wrapperReferenceReleased = true
-        cancelOwnedRelease()
+        if (closed) return
+        if (!owned) {
+            OwnedReleases.warnBorrowedClose(this)
+            return
+        }
+        owned = false
+        // Lost the race with the fallback: its queued release is this +1.
+        if (!cancelOwnedRelease()) return
         val shouldDestroy = ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, segment)
         if (shouldDestroy) {
             closed = true
@@ -153,7 +184,17 @@ open class RefCounted internal constructor(
          * always has its fallback release registered.
          */
         internal fun <T : RefCounted> owned(wrapper: T): T {
-            wrapper.registerOwnedRelease()
+            wrapper.markOwned()
+            return wrapper
+        }
+
+        /**
+         * [wrapper] after it took a `+1` of its own (`reference()`): what a `from*` downcast
+         * returns, so a view kept in a field keeps the object alive like any other wrapper you can
+         * reach (task 132).
+         */
+        internal fun <T : RefCounted> retained(wrapper: T): T {
+            wrapper.retainForKotlinWrapper()
             return wrapper
         }
 

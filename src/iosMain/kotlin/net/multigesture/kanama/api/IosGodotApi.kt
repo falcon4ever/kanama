@@ -506,8 +506,9 @@ class InputEventMouseButton(handle: GodotHandle) : InputEvent(handle) {
     companion object {
 
         fun from(value: GodotObject): InputEventMouseButton? =
-            if (value.isClass("InputEventMouseButton")) InputEventMouseButton(value.handle)
-            else if (value.isClass("InputEventScreenTouch")) InputEventMouseButton(value.handle)
+            // A downcast takes a +1 of its own (task 132), as every generated `from*` does.
+            if (value.isClass("InputEventMouseButton")) RefCounted.retained(InputEventMouseButton(value.handle))
+            else if (value.isClass("InputEventScreenTouch")) RefCounted.retained(InputEventMouseButton(value.handle))
             else null
 
         // Instantiate an InputEventMouseButton (owned: close() it, or `use { }`).

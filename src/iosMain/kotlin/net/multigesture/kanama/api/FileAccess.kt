@@ -203,7 +203,7 @@ actual object FileAccess {
 
     fun open(path: String, flags: FileAccess.ModeFlags): FileAccessHandle? {
         val segment = ObjectCalls.ptrcallStaticWithStringAndLongArgsRetObject(openBind, path, flags.value)
-        return if (segment.address() == 0L) null else FileAccessHandle(GodotHandle(segment))
+        return if (segment.address() == 0L) null else RefCounted.owned(FileAccessHandle(GodotHandle(segment)))
     }
 
     fun getSize(path: String): Long =

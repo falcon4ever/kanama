@@ -231,7 +231,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
         // KANAMA-IOS-SUGAR: [glue] downcast a Resource (null if not), mirroring the desktop
         // helper and the ShaderMaterial.fromResource pattern. Re-add after regeneration.
         fun fromResource(value: Resource?): ProceduralSkyMaterial? =
-            value?.takeIf { it.isClass("ProceduralSkyMaterial") }?.let { ProceduralSkyMaterial(it.handle) }
+            value?.takeIf { it.isClass("ProceduralSkyMaterial") }?.let { RefCounted.retained(ProceduralSkyMaterial(it.handle)) }
 
         private const val SET_SKY_TOP_COLOR_HASH = 2920490490L
         private val setSkyTopColorBind by lazy {

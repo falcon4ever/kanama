@@ -1247,7 +1247,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         // KANAMA-IOS-SUGAR: [glue] downcast a Resource (null if not), mirroring the desktop
         // helper and the ShaderMaterial.fromResource pattern. Re-add after regeneration.
         fun fromResource(value: Resource?): ParticleProcessMaterial? =
-            value?.takeIf { it.isClass("ParticleProcessMaterial") }?.let { ParticleProcessMaterial(it.handle) }
+            value?.takeIf { it.isClass("ParticleProcessMaterial") }?.let { RefCounted.retained(ParticleProcessMaterial(it.handle)) }
 
 
         fun fromHandle(handle: GodotHandle): ParticleProcessMaterial? =

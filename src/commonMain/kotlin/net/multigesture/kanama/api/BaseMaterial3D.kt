@@ -3721,7 +3721,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         // Downcast a Material to BaseMaterial3D (null if not).
         @JvmStatic
         fun fromMaterial(value: Material): BaseMaterial3D? =
-            if (value.isClass("BaseMaterial3D")) BaseMaterial3D(value.handle) else null
+            if (value.isClass("BaseMaterial3D")) RefCounted.retained(BaseMaterial3D(value.handle)) else null
 
         private const val SET_ALBEDO_HASH = 2920490490L
         private val setAlbedoBind by lazy {

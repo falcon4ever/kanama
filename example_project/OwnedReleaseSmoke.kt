@@ -24,7 +24,8 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
  *   mesh ends at exactly the two references it should have (this script's and the node's).
  *
  * Each frame posts a `System.gc()` until the count is back (or [MAX_FRAMES] pass), then prints one
- * line and quits.
+ * line and quits -- after dropping one more owned Resource on the way out, which the shutdown GC
+ * (D4) must release before Godot's leak report (the smoke asserts no `Leaked instance`).
  */
 @ScriptClass(attachTo = "Node")
 class OwnedReleaseSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
@@ -75,12 +76,18 @@ class OwnedReleaseSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObje
     holder = null
     mesh?.close()
     mesh = null
+    dropJustBeforeQuit()
     self.getTree()?.quit()
   }
 
   // A handful of engine objects come and go between frames on their own (one, in practice), so
   // "back" means within [SLACK] of the baseline -- against the 10,000 that were dropped.
   private fun backToBaseline(now: Long): Boolean = now - baseline <= SLACK
+
+  // No frame runs after quit(): only the shutdown GC + drain can release this one.
+  private fun dropJustBeforeQuit() {
+    Resource.create()
+  }
 
   private fun objectCount(): Long =
     Performance.getMonitor(Performance.Monitor.OBJECT_COUNT).toLong()

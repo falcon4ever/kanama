@@ -31,6 +31,8 @@ internal actual object OwnedReleaseCleaner {
 
   private val pending = ConcurrentLinkedQueue<PendingRelease>()
 
+  @Volatile private var mainThread: Thread? = null
+
   actual val available: Boolean
     get() = cleaner != null
 
@@ -62,7 +64,9 @@ internal actual object OwnedReleaseCleaner {
     repeat(2) {
       val done = CountDownLatch(1)
       cleaner.registerSentinel(done)
-      System.gc()
+      // Runtime.gc(), not System.gc(): ART ignores System.gc() unless a finalization ran since
+      // the last one; Runtime.gc() always collects (on HotSpot the two are the same call).
+      Runtime.getRuntime().gc()
       done.await(timeoutMillis / 2, TimeUnit.MILLISECONDS)
     }
   }
@@ -74,6 +78,23 @@ internal actual object OwnedReleaseCleaner {
 
   actual fun log(message: String) {
     runCatching { GD.print(message) }.onFailure { System.err.println("[kanama:kt] $message") }
+  }
+
+  actual fun warn(message: String) {
+    runCatching { GD.pushWarning(message) }
+      .onFailure { System.err.println("[kanama:kt] WARNING: $message") }
+  }
+
+  actual fun ownerHasPlainScript(address: Long): Boolean =
+    net.multigesture.kanama.binding.ScriptOwnerLinks.ownerHasPlainScript(address)
+
+  actual fun noteMainThread() {
+    mainThread = Thread.currentThread()
+  }
+
+  actual fun isMainThread(): Boolean {
+    val main = mainThread
+    return main == null || main === Thread.currentThread()
   }
 
   /** The `java.lang.ref.Cleaner` itself, isolated so a runtime without the class never loads it. */

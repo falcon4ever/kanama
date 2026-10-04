@@ -1,6 +1,7 @@
 package net.multigesture.kanama.binding.runtime
 
-import kotlin.concurrent.Volatile
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.jvm.JvmField
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
@@ -10,10 +11,12 @@ import net.multigesture.kanama.api.RefCounted
 /**
  * The fallback release of an owned `RefCounted` wrapper (task 132): a forgotten `close()` is a late
  * release, not a leak.
- * - D1: only a wrapper that owns a `+1` ([RefCounted.registerOwnedRelease], reached through
- *   `wrapOwned`, `create()` and `retainForKotlinWrapper`) registers one. A borrowed view
- *   (`fromHandle`, `from*`, Variant decoding) registers nothing: releasing it would drop a
- *   reference nobody took.
+ * - D1: only a wrapper that owns a `+1` ([RefCounted.markOwned], reached through `wrapOwned`,
+ *   `create()`, the `from*` downcasts and `retainForKotlinWrapper`) registers one. A borrowed view
+ *   (`fromHandle`, a wrapper constructor, Variant decoding) registers nothing: releasing it would
+ *   drop a reference nobody took, and its close() is a no-op. A wrapper built off the engine main
+ *   thread registers nothing either (it stays owned; close() releases it): the worker may still be
+ *   inside a call through it when the main thread would drain its release.
  * - D2: the registration is a platform cleanup ([OwnedReleaseCleaner]: `java.lang.ref.Cleaner` on
  *   desktop/Android, `kotlin.native.ref.createCleaner` on iOS) whose action holds a
  *   [PendingRelease] -- the raw handle, never the wrapper. When the wrapper becomes unreachable the
@@ -23,7 +26,12 @@ import net.multigesture.kanama.api.RefCounted
  * - D3: `close()` cancels the cleanup ([cancel]) before it releases, so a `+1` is released once.
  * - D4: [shutdown] runs a GC, waits for the cleaner, and drains, before Godot's leak report.
  * - D5: with the project setting [LOG_SETTING] on, each release made by the GC is logged once per
- *   creation site: `released by GC: <class> (created at <file>:<line>)`.
+ *   creation site: `released by GC: <class> (created at <file>:<line>)`. The site is a stack walk
+ *   taken when each owned wrapper is built, a few microseconds each, so the setting is for finding
+ *   the sites, not for shipping.
+ * - Script instances (task 132 blocker 1): a Kotlin script object on a RefCounted owner holds a
+ *   `+1` on its owner, released through this same queue (a [PendingRelease] with a [ReleaseHook])
+ *   once the script object is unreachable; see `ScriptOwnerLinks` on each backend.
  *
  * Main-thread state ([drain], [configure], [shutdown], the logged-site set) is touched only by the
  * engine main thread; only [PendingRelease.fire] runs elsewhere.
@@ -34,6 +42,9 @@ internal object OwnedReleases {
 
   /** Whether each GC release is logged once per creation site (D5). Decided by [configure]. */
   @JvmField var logGcReleases: Boolean = false
+
+  /** Whether the engine is a debug build: close() on a borrowed view warns there. */
+  @JvmField var debugBuild: Boolean = false
 
   /** Releases [drain] has made since start: the shutdown log line and the tests read it. */
   var releasedByGc: Long = 0L
@@ -95,6 +106,8 @@ internal object OwnedReleases {
    * through `ProjectSettings.get_setting`. Never throws.
    */
   fun configureFromEngine(): String {
+    OwnedReleaseCleaner.noteMainThread()
+    debugBuild = runCatching { OS.isDebugBuild() }.getOrDefault(false)
     val environment = runCatching { OS.getEnvironment(ENVIRONMENT_VARIABLE) }.getOrDefault("")
     val logSetting = runCatching { boolSetting(LOG_SETTING) }.getOrDefault(false)
     return configure(environment, logSetting)
@@ -105,21 +118,43 @@ internal object OwnedReleases {
     return settings.call("has_setting", name) == true && settings.call("get_setting", name) == true
   }
 
-  /** The release record for [wrapper], or null when the fallback is off. */
+  /**
+   * The release record for [wrapper], or null when the fallback is off or this is not the engine
+   * main thread (one thread compare; see the class comment).
+   */
   fun newRelease(wrapper: RefCounted): PendingRelease? {
-    if (!enabled) return null
+    if (!enabled || !OwnedReleaseCleaner.isMainThread()) return null
     val origin = if (logGcReleases) describeOrigin(wrapper) else null
-    return PendingRelease(wrapper.handle.segment, wrapper.instanceId, origin)
+    return PendingRelease(wrapper.handle.segment, wrapper.instanceId, origin, null)
   }
 
   /** Registers [release] to fire once [wrapper] is unreachable; the result lives in [wrapper]. */
   fun register(wrapper: RefCounted, release: PendingRelease): Any? =
     OwnedReleaseCleaner.register(wrapper, release)
 
-  /** `close()`'s cancel: [release] never fires, and the platform drops [registration] now. */
-  fun cancel(release: PendingRelease, registration: Any?) {
-    release.disarm()
+  /** Test seam: runs [wrapper]'s cleanup action now, as the cleaner thread would. */
+  internal fun firePendingForTest(wrapper: RefCounted): Boolean = wrapper.firePendingForTest()
+
+  /** After a disarm: the platform drops [registration] now (its action runs as a no-op). */
+  fun dropRegistration(registration: Any?) {
     OwnedReleaseCleaner.cancel(registration)
+  }
+
+  private val warnedBorrowedCloses = HashSet<String>()
+
+  /**
+   * close() on a wrapper that holds no reference of its own (a borrowed view): nothing to release.
+   * Debug builds warn once per wrapper class, because the caller probably meant a different
+   * wrapper; before task 132 this released a reference the view never took.
+   */
+  fun warnBorrowedClose(wrapper: RefCounted) {
+    if (!debugBuild) return
+    val name = wrapper::class.simpleName ?: "RefCounted"
+    if (!warnedBorrowedCloses.add(name)) return
+    OwnedReleaseCleaner.warn(
+      "close() on a borrowed $name view (fromHandle or a wrapper constructor) releases nothing: " +
+        "the view took no reference. Close the wrapper you got from the API instead."
+    )
   }
 
   /**
@@ -128,12 +163,22 @@ internal object OwnedReleases {
    */
   fun drain(): Int {
     var released = 0
+    val unparked = releaseUnparked()
     while (true) {
       val release = OwnedReleaseCleaner.poll() ?: break
+      // An owned wrapper of an object whose script object is a plain class: keep the object (the
+      // script object cannot anchor it, see ScriptOwnerLinks), park the release until the script
+      // is detached or the game shuts down.
+      if (
+        release.hook == null && OwnedReleaseCleaner.ownerHasPlainScript(release.handle.address())
+      ) {
+        parked += release
+        continue
+      }
       try {
         // An object already destroyed (only possible after a program error, such as closing a
         // borrowed view that dropped the count to zero) is skipped, never unreferenced again.
-        if (isLiveOrUnknown(release)) {
+        if (release.hook?.beforeRelease() != false && isLiveOrUnknown(release)) {
           val override = releaseOverride
           if (override != null) override(release.handle)
           else RefCounted.releaseHandle(release.handle)
@@ -148,7 +193,7 @@ internal object OwnedReleases {
       }
     }
     releasedByGc += released
-    return released
+    return released + unparked
   }
 
   /**
@@ -159,7 +204,38 @@ internal object OwnedReleases {
   fun shutdown(): Int {
     if (!enabled) return 0
     OwnedReleaseCleaner.collectGarbage(SHUTDOWN_WAIT_MILLIS)
-    return drain()
+    val released = drain()
+    // The parked releases too: nothing else will release them before Godot's leak report.
+    return released + releaseParked { true }
+  }
+
+  // Releases parked for a plain script owner (see [drain]); main thread only.
+  private val parked = ArrayList<PendingRelease>()
+
+  private fun releaseUnparked(): Int =
+    if (parked.isEmpty()) 0
+    else releaseParked { !OwnedReleaseCleaner.ownerHasPlainScript(it.handle.address()) }
+
+  private fun releaseParked(due: (PendingRelease) -> Boolean): Int {
+    var released = 0
+    val iterator = parked.iterator()
+    while (iterator.hasNext()) {
+      val release = iterator.next()
+      if (!due(release)) continue
+      iterator.remove()
+      try {
+        if (isLiveOrUnknown(release)) {
+          val override = releaseOverride
+          if (override != null) override(release.handle)
+          else RefCounted.releaseHandle(release.handle)
+          released += 1
+        }
+      } catch (t: Throwable) {
+        log("[kanama] GC release failed: ${t::class.simpleName}: ${t.message}")
+      }
+    }
+    releasedByGc += released
+    return released
   }
 
   private const val SHUTDOWN_WAIT_MILLIS = 500L
@@ -182,25 +258,34 @@ internal object OwnedReleases {
  * and the instance id, never the wrapper: a reference to the wrapper would keep it reachable and
  * the cleanup would never run.
  */
+@OptIn(ExperimentalAtomicApi::class)
 internal class PendingRelease(
   @JvmField val handle: RawSegment,
   @JvmField val instanceId: Long,
   /** `<class> (created at <site>)` when the D5 log is on, else null. */
   @JvmField val origin: String?,
+  /** Asked on the main thread right before the release; false skips it (script owner links). */
+  @JvmField val hook: ReleaseHook?,
 ) {
-  @Volatile private var armed: Boolean = true
+  private val armed = AtomicInt(1)
 
   /**
    * The cleanup action, on the platform's cleaner thread: enqueue for the main thread unless
-   * `close()` disarmed it. Never calls Godot.
+   * `close()` disarmed it first. Never calls Godot.
    */
   fun fire() {
-    if (!armed) return
-    armed = false
-    OwnedReleaseCleaner.enqueue(this)
+    if (tryDisarm()) OwnedReleaseCleaner.enqueue(this)
   }
 
-  fun disarm() {
-    armed = false
-  }
+  /**
+   * Atomically disarms: true for exactly one caller, the cleanup action ([fire]) or `close()`. The
+   * loser must not release: the winner does.
+   */
+  fun tryDisarm(): Boolean = armed.compareAndSet(1, 0)
+}
+
+/** See [PendingRelease.hook]. */
+internal interface ReleaseHook {
+  /** Main thread, right before the drain releases: false when the release no longer applies. */
+  fun beforeRelease(): Boolean
 }

@@ -56,6 +56,14 @@ int32_t kanama_ios_report_script_error(
     int32_t line
 );
 
+/*
+ * Task 132 — prints [message] to Godot's output through the `print` utility function, or
+ * `push_warning` when [warning] is non-zero, so runtime diagnostics (the GC-release log, the
+ * borrowed-close warning) reach the same log as on desktop. Returns 1 when printed, 0 when the
+ * engine API did not resolve (a fault is recorded).
+ */
+int32_t kanama_ios_godot_print(const char *message, int32_t warning);
+
 void kanama_ios_godot_ptrcall(
     int64_t method_bind,
     int64_t instance,

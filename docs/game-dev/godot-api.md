@@ -247,8 +247,8 @@ Same call, different outcome, because the number of other owners differs.
 
 | Category | What it covers | What to do |
 |---|---|---|
-| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }`, to release it early — for a list, each element (`list.forEach { it.close() }`). Forgotten, it is released after the GC drops the wrapper |
-| **Borrowed view** | A wrapper *you* mint around a handle you already have: `Resource.fromHandle(...)`, `Resource.fromObject(...)`, a script-class constructor wrapping an existing handle | **Never** `close()` — it releases a reference you never took |
+| **Owned** | `X.create()`, `ResourceLoader.load…`, every `RefCounted`-typed method return **including plain getters**, **every element of a returned typed `Array` of `RefCounted`** (`getMaterials()`, `actionGetEvents()`, `getProcessedTweens()`, …), the `from*` downcasts (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`), and `@Export` reads of resource-typed fields and collections | `close()` it, or `use { }`, to release it early — for a list, each element (`list.forEach { it.close() }`). Forgotten, it is released after the GC drops the wrapper |
+| **Borrowed view** | A wrapper *you* build over a raw handle you already have: `Resource.fromHandle(...)`, a wrapper constructor (`Mesh(other.handle)`), a script's own `self` | Keep the wrapper you got the handle from while you use the view: the view takes no reference. `close()` on it releases nothing (debug builds warn) |
 | **Engine-owned, live** | A running `Tween` (from `createTween()` or an element of `getProcessedTweens()`), anything living in the scene tree | To **stop** it use the Godot lifecycle (`kill()`, `queueFree()`): `close()` never stops it. Your wrapper of a tween is still an owned `+1` — close it when you stop using that wrapper (see below) |
 | **Nodes and plain `Object`s** | Anything not `RefCounted` — no refcount exists, and `GodotObject` has no `close()` | `Node.queueFree()` |
 
@@ -261,8 +261,8 @@ wrapper; and for the elements of `SceneTree.getProcessedTweens()`, which are
 owned `+1`s of tweens that keep running, close each one when you are done
 reading it — that does not affect the tweens.
 
-The awkward-looking case — a getter you must close — is the common one, and it is
-safe precisely because the node still holds its own reference. Handing an owned
+Closing a getter's result is the common case, and it is safe precisely because
+the node still holds its own reference. Handing an owned
 wrapper to a sink (`setMesh`, `setStream`, `ResourceSaver.save`) does not move
 it into the engine-owned row: the sink takes its own reference and yours is
 still yours to close. In the demos corpus this table is what
@@ -286,14 +286,22 @@ big resources (meshes, textures, audio) and in loops; the fallback is what keeps
 a forgotten getter result from staying alive until shutdown.
 
 - **Only owned wrappers** are released this way. A borrowed view
-  (`fromHandle`, `fromObject`, values read through `call`/`get`/`getMeta`) is
-  never released, because its reference was never yours.
+  (`fromHandle`, a wrapper constructor, values read through `call`/`get`/`getMeta`)
+  is never released, because its reference was never yours.
+- **Only wrappers made on the engine main thread.** A wrapper you get on a worker
+  thread (a `Dispatchers.Default` coroutine, your own `Thread`) is still owned,
+  but nothing releases it for you: the worker may still be in a call through it
+  when the main thread would release it. Close those (`use { }`), or hand the
+  result back to the main thread first ([Threads](scripts.md#threads)).
 - **Never twice.** `close()` cancels the fallback, so a wrapper you closed is not
   released again when it is collected.
 - **On the main thread.** The collector only queues the release; Godot is called
   from the frame loop, never from the collector's thread. How soon depends on
-  when the JVM (or Kotlin/Native) collects, so "late" can mean a few frames or
-  much longer on an idle heap.
+  when the JVM (or Kotlin/Native) collects: it is not a deadline. Measured on an
+  Apple M1 Max dropping 10,000 owned getter results every frame with no forced
+  collection, a dropped wrapper waited about 200 frames (a few seconds) on
+  average, with up to 3.7 million releases pending and occasional 40-70 ms
+  frames when a large batch was released at once. Close what you make in a loop.
 - **At shutdown**, before Godot's leak report, Kanama runs a collection and
   releases what it finds, so a dropped wrapper no longer shows up as
   `Leaked instance` at exit. A wrapper you still hold in a field is still yours.
@@ -311,6 +319,34 @@ Android 13 anyway). Web keeps the explicit rule for
 now (see the Web note in
 [Properties and Resources](properties-resources.md)). `KANAMA_GC_RELEASES=0` in
 the game's environment turns the fallback off, for measurements.
+
+### A script object keeps its resource alive
+
+Holding the Kotlin object of a resource's script keeps the resource alive, as
+holding the resource does in GDScript. This works whatever happened to the
+wrapper you reached it through:
+
+```kotlin
+// Keep only the script object; the loaded wrapper is dropped (or closed).
+map = ResourceLoader.load("user://map.res")?.kotlinScriptInstance<DataMap>() ?: return
+// ... frames later, after any number of collections:
+ResourceSaver.save(Resource.fromObject(GodotObject(map.godotObject))!!, "user://map.res")
+```
+
+and the same holds for `newScriptInstance<T>().instance` kept without its
+handle. Kanama follows C#'s model: the script object holds a reference on its
+resource, the engine keeps the script object alive while it holds the resource
+itself, and once only your code can reach the script object, dropping it
+releases the resource like any other forgotten wrapper.
+
+This needs the script class to extend `KanamaScript`. A plain script class
+(`@ScriptClass class Data(val godotObject: GodotHandle)`) has nowhere to keep
+that link, so a resource carrying one keeps the lifetime it had before the
+garbage-collector fallback: wrappers you close still release at once, but a
+forgotten wrapper of it is not released until its script is detached
+(`setScript(null)`) or the game shuts down. Keeping only its script object is
+therefore safe, at the price of that resource staying alive. Extend
+`KanamaScript` for resources you create and drop often.
 
 ### Two cleanups in one function
 

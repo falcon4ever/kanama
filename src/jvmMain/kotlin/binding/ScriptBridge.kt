@@ -15,6 +15,7 @@ import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.GodotStructs
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.ScriptErrors
+import net.multigesture.kanama.binding.runtime.ScriptOwnerIds
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.binding.runtime.VariantConverters
@@ -37,7 +38,9 @@ object ScriptBridge {
   private const val REFCOUNTED_REFERENCE_HASH = 2240911060L
   private const val REFCOUNTED_UNREFERENCE_HASH = 2240911060L
   private val kotlinObjectByOwnerAddress = ConcurrentHashMap<Long, Any>()
-  private val scriptInstanceByOwnerAddress = ConcurrentHashMap<Long, KanamaScriptInstance>()
+  // Values are the KanamaScriptInstance, or the ScriptOwnerLink in front of it for a RefCounted
+  // owner (task 132): the link holds the instance strongly or weakly by the owner's count.
+  private val scriptInstanceByOwnerAddress = ConcurrentHashMap<Long, Any>()
   private val nullScriptPropertyValue = Any()
   private val pendingKanamaScriptOwnerAddresses = ConcurrentHashMap.newKeySet<Long>()
   private val pendingScriptPropertyValuesByOwnerAddress =
@@ -65,7 +68,17 @@ object ScriptBridge {
     scriptInstanceCreate3.invoke(info3, MemorySegment.ofAddress(handle)) as MemorySegment
 
   fun kotlinObjectForOwner(ownerObject: MemorySegment): Any? =
-    kotlinObjectByOwnerAddress[ownerObject.address()]
+    when (val value = kotlinObjectByOwnerAddress[ownerObject.address()]) {
+      is ScriptOwnerLink -> value.instance()?.kotlinObject
+      else -> value
+    }
+
+  /** A recreated instance replaces the old one for [ownerObject] (task 132). */
+  internal fun retrackOwner(ownerObject: MemorySegment, link: ScriptOwnerLink, kotlinObject: Any) {
+    scriptInstanceByOwnerAddress[ownerObject.address()] = link
+    kotlinObjectByOwnerAddress[ownerObject.address()] = link
+    ScriptOwnerIds.remember(kotlinObject, link.instanceId)
+  }
 
   fun trackKotlinObject(ownerObject: MemorySegment, kotlinObject: Any) {
     if (ownerObject.address() != 0L) {
@@ -106,7 +119,7 @@ object ScriptBridge {
     // Slash-separated paths are indexed engine properties, not generated script property names.
     '/' !in property
 
-  fun trackScriptInstance(ownerObject: MemorySegment, scriptInstance: KanamaScriptInstance) {
+  fun trackScriptInstance(ownerObject: MemorySegment, scriptInstance: Any) {
     if (ownerObject.address() != 0L) {
       pendingKanamaScriptOwnerAddresses.remove(ownerObject.address())
       scriptInstanceByOwnerAddress[ownerObject.address()] = scriptInstance
@@ -278,21 +291,21 @@ object ScriptBridge {
       off("to_string_func"),
       stub("siToString", voidDataAddrAddr, descVoidDataAddrAddr),
     )
+    // Task 132: a script instance on a RefCounted owner holds a +1 on it and switches its native
+    // link strong (count > 1) / weak (count 1), as C#'s CSharpInstance does (ScriptOwnerLinks).
     struct.set(
       ADDRESS,
       off("refcount_incremented_func"),
       stub("siRefcountIncremented", voidData, descVoidData),
     )
-    // Contract (script_instance.h): "return true if it can die". Kanama's script
-    // instance holds no reference on its owner, so the last unreference() must be
-    // allowed to destroy it — returning false here made every scripted RefCounted
-    // (custom Resources included) immortal: `die = die && script_ret` in
-    // RefCounted::unreference() can never be true. (C# returns false only while
-    // its managed GC handle owns deletion responsibility — Kanama has no such path.)
+    // Contract (script_instance.h): "return true if it can die". True at count 0; false at 1,
+    // where only the instance's own +1 is left (the owner then dies when that +1 is released by
+    // the GC fallback). Before task 132 the instance held no reference and this always returned
+    // true; returning false there made every scripted RefCounted immortal.
     struct.set(
       ADDRESS,
       off("refcount_decremented_func"),
-      stub("siReturnTrue1", boolData, descBoolData),
+      stub("siRefcountDecremented", boolData, descBoolData),
     )
     struct.set(ADDRESS, off("get_script_func"), stub("siGetScript", addrData, descAddrData))
     struct.set(ADDRESS, off("is_placeholder_func"), stub("siIsPlaceholder", boolData, descBoolData))
@@ -351,7 +364,11 @@ object ScriptBridge {
   // ---- Upcall implementations ----
 
   private fun si(data: MemorySegment): KanamaScriptInstance? =
-    ObjectRegistry.get(data.address()) as? KanamaScriptInstance
+    when (val value = ObjectRegistry.get(data.address())) {
+      is KanamaScriptInstance -> value
+      is ScriptOwnerLink -> value.instance()
+      else -> null
+    }
 
   // --- Property set/get ---
 
@@ -777,7 +794,17 @@ object ScriptBridge {
 
   // --- Refcounting ---
 
-  @JvmStatic fun siRefcountIncremented(data: MemorySegment) {}
+  @JvmStatic
+  fun siRefcountIncremented(data: MemorySegment) {
+    val link = ObjectRegistry.get(data.address()) as? ScriptOwnerLink ?: return
+    ScriptOwnerLinks.incremented(data.address(), link)
+  }
+
+  @JvmStatic
+  fun siRefcountDecremented(data: MemorySegment): Byte {
+    val link = ObjectRegistry.get(data.address()) as? ScriptOwnerLink ?: return 1
+    return if (ScriptOwnerLinks.decremented(link)) 1 else 0
+  }
 
   // --- Notification ---
 
@@ -832,6 +859,9 @@ object ScriptBridge {
   @JvmStatic
   fun siFree(data: MemorySegment) {
     val handle = data.address()
+    val link = ObjectRegistry.get(handle) as? ScriptOwnerLink
+    // An owner that is not dying (script detached or replaced): drop the instance's +1 next frame.
+    link?.let { ScriptOwnerLinks.freed(it) }
     val scriptInstance = si(data)
     // The script's coroutines end with the instance (task 133: KanamaScript.scriptScope).
     (scriptInstance?.kotlinObject as? net.multigesture.kanama.api.KanamaScript<*>)?.let { script ->
@@ -859,7 +889,7 @@ object ScriptBridge {
           )
         }
     }
-    val scriptObject = scriptInstance?.script?.godotObject ?: MemorySegment.NULL
+    val scriptObject = (scriptInstance?.script ?: link?.script)?.godotObject ?: MemorySegment.NULL
     if (scriptObject.address() != 0L) {
       val unreferenceBind =
         ObjectCalls.getMethodBind("RefCounted", "unreference", REFCOUNTED_UNREFERENCE_HASH)
@@ -867,12 +897,15 @@ object ScriptBridge {
         ObjectCalls.ptrcallNoArgsRetBool(unreferenceBind, scriptObject)
       }
     }
-    if (scriptInstance != null) {
-      scriptInstance.script?.untrackOwnerObject(scriptInstance.ownerObject.address())
-      kotlinObjectByOwnerAddress.remove(scriptInstance.ownerObject.address())
-      scriptInstanceByOwnerAddress.remove(scriptInstance.ownerObject.address())
-      pendingKanamaScriptOwnerAddresses.remove(scriptInstance.ownerObject.address())
-      pendingScriptPropertyValuesByOwnerAddress.remove(scriptInstance.ownerObject.address())
+    // The owner address and script come from the link when the GC already collected the
+    // instance (task 132: the owner of a collected script object dies through the drain).
+    val ownerAddress = scriptInstance?.ownerObject?.address() ?: link?.owner?.address()
+    if (ownerAddress != null) {
+      (scriptInstance?.script ?: link?.script)?.untrackOwnerObject(ownerAddress)
+      kotlinObjectByOwnerAddress.remove(ownerAddress)
+      scriptInstanceByOwnerAddress.remove(ownerAddress)
+      pendingKanamaScriptOwnerAddresses.remove(ownerAddress)
+      pendingScriptPropertyValuesByOwnerAddress.remove(ownerAddress)
     }
     ObjectRegistry.unregister(handle)
     if (System.getenv("KANAMA_TRACE_INSTANCES") == "1") {

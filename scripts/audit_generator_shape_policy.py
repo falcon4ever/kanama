@@ -633,31 +633,48 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
 
 # ---------------------------------------------------------------------------------------------
 # Task 132 D1: ownership is a constructor fact. A RefCounted wrapper class has no `wrap`; every
-# site that mints one says whether the wrapper owns a +1 (`wrapOwned`, `RefCounted.owned(...)`,
-# which register the GC fallback release) or borrows (`wrapBorrowed`, `fromHandle`, `from*`). The
-# rule is the one `docs/game-dev/godot-api.md` "Resource Ownership" states:
-#   - OWNED: the +1 a RefCounted-typed ptrcall return hands over (`X.wrapOwned(ObjectCalls.*RetObject(...))`,
-#     the self-return collapse's `X.wrapOwned(ret)`), and the constructing +1 (`create()`,
-#     `X(GodotHandle(...constructObject(...)))`, which must sit inside `RefCounted.owned(...)`);
-#   - BORROWED: `fromHandle` (its body calls `wrapBorrowed`), and the element callback of a typed
-#     Array return (`X::wrapBorrowed`): the helper decodes through `readArrayObjectsOwned`
-#     (desktop) / `ownedListElement` (iOS), which retain each element and make its wrapper owned,
-#     so an `X::wrapOwned` callback there would register twice.
+# site that builds one says whether the wrapper owns a +1 or borrows. The rule is the one
+# `docs/game-dev/godot-api.md` "Resource Ownership" states:
+#   - OWNED by adopting a +1 handed over: a RefCounted-typed ptrcall return
+#     (`X.wrapOwned(ObjectCalls.*RetObject(...))`, the self-return collapse's `X.wrapOwned(ret)`),
+#     the constructing +1 (`create()`, a hand-written loader or decode): `RefCounted.owned(...)`;
+#   - OWNED by taking a +1: the `from*` downcasts and the owned decodes (`RefCounted.retained(...)`,
+#     `retainForKotlinWrapper()`), so a view kept in a field keeps the object alive;
+#   - BORROWED: `fromHandle` (its body is `wrapBorrowed(handle.segment)` or the constructor), and
+#     the element callback of a typed Array return (`X::wrapBorrowed`): the helper decodes through
+#     `readArrayObjectsOwned` (desktop) / `ownedListElement` (iOS), which retain each element and
+#     make its wrapper owned, so an `X::wrapOwned` callback there would register twice.
 # Checked over every wrapper source the tree compiles: the generated shared tree, the
-# per-platform generated and hand-shaped files, and the runtime helpers.
+# per-platform generated and hand-shaped files, and the runtime helpers and decodes. A positive
+# check walks extension_api.json: every RefCounted-typed method return that a wrapper emits must
+# reach `wrapOwned`. RED_RUNS below are known-bad snippets the rules must each reject; the gate
+# runs them first, so a rule that stops matching fails loudly instead of passing everything.
 WRAPPER_SOURCE_DIRS = (
     ROOT / "src/commonMain/kotlin/net/multigesture/kanama/api",
     ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api",
     ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api",
     ROOT / "src/jvmMain/kotlin/binding",
     ROOT / "src/iosMain/kotlin/net/multigesture/kanama/binding/runtime",
+    ROOT / "src/iosMain/kotlin/net/multigesture/kanama/ios",
 )
 EXTENSION_API = ROOT / "extension_api.json"
 
+# Borrowed constructions that are correct, each with its reason.
+ALLOWED_BORROWED_CONSTRUCTIONS = {
+    # The iOS self-test builds raw probe objects it destroys or hands to an owning helper itself.
+    ("ObjectCalls.kt", "listOf(RefCounted(GodotHandle(typedNodeA)), RefCounted(GodotHandle(typedNodeB)))"),
+    ("ObjectCalls.kt", "RefCounted(GodotHandle(it))"),
+    ("ObjectCalls.kt", 'net.multigesture.kanama.api.Resource(GodotHandle(ObjectCalls.constructObject("Resource")))'),
+}
+
+
+def _api_parents() -> dict[str, str | None]:
+    api = json.loads(EXTENSION_API.read_text(encoding="utf-8"))
+    return {cls["name"]: cls.get("inherits") for cls in api["classes"]}
+
 
 def refcounted_classes() -> set[str]:
-    api = json.loads(EXTENSION_API.read_text(encoding="utf-8"))
-    parents = {cls["name"]: cls.get("inherits") for cls in api["classes"]}
+    parents = _api_parents()
 
     def is_refcounted(name: str | None) -> bool:
         while name:
@@ -666,74 +683,250 @@ def refcounted_classes() -> set[str]:
             name = parents.get(name)
         return False
 
-    return {name for name in parents if is_refcounted(name)}
+    # The hand-shaped FileAccess/DirAccess handle classes stand for Godot's FileAccess/DirAccess.
+    return {name for name in parents if is_refcounted(name)} | {"RefCounted", *REFCOUNTED_ALIASES}
 
 
-WRAP_CALL = re.compile(r"(?<![\w.])(\w+)\.(wrap|wrapOwned|wrapBorrowed)\(\s*")
+# Hand-written RefCounted wrapper classes with no Godot class of their own name.
+REFCOUNTED_ALIASES = {"FileAccessHandle": "FileAccess", "DirAccessHandle": "DirAccess"}
+
+
+WRAP_CALL = re.compile(r"(?<![\w])(?:(\w+)\.)?(wrap|wrapOwned|wrapBorrowed)\(\s*")
 WRAP_REFERENCE = re.compile(r"(?<![\w.])(\w+)::(wrap|wrapOwned|wrapBorrowed)\b")
-CONSTRUCT = re.compile(
-    r"(?<![\w.])(\w+)\(GodotHandle\((?:ObjectCalls\.constructObject|MemorySegment\.ofAddress\(IosGodot\.constructObject)\("
+# `X(GodotHandle(...))`, `X(value.handle)`, `X(it.handle)`, `X(handle)` with X a wrapper class.
+CONSTRUCTION = re.compile(
+    r"(?<![\w])(?:net\.multigesture\.kanama\.api\.)?([A-Z]\w*)\((GodotHandle\(|[\w.]*\bhandle\))"
 )
 OWNED_SOURCE = re.compile(r"(ObjectCalls\.\w*RetObject\(|ret\))")
+FUN_DECL = re.compile(r"^[ \t]*(?:@\w+[ \t]+)*(?:(?:internal|private|public|override|actual|inline|operator)[ \t]+)*fun[ \t]+(?:<[^>]*>[ \t]+)?(?:[\w.]+\.)?(\w+)\(", re.M)
+
+
+def _function_spans(text: str) -> list[tuple[str, int, int]]:
+    """(name, start, end) of each `fun` in [text]; a body ends where the next `fun` starts."""
+    starts = [(m.group(1), m.start()) for m in FUN_DECL.finditer(text)]
+    spans = []
+    for index, (name, start) in enumerate(starts):
+        end = starts[index + 1][1] if index + 1 < len(starts) else len(text)
+        spans.append((name, start, end))
+    return spans
+
+
+def _enclosing_function(spans: list[tuple[str, int, int]], offset: int) -> tuple[str, int, int] | None:
+    for span in spans:
+        if span[1] <= offset < span[2]:
+            return span
+    return None
+
+
+def _ownership_problems_in(rel: str, stem: str, text: str, refcounted: set[str]) -> list[str]:
+    problems: list[str] = []
+    spans = _function_spans(text)
+    file_class = stem.split(".")[0]
+
+    def where(offset: int) -> str:
+        return f"{rel}:{text.count(chr(10), 0, offset) + 1}"
+
+    def line_at(offset: int) -> str:
+        start = text.rfind("\n", 0, offset) + 1
+        end = text.find("\n", offset)
+        return text[start : end if end >= 0 else len(text)]
+
+    for match in WRAP_CALL.finditer(text):
+        qualifier, helper = match.group(1), match.group(2)
+        prefix = text[max(0, match.start() - 4) : match.start()]
+        if prefix.endswith("fun "):
+            continue  # the declaration itself
+        cls = qualifier or file_class
+        if cls not in refcounted:
+            continue
+        function = _enclosing_function(spans, match.start())
+        function_name = function[0] if function else ""
+        if helper == "wrap":
+            problems.append(
+                f"{where(match.start())}: {cls}.wrap(...) -- a RefCounted wrapper has no wrap; "
+                "use wrapOwned (a returned +1) or wrapBorrowed (fromHandle only)"
+            )
+        elif helper == "wrapOwned":
+            if function_name == "fromHandle":
+                problems.append(
+                    f"{where(match.start())}: wrapOwned(...) inside fromHandle -- fromHandle is a view "
+                    "of a handle the caller already holds; adopting it releases a reference never taken"
+                )
+            elif not OWNED_SOURCE.match(text, match.end()):
+                problems.append(
+                    f"{where(match.start())}: {cls}.wrapOwned(...) of something other than a ptrcall "
+                    "object return or the collapse's `ret`: only a returned +1 is adopted"
+                )
+        elif helper == "wrapBorrowed" and function_name != "fromHandle":
+            problems.append(
+                f"{where(match.start())}: {cls}.wrapBorrowed(...) outside fromHandle: a site that "
+                "builds a wrapper over a returned or decoded +1 owns it (wrapOwned / RefCounted.owned)"
+            )
+
+    for match in WRAP_REFERENCE.finditer(text):
+        cls, helper = match.group(1), match.group(2)
+        if cls in refcounted and helper != "wrapBorrowed":
+            problems.append(
+                f"{where(match.start())}: {cls}::{helper} -- a typed Array element callback is "
+                "wrapBorrowed: the helper retains the element and makes the wrapper owned"
+            )
+
+    for match in CONSTRUCTION.finditer(text):
+        cls = match.group(1)
+        if cls not in refcounted:
+            continue
+        line = line_at(match.start())
+        stripped = line.strip()
+        before = text[max(0, match.start() - 40) : match.start()]
+        after = text[match.end() : match.end() + 220]
+        if re.search(r"\)\s*:\s*$", before) or re.match(r"(?:(?:open|abstract|actual|internal|sealed)\s+)*class\s", stripped):
+            continue  # a class declaration's superclass call
+        if before.rstrip().endswith(("owned(", "retained(")):
+            continue  # RefCounted.owned / .retained (unqualified inside the RefCounted root)
+        if re.match(r"[^\n]*\)?[\s)]*\.(?:also|apply)\s*\{\s*(?:it\.)?retainForKotlinWrapper\(\)", after):
+            continue
+        function = _enclosing_function(spans, match.start())
+        function_name = function[0] if function else ""
+        if function_name in ("fromHandle", "wrapBorrowed"):
+            continue  # the borrowed view, by definition
+        if any(Path(rel).name == name and snippet in line for name, snippet in ALLOWED_BORROWED_CONSTRUCTIONS):
+            continue
+        problems.append(
+            f"{where(match.start())}: {cls}({match.group(2)}...) builds a borrowed {cls} outside "
+            "fromHandle/wrapBorrowed: wrap it in RefCounted.owned(...) (it adopts a +1) or "
+            "RefCounted.retained(...) (it takes one)"
+        )
+
+    if file_class in refcounted:
+        for name, start, end in spans:
+            body = text[start:end]
+            if name == "wrapOwned" and "owned(" not in body:
+                problems.append(f"{where(start)}: wrapOwned does not mark its wrapper owned (RefCounted.owned)")
+            elif name == "create" and "constructObject(" in body and "RefCounted.owned(" not in body:
+                problems.append(f"{where(start)}: {file_class}.create() does not own the constructing +1")
+            elif (
+                name.startswith("from")
+                and name != "fromHandle"
+                and ".isClass(" in body
+                and "RefCounted.retained(" not in body
+            ):
+                problems.append(
+                    f"{where(start)}: {file_class}.{name} is a downcast that does not take its own +1 "
+                    "(RefCounted.retained): a view kept in a field would dangle"
+                )
+        if Path(rel).parent.name == "api" and "internal fun wrap(handle:" in text:
+            problems.append(
+                f"{rel}: declares `internal fun wrap(handle: ...)` for a RefCounted class; declare "
+                "wrapOwned and wrapBorrowed"
+            )
+    return problems
+
+
+def _positive_return_problems(roots: tuple[Path, ...], refcounted: set[str]) -> list[str]:
+    """Every RefCounted-typed method return a wrapper emits reaches wrapOwned."""
+    from generate_api_wrapper import method_function_name
+
+    api = json.loads(EXTENSION_API.read_text(encoding="utf-8"))
+    problems: list[str] = []
+    files: dict[str, list[Path]] = {}
+    for root in roots[:3]:
+        for path in root.glob("*.kt"):
+            files.setdefault(path.stem.split(".")[0], []).append(path)
+    checked = 0
+    for cls in api["classes"]:
+        paths = files.get(cls["name"], [])
+        if not paths:
+            continue
+        texts = [(p, p.read_text(encoding="utf-8")) for p in paths]
+        for alias, godot_name in REFCOUNTED_ALIASES.items():
+            if godot_name == cls["name"]:
+                texts += [(p, p.read_text(encoding="utf-8")) for p in files.get(alias, [])]
+        for method in cls.get("methods", []):
+            ret = (method.get("return_value") or {}).get("type", "")
+            if ret not in refcounted:
+                continue
+            name = method_function_name(cls["name"], method["name"])
+            for path, text in texts:
+                spans = _function_spans(text)
+                # A file-local helper that adopts the +1 (Tween's wrapOrThis) counts as adopting.
+                adopters = {
+                    fname
+                    for fname, start, end in spans
+                    if "wrapOwned(" in text[start:end] or "RefCounted.owned(" in text[start:end]
+                }
+                for fname, start, end in spans:
+                    if fname != name:
+                        continue
+                    body = text[start:end]
+                    if "RetObject(" not in body and "IosGodot." not in body:
+                        continue  # a Variant-path or hand sugar overload with no ptrcall return
+                    checked += 1
+                    if (
+                        "wrapOwned(" not in body
+                        and "RefCounted.owned(" not in body
+                        and not any(re.search(rf"\b{re.escape(a)}\(", body[1:]) for a in adopters if a != fname)
+                    ):
+                        problems.append(
+                            f"{path.relative_to(ROOT) if path.is_relative_to(ROOT) else path}:"
+                            f"{text.count(chr(10), 0, start) + 1}: "
+                            f"{cls['name']}.{method['name']} returns {ret} (an owned +1) but its "
+                            "wrapper never adopts it (wrapOwned / RefCounted.owned)"
+                        )
+    if checked == 0:
+        problems.append("positive RefCounted-return check matched no method: the walk is broken")
+    return problems
+
+
+# Known-bad snippets (task 132 review red runs): each must make the rules above report.
+RED_RUNS: tuple[tuple[str, str, str], ...] = (
+    ("R1 wrap on a RefCounted class", "api/MeshInstance3D.kt",
+     "    fun getMesh(): Mesh? {\n        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(b, segment))\n    }\n"),
+    ("R2 wrapBorrowed on a returned +1", "api/Texture2D.kt",
+     "    fun getImage(): Image? {\n        return Image.wrapBorrowed(ObjectCalls.ptrcallNoArgsRetObject(b, segment))\n    }\n"),
+    ("R3 wrapOwned of a handle not returned", "api/Texture2D.kt",
+     "    fun view(h: GodotHandle): Image? {\n        return Image.wrapOwned(h.segment)\n    }\n"),
+    ("R4 wrapOwned element callback", "api/Node.kt",
+     "    fun mats(): List<Material> {\n        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(b, segment, Material::wrapOwned)\n    }\n"),
+    ("R5 unqualified wrapOwned inside fromHandle", "api/Texture2D.kt",
+     "    companion object {\n        fun fromHandle(handle: GodotHandle): Texture2D? =\n            wrapOwned(handle.segment)\n\n"
+     "        internal fun wrapOwned(handle: RawSegment): Texture2D? =\n"
+     "            if (handle.address() == 0L) null else RefCounted.owned(Texture2D(GodotHandle(handle)))\n    }\n"),
+    ("R6 runtime decode without owned", "binding/runtime/BuiltinTypes.kt",
+     "  fun readOwned(value: GodotObject): Any? {\n    ObjectCalls.ptrcallNoArgsRetBool(referenceBind, value.segment)\n"
+     "    return RefCounted(value.handle)\n  }\n"),
+    ("R7 iOS ownedListElement without owned", "binding/runtime/ObjectCalls.kt",
+     "  internal fun <T> ownedListElement(obj: T?): T? =\n    if (obj is GodotObject) RefCounted(obj.handle) as T else obj\n"),
+    ("R8 create() without owned", "api/StandardMaterial3D.kt",
+     "    companion object {\n        fun create(): StandardMaterial3D =\n"
+     "            StandardMaterial3D(GodotHandle(ObjectCalls.constructObject(\"StandardMaterial3D\")))\n    }\n"),
+    ("R9 iOS loader without owned", "api/IosGodotApi.kt",
+     "    fun load(path: String): Resource? =\n        IosGodot.resourceLoaderLoad(path, \"\").takeIf { it != 0L }?.let {\n"
+     "            Resource(GodotHandle(MemorySegment.ofAddress(it)))\n        }\n"),
+    ("R10 downcast without its own +1", "api/Mesh.kt",
+     "    companion object {\n        fun fromObject(value: GodotObject): Mesh? =\n"
+     "            if (value.isClass(\"Mesh\")) Mesh(value.handle) else null\n    }\n"),
+    ("R11 wrapOwned helper that does not own", "api/Mesh.kt",
+     "        internal fun wrapOwned(handle: RawSegment): Mesh? =\n            if (handle.address() == 0L) null else Mesh(GodotHandle(handle))\n"),
+)
+
+
+def red_run_problems(refcounted: set[str]) -> list[str]:
+    problems = []
+    for label, rel, snippet in RED_RUNS:
+        stem = Path(rel).stem
+        if not _ownership_problems_in(rel, stem, snippet, refcounted):
+            problems.append(f"red run '{label}' passed the ownership rules: a rule stopped matching")
+    return problems
 
 
 def refcounted_ownership_problems(roots: tuple[Path, ...] = WRAPPER_SOURCE_DIRS) -> list[str]:
-    refcounted = refcounted_classes() | {"RefCounted"}
-    problems: list[str] = []
+    refcounted = refcounted_classes()
+    problems = red_run_problems(refcounted)
     for root in roots:
         for path in sorted(root.rglob("*.kt")):
             text = path.read_text(encoding="utf-8")
-            rel = path.relative_to(ROOT)
-
-            def where(offset: int) -> str:
-                return f"{rel}:{text.count(chr(10), 0, offset) + 1}"
-
-            for match in WRAP_CALL.finditer(text):
-                cls, helper = match.group(1), match.group(2)
-                if cls not in refcounted:
-                    continue
-                if helper == "wrap":
-                    problems.append(
-                        f"{where(match.start())}: {cls}.wrap(...) -- a RefCounted wrapper has no wrap; "
-                        "use wrapOwned (a returned +1) or wrapBorrowed (a view)"
-                    )
-                elif helper == "wrapOwned" and not OWNED_SOURCE.match(text, match.end()):
-                    problems.append(
-                        f"{where(match.start())}: {cls}.wrapOwned(...) of something other than a ptrcall "
-                        "object return or the collapse's `ret`: only a returned +1 is owned"
-                    )
-                elif helper == "wrapBorrowed":
-                    # Only fromHandle's body calls it directly.
-                    head = text[max(0, match.start() - 160) : match.start()]
-                    if "fun fromHandle(" not in head:
-                        problems.append(
-                            f"{where(match.start())}: {cls}.wrapBorrowed(...) outside fromHandle: a "
-                            "direct site that mints a wrapper must say it owns (wrapOwned) unless it "
-                            "is a fromHandle view"
-                        )
-            for match in WRAP_REFERENCE.finditer(text):
-                cls, helper = match.group(1), match.group(2)
-                if cls in refcounted and helper != "wrapBorrowed":
-                    problems.append(
-                        f"{where(match.start())}: {cls}::{helper} -- a typed Array element callback is "
-                        "wrapBorrowed: the helper retains the element and makes the wrapper owned"
-                    )
-            for match in CONSTRUCT.finditer(text):
-                cls = match.group(1)
-                if cls not in refcounted:
-                    continue
-                if not text[max(0, match.start() - len("RefCounted.owned(")) : match.start()].endswith(
-                    "RefCounted.owned("
-                ):
-                    problems.append(
-                        f"{where(match.start())}: {cls}(GodotHandle(constructObject(...))) outside "
-                        "RefCounted.owned(...): the constructing +1 is owned"
-                    )
-            if path.stem in refcounted and path.parts[-2] == "api" and "internal fun wrap(handle:" in text:
-                problems.append(
-                    f"{rel}: declares `internal fun wrap(handle: ...)` for a RefCounted class; declare "
-                    "wrapOwned and wrapBorrowed"
-                )
+            problems.extend(_ownership_problems_in(str(path.relative_to(ROOT)), path.stem, text, refcounted))
+    problems.extend(_positive_return_problems(roots, refcounted))
     return problems
 
 

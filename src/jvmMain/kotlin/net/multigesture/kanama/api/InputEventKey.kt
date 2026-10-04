@@ -286,7 +286,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
 
         @JvmStatic
         fun from(value: GodotObject): InputEventKey? =
-            if (value.isClass("InputEventKey")) InputEventKey(value.handle) else null
+            if (value.isClass("InputEventKey")) RefCounted.retained(InputEventKey(value.handle)) else null
 
         @JvmStatic
         fun create(): InputEventKey =

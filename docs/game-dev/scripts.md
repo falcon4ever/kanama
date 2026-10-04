@@ -543,6 +543,13 @@ That is also the rule for your own threads: **hand results back to the main
 thread** with `MainThread.post` or a script coroutine before touching a
 node (see [Kotlin Style → Coroutines](style-guide.md#coroutines)).
 
+A `RefCounted` wrapper you get on another thread is still yours, but it gets
+**no garbage-collector fallback**: a worker can still be inside a call through
+it when the main thread would release it, so Kanama only registers the fallback
+for wrappers made on the main thread. Close a worker's wrappers (`use { }`) or
+hand them to the main thread first; a forgotten one is never released
+([Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release)).
+
 Kanama performs **no thread-affinity checks**. A wrapper method called from a
 `Dispatchers.Default` coroutine or a `Thread` you started ptrcalls the engine
 from that thread, exactly as a GDScript `Thread` would; whether that is safe is

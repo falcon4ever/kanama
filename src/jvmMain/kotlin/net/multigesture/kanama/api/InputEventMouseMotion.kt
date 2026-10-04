@@ -250,7 +250,7 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
 
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseMotion? =
-            if (value.isClass("InputEventMouseMotion")) InputEventMouseMotion(value.handle) else null
+            if (value.isClass("InputEventMouseMotion")) RefCounted.retained(InputEventMouseMotion(value.handle)) else null
 
         internal fun wrapOwned(handle: MemorySegment): InputEventMouseMotion? =
             if (handle.address() == 0L) null else RefCounted.owned(InputEventMouseMotion(GodotHandle(handle)))

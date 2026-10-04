@@ -133,7 +133,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
         // Downcast a Resource to Material (null if not).
         @JvmStatic
         fun fromResource(value: Resource?): Material? =
-            value?.takeIf { it.isClass("Material") }?.let { Material(it.handle) }
+            value?.takeIf { it.isClass("Material") }?.let { RefCounted.retained(Material(it.handle)) }
 
         private const val SET_NEXT_PASS_HASH = 2757459619L
         private val setNextPassBind by lazy {

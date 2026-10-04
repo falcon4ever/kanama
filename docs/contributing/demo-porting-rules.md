@@ -134,6 +134,10 @@ owner.setScript(script)
 val map = owner.kotlinScriptInstance<DataMap>() ?: error("missing DataMap")
 ```
 
+Keeping only `map` is enough: a script object that extends `KanamaScript` keeps
+its resource alive (task 132), so `owner` may be closed or dropped once the
+script object is in hand.
+
 Treat Kanama `.kt` scripts as trusted executable project code. This is the
 same security model as GDScript, C#, native GDExtensions, and editor plugins;
 do not run untrusted Godot projects with their addons/extensions enabled.

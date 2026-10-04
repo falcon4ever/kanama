@@ -370,7 +370,26 @@ The wrapper convention on desktop/Android:
   forced collection, before Godot's leak report. `close()` cancels the cleanup
   first, so a `+1` is released once; a release whose object is already gone
   (instance id no longer resolves) is skipped. `retainForKotlinWrapper()` makes
-  a borrowed wrapper owned, fallback included.
+  a borrowed wrapper owned, fallback included. `close()` disarms atomically
+  (`PendingRelease.tryDisarm`): if the cleanup won the race, close() leaves the
+  release to the drain. A wrapper built off the engine main thread is owned but
+  registers no fallback. `close()` on a wrapper that holds no reference of its
+  own (a borrowed view) releases nothing and warns in debug builds; the `from*`
+  downcasts take their own `+1` (`RefCounted.retained`).
+- **A script object keeps its RefCounted owner alive** (task 132 blocker 1,
+  `ScriptOwnerLinks.kt` on desktop/Android, `IosScriptInstance` in
+  `KanamaIosRuntime.kt` on iOS): C#'s `CSharpInstance` model. The instance of a
+  `KanamaScript` object holds a `+1` on its owner; the runtime's link to the
+  instance (`ObjectRegistry`, `ScriptBridge`'s owner maps) is strong while the
+  owner's count is above 1 and weak at 1, switched in `refcount_incremented` /
+  `refcount_decremented` (which now returns false at count 1). The script object
+  anchors the instance (`KanamaScript.kanamaInstanceAnchor`) and carries the
+  cleanup that queues the owner's release once it is unreachable. A plain script
+  class has no anchor and takes no `+1`; instead `OwnedReleases.drain` parks the
+  GC releases of its owner's owned wrappers until the script is detached (or
+  shutdown), the lifetime it had before the fallback. A collected instance whose owner the engine
+  references again before the release ran is rebuilt from the script factory,
+  as C#'s `_internal_new_managed` does.
 - **Self-returning fluent methods collapse**: when the returned address equals
   the receiver's handle, the generated method releases the duplicate reference
   and returns `this` instead of minting a second owning wrapper (chained calls

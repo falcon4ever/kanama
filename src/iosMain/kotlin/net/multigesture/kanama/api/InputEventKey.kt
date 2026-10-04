@@ -152,7 +152,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
 
         // Downcast a GodotObject to InputEventKey (null if not).
         fun from(value: GodotObject): InputEventKey? =
-            if (value.isClass("InputEventKey")) InputEventKey(value.handle) else null
+            if (value.isClass("InputEventKey")) RefCounted.retained(InputEventKey(value.handle)) else null
 
         private const val SET_PRESSED_HASH = 2586408642L
         private val setPressedBind by lazy {

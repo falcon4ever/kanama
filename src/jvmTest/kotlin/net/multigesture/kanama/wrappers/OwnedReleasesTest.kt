@@ -116,6 +116,36 @@ class OwnedReleasesTest {
   }
 
   @Test
+  fun closeOnABorrowedViewReleasesNothing() {
+    val view = RefCounted.wrapBorrowed(segment(0x7000))!!
+    assertFalse(view.isOwned)
+    view.close() // returns before any engine call: nothing to release
+    assertFalse(view.isOwned)
+  }
+
+  @Test
+  fun aCleanupThatAlreadyFiredMakesCloseSkipItsRelease() {
+    val wrapper = RefCounted.wrapOwned(segment(0x7100))!!
+    // The fallback won the race (the cleaner thread ran first): close() must not release too.
+    assertTrue(OwnedReleases.firePendingForTest(wrapper))
+    assertFalse(wrapper.cancelOwnedRelease())
+    OwnedReleases.drain()
+    assertEquals(listOf(0x7100L), released)
+  }
+
+  @Test
+  fun aWrapperMadeOffTheMainThreadIsOwnedButRegistersNoFallback() {
+    OwnedReleaseCleaner.noteMainThread()
+    var offThread: RefCounted? = null
+    val worker = Thread { offThread = RefCounted.wrapOwned(segment(0x7200)) }
+    worker.start()
+    worker.join()
+    assertTrue(offThread!!.isOwned)
+    assertFalse(offThread!!.hasPendingRelease)
+    assertTrue(RefCounted.wrapOwned(segment(0x7300))!!.hasPendingRelease)
+  }
+
+  @Test
   fun theFallbackCanBeTurnedOffForMeasurement() {
     assertEquals("off (KANAMA_GC_RELEASES=0)", OwnedReleases.configure("0", logSetting = false))
     assertFalse(RefCounted.wrapOwned(segment(0x5000))!!.hasPendingRelease)

@@ -657,7 +657,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         // Downcast a GodotObject to Mesh (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): Mesh? =
-            if (value.isClass("Mesh")) Mesh(value.handle) else null
+            if (value.isClass("Mesh")) RefCounted.retained(Mesh(value.handle)) else null
 
         private const val SET_LIGHTMAP_SIZE_HINT_HASH = 1130785943L
         private val setLightmapSizeHintBind by lazy {

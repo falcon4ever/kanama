@@ -171,6 +171,10 @@ extern int32_t kanama_ios_runtime_script_instance_set_property_value(
     int32_t length
 );
 extern void kanama_ios_runtime_script_instance_free(int64_t instance_handle);
+// Task 132: a script instance on a RefCounted owner holds a +1 on it and switches its link to the
+// Kotlin script object strong (count > 1) / weak (count 1), as C#'s CSharpInstance does.
+extern void kanama_ios_runtime_script_instance_refcount_incremented(int64_t instance_handle);
+extern int32_t kanama_ios_runtime_script_instance_refcount_decremented(int64_t instance_handle);
 extern void kanama_ios_runtime_dispatch_callable(
     int64_t callback_id,
     int32_t argument_count,
@@ -5821,6 +5825,44 @@ int64_t kanama_ios_godot_object_get_instance_id(int64_t object) {
 // output as `SCRIPT ERROR: <message>` / `at: <function> (<file>:<line>)`, and the debugger's Errors
 // tab, like a GDScript error. NULL strings are sent as "" (Godot formats them with %s). Returns 1
 // when the error reached the engine, 0 when the entry point did not resolve.
+// Task 132: the `print` / `push_warning` utility functions (both vararg, hash 2648703342), resolved
+// on first use.
+static GDExtensionPtrUtilityFunction g_utility_print = NULL;
+static GDExtensionPtrUtilityFunction g_utility_push_warning = NULL;
+
+int32_t kanama_ios_godot_print(const char *message, int32_t warning) {
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return 0;
+    }
+    GDExtensionPtrUtilityFunction *slot = warning != 0 ? &g_utility_push_warning : &g_utility_print;
+    if (*slot == NULL) {
+        GDExtensionInterfaceVariantGetPtrUtilityFunction get_utility =
+            (GDExtensionInterfaceVariantGetPtrUtilityFunction)kanama_ios_lookup("variant_get_ptr_utility_function");
+        if (get_utility == NULL) {
+            kanama_ios_fault(__func__, "api-unresolved", "variant_get_ptr_utility_function");
+            return 0;
+        }
+        uint64_t name_storage = 0;
+        kanama_ios_init_string_name(&name_storage, warning != 0 ? "push_warning" : "print");
+        *slot = get_utility((GDExtensionConstStringNamePtr)&name_storage, 2648703342);
+        kanama_ios_destroy_string_name(&name_storage);
+        if (*slot == NULL) {
+            kanama_ios_fault(__func__, "null-bind", warning != 0 ? "push_warning" : "print");
+            return 0;
+        }
+    }
+    uint64_t text_storage = 0;
+    uint64_t variant_storage[3] = {0, 0, 0};
+    kanama_ios_init_string(&text_storage, message != NULL ? message : "");
+    g_variant_from_string((GDExtensionUninitializedVariantPtr)variant_storage, (GDExtensionTypePtr)&text_storage);
+    const GDExtensionConstTypePtr args[1] = { (GDExtensionConstTypePtr)variant_storage };
+    (*slot)(NULL, args, 1);
+    g_variant_destroy((GDExtensionVariantPtr)variant_storage);
+    kanama_ios_destroy_string(&text_storage);
+    return 1;
+}
+
 int32_t kanama_ios_report_script_error(
     const char *description,
     const char *message,
@@ -9845,15 +9887,6 @@ static GDExtensionBool kanama_ios_script_instance_false_1(GDExtensionScriptInsta
     return 0;
 }
 
-// refcount_decremented_func contract (script_instance.h): "return true if it can die".
-// The Kanama script instance holds no reference on its owner, so the last
-// unreference() must be allowed to destroy it; returning false makes every
-// scripted RefCounted immortal (die = die && script_ret in RefCounted::unreference).
-static GDExtensionBool kanama_ios_script_instance_true_1(GDExtensionScriptInstanceDataPtr data) {
-    (void)data;
-    return 1;
-}
-
 static GDExtensionBool kanama_ios_script_instance_false_2(
     GDExtensionScriptInstanceDataPtr data,
     GDExtensionConstStringNamePtr name
@@ -10613,7 +10646,22 @@ static void kanama_ios_script_instance_to_string(
 }
 
 static void kanama_ios_script_instance_refcount_incremented(GDExtensionScriptInstanceDataPtr data) {
-    (void)data;
+    KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
+    if (instance == NULL || instance->runtime_handle == 0) {
+        return;
+    }
+    kanama_ios_runtime_script_instance_refcount_incremented(instance->runtime_handle);
+}
+
+// refcount_decremented_func contract (script_instance.h): "return true if it can die". The
+// Kotlin runtime answers: true at count 0; false at 1 while the instance holds its own +1 on a
+// RefCounted owner (the owner dies when the GC fallback releases it, task 132).
+static GDExtensionBool kanama_ios_script_instance_refcount_decremented(GDExtensionScriptInstanceDataPtr data) {
+    KanamaIosScriptInstance *instance = kanama_ios_script_instance_data(data);
+    if (instance == NULL || instance->runtime_handle == 0) {
+        return 1;
+    }
+    return kanama_ios_runtime_script_instance_refcount_decremented(instance->runtime_handle) != 0 ? 1 : 0;
 }
 
 static GDExtensionObjectPtr kanama_ios_script_instance_get_script(GDExtensionScriptInstanceDataPtr data) {
@@ -11144,7 +11192,7 @@ static GDExtensionScriptInstanceInfo3 g_script_instance_info = {
     kanama_ios_script_instance_notification,
     kanama_ios_script_instance_to_string,
     kanama_ios_script_instance_refcount_incremented,
-    kanama_ios_script_instance_true_1, /* refcount_decremented: owner may die at zero */
+    kanama_ios_script_instance_refcount_decremented,
     kanama_ios_script_instance_get_script,
     kanama_ios_script_instance_is_placeholder,
     kanama_ios_script_instance_set_property,

@@ -49,7 +49,7 @@ class BoxShape3D internal constructor(handle: GodotHandle) : Shape3D(handle) {
 
         @JvmStatic
         fun fromResource(value: Resource): BoxShape3D? =
-            if (value.isClass("BoxShape3D")) BoxShape3D(value.handle) else null
+            if (value.isClass("BoxShape3D")) RefCounted.retained(BoxShape3D(value.handle)) else null
 
     }
 }

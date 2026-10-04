@@ -3262,15 +3262,18 @@ def render_factory_helpers(class_name: str, refcounted: bool = False) -> str | N
         )
     for downcast in spec.downcasts:
         param = downcast.param_name
+        # A RefCounted downcast takes a +1 of its own (task 132): a view kept in a field keeps the
+        # object alive like any other wrapper you can reach, whatever happens to the source wrapper.
+        view = (lambda h: f"RefCounted.retained({class_name}({h}))") if refcounted else (lambda h: f"{class_name}({h})")
         if downcast.nullable:
             body = [
                 f"        fun {downcast.name}({param}: {downcast.param_type}?): {class_name}? =",
-                f'            {param}?.takeIf {{ it.isClass("{class_name}") }}?.let {{ {class_name}(it.handle) }}',
+                f'            {param}?.takeIf {{ it.isClass("{class_name}") }}?.let {{ {view("it.handle")} }}',
             ]
         else:
             body = [
                 f"        fun {downcast.name}({param}: {downcast.param_type}): {class_name}? =",
-                f'            if ({param}.isClass("{class_name}")) {class_name}({param}.handle) else null',
+                f'            if ({param}.isClass("{class_name}")) {view(f"{param}.handle")} else null',
             ]
         blocks.append(
             "\n".join(

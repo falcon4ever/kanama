@@ -2447,7 +2447,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         // Downcast a Resource to ParticleProcessMaterial (null if not).
         @JvmStatic
         fun fromResource(value: Resource): ParticleProcessMaterial? =
-            if (value.isClass("ParticleProcessMaterial")) ParticleProcessMaterial(value.handle) else null
+            if (value.isClass("ParticleProcessMaterial")) RefCounted.retained(ParticleProcessMaterial(value.handle)) else null
 
         private const val SET_DIRECTION_HASH = 3460891852L
         private val setDirectionBind by lazy {

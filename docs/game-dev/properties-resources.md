@@ -345,7 +345,10 @@ next frame, never on the collector's thread). Closing is therefore about
 *when*: `use { }` releases now, the collector releases eventually. The project
 setting `kanama/debug/log_gc_releases` names every creation site the collector
 had to clean up after. See
-[Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release).
+[Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release). Holding a
+custom resource's script object (`kotlinScriptInstance<T>()`,
+`newScriptInstance<T>().instance`) keeps the resource itself alive, as in GDScript
+([details](godot-api.md#a-script-object-keeps-its-resource-alive)).
 
 The **Web (Kotlin/Wasm)** backend reaches Godot over a JavaScript *handle bridge*
 rather than an FFI pointer boundary: `close()`/`use { }` emits a release-handle

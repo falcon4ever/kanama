@@ -190,7 +190,7 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         // Downcast a Resource to PlaneMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): PlaneMesh? =
-            if (value.isClass("PlaneMesh")) PlaneMesh(value.handle) else null
+            if (value.isClass("PlaneMesh")) RefCounted.retained(PlaneMesh(value.handle)) else null
 
         private const val SET_SIZE_HASH = 743155724L
         private val setSizeBind by lazy {

@@ -3089,7 +3089,7 @@ actual object ObjectCalls {
         for (i in next until count.toInt()) {
           val handle = buf[i]
           if (handle != 0L && IosGodot.objectGetInstanceId(handle) < 0L) {
-            runCatching { RefCounted(GodotHandle(MemorySegment.ofAddress(handle))).close() }
+            runCatching { RefCounted.releaseHandle(MemorySegment.ofAddress(handle)) }
           }
         }
         throw t
@@ -39167,6 +39167,25 @@ private const val SELFTEST_EXPECTED_FAULTS = 7
 // only as human-readable markers in the log; nothing parses them, and nothing may rely on where the
 // FAULT-PROBE lines appear relative to them. What proves that the probes and nothing else fired is
 // the count: `faults=7 expected=7` on both summary lines.
+// Task 132 owner-link row: the only reference the row keeps to the script object.
+private object OwnerLinkHolder {
+  var held: Any? = null
+}
+
+// A resource with the owner-link probe script; its owning wrapper is closed and only the script
+// object is kept. Returns (instance handle, owner instance id).
+private fun ownerLinkKeepOnlyScriptObject(script: Long): Pair<Long, Long> {
+  val owner = net.multigesture.kanama.api.Resource.create()
+  val ownerAddress = owner.handle.segment.address()
+  val instance = KanamaIosRuntime.createScriptInstance(script, ownerAddress)
+  OwnerLinkHolder.held = net.multigesture.kanama.ios.iosScriptInstanceForOwner(ownerAddress)
+  val ownerId = owner.instanceId
+  owner.close()
+  if (instance != 0L)
+    net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceRefcountDecremented(instance)
+  return instance to ownerId
+}
+
 // Task 132 self-test helpers: each is its own function so no stack slot of the caller keeps a
 // dropped wrapper reachable.
 private fun dropOwnedResources(count: Int): LongArray =
@@ -41402,6 +41421,47 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         FreedObjectChecks.enabled = checksBefore
       }
     } else check("wrapper-equality(two objects constructed)", false)
+  }
+
+  // Task 132 blocker 1: a KanamaScript object keeps its RefCounted owner alive. The City-Builder
+  // pattern at the runtime level: a resource with a KanamaScript instance, its owning wrapper
+  // closed (the engine would call refcount_decremented at count 1: the link goes weak), only the
+  // script object kept -- after a GC and a drain the owner is alive; once the script object is
+  // dropped too, the owner dies. (The shim's refcount callbacks are driven here through their
+  // @CName exports, as Godot calls them for an attached instance.)
+  run {
+    val enabledBefore = OwnedReleases.enabled
+    OwnedReleases.enabled = true
+    try {
+      val script =
+        KanamaIosRuntime.createScriptResource(KanamaIosRuntime.OWNER_LINK_PROBE_SCRIPT_PATH)
+      val (instance, ownerId) = ownerLinkKeepOnlyScriptObject(script)
+      repeat(3) {
+        OwnedReleaseCleaner.collectGarbage(1_000)
+        OwnedReleases.drain()
+      }
+      val aliveWhileHeld = IosGodot.isInstanceIdValid(ownerId)
+      OwnerLinkHolder.held = null
+      repeat(5) {
+        if (!IosGodot.isInstanceIdValid(ownerId)) return@repeat
+        OwnedReleaseCleaner.collectGarbage(1_000)
+        OwnedReleases.drain()
+      }
+      val diesAfterDrop = !IosGodot.isInstanceIdValid(ownerId)
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST owner-link instance=$instance " +
+          "alive_while_held=$aliveWhileHeld dies_after_drop=$diesAfterDrop"
+      )
+      check(
+        "owner-link(a held KanamaScript object keeps its resource alive across GC)",
+        aliveWhileHeld,
+      )
+      check("owner-link(the resource dies once the script object is dropped)", diesAfterDrop)
+      if (instance != 0L) KanamaIosRuntime.freeScriptInstance(instance)
+      KanamaIosRuntime.freeScriptResource(script)
+    } finally {
+      OwnedReleases.enabled = enabledBefore
+    }
   }
 
   // Task 132: a forgotten close() is a late release, not a leak. 1,000 owned Resources dropped
