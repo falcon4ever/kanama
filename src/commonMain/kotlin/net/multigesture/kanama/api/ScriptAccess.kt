@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import net.multigesture.kanama.types.NodePath
 
 // Typed checked casts, script checks, tree accessors and the delegates behind
 // `KanamaScript.node`/`script`/`preload` (task 133). Hand-written, common to desktop, Android and iOS;
@@ -48,54 +49,74 @@ internal object GodotClasses {
   val size: Int
     get() = tokens.size
 
-  fun token(type: KClass<out GodotObject>): GodotClassToken =
+  fun token(type: KClass<out GodotObject>): GodotClassToken = token(type, null)
+
+  /** [token]; [use] (for example `Main.scoreTimer`) is named in the error. */
+  fun token(type: KClass<out GodotObject>, use: String?): GodotClassToken =
     tokens[type]
       ?: throw IllegalArgumentException(
-        "${type.simpleName} is not a Kanama wrapper of a Godot class; checked casts and node<T>() " +
-          "take a generated wrapper (Node, Timer, PackedScene, ...), and script<T>() takes a Kotlin script class"
+        (if (use != null) "$use: " else "") +
+          "${type.simpleName} is not a Kanama wrapper of a Godot class; checked casts, node<T>() and " +
+          "preload<T>() take a generated wrapper (Node, Timer, PackedScene, ...), and script<T>() takes " +
+          "a Kotlin script class"
       )
 
+  /**
+   * Always asks Godot (`Object.is_class`), except for `GodotObject`, which every object is: a wrapper
+   * whose Kotlin class already is a `T` may have been minted unchecked (`Timer(node.handle)`), so its
+   * Kotlin type proves nothing. When it is a `T` and Godot agrees, the same wrapper is returned;
+   * otherwise a new non-owning view.
+   */
   @Suppress("UNCHECKED_CAST")
   fun <T : GodotObject> castOrNull(value: GodotObject, type: KClass<T>): T? {
-    if (type.isInstance(value)) return value as T
+    if (type == GodotObject::class) return value as T
     val token = token(type)
-    return if (value.isClass(token.godotName)) token.wrap(value.handle) as T else null
+    if (!value.isClass(token.godotName)) return null
+    return if (type.isInstance(value)) value as T else token.wrap(value.handle) as T
   }
 
   fun <T : GodotObject> cast(value: GodotObject, type: KClass<T>): T =
     castOrNull(value, type)
-      ?: throw ClassCastException("${describeObject(value)} is not a ${token(type).godotName}")
+      ?: throw ClassCastException(
+        "${describeObject(value)} (${value.getClassName()}) is not a ${token(type).godotName}"
+      )
 
-  fun <T : Node> getNodeAs(owner: Node, path: String, type: KClass<T>): T? =
+  fun <T : Node> getNodeAs(owner: Node, path: NodePath, type: KClass<T>): T? =
     owner.getNodeOrNull(path)?.let { castOrNull(it, type) }
 
-  fun <T : Node> requireNodeAs(owner: Node, path: String, type: KClass<T>): T {
+  fun <T : Node> requireNodeAs(owner: Node, path: NodePath, type: KClass<T>): T {
     val node =
       owner.getNodeOrNull(path)
-        ?: throw IllegalStateException("No node at \"$path\" under ${describeObject(owner)}")
+        ?: throw IllegalStateException("No node at \"${path.path}\" under ${describeObject(owner)}")
     return castOrNull(node, type)
       ?: throw IllegalStateException(
-        "Node \"$path\" under ${describeObject(owner)} is a ${node.getClassName()}, not a ${token(type).godotName}"
+        "Node \"${path.path}\" under ${describeObject(owner)} is a ${node.getClassName()}, not a ${token(type).godotName}"
       )
   }
 
   fun <T : Node> instantiateAs(scene: PackedScene, type: KClass<T>): T {
+    val token = token(type)
     val root = instantiateRoot(scene)
     return castOrNull(root, type)
       ?: run {
         val found = root.getClassName()
         root.queueFree()
         throw IllegalStateException(
-          "${describeScene(scene)} has a $found root, not a ${token(type).godotName}"
+          "${describeScene(scene)} has a $found root, not a ${token.godotName}"
         )
       }
   }
 
+  /**
+   * The Kotlin script of type [type] on a new instance of [scene]. Any other outcome (no script, a
+   * script of another class, or a [type] that is no script class at all) frees the instance and
+   * throws.
+   */
   @Suppress("UNCHECKED_CAST")
   fun <T : Any> instantiateScript(scene: PackedScene, type: KClass<T>): T {
     val root = instantiateRoot(scene)
     val script = ScriptRuntime.scriptInstanceOf(root)
-    if (type.isInstance(script)) return script as T
+    if (script != null && type.isInstance(script)) return script as T
     val found = script?.let { "the script ${it::class.simpleName}" } ?: "no Kotlin script"
     root.queueFree()
     throw IllegalStateException(
@@ -117,16 +138,19 @@ internal object GodotClasses {
 internal fun describeObject(value: GodotObject): String {
   if (!value.isClass("Node")) return value.getClassName()
   val node = value as? Node ?: Node(value.handle)
-  return if (node.isInsideTree()) node.getPath().path
-  else "${node.getClassName()} \"${node.getName()}\" (outside the tree)"
+  return if (node.isInsideTree()) node.getPath().path else describeDetached(node)
 }
+
+/** `Node "Sub"`: a node outside the tree, by class and name. */
+internal fun describeDetached(node: Node): String = "${node.getClassName()} \"${node.getName()}\""
 
 // ── Typed checked casts (F3) ────────────────────────────────────────────────────────────────────
 
 /**
- * This object as a `T` when Godot says it is one (`Object.is_class`), else `null`: GDScript's
- * `x as Camera3D`. The result is another non-owning view of the same object, so a `RefCounted`
- * stays owned by the wrapper you cast from.
+ * This object as a `T` when Godot says it is one (`Object.is_class`, asked every time except for
+ * `T = GodotObject`), else `null`: GDScript's `x as Camera3D`. The result is the same wrapper when
+ * it already is a `T`, else a new non-owning view of the same object. A cast result is never yours
+ * to close: close the original (an owned `RefCounted` return) and only that.
  */
 inline fun <reified T : GodotObject> GodotObject.castOrNull(): T? = GodotClasses.castOrNull(this, T::class)
 
@@ -137,14 +161,23 @@ inline fun <reified T : GodotObject> GodotObject.cast(): T = GodotClasses.cast(t
  * The node at [path] as a `T`, or `null` when the path is missing or the node is another class
  * (GDScript: `get_node_or_null(path) as T`).
  */
-inline fun <reified T : Node> Node.getNodeAs(path: String): T? = GodotClasses.getNodeAs(this, path, T::class)
+inline fun <reified T : Node> Node.getNodeAs(path: String): T? =
+  GodotClasses.getNodeAs(this, NodePath(path), T::class)
+
+/** [getNodeAs] for a [NodePath]. */
+inline fun <reified T : Node> Node.getNodeAs(path: NodePath): T? = GodotClasses.getNodeAs(this, path, T::class)
 
 /**
  * The node at [path] as a `T`; throws an `IllegalStateException` naming the path when it is missing
  * or the class found when it is not a `T` (GDScript: `$Path` into a typed variable). Unlike the
  * older `requireAs(path, ::T)`, the class is checked.
  */
-inline fun <reified T : Node> Node.requireAs(path: String): T = GodotClasses.requireNodeAs(this, path, T::class)
+inline fun <reified T : Node> Node.requireAs(path: String): T =
+  GodotClasses.requireNodeAs(this, NodePath(path), T::class)
+
+/** [requireAs] for a [NodePath]. */
+inline fun <reified T : Node> Node.requireAs(path: NodePath): T =
+  GodotClasses.requireNodeAs(this, path, T::class)
 
 // ── Script checks (F11) ─────────────────────────────────────────────────────────────────────────
 
@@ -164,24 +197,31 @@ inline fun <reified T : Node> PackedScene.instantiateAs(): T = GodotClasses.inst
 
 /**
  * Instantiates the scene and returns the Kotlin script of type [T] on its root (reach the node with
- * the script's `self`). A root without that script is freed and an `IllegalStateException` names
- * what it has.
+ * the script's `self`). A root without that script, with another script, or a [T] that is not a
+ * Kotlin script class at all: the instance is freed and an `IllegalStateException` names what it
+ * has.
  */
 inline fun <reified T : Any> PackedScene.instantiateScript(): T = GodotClasses.instantiateScript(this, T::class)
 
 // ── Tree accessors (F17) ────────────────────────────────────────────────────────────────────────
 
 /**
- * The `SceneTree` this node is in. Throws an `IllegalStateException` when the node is not inside
- * the tree, where GDScript's `get_tree()` fails the same way; `getTree()` is the nullable form.
+ * The `SceneTree` this node is in. Throws an `IllegalStateException` (`Node "Sub" is not inside the
+ * tree`) when the node is not inside the tree, where GDScript's `get_tree()` fails; `getTree()` is
+ * the nullable form. The tree membership is checked first, so Godot logs no error of its own.
  */
 val Node.tree: SceneTree
-  get() = getTree() ?: throw IllegalStateException("${describeObject(this)} is not inside the tree")
+  get() {
+    if (!isInsideTree()) throw IllegalStateException("${describeDetached(this)} is not inside the tree")
+    return getTree() ?: throw IllegalStateException("${describeDetached(this)} is not inside the tree")
+  }
 
-/** The `Viewport` this node is in; throws when the node is not inside the tree (`getViewport()` is nullable). */
+/** The `Viewport` this node is in; throws like [tree] when the node is not inside the tree. */
 val Node.viewport: Viewport
-  get() =
-    getViewport() ?: throw IllegalStateException("${describeObject(this)} is not inside the tree")
+  get() {
+    if (!isInsideTree()) throw IllegalStateException("${describeDetached(this)} is not inside the tree")
+    return getViewport() ?: throw IllegalStateException("${describeDetached(this)} is not inside the tree")
+  }
 
 /** This node's parent; throws when it has none (`getParent()` is the nullable form). */
 val Node.parentNode: Node
@@ -189,64 +229,72 @@ val Node.parentNode: Node
 
 // ── Delegates ───────────────────────────────────────────────────────────────────────────────────
 
-/** `KanamaScript.node`: resolved on the first read after ready, then cached. */
+/**
+ * `KanamaScript.node`: resolved on the first read after ready and cached until the next `_ready`
+ * (the script's ready generation), as GDScript re-runs `@onready` initializers on every `_ready`,
+ * including the one `request_ready()` schedules.
+ */
 internal class NodeDelegate<T : Node>(
   private val script: KanamaScript<*>,
-  private val path: String,
-  private val token: GodotClassToken,
+  private val path: NodePath,
+  private val type: KClass<T>,
 ) : ReadOnlyProperty<Any?, T> {
   private var cached: T? = null
+  private var cachedGeneration = -1
 
   @Suppress("UNCHECKED_CAST")
   override fun getValue(thisRef: Any?, property: KProperty<*>): T {
     cached?.let {
-      return it
+      if (cachedGeneration == script.readyGeneration) return it
     }
-    val owner = readyOwner(script, property, "node(\"$path\")")
+    val use = "${script.scriptName()}.${property.name}"
+    val token = GodotClasses.token(type, use)
+    val owner = readyOwner(script, property, "node(\"${path.path}\")")
     val node =
       owner.getNodeOrNull(path)
-        ?: throw IllegalStateException(
-          "${script.scriptName()}.${property.name}: no node at \"$path\" under ${describeObject(owner)}"
-        )
+        ?: throw IllegalStateException("$use: no node at \"${path.path}\" under ${describeObject(owner)}")
     if (!node.isClass(token.godotName)) {
       throw IllegalStateException(
-        "${script.scriptName()}.${property.name}: node \"$path\" is a ${node.getClassName()}, not a ${token.godotName}"
+        "$use: node \"${path.path}\" is a ${node.getClassName()}, not a ${token.godotName}"
       )
     }
     val typed = token.wrap(node.handle) as T
     cached = typed
+    cachedGeneration = script.readyGeneration
     return typed
   }
 }
 
-/** `KanamaScript.script`: the Kotlin script on the node at a path, resolved like [NodeDelegate]. */
+/** `KanamaScript.script`: the Kotlin script on the node at a path, cached like [NodeDelegate]. */
 internal class ScriptDelegate<T : Any>(
   private val script: KanamaScript<*>,
-  private val path: String,
+  private val path: NodePath,
   private val type: KClass<T>,
 ) : ReadOnlyProperty<Any?, T> {
   private var cached: T? = null
+  private var cachedGeneration = -1
 
   @Suppress("UNCHECKED_CAST")
   override fun getValue(thisRef: Any?, property: KProperty<*>): T {
     cached?.let {
-      return it
+      if (cachedGeneration == script.readyGeneration) return it
     }
-    val owner = readyOwner(script, property, "script(\"$path\")")
+    val owner = readyOwner(script, property, "script(\"${path.path}\")")
     val node =
       owner.getNodeOrNull(path)
         ?: throw IllegalStateException(
-          "${script.scriptName()}.${property.name}: no node at \"$path\" under ${describeObject(owner)}"
+          "${script.scriptName()}.${property.name}: no node at \"${path.path}\" under ${describeObject(owner)}"
         )
     val instance = ScriptRuntime.scriptInstanceOf(node)
-    if (!type.isInstance(instance)) {
+    if (instance == null || !type.isInstance(instance)) {
       val found = instance?.let { "the script ${it::class.simpleName}" } ?: "no Kotlin script"
       throw IllegalStateException(
-        "${script.scriptName()}.${property.name}: node \"$path\" (${node.getClassName()}) has $found, not ${type.simpleName}"
+        "${script.scriptName()}.${property.name}: node \"${path.path}\" (${node.getClassName()}) has $found, not ${type.simpleName}"
       )
     }
     val typed = instance as T
     cached = typed
+    cachedGeneration = script.readyGeneration
     return typed
   }
 }
@@ -265,7 +313,7 @@ private fun readyOwner(script: KanamaScript<*>, property: KProperty<*>, what: St
 /** `KanamaScript.preload`: a typed view of the process-wide [Preloads] entry. */
 internal class PreloadDelegate<T : Resource>(
   private val path: String,
-  private val token: GodotClassToken,
+  private val type: KClass<T>,
 ) : ReadOnlyProperty<Any?, T> {
   private var cached: T? = null
 
@@ -274,6 +322,7 @@ internal class PreloadDelegate<T : Resource>(
     cached?.let {
       return it
     }
+    val token = GodotClasses.token(type, property.name)
     val resource = Preloads.get(path)
     if (!resource.isClass(token.godotName)) {
       throw IllegalStateException(
@@ -288,7 +337,9 @@ internal class PreloadDelegate<T : Resource>(
 
 /**
  * The process-wide preload cache: one owned reference per path, loaded on first use and kept, as a
- * GDScript `preload` constant keeps its resource. [releaseAll] runs at engine shutdown.
+ * GDScript `preload` constant keeps its resource. [releaseAll] runs at engine shutdown. Keyed by the
+ * path string: `res://a.tscn` and its `uid://...` are two entries holding two references to the one
+ * resource Godot's own cache returns for both, which is harmless.
  */
 internal object Preloads {
   private val loaded = HashMap<String, Resource>()

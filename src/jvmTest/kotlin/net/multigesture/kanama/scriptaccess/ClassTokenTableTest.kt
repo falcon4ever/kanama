@@ -90,5 +90,12 @@ class ClassTokenTableTest {
 
     val error = assertFailsWith<IllegalArgumentException> { GodotClasses.token(NotAWrapper::class) }
     assertTrue(error.message!!.contains("NotAWrapper is not a Kanama wrapper"), error.message)
+
+    // A delegate resolves its token on first read and names the property it backs.
+    val named =
+      assertFailsWith<IllegalArgumentException> {
+        GodotClasses.token(NotAWrapper::class, "Main.scoreTimer")
+      }
+    assertTrue(named.message!!.startsWith("Main.scoreTimer: NotAWrapper is not"), named.message)
   }
 }

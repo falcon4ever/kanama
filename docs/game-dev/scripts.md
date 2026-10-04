@@ -420,7 +420,9 @@ private val player by script<Player>("Player")             // the Kotlin script 
 
 The node is looked up on first read and cached, like an `@onready` variable that
 GDScript assigns just before `_ready`. The read must therefore come once the node
-is ready (in `@OnReady` or later). Each delegate checks what it finds and throws an
+is ready (in `@OnReady` or later). The cache lasts until the next `_ready`: after
+`request_ready()` and a re-entry, the next read looks the node up again, as GDScript
+re-runs its `@onready` initializers. Every lookup also takes a `NodePath`. Each delegate checks what it finds and throws an
 `IllegalStateException` that names the property:
 
 - read before ready: `Main.scoreTimer: node("ScoreTimer") was read before /root/Main was ready`;
@@ -445,9 +447,12 @@ compile; they do not check the class, so prefer the typed forms.
 | `if body is Player:` | `if (body.isScript<Player>())` |
 | `var p := body as Player` | `val p = body.asScript<Player>()` |
 
-`castOrNull` and `cast` ask Godot (`Object.is_class`) once and return another
-non-owning view of the same object, so a `RefCounted` stays owned by the wrapper
-you cast from. They take a Kanama wrapper class (`Node3D`, `InputEventKey`,
+`castOrNull` and `cast` ask Godot (`Object.is_class`) every time, even when the
+wrapper's Kotlin class already matches (a wrapper minted with `Timer(node.handle)`
+proves nothing); only a cast to `GodotObject` skips the question. They return the
+same wrapper when it already is a `T`, else a new non-owning view of the same
+object. A cast result is never yours to close: close the original (the owned
+`RefCounted` return you cast from) and only that. They take a Kanama wrapper class (`Node3D`, `InputEventKey`,
 `PackedScene`, ...); `isScript` / `asScript` take a Kotlin script class.
 Replace hand-written `Node3D(other.handle)` casts with them: an unchecked one
 calls `Node3D` methods on whatever the object really is.
@@ -467,15 +472,18 @@ fun shoot() {
 `preload` loads the resource on first read and keeps it for the rest of the
 process, shared by every script that preloads the same path, as a GDScript
 `preload` constant does; do not `close()` it. A missing file or a resource of
-another class throws. `instantiateAs<T>()` and `instantiateScript<T>()` free the
+another class throws. Give an absolute `res://` or `uid://` path. The cache is keyed
+by the path text, so preloading one resource by both its `res://` path and its
+`uid://` holds it twice; that is harmless, it is the same object. `instantiateAs<T>()` and `instantiateScript<T>()` free the
 instance and throw when its root is not what you asked for.
 
 ## Tree Accessors
 
 `self.tree`, `self.viewport` and `self.parentNode` are the non-null forms of
 `getTree()`, `getViewport()` and `getParent()`: they throw an
-`IllegalStateException` when the node is not inside the tree (or has no parent),
-where GDScript's `get_tree()` fails the same way.
+`IllegalStateException` (`Node "Sub" is not inside the tree`, or `... has no
+parent`) where GDScript's `get_tree()` fails. They check the tree membership
+first, so Godot logs no error of its own.
 
 ```kotlin
 self.tree.callGroup("mobs", "queue_free")      // was requireNotNull(self.getTree())
@@ -506,8 +514,10 @@ fun showGameOver() {
 The scope runs on the main thread and is cancelled when the script's Godot
 object is freed, so a coroutine never touches a freed node. Leaving the tree does
 not cancel it (GDScript does not either); `cancelCoroutines()` does. `wait` uses a
-`SceneTree` timer, so it pauses with the tree; on Web it is the frame scheduler's
-delay. `scriptScope` is the scope itself, for other `kotlinx.coroutines` builders.
+`SceneTree` timer with GDScript's `create_timer` defaults: it keeps running while the
+tree is paused and follows `Engine.time_scale`. `wait(1.0, processAlways = false)`
+pauses with the game, and `ignoreTimeScale = true` ignores the time scale. On Web it
+is the frame scheduler's delay (the defaults only). `scriptScope` is the scope itself, for other `kotlinx.coroutines` builders.
 See [Kotlin Style → Coroutines](style-guide.md#coroutines).
 
 **Web.** The Web backend has `launch`, `wait`, `nextFrame`, `isScript`,

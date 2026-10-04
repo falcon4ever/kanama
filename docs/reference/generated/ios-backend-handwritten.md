@@ -33,7 +33,7 @@ _Intentionally bespoke — not generatable from extension_api.json; correct as-i
 | `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:848` | [glue] thin cinterop facade over the C shim helpers used by the bespoke |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt:9` | [platform] MainThread.post/runOnMainThread run inline (Kotlin/Native scripts already run on the engine main thread); the frame queues are pumped by KanamaIosRuntime.frame(), not a JVM executor. |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ProjectSettings.kt:6` | [glue] ProjectSettings singleton. Not retired to the generated wrapper: |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt:5` | [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt:6` | [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime. |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt:5` | [platform] iOS actual of the script-authoring seam (ScriptRuntime.expect.kt, task 133): the runtime's script-instance table, the typed-loader ResourceLoader and Engine singletons. |
 
 ## SUGAR

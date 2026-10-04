@@ -1,11 +1,13 @@
 package net.multigesture.kanama.api
 
 import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
+import net.multigesture.kanama.types.NodePath
 
 /**
  * Base class for attachable scripts that want a typed wrapper for their own Godot object.
@@ -87,15 +89,17 @@ abstract class KanamaScript<Self : Any>(
   fun launch(block: suspend CoroutineScope.() -> Unit): Job = scriptScope.launch(block = block)
 
   /**
-   * Suspends for [seconds] of scene-tree time: a `SceneTree` timer, as GDScript's
-   * `await get_tree().create_timer(seconds).timeout` (it pauses with the tree and follows
-   * `Engine.time_scale`). The script's node must be inside the tree.
+   * Suspends for [seconds] on a `SceneTree` timer, as GDScript's
+   * `await get_tree().create_timer(seconds).timeout`, with the same defaults: the timer keeps
+   * running while the tree is paused ([processAlways] `= true`; pass `false` for a wait that pauses
+   * with the game) and follows `Engine.time_scale` ([ignoreTimeScale] `= false`). The script's node
+   * must be inside the tree.
    */
-  suspend fun wait(seconds: Double) {
+  suspend fun wait(seconds: Double, processAlways: Boolean = true, ignoreTimeScale: Boolean = false) {
     val node = ownerNode("wait")
-    node.tree.createTimer(seconds).use { timer ->
-      timer.signal(SceneTreeTimer.Signals.timeout).await(node)
-    }
+    node.tree
+      .createTimer(seconds, processAlways = processAlways, ignoreTimeScale = ignoreTimeScale)
+      .use { timer -> timer.signal(SceneTreeTimer.Signals.timeout).await(node) }
   }
 
   /** Suspends until the next engine frame (GDScript: `await get_tree().process_frame`). */
@@ -117,51 +121,77 @@ abstract class KanamaScript<Self : Any>(
     scopeOrNull?.cancel()
   }
 
+  /**
+   * Counts the `_ready` cycles of this script's node; the [node] and [script] delegates re-resolve
+   * when it changes, as GDScript re-runs its `@onready` initializers on every `_ready` (including
+   * the one `request_ready()` schedules).
+   */
+  internal var readyGeneration = 0
+    private set
+
+  /**
+   * Desktop and Android, on `NOTIFICATION_ENTER_TREE` (before `_ready`): a node that is not ready
+   * yet is about to run `_ready`, so a new ready cycle starts.
+   */
+  internal fun onEnterTree() {
+    if (!ownerNode("ready").isNodeReady()) readyGeneration++
+  }
+
+  /** iOS, just before the runtime dispatches `_ready`: a new ready cycle starts. */
+  internal fun onReadyCycle() {
+    readyGeneration++
+  }
+
   // ── Node, script and resource access ────────────────────────────────────────────────────────
 
   /**
    * The node at [path] relative to this script's node, as a `T`: GDScript's
    * `@onready var timer: Timer = $ScoreTimer`.
    *
-   * Resolved on first read, which must come once the node is ready (in `@OnReady` or later), then
-   * cached. A read before ready, a missing node or a node of another class throws an
-   * `IllegalStateException` naming the property, the path and the class found.
+   * Resolved on first read, which must come once the node is ready (in `@OnReady` or later), and
+   * cached until the next `_ready` (GDScript re-runs `@onready` on every `_ready`, including one
+   * `request_ready()` schedules). A read before ready, a missing node or a node of another class
+   * throws an `IllegalStateException` naming the property, the path and the class found.
    */
   inline fun <reified T : Node> node(path: String): ReadOnlyProperty<Any?, T> =
-    nodeDelegate(path, GodotClasses.token(T::class))
+    nodeDelegate(NodePath(path), T::class)
+
+  /** [node] for a [NodePath]. */
+  inline fun <reified T : Node> node(path: NodePath): ReadOnlyProperty<Any?, T> =
+    nodeDelegate(path, T::class)
 
   /**
    * The Kotlin script of type [T] attached to the node at [path] (GDScript:
-   * `@onready var player: Player = $Player`, where `Player` is a script class). Resolved like
-   * [node]; a node without a Kotlin script, or with another one, throws.
+   * `@onready var player: Player = $Player`, where `Player` is a script class). Resolved and cached
+   * like [node]; a node without a Kotlin script, or with another one, throws.
    */
   inline fun <reified T : Any> script(path: String): ReadOnlyProperty<Any?, T> =
+    scriptDelegate(NodePath(path), T::class)
+
+  /** [script] for a [NodePath]. */
+  inline fun <reified T : Any> script(path: NodePath): ReadOnlyProperty<Any?, T> =
     scriptDelegate(path, T::class)
 
   /**
    * The resource at [path] as a `T`, loaded once per process and shared by every script that
-   * preloads it, as GDScript's `const BULLET = preload("res://bullet.tscn")`. Loaded on first read;
-   * a missing file or another resource class throws. The resource stays loaded until the engine
-   * shuts down: do not `close()` it.
+   * preloads it, as GDScript's `const BULLET = preload("res://bullet.tscn")`. Give an absolute
+   * `res://` or `uid://` path. Loaded on first read; a missing file or another resource class
+   * throws. The resource stays loaded until the engine shuts down: do not `close()` it.
    */
   inline fun <reified T : Resource> preload(path: String): ReadOnlyProperty<Any?, T> =
-    preloadDelegate(path, GodotClasses.token(T::class))
+    preloadDelegate(path, T::class)
 
   @PublishedApi
-  internal fun <T : Node> nodeDelegate(path: String, token: GodotClassToken): ReadOnlyProperty<Any?, T> =
-    NodeDelegate(this, path, token)
+  internal fun <T : Node> nodeDelegate(path: NodePath, type: KClass<T>): ReadOnlyProperty<Any?, T> =
+    NodeDelegate(this, path, type)
 
   @PublishedApi
-  internal fun <T : Any> scriptDelegate(
-    path: String,
-    type: kotlin.reflect.KClass<T>,
-  ): ReadOnlyProperty<Any?, T> = ScriptDelegate(this, path, type)
+  internal fun <T : Any> scriptDelegate(path: NodePath, type: KClass<T>): ReadOnlyProperty<Any?, T> =
+    ScriptDelegate(this, path, type)
 
   @PublishedApi
-  internal fun <T : Resource> preloadDelegate(
-    path: String,
-    token: GodotClassToken,
-  ): ReadOnlyProperty<Any?, T> = PreloadDelegate(path, token)
+  internal fun <T : Resource> preloadDelegate(path: String, type: KClass<T>): ReadOnlyProperty<Any?, T> =
+    PreloadDelegate(path, type)
 
   private var ownerNodeOrNull: Node? = null
 

@@ -1042,24 +1042,18 @@ SHARED_MEMBER_SECTIONS: dict[str, str] = {
 
     /**
      * Returns the node at `path` wrapped as `T`, or throws a descriptive error
-     * if the node is missing.
+     * if the node is missing. The class is NOT checked: `wrapper` re-types
+     * whatever node is there.
      *
-     * This is the common Kanama replacement for GDScript's required
-     * `get_node(path)` calls:
-     *
-     * ```
-     * var mob_spawn_location = get_node(^"SpawnPath/MobSpawnLocation")
-     * ```
-     *
-     * becomes:
+     * Prefer the checked forms (task 133): `self.requireAs<PathFollow2D>(path)`
+     * (throws when the node is missing or another class), `self.getNodeAs<T>(path)`
+     * (null instead), or a `node<T>(path)` delegate in a `KanamaScript`:
      *
      * ```
-     * val mobSpawnLocation = self.requireAs("SpawnPath/MobSpawnLocation", ::PathFollow2D)
+     * val mobSpawnLocation = self.requireAs<PathFollow2D>("SpawnPath/MobSpawnLocation")
      * ```
      *
-     * The returned wrapper is non-owning; Godot still owns the node. Use this
-     * when the scene requires the child to exist. Use [getAsOrNull] when a
-     * missing child is valid.
+     * The returned wrapper is non-owning; Godot still owns the node.
      */
     fun <T : Node> requireAs(
         path: String,

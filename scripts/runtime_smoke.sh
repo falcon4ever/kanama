@@ -394,6 +394,9 @@ check "unregistered [0-9]+ extension class\\(es\\)"
 # task 133 -- script authoring like GDScript (script_access_smoke.tscn)
 check "ScriptAccessSmoke sync before_ready=true node=true wrong_type=true missing=true script=true no_script=true is_script=true as_script=true cast=true require_as=true preload=true preload_wrong=true instantiate=true tree=true orphan_tree=true"
 check "ScriptAccessSmoke async wait=true next_frame=true freed_cancelled=true"
+check "ScriptAccessSmoke reready cached_until_ready=true re_resolved=true ready_count=2"
+# the tree accessors check tree membership first: no engine error of their own
+check_absent 'Parameter "data\.tree" is null'
 check_absent "Resource still in use: res://script_access_child\\.tscn"
 check_absent "Orphan StringName"
 check_absent "unclaimed string names"

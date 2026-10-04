@@ -49,11 +49,15 @@ accessors now and the rest in a follow-up (see "Web" below).
 - **Node and script delegates** (GDScript `@onready var timer: Timer = $ScoreTimer`):
   `private val scoreTimer by node<Timer>("ScoreTimer")` and
   `private val player by script<Player>("Player")`. Looked up on the first read after ready and
-  cached; a read before ready, a missing node, a node of another class or a node without that Kotlin
-  script throws an `IllegalStateException` naming the property, the path and what was found.
+  cached until the next `_ready` (GDScript re-runs `@onready` on every `_ready`, including after
+  `request_ready()`); a read before ready, a missing node, a node of another class or a node without
+  that Kotlin script throws an `IllegalStateException` naming the property, the path and what was
+  found.
 - **Checked casts**: `x.castOrNull<Camera3D>()` (GDScript `x as Camera3D`), `x.cast<Camera3D>()`
   (throws `ClassCastException`), `node.requireAs<Timer>(path)` and `node.getNodeAs<Timer>(path)`.
-  One `Object.is_class` call; the result is a non-owning view of the same object. They are backed by
+  One `Object.is_class` call, made even when the wrapper's Kotlin class already matches; the result
+  is the same wrapper or a new non-owning view of the object, never yours to close (close the
+  original). `NodePath` overloads exist for `requireAs`, `getNodeAs`, `node` and `script`. They are backed by
   generated class-token tables (`GodotClasses.kt`, `PlatformGodotClasses.kt`, from
   `scripts/generate_api_wrapper.py --write-tree`) built from class literals and constructor calls,
   so they need no reflection and survive R8. Size: the two desktop table classes are 54.6 KB of
@@ -65,15 +69,18 @@ accessors now and the rest in a follow-up (see "Web" below).
   `body.asScript<Player>()`.
 - **Await**: every `KanamaScript` has a coroutine scope on the main thread that the free path
   cancels: `launch { wait(1.0); nextFrame(); ... }`, `scriptScope` for other builders,
-  `cancelCoroutines()`. `wait(seconds)` is a `SceneTree` timer (GDScript
-  `await get_tree().create_timer(seconds).timeout`), `nextFrame()` is
+  `cancelCoroutines()`. `wait(seconds, processAlways = true, ignoreTimeScale = false)` is a
+  `SceneTree` timer with GDScript's `create_timer` defaults (it keeps running while the tree is
+  paused; `processAlways = false` pauses with the game), `nextFrame()` is
   `await get_tree().process_frame`.
-- **Preload**: `private val bullet by preload<PackedScene>("res://bullet.tscn")` loads once per
-  process and keeps the resource until shutdown (GDScript `preload` constant semantics);
+- **Preload**: `private val bullet by preload<PackedScene>("res://bullet.tscn")` (an absolute
+  `res://` or `uid://` path) loads once per process and keeps the resource until shutdown (GDScript
+  `preload` constant semantics);
   `scene.instantiateAs<RigidBody2D>()` and `scene.instantiateScript<Coin>()` check the root and free
   it on a mismatch.
-- **Tree accessors**: `self.tree`, `self.viewport` and `self.parentNode` are non-null and throw when
-  the node is not inside the tree (or has no parent), as GDScript's `get_tree()` fails.
+- **Tree accessors**: `self.tree`, `self.viewport` and `self.parentNode` are non-null and throw
+  (`Node "Sub" is not inside the tree`) when the node is not inside the tree (or has no parent), as
+  GDScript's `get_tree()` fails.
 - Proof: `ClassTokenTableTest`, `KanamaScriptScopeTest`, `ScriptScopeFreePathTest`, the
   `script_access_smoke.tscn` rows of `scripts/runtime_smoke.sh` and iOS self-test rows.
 - **Web**: `launch`, `wait` (the frame scheduler's delay), `nextFrame`, `cancelCoroutines`,

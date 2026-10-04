@@ -782,11 +782,23 @@ object ScriptBridge {
   // --- Notification ---
 
   @JvmStatic
-  fun siNotification(_data: MemorySegment, _what: Int, _reversed: Byte) {
+  fun siNotification(data: MemorySegment, what: Int, _reversed: Byte) {
     // Processing is enabled once when the script instance is created. Re-enabling it from
     // ENTER_TREE or READY notifications would override a script's setProcess(false) or
     // setPhysicsProcess(false), including authority-gated multiplayer input scripts.
+    //
+    // ENTER_TREE of a node that is not ready yet means `_ready` follows: a new ready cycle, after
+    // which the KanamaScript node/script delegates re-resolve (task 133; GDScript re-runs
+    // @onready).
+    // READY itself reaches the script instance only after `_ready` ran, which is too late.
+    if (what == NOTIFICATION_ENTER_TREE) {
+      val script = si(data)?.kotlinObject as? net.multigesture.kanama.api.KanamaScript<*> ?: return
+      runCatching { script.onEnterTree() }
+        .onFailure { ScriptErrors.report(it, "${scriptLabel(si(data))}._enter_tree ready cycle") }
+    }
   }
+
+  private const val NOTIFICATION_ENTER_TREE = 10
 
   // --- Method arg count ---
 

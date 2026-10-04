@@ -155,6 +155,13 @@ internal object KanamaIosRuntime {
    * the row drives the real `kanama_ios_runtime_script_instance_call_v` containment path.
    */
   internal const val THROWING_PROBE_SCRIPT_PATH = "res://kanama_ios_throwing_probe.kt"
+
+  /**
+   * Built-in script for the debug self-test's script-scope row (task 133): its Kotlin object is a
+   * real `KanamaScript`, so the row can prove that `freeScriptInstance` cancels its coroutines and
+   * that the ready dispatch starts a new ready cycle.
+   */
+  internal const val SCOPE_PROBE_SCRIPT_PATH = "res://kanama_ios_scope_probe.kt"
   private const val LABEL_SET_TEXT_HASH = 83702148L
 
   private var initialized = false
@@ -402,6 +409,8 @@ internal object KanamaIosRuntime {
       log("ready skipped for missing script instance handle=$handle")
       return
     }
+    // A new ready cycle: the KanamaScript node/script delegates re-resolve (task 133).
+    (instance.bridge.scriptInstance as? net.multigesture.kanama.api.KanamaScript<*>)?.onReadyCycle()
     callScriptInstanceV(handle, "_ready", emptyList())
   }
 
@@ -614,6 +623,17 @@ internal object KanamaIosRuntime {
   }
 
   private fun builtInProbeDescriptor(path: String): KanamaIosScriptDescriptor? {
+    if (path == SCOPE_PROBE_SCRIPT_PATH) {
+      return KanamaIosScriptDescriptor(
+        path = path,
+        baseType = "Node",
+        methods = emptyList(),
+        properties = emptyList(),
+        signals = emptyList(),
+        rpcConfigs = emptyList(),
+        factory = { ownerObject -> ScopeProbeBridge(ownerObject) },
+      )
+    }
     if (path == THROWING_PROBE_SCRIPT_PATH) {
       return KanamaIosScriptDescriptor(
         path = path,
@@ -658,6 +678,15 @@ internal object KanamaIosRuntime {
     val bridge: KanamaIosScriptBridge,
     var readyCalled: Boolean = false,
   )
+
+  private class ScopeProbeBridge(ownerObject: Long) : KanamaIosScriptBridge {
+    override val scriptInstance: Any? =
+      net.multigesture.kanama.api.ScopeProbeScript(
+        net.multigesture.kanama.api.GodotHandle(
+          java.lang.foreign.MemorySegment.ofAddress(ownerObject)
+        )
+      )
+  }
 
   private class ThrowingProbeScript : KanamaIosScriptBridge {
     override fun callV(methodName: String, args: List<Any?>): Boolean =

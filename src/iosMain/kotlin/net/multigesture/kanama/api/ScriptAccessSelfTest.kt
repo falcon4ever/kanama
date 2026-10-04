@@ -1,9 +1,13 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.ios.KanamaIosRuntime
 
 // KANAMA-IOS-HANDWRITTEN: [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime.
 private class ScriptAccessSelfTestScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
+
+/** The Kotlin object of the runtime's built-in scope-probe script (`SCOPE_PROBE_SCRIPT_PATH`). */
+internal class ScopeProbeScript(handle: GodotHandle) : KanamaScript<Node>(handle, ::Node)
 
 /**
  * Task 133 self-test rows, run by `kanamaIosRuntimeObjectCallsSelfTestFrame` once the SceneTree is
@@ -42,12 +46,21 @@ internal fun scriptAccessSelfTestRows(check: (String, Boolean) -> Unit) {
   // Tree accessors outside and inside the tree.
   val orphan = Node(timerHandle)
   check(
-    "tree outside the tree throws",
+    "parentNode of an orphan throws",
     try {
       orphan.parentNode
       false
     } catch (e: IllegalStateException) {
       e.message.orEmpty().contains("has no parent")
+    },
+  )
+  check(
+    "tree outside the tree throws",
+    try {
+      orphan.tree
+      false
+    } catch (e: IllegalStateException) {
+      e.message.orEmpty().contains("is not inside the tree")
     },
   )
   val root = SceneTree.active().getRoot()
@@ -65,11 +78,22 @@ internal fun scriptAccessSelfTestRows(check: (String, Boolean) -> Unit) {
     },
   )
 
-  // The script scope: launch, then the free path cancels it.
-  val scriptNode = GodotHandle(ObjectCalls.constructObject("Node"))
-  val script = ScriptAccessSelfTestScript(scriptNode)
-  val job = script.launch { script.nextFrame() }
-  script.disposeScriptScope()
-  check("script scope cancelled by the free path", job.isCancelled)
-  ObjectCalls.destroyObject(scriptNode.segment)
+  // The script scope through the REAL runtime path: a built-in script whose Kotlin object is a
+  // KanamaScript is instanced on a Node; the ready dispatch starts a ready cycle, and
+  // KanamaIosRuntime.freeScriptInstance (what the shim's free callback calls) cancels the scope.
+  val scopeOwner = ObjectCalls.constructObject("Node")
+  val scopeScript = KanamaIosRuntime.createScriptResource(KanamaIosRuntime.SCOPE_PROBE_SCRIPT_PATH)
+  val scopeInstance = KanamaIosRuntime.createScriptInstance(scopeScript, scopeOwner.address())
+  val probe = KanamaIosRuntime.scriptInstanceForOwner(scopeOwner.address()) as? ScopeProbeScript
+  check("scope-probe script instanced", scopeInstance != 0L && probe != null)
+  if (scopeInstance != 0L && probe != null) {
+    val generation = probe.readyGeneration
+    KanamaIosRuntime.readyScriptInstance(scopeInstance)
+    check("ready dispatch starts a new ready cycle", probe.readyGeneration == generation + 1)
+    val job = probe.launch { probe.nextFrame() }
+    KanamaIosRuntime.freeScriptInstance(scopeInstance)
+    check("freeScriptInstance cancels the script scope", job.isCancelled)
+  }
+  KanamaIosRuntime.freeScriptResource(scopeScript)
+  ObjectCalls.destroyObject(scopeOwner)
 }

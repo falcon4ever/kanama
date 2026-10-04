@@ -38,6 +38,11 @@
 -keep class **.KanamaRegistry { *; }
 -keep class **.KanamaScriptRegistry { *; }
 
+# Readable script errors (task 133): the node/script delegates, checked instancing and contained
+# script errors name the game's script class (`Main.scoreTimer: ...`). Keep the NAMES of the
+# KanamaScript subclasses only; R8 still shrinks and optimizes their members.
+-keepnames class * extends net.multigesture.kanama.api.KanamaScript
+
 # Kanama annotations drive script resolution at runtime.
 -keep @interface net.multigesture.kanama.annotation.** { *; }
 -keepattributes RuntimeVisibleAnnotations, RuntimeInvisibleAnnotations

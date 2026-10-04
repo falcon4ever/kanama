@@ -45,10 +45,16 @@ ROLE_ANNOTATIONS = {
 KOTLIN_ONLY_MODIFIERS = re.compile(r"\b(private|internal|protected|suspend|override)\b")
 RISKY_LAMBDA_MARKERS = (
     ".connect(",
-    "kanamaScope.launch",
     ".await(",
 )
-LOOKUP_RE = re.compile(r"\brequire(?:Node)?As\s*\(")
+# A coroutine body: KanamaScript.launch { } / scriptScope.launch(...) { } (task 133; the old
+# kanamaScope.launch is gone with KanamaCoroutineOwner).
+LAUNCH_RE = re.compile(r"(?<![\w.])(?:scriptScope\.)?launch\s*[({]")
+# Required lookups: requireAs(path, ::T) / requireNodeAs, the checked requireAs<T>(path) and
+# getNodeAs<T>(path), and a node<T>(path) / script<T>(path) delegate created inside a runtime body.
+LOOKUP_RE = re.compile(
+    r"\brequire(?:Node)?As\s*(?:\(|<)|\bgetNodeAs\s*<|(?<![\w.])(?:node|script)\s*<[^>]*>\s*\("
+)
 DYNAMIC_CALL_RE = re.compile(r"\.call\s*\(")
 RAW_RPC_RE = re.compile(r"\.(?:callLocalRpc|rpc|rpcId)\s*\(")
 ANNOTATION_RE = re.compile(r"^\s*@([A-Za-z_][A-Za-z0-9_]*)\b")
@@ -106,7 +112,7 @@ def audit_file(path: Path) -> list[Finding]:
         elif stripped and not stripped.startswith("@"):
             pending_annotations = []
 
-        if any(marker in line for marker in RISKY_LAMBDA_MARKERS) and "{" in line:
+        if (any(marker in line for marker in RISKY_LAMBDA_MARKERS) or LAUNCH_RE.search(line)) and "{" in line:
             scopes.append(Scope("lambda", stripped, line_no, depth))
 
         if RAW_RPC_RE.search(line):

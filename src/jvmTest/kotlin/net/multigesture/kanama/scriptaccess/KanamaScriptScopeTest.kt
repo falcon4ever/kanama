@@ -78,6 +78,16 @@ class KanamaScriptScopeTest {
     assertTrue(ran, "launch after cancelCoroutines() runs")
   }
 
+  /** Each ready cycle invalidates the node/script delegate caches (GDScript re-runs @onready). */
+  @Test
+  fun eachReadyCycleAdvancesTheReadyGeneration() {
+    val script = Probe()
+    val start = script.readyGeneration
+    script.onReadyCycle()
+    script.onReadyCycle()
+    assertEquals(start + 2, script.readyGeneration)
+  }
+
   @Test
   fun scopeIsCreatedOnFirstUseAndKept() {
     val script = Probe()

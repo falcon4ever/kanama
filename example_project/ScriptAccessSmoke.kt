@@ -46,6 +46,9 @@ class ScriptAccessSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObje
   private val childSceneAsTexture by preload<Texture2D>("res://script_access_child.tscn")
 
   private var beforeReady = false
+  private var readyCount = 0
+  private var replacementTimer: Timer? = null
+  private var cachedBeforeReReady = false
 
   private fun failsWith(fragment: String, block: () -> Any?): Boolean =
     try {
@@ -65,6 +68,10 @@ class ScriptAccessSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObje
 
   @OnReady
   fun ready() {
+    if (readyCount++ > 0) {
+      reReady()
+      return
+    }
     val timerNode = self.getNodeOrNull("ScoreTimer")!!
     val nodeRow =
       scoreTimer.getClassName() == "Timer" &&
@@ -115,6 +122,9 @@ class ScriptAccessSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObje
         failsWith("root, not a Camera3D") { childScene.instantiateAs<Camera3D>() } &&
         failsWith("has the script ScriptAccessTarget, not ScriptAccessSmoke") {
           childScene.instantiateScript<ScriptAccessSmoke>()
+        } &&
+        failsWith("has the script ScriptAccessTarget, not String") {
+          childScene.instantiateScript<String>()
         }
     asNode2D.queueFree()
 
@@ -123,9 +133,10 @@ class ScriptAccessSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObje
       self.tree.isSameInstance(self.getTree()!!) &&
         self.viewport.isSameInstance(self.getViewport()!!) &&
         self.parentNode.isSameInstance(self.getParent()!!)
+    orphan.setName("Sub")
     val orphanRow =
-      failsWith("is not inside the tree") { orphan.tree } &&
-        failsWith("is not inside the tree") { orphan.viewport } &&
+      failsWith("Node \"Sub\" is not inside the tree") { orphan.tree } &&
+        failsWith("Node \"Sub\" is not inside the tree") { orphan.viewport } &&
         failsWith("has no parent") { orphan.parentNode }
     ObjectCalls.destroyObject(orphan.handle.segment)
 
@@ -167,6 +178,32 @@ class ScriptAccessSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObje
         "[kanama:kt] ScriptAccessSmoke async wait=${waited >= 200} next_frame=${countedBeforeFree > 0} " +
           "freed_cancelled=${stopped && counting.isCancelled && waitingLong.isCancelled} waited_ms=$waited"
       )
+
+      // GDScript re-runs @onready on every _ready: replace ScoreTimer, then request_ready and
+      // re-enter the tree. Until that _ready the delegate keeps its cached node (as GDScript's
+      // variable does); after it, it resolves the replacement.
+      val oldTimer = scoreTimer
+      val replacement = Timer(GodotHandle(ObjectCalls.constructObject("Timer")))
+      replacement.setName("ScoreTimer")
+      self.removeChild(oldTimer)
+      oldTimer.queueFree()
+      self.addChild(replacement)
+      replacementTimer = replacement
+      cachedBeforeReReady = scoreTimer.isSameInstance(oldTimer)
+      val parent = self.parentNode
+      self.requestReady()
+      parent.removeChild(self)
+      parent.addChild(self) // enters the tree again: _ready runs, see reReady()
+    }
+  }
+
+  private fun reReady() {
+    val reResolved = replacementTimer?.let { scoreTimer.isSameInstance(it) } == true
+    System.err.println(
+      "[kanama:kt] ScriptAccessSmoke reready cached_until_ready=$cachedBeforeReReady re_resolved=$reResolved ready_count=$readyCount"
+    )
+    launch {
+      nextFrame()
       self.tree.quit()
     }
   }

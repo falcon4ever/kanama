@@ -317,9 +317,11 @@ Kept by: `scripts/audit_wrapper_signatures.py`, `scripts/audit_variant_marshalli
   public constructor from it, but that constructor does not check the class:
   `CharacterBody3D(body.handle)` calls `CharacterBody3D` methods on whatever `body` really is.
 - **Checked casts** (task 133) re-type a wrapper safely: `body.castOrNull<CharacterBody3D>()` asks
-  Godot (`Object.is_class`) once and returns `null` when the object is another class, `cast<T>()`
+  Godot (`Object.is_class`) and returns `null` when the object is another class, `cast<T>()`
   throws a `ClassCastException`, and `Node.requireAs<T>(path)` / `getNodeAs<T>(path)` check the
-  node they find. The result is another non-owning view of the same object. They are inline
+  node they find. They ask Godot every time, also when the wrapper's Kotlin class already matches
+  (only `GodotObject` is not asked). The result is the same wrapper when it already is a `T`, else
+  a new non-owning view: a cast result is never yours to close; close the original. They are inline
   reified functions backed by generated class-token tables (`GodotClasses.kt` for the shared tree,
   `PlatformGodotClasses.kt` per platform; `class_token_entries_shared` /
   `class_token_entries_platform`, `render_class_tokens`), built from class literals and constructor

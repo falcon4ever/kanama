@@ -63,8 +63,16 @@ abstract class KanamaScript<T : GodotObject>(
   /** Starts [block] as a coroutine of this script; it stops when the script object is freed. */
   fun launch(block: suspend CoroutineScope.() -> Unit): Job = scriptScope.launch(block = block)
 
-  /** Suspends for [seconds] of frame time (on Web, the frame scheduler's `SceneTree.delaySeconds`). */
-  suspend fun wait(seconds: Double): Unit = SceneTree.delaySeconds(seconds)
+  /**
+   * Suspends for [seconds] of frame time (on Web, the frame scheduler's `SceneTree.delaySeconds`).
+   * The parameters mirror native `wait`; like Web `SceneTree.createTimer`, only the GDScript
+   * defaults (`processAlways = true`, `ignoreTimeScale = false`) are supported.
+   */
+  suspend fun wait(seconds: Double, processAlways: Boolean = true, ignoreTimeScale: Boolean = false) {
+    require(processAlways) { "Web wait supports only processAlways = true" }
+    require(!ignoreTimeScale) { "Web wait supports only ignoreTimeScale = false" }
+    SceneTree.delaySeconds(seconds)
+  }
 
   /** Suspends until the next frame. */
   suspend fun nextFrame() {
