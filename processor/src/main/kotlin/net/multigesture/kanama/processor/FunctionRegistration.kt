@@ -105,8 +105,18 @@ internal object FunctionRegistration {
     val hasTypeParameters: Boolean = false,
     /** An `override` of a member declared outside any script / registered class. */
     val overridesNonScriptMember: Boolean = false,
-    /** The function's own name is an engine virtual of the attached class (`_process`, `_draw`). */
-    val nameIsEngineVirtual: Boolean = false,
+    /**
+     * The engine virtual of the attached class the function's name spells (`_process`, `_draw`; the
+     * camelCase `_getConfigurationWarnings` spells `_get_configuration_warnings`), or null.
+     */
+    val engineVirtual: String? = null,
+    /** A `vararg` parameter (Godot calls with a fixed argument list). */
+    val hasVararg: Boolean = false,
+    /**
+     * The engine class in the attached hierarchy that already has a method named like the
+     * function's snake_case name (`queueFree` -> `queue_free` on Node), or null.
+     */
+    val engineMethodOwner: String? = null,
   )
 
   sealed interface Decision {
@@ -149,8 +159,15 @@ internal object FunctionRegistration {
       }
       return Decision.Role
     }
-    if (f.nameIsEngineVirtual && f.godotNameOverride == null) {
-      val annotation = LIFECYCLE_VIRTUALS.entries.firstOrNull { it.value == f.kotlinName }?.key
+    if (f.godotNameOverride != null && f.godotNameOverride.isBlank()) {
+      return Decision.Error(
+        "$where: @GodotName(\"\") is empty; give the Godot name, or delete the annotation to use " +
+          "the snake_case name `${KanamaProcessor.camelToSnake(f.kotlinName)}`."
+      )
+    }
+    if (f.engineVirtual != null && f.godotNameOverride == null) {
+      val virtual = f.engineVirtual
+      val annotation = LIFECYCLE_VIRTUALS.entries.firstOrNull { it.value == virtual }?.key
       val fix =
         if (annotation != null) {
           "annotate it @$annotation (any function name works: `@$annotation fun " +
@@ -159,7 +176,7 @@ internal object FunctionRegistration {
           "annotate it @OverrideVirtual to override the virtual"
         }
       return Decision.Error(
-        "$where is named like the engine virtual `${f.kotlinName}`, which Godot would never call " +
+        "$where is named like the engine virtual `$virtual`, which Godot would never call " +
           "on it: $fix, or rename it."
       )
     }
@@ -184,7 +201,24 @@ internal object FunctionRegistration {
       }
       return Decision.KotlinOnly(kotlinOnlyReason)
     }
-    return Decision.Register(f.godotNameOverride ?: KanamaProcessor.camelToSnake(f.kotlinName))
+    if (f.hasVararg) {
+      return Decision.Error(
+        "$where has a vararg parameter, which a registered function cannot take (Godot calls it " +
+          "with a fixed argument list). Every public function of a script class is registered " +
+          "with Godot; make it `internal` or `private` to keep it Kotlin-only, or declare the " +
+          "arguments one by one."
+      )
+    }
+    val godotName = f.godotNameOverride ?: KanamaProcessor.camelToSnake(f.kotlinName)
+    if (f.engineMethodOwner != null && f.godotNameOverride == null) {
+      return Decision.Error(
+        "$where would register as `$godotName`, the name of the engine method " +
+          "${f.engineMethodOwner}.$godotName: it would override the engine's `$godotName` for " +
+          "scene connections, `call()` and Callables on this node. Rename it, make it `internal` " +
+          "or `private`, or confirm the override with @GodotName(\"$godotName\")."
+      )
+    }
+    return Decision.Register(godotName)
   }
 
   private fun lifecycleExampleName(annotation: String): String =

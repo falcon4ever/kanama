@@ -3,7 +3,6 @@ package net.multigesture.kanama.processor
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -28,7 +27,9 @@ class FunctionRegistrationTest {
     extension: Boolean = false,
     generic: Boolean = false,
     overridesNonScript: Boolean = false,
-    virtualName: Boolean = false,
+    virtualName: String? = null,
+    hasVararg: Boolean = false,
+    engineMethodOwner: String? = null,
   ) =
     FunctionRegistration.Facts(
       owner = "Hud",
@@ -40,7 +41,9 @@ class FunctionRegistrationTest {
       hasExtensionReceiver = extension,
       hasTypeParameters = generic,
       overridesNonScriptMember = overridesNonScript,
-      nameIsEngineVirtual = virtualName,
+      engineVirtual = virtualName,
+      hasVararg = hasVararg,
+      engineMethodOwner = engineMethodOwner,
     )
 
   private fun decide(f: FunctionRegistration.Facts) = FunctionRegistration.decide(f)
@@ -157,20 +160,77 @@ class FunctionRegistrationTest {
 
   @Test
   fun anUnannotatedEngineVirtualNameIsAnError() {
-    val process = errorOf(facts("_process", virtualName = true))
+    val process = errorOf(facts("_process", virtualName = "_process"))
     assertContains(process, "named like the engine virtual `_process`")
     assertContains(process, "@OnProcess")
-    val draw = errorOf(facts("_draw", virtualName = true))
+    val draw = errorOf(facts("_draw", virtualName = "_draw"))
     assertContains(draw, "@OverrideVirtual")
     // Private does not hide it: Godot would not call it either way.
     assertIs<FunctionRegistration.Decision.Error>(
-      decide(facts("_ready", FunctionRegistration.Visibility.PRIVATE, virtualName = true))
+      decide(facts("_ready", FunctionRegistration.Visibility.PRIVATE, virtualName = "_ready"))
     )
     // Annotated, it is wired.
     assertEquals(
       FunctionRegistration.Decision.Role,
-      decide(facts("_draw", annotations = setOf("OverrideVirtual"), virtualName = true)),
+      decide(facts("_draw", annotations = setOf("OverrideVirtual"), virtualName = "_draw")),
     )
+  }
+
+  @Test
+  fun aCamelCaseSpellingOfAnEngineVirtualIsTheSameError() {
+    val message =
+      errorOf(facts("_getConfigurationWarnings", virtualName = "_get_configuration_warnings"))
+    assertContains(message, "named like the engine virtual `_get_configuration_warnings`")
+    assertContains(message, "@OverrideVirtual")
+  }
+
+  // ---------- engine method names, vararg, empty names ----------
+
+  @Test
+  fun aPublicFunctionOnAnEngineMethodNameIsAnErrorUnlessConfirmed() {
+    val message = errorOf(facts("queueFree", engineMethodOwner = "Node"))
+    assertContains(message, "would register as `queue_free`")
+    assertContains(message, "engine method Node.queue_free")
+    assertContains(message, "@GodotName(\"queue_free\")")
+    assertContains(message, "`internal`")
+    // Confirmed explicitly, it registers under that name.
+    assertEquals(
+      FunctionRegistration.Decision.Register("queue_free"),
+      decide(facts("queueFree", godotName = "queue_free", engineMethodOwner = "Node")),
+    )
+    // Kotlin-only functions never collide.
+    assertIs<FunctionRegistration.Decision.KotlinOnly>(
+      decide(
+        facts("queueFree", FunctionRegistration.Visibility.PRIVATE, engineMethodOwner = "Node")
+      )
+    )
+  }
+
+  @Test
+  fun theEngineMethodTableKnowsTheAttachedHierarchy() {
+    assertEquals("Node", EngineMethodTable.declaringClass("CharacterBody3D", "queue_free"))
+    assertEquals("Object", EngineMethodTable.declaringClass("Node2D", "get_class"))
+    assertEquals(
+      "CharacterBody3D",
+      EngineMethodTable.declaringClass("CharacterBody3D", "move_and_slide"),
+    )
+    assertNull(EngineMethodTable.declaringClass("Node", "move_and_slide"))
+    assertNull(EngineMethodTable.declaringClass("Node", "show_message"))
+    // Virtuals are the virtual table's business, not this one's.
+    assertNull(EngineMethodTable.declaringClass("Node", "_ready"))
+  }
+
+  @Test
+  fun aVarargPublicFunctionIsAnError() {
+    assertContains(errorOf(facts("spawnAll", hasVararg = true)), "vararg parameter")
+    assertIs<FunctionRegistration.Decision.KotlinOnly>(
+      decide(facts("spawnAll", FunctionRegistration.Visibility.INTERNAL, hasVararg = true))
+    )
+  }
+
+  @Test
+  fun anEmptyGodotNameIsAnError() {
+    assertContains(errorOf(facts("onPressed", godotName = "")), "@GodotName(\"\") is empty")
   }
 
   // ---------- duplicates ----------
@@ -191,6 +251,24 @@ class FunctionRegistrationTest {
       )
     assertContains(renamed.single(), "onPressed and onPressedAgain")
     assertContains(renamed.single(), "@GodotName")
+  }
+
+  @Test
+  fun aRegisterClassAccessorCollisionIsAnErrorNamingBoth() {
+    val errors =
+      FunctionRegistration.duplicateNameErrors(
+        "HelloKanama",
+        listOf(
+          "get_counter" to "getCounter",
+          "get_counter" to "the generated accessor of @Export var counter",
+          "set_counter" to "the generated accessor of @Export var counter",
+        ),
+      )
+    assertContains(
+      errors.single(),
+      "getCounter and the generated accessor of @Export var counter all register as the Godot " +
+        "method 'get_counter'",
+    )
   }
 
   @Test
@@ -253,17 +331,48 @@ class FunctionRegistrationTest {
     )
 
   @Test
-  fun theRemovedAnnotationsNoLongerExist() {
-    // Kotlin then fails to resolve every leftover use: a compile error, not a silent alias.
+  fun everyRemovedAnnotationIsATombstoneTheCompilerRefusesNamingItsReplacement() {
+    // A tombstone, not an absence: with the class gone, `@Process` resolves to java.lang.Process
+    // and `@ScriptProperty` is only "Unresolved reference". `DeprecationLevel.ERROR` makes every
+    // use a compile error whose message names the replacement.
     for (name in removed) {
-      assertFailsWith<ClassNotFoundException>(name) {
-        Class.forName("net.multigesture.kanama.annotations.$name")
-      }
+      val deprecated =
+        assertNotNull(
+          Class.forName("net.multigesture.kanama.annotations.$name")
+            .getAnnotation(Deprecated::class.java),
+          name,
+        )
+      assertEquals(DeprecationLevel.ERROR, deprecated.level, name)
+      assertContains(deprecated.message, "removed in Kanama 0.5")
+      assertContains(deprecated.message, expectedReplacement.getValue(name))
     }
     for (name in canonical) {
-      assertNotNull(Class.forName("net.multigesture.kanama.annotations.$name"))
+      assertNull(
+        Class.forName("net.multigesture.kanama.annotations.$name")
+          .getAnnotation(Deprecated::class.java),
+        name,
+      )
     }
   }
+
+  private val expectedReplacement =
+    mapOf(
+      "RegisterFunction" to "@GodotName",
+      "Method" to "@GodotName",
+      "ScriptProperty" to "@Export",
+      "RegisterProperty" to "@Export",
+      "ClassName" to "@GlobalClass",
+      "ToolButton" to "@ExportToolButton",
+      "Ready" to "@OnReady",
+      "EnterTree" to "@OnEnterTree",
+      "ExitTree" to "@OnExitTree",
+      "Process" to "@OnProcess",
+      "PhysicsProcess" to "@OnPhysicsProcess",
+      "Input" to "@OnInput",
+      "UnhandledInput" to "@OnUnhandledInput",
+      "ShortcutInput" to "@OnShortcutInput",
+      "UnhandledKeyInput" to "@OnUnhandledKeyInput",
+    )
 
   @Test
   fun everyRemovedAnnotationIsABuildErrorNamingItsReplacement() {

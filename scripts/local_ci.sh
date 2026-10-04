@@ -399,6 +399,13 @@ stage "virtual-method signature table drift (task 128 B)"
 # including the typed enum slots. A hand edit or an un-regenerated API bump fails here.
 python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
 
+stage "engine method-name table drift (task 133 B)"
+# processor/.../engine-methods.tsv lists every class's own non-virtual method names from
+# extension_api.json; the processor refuses a public script function whose Godot name would
+# shadow one of the attached class's engine methods (`fun queueFree()` -> queue_free). A hand edit
+# or an un-regenerated API bump fails here.
+python3 "$ROOT_DIR/scripts/generate_engine_method_table.py" --check
+
 stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, task 117 P2')"
 # A zero instance is the generator's static-method marker (NULL_SEGMENT for an `is_static`
 # method) and over twenty kanama_ios_godot_* entry points early-return on it, so a static routed

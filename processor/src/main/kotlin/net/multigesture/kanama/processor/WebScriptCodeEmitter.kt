@@ -678,7 +678,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
     /**
-     * Errors for `@Export`/`@Export` declarations a Web build would mishandle (task 64, mirroring
+     * Errors for `@Export` declarations a Web build would mishandle (task 64, mirroring
      * [undispatchedVirtualErrors]): a property type without the full Web arm set (declaration,
      * push, pull, registry accessors) used to emit non-compiling registry code or silently drop
      * values; an expression default used to hydrate the type default over the Kotlin initializer;

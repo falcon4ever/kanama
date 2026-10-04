@@ -325,17 +325,25 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           }
       }
     }
-    errors.duplicateNames(
-      simpleName,
-      methods.map { it.godotName to it.kotlinName } +
-        virtuals.map { it.virtualName to it.kotlinMethodName },
-      cls,
-    )
-
     for (prop in cls.getDeclaredProperties()) {
       if (prop.annotations.none { it.shortName.asString() == "Export" }) continue
       errors.capture(prop) { properties += buildPropertyModel(prop, simpleName) }
     }
+    // A @RegisterClass property is registered through generated `get_<name>` / `set_<name>`
+    // methods, so a public `fun getX()` next to `@Export var x` lands on the same Godot name.
+    val accessors =
+      properties.flatMap { p ->
+        val owner = "the generated accessor of @Export var ${p.kotlinName}"
+        listOf("get_${p.godotName}" to owner) +
+          if (p.isMutable) listOf("set_${p.godotName}" to owner) else emptyList()
+      }
+    errors.duplicateNames(
+      simpleName,
+      methods.map { it.godotName to it.kotlinName } +
+        virtuals.map { it.virtualName to it.kotlinMethodName } +
+        accessors,
+      cls,
+    )
     errors.throwIfAny()
 
     return ClassModel(
@@ -615,10 +623,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             n == "ScriptClass" || n == "RegisterClass"
           }
         }
-    val nameIsEngineVirtual =
-      kotlinName.startsWith("_") &&
-        (kotlinName in FunctionRegistration.LIFECYCLE_VIRTUALS.values ||
-          VirtualSignatureTable.resolve(attachTo, kotlinName) != null)
+    // `_process` and the camelCase `_getConfigurationWarnings` both spell an engine virtual.
+    val engineVirtual =
+      if (!kotlinName.startsWith("_")) null
+      else
+        listOf(kotlinName, camelToSnake(kotlinName)).distinct().firstOrNull {
+          it in FunctionRegistration.LIFECYCLE_VIRTUALS.values ||
+            VirtualSignatureTable.resolve(attachTo, it) != null
+        }
     return FunctionRegistration.Facts(
       owner = ownerSimpleName,
       kotlinName = kotlinName,
@@ -629,7 +641,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       hasExtensionReceiver = fn.extensionReceiver != null,
       hasTypeParameters = fn.typeParameters.isNotEmpty(),
       overridesNonScriptMember = overridesNonScriptMember,
-      nameIsEngineVirtual = nameIsEngineVirtual,
+      engineVirtual = engineVirtual,
+      hasVararg = fn.parameters.any { it.isVararg },
+      engineMethodOwner = EngineMethodTable.declaringClass(attachTo, camelToSnake(kotlinName)),
     )
   }
 
@@ -658,11 +672,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           if (name !in FunctionRegistration.REMOVED_ANNOTATIONS) continue
           val resolved = runCatching { ann.annotationType.resolve() }.getOrNull()
           val fq = resolved?.declaration?.qualifiedName?.asString()
+          // Ours: the tombstone, an unresolved name, or a name that resolved to something that is
+          // not an annotation at all (`@Process` without its import is `java.lang.Process`).
           val ours =
             resolved == null ||
               resolved.isError ||
               fq == null ||
-              fq.startsWith("net.multigesture.kanama.annotations.")
+              fq.startsWith("net.multigesture.kanama.annotations.") ||
+              (resolved.declaration as? KSClassDeclaration)?.classKind != ClassKind.ANNOTATION_CLASS
           if (!ours) continue
           FunctionRegistration.removedAnnotationError(where, name)?.let { add(it, node) }
         }

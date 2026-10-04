@@ -120,3 +120,142 @@ object PropertyUsage {
 
 // iOS shadow of @GlobalClass (GDScript class_name intent). SOURCE-retained; consumed by KSP.
 @Target(AnnotationTarget.CLASS) @Retention(AnnotationRetention.SOURCE) annotation class GlobalClass
+
+// ---------- Removed in Kanama 0.5 (task 133 B) ----------
+//
+// Tombstones, not aliases: each removed name still resolves, so a leftover use is a compile error
+// whose message names the replacement (without the class, `@Process` would quietly resolve to
+// `java.lang.Process` and `@ScriptProperty` would say only "Unresolved reference").
+// `DeprecationLevel.ERROR` makes every use fail to compile; nothing reads them. The KSP processor
+// reports the same leftovers at their declarations. scripts/migrate_script_annotations.py rewrites
+// a source tree.
+
+@Deprecated(
+  "removed in Kanama 0.5: public functions are registered automatically; delete it, or use @GodotName(\"...\") for another Godot name. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class RegisterFunction(val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: public functions are registered automatically; delete it, or use @GodotName(\"...\") for another Godot name. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Method(val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: use @Export (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ScriptProperty(
+  val name: String = "",
+  val hint: Int = 0,
+  val hintString: String = "",
+  val usage: Int = 6,
+)
+
+@Deprecated(
+  "removed in Kanama 0.5: use @Export (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
+annotation class RegisterProperty(
+  val name: String = "",
+  val hint: Int = 0,
+  val hintString: String = "",
+  val usage: Int = 6,
+)
+
+@Deprecated(
+  "removed in Kanama 0.5: use @GlobalClass. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ClassName()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @ExportToolButton (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ToolButton(val text: String = "", val icon: String = "", val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnReady. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Ready()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnEnterTree. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class EnterTree()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnExitTree. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ExitTree()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnProcess. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Process()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnPhysicsProcess. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class PhysicsProcess()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Input()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnUnhandledInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class UnhandledInput()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnShortcutInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ShortcutInput()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnUnhandledKeyInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class UnhandledKeyInput()
