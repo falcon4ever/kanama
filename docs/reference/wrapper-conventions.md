@@ -137,21 +137,27 @@ Current rule (since task 134):
     - `toString()` prints what GDScript's `str(v)` prints: `(0.1, 0.2)`, `(1.0, 2.0, 3.0)`,
       Quaternion `(0, 0, 0, 1)`, Color `(1.0, 0.5, 0.0, 1.0)` (at most four decimals), Plane
       `[N: (0.0, 1.0, 0.0), D: 0]`, Basis/Transform columns `[X: …, Y: …, Z: …, O: …]`.
-    - One arithmetic operation gives Godot's result bit for bit: it is computed on the stored
-      operands and rounded to the storage width on store (one float32 operation on float32 inputs
-      equals the Double operation rounded to float32), and a scalar operand is narrowed to
-      `real_t` first, as `Vector2 * float` does in Godot. `dot`, `length`, `cross`,
-      `normalized`, `Quaternion * Quaternion` and Basis-from-Quaternion follow Godot's formulas
-      in `real_t`. Methods computed by the engine (`lerp`, `rotated`, `slerp`, ...) return the
-      engine's stored result.
+    - Basic arithmetic gives Godot's result bit for bit: `+`, `-`, `*`, `/` and unary `-` are
+      computed on the stored operands and rounded to the storage width on store (one float32
+      operation on float32 inputs equals the Double operation rounded to float32), and a scalar
+      operand is narrowed to `real_t` first, as `Vector2 * float` does in Godot. `dot`,
+      `length`, `lengthSquared`, `distanceTo`, `cross`, `normalized`, `Quaternion * Quaternion`,
+      `Basis(quaternion)`, `Basis * Vector3`, `Transform3D * Vector3`, `Plane.distanceTo`,
+      `Rect2.area` and `AABB.volume` follow Godot's `real_t` formulas in Godot's operand order
+      (`types/shared/RealMath.kt`, one source for the native and the Web types). Methods computed
+      by the engine (`lerp`, `rotated`, `slerp`, ...) return the engine's stored result.
+      Transcendental results computed in Kotlin (`angle`, Web `rotated`/`slerp`, ...) are rounded
+      to `real_t` but not guaranteed to the bit.
 - **The same caveat as GDScript:** `v.x = 0.1` (or `Vector2(0.1, 0.2)`) stores the float32
   nearest to 0.1, so `v.x == 0.1` is `false` in a float32 build, while `v == Vector2(0.1, 0.2)`
   is `true` (both sides are stored). Compare decimals with `isEqualApprox`; values exact in
   float32 (`0.5`, `1.25`, small integers) compare equal either way.
-- Integer components construct without boxing: `Vector3(0, 1, 0)`, `Color(1, 1, 1)`,
-  `Plane(Vector3.UP, 0)` (an `Int` overload beside the `Double` one; the operators take `Int`, `Long`,
-  `Double` and `Float` scalars). Mixing the two in one call needs Double literals:
-  `Vector3(speed, 0.0, 0.0)`. There is no `Number` overload: it boxed every argument, a hidden
+- Integer components construct without boxing, as in GDScript: `Vector3(0, 1, 0)`,
+  `Vector3(speed, 0, 0)`, `Color(1, 1, 1)`, `Color(1, 1, 1, 0.72)`, `Plane(Vector3.UP, 0)`.
+  `Vector2` and `Vector3` have an overload for every Int/Double mix, `Color` adds
+  `(Int, Int, Int, Double)`, and `Vector4`, `Quaternion` and `Plane(x, y, z, d)` take all-`Int`
+  or all-`Double`; each call matches exactly one overload. The operators take `Int`, `Long`,
+  `Double` and `Float` scalars. There is no `Number` overload: it boxed every argument, a hidden
   allocation in a per-frame loop.
 - Packed bulk data keeps compact 32-bit storage: `PackedFloat32Array` is `List<Float>`,
   `PackedFloat64Array` is `List<Double>`. The elements of `PackedVector2/3/4Array` and
@@ -164,7 +170,9 @@ Current rule (since task 134):
 Kept by: the value types' signatures in `api-snapshots/types.txt` / `web-types.txt`, the
 `RealStorageWidthTest` unit test (storage, equality, `toString` against Godot's strings, real_t
 arithmetic) and the `value_type_storage_smoke` rows of `scripts/runtime_smoke.sh`, which compare
-an engine round trip, `str(v)` and a few operations with GDScript's in the same run.
+an engine round trip, `str(v)`, a few operations and a 256-input randomized parity row (every
+bit-identical operation above, hashed per operation) with GDScript's in the same run, and the Web
+`WebValueTypeStorageTest` (Node).
 
 ## 5. Enums and bitfields
 

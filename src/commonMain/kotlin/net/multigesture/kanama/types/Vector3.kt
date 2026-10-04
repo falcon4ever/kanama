@@ -74,10 +74,24 @@ private constructor(
     x: Double,
     y: Double,
     z: Double,
-  ) : this(GodotReal.toC(x), GodotReal.toC(y), GodotReal.toC(z), RawStorage)
+  ) : this(narrowReal(x), narrowReal(y), narrowReal(z), RawStorage)
 
   /** GDScript's `Vector3(0, 1, 0)`: integer components. */
   constructor(x: Int, y: Int, z: Int) : this(x.toDouble(), y.toDouble(), z.toDouble())
+
+  // GDScript's mixed `Vector3(x, 0, 0)`: every Int/Double mix, so exactly one overload matches a
+  // call and none boxes (hand-written: the value types have no generator path for constructors).
+  constructor(x: Int, y: Int, z: Double) : this(x.toDouble(), y.toDouble(), z)
+
+  constructor(x: Int, y: Double, z: Int) : this(x.toDouble(), y, z.toDouble())
+
+  constructor(x: Int, y: Double, z: Double) : this(x.toDouble(), y, z)
+
+  constructor(x: Double, y: Int, z: Int) : this(x, y.toDouble(), z.toDouble())
+
+  constructor(x: Double, y: Int, z: Double) : this(x, y.toDouble(), z)
+
+  constructor(x: Double, y: Double, z: Int) : this(x, y, z.toDouble())
 
   /**
    * The vector's X component. Also accessible by using the index position `[0]`.
@@ -85,7 +99,7 @@ private constructor(
    * Generated from Godot docs: Vector3.x
    */
   val x: Double
-    get() = GodotReal.fromC(rawX)
+    get() = widenReal(rawX)
 
   /**
    * The vector's Y component. Also accessible by using the index position `[1]`.
@@ -93,7 +107,7 @@ private constructor(
    * Generated from Godot docs: Vector3.y
    */
   val y: Double
-    get() = GodotReal.fromC(rawY)
+    get() = widenReal(rawY)
 
   /**
    * The vector's Z component. Also accessible by using the index position `[2]`.
@@ -101,7 +115,7 @@ private constructor(
    * Generated from Godot docs: Vector3.z
    */
   val z: Double
-    get() = GodotReal.fromC(rawZ)
+    get() = widenReal(rawZ)
 
   operator fun component1(): Double = x
 
@@ -155,21 +169,21 @@ private constructor(
     raw(rawX - other.rawX, rawY - other.rawY, rawZ - other.rawZ)
 
   // A scalar operand is a `real_t` in Godot (`Vector3 * float` narrows the float first).
-  operator fun times(scale: Double): Vector3 = scaled(GodotReal.toC(scale))
+  operator fun times(scale: Double): Vector3 = scaled(narrowReal(scale))
 
-  operator fun times(scale: Float): Vector3 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Float): Vector3 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Int): Vector3 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Int): Vector3 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Long): Vector3 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Long): Vector3 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Double): Vector3 = divided(GodotReal.toC(scale))
+  operator fun div(scale: Double): Vector3 = divided(narrowReal(scale))
 
-  operator fun div(scale: Float): Vector3 = divided(GodotReal.toC(scale.toDouble()))
+  operator fun div(scale: Float): Vector3 = divided(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Int): Vector3 = divided(GodotReal.toC(scale.toDouble()))
+  operator fun div(scale: Int): Vector3 = divided(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Long): Vector3 = divided(GodotReal.toC(scale.toDouble()))
+  operator fun div(scale: Long): Vector3 = divided(narrowReal(scale.toDouble()))
 
   private fun scaled(s: GodotRealStorage): Vector3 = raw(rawX * s, rawY * s, rawZ * s)
 
@@ -184,16 +198,16 @@ private constructor(
    *
    * Generated from Godot docs: Vector3.length_squared
    */
-  fun lengthSquared(): Double = GodotReal.fromC(rawLengthSquared())
+  fun lengthSquared(): Double = widenReal(rawLengthSquared())
 
-  private fun rawLengthSquared(): GodotRealStorage = rawX * rawX + rawY * rawY + rawZ * rawZ
+  private fun rawLengthSquared(): GodotRealStorage = realDot(rawX, rawY, rawZ, rawX, rawY, rawZ)
 
   /**
    * Returns the length (magnitude) of this vector.
    *
    * Generated from Godot docs: Vector3.length
    */
-  fun length(): Double = GodotReal.fromC(sqrt(rawLengthSquared()))
+  fun length(): Double = widenReal(sqrt(rawLengthSquared()))
 
   /**
    * Returns the result of scaling the vector to unit length. Equivalent to `v / v.length()`.
@@ -203,10 +217,12 @@ private constructor(
    * Generated from Godot docs: Vector3.normalized
    */
   fun normalized(): Vector3 {
-    val lengthSquared = rawLengthSquared()
-    if (lengthSquared == GodotReal.toC(0.0)) return ZERO
-    val len = sqrt(lengthSquared)
-    return raw(rawX / len, rawY / len, rawZ / len)
+    return realNormalize(
+      rawX.isFinite() && rawY.isFinite() && rawZ.isFinite(),
+      rawLengthSquared(),
+      { ZERO },
+      { len -> raw(rawX / len, rawY / len, rawZ / len) },
+    )
   }
 
   /**
@@ -243,7 +259,7 @@ private constructor(
    * Generated from Godot docs: Vector3.dot
    */
   fun dot(other: Vector3): Double =
-    GodotReal.fromC(rawX * other.rawX + rawY * other.rawY + rawZ * other.rawZ)
+    widenReal(realDot(rawX, rawY, rawZ, other.rawX, other.rawY, other.rawZ))
 
   /**
    * Returns the cross product of this vector and `with`. This returns a vector perpendicular to
@@ -255,11 +271,7 @@ private constructor(
    * Generated from Godot docs: Vector3.cross
    */
   fun cross(other: Vector3): Vector3 =
-    raw(
-      rawY * other.rawZ - rawZ * other.rawY,
-      rawZ * other.rawX - rawX * other.rawZ,
-      rawX * other.rawY - rawY * other.rawX,
-    )
+    realCross(rawX, rawY, rawZ, other.rawX, other.rawY, other.rawZ) { x, y, z -> raw(x, y, z) }
 
   /**
    * Returns the Euclidean distance (https://en.wikipedia.org/wiki/Euclidean_distance) between this
@@ -313,11 +325,11 @@ private constructor(
       )
     )
 
-  fun withX(value: Double): Vector3 = raw(GodotReal.toC(value), rawY, rawZ)
+  fun withX(value: Double): Vector3 = raw(narrowReal(value), rawY, rawZ)
 
-  fun withY(value: Double): Vector3 = raw(rawX, GodotReal.toC(value), rawZ)
+  fun withY(value: Double): Vector3 = raw(rawX, narrowReal(value), rawZ)
 
-  fun withZ(value: Double): Vector3 = raw(rawX, rawY, GodotReal.toC(value))
+  fun withZ(value: Double): Vector3 = raw(rawX, rawY, narrowReal(value))
 
   fun withX(value: Int): Vector3 = withX(value.toDouble())
 

@@ -173,8 +173,7 @@ assigned yet. Unconditional `!!` will crash the editor.
   (all `Double`)
 - Compare decimals with `isEqualApprox`, as in GDScript: components are stored as float32, so
   `Vector2(0.1, 0.2).x == 0.1` is `false` (while `v == Vector2(0.1, 0.2)` is `true`)
-- Integer components need no `.0` (`Vector3(0, 1, 0)`), but a call that mixes them with decimals
-  does (`Vector3(speed, 0.0, 0.0)`)
+- Integer components need no `.0`, as in GDScript: `Vector3(0, 1, 0)`, `Vector3(speed, 0, 0)`
 - Use `withX()` / `withY()` / `withZ()` to change one component without constructing a full new vector
 
 ```kotlin

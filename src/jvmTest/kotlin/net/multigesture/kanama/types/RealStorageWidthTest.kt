@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
  * Expected strings are GDScript's `str(v)` from Godot 4.7.2 (the runtime smoke compares them live).
  */
 class RealStorageWidthTest {
-  private val single = GodotReal.IS_SINGLE
+  private val single = REAL_IS_SINGLE
 
   /** What Godot stores for [value] in a `real_t` component, widened back to Double. */
   private fun real(value: Double): Double = if (single) value.toFloat().toDouble() else value
@@ -52,6 +52,26 @@ class RealStorageWidthTest {
     assertEquals(Color(-0.0, 0.0, 0.0).hashCode(), Color(0.0, 0.0, 0.0).hashCode())
     assertEquals(Plane(Vector3.UP, 0.1), Plane(Vector3.UP, real(0.1)))
     if (single) assertEquals(Vector2(0.1, 0.2), Vector2(0.1f.toDouble(), 0.2f.toDouble()))
+  }
+
+  @Test
+  fun mixedIntAndDoubleArgumentsResolveToOneOverload() {
+    // Compile-time proof that each mix has exactly one applicable overload (an ambiguity, or a
+    // boxing `Number` fallback, would not compile or would show up in the API snapshot).
+    val x = 1.5
+    val y = -2.25
+    assertEquals(Vector3(1.5, 0.0, -2.25), Vector3(x, 0, y))
+    assertEquals(Vector3(0.0, 1.5, 3.0), Vector3(0, x, 3))
+    assertEquals(Vector3(1.0, 2.0, -2.25), Vector3(1, 2, y))
+    assertEquals(Vector3(1.5, -2.25, 4.0), Vector3(x, y, 4))
+    assertEquals(Vector3(1.5, 0.0, 0.0), Vector3(x, 0, 0))
+    assertEquals(Vector3(0.0, 0.0, 1.5), Vector3(0, 0, x))
+    assertEquals(Vector3(0.0, 1.5, -2.25), Vector3(0, x, y))
+    assertEquals(Vector2(1.5, 0.0), Vector2(x, 0))
+    assertEquals(Vector2(0.0, -2.25), Vector2(0, y))
+    assertEquals(Color(1.0, 1.0, 1.0, 0.72), Color(1, 1, 1, 0.72))
+    assertEquals(Color(1.0, 1.0, 1.0, 1.0), Color(1, 1, 1))
+    assertEquals(Vector2(3.0, 0.0), Vector2(1.5, 0.0) * 2L)
   }
 
   @Test

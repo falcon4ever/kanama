@@ -34,7 +34,7 @@ private constructor(
     y: Double,
     z: Double,
     w: Double,
-  ) : this(GodotReal.toC(x), GodotReal.toC(y), GodotReal.toC(z), GodotReal.toC(w), RawStorage)
+  ) : this(narrowReal(x), narrowReal(y), narrowReal(z), narrowReal(w), RawStorage)
 
   /** GDScript's `Quaternion(0, 0, 0, 1)`: integer components. */
   constructor(
@@ -51,7 +51,7 @@ private constructor(
    * Generated from Godot docs: Quaternion.x
    */
   val x: Double
-    get() = GodotReal.fromC(rawX)
+    get() = widenReal(rawX)
 
   /**
    * Y component of the quaternion. This is the value along the "imaginary" `j` axis. Note:
@@ -60,7 +60,7 @@ private constructor(
    * Generated from Godot docs: Quaternion.y
    */
   val y: Double
-    get() = GodotReal.fromC(rawY)
+    get() = widenReal(rawY)
 
   /**
    * Z component of the quaternion. This is the value along the "imaginary" `k` axis. Note:
@@ -69,7 +69,7 @@ private constructor(
    * Generated from Godot docs: Quaternion.z
    */
   val z: Double
-    get() = GodotReal.fromC(rawZ)
+    get() = widenReal(rawZ)
 
   /**
    * W component of the quaternion. This is the "real" part. Note: Quaternion components should
@@ -78,7 +78,7 @@ private constructor(
    * Generated from Godot docs: Quaternion.w
    */
   val w: Double
-    get() = GodotReal.fromC(rawW)
+    get() = widenReal(rawW)
 
   operator fun component1(): Double = x
 
@@ -139,17 +139,17 @@ private constructor(
    *
    * Generated from Godot docs: Quaternion.length_squared
    */
-  fun lengthSquared(): Double = GodotReal.fromC(rawLengthSquared())
+  fun lengthSquared(): Double = widenReal(rawLengthSquared())
 
   private fun rawLengthSquared(): GodotRealStorage =
-    rawX * rawX + rawY * rawY + rawZ * rawZ + rawW * rawW
+    realDot(rawX, rawY, rawZ, rawW, rawX, rawY, rawZ, rawW)
 
   /**
    * Returns this quaternion's length, also called magnitude.
    *
    * Generated from Godot docs: Quaternion.length
    */
-  fun length(): Double = GodotReal.fromC(sqrt(rawLengthSquared()))
+  fun length(): Double = widenReal(sqrt(rawLengthSquared()))
 
   /**
    * Returns a copy of this quaternion, normalized so that its length is `1.0`. See also
@@ -160,8 +160,8 @@ private constructor(
   fun normalized(): Quaternion {
     // Godot: `*this / length()`, which multiplies by `1 / length` in `real_t`.
     val len = sqrt(rawLengthSquared())
-    if (len == GodotReal.toC(0.0)) return IDENTITY
-    val inverseLength = GodotReal.toC(1.0) / len
+    if (len == narrowReal(0.0)) return IDENTITY
+    val inverseLength = narrowReal(1.0) / len
     return raw(
       rawX * inverseLength,
       rawY * inverseLength,
@@ -170,13 +170,16 @@ private constructor(
     )
   }
 
+  // Godot's `Quaternion::operator*=`, term for term and in its order (float addition is not
+  // associative, so the order is part of the bit-exact result).
   operator fun times(other: Quaternion): Quaternion =
-    raw(
-      rawW * other.rawX + rawX * other.rawW + rawY * other.rawZ - rawZ * other.rawY,
-      rawW * other.rawY - rawX * other.rawZ + rawY * other.rawW + rawZ * other.rawX,
-      rawW * other.rawZ + rawX * other.rawY - rawY * other.rawX + rawZ * other.rawW,
-      rawW * other.rawW - rawX * other.rawX - rawY * other.rawY - rawZ * other.rawZ,
-    )
+    realQuaternionProduct(rawX, rawY, rawZ, rawW, other.rawX, other.rawY, other.rawZ, other.rawW) {
+      x,
+      y,
+      z,
+      w ->
+      raw(x, y, z, w)
+    }
 
   operator fun unaryMinus(): Quaternion = raw(-rawX, -rawY, -rawZ, -rawW)
 
@@ -196,7 +199,7 @@ private constructor(
    * Generated from Godot docs: Quaternion.dot
    */
   fun dot(other: Quaternion): Double =
-    GodotReal.fromC(rawX * other.rawX + rawY * other.rawY + rawZ * other.rawZ + rawW * other.rawW)
+    widenReal(realDot(rawX, rawY, rawZ, rawW, other.rawX, other.rawY, other.rawZ, other.rawW))
 
   /**
    * Performs a spherical-linear interpolation with the `to` quaternion, given a `weight` and

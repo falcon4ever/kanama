@@ -48,7 +48,7 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `func _input(event):` | `@OnInput fun input(event: InputEvent)` |
 | `func show_message(text):` | `fun showMessage(text: String)` (every public function is registered) |
 | `@export var speed := 5.0` | `@Export var speed = 5.0` |
-| `Vector3(0, 1, 0)`, `Vector3(speed, 0, 0)` | `Vector3(0, 1, 0)`, `Vector3(speed, 0.0, 0.0)` (all-integer or all-decimal components) |
+| `Vector3(0, 1, 0)`, `Vector3(speed, 0, 0)`, `Color(1, 1, 1, 0.72)` | the same |
 | `velocity.y += gravity * delta` | `velocity = velocity.withY(velocity.y + gravity * delta)` (value types are immutable) |
 | `print(position)` → `(0.1, 0.2)` | `println(position)` → `(0.1, 0.2)` (same `str()` form) |
 | `v.is_equal_approx(w)`, `v == w` | `v.isEqualApprox(w)`, `v == w` (compares the stored components, as in GDScript) |

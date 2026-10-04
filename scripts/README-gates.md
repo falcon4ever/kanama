@@ -217,7 +217,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:20` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:27` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:391` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
+| `scripts/runtime_smoke.sh:408` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/tool_smoke.sh:18` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:25` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |

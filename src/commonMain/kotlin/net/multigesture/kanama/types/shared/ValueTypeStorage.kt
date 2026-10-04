@@ -4,15 +4,24 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.log10
 
-// Storage and printing for the Web value types (task 134 A2): the same rules as the native
-// types' `src/commonMain/.../types/ValueTypeStorage.kt` (keep the two in step), with `real_t`
-// fixed at float32, as in every Web build of Godot. Components are stored at Godot's width and
-// exposed as `Double`; `toString()` prints GDScript's `str(v)`.
+// Storage and printing shared by the value types (task 134 A2). A value type keeps its components
+// at Godot's width — `real_t` ([GodotRealStorage]: float32 by default, float64 with
+// `-PkanamaPrecision=double`) for Vector2…Projection, float32 for Color — and exposes them as
+// `Double`. So a value is exactly the value Godot stores: `node.position = v; node.position == v`
+// holds and `toString()` prints what GDScript's `str(v)` prints.
+//
+// ONE source for the native and the Web value types: this directory (`types/shared`) is also a
+// source directory of `web-runtime`, which supplies its own `GodotRealStorage` (Float),
+// `REAL_IS_SINGLE`, `narrowReal` and `widenReal` (`WebReal.kt`); natively they come from the
+// generated `Real.kt`. Keep this directory free of anything else either side lacks.
 
 /** Selects a value type's raw constructor: the arguments are already at the storage width. */
 internal object RawStorage
 
-/** Godot's `Math::is_equal` for a stored component: `-0.0 == 0.0`, and NaN equal to NaN. */
+/**
+ * Godot's `Math::is_same` for a stored component: `==` (so `-0.0 == 0.0`), plus NaN equal to NaN,
+ * which keeps the JVM `equals` contract reflexive.
+ */
 internal fun storedEquals(a: Float, b: Float): Boolean = a == b || (a.isNaN() && b.isNaN())
 
 internal fun storedEquals(a: Double, b: Double): Boolean = a == b || (a.isNaN() && b.isNaN())
@@ -22,12 +31,16 @@ internal fun storedHash(value: Float): Int = (value + 0.0f).hashCode()
 
 internal fun storedHash(value: Double): Int = (value + 0.0).hashCode()
 
-/** Godot's `String::num_real(real_t, trailing)` for a stored float32 (`real_t` on Web) value. */
-internal fun godotRealString(value: Float, trailing: Boolean): String =
-  numRealFloat(value, trailing)
+/**
+ * Godot's `String::num_real(real_t, trailing)` for a stored `real_t` component (`value` is the
+ * exact widened stored value): integers print as `1` or `1.0`, others with 6 significant decimals
+ * in a float32 build (14 in a float64 build), trailing zeros removed.
+ */
+internal fun godotRealString(value: Double, trailing: Boolean): String =
+  if (REAL_IS_SINGLE) numRealFloat(value.toFloat(), trailing) else numRealDouble(value, trailing)
 
-/** [value] as Godot's float32 `real_t` holds it: a scalar operand of a vector operation. */
-internal fun real(value: Double): Double = value.toFloat().toDouble()
+/** Godot's `String::num(double, 4)`, the form `Color` prints its float32 channels with. */
+internal fun godotColorChannelString(value: Float): String = godotNum(value.toDouble(), 4)
 
 private fun numRealFloat(value: Float, trailing: Boolean): String {
   if (value.isNaN() || value.isInfinite()) return godotNum(value.toDouble(), 0)
@@ -38,6 +51,16 @@ private fun numRealFloat(value: Float, trailing: Boolean): String {
   val absValue = abs(value)
   if (absValue > 10f) decimals -= floor(log10(absValue)).toInt()
   return godotNum(value.toDouble(), decimals)
+}
+
+private fun numRealDouble(value: Double, trailing: Boolean): String {
+  if (value.isNaN() || value.isInfinite()) return godotNum(value, 0)
+  val whole = value.toLong()
+  if (value == whole.toDouble()) return if (trailing) "$whole.0" else whole.toString()
+  var decimals = 14
+  val absValue = abs(value)
+  if (absValue > 10.0) decimals -= floor(log10(absValue)).toInt()
+  return godotNum(value, decimals)
 }
 
 private const val MAX_DECIMALS = 32

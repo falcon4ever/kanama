@@ -22,7 +22,7 @@ private constructor(
   @Suppress("UNUSED_PARAMETER") raw: RawStorage,
 ) {
   /** A plane whose `d` is stored at Godot's `real_t` width (rounded to it, as in Godot). */
-  constructor(normal: Vector3, d: Double) : this(normal, GodotReal.toC(d), RawStorage)
+  constructor(normal: Vector3, d: Double) : this(normal, narrowReal(d), RawStorage)
 
   constructor(normal: Vector3, d: Int) : this(normal, d.toDouble())
 
@@ -41,7 +41,7 @@ private constructor(
    * Generated from Godot docs: Plane.d
    */
   val d: Double
-    get() = GodotReal.fromC(rawD)
+    get() = widenReal(rawD)
 
   operator fun component1(): Vector3 = normal
 
@@ -66,7 +66,7 @@ private constructor(
    *
    * Generated from Godot docs: Plane.distance_to
    */
-  fun distanceTo(point: Vector3): Double = GodotReal.fromC(rawDistanceTo(point))
+  fun distanceTo(point: Vector3): Double = widenReal(rawDistanceTo(point))
 
   // Godot: `normal.dot(p_point) - d`, in `real_t`.
   private fun rawDistanceTo(point: Vector3): GodotRealStorage =
@@ -81,9 +81,9 @@ private constructor(
   fun intersectsRay(from: Vector3, dir: Vector3): Vector3? {
     val denominator = normal.dot(dir)
     if (abs(denominator) <= 0.00001) return null
-    val signedDistance = rawDistanceTo(from) / GodotReal.toC(denominator)
-    if (GodotReal.fromC(signedDistance) > 0.00001) return null
-    return from + dir * GodotReal.fromC(-signedDistance)
+    val signedDistance = rawDistanceTo(from) / narrowReal(denominator)
+    if (widenReal(signedDistance) > 0.00001) return null
+    return from + dir * widenReal(-signedDistance)
   }
 
   companion object {

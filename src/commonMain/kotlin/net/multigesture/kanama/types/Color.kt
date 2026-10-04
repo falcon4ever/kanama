@@ -30,6 +30,9 @@ private constructor(
     a: Int = 1,
   ) : this(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
 
+  /** GDScript's `Color(1, 1, 1, 0.72)`: integer channels with a decimal alpha. */
+  constructor(r: Int, g: Int, b: Int, a: Double) : this(r.toDouble(), g.toDouble(), b.toDouble(), a)
+
   /**
    * The color's red component, typically on the range of 0 to 1.
    *

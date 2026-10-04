@@ -69,7 +69,7 @@ private constructor(
     y: Double,
     z: Double,
     w: Double,
-  ) : this(GodotReal.toC(x), GodotReal.toC(y), GodotReal.toC(z), GodotReal.toC(w), RawStorage)
+  ) : this(narrowReal(x), narrowReal(y), narrowReal(z), narrowReal(w), RawStorage)
 
   /** GDScript's `Vector4(0, 0, 0, 1)`: integer components. */
   constructor(
@@ -85,7 +85,7 @@ private constructor(
    * Generated from Godot docs: Vector4.x
    */
   val x: Double
-    get() = GodotReal.fromC(rawX)
+    get() = widenReal(rawX)
 
   /**
    * The vector's Y component. Also accessible by using the index position `[1]`.
@@ -93,7 +93,7 @@ private constructor(
    * Generated from Godot docs: Vector4.y
    */
   val y: Double
-    get() = GodotReal.fromC(rawY)
+    get() = widenReal(rawY)
 
   /**
    * The vector's Z component. Also accessible by using the index position `[2]`.
@@ -101,7 +101,7 @@ private constructor(
    * Generated from Godot docs: Vector4.z
    */
   val z: Double
-    get() = GodotReal.fromC(rawZ)
+    get() = widenReal(rawZ)
 
   /**
    * The vector's W component. Also accessible by using the index position `[3]`.
@@ -109,7 +109,7 @@ private constructor(
    * Generated from Godot docs: Vector4.w
    */
   val w: Double
-    get() = GodotReal.fromC(rawW)
+    get() = widenReal(rawW)
 
   operator fun component1(): Double = x
 
@@ -182,13 +182,13 @@ private constructor(
     raw(rawX - other.rawX, rawY - other.rawY, rawZ - other.rawZ, rawW - other.rawW)
 
   // A scalar operand is a `real_t` in Godot (`Vector4 * float` narrows the float first).
-  operator fun times(scale: Double): Vector4 = scaled(GodotReal.toC(scale))
+  operator fun times(scale: Double): Vector4 = scaled(narrowReal(scale))
 
-  operator fun times(scale: Float): Vector4 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Float): Vector4 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Int): Vector4 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Int): Vector4 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Long): Vector4 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Long): Vector4 = scaled(narrowReal(scale.toDouble()))
 
   private fun scaled(s: GodotRealStorage): Vector4 = raw(rawX * s, rawY * s, rawZ * s, rawW * s)
 
@@ -201,17 +201,17 @@ private constructor(
    *
    * Generated from Godot docs: Vector4.length_squared
    */
-  fun lengthSquared(): Double = GodotReal.fromC(rawLengthSquared())
+  fun lengthSquared(): Double = widenReal(rawLengthSquared())
 
   private fun rawLengthSquared(): GodotRealStorage =
-    rawX * rawX + rawY * rawY + rawZ * rawZ + rawW * rawW
+    realDot(rawX, rawY, rawZ, rawW, rawX, rawY, rawZ, rawW)
 
   /**
    * Returns the length (magnitude) of this vector.
    *
    * Generated from Godot docs: Vector4.length
    */
-  fun length(): Double = GodotReal.fromC(sqrt(rawLengthSquared()))
+  fun length(): Double = widenReal(sqrt(rawLengthSquared()))
 
   /**
    * Returns the dot product of this vector and `with`.
@@ -219,7 +219,7 @@ private constructor(
    * Generated from Godot docs: Vector4.dot
    */
   fun dot(other: Vector4): Double =
-    GodotReal.fromC(rawX * other.rawX + rawY * other.rawY + rawZ * other.rawZ + rawW * other.rawW)
+    widenReal(realDot(rawX, rawY, rawZ, rawW, other.rawX, other.rawY, other.rawZ, other.rawW))
 
   companion object {
     /** A vector from components already at the storage width (marshalling; no conversion). */

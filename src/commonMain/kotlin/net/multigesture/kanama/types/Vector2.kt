@@ -59,10 +59,16 @@ private constructor(
   // ===== END GENERATED ENUMS: Vector2 =====
 
   /** A vector stored at Godot's `real_t` width: each component is rounded to it, as in Godot. */
-  constructor(x: Double, y: Double) : this(GodotReal.toC(x), GodotReal.toC(y), RawStorage)
+  constructor(x: Double, y: Double) : this(narrowReal(x), narrowReal(y), RawStorage)
 
   /** GDScript's `Vector2(1, 2)`: integer components. */
   constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
+
+  // GDScript's mixed `Vector2(x, 0)`: every Int/Double mix, so exactly one overload matches a
+  // call and none boxes (hand-written: the value types have no generator path for constructors).
+  constructor(x: Int, y: Double) : this(x.toDouble(), y)
+
+  constructor(x: Double, y: Int) : this(x, y.toDouble())
 
   /**
    * The vector's X component. Also accessible by using the index position `[0]`.
@@ -70,7 +76,7 @@ private constructor(
    * Generated from Godot docs: Vector2.x
    */
   val x: Double
-    get() = GodotReal.fromC(rawX)
+    get() = widenReal(rawX)
 
   /**
    * The vector's Y component. Also accessible by using the index position `[1]`.
@@ -78,7 +84,7 @@ private constructor(
    * Generated from Godot docs: Vector2.y
    */
   val y: Double
-    get() = GodotReal.fromC(rawY)
+    get() = widenReal(rawY)
 
   operator fun component1(): Double = x
 
@@ -124,21 +130,21 @@ private constructor(
   operator fun minus(other: Vector2): Vector2 = raw(rawX - other.rawX, rawY - other.rawY)
 
   // A scalar operand is a `real_t` in Godot (`Vector2 * float` narrows the float first).
-  operator fun times(scale: Double): Vector2 = scaled(GodotReal.toC(scale))
+  operator fun times(scale: Double): Vector2 = scaled(narrowReal(scale))
 
-  operator fun times(scale: Float): Vector2 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Float): Vector2 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Int): Vector2 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Int): Vector2 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Long): Vector2 = scaled(GodotReal.toC(scale.toDouble()))
+  operator fun times(scale: Long): Vector2 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Double): Vector2 = divided(GodotReal.toC(scale))
+  operator fun div(scale: Double): Vector2 = divided(narrowReal(scale))
 
-  operator fun div(scale: Float): Vector2 = divided(GodotReal.toC(scale.toDouble()))
+  operator fun div(scale: Float): Vector2 = divided(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Int): Vector2 = divided(GodotReal.toC(scale.toDouble()))
+  operator fun div(scale: Int): Vector2 = divided(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Long): Vector2 = divided(GodotReal.toC(scale.toDouble()))
+  operator fun div(scale: Long): Vector2 = divided(narrowReal(scale.toDouble()))
 
   private fun scaled(s: GodotRealStorage): Vector2 = raw(rawX * s, rawY * s)
 
@@ -153,16 +159,16 @@ private constructor(
    *
    * Generated from Godot docs: Vector2.length_squared
    */
-  fun lengthSquared(): Double = GodotReal.fromC(rawLengthSquared())
+  fun lengthSquared(): Double = widenReal(rawLengthSquared())
 
-  private fun rawLengthSquared(): GodotRealStorage = rawX * rawX + rawY * rawY
+  private fun rawLengthSquared(): GodotRealStorage = realDot(rawX, rawY, rawX, rawY)
 
   /**
    * Returns the length (magnitude) of this vector.
    *
    * Generated from Godot docs: Vector2.length
    */
-  fun length(): Double = GodotReal.fromC(sqrt(rawLengthSquared()))
+  fun length(): Double = widenReal(sqrt(rawLengthSquared()))
 
   /**
    * Returns the result of scaling the vector to unit length. Equivalent to `v / v.length()`.
@@ -172,10 +178,12 @@ private constructor(
    * Generated from Godot docs: Vector2.normalized
    */
   fun normalized(): Vector2 {
-    val lengthSquared = rawLengthSquared()
-    if (lengthSquared == GodotReal.toC(0.0)) return ZERO
-    val len = sqrt(lengthSquared)
-    return raw(rawX / len, rawY / len)
+    return realNormalize(
+      rawX.isFinite() && rawY.isFinite(),
+      rawLengthSquared(),
+      { ZERO },
+      { len -> raw(rawX / len, rawY / len) },
+    )
   }
 
   /**
@@ -189,7 +197,7 @@ private constructor(
    *
    * Generated from Godot docs: Vector2.dot
    */
-  fun dot(other: Vector2): Double = GodotReal.fromC(rawX * other.rawX + rawY * other.rawY)
+  fun dot(other: Vector2): Double = widenReal(realDot(rawX, rawY, other.rawX, other.rawY))
 
   /**
    * Returns the Euclidean distance (https://en.wikipedia.org/wiki/Euclidean_distance) between this
@@ -218,7 +226,7 @@ private constructor(
    *
    * Generated from Godot docs: Vector2.angle
    */
-  fun angle(): Double = atan2(y, x)
+  fun angle(): Double = widenReal(atan2(rawY, rawX))
 
   /**
    * Returns the result of the linear interpolation between this vector and `to` by amount `weight`.
@@ -277,9 +285,9 @@ private constructor(
       )
     )
 
-  fun withX(value: Double): Vector2 = raw(GodotReal.toC(value), rawY)
+  fun withX(value: Double): Vector2 = raw(narrowReal(value), rawY)
 
-  fun withY(value: Double): Vector2 = raw(rawX, GodotReal.toC(value))
+  fun withY(value: Double): Vector2 = raw(rawX, narrowReal(value))
 
   fun withX(value: Int): Vector2 = withX(value.toDouble())
 

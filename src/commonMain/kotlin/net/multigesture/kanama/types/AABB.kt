@@ -53,7 +53,7 @@ data class AABB(
   val end: Vector3
     get() = position + size
 
-  fun volume(): Double = GodotReal.fromC(size.rawX * size.rawY * size.rawZ)
+  fun volume(): Double = widenReal(size.rawX * size.rawY * size.rawZ)
 
   /**
    * Returns `true` if the bounding box contains the given `point`. By convention, points exactly on

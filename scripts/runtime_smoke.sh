@@ -381,9 +381,12 @@ fi
 # task 134 A2 -- a position written and read back is `==` (its x is not `== 0.1`, as in GDScript),
 # toString() is GDScript's str(), and Kotlin-side arithmetic has the engine's float32 bits: each
 # Kotlin line must equal the GDScript line printed in the same run (value_type_storage_ref.gd).
+# The parity row hashes the float32 bits of every operation the docs call bit-identical over 256
+# fixed-seed random inputs, per operation, so one differing bit in one result fails the row.
 check "ValueTypeStorage kotlin roundtrip_eq=true str=\\(0\\.1, 0\\.2\\) x_eq_literal=false$"
 check "ValueTypeStorage kotlin str=\\(0\\.1, 0\\.2\\)\\|\\(1\\.0, 2\\.0, 3\\.0\\)\\|\\(12345\\.68, -0\\.000001\\)\\|"
-for vts_row in roundtrip_eq str bits; do
+check "ValueTypeStorage kotlin parity=n=256 v2_add=[0-9a-f]+ "
+for vts_row in roundtrip_eq str bits parity; do
   vts_kotlin="$(grep -o "ValueTypeStorage kotlin ${vts_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^ValueTypeStorage kotlin //')"
   vts_gdscript="$(grep -o "ValueTypeStorage gdscript ${vts_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^ValueTypeStorage gdscript //')"
   if [[ -z "$vts_kotlin" || "$vts_kotlin" != "$vts_gdscript" ]]; then

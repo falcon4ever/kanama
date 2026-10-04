@@ -19,6 +19,11 @@ private constructor(
 
   constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
 
+  // Every Int/Double mix (GDScript's `Vector2(x, 0)`): exactly one overload matches, none boxes.
+  constructor(x: Int, y: Double) : this(x.toDouble(), y)
+
+  constructor(x: Double, y: Int) : this(x, y.toDouble())
+
   val x: Double
     get() = rawX.toDouble()
 
@@ -38,32 +43,33 @@ private constructor(
   override fun hashCode(): Int = 31 * storedHash(rawX) + storedHash(rawY)
 
   /** Godot's `str(v)`: `(0.1, 0.2)`. */
-  override fun toString(): String =
-    "(${godotRealString(rawX, true)}, ${godotRealString(rawY, true)})"
+  override fun toString(): String = "(${godotRealString(x, true)}, ${godotRealString(y, true)})"
 
   operator fun plus(other: Vector2): Vector2 = Vector2(x + other.x, y + other.y)
 
   operator fun minus(other: Vector2): Vector2 = Vector2(x - other.x, y - other.y)
 
   // A scalar operand is a `real_t` (float32) in Godot: narrowed first, like `Vector2 * float`.
-  operator fun times(scalar: Double): Vector2 = real(scalar).let { s -> Vector2(x * s, y * s) }
+  operator fun times(scalar: Double): Vector2 =
+    narrowReal(scalar).let { s -> raw(rawX * s, rawY * s) }
 
   operator fun times(scalar: Int): Vector2 = times(scalar.toDouble())
 
   operator fun times(scalar: Long): Vector2 = times(scalar.toDouble())
 
-  operator fun div(scalar: Double): Vector2 = real(scalar).let { s -> Vector2(x / s, y / s) }
+  operator fun div(scalar: Double): Vector2 =
+    narrowReal(scalar).let { s -> raw(rawX / s, rawY / s) }
 
   operator fun div(scalar: Int): Vector2 = div(scalar.toDouble())
 
   operator fun div(scalar: Long): Vector2 = div(scalar.toDouble())
 
-  fun length(): Double = sqrt(x * x + y * y)
+  fun length(): Double = widenReal(sqrt(realDot(rawX, rawY, rawX, rawY)))
 
-  fun angle(): Double = atan2(y, x)
+  fun angle(): Double = widenReal(atan2(rawY, rawX))
 
   fun lerp(to: Vector2, weight: Double): Vector2 =
-    Vector2(x + (to.x - x) * weight, y + (to.y - y) * weight)
+    narrowReal(weight).let { w -> raw(realLerp(rawX, to.rawX, w), realLerp(rawY, to.rawY, w)) }
 
   fun withX(value: Double): Vector2 = Vector2(value, y)
 
@@ -73,10 +79,13 @@ private constructor(
 
   fun withY(value: Int): Vector2 = withY(value.toDouble())
 
-  fun normalized(): Vector2 {
-    val len = length()
-    return if (len > 0.0) Vector2(x / len, y / len) else ZERO
-  }
+  fun normalized(): Vector2 =
+    realNormalize(
+      rawX.isFinite() && rawY.isFinite(),
+      realDot(rawX, rawY, rawX, rawY),
+      { ZERO },
+      { len -> raw(rawX / len, rawY / len) },
+    )
 
   fun clamp(min: Vector2, max: Vector2): Vector2 =
     Vector2(x.coerceIn(min.x, max.x), y.coerceIn(min.y, max.y))
@@ -88,6 +97,8 @@ private constructor(
   }
 
   companion object {
+    internal fun raw(x: Float, y: Float): Vector2 = Vector2(x, y, RawStorage)
+
     val ZERO = Vector2(0.0, 0.0)
     val ONE = Vector2(1.0, 1.0)
     val RIGHT = Vector2(1.0, 0.0)
@@ -110,6 +121,19 @@ private constructor(
   ) : this(x.toFloat(), y.toFloat(), z.toFloat(), RawStorage)
 
   constructor(x: Int, y: Int, z: Int) : this(x.toDouble(), y.toDouble(), z.toDouble())
+
+  // Every Int/Double mix (GDScript's `Vector3(x, 0, y)`): exactly one overload matches, none boxes.
+  constructor(x: Int, y: Int, z: Double) : this(x.toDouble(), y.toDouble(), z)
+
+  constructor(x: Int, y: Double, z: Int) : this(x.toDouble(), y, z.toDouble())
+
+  constructor(x: Int, y: Double, z: Double) : this(x.toDouble(), y, z)
+
+  constructor(x: Double, y: Int, z: Int) : this(x, y.toDouble(), z.toDouble())
+
+  constructor(x: Double, y: Int, z: Double) : this(x, y.toDouble(), z)
+
+  constructor(x: Double, y: Double, z: Int) : this(x, y, z.toDouble())
 
   val x: Double
     get() = rawX.toDouble()
@@ -139,7 +163,7 @@ private constructor(
 
   /** Godot's `str(v)`: `(0.1, 0.2, 0.3)`. */
   override fun toString(): String =
-    "(${godotRealString(rawX, true)}, ${godotRealString(rawY, true)}, ${godotRealString(rawZ, true)})"
+    "(${godotRealString(x, true)}, ${godotRealString(y, true)}, ${godotRealString(z, true)})"
 
   operator fun plus(other: Vector3): Vector3 = Vector3(x + other.x, y + other.y, z + other.z)
 
@@ -147,21 +171,24 @@ private constructor(
 
   // A scalar operand is a `real_t` (float32) in Godot: narrowed first, like `Vector3 * float`.
   operator fun times(scalar: Double): Vector3 =
-    real(scalar).let { s -> Vector3(x * s, y * s, z * s) }
+    narrowReal(scalar).let { s -> raw(rawX * s, rawY * s, rawZ * s) }
 
   operator fun times(scalar: Int): Vector3 = times(scalar.toDouble())
 
   operator fun times(scalar: Long): Vector3 = times(scalar.toDouble())
 
-  operator fun div(scalar: Double): Vector3 = real(scalar).let { s -> Vector3(x / s, y / s, z / s) }
+  operator fun div(scalar: Double): Vector3 =
+    narrowReal(scalar).let { s -> raw(rawX / s, rawY / s, rawZ / s) }
 
   operator fun div(scalar: Int): Vector3 = div(scalar.toDouble())
 
   operator fun div(scalar: Long): Vector3 = div(scalar.toDouble())
 
-  fun length(): Double = sqrt(x * x + y * y + z * z)
+  fun length(): Double = widenReal(sqrt(rawLengthSquared()))
 
-  fun lengthSquared(): Double = x * x + y * y + z * z
+  fun lengthSquared(): Double = widenReal(rawLengthSquared())
+
+  private fun rawLengthSquared(): Float = realDot(rawX, rawY, rawZ, rawX, rawY, rawZ)
 
   operator fun unaryMinus(): Vector3 = Vector3(-x, -y, -z)
 
@@ -172,10 +199,11 @@ private constructor(
   /** Godot's bounce: reflect off the plane with (unit) normal [normal]. */
   fun bounce(normal: Vector3): Vector3 = this - normal * (2.0 * dot(normal))
 
-  fun dot(other: Vector3): Double = x * other.x + y * other.y + z * other.z
+  fun dot(other: Vector3): Double =
+    widenReal(realDot(rawX, rawY, rawZ, other.rawX, other.rawY, other.rawZ))
 
   fun cross(other: Vector3): Vector3 =
-    Vector3(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
+    realCross(rawX, rawY, rawZ, other.rawX, other.rawY, other.rawZ) { x, y, z -> raw(x, y, z) }
 
   /** Signed angle to [to] around [axis] (Godot's signed_angle_to). */
   fun signedAngleTo(to: Vector3, axis: Vector3): Double {
@@ -203,13 +231,18 @@ private constructor(
 
   fun withZ(value: Int): Vector3 = withZ(value.toDouble())
 
-  fun normalized(): Vector3 {
-    val len = length()
-    return if (len > 0.0) Vector3(x / len, y / len, z / len) else ZERO
-  }
+  fun normalized(): Vector3 =
+    realNormalize(
+      rawX.isFinite() && rawY.isFinite() && rawZ.isFinite(),
+      rawLengthSquared(),
+      { ZERO },
+      { len -> raw(rawX / len, rawY / len, rawZ / len) },
+    )
 
   fun lerp(to: Vector3, weight: Double): Vector3 =
-    Vector3(x + (to.x - x) * weight, y + (to.y - y) * weight, z + (to.z - z) * weight)
+    narrowReal(weight).let { w ->
+      raw(realLerp(rawX, to.rawX, w), realLerp(rawY, to.rawY, w), realLerp(rawZ, to.rawZ, w))
+    }
 
   fun limitLength(max: Double): Vector3 {
     val len = length()
@@ -233,6 +266,8 @@ private constructor(
   }
 
   companion object {
+    internal fun raw(x: Float, y: Float, z: Float): Vector3 = Vector3(x, y, z, RawStorage)
+
     val ZERO = Vector3(0.0, 0.0, 0.0)
     val ONE = Vector3(1.0, 1.0, 1.0)
     val UP = Vector3(0.0, 1.0, 0.0)
@@ -274,6 +309,9 @@ private constructor(
     b: Int,
     a: Int = 1,
   ) : this(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
+
+  /** GDScript's `Color(1, 1, 1, 0.72)`: integer channels with a decimal alpha. */
+  constructor(r: Int, g: Int, b: Int, a: Double) : this(r.toDouble(), g.toDouble(), b.toDouble(), a)
 
   val r: Double
     get() = rawR.toDouble()
@@ -346,7 +384,7 @@ private constructor(
   override fun hashCode(): Int = 31 * normal.hashCode() + storedHash(rawD)
 
   /** Godot's `str(p)`: `[N: (0.0, 1.0, 0.0), D: 0]`. */
-  override fun toString(): String = "[N: $normal, D: ${godotRealString(rawD, false)}]"
+  override fun toString(): String = "[N: $normal, D: ${godotRealString(d, false)}]"
 
   /**
    * Godot's intersects_ray: the intersection of the ray [from] + t * [dir] with this plane, or null
@@ -438,12 +476,15 @@ private constructor(
 
   /** Godot's `str(q)`: `(0, 0, 0, 1)`. */
   override fun toString(): String =
-    "(${godotRealString(rawX, false)}, ${godotRealString(rawY, false)}, " +
-      "${godotRealString(rawZ, false)}, ${godotRealString(rawW, false)})"
+    "(${godotRealString(x, false)}, ${godotRealString(y, false)}, " +
+      "${godotRealString(z, false)}, ${godotRealString(w, false)})"
 
+  // Godot: `*this / length()`, which multiplies by `1 / length` in `real_t`.
   fun normalized(): Quaternion {
-    val len = sqrt(x * x + y * y + z * z + w * w)
-    return if (len > 0.0) Quaternion(x / len, y / len, z / len, w / len) else IDENTITY
+    val len = sqrt(realDot(rawX, rawY, rawZ, rawW, rawX, rawY, rawZ, rawW))
+    if (len == 0.0f) return IDENTITY
+    val inverse = 1.0f / len
+    return raw(rawX * inverse, rawY * inverse, rawZ * inverse, rawW * inverse)
   }
 
   /** Spherical interpolation along the shortest arc (Godot's slerp). */
@@ -474,6 +515,9 @@ private constructor(
   }
 
   companion object {
+    internal fun raw(x: Float, y: Float, z: Float, w: Float): Quaternion =
+      Quaternion(x, y, z, w, RawStorage)
+
     val IDENTITY = Quaternion(0.0, 0.0, 0.0, 1.0)
   }
 }
@@ -513,52 +557,47 @@ class Basis internal constructor(private val stored: FloatArray) {
     )
   )
 
+  /** Godot's `Basis(Quaternion)` (`set_quaternion`), in `real_t`. */
   constructor(
     quaternion: Quaternion
   ) : this(
-    quaternion.normalized().let { q ->
-      val xx = q.x * q.x
-      val yy = q.y * q.y
-      val zz = q.z * q.z
-      val xy = q.x * q.y
-      val xz = q.x * q.z
-      val yz = q.y * q.z
-      val wx = q.w * q.x
-      val wy = q.w * q.y
-      val wz = q.w * q.z
-      doubleArrayOf(
-        1.0 - 2.0 * (yy + zz),
-        2.0 * (xy - wz),
-        2.0 * (xz + wy),
-        2.0 * (xy + wz),
-        1.0 - 2.0 * (xx + zz),
-        2.0 * (yz - wx),
-        2.0 * (xz - wy),
-        2.0 * (yz + wx),
-        1.0 - 2.0 * (xx + yy),
-      )
+    realBasisFromQuaternion(quaternion.rawX, quaternion.rawY, quaternion.rawZ, quaternion.rawW) {
+      r00,
+      r01,
+      r02,
+      r10,
+      r11,
+      r12,
+      r20,
+      r21,
+      r22 ->
+      floatArrayOf(r00, r01, r02, r10, r11, r12, r20, r21, r22)
     }
   )
 
+  /** Godot's `Basis.xform`: each row dotted with [v], in `real_t`. */
   operator fun times(v: Vector3): Vector3 =
-    Vector3(
-      stored[0] * v.x + stored[1] * v.y + stored[2] * v.z,
-      stored[3] * v.x + stored[4] * v.y + stored[5] * v.z,
-      stored[6] * v.x + stored[7] * v.y + stored[8] * v.z,
+    Vector3.raw(
+      realDot(stored[0], stored[1], stored[2], v.rawX, v.rawY, v.rawZ),
+      realDot(stored[3], stored[4], stored[5], v.rawX, v.rawY, v.rawZ),
+      realDot(stored[6], stored[7], stored[8], v.rawX, v.rawY, v.rawZ),
     )
 
   /** Row-major matrix product (this applied after [other] in xform order). */
+  /**
+   * Row-major matrix product (this applied after [other] in xform order), Godot's real_t sum order.
+   */
   operator fun times(other: Basis): Basis {
-    val a = m
-    val b = other.m
-    val out = DoubleArray(9)
-    for (row in 0..2) {
-      for (col in 0..2) {
-        out[row * 3 + col] =
-          a[row * 3] * b[col] + a[row * 3 + 1] * b[3 + col] + a[row * 3 + 2] * b[6 + col]
+    val a = stored
+    val b = other.stored
+    return Basis(
+      FloatArray(9) {
+        val row = it / 3
+        val col = it % 3
+        // Godot: other.tdot{x,y,z}(rows[row]) = b[0][col] * a[row][0] + b[1][col] * a[row][1] + ...
+        b[col] * a[row * 3] + b[3 + col] * a[row * 3 + 1] + b[6 + col] * a[row * 3 + 2]
       }
-    }
-    return Basis(out)
+    )
   }
 
   /** Rotation-only inverse: the transpose. */

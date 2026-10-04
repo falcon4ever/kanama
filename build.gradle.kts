@@ -121,10 +121,10 @@ fun kanamaRealIsDouble(selected: String): Boolean =
   }
 
 // The engine's `real_t` STORAGE width, as ONE generated common file. Every decimal component
-// Kanama exposes is `Double` in every build (task 134, D1): `real_t` is not a public type. What
-// depends on the engine build's precision is only the width a component has in an engine buffer —
-// `GodotRealArray` and the `GodotReal.toC`/`fromC` pair that narrows on the way in and widens on
-// the way out, like GDScript (whose `float` is 64-bit) does at the same boundary.
+// Kanama exposes is `Double` in every public signature (task 134, D1): `real_t` is not a public
+// type. The value types STORE their components at this width (task 134 A2, like Godot, GDScript
+// and C#): the internal `GodotRealStorage` field type with `narrowReal`/`widenReal` around it, and
+// engine buffers use the same width (`GodotRealArray`, the public `GodotReal.toC`/`fromC`).
 // -PkanamaPrecision=double is a desktop build; the iOS compile guard further down rejects it.
 val generateKanamaReal by
   tasks.registering {
@@ -148,7 +148,7 @@ val generateKanamaReal by
                 | * A flat buffer of components at the engine's `real_t` storage width (`Float` for a
                 | * normal `precision=single` Godot build, `Double` for `precision=double`) — the marshal
                 | * form the [net.multigesture.kanama.binding.runtime.BuiltinCalls] facade moves value
-                | * types in and out with. Kanama's value types themselves hold `Double` in every build.
+                | * types in and out with, at the same width the value types store their components.
                 | */
                 |typealias GodotRealArray = ${storage}Array
                 |
@@ -157,6 +157,17 @@ val generateKanamaReal by
                 | * type (`Vector2`…`Projection`). Public members stay `Double`; this is internal.
                 | */
                 |internal typealias GodotRealStorage = $storage
+                |
+                |/** `true` when `real_t` is float32 (Godot's default `precision=single`). */
+                |internal const val REAL_IS_SINGLE: Boolean = ${!isDouble}
+                |
+                |/** A `Double` narrowed to `real_t` (rounded to nearest): what a value type stores. */
+                |@Suppress("NOTHING_TO_INLINE")
+                |internal inline fun narrowReal(value: Double): GodotRealStorage = ${if (isDouble) "value" else "value.toFloat()"}
+                |
+                |/** A stored `real_t` widened to `Double` (exact): what a value type's property returns. */
+                |@Suppress("NOTHING_TO_INLINE")
+                |internal inline fun widenReal(value: GodotRealStorage): Double = ${if (isDouble) "value" else "value.toDouble()"}
                 |
                 |/**
                 | * The engine's `real_t` storage width and the conversions between it and `Double`.
@@ -175,9 +186,6 @@ val generateKanamaReal by
                 |
                 |    /** A stored value widened to `Double` (exact). */
                 |    fun fromC(value: $storage): Double = ${if (isDouble) "value" else "value.toDouble()"}
-                |
-                |    /** `true` when `real_t` is float32 (Godot's default `precision=single`). */
-                |    internal const val IS_SINGLE: Boolean = ${!isDouble}
                 |
                 |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
                 |}

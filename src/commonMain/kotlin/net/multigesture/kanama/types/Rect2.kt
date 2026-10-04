@@ -51,7 +51,7 @@ data class Rect2(
   val end: Vector2
     get() = position + size
 
-  fun area(): Double = GodotReal.fromC(size.rawX * size.rawY)
+  fun area(): Double = widenReal(size.rawX * size.rawY)
 
   /**
    * Returns `true` if the rectangle contains the given `point`. By convention, points on the right

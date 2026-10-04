@@ -57,14 +57,20 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
             |
             |internal typealias GodotRealStorage = Float
             |
+            |internal const val REAL_IS_SINGLE: Boolean = true
+            |
+            |@Suppress("NOTHING_TO_INLINE")
+            |internal inline fun narrowReal(value: Double): Float = value.toFloat()
+            |
+            |@Suppress("NOTHING_TO_INLINE")
+            |internal inline fun widenReal(value: Float): Double = value.toDouble()
+            |
             |object GodotReal {
             |    const val SIZE_BYTES: Long = 4L
             |    const val ALIGN_BYTES: Long = 4L
             |
             |    fun toC(value: Double): Float = value.toFloat()
             |    fun fromC(value: Float): Double = value.toDouble()
-            |
-            |    internal const val IS_SINGLE: Boolean = true
             |
             |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
             |}

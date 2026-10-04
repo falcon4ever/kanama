@@ -291,8 +291,10 @@ boundary:
   `Double` in Kotlin and store their components at the same width (task 134):
   the generated internal `GodotRealStorage` — `Float` for normal single-precision
   Godot builds, `Double` for `precision=double` builds (`Color` is always
-  `Float`). Constructors round with `GodotReal.toC`, properties widen with
-  `GodotReal.fromC`, and the marshalling moves the stored values unconverted
+  `Float`). Constructors round with the generated internal inline `narrowReal`,
+  properties widen with `widenReal`, the `real_t` formulas live once in
+  `types/shared/RealMath.kt` (also compiled by `web-runtime`, whose `WebReal.kt` supplies
+  the float32 storage), and the marshalling moves the stored values unconverted
   (`GodotRealSegment.readRaw`/`writeRaw`, the value types' internal `raw`
   factories and `rawX`… fields); `GodotRealSegment.readIndex`/`writeIndex` are the
   `Double` pair the generated script registrars use.

@@ -310,28 +310,20 @@ data class Basis(
     // the engine is component i of column j here, so the engine rows are transposed into columns.
     // Exact arithmetic (no epsilon, no normalization), so it stays in Kotlin, in `real_t` like
     // the engine, so the result is the engine's to the bit.
-    private fun columnsFromQuaternion(q: Quaternion): Triple<Vector3, Vector3, Vector3> {
-      val one = GodotReal.toC(1.0)
-      val d = q.rawX * q.rawX + q.rawY * q.rawY + q.rawZ * q.rawZ + q.rawW * q.rawW
-      val s = GodotReal.toC(2.0) / d
-      val xs = q.rawX * s
-      val ys = q.rawY * s
-      val zs = q.rawZ * s
-      val wx = q.rawW * xs
-      val wy = q.rawW * ys
-      val wz = q.rawW * zs
-      val xx = q.rawX * xs
-      val xy = q.rawX * ys
-      val xz = q.rawX * zs
-      val yy = q.rawY * ys
-      val yz = q.rawY * zs
-      val zz = q.rawZ * zs
-      return Triple(
-        Vector3.raw(one - (yy + zz), xy + wz, xz - wy),
-        Vector3.raw(xy - wz, one - (xx + zz), yz + wx),
-        Vector3.raw(xz + wy, yz - wx, one - (xx + yy)),
-      )
-    }
+    private fun columnsFromQuaternion(q: Quaternion): Triple<Vector3, Vector3, Vector3> =
+      // Godot's rows[i][j] is component i of column j here: the rows are transposed into columns.
+      realBasisFromQuaternion(q.rawX, q.rawY, q.rawZ, q.rawW) {
+        r00,
+        r01,
+        r02,
+        r10,
+        r11,
+        r12,
+        r20,
+        r21,
+        r22 ->
+        Triple(Vector3.raw(r00, r10, r20), Vector3.raw(r01, r11, r21), Vector3.raw(r02, r12, r22))
+      }
 
     private fun vector3Array(v: Vector3): GodotRealArray =
       GodotRealArray(3).also {
