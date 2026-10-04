@@ -38,8 +38,15 @@ object AutoloadAccess {
     val instance = ScriptRuntime.scriptInstanceOf(node)
     if (instance != null && type.isInstance(instance)) return instance as T
     val found = instance?.let { "the script ${it::class.simpleName}" } ?: "no Kotlin script"
+    // Desktop hot reload re-creates the scene's script objects, not an autoload's: the autoload
+    // keeps the object of the previous build (an equally named class) until the game restarts.
+    val stale =
+      if (instance != null && instance::class.simpleName == type.simpleName) {
+        " from before a hot reload (an autoload keeps its Kotlin object until the game restarts)"
+      } else ""
     throw IllegalStateException(
-      "Autoload '$name' at /root/$name (${node.getClassName()}) has $found, not ${type.simpleName}"
+      "Autoload '$name' at /root/$name (${node.getClassName()}) has $found$stale, not " +
+        "${type.simpleName}"
     )
   }
 

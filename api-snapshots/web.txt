@@ -2074,11 +2074,11 @@ KanamaScript: constructor(godotObject: GodotHandle, wrapper: (GodotHandle) -> T)
 KanamaScript: fun cancelCoroutines()
 KanamaScript: fun launch(block: suspend CoroutineScope.() -> Unit): Job
 KanamaScript: inline fun <R> selfAs(ctor: (GodotHandle) -> R): R
-KanamaScript: protected val self: T
 KanamaScript: suspend fun nextFrame()
 KanamaScript: suspend fun wait(seconds: Double, processAlways: Boolean = ..., ignoreTimeScale: Boolean = ...)
 KanamaScript: val godotObject: GodotHandle
 KanamaScript: val scriptScope: CoroutineScope
+KanamaScript: val self: T
 Key: value class Key : GodotEnumValue
 Key: constructor(value: Long)
 Key: override val value: Long

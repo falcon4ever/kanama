@@ -87,7 +87,14 @@ Desktop, Android, iOS and Web.
   declare `project.godot` as a KSP input, and the `kanamaGodotProjectDir` KSP option points at a
   project that is not above the script sources (the Web build sets it). Runtime:
   `AutoloadAccess` (common, and a Web counterpart that resolves through the running script's
-  node). Proof: `AutoloadSourceTest`, the `autoload` row of `scripts/runtime_smoke.sh`.
+  node). Proof: `AutoloadSourceTest`, the `autoload` row of `scripts/runtime_smoke.sh`. Known
+  limit (not new): a desktop hot reload re-creates the reloaded scene's script objects, not an
+  autoload's, so a Kotlin script autoload keeps its pre-reload object until the game restarts;
+  `Autoloads.<Name>` then throws saying so (the former `kotlinScriptInstance<Audio>()` lookups
+  returned `null` and the call was silently skipped).
+- **Source break:** on Web, `KanamaScript.self` is public (it was `protected`), as on desktop,
+  Android and iOS, so shared code can reach an autoload's node (`Autoloads.Events.self`). Widening
+  breaks no caller; the snapshot records it as a change.
 - **Script inheritance**: a script class that extends another class of the same build (a
   `@ScriptClass` base or a plain abstract one) has all of its members — exports, signals,
   lifecycle handlers, `@OverrideVirtual`s, tool buttons and registered public functions — with no

@@ -39,7 +39,12 @@ class AutoloadSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, 
       } catch (e: IllegalStateException) {
         e.message?.contains("has the script KanamaKotlinAutoload, not AutoloadSmoke") == true
       }
-    return "kotlin=${kotlin.greeting()} gd=${gd.getName()}:${addCount(gd)} " +
+    val greeting = kotlin.greeting()
+    // Free the Kotlin autoload (at the end of this frame): an autoload outlives a desktop hot
+    // reload (only the scene's script objects are re-created), and hot_reload_in_process_smoke.sh
+    // checks that the previous build's class loader is collected.
+    kotlin.self.queueFree()
+    return "kotlin=$greeting gd=${gd.getName()}:${addCount(gd)} " +
       "missing=$missing wrong_class=$wrongClass wrong_script=$wrongScript"
   }
 

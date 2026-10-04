@@ -567,6 +567,12 @@ wrapper for on the target falls back to its nearest wrapped ancestor. On Web the
 lookup goes through the running script's node, so read an autoload from a script
 callback (a lifecycle handler, a signal, a coroutine), which is where Web code runs.
 
+**Hot reload.** A desktop hot reload re-creates the script objects of the reloaded
+scene, not those of autoloads, which outlive it: a Kotlin script autoload keeps the
+object (and code) of the build it started with until the game restarts, and
+`Autoloads.<Name>` then throws, saying the object is from before a hot reload.
+GDScript and scene-class autoloads are unaffected.
+
 ## Script Inheritance
 
 A script class can extend another script class of the project, as a GDScript

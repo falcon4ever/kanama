@@ -659,8 +659,11 @@ func _kanama_export_hint_twin_smoke() -> void:
 	if mismatches.size() > 0 or rows < 36 or not folded:
 		push_error("Kanama typed export hints differ from GDScript: %s (rows=%d folded=%s)" % [str(mismatches), rows, str(folded)])
 
-# task 133 C -- the generated Autoloads object (from project.godot [autoload]).
+# task 133 C -- the generated Autoloads object (from project.godot [autoload]). AutoloadSmoke frees
+# the Kotlin autoload at the end (see there), so a reloaded main scene skips the row.
 func _kanama_autoload_smoke() -> void:
+	if get_node_or_null("/root/KanamaKotlinAutoload") == null:
+		return
 	var node := Node.new()
 	node.set_script(load("res://AutoloadSmoke.kt"))
 	add_child(node)
