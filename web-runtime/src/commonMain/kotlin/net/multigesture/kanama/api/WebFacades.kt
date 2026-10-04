@@ -149,6 +149,22 @@ class MultiplayerAPI internal constructor() {
   /** No remote peers ever connect, so these signals never fire; connects are no-ops. */
   fun signal(@Suppress("UNUSED_PARAMETER") name: String): InertSignal = InertSignal
 
+  // The typed signals (task 134 D4), as inert as the untyped handle above.
+  val peerConnected: InertSignal1<Long>
+    get() = InertSignal1()
+
+  val peerDisconnected: InertSignal1<Long>
+    get() = InertSignal1()
+
+  val connectedToServer: InertSignal0
+    get() = InertSignal0
+
+  val connectionFailed: InertSignal0
+    get() = InertSignal0
+
+  val serverDisconnected: InertSignal0
+    get() = InertSignal0
+
   object Signals {
     const val peerConnected = "peer_connected"
     const val peerDisconnected = "peer_disconnected"
@@ -170,6 +186,22 @@ class MultiplayerAPI internal constructor() {
     }
   }
   // ===== END GENERATED ENUMS: MultiplayerAPI =====
+}
+
+/** A typed signal without arguments that can never fire on Web; connecting is inert (task 134). */
+object InertSignal0 {
+  fun connect(@Suppress("UNUSED_PARAMETER") callback: () -> Unit) = Unit
+
+  fun connect(@Suppress("UNUSED_PARAMETER") target: GodotObject, @Suppress("UNUSED_PARAMETER") callback: () -> Unit) =
+    Unit
+}
+
+/** A typed one-argument signal that can never fire on Web; connecting is inert (task 134). */
+class InertSignal1<A> {
+  fun connect(@Suppress("UNUSED_PARAMETER") callback: (A) -> Unit) = Unit
+
+  fun connect(@Suppress("UNUSED_PARAMETER") target: GodotObject, @Suppress("UNUSED_PARAMETER") callback: (A) -> Unit) =
+    Unit
 }
 
 /** A signal that can never fire on Web; connecting to it is deliberately inert. */

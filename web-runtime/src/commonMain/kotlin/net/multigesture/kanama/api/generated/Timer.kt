@@ -27,6 +27,10 @@ class Timer(godotObject: GodotHandle) : Node(godotObject) {
   val timeLeft: Double
     get() = getTimeLeft()
 
+  /** Signal `timeout`; see [TypedSignal]. */
+  val timeout: Signal0
+    get() = Signal0(this, "timeout")
+
   object Signals {
     const val timeout: String = "timeout"
   }

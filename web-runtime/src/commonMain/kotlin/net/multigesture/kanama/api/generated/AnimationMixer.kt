@@ -61,6 +61,10 @@ open class AnimationMixer(godotObject: GodotHandle) : Node(godotObject) {
     set(path, value.toDouble())
   }
 
+  /** Signal `animation_finished`; see [TypedSignal]. */
+  val animationFinished: Signal1<String>
+    get() = Signal1(this, "animation_finished", SignalArgType.STRING)
+
   object Signals {
     const val animationFinished: String = "animation_finished"
   }

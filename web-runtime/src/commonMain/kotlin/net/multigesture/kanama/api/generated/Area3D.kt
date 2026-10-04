@@ -16,6 +16,14 @@ class Area3D(godotObject: GodotHandle) : CollisionObject3D(godotObject) {
       requireOpenHandle(),
     ).map { Node3D(it.toWebId()) }
 
+  /** Signal `body_entered`; see [TypedSignal]. */
+  val bodyEntered: Signal1<Node3D>
+    get() = Signal1(this, "body_entered", SignalArgType.objectOf("Node3D") { Node3D(it) })
+
+  /** Signal `body_exited`; see [TypedSignal]. */
+  val bodyExited: Signal1<Node3D>
+    get() = Signal1(this, "body_exited", SignalArgType.objectOf("Node3D") { Node3D(it) })
+
   object Signals {
     const val bodyEntered: String = "body_entered"
     const val bodyExited: String = "body_exited"

@@ -65,6 +65,14 @@ healthChanged.connect { hp -> bar.value = hp.toDouble() }
 `X.Signals` constants (`Area3D.Signals.bodyEntered = "body_entered"`) remain for
 string-based APIs, as does the untyped `signal(name)` handle described below.
 
+**Web.** The Web bridge delivers a signal's first argument only, so Web has
+`Signal0` and `Signal1` (an object, `int`, `float`, `bool`, `String`/`StringName`,
+`Vector2`, `Vector2i`, `Vector3` or a Godot enum), on the signals its wrappers
+expose (`timeout`, `pressed`, `finished`, `body_entered`/`body_exited`,
+`animation_finished`, `size_changed`); `connect`, `await`, `emit` and the script's
+`connect { }` work as above. Signals with two or more arguments and the other
+argument types are not available on Web yet.
+
 ## Custom Signals
 
 Declare custom signals with `@Signal`. KSP generates a typed `*Signals` helper
@@ -278,7 +286,7 @@ connection.close()
 Lifetime is the same as for the typed form: the connection dies with its target
 or the emitter, or after a one-shot call, and Kanama then releases the lambda.
 This holds on desktop, Android and iOS; the Web backend does not release them
-yet, and it has no typed engine signals yet (Web keeps the untyped handle).
+yet.
 
 `connect(target, argumentCount) { args -> ... }` receives the first
 `argumentCount` emitted arguments as a `List<Any?>` (no upper limit since task

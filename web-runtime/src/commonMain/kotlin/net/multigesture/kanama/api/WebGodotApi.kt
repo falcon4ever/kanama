@@ -82,6 +82,22 @@ abstract class KanamaScript<T : GodotObject>(
     }
   }
 
+  // Typed signals bound to this script's object (task 134 D4), as on desktop, Android and iOS.
+
+  /** Connects [callback] bound to this script's object: `timer.timeout.connect { … }`. */
+  fun Signal0.connect(callback: () -> Unit): SignalConnection = connect(GodotObject(godotObject), callback)
+
+  /** [Signal0.connect] bound to this script's object, with [flags]. */
+  fun Signal0.connect(flags: GodotObject.ConnectFlags, callback: () -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), flags, callback)
+
+  /** Connects [callback] bound to this script's object: `area.bodyEntered.connect { body -> … }`. */
+  fun <A> Signal1<A>.connect(callback: (A) -> Unit): SignalConnection = connect(GodotObject(godotObject), callback)
+
+  /** [Signal1.connect] bound to this script's object, with [flags]. */
+  fun <A> Signal1<A>.connect(flags: GodotObject.ConnectFlags, callback: (A) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), flags, callback)
+
   /** Cancels every coroutine this script has running; a later [launch] starts fresh. */
   fun cancelCoroutines() {
     scopeOrNull?.coroutineContext?.cancelChildren()
