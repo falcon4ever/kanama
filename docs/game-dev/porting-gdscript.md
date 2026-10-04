@@ -53,7 +53,9 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `print(position)` → `(0.1, 0.2)` | `println(position)` → `(0.1, 0.2)` (same `str()` form) |
 | `v.is_equal_approx(w)`, `v == w` | `v.isEqualApprox(w)`, `v == w` (compares the stored components, as in GDScript) |
 | `global_transform * Vector3.FORWARD`, `basis * other_basis`, `quat * dir` | the same operators |
-| `2.0 * v`, `Vector2i(4, 6) / 2`, `-color`, `a < b` (vectors) | the same |
+| `2.0 * v`, `Vector2i(4, 6) / 2`, `-color`, `a < b` (vectors) | the same (`2.0 * v` is an extension operator: `import net.multigesture.kanama.types.*`, which new scripts already have) |
+| `x ** y` | `x.pow(y)` (`kotlin.math`) or `GD.pow(x, y)` (Godot's `pow`): Kotlin has no power operator |
+| `Color.RED`, `Vector2i.LEFT`, `Vector3.MODEL_FRONT` | the same |
 | `v.direction_to(t)`, `rect.get_center()`, `Color.from_hsv(h, s, v)` | `v.directionTo(t)`, `rect.getCenter()`, `Color.fromHsv(h, s, v)` |
 
 Decimals behave as in GDScript: every decimal is `Double` (GDScript's `float`), and a vector,

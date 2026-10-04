@@ -198,7 +198,7 @@ out of the tree universe (and `--ios-emit-class RefCounted` refuses it); `GodotO
 the three is a ptrcall through `ObjectCalls`, except four platform-bound hooks that go through the
 internal **`ObjectRuntime` seam** — `internal expect object ObjectRuntime` in
 `src/commonMain/.../binding/runtime/ObjectRuntime.expect.kt`, the compiler-checked contract in the
-same style as `ObjectCalls` and `BuiltinCalls`:
+same style as `ObjectCalls` and the builtin-call `BuiltinFrame`:
 
 | hook | called from | desktop/Android actual | iOS actual |
 |---|---|---|---|
@@ -888,23 +888,22 @@ files, and neither platform keeps a copy. Only `Real.kt` is per platform
 build script on Android) — as `GodotHandle` was until task 104 step 3 moved it into
 the shared tree over `RawSegment`.
 
-A shared body reaches the engine only through
-`net.multigesture.kanama.binding.runtime.BuiltinCalls`, which exists once per
-platform under that one fully-qualified name: over Panama/FFM in
-`src/jvmMain/kotlin/binding/runtime/BuiltinCalls.kt` (Android gets it through the
-source remap) and over the C shim in
-`src/iosMain/.../binding/runtime/BuiltinCalls.kt`. Since task 104 step 3 the
-declaration both implement is `expect object BuiltinCalls` in
-`src/commonMain/.../binding/runtime/BuiltinCalls.expect.kt`, so adding a member
-to one half without the other is a compile error at the edit, not a drift a
-script has to notice. The `VT_*`/`PT_*` wire numbers are common `const val`s in
-`BuiltinTags.kt` — values, which an `expect` declaration cannot carry.
+A shared body reaches the engine only through the builtin-call facade
+`net.multigesture.kanama.binding.runtime.BuiltinFrame` / `BuiltinMethod`, declared once as
+`internal expect class`es in `src/commonMain/.../binding/runtime/BuiltinFrame.expect.kt` and
+implemented over Panama/FFM in `src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt` (Android gets
+it through the source remap) and over the C shim in `src/iosMain/.../binding/runtime/BuiltinFrame.kt`,
+so adding a member to one half without the other is a compile error at the edit. A call allocates
+nothing: the generated member writes its base and arguments into the thread's frame slots and
+calls through one constant downcall (task 134 B). The `VT_*`/`PT_*` wire numbers are common
+`const val`s in `BuiltinTags.kt` — values, which an `expect` declaration cannot carry.
 
-Which methods are engine-computed is a policy, not a preference: a method whose
-result depends on Godot's own edge-case handling — epsilons, orthonormalization,
-Euler order, shortest-arc slerp — calls the builtin; exact arithmetic (dot,
-cross, component-wise operators, `is_normalized`'s epsilon comparison) is plain
-Kotlin, so it costs no round trip on device. Value-type helpers that mirror
+Which methods are engine-computed is a policy, not a preference: a method with a
+transcendental (sin/cos/atan2/exp/pow) or a long body — Euler angles,
+orthonormalization, shortest-arc slerp — calls the builtin; exact arithmetic
+(operators, `dot`, `lerp`, `moveToward`, rect/AABB tests, `is_normalized`'s epsilon
+comparison) is plain Kotlin with Godot's operand order, so it costs no round trip
+and is never slower than GDScript. Value-type helpers that mirror
 Godot builtin methods should call the matching builtin unless the local
 implementation is deliberately proven equivalent. Use the audit script when
 editing `types/*.kt`:
@@ -916,8 +915,8 @@ python3 scripts/audit_value_type_wrappers.py --api extension_api.json
 The audit is report-only by default, and `--strict` is wired into local CI. It
 also checks the builtin float ABI in its new shape: Godot's ptr-ABI passes a
 Variant `float` argument as an 8-byte double whatever the engine's `real_t`
-precision, so such an argument must travel as `BArg.Real`, never
-inside a `BArg.Floats` buffer of `real_t` components. Reviewed local scalar
+precision, so such an argument must be written with `putDouble`, never
+as a `putReal` component. Reviewed local scalar
 formulas are allowlisted in the script; any newly added Godot-named value helper
 that does not call the builtin should be treated as suspicious until it is either
 bound to Godot's builtin or deliberately added to the reviewed list with focused
@@ -932,9 +931,9 @@ the rest of each file stays hand-written, and a hand-written member with the God
 generator skips it). Operators and the methods in the generator's `PURE_METHODS` are Kotlin:
 component-wise ones come from templates, composite ones call the hand-ported formulas in
 `types/BuiltinFormulas.kt` (Godot's operand order, `real_t` width). Every other method calls the
-engine through `BuiltinCalls.invoke*` (base and arguments marshalled by Godot type in the generated
-`types/BuiltinMarshalling.kt`; `int32` structs as `BArg.Ints`, `Color` as `BArg.Float32s`, a
-`String` as `BArg.Str`). `types/BuiltinScalarOperators.kt` holds `2.0 * v` and
+engine through the thread's `BuiltinFrame` (base and arguments written by Godot type through the
+generated `types/BuiltinMarshalling.kt`: `real_t` components, `int32` for `Vector2i`-style types,
+float32 for `Color`, a `String` built for the call; one `BuiltinMethod` constant per method). `types/BuiltinScalarOperators.kt` holds `2.0 * v` and
 `points * transform`. After editing the generator or a value type:
 
 ```sh

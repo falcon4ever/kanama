@@ -68,17 +68,38 @@ under its GDScript meaning, generated from `extension_api.json`:
   `transform.getRotation()`; `Transform2D.get_origin()` is the `origin`
   property.
 
-Arithmetic operators and short component-wise methods (`abs`, `floor`, `min`,
-`clampf`, `length` of an integer vector, ...) run in Kotlin with Godot's own
-formulas at Godot's width, so their results are Godot's to the bit; every other
-method is computed by the engine. The runtime smoke compares all of them with
-GDScript on every run. Integer vectors follow GDScript: integer division by zero
-is an error (Kotlin throws `ArithmeticException`). Methods Godot checks in debug
-builds (`slerp` on a non-normalized quaternion, `slide` with a non-normalized
-normal) report the same engine error as GDScript, except `quaternion * vector` and `vector * quaternion`,
-which are Kotlin math and compute the product without the debug check. Comparing
-vectors that contain NaN with `<`/`>` is false in Godot for all four operators;
-Kotlin's single `compareTo` cannot express that, so a NaN component sorts last.
+Operators and every method whose Godot implementation is plain arithmetic
+(`abs`, `floor`, `round`, `min`/`max`, `clampf`, `lerp`, `moveToward`,
+`slide`/`bounce`/`reflect`, `project`, `limitLength`, `Rect2`/`Rect2i`/`AABB`
+`hasPoint`/`intersects`/`encloses`/`merge`/`grow*`, `Plane.project`,
+`Transform2D.inverse`/`translated`, `Color.lerp`, ...) run in Kotlin with
+Godot's own formulas at Godot's width, so their results are Godot's to the bit
+and cost no engine call. Every other method (`angle`, `rotated`, `slerp`,
+`Basis.getEuler`, `Color.lightened`, ...) is computed by the engine through an
+allocation-free call, about as fast as the same call from GDScript. The runtime
+smoke compares all of them with GDScript on every run, over random inputs and over
+±0, NaN, ±INF and `.5` ties. Constants are the companion values Godot declares:
+`Vector2i.LEFT`, `Vector3.MODEL_FRONT`, `Basis.FLIP_X`, `Plane.PLANE_XY`,
+`Vector3.INF`, every named color (`Color.RED`, `Color.CORNFLOWER_BLUE`), and the
+enums (`Vector3.Axis.X`).
+
+Where Kotlin and GDScript differ:
+
+- Integer division or `%` by zero (`Vector2i(1, 1) / 0`) throws
+  `ArithmeticException`; GDScript reports a division-by-zero error.
+- Godot's debug build checks some arguments and returns a default instead of
+  computing (`slide`, `bounce`, `reflect` with a non-normalized normal;
+  `quaternion * vector` and `vector * quaternion` with a non-normalized
+  quaternion). These are Kotlin math and compute the formula without the check,
+  which is what an exported (release) game does. Engine-computed methods
+  (`slerp`, `rotated`, ...) report the same error as GDScript.
+- Comparing vectors with a NaN component: Godot answers `false` to all of `<`,
+  `<=`, `>` and `>=`. Kotlin's comparisons go through one `compareTo`, which sorts
+  a NaN component last, so `<` and `<=` are `false` but `>` and `>=` are `true`.
+- On Web (Kotlin/Wasm), the methods that run in Kotlin natively run the same
+  Kotlin, with the same results; the engine-computed ones are not all there yet,
+  and `angle()`, `rotated` and `slerp` are Kotlin approximations of Godot's
+  (rounded to `real_t`, not guaranteed to the bit).
 
 Their components are `Double`, like every other decimal in the API (`Vector3.x`,
 `Color.r`, `delta`, scalar arguments), so no `.toFloat()`/`.toDouble()` is
