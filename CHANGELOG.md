@@ -201,8 +201,13 @@ accessors now and the rest in a follow-up (see "Web" below).
   `script_owner_smoke.tscn` (red with `KANAMA_SCRIPT_OWNER_LINKS=0`, a measurement knob). If the
   collector drops a script object and the engine loads its resource from the cache again before
   the next frame, the rebuilt script instance re-reads its property values from the resource's
-  file (what GDScript's re-parse gives); only a resource with no file starts from the defaults,
-  with a warning (`cache_recreate_probe.tscn`). `KANAMA_GC_RELEASES=0` turns these owner links
+  file (what GDScript's re-parse gives); only a resource with no file, or a sub-resource stored
+  inside another file, starts from the defaults, with a warning (`cache_recreate_probe.tscn`).
+  The rebuild and the re-read happen on the script object's first use, never inside the engine's
+  reference callback (which holds the loader locks) nor while the resource is freed
+  (`refill_on_free_probe.tscn`); the re-read loads an uncached copy, so the script constructor
+  runs for it too, and a file changed on disk since the load gives script properties from the
+  file but engine properties from memory. `KANAMA_GC_RELEASES=0` turns these owner links
   off too.
 - **The `from*` downcasts own their wrapper** (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`,
   ...): each takes a reference of its own, so a downcast kept in a field keeps the object alive.

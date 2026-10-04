@@ -8,6 +8,7 @@ import net.multigesture.kanama.binding.runtime.OwnedReleaseCleaner
 import net.multigesture.kanama.binding.runtime.OwnedReleases
 import net.multigesture.kanama.binding.runtime.PendingRelease
 import net.multigesture.kanama.binding.runtime.ReleaseHook
+import net.multigesture.kanama.binding.runtime.ScriptOwnerIds
 
 /**
  * A Kotlin script object on a `RefCounted` owner keeps its owner alive, as holding the script
@@ -30,9 +31,17 @@ import net.multigesture.kanama.binding.runtime.ReleaseHook
  *   [net.multigesture.kanama.binding.runtime.OwnedReleases] (main thread, next frame); the owner
  *   then dies like any unreferenced `RefCounted`.
  * - if the engine re-references the owner after the GC collected the script object but before that
- *   release ran (a `ResourceCache` hit), the instance is recreated from the script's factory, as
- *   `CSharpInstance::_internal_new_managed` does; its property values start from their defaults,
- *   and a warning says so.
+ *   release ran (a `ResourceCache` hit), the Kotlin object -- and the property values it held -- is
+ *   gone, so the instance is rebuilt from the script's factory, as
+ *   `CSharpInstance::_internal_new_managed` does, and for a resource saved to a file refilled from
+ *   an uncached load of that file: what GDScript does there (the resource died at count 0 and the
+ *   cache hit re-parses the file). Both happen on the instance's first use
+ *   ([ScriptOwnerLinks.materialize]), never in the callback itself: the engine calls
+ *   `refcount_incremented` under its ResourceCache lock and `ResourceLoader` mutex, where neither
+ *   the script's constructor nor a nested load may run. A free with no use builds nothing. A
+ *   resource with no file, or a sub-resource stored inside another file, keeps its defaults, with a
+ *   warning. Owner-link releases run first in each drain, so the window is at most until the next
+ *   frame.
  *
  * A plain script class (one that does not extend `KanamaScript`) has no field the runtime can
  * anchor its instance in, so its native link cannot go weak safely and it takes no `+1`. Instead
@@ -42,7 +51,7 @@ import net.multigesture.kanama.binding.runtime.ReleaseHook
  * usable. Closing the wrappers still releases at once. Extend `KanamaScript` to get the full model.
  */
 internal class ScriptOwnerLink(
-  si: KanamaScriptInstance,
+  si: KanamaScriptInstance?,
   val owner: MemorySegment,
   val instanceId: Long,
   val script: KanamaScript?,
@@ -50,7 +59,7 @@ internal class ScriptOwnerLink(
   val anchored: Boolean,
 ) : ReleaseHook {
   @Volatile private var strongInstance: KanamaScriptInstance? = si
-  @Volatile private var weakInstance: WeakReference<KanamaScriptInstance> = WeakReference(si)
+  @Volatile private var weakInstance: WeakReference<KanamaScriptInstance?> = WeakReference(si)
 
   /** Whether the instance's own `+1` on the owner is held (taken, not yet released). */
   @Volatile
@@ -60,8 +69,28 @@ internal class ScriptOwnerLink(
   /** The cleanup that releases the owner `+1` once the script object is unreachable. */
   @Volatile var pending: PendingRelease? = null
 
-  /** A rebuilt instance's file, refilled on first use ([ScriptOwnerLinks.refillIfPending]). */
+  /** A rebuilt instance's file, refilled on first use ([ScriptOwnerLinks.materialize]). */
   @Volatile var pendingRefill: String? = null
+
+  /**
+   * True for a link whose instance must be rebuilt (its script object was collected while the
+   * engine re-referenced the owner): the first use builds it ([ScriptOwnerLinks.materialize]).
+   */
+  @Volatile var needsBuild: Boolean = false
+
+  /** Installs a built instance (STRONG; the count decides from then on). */
+  @Synchronized
+  fun install(si: KanamaScriptInstance) {
+    strongInstance = si
+    weakInstance = WeakReference(si)
+  }
+
+  /** The free path: forget any rebuild or refill still owed (the owner is going away). */
+  @Synchronized
+  fun abandon() {
+    needsBuild = false
+    pendingRefill = null
+  }
 
   fun instance(): KanamaScriptInstance? = strongInstance ?: weakInstance.get()
 
@@ -208,30 +237,70 @@ internal object ScriptOwnerLinks {
     link.onDecremented { referenceCount(link.owner) }
 
   // The script object was collected but the engine referenced the owner again before the queued
-  // release ran: rebuild the instance from the script's factory, with a +1 and a cleanup of its
-  // own (the old release stays queued and drops the old +1), and refill it from the owner's file
-  // on first use (class comment).
+  // release ran. Nothing is built here: refcount_incremented runs under the engine's
+  // ResourceCache lock and ResourceLoader mutex, where neither the script's constructor nor a
+  // file load may run. The link is replaced by one that owes a build and a refill; the first use
+  // of the instance ([materialize]) pays them, and a free with no use pays nothing. The old
+  // release stays queued and drops the old +1.
   private fun recreate(handle: Long, link: ScriptOwnerLink) {
     val script = link.script ?: return
-    val fresh = runCatching { script.factory?.invoke(link.owner) }.getOrNull() ?: return
-    fresh.script = script
-    val replacement = ScriptOwnerLink(fresh, link.owner, link.instanceId, script, anchored = true)
-    adopt(replacement, fresh)
-    replacement.makeStrong()
+    val replacement = ScriptOwnerLink(null, link.owner, link.instanceId, script, anchored = true)
+    replacement.needsBuild = true
     val path =
       runCatching { ObjectCalls.ptrcallNoArgsRetString(getPathBind, link.owner) }.getOrDefault("")
-    if (path.isNotEmpty() && "::" !in path) {
-      replacement.pendingRefill = path
-    } else {
-      OwnedReleaseCleaner.warn(
-        "The ${script.kotlinClassName} script object of a resource with no file was collected while " +
-          "the engine re-referenced the resource; its script instance was recreated with its " +
-          "default property values. Keep a reference to the script object (or the resource) while " +
-          "you use it."
-      )
+    when {
+      path.isEmpty() ->
+        OwnedReleaseCleaner.warn(
+          "The ${script.kotlinClassName} script object of a resource with no file was collected " +
+            "while the engine re-referenced the resource; its script instance is recreated with its " +
+            "default property values. Keep a reference to the script object (or the resource) " +
+            "while you use it."
+        )
+      "::" in path ->
+        OwnedReleaseCleaner.warn(
+          "The ${script.kotlinClassName} script object of a sub-resource of " +
+            "${path.substringBefore("::")} was collected while the engine re-referenced the " +
+            "resource; its script instance is recreated with its default property values (a " +
+            "sub-resource is not reloaded on its own). Keep a reference to the script object (or " +
+            "the resource) while you use it."
+        )
+      else -> replacement.pendingRefill = path
     }
     ObjectRegistry.replace(handle, replacement)
-    ScriptBridge.retrackOwner(link.owner, replacement, fresh.kotlinObject)
+    ScriptBridge.retrackOwner(link.owner, replacement, null)
+  }
+
+  /**
+   * The first use of a link that owes a build and a refill (see [recreate]), from `ScriptBridge.si`
+   * / `kotlinObjectForOwner`, outside the engine's loader locks: builds the instance from the
+   * script's factory (the script constructor runs), adopts it (its own +1, anchor, cleanup), then
+   * refills it from the owner's file. Engine callbacks on the instance all go through `si`, so the
+   * first callback is the first use.
+   */
+  fun materialize(link: ScriptOwnerLink) {
+    if (link.needsBuild) {
+      synchronized(link) {
+        if (link.needsBuild) {
+          // Cleared first: a callback the constructor itself triggers sees no instance yet.
+          link.needsBuild = false
+          val script = link.script
+          val fresh =
+            script?.let { s ->
+              runCatching { s.factory?.let { factory -> factory(link.owner) } }.getOrNull()
+            }
+          if (fresh == null) {
+            link.pendingRefill = null
+          } else {
+            fresh.script = script
+            link.install(fresh)
+            adopt(link, fresh)
+            link.makeStrong()
+            ScriptOwnerIds.remember(fresh.kotlinObject, link.instanceId)
+          }
+        }
+      }
+    }
+    if (link.pendingRefill != null) refillIfPending(link)
   }
 
   /**
@@ -239,7 +308,7 @@ internal object ScriptOwnerLinks {
    * once, on its first use: the stored (`PROPERTY_USAGE_STORAGE`) script properties of the
    * re-parsed copy are set on the owner, through its script instance, and the copy is released.
    */
-  fun refillIfPending(link: ScriptOwnerLink) {
+  private fun refillIfPending(link: ScriptOwnerLink) {
     val path =
       synchronized(link) { link.pendingRefill.also { link.pendingRefill = null } } ?: return
     val script = link.script ?: return
@@ -285,6 +354,7 @@ internal object ScriptOwnerLinks {
    * parked releases are handed back to the drain.
    */
   fun freed(link: ScriptOwnerLink) {
+    link.abandon()
     if (!link.anchored) {
       plainScriptOwners -= link.owner.address()
       OwnedReleases.unparkLater(link.owner, link.instanceId)

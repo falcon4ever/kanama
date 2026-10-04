@@ -600,6 +600,11 @@ internal object KanamaIosRuntime {
   fun freeScriptInstance(handle: Long) {
     val instance = scriptInstances[handle]
     if (instance != null) {
+      // Never build or refill an instance whose owner is going away.
+      instance.lock.withLock {
+        instance.needsBuild = false
+        instance.pendingRefill = null
+      }
       releaseOwnerRefLater(instance)
       ownerObjectToInstance.remove(instance.ownerObject)
       // The script's coroutines end with the instance (task 133: KanamaScript.scriptScope).
@@ -735,9 +740,18 @@ internal object KanamaIosRuntime {
      */
     val bridge: KanamaIosScriptBridge
       get() {
-        if (pendingRefill != null) refillIfPending(this)
+        if (needsBuild || pendingRefill != null) materialize(this)
         return strongBridge ?: weakBridge.value ?: CollectedScriptBridge
       }
+
+    /** The bridge as it is, never building or refilling (the free path). */
+    val bridgeWithoutBuild: KanamaIosScriptBridge?
+      get() = strongBridge ?: weakBridge.value
+
+    /**
+     * Owes a rebuild (and maybe a refill) on first use; see [scriptInstanceRefcountIncremented].
+     */
+    var needsBuild: Boolean = false
 
     var instanceId: Long = 0L
     var anchored: Boolean = false
@@ -867,7 +881,7 @@ internal object KanamaIosRuntime {
     if (id >= 0L || !ownerLinksEnabled || !OwnedReleases.enabled) return
     instance.instanceId = id
     instance.refCountedOwner = true
-    val kotlinObject = instance.bridge.scriptInstance
+    val kotlinObject = instance.bridgeWithoutBuild?.scriptInstance
     if (kotlinObject !is KanamaScript<*>) return
     instance.anchored = true
     if (!takeOwnerRef(instance)) return
@@ -875,21 +889,22 @@ internal object KanamaIosRuntime {
       PendingRelease(MemorySegment.ofAddress(instance.ownerObject), id, null, instance.ownerRef)
     instance.pending = release
     val registration = OwnedReleaseCleaner.register(kotlinObject, release)
-    kotlinObject.kanamaInstanceAnchor = Pair(instance.bridge, registration)
+    kotlinObject.kanamaInstanceAnchor = Pair(instance.bridgeWithoutBuild, registration)
     if (referenceCount(instance.ownerObject) <= 1) instance.makeWeak()
   }
 
   fun scriptInstanceRefcountIncremented(handle: Long) {
     val instance = scriptInstances[handle] ?: return
     if (instance.onIncremented { referenceCount(instance.ownerObject) }) return
-    // Collected before its release ran and re-referenced (a cache hit): rebuild it, as desktop's
-    // ScriptOwnerLinks.recreate does, with a new +1 (a new OwnerRef: the old release still queued
-    // drops only the old +1), and refill it from its file on first use.
-    val fresh = instance.resource.descriptor?.factory?.invoke(instance.ownerObject) ?: return
-    instance.replaceBridge(fresh)
-    instance.ownerRef = null
-    instance.pending = null
-    linkOwner(instance)
+    // Collected before its release ran and re-referenced (a cache hit). Nothing is built here
+    // (Godot holds its ResourceCache lock and ResourceLoader mutex in this callback): the instance
+    // owes a rebuild and a refill, paid on first use ([materialize]); a free with no use pays
+    // nothing. The old release still queued drops only the old +1 (its own OwnerRef).
+    instance.lock.withLock {
+      instance.ownerRef = null
+      instance.pending = null
+      instance.needsBuild = true
+    }
     val path =
       runCatching {
           ObjectCalls.ptrcallNoArgsRetString(
@@ -898,15 +913,38 @@ internal object KanamaIosRuntime {
           )
         }
         .getOrDefault("")
-    if (path.isNotEmpty() && "::" !in path) {
-      instance.pendingRefill = path
-    } else {
-      OwnedReleaseCleaner.warn(
-        "The ${instance.resource.path} script object of a resource with no file was collected " +
-          "while the engine re-referenced the resource; its script instance was recreated with " +
-          "its default property values."
-      )
+    when {
+      path.isEmpty() ->
+        OwnedReleaseCleaner.warn(
+          "The ${instance.resource.path} script object of a resource with no file was collected " +
+            "while the engine re-referenced the resource; its script instance is recreated with " +
+            "its default property values."
+        )
+      "::" in path ->
+        OwnedReleaseCleaner.warn(
+          "The ${instance.resource.path} script object of a sub-resource of " +
+            "${path.substringBefore("::")} was collected while the engine re-referenced the " +
+            "resource; its script instance is recreated with its default property values (a " +
+            "sub-resource is not reloaded on its own)."
+        )
+      else -> instance.pendingRefill = path
     }
+  }
+
+  // First use of an instance that owes a rebuild: build the bridge from the factory (the script
+  // constructor runs), link it (its own +1, anchor, cleanup), then refill it from the file.
+  private fun materialize(instance: IosScriptInstance) {
+    val build = instance.lock.withLock { instance.needsBuild.also { instance.needsBuild = false } }
+    if (build) {
+      val fresh = instance.resource.descriptor?.factory?.invoke(instance.ownerObject)
+      if (fresh == null) {
+        instance.pendingRefill = null
+      } else {
+        instance.replaceBridge(fresh)
+        linkOwner(instance)
+      }
+    }
+    if (instance.pendingRefill != null) refillIfPending(instance)
   }
 
   // The refill of a rebuilt instance (see IosScriptInstance.bridge): an uncached load of the

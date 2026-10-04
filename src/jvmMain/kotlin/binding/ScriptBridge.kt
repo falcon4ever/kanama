@@ -70,17 +70,17 @@ object ScriptBridge {
   fun kotlinObjectForOwner(ownerObject: MemorySegment): Any? =
     when (val value = kotlinObjectByOwnerAddress[ownerObject.address()]) {
       is ScriptOwnerLink -> {
-        if (value.pendingRefill != null) ScriptOwnerLinks.refillIfPending(value)
+        if (value.needsBuild || value.pendingRefill != null) ScriptOwnerLinks.materialize(value)
         value.instance()?.kotlinObject
       }
       else -> value
     }
 
   /** A recreated instance replaces the old one for [ownerObject] (task 132). */
-  internal fun retrackOwner(ownerObject: MemorySegment, link: ScriptOwnerLink, kotlinObject: Any) {
+  internal fun retrackOwner(ownerObject: MemorySegment, link: ScriptOwnerLink, kotlinObject: Any?) {
     scriptInstanceByOwnerAddress[ownerObject.address()] = link
     kotlinObjectByOwnerAddress[ownerObject.address()] = link
-    ScriptOwnerIds.remember(kotlinObject, link.instanceId)
+    if (kotlinObject != null) ScriptOwnerIds.remember(kotlinObject, link.instanceId)
   }
 
   fun trackKotlinObject(ownerObject: MemorySegment, kotlinObject: Any) {
@@ -370,9 +370,17 @@ object ScriptBridge {
     when (val value = ObjectRegistry.get(data.address())) {
       is KanamaScriptInstance -> value
       is ScriptOwnerLink -> {
-        if (value.pendingRefill != null) ScriptOwnerLinks.refillIfPending(value)
+        if (value.needsBuild || value.pendingRefill != null) ScriptOwnerLinks.materialize(value)
         value.instance()
       }
+      else -> null
+    }
+
+  // The free path's read: never builds or refills (the owner is being destroyed).
+  private fun siWithoutBuild(data: MemorySegment): KanamaScriptInstance? =
+    when (val value = ObjectRegistry.get(data.address())) {
+      is KanamaScriptInstance -> value
+      is ScriptOwnerLink -> value.instance()
       else -> null
     }
 
@@ -456,19 +464,27 @@ object ScriptBridge {
 
   // --- Owner / script / language ---
 
+  // Owner, script and placeholder metadata come from the link without building a pending
+  // instance (task 132): the engine asks for them in contexts (loading, freeing) where the
+  // script's constructor must not run, and none of them needs the Kotlin object.
   @JvmStatic
-  fun siGetOwner(data: MemorySegment): MemorySegment = si(data)?.ownerObject ?: MemorySegment.NULL
+  fun siGetOwner(data: MemorySegment): MemorySegment =
+    siWithoutBuild(data)?.ownerObject
+      ?: (ObjectRegistry.get(data.address()) as? ScriptOwnerLink)?.owner
+      ?: MemorySegment.NULL
 
   @JvmStatic
   fun siGetScript(data: MemorySegment): MemorySegment =
-    si(data)?.script?.godotObject ?: MemorySegment.NULL
+    (siWithoutBuild(data)?.script
+        ?: (ObjectRegistry.get(data.address()) as? ScriptOwnerLink)?.script)
+      ?.godotObject ?: MemorySegment.NULL
 
   @JvmStatic
   fun siGetLanguage(data: MemorySegment): MemorySegment = KanamaScriptLanguage.godotObject
 
   @JvmStatic
   fun siIsPlaceholder(data: MemorySegment): Byte =
-    if (si(data)?.placeholderPropertyValues != null) 1 else 0
+    if (siWithoutBuild(data)?.placeholderPropertyValues != null) 1 else 0
 
   // --- Method list (empty for now) ---
 
@@ -868,7 +884,7 @@ object ScriptBridge {
     val link = ObjectRegistry.get(handle) as? ScriptOwnerLink
     // An owner that is not dying (script detached or replaced): drop the instance's +1 next frame.
     link?.let { ScriptOwnerLinks.freed(it) }
-    val scriptInstance = si(data)
+    val scriptInstance = siWithoutBuild(data)
     // The script's coroutines end with the instance (task 133: KanamaScript.scriptScope).
     (scriptInstance?.kotlinObject as? net.multigesture.kanama.api.KanamaScript<*>)?.let { script ->
       runCatching { script.disposeScriptScope() }

@@ -5343,7 +5343,8 @@ static void kanama_ios_godot_ptrcall_object_bool_int_arg(
     }
     GDExtensionObjectPtr object_cell = object_arg;
     GDExtensionBool bool_cell = bool_arg;
-    int32_t int_cell = int_arg;
+    // Integer and enum ptrcall arguments are 64-bit cells (PtrToArg reads an int64_t), task 132.
+    int64_t int_cell = int_arg;
     const GDExtensionConstTypePtr args[3] = {
         (GDExtensionConstTypePtr)&object_cell,
         (GDExtensionConstTypePtr)&bool_cell,
@@ -5386,7 +5387,8 @@ static GDExtensionObjectPtr kanama_ios_godot_ptrcall_int_bool_arg_ret_object(
         kanama_ios_fault(__func__, "null-instance", NULL);
         return NULL;
     }
-    int32_t int_cell = int_arg;
+    // Integer and enum ptrcall arguments are 64-bit cells (PtrToArg reads an int64_t), task 132.
+    int64_t int_cell = int_arg;
     GDExtensionBool bool_cell = bool_arg;
     const GDExtensionConstTypePtr args[2] = {
         (GDExtensionConstTypePtr)&int_cell,
@@ -5676,7 +5678,8 @@ static void kanama_ios_godot_notify_postinitialize(GDExtensionObjectPtr object) 
         kanama_ios_fault(__func__, "null-bind", NULL);
         return;
     }
-    int32_t notification = KANAMA_IOS_NOTIFICATION_POSTINITIALIZE;
+    // A 64-bit cell: PtrToArg reads an int64_t for every integer argument (task 132).
+    int64_t notification = KANAMA_IOS_NOTIFICATION_POSTINITIALIZE;
     GDExtensionBool reversed = 0;
     const GDExtensionConstTypePtr args[2] = {
         (GDExtensionConstTypePtr)&notification,
@@ -6648,7 +6651,7 @@ int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type
 
     uint64_t path_storage = 0;
     uint64_t type_hint_storage = 0;
-    int32_t cache_mode = 1;
+    int64_t cache_mode = 1; // CACHE_MODE_REUSE; enum arguments are 64-bit cells in ptrcall (task 132)
     kanama_ios_init_string(&path_storage, path);
     kanama_ios_init_string(&type_hint_storage, type_hint != NULL ? type_hint : "");
     const GDExtensionConstTypePtr args[3] = {

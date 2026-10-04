@@ -247,6 +247,8 @@ internal object OwnedReleases {
       // is detached or the game shuts down.
       val owner = release.handle.address()
       if (OwnedReleaseCleaner.ownerHasPlainScript(owner)) {
+        // Parked, not live: a parked release no longer counts toward the registration cap.
+        liveRegistrations.decrementAndFetch()
         parked.getOrPut(owner) { ArrayList(1) } += release
         continue
       }
@@ -306,10 +308,7 @@ internal object OwnedReleases {
   private fun unpark(owner: Long): Int {
     val releases = parked.remove(owner) ?: return 0
     var released = 0
-    for (release in releases) {
-      liveRegistrations.decrementAndFetch()
-      released += runRelease(release)
-    }
+    for (release in releases) released += runRelease(release)
     releasedByGc += released
     return released
   }

@@ -68,6 +68,10 @@ KANAMA_SCRIPT_OWNER_LINKS=0 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GOD
 # whose KanamaScript object was collected is loaded again before the drain; its rebuilt instance is
 # refilled from the file (GDScript re-parses it), never left at the Kotlin defaults.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://cache_recreate_probe.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
+# task 132 round 4 -- the same window, with the rebuilt instance never used before its owner dies:
+# nothing is constructed inside refcount_incremented (it runs under the loader locks) nor while
+# the owner is freed (803d04d6: after_reload=3, constructions_at_end=4).
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://refill_on_free_probe.tscn --quit-after 300 --verbose >>"$LOG_FILE" 2>&1
 # task 132 D7 -- the same freed-object scene with the instance-binding check (opt-in), own log.
 FREED_BINDING_LOG="${LOG_FILE}.freed_binding"
 KANAMA_FREED_OBJECT_CHECKS=binding "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit >"$FREED_BINDING_LOG" 2>&1
@@ -379,7 +383,10 @@ check "FreedObjectSmoke backtraces valid=\[true(, true)*\] languages=\[[A-Za-z]"
 # and a Map of them) whose nodes were freed read back as nil, without reading the freed owners.
 check "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"
 # task 132 round 2 -- the cache re-reference keeps the file's values (caeee78b: reload_read=10).
-check "CacheRecreateProbe saved=true first_read=4242 alive_before_reload=(true|false) same_object=(true|false) reload_read=4242 kotlin_cash=4242"
+check "CacheRecreateProbe saved=true first_read=4242 alive_before_reload=true same_object=true reload_read=4242 kotlin_cash=4242"
+check "RefillOnFreeProbe reload_same_object=true"
+check "RefillOnFreeProbe constructions_before_reload=2 after_reload=2 alive=true"
+check "RefillOnFreeProbe dead=true frames=[0-9]+ constructions_at_end=2 after_reload=2"
 check_absent "property values reset|recreated with its default property values"
 # task 132 blocker 1 -- script objects keep their owners (see the run above).
 check "ScriptOwnerSmoke saved=true loaded=true created=true"

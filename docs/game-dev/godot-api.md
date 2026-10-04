@@ -345,9 +345,21 @@ Resource.fromObject(GodotObject(map.godotObject))?.use { ResourceSaver.save(it, 
 and the same holds for `newScriptInstance<T>().instance` kept without its
 handle. One edge: if the collector drops the script object and the engine
 loads the resource from its cache again before the next frame, the script
-object is rebuilt and re-reads its values from the resource's file, which is
-what GDScript's re-parse would give; a resource that was never saved starts
-from its defaults, with a warning. Kanama follows C#'s model: the script object holds a reference on its
+object is rebuilt on its first use and re-reads its values from the
+resource's file, which is what GDScript's re-parse would give. Three details
+follow from that:
+
+- re-reading the file loads an uncached copy of the resource, so the script
+  class's constructor (and `init` blocks) runs once more for that copy, besides
+  once for the rebuilt script object;
+- if the file changed on disk since the resource was loaded, the result is
+  mixed: the resource's engine properties keep their in-memory values, its
+  script properties come from the file;
+- a resource that was never saved, or a sub-resource stored inside another
+  file (`res://level.tres::Resource_x`), is not re-read: its script object
+  starts from its defaults, with a warning.
+
+Kanama follows C#'s model: the script object holds a reference on its
 resource, the engine keeps the script object alive while it holds the resource
 itself, and once only your code can reach the script object, dropping it
 releases the resource like any other forgotten wrapper.
