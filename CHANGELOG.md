@@ -38,6 +38,40 @@ only `--write`.
 
 ## Unreleased
 
+### Added — every value-type operator and method, generated from the Godot API (task 134 B)
+
+- **Operators:** every operator Godot declares for a value type is a Kotlin operator with GDScript's
+  meaning: `Transform3D * Transform3D`, `Basis * Basis`, `Quaternion * Vector3`, `transform * plane`
+  / `* aabb` / `* points` (a `List<Vector3>`), `Transform2D * Rect2`, `Projection * Vector4`, the
+  inverse forms (`point * transform`, `vector * basis`, `vector * quaternion`), `Vector2 * Vector2`
+  and `/`, `Vector2i`/`Vector3i`/`Vector4i` arithmetic including `%` and `* 0.5` (a `Vector2`, as in
+  GDScript), `Color` arithmetic (`-color` is Godot's inversion), `+v`, `<`/`<=`/`>`/`>=` on vectors
+  (component by component) and RIDs, and `2.0 * v` / `2 * v`. 167 of Godot's 749 builtin operators
+  are now Kotlin members (23 before); the other 582 are `==`/`!=` (`equals`), `not`, `in` or belong
+  to the classes Kotlin maps to its own types (`String`, `List`, `Map`, arrays).
+- **Methods:** all 370 methods of the 16 value types and RID (74 of them before), camelCase:
+  `directionTo`, `snapped`, `slerp`, `bezierInterpolate`, `Basis.fromScale`,
+  `Projection.createPerspective`, `Color.fromHsv`, `Color.toHtml`, `aabb.intersectsRay` (a `Vector3?`),
+  ... Arithmetic operators and short component-wise methods (`abs`, `floor`, `round`, `sign`,
+  `min`/`max`, `clampf`, integer-vector `length`, ...) run in Kotlin with Godot's own formulas at
+  Godot's width; every other method is computed by the engine. `Vector2.angle()` is now computed by
+  the engine too (Kotlin's `atan2` differed from Godot's in the last bit for some inputs).
+- **Proven against GDScript on every runtime smoke:** a generated probe pair hashes every
+  Kotlin-computed operator and method (279 entries, generated and hand-written) over 256
+  fixed-seed random inputs and every engine-backed method (219) over 8, and requires the Kotlin
+  hashes to equal GDScript's. The Web value types get the same Kotlin members for the classes Web
+  has (`Vector2`, `Vector3`, `Vector2i`, `Vector3i`, `Quaternion`, `Color`, `Plane`) and are checked
+  against Godot's recorded hashes in a Node test; Web's engine-computed methods follow with the Web
+  builtin-call path. Web `Plane.intersectsRay` now uses Godot's formula (it used a different
+  epsilon).
+- **Gate:** `scripts/check_builtin_coverage.py` (a `local_ci.sh` stage) fails when a builtin
+  operator or method in `extension_api.json` has neither a Kotlin member nor a recorded reason;
+  `scripts/generate_builtin_ops.py --check` fails when a generated member is edited by hand.
+- A member with the same name now hides an extension function you declared on a value type
+  (Kotlin prefers members): rename such an extension if its meaning differs from Godot's.
+- `Transform2D.get_origin()` is the existing `origin` property. Integer-vector division or `%` by
+  zero throws `ArithmeticException` (GDScript reports a division-by-zero error).
+
 ### Changed — faster wrapper calls on desktop (task 131 item 16)
 
 - The downcall handles every wrapper call goes through (`object_method_bind_ptrcall`,

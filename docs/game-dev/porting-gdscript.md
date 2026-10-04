@@ -52,6 +52,9 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `velocity.y += gravity * delta` | `velocity = velocity.withY(velocity.y + gravity * delta)` (value types are immutable) |
 | `print(position)` → `(0.1, 0.2)` | `println(position)` → `(0.1, 0.2)` (same `str()` form) |
 | `v.is_equal_approx(w)`, `v == w` | `v.isEqualApprox(w)`, `v == w` (compares the stored components, as in GDScript) |
+| `global_transform * Vector3.FORWARD`, `basis * other_basis`, `quat * dir` | the same operators |
+| `2.0 * v`, `Vector2i(4, 6) / 2`, `-color`, `a < b` (vectors) | the same |
+| `v.direction_to(t)`, `rect.get_center()`, `Color.from_hsv(h, s, v)` | `v.directionTo(t)`, `rect.getCenter()`, `Color.fromHsv(h, s, v)` |
 
 Decimals behave as in GDScript: every decimal is `Double` (GDScript's `float`), and a vector,
 transform or color stores its components at Godot's width (float32 in normal builds), so equality,

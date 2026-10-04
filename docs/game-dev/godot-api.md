@@ -49,9 +49,36 @@ are immutable snapshots in Kanama. This intentionally makes copied Godot values
 less error-prone: changing a component means creating a new value and assigning
 it back to the Godot property, not mutating a hidden copy.
 
-Value-type helpers mirror Godot behavior where possible, including transform
-and physics math. Gameplay code can treat these helpers as normal Kotlin value
-APIs and assign the updated value back to the Godot property.
+Every operator and method Godot declares for a value type exists in Kotlin
+under its GDScript meaning, generated from `extension_api.json`:
+
+- Operators are Kotlin operators: `a + b`, `v * 2.0`, `2.0 * v`, `-v`,
+  `transform * point`, `basis * otherBasis`, `quaternion * vector`,
+  `Vector2i(3, 4) * 2`, `Vector2i(3, 4) * 0.5` (a `Vector2`, as in GDScript),
+  `color * 0.5`, `transform * points` (a `List<Vector3>`), and `<`/`>` on
+  vectors (component by component, as Godot compares). `point * transform` is
+  Godot's inverse transform (`xform_inv`), as in GDScript. `2.0 * v` and
+  `points * transform` are extension operators: import
+  `net.multigesture.kanama.types.times` (the IDE offers it) or the package with
+  `net.multigesture.kanama.types.*`.
+- Methods are camelCase: `v.directionTo(target)`, `v.snapped(step)`,
+  `basis.getEuler()`, `Projection.createPerspective(...)`,
+  `Color.fromHsv(h, s, v)`, `aabb.intersectsRay(from, dir)` (`null` when
+  GDScript returns `null`). Getters keep `get`: `rect.getCenter()`,
+  `transform.getRotation()`; `Transform2D.get_origin()` is the `origin`
+  property.
+
+Arithmetic operators and short component-wise methods (`abs`, `floor`, `min`,
+`clampf`, `length` of an integer vector, ...) run in Kotlin with Godot's own
+formulas at Godot's width, so their results are Godot's to the bit; every other
+method is computed by the engine. The runtime smoke compares all of them with
+GDScript on every run. Integer vectors follow GDScript: integer division by zero
+is an error (Kotlin throws `ArithmeticException`). Methods Godot checks in debug
+builds (`slerp` on a non-normalized quaternion, `slide` with a non-normalized
+normal) report the same engine error as GDScript, except `quaternion * vector` and `vector * quaternion`,
+which are Kotlin math and compute the product without the debug check. Comparing
+vectors that contain NaN with `<`/`>` is false in Godot for all four operators;
+Kotlin's single `compareTo` cannot express that, so a NaN component sorts last.
 
 Their components are `Double`, like every other decimal in the API (`Vector3.x`,
 `Color.r`, `delta`, scalar arguments), so no `.toFloat()`/`.toDouble()` is
