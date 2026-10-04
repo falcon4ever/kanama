@@ -30,8 +30,12 @@ object GodotStrings {
 
   // The per-call String handles as JVM constants (task 131 item 16): `@JvmField` in an `object` is
   // a `static final` field the JIT folds, called through `invokeExact` on its exact type (no
-  // generic invoker or `asType` per String argument or return). One holder per handle, so each
-  // entry point is resolved on its own first use (after `GodotFFI.bootstrap`), as `by lazy` did.
+  // generic invoker or `asType` per String argument or return).
+  // Each holder resolves its own entry point on first use (after `GodotFFI.bootstrap`), so one
+  // missing entry point does not take the others down. Unlike `by lazy`, a failed resolution is not
+  // retried: the first use throws `ExceptionInInitializerError` (its cause is the lookup's error)
+  // and every later use `NoClassDefFoundError`. Kanama's containment catches `Throwable`, and the
+  // script error report names the cause (`ScriptErrors.reportFor`); see ObjectCalls.
 
   /** `string_name_new_with_utf8_chars`: `(MemorySegment, MemorySegment)V`. */
   private object StringNameNew {

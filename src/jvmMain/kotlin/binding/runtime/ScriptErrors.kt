@@ -54,9 +54,15 @@ object ScriptErrors {
         .getOrNull()
   }
 
-  /** The report [report] would send for [t]; pure, so it is unit-testable. */
-  fun reportFor(t: Throwable, where: String): ScriptErrorReport =
-    ScriptErrorReport.of(t, where, t.javaClass.name) { throwable ->
+  /**
+   * The report [report] would send for [t]; pure, so it is unit-testable. An
+   * `ExceptionInInitializerError` -- a class initializer that threw, such as a runtime downcall
+   * holder whose entry point did not resolve (task 131 item 16) -- carries no message of its own,
+   * so its cause is reported instead.
+   */
+  fun reportFor(t: Throwable, where: String): ScriptErrorReport {
+    val shown = (t as? ExceptionInInitializerError)?.cause ?: t
+    return ScriptErrorReport.of(shown, where, shown.javaClass.name) { throwable ->
       throwable.stackTrace.map {
         ScriptErrorFrame(
           className = it.className,
@@ -66,6 +72,7 @@ object ScriptErrors {
         )
       }
     }
+  }
 
   private val resolvedPaths = java.util.concurrent.ConcurrentHashMap<String, String>()
 

@@ -34,11 +34,16 @@ internal object InstanceBindings {
      * `(MemorySegment, MemorySegment, MemorySegment)J`.
      */
     @JvmField
-    val GET_INSTANCE_BINDING: MethodHandle =
+    val GET_INSTANCE_BINDING: MethodHandle = run {
+      check(ADDRESS.byteSize() == 8L) {
+        "object_get_instance_binding returns its pointer as a 64-bit long; this platform's " +
+          "pointers are ${ADDRESS.byteSize()} bytes"
+      }
       GodotFFI.lookup(
         "object_get_instance_binding",
         FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, ADDRESS),
       )
+    }
 
     /** Kanama's binding token: the address of a byte only this runtime owns. */
     @JvmField val TOKEN: MemorySegment = GodotFFI.arena.allocate(8L, 8L)
@@ -83,11 +88,14 @@ internal object InstanceBindings {
 
   /**
    * Resolves the binding entry point and builds the callbacks once, when the freed-object check is
-   * configured: false keeps the instance-id lookup.
+   * configured: false keeps the instance-id lookup. A holder that fails to initialize throws
+   * `ExceptionInInitializerError` (no message of its own), so the line names its cause.
    */
   fun available(): Boolean =
     runCatching { Lookup.CALLBACKS }
-      .onFailure { System.err.println("[kanama:kt] object_get_instance_binding: ${it.message}") }
+      .onFailure {
+        System.err.println("[kanama:kt] object_get_instance_binding: ${(it.cause ?: it).message}")
+      }
       .isSuccess
 
   fun liveFlagOf(segment: RawSegment): LiveFlag {

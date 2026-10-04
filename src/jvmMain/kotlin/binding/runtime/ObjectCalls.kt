@@ -61,20 +61,15 @@ actual object ObjectCalls {
     )
   }
 
-  private val classdbConstructObject by lazy {
-    // classdb_construct_object3 (Godot 4.7, replaces the deprecated construct_object2). For a
-    // RefCounted subtype it returns the object already owned (refcount 1) — the caller is
-    // responsible for releasing it (close()) — so X.create() factories are owning without a hand
-    // -rolled init_ref claim (task 62 / issue #91). No-op vs construct_object2 for non-RefCounted.
-    GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
-  }
-
   // The per-call downcall handles as JVM constants (task 131 item 16). `@JvmField` in an `object`
-  // is
-  // a `static final` field, which the JIT folds into the call site, and every caller uses
+  // is a `static final` field, which the JIT folds into the call site, and every caller uses
   // `invokeExact` with the handle's exact type: no `Lazy` read, no generic invoker and no `asType`
-  // per wrapper call. One holder per handle, so each entry point is resolved on its own first use
-  // (after `GodotFFI.bootstrap`), as `by lazy` did.
+  // per wrapper call.
+  // Each holder resolves its own entry point on first use (after `GodotFFI.bootstrap`), so one
+  // missing entry point does not take the others down. Unlike `by lazy`, a failed resolution is not
+  // retried: the first use throws `ExceptionInInitializerError` (its cause is the lookup's error)
+  // and every later use `NoClassDefFoundError`. Kanama's containment catches `Throwable`, and the
+  // script error report names the cause (`ScriptErrors.reportFor`).
 
   /**
    * `object_method_bind_ptrcall`: `(MemorySegment, MemorySegment, MemorySegment, MemorySegment)V`.
@@ -93,6 +88,19 @@ actual object ObjectCalls {
     @JvmField
     val HANDLE: MethodHandle =
       GodotFFI.lookup("object_get_instance_id", FunctionDescriptor.of(JAVA_LONG, ADDRESS))
+  }
+
+  /**
+   * `classdb_construct_object3`, once per object Kanama creates: `(MemorySegment)MemorySegment`.
+   * Godot 4.7, replaces the deprecated construct_object2: for a RefCounted subtype it returns the
+   * object already owned (refcount 1) -- the caller is responsible for releasing it (close()) -- so
+   * X.create() factories are owning without a hand-rolled init_ref claim (task 62 / issue #91).
+   * No-op vs construct_object2 for non-RefCounted.
+   */
+  private object ConstructObjectHandle {
+    @JvmField
+    val HANDLE: MethodHandle =
+      GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
   }
 
   /**
@@ -247,7 +255,8 @@ actual object ObjectCalls {
 
   actual fun constructObject(className: String): MemorySegment {
     val instance =
-      classdbConstructObject.invoke(GodotStrings.makeStringName(className)) as MemorySegment
+      ConstructObjectHandle.HANDLE.invokeExact(GodotStrings.makeStringName(className))
+        as MemorySegment
     // Objects created through ClassDB are not fully initialized until Godot
     // receives NOTIFICATION_POSTINITIALIZE. Theme/text controls rely on it.
     notifyPostinitialize(instance)

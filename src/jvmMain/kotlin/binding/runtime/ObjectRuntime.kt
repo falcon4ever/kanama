@@ -1,6 +1,7 @@
 package net.multigesture.kanama.binding.runtime
 
 import java.lang.foreign.FunctionDescriptor
+import java.lang.foreign.ValueLayout.ADDRESS
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
 import net.multigesture.kanama.binding.ScriptBridge
@@ -28,21 +29,31 @@ internal actual object ObjectRuntime {
    *
    * A JVM constant (task 131 item 16): `@JvmField` in an `object` is a `static final` field, which
    * the JIT folds, and [isLive] calls it with `invokeExact` on its exact `(J)J` type -- no generic
-   * invoker, no `asType`. The holder class initializes on first use, after `GodotFFI.bootstrap`.
+   * invoker, no `asType`. The holder class initializes on first use, after `GodotFFI.bootstrap`; a
+   * failed resolution is not retried (see [instanceLookupAvailable]).
    */
   private object InstanceLookup {
     @JvmField
-    val FROM_ID: MethodHandle =
+    val FROM_ID: MethodHandle = run {
+      check(ADDRESS.byteSize() == 8L) {
+        "object_get_instance_from_id returns its pointer as a 64-bit long; this platform's " +
+          "pointers are ${ADDRESS.byteSize()} bytes"
+      }
       GodotFFI.lookup("object_get_instance_from_id", FunctionDescriptor.of(JAVA_LONG, JAVA_LONG))
+    }
   }
 
   /**
    * Resolves `object_get_instance_from_id` once, when the freed-object check is configured (task
-   * 131): false turns the check off with one log line instead of failing every wrapper call.
+   * 131): false turns the check off with one log line instead of failing every wrapper call. A
+   * holder that fails to initialize throws `ExceptionInInitializerError` (no message of its own),
+   * so the line names its cause.
    */
   internal fun instanceLookupAvailable(): Boolean =
     runCatching { InstanceLookup.FROM_ID }
-      .onFailure { System.err.println("[kanama:kt] object_get_instance_from_id: ${it.message}") }
+      .onFailure {
+        System.err.println("[kanama:kt] object_get_instance_from_id: ${(it.cause ?: it).message}")
+      }
       .isSuccess
 
   /** Test seam: answers [isLive] in JVM unit tests, which have no engine to ask. */
