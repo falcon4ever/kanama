@@ -471,6 +471,8 @@ case("hot_reload_smoke.sh", ["bash", "scripts/hot_reload_smoke.sh", GODOT],
 case("hot_reload_in_process_smoke.sh", ["bash", "scripts/hot_reload_in_process_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(f)._ready health=")],
      "hot_reload_in_process_smoke] FAIL --", "the reloadable script line the smoke rewrites is gone, so no marker can reach the log",
+     # a fresh worktree has no .godot import cache; the smoke's 60 s pattern timeout is not meant to cover a cold import
+     pre=[[GODOT, "--headless", "--import", "--path", "example_project"]],
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("check_exported_scene_properties_selftest.sh", ["bash", "scripts/check_exported_scene_properties_selftest.sh", GODOT],
      [Edit("scripts/check_exported_scene_properties.gd", "lost script property", "lost a thing")],
@@ -479,6 +481,7 @@ case("check_exported_scene_properties_selftest.sh", ["bash", "scripts/check_expo
 case("check_jdk_lookup_parity.sh", ["bash", "scripts/check_jdk_lookup_parity.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/plugin.gd", '["all", "~/.jdks", "", ""]', '["all", "~/.jdkz", "", ""]')],
      "FAIL table_home_dot_jdks", "the editor plugin's JDK location table drifts from bootstrap.c's (a `~/.jdks` row renamed)",
+     pre=[[GODOT, "--headless", "--import", "--path", "example_project"]], timeout=1800,  # cold worktree: Gradle builds the native bootstrap first
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("check_bootstrap_jdk_resolution.sh", ["bash", "scripts/check_bootstrap_jdk_resolution.sh"],
      [Edit("bootstrap/CMakeLists.txt", "predates JDK 21 (no JNI_VERSION_21)", "is fine")],
