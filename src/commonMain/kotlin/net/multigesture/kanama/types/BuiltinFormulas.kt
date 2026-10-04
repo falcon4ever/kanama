@@ -118,13 +118,13 @@ internal fun transform3DMultiply(a: Transform3D, b: Transform3D): Transform3D =
 internal fun transform3DXformAabb(t: Transform3D, box: AABB): AABB {
   val min = floatsOf(box.position)
   val max =
-    arrayOf(
+    reals(
       box.position.rawX + box.size.rawX,
       box.position.rawY + box.size.rawY,
       box.position.rawZ + box.size.rawZ,
     )
   val origin = floatsOf(t.origin)
-  val rows = basisRows(t.basis) { a, b, c, d, e, f, g, h, i -> arrayOf(a, b, c, d, e, f, g, h, i) }
+  val rows = basisRows(t.basis) { a, b, c, d, e, f, g, h, i -> reals(a, b, c, d, e, f, g, h, i) }
   val tmin = origin.copyOf()
   val tmax = origin.copyOf()
   for (i in 0 until 3) {
@@ -166,7 +166,7 @@ internal fun transform3DXformInvAabb(t: Transform3D, box: AABB): AABB {
       Vector3.raw(px, py, pz),
     )
   val first = transform3DXformInv(t, corners[0])
-  val box3 = BoxAccumulator(floatsOf(first), arrayOf(zeroReal(), zeroReal(), zeroReal()))
+  val box3 = BoxAccumulator(floatsOf(first), reals(zeroReal(), zeroReal(), zeroReal()))
   for (i in 1 until 8) box3.expandTo(floatsOf(transform3DXformInv(t, corners[i])))
   return AABB(
     Vector3.raw(box3.position[0], box3.position[1], box3.position[2]),
@@ -263,10 +263,10 @@ internal fun transform2DXformRect(t: Transform2D, rect: Rect2): Rect2 {
   val yx = t.y.rawX * rect.size.rawY
   val yy = t.y.rawY * rect.size.rawY
   val pos = transform2DXform(t, rect.position)
-  val box = BoxAccumulator(arrayOf(pos.rawX, pos.rawY), arrayOf(zeroReal(), zeroReal()))
-  box.expandTo(arrayOf(pos.rawX + xx, pos.rawY + xy))
-  box.expandTo(arrayOf(pos.rawX + yx, pos.rawY + yy))
-  box.expandTo(arrayOf(pos.rawX + xx + yx, pos.rawY + xy + yy))
+  val box = BoxAccumulator(reals(pos.rawX, pos.rawY), reals(zeroReal(), zeroReal()))
+  box.expandTo(reals(pos.rawX + xx, pos.rawY + xy))
+  box.expandTo(reals(pos.rawX + yx, pos.rawY + yy))
+  box.expandTo(reals(pos.rawX + xx + yx, pos.rawY + xy + yy))
   return Rect2(Vector2.raw(box.position[0], box.position[1]), Vector2.raw(box.size[0], box.size[1]))
 }
 
@@ -277,10 +277,10 @@ internal fun transform2DXformInvRect(t: Transform2D, rect: Rect2): Rect2 {
   val ex = px + rect.size.rawX
   val ey = py + rect.size.rawY
   val first = transform2DXformInv(t, Vector2.raw(px, py))
-  val box = BoxAccumulator(arrayOf(first.rawX, first.rawY), arrayOf(zeroReal(), zeroReal()))
+  val box = BoxAccumulator(reals(first.rawX, first.rawY), reals(zeroReal(), zeroReal()))
   for (corner in arrayOf(Vector2.raw(px, ey), Vector2.raw(ex, ey), Vector2.raw(ex, py))) {
     val v = transform2DXformInv(t, corner)
-    box.expandTo(arrayOf(v.rawX, v.rawY))
+    box.expandTo(reals(v.rawX, v.rawY))
   }
   return Rect2(Vector2.raw(box.position[0], box.position[1]), Vector2.raw(box.size[0], box.size[1]))
 }
@@ -327,24 +327,24 @@ internal fun projectionXformInv(p: Projection, v: Vector4): Vector4 {
   )
 }
 
-private fun projectionColumns(p: Projection): Array<Array<GodotRealStorage>> =
+private fun projectionColumns(p: Projection): Array<GodotRealArray> =
   arrayOf(floatsOf(p.x), floatsOf(p.y), floatsOf(p.z), floatsOf(p.w))
 
-private fun floatsOf(v: Vector3): Array<GodotRealStorage> = arrayOf(v.rawX, v.rawY, v.rawZ)
+private fun floatsOf(v: Vector3): GodotRealArray = reals(v.rawX, v.rawY, v.rawZ)
 
-private fun floatsOf(v: Vector4): Array<GodotRealStorage> = arrayOf(v.rawX, v.rawY, v.rawZ, v.rawW)
+private fun floatsOf(v: Vector4): GodotRealArray = reals(v.rawX, v.rawY, v.rawZ, v.rawW)
 
 private fun zeroReal(): GodotRealStorage = narrowReal(0.0)
+
+// An unboxed `real_t` array of the given components (GodotRealArray is FloatArray/DoubleArray).
+private fun reals(vararg values: GodotRealStorage): GodotRealArray = values
 
 /**
  * `Rect2::expand_to` / `AABB::expand_to` over N axes: `begin = position; end = position + size`,
  * each axis widened to include the point, then `size = end - begin`.
  */
-private class BoxAccumulator(
-  val position: Array<GodotRealStorage>,
-  val size: Array<GodotRealStorage>,
-) {
-  fun expandTo(point: Array<GodotRealStorage>) {
+private class BoxAccumulator(val position: GodotRealArray, val size: GodotRealArray) {
+  fun expandTo(point: GodotRealArray) {
     for (i in position.indices) {
       var begin = position[i]
       var end = position[i] + size[i]

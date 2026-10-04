@@ -259,18 +259,26 @@ data class Vector4i(
    *
    * Generated from Godot docs: Vector4i.snapped
    */
-  fun snapped(step: Vector4i): Vector4i =
-    builtinVector4i(
-      builtinInts(Vector4iMethods.snapped, builtinArg(), 4, listOf(step.builtinArg()))
-    )
+  fun snapped(step: Vector4i): Vector4i {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, step)
+    f.call(Vector4iMethods.snapped, 1)
+    return f.retVector4i()
+  }
 
   /**
    * Returns a new vector with each component snapped to the closest multiple of `step`.
    *
    * Generated from Godot docs: Vector4i.snappedi
    */
-  fun snappedi(step: Long): Vector4i =
-    builtinVector4i(builtinInts(Vector4iMethods.snappedi, builtinArg(), 4, listOf(argLong(step))))
+  fun snappedi(step: Long): Vector4i {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putLong(1, step)
+    f.call(Vector4iMethods.snappedi, 1)
+    return f.retVector4i()
+  }
 
   /**
    * Returns the component-wise minimum of this and `with`, equivalent to `Vector4i(mini(x, with.x),
@@ -332,6 +340,25 @@ data class Vector4i(
   // ===== END GENERATED BUILTIN MEMBERS: Vector4i =====
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Vector4i (generate_builtin_ops.py) =====
+    /**
+     * Min vector, a vector with all components equal to `INT32_MIN`. Can be used as a negative
+     * integer equivalent of `Vector4.INF`.
+     *
+     * Generated from Godot docs: Vector4i.MIN
+     */
+    val MIN: Vector4i = Vector4i(Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE)
+
+    /**
+     * Max vector, a vector with all components equal to `INT32_MAX`. Can be used as an integer
+     * equivalent of `Vector4.INF`.
+     *
+     * Generated from Godot docs: Vector4i.MAX
+     */
+    val MAX: Vector4i = Vector4i(Int.MAX_VALUE, Int.MAX_VALUE, Int.MAX_VALUE, Int.MAX_VALUE)
+
+    // ===== END GENERATED BUILTIN STATICS: Vector4i =====
+
     /**
      * Zero vector, a vector with all components set to `0`.
      *

@@ -14,127 +14,99 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import net.multigesture.kanama.binding.runtime.BArg
-import net.multigesture.kanama.binding.runtime.BuiltinCalls
-import net.multigesture.kanama.binding.runtime.PT_VECTOR3
-import net.multigesture.kanama.binding.runtime.VT_BASIS
+import net.multigesture.kanama.binding.runtime.BuiltinMethod
 import net.multigesture.kanama.binding.runtime.VT_VECTOR3
 import net.multigesture.kanama.ffi.GodotFFI
 
 /**
- * Drives the desktop [BuiltinCalls] facade end to end — resolution through
- * `variant_get_ptr_builtin_method`, the builtin ptrcall itself, and the decode of each return width
- * — against a fake GDExtension built out of Panama upcall stubs.
+ * Drives the desktop builtin-call facade (`BuiltinFrame` / `BuiltinMethod`) end to end --
+ * resolution through `variant_get_ptr_builtin_method`, the one unbound builtin-method downcall, and
+ * the decode of each return width -- against a fake GDExtension built out of Panama upcall stubs.
  *
  * A JVM unit test has no Godot process, so the engine side is stubbed: [FakeGodot] serves the two
  * entry points the facade resolves (`string_name_new_with_utf8_chars` for the method name and
  * `variant_get_ptr_builtin_method`) and hands back one builtin method pointer per method name, each
- * reading the base and the tagged args back out of the buffers the facade laid out. What is under
- * test is therefore exactly the half that is Kanama's: the `real_t` base/return layout, the `BArg`
- * encodings and the four return decodes. The engine's own arithmetic is proved by the desktop
- * runtime smoke and the iOS device gate, not here.
+ * reading the base and the args back out of the frame's slots. What is under test is exactly the
+ * half that is Kanama's: the slot layouts, the argument-pointer array, the return decodes and the
+ * zeroed Variant return slot, through generated members where the fake has the method. The engine's
+ * own arithmetic is proved by the runtime smoke's builtin parity row.
  */
-class BuiltinCallsFacadeTest {
+class BuiltinFrameTest {
 
   @Test
   fun valueTypeCallRoundTripsBaseArgsAndReturn() {
     FakeGodot.bootstrapOnce()
-
     // Shape: Vector3.lerp(to: Vector3, weight: float) -> Vector3. The fake replies with
-    // base + arg0 * arg1, so every marshalled field has to arrive intact for the expected
-    // value to come back — and `weight` has to arrive as the ptr-ABI's 8-byte double.
-    val method = BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "lerp", LERP_HASH)
-    assertTrue(method != 0L, "fake engine returned a null builtin method pointer")
-
-    val result =
-      BuiltinCalls.call(
-        method,
-        realsOf(1.0, 2.0, 3.0),
-        3,
-        listOf(BArg.Floats(PT_VECTOR3, realsOf(10.0, 20.0, 30.0)), BArg.Real(0.5)),
-      )
-
-    assertEquals(3, result.size)
-    assertEquals(6.0, doubleAt(result, 0), TOLERANCE)
-    assertEquals(12.0, doubleAt(result, 1), TOLERANCE)
-    assertEquals(18.0, doubleAt(result, 2), TOLERANCE)
+    // base + arg0 * arg1, so every slot has to arrive intact -- and `weight` as the ptr-ABI's
+    // 8-byte double.
+    val lerp = BuiltinMethod(VT_VECTOR3, "lerp", LERP_HASH)
+    val f = builtinFrame()
+    f.put(0, Vector3(1.0, 2.0, 3.0))
+    f.put(1, Vector3(10.0, 20.0, 30.0))
+    f.putDouble(2, 0.5)
+    f.call(lerp, 2)
+    assertEquals(Vector3(6.0, 12.0, 18.0), f.retVector3())
     assertEquals(2, FakeGodot.lastArgc)
+    assertTrue(!FakeGodot.lastBaseWasNull)
   }
 
   @Test
-  fun noArgCallSizesTheReturnFromTheBase() {
+  fun aGeneratedNoArgMemberReturnsItsOwnType() {
     FakeGodot.bootstrapOnce()
-    val method = BuiltinCalls.getBuiltinMethod(VT_BASIS, "inverse", INVERSE_HASH)
-    val base = GodotRealArray(9) { GodotReal.toC((it + 1).toDouble()) }
-
-    val result = BuiltinCalls.callNoArgsFloat32(method, base)
-
-    assertEquals(9, result.size)
-    for (i in 0 until 9) assertEquals((i + 1).toDouble(), doubleAt(result, i), TOLERANCE)
+    // Basis.inverse() is a generated facade member; the fake echoes the 9-component base.
+    val basis = Basis(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0), Vector3(7.0, 8.0, 9.0))
+    assertEquals(basis, basis.inverse())
     assertEquals(0, FakeGodot.lastArgc)
   }
 
   @Test
   fun scalarBoolAndIntReturnsUseTheirOwnPtrAbiWidths() {
     FakeGodot.bootstrapOnce()
-    val base = realsOf(2.0, 0.0, 0.0)
+    val f = builtinFrame()
+    f.put(0, Vector3(1.0, 0.0, 0.0))
+    f.put(1, Vector3(0.0, 1.0, 0.0))
+    f.call(BuiltinMethod(VT_VECTOR3, "dot", DOT_HASH), 1)
+    assertEquals(FakeGodot.SCALAR_REPLY, f.retDouble(), TOLERANCE)
 
-    // A `float` return is an 8-byte double at ptrcall, never a real_t.
-    val dot = BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "dot", DOT_HASH)
-    assertEquals(FakeGodot.SCALAR_REPLY, BuiltinCalls.callScalar(dot, base, emptyList()), TOLERANCE)
+    // A generated facade member with a bool return (one byte).
+    assertTrue(Vector2(1.0, 0.0).isNormalized())
 
-    // A `bool` return is one uint8 byte.
-    val isNormalized =
-      BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "is_normalized", IS_NORMALIZED_HASH)
-    assertTrue(BuiltinCalls.callBool(isNormalized, base, emptyList()))
-
-    // An `int` return is an int64 — and BArg.Int64 is what carries an int argument down
-    // (Basis.get_euler's EulerOrder is the shared bodies' only user of it).
-    val maxAxis = BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "max_axis_index", MAX_AXIS_HASH)
-    assertEquals(FakeGodot.INT_REPLY, BuiltinCalls.callInt(maxAxis, base, listOf(BArg.Int64(7L))))
+    f.put(0, Vector3(1.0, 2.0, 3.0))
+    f.putLong(1, 7L)
+    f.call(BuiltinMethod(VT_VECTOR3, "max_axis_index", MAX_AXIS_HASH), 1)
+    assertEquals(FakeGodot.INT_REPLY, f.retLong())
     assertEquals(7L, FakeGodot.lastInt64Arg)
   }
 
   @Test
   fun staticBuiltinIsCalledWithANullBaseAndABoolArgIsOneByte() {
     FakeGodot.bootstrapOnce()
-    val method = BuiltinCalls.getBuiltinMethod(VT_BASIS, "looking_at", LOOKING_AT_HASH)
-
-    val result =
-      BuiltinCalls.call(
-        method,
-        GodotRealArray(0),
-        9,
-        listOf(
-          BArg.Floats(PT_VECTOR3, realsOf(0.0, 0.0, -4.0)),
-          BArg.Floats(PT_VECTOR3, realsOf(0.0, 1.0, 0.0)),
-          BArg.Bool(true),
-        ),
-      )
-
-    assertEquals(9, result.size)
-    assertTrue(FakeGodot.lastBaseWasNull, "a static builtin must be called with a NULL base")
+    // Basis.looking_at is static: NULL base; the fake pads arg0 out to nine components.
+    val result = Basis.lookingAt(Vector3(1.0, 2.0, 3.0), Vector3(0.0, 1.0, 0.0), true)
+    assertTrue(FakeGodot.lastBaseWasNull)
     assertEquals(3, FakeGodot.lastArgc)
     assertEquals(1, FakeGodot.lastBoolArg)
-    // The fake echoes arg0 into the first three return components.
-    assertEquals(0.0, doubleAt(result, 0), TOLERANCE)
-    assertEquals(0.0, doubleAt(result, 1), TOLERANCE)
-    assertEquals(-4.0, doubleAt(result, 2), TOLERANCE)
+    // Rows (1, 2, 3), (0, 0, 0), (0, 0, 0): the first column is (1, 0, 0).
+    assertEquals(Vector3(1.0, 0.0, 0.0), result.x)
   }
 
-  private fun realsOf(vararg values: Double): GodotRealArray =
-    GodotRealArray(values.size) { GodotReal.toC(values[it]) }
-
-  private fun doubleAt(values: GodotRealArray, index: Int): Double = GodotReal.fromC(values[index])
+  @Test
+  fun aVariantReturnSlotIsZeroedBeforeEveryCall() {
+    FakeGodot.bootstrapOnce()
+    val f = builtinFrame()
+    f.put(0, Vector3(1.0, 0.0, 0.0))
+    f.put(1, Vector3(0.0, 1.0, 0.0))
+    f.call(BuiltinMethod(VT_VECTOR3, "dot", DOT_HASH), 1) // leaves 42.5 in the return slot
+    f.call(BuiltinMethod(VT_VECTOR3, "intersects_ray", NOOP_HASH), 0) // writes nothing
+    assertTrue(f.retVariantIsNil())
+  }
 
   private companion object {
     const val TOLERANCE = 1e-6
     const val LERP_HASH = 1682608829L
-    const val INVERSE_HASH = 594669093L
     const val DOT_HASH = 1047977935L
-    const val IS_NORMALIZED_HASH = 3918633141L
     const val MAX_AXIS_HASH = 3173160232L
-    const val LOOKING_AT_HASH = 3728732505L
+    const val NOOP_HASH = 1L
   }
 }
 
@@ -176,6 +148,7 @@ private object FakeGodot {
     methods["dot"] = stub(arena, "scalarMethod", VOID_BUILTIN)
     methods["is_normalized"] = stub(arena, "boolMethod", VOID_BUILTIN)
     methods["max_axis_index"] = stub(arena, "intMethod", VOID_BUILTIN)
+    methods["intersects_ray"] = stub(arena, "noopMethod", VOID_BUILTIN)
     stringNameNew = stub(arena, "stringNameNew", FunctionDescriptor.ofVoid(ADDRESS, ADDRESS))
     getPtrBuiltinMethod =
       stub(
@@ -290,6 +263,11 @@ private object FakeGodot {
       lastInt64Arg = argAt(args, 0).reinterpret(JAVA_LONG.byteSize()).get(JAVA_LONG, 0)
     }
     ret.reinterpret(JAVA_LONG.byteSize()).set(JAVA_LONG, 0, INT_REPLY)
+  }
+
+  @Suppress("unused")
+  fun noopMethod(base: MemorySegment, args: MemorySegment, ret: MemorySegment, argc: Int) {
+    record(base, args, argc)
   }
 
   private fun record(base: MemorySegment, args: MemorySegment, argc: Int) {

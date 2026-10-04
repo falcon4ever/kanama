@@ -394,8 +394,8 @@ case("audit_stale_blockers.py", py("audit_stale_blockers.py"),
      [Edit("CONTRIBUTING.md", "# Contributing to Kanama", "# Contributing to Kanama\n<!-- " + BLOCKED_MARKER + " -->")],
      "stale_blockers] FAIL", "a stale-blocker marker whose blocker no longer holds")
 case("audit_value_type_wrappers.py", py("audit_value_type_wrappers.py", "--strict"),
-     [Edit(f"{COMMON}/types/Quaternion.kt", "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight))",
-           "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Floats(PT_FLOAT, doubleArrayOf(weight)))")],
+     [Edit(f"{COMMON}/types/Quaternion.kt", "    f.putDouble(2, weight)\n    f.call(QuaternionMethods.slerp, 2)",
+           "    f.putReal(2, 0, narrowReal(weight))\n    f.call(QuaternionMethods.slerp, 2)")],
      "Quaternion.slerp passes 1 Godot float arg", "a Godot `float` argument is marshalled as a real_t component array")
 case("check_builtin_coverage.py", py("check_builtin_coverage.py"),
      [Edit(f"{COMMON}/types/Vector2.kt", "  fun orthogonal(): Vector2 = raw(rawY, -rawX)", "  fun orthogonalVector(): Vector2 = raw(rawY, -rawX)")],

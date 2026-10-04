@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Gate: every builtin operator and method in extension_api.json has a Kotlin member or a recorded
-reason (task 134 B).
+reason, and every builtin constant and enum a Kotlin counterpart (task 134 B).
 
 Godot lists, per builtin class, its operators (`builtin_classes[*].operators`: 749) and methods
 (`builtin_classes[*].methods`: 999). Before task 134 B, Kotlin had 95 of the value types' 279
@@ -55,22 +55,34 @@ NOT_REASON = "Kotlin has no truthiness: compare with the zero value (`v == Vecto
 IN_REASON = "the right operand's Kotlin type answers `in` (List/Map/String `contains`)"
 FORMAT_REASON = "GDScript `%` formatting: Kotlin string templates / `String.format`"
 
+POW_REASON = (
+    "Kotlin has no power operator: `x ** y` is `x.pow(y)` (kotlin.math) or `GD.pow(x, y)` (Godot's "
+    "`pow`), as porting-gdscript.md says"
+)
+
+PARCEL_D = "task 134 parcel D (builtin methods for String, NodePath, Callable, Signal, packed arrays)"
+
 # Builtin classes Kotlin represents with its own types; their entries are covered by the language
-# and the stdlib, or deferred as stated.
+# and the stdlib, or deferred to parcel D as stated.
 CLASS_REASONS = {
     "Nil": "Kotlin `null`: the language's own operators",
     "bool": "Kotlin `Boolean`: the language's own operators",
     "int": "Kotlin `Int`/`Long`: the language's own operators",
     "float": "Kotlin `Double`: the language's own operators",
-    "String": "Kotlin `String` and its stdlib; Godot's String methods are not wrapped (deferred: follow-up)",
-    "StringName": "Kotlin `String` (a StringName is marshalled from it); methods as String (deferred)",
-    "NodePath": "NodePath wraps the path text; its methods need a NodePath facade base (deferred: parcel D)",
-    "Callable": "GodotCallable's hand-written API (call/bind/...); the generated Callable methods are deferred",
-    "Signal": "GodotSignal (connect/emit/await); typed engine signals are parcel C",
+    "String": f"Kotlin `String` and its stdlib for the common operations; Godot's String methods are deferred: {PARCEL_D}",
+    "StringName": f"Kotlin `String` (a StringName is marshalled from it); its methods are deferred: {PARCEL_D}",
+    "NodePath": f"NodePath wraps the path text; its methods need a NodePath facade base, deferred: {PARCEL_D}",
+    "Callable": f"deferred (no call/bind API yet): {PARCEL_D}",
+    "Signal": f"GodotSignal's connect/emit/await; Signal's builtin methods are deferred: {PARCEL_D}",
     "Dictionary": "Kotlin `Map` and its stdlib",
     "Array": "Kotlin `List` and its stdlib",
 }
-PACKED_REASON = "Kotlin arrays / `List<T>` and their stdlib"
+PACKED_REASON = "Kotlin arrays / `List<T>` and their stdlib (`size`, `contains`, `binarySearch`, `sorted`, ...)"
+# Packed-array methods with no stdlib equivalent: deferred, not "covered by the stdlib".
+PACKED_DEFERRED_PREFIXES = ("compress", "decompress", "encode_", "decode_", "has_encoded_var", "bswap", "to_")
+PACKED_DEFERRED = {"hex_encode", "get_string_from_utf16", "get_string_from_utf32", "get_string_from_wchar",
+                   "get_string_from_multibyte_char"}
+PACKED_DEFERRED_REASON = f"no stdlib equivalent; deferred: {PARCEL_D}"
 
 MEMBER_RE = re.compile(
     r"\bfun\s+(?:<[^>]*>\s*)?(?:(?P<receiver>[A-Za-z0-9_.<>]+)\.)?(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*\("
@@ -104,6 +116,8 @@ def operator_status(cls: str, op: dict, found: set, scalar: set) -> tuple[str, s
         return ("reason", NOT_REASON)
     if name == "in":
         return ("reason", IN_REASON)
+    if name == "**":
+        return ("reason", POW_REASON)
     if cls in ("int", "float") and name == "*" and right in OWNED_CLASSES:
         receivers = ("Int", "Long") if cls == "int" else ("Double",)
         missing = [r for r in receivers if (r, "times", right) not in scalar]
@@ -135,6 +149,9 @@ def operator_status(cls: str, op: dict, found: set, scalar: set) -> tuple[str, s
 def method_status(cls: str, m: dict, found: set) -> tuple[str, str]:
     if cls not in OWNED_CLASSES:
         if cls.startswith("Packed"):
+            name = m["name"]
+            if name in PACKED_DEFERRED or name.startswith(PACKED_DEFERRED_PREFIXES):
+                return ("reason", PACKED_DEFERRED_REASON)
             return ("reason", PACKED_REASON)
         return ("reason", CLASS_REASONS[cls])
     if (cls, m["name"]) in PROPERTY_MEMBERS:
@@ -155,6 +172,7 @@ def main() -> int:
     scalar = extensions(SCALAR_OPS.read_text(encoding="utf-8"))
     missing: list[str] = []
     totals = {"op": [0, 0, 0], "method": [0, 0, 0]}  # member, reason, missing
+    const_total = const_have = enum_total = enum_have = 0
     rows = []
     for cls_api in api["builtin_classes"]:
         cls = cls_api["name"]
@@ -175,6 +193,21 @@ def main() -> int:
             counts["method"][index] += 1
             if status == "missing":
                 missing.append(f"{cls}.{m['name']}: no Kotlin member ({what}) and no recorded reason")
+        body = ""
+        if cls in OWNED_CLASSES:
+            body = class_body((TYPES_DIR / f"{cls}.kt").read_text(encoding="utf-8"), cls)
+        for const in cls_api.get("constants", []):
+            const_total += 1
+            if re.search(rf"\bval {const['name']}\b", body):
+                const_have += 1
+            else:
+                missing.append(f"{cls}.{const['name']}: no Kotlin constant")
+        for enum in cls_api.get("enums", []):
+            enum_total += 1
+            if re.search(rf"\bvalue class {enum['name']}\b", body):
+                enum_have += 1
+            else:
+                missing.append(f"{cls}.{enum['name']}: no Kotlin enum value class")
         for kind in ("op", "method"):
             for i in range(3):
                 totals[kind][i] += counts[kind][i]
@@ -187,7 +220,8 @@ def main() -> int:
     method_total = sum(totals["method"])
     summary = (
         f"operators {op_total} (Kotlin member {totals['op'][0]}, reason {totals['op'][1]}), "
-        f"methods {method_total} (Kotlin member {totals['method'][0]}, reason {totals['method'][1]})"
+        f"methods {method_total} (Kotlin member {totals['method'][0]}, reason {totals['method'][1]}), "
+        f"constants {const_have}/{const_total}, enums {enum_have}/{enum_total}"
     )
     if missing:
         print(f"[builtin_coverage] FAIL: {len(missing)} builtin operator(s)/method(s) uncovered; {summary}", file=sys.stderr)

@@ -126,8 +126,12 @@ data class Projection(
    *
    * Generated from Godot docs: Projection.determinant
    */
-  fun determinant(): Double =
-    builtinDouble(ProjectionMethods.determinant, builtinArg(), emptyList())
+  fun determinant(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.determinant, 0)
+    return f.retDouble()
+  }
 
   /**
    * Returns a `Projection` with the near clipping distance adjusted to be `new_znear`. Note: The
@@ -135,15 +139,13 @@ data class Projection(
    *
    * Generated from Godot docs: Projection.perspective_znear_adjusted
    */
-  fun perspectiveZnearAdjusted(newZnear: Double): Projection =
-    builtinProjection(
-      builtinReals(
-        ProjectionMethods.perspectiveZnearAdjusted,
-        builtinArg(),
-        16,
-        listOf(argReal(newZnear)),
-      )
-    )
+  fun perspectiveZnearAdjusted(newZnear: Double): Projection {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putDouble(1, newZnear)
+    f.call(ProjectionMethods.perspectiveZnearAdjusted, 1)
+    return f.retProjection()
+  }
 
   /**
    * Returns the clipping plane of this `Projection` whose index is given by `plane`. `plane` should
@@ -152,18 +154,25 @@ data class Projection(
    *
    * Generated from Godot docs: Projection.get_projection_plane
    */
-  fun getProjectionPlane(plane: Long): Plane =
-    builtinPlane(
-      builtinReals(ProjectionMethods.getProjectionPlane, builtinArg(), 4, listOf(argLong(plane)))
-    )
+  fun getProjectionPlane(plane: Long): Plane {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putLong(1, plane)
+    f.call(ProjectionMethods.getProjectionPlane, 1)
+    return f.retPlane()
+  }
 
   /**
    * Returns a copy of this `Projection` with the signs of the values of the Y column flipped.
    *
    * Generated from Godot docs: Projection.flipped_y
    */
-  fun flippedY(): Projection =
-    builtinProjection(builtinReals(ProjectionMethods.flippedY, builtinArg(), 16, emptyList()))
+  fun flippedY(): Projection {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.flippedY, 0)
+    return f.retProjection()
+  }
 
   /**
    * Returns a `Projection` with the X and Y values from the given `Vector2` added to the first and
@@ -171,46 +180,73 @@ data class Projection(
    *
    * Generated from Godot docs: Projection.jitter_offseted
    */
-  fun jitterOffseted(offset: Vector2): Projection =
-    builtinProjection(
-      builtinReals(ProjectionMethods.jitterOffseted, builtinArg(), 16, listOf(offset.builtinArg()))
-    )
+  fun jitterOffseted(offset: Vector2): Projection {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, offset)
+    f.call(ProjectionMethods.jitterOffseted, 1)
+    return f.retProjection()
+  }
 
   /**
    * Returns the distance for this `Projection` beyond which positions are clipped.
    *
    * Generated from Godot docs: Projection.get_z_far
    */
-  fun getZFar(): Double = builtinDouble(ProjectionMethods.getZFar, builtinArg(), emptyList())
+  fun getZFar(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.getZFar, 0)
+    return f.retDouble()
+  }
 
   /**
    * Returns the distance for this `Projection` before which positions are clipped.
    *
    * Generated from Godot docs: Projection.get_z_near
    */
-  fun getZNear(): Double = builtinDouble(ProjectionMethods.getZNear, builtinArg(), emptyList())
+  fun getZNear(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.getZNear, 0)
+    return f.retDouble()
+  }
 
   /**
    * Returns the X:Y aspect ratio of this `Projection`'s viewport.
    *
    * Generated from Godot docs: Projection.get_aspect
    */
-  fun getAspect(): Double = builtinDouble(ProjectionMethods.getAspect, builtinArg(), emptyList())
+  fun getAspect(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.getAspect, 0)
+    return f.retDouble()
+  }
 
   /**
    * Returns the horizontal field of view of the projection (in degrees).
    *
    * Generated from Godot docs: Projection.get_fov
    */
-  fun getFov(): Double = builtinDouble(ProjectionMethods.getFov, builtinArg(), emptyList())
+  fun getFov(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.getFov, 0)
+    return f.retDouble()
+  }
 
   /**
    * Returns `true` if this `Projection` performs an orthogonal projection.
    *
    * Generated from Godot docs: Projection.is_orthogonal
    */
-  fun isOrthogonal(): Boolean =
-    builtinBool(ProjectionMethods.isOrthogonal, builtinArg(), emptyList())
+  fun isOrthogonal(): Boolean {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.isOrthogonal, 0)
+    return f.retBool()
+  }
 
   /**
    * Returns the dimensions of the viewport plane that this `Projection` projects positions onto,
@@ -218,20 +254,24 @@ data class Projection(
    *
    * Generated from Godot docs: Projection.get_viewport_half_extents
    */
-  fun getViewportHalfExtents(): Vector2 =
-    builtinVector2(
-      builtinReals(ProjectionMethods.getViewportHalfExtents, builtinArg(), 2, emptyList())
-    )
+  fun getViewportHalfExtents(): Vector2 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.getViewportHalfExtents, 0)
+    return f.retVector2()
+  }
 
   /**
    * Returns the dimensions of the far clipping plane of the projection, divided by two.
    *
    * Generated from Godot docs: Projection.get_far_plane_half_extents
    */
-  fun getFarPlaneHalfExtents(): Vector2 =
-    builtinVector2(
-      builtinReals(ProjectionMethods.getFarPlaneHalfExtents, builtinArg(), 2, emptyList())
-    )
+  fun getFarPlaneHalfExtents(): Vector2 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.getFarPlaneHalfExtents, 0)
+    return f.retVector2()
+  }
 
   /**
    * Returns a `Projection` that performs the inverse of this `Projection`'s projective
@@ -239,8 +279,12 @@ data class Projection(
    *
    * Generated from Godot docs: Projection.inverse
    */
-  fun inverse(): Projection =
-    builtinProjection(builtinReals(ProjectionMethods.inverse, builtinArg(), 16, emptyList()))
+  fun inverse(): Projection {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.inverse, 0)
+    return f.retProjection()
+  }
 
   /**
    * Returns `for_pixel_width` divided by the viewport's width measured in meters on the near plane,
@@ -248,16 +292,25 @@ data class Projection(
    *
    * Generated from Godot docs: Projection.get_pixels_per_meter
    */
-  fun getPixelsPerMeter(forPixelWidth: Long): Long =
-    builtinLong(ProjectionMethods.getPixelsPerMeter, builtinArg(), listOf(argLong(forPixelWidth)))
+  fun getPixelsPerMeter(forPixelWidth: Long): Long {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putLong(1, forPixelWidth)
+    f.call(ProjectionMethods.getPixelsPerMeter, 1)
+    return f.retLong()
+  }
 
   /**
    * Returns the factor by which the visible level of detail is scaled by this `Projection`.
    *
    * Generated from Godot docs: Projection.get_lod_multiplier
    */
-  fun getLodMultiplier(): Double =
-    builtinDouble(ProjectionMethods.getLodMultiplier, builtinArg(), emptyList())
+  fun getLodMultiplier(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(ProjectionMethods.getLodMultiplier, 0)
+    return f.retDouble()
+  }
 
   // ===== END GENERATED BUILTIN MEMBERS: Projection =====
 
@@ -270,20 +323,24 @@ data class Projection(
      *
      * Generated from Godot docs: Projection.create_depth_correction
      */
-    fun createDepthCorrection(flipY: Boolean): Projection =
-      builtinProjection(
-        builtinReals(ProjectionMethods.createDepthCorrection, null, 16, listOf(argBool(flipY)))
-      )
+    fun createDepthCorrection(flipY: Boolean): Projection {
+      val f = builtinFrame()
+      f.putBool(1, flipY)
+      f.callStatic(ProjectionMethods.createDepthCorrection, 1)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` that projects positions into the given `Rect2`.
      *
      * Generated from Godot docs: Projection.create_light_atlas_rect
      */
-    fun createLightAtlasRect(rect: Rect2): Projection =
-      builtinProjection(
-        builtinReals(ProjectionMethods.createLightAtlasRect, null, 16, listOf(rect.builtinArg()))
-      )
+    fun createLightAtlasRect(rect: Rect2): Projection {
+      val f = builtinFrame()
+      f.put(1, rect)
+      f.callStatic(ProjectionMethods.createLightAtlasRect, 1)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` that projects positions using a perspective projection with the
@@ -298,15 +355,16 @@ data class Projection(
       zNear: Double,
       zFar: Double,
       flipFov: Boolean = false,
-    ): Projection =
-      builtinProjection(
-        builtinReals(
-          ProjectionMethods.createPerspective,
-          null,
-          16,
-          listOf(argReal(fovy), argReal(aspect), argReal(zNear), argReal(zFar), argBool(flipFov)),
-        )
-      )
+    ): Projection {
+      val f = builtinFrame()
+      f.putDouble(1, fovy)
+      f.putDouble(2, aspect)
+      f.putDouble(3, zNear)
+      f.putDouble(4, zFar)
+      f.putBool(5, flipFov)
+      f.callStatic(ProjectionMethods.createPerspective, 5)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` that projects positions using a perspective projection with the
@@ -327,24 +385,19 @@ data class Projection(
       eye: Long,
       intraocularDist: Double,
       convergenceDist: Double,
-    ): Projection =
-      builtinProjection(
-        builtinReals(
-          ProjectionMethods.createPerspectiveHmd,
-          null,
-          16,
-          listOf(
-            argReal(fovy),
-            argReal(aspect),
-            argReal(zNear),
-            argReal(zFar),
-            argBool(flipFov),
-            argLong(eye),
-            argReal(intraocularDist),
-            argReal(convergenceDist),
-          ),
-        )
-      )
+    ): Projection {
+      val f = builtinFrame()
+      f.putDouble(1, fovy)
+      f.putDouble(2, aspect)
+      f.putDouble(3, zNear)
+      f.putDouble(4, zFar)
+      f.putBool(5, flipFov)
+      f.putLong(6, eye)
+      f.putDouble(7, intraocularDist)
+      f.putDouble(8, convergenceDist)
+      f.callStatic(ProjectionMethods.createPerspectiveHmd, 8)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` for projecting positions onto a head-mounted display with the
@@ -363,24 +416,19 @@ data class Projection(
       oversample: Double,
       zNear: Double,
       zFar: Double,
-    ): Projection =
-      builtinProjection(
-        builtinReals(
-          ProjectionMethods.createForHmd,
-          null,
-          16,
-          listOf(
-            argLong(eye),
-            argReal(aspect),
-            argReal(intraocularDist),
-            argReal(displayWidth),
-            argReal(displayToLens),
-            argReal(oversample),
-            argReal(zNear),
-            argReal(zFar),
-          ),
-        )
-      )
+    ): Projection {
+      val f = builtinFrame()
+      f.putLong(1, eye)
+      f.putDouble(2, aspect)
+      f.putDouble(3, intraocularDist)
+      f.putDouble(4, displayWidth)
+      f.putDouble(5, displayToLens)
+      f.putDouble(6, oversample)
+      f.putDouble(7, zNear)
+      f.putDouble(8, zFar)
+      f.callStatic(ProjectionMethods.createForHmd, 8)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` that projects positions using an orthogonal projection with the
@@ -395,22 +443,17 @@ data class Projection(
       top: Double,
       zNear: Double,
       zFar: Double,
-    ): Projection =
-      builtinProjection(
-        builtinReals(
-          ProjectionMethods.createOrthogonal,
-          null,
-          16,
-          listOf(
-            argReal(left),
-            argReal(right),
-            argReal(bottom),
-            argReal(top),
-            argReal(zNear),
-            argReal(zFar),
-          ),
-        )
-      )
+    ): Projection {
+      val f = builtinFrame()
+      f.putDouble(1, left)
+      f.putDouble(2, right)
+      f.putDouble(3, bottom)
+      f.putDouble(4, top)
+      f.putDouble(5, zNear)
+      f.putDouble(6, zFar)
+      f.callStatic(ProjectionMethods.createOrthogonal, 6)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` that projects positions using an orthogonal projection with the
@@ -425,15 +468,16 @@ data class Projection(
       zNear: Double,
       zFar: Double,
       flipFov: Boolean = false,
-    ): Projection =
-      builtinProjection(
-        builtinReals(
-          ProjectionMethods.createOrthogonalAspect,
-          null,
-          16,
-          listOf(argReal(size), argReal(aspect), argReal(zNear), argReal(zFar), argBool(flipFov)),
-        )
-      )
+    ): Projection {
+      val f = builtinFrame()
+      f.putDouble(1, size)
+      f.putDouble(2, aspect)
+      f.putDouble(3, zNear)
+      f.putDouble(4, zFar)
+      f.putBool(5, flipFov)
+      f.callStatic(ProjectionMethods.createOrthogonalAspect, 5)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` that projects positions in a frustum with the given clipping
@@ -448,22 +492,17 @@ data class Projection(
       top: Double,
       zNear: Double,
       zFar: Double,
-    ): Projection =
-      builtinProjection(
-        builtinReals(
-          ProjectionMethods.createFrustum,
-          null,
-          16,
-          listOf(
-            argReal(left),
-            argReal(right),
-            argReal(bottom),
-            argReal(top),
-            argReal(zNear),
-            argReal(zFar),
-          ),
-        )
-      )
+    ): Projection {
+      val f = builtinFrame()
+      f.putDouble(1, left)
+      f.putDouble(2, right)
+      f.putDouble(3, bottom)
+      f.putDouble(4, top)
+      f.putDouble(5, zNear)
+      f.putDouble(6, zFar)
+      f.callStatic(ProjectionMethods.createFrustum, 6)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` that projects positions in a frustum with the given size, X:Y
@@ -479,22 +518,17 @@ data class Projection(
       zNear: Double,
       zFar: Double,
       flipFov: Boolean = false,
-    ): Projection =
-      builtinProjection(
-        builtinReals(
-          ProjectionMethods.createFrustumAspect,
-          null,
-          16,
-          listOf(
-            argReal(size),
-            argReal(aspect),
-            offset.builtinArg(),
-            argReal(zNear),
-            argReal(zFar),
-            argBool(flipFov),
-          ),
-        )
-      )
+    ): Projection {
+      val f = builtinFrame()
+      f.putDouble(1, size)
+      f.putDouble(2, aspect)
+      f.put(3, offset)
+      f.putDouble(4, zNear)
+      f.putDouble(5, zFar)
+      f.putBool(6, flipFov)
+      f.callStatic(ProjectionMethods.createFrustumAspect, 6)
+      return f.retProjection()
+    }
 
     /**
      * Creates a new `Projection` that scales a given projection to fit around a given `AABB` in
@@ -502,10 +536,12 @@ data class Projection(
      *
      * Generated from Godot docs: Projection.create_fit_aabb
      */
-    fun createFitAabb(aabb: AABB): Projection =
-      builtinProjection(
-        builtinReals(ProjectionMethods.createFitAabb, null, 16, listOf(aabb.builtinArg()))
-      )
+    fun createFitAabb(aabb: AABB): Projection {
+      val f = builtinFrame()
+      f.put(1, aabb)
+      f.callStatic(ProjectionMethods.createFitAabb, 1)
+      return f.retProjection()
+    }
 
     /**
      * Returns the vertical field of view of the projection (in degrees) associated with the given
@@ -514,8 +550,13 @@ data class Projection(
      *
      * Generated from Godot docs: Projection.get_fovy
      */
-    fun getFovy(fovx: Double, aspect: Double): Double =
-      builtinDouble(ProjectionMethods.getFovy, null, listOf(argReal(fovx), argReal(aspect)))
+    fun getFovy(fovx: Double, aspect: Double): Double {
+      val f = builtinFrame()
+      f.putDouble(1, fovx)
+      f.putDouble(2, aspect)
+      f.callStatic(ProjectionMethods.getFovy, 2)
+      return f.retDouble()
+    }
 
     // ===== END GENERATED BUILTIN STATICS: Projection =====
 

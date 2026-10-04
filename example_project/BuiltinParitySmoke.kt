@@ -26,8 +26,253 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     repeat(256) { pureRound() }
     report("pure=n=256 " + summary())
     hashes.clear()
+    edge = true
+    repeat(64) { edgeRound() }
+    edge = false
+    report("edge=n=64 " + summary())
+    hashes.clear()
     repeat(8) { facadeRound() }
     report("facade=n=8 " + summary())
+    hashes.clear()
+    constants()
+    report("const=n=1 " + summary())
+  }
+
+  private fun constants() {
+    mix("Vector2.ZERO", Vector2.ZERO)
+    mix("Vector2.ONE", Vector2.ONE)
+    mix("Vector2.INF", Vector2.INF)
+    mix("Vector2.LEFT", Vector2.LEFT)
+    mix("Vector2.RIGHT", Vector2.RIGHT)
+    mix("Vector2.UP", Vector2.UP)
+    mix("Vector2.DOWN", Vector2.DOWN)
+    mix("Vector2.AXIS_X", Vector2.Axis.X.value)
+    mix("Vector2.AXIS_Y", Vector2.Axis.Y.value)
+    mix("Vector3.ZERO", Vector3.ZERO)
+    mix("Vector3.ONE", Vector3.ONE)
+    mix("Vector3.INF", Vector3.INF)
+    mix("Vector3.LEFT", Vector3.LEFT)
+    mix("Vector3.RIGHT", Vector3.RIGHT)
+    mix("Vector3.UP", Vector3.UP)
+    mix("Vector3.DOWN", Vector3.DOWN)
+    mix("Vector3.FORWARD", Vector3.FORWARD)
+    mix("Vector3.BACK", Vector3.BACK)
+    mix("Vector3.MODEL_LEFT", Vector3.MODEL_LEFT)
+    mix("Vector3.MODEL_RIGHT", Vector3.MODEL_RIGHT)
+    mix("Vector3.MODEL_TOP", Vector3.MODEL_TOP)
+    mix("Vector3.MODEL_BOTTOM", Vector3.MODEL_BOTTOM)
+    mix("Vector3.MODEL_FRONT", Vector3.MODEL_FRONT)
+    mix("Vector3.MODEL_REAR", Vector3.MODEL_REAR)
+    mix("Vector3.AXIS_X", Vector3.Axis.X.value)
+    mix("Vector3.AXIS_Y", Vector3.Axis.Y.value)
+    mix("Vector3.AXIS_Z", Vector3.Axis.Z.value)
+    mix("Vector4.ZERO", Vector4.ZERO)
+    mix("Vector4.ONE", Vector4.ONE)
+    mix("Vector4.INF", Vector4.INF)
+    mix("Vector4.AXIS_X", Vector4.Axis.X.value)
+    mix("Vector4.AXIS_Y", Vector4.Axis.Y.value)
+    mix("Vector4.AXIS_Z", Vector4.Axis.Z.value)
+    mix("Vector4.AXIS_W", Vector4.Axis.W.value)
+    mix("Quaternion.IDENTITY", Quaternion.IDENTITY)
+    mix("Plane.PLANE_YZ", Plane.PLANE_YZ)
+    mix("Plane.PLANE_XZ", Plane.PLANE_XZ)
+    mix("Plane.PLANE_XY", Plane.PLANE_XY)
+    mix("Basis.IDENTITY", Basis.IDENTITY)
+    mix("Basis.FLIP_X", Basis.FLIP_X)
+    mix("Basis.FLIP_Y", Basis.FLIP_Y)
+    mix("Basis.FLIP_Z", Basis.FLIP_Z)
+    mix("Transform3D.IDENTITY", Transform3D.IDENTITY)
+    mix("Transform3D.FLIP_X", Transform3D.FLIP_X)
+    mix("Transform3D.FLIP_Y", Transform3D.FLIP_Y)
+    mix("Transform3D.FLIP_Z", Transform3D.FLIP_Z)
+    mix("Transform2D.IDENTITY", Transform2D.IDENTITY)
+    mix("Transform2D.FLIP_X", Transform2D.FLIP_X)
+    mix("Transform2D.FLIP_Y", Transform2D.FLIP_Y)
+    mix("Projection.IDENTITY", Projection.IDENTITY)
+    mix("Projection.ZERO", Projection.ZERO)
+    mix("Projection.PLANE_NEAR", Projection.Planes.NEAR.value)
+    mix("Projection.PLANE_FAR", Projection.Planes.FAR.value)
+    mix("Projection.PLANE_LEFT", Projection.Planes.LEFT.value)
+    mix("Projection.PLANE_TOP", Projection.Planes.TOP.value)
+    mix("Projection.PLANE_RIGHT", Projection.Planes.RIGHT.value)
+    mix("Projection.PLANE_BOTTOM", Projection.Planes.BOTTOM.value)
+    mix("Color.ALICE_BLUE", Color.ALICE_BLUE)
+    mix("Color.ANTIQUE_WHITE", Color.ANTIQUE_WHITE)
+    mix("Color.AQUA", Color.AQUA)
+    mix("Color.AQUAMARINE", Color.AQUAMARINE)
+    mix("Color.AZURE", Color.AZURE)
+    mix("Color.BEIGE", Color.BEIGE)
+    mix("Color.BISQUE", Color.BISQUE)
+    mix("Color.BLACK", Color.BLACK)
+    mix("Color.BLANCHED_ALMOND", Color.BLANCHED_ALMOND)
+    mix("Color.BLUE", Color.BLUE)
+    mix("Color.BLUE_VIOLET", Color.BLUE_VIOLET)
+    mix("Color.BROWN", Color.BROWN)
+    mix("Color.BURLYWOOD", Color.BURLYWOOD)
+    mix("Color.CADET_BLUE", Color.CADET_BLUE)
+    mix("Color.CHARTREUSE", Color.CHARTREUSE)
+    mix("Color.CHOCOLATE", Color.CHOCOLATE)
+    mix("Color.CORAL", Color.CORAL)
+    mix("Color.CORNFLOWER_BLUE", Color.CORNFLOWER_BLUE)
+    mix("Color.CORNSILK", Color.CORNSILK)
+    mix("Color.CRIMSON", Color.CRIMSON)
+    mix("Color.CYAN", Color.CYAN)
+    mix("Color.DARK_BLUE", Color.DARK_BLUE)
+    mix("Color.DARK_CYAN", Color.DARK_CYAN)
+    mix("Color.DARK_GOLDENROD", Color.DARK_GOLDENROD)
+    mix("Color.DARK_GRAY", Color.DARK_GRAY)
+    mix("Color.DARK_GREEN", Color.DARK_GREEN)
+    mix("Color.DARK_KHAKI", Color.DARK_KHAKI)
+    mix("Color.DARK_MAGENTA", Color.DARK_MAGENTA)
+    mix("Color.DARK_OLIVE_GREEN", Color.DARK_OLIVE_GREEN)
+    mix("Color.DARK_ORANGE", Color.DARK_ORANGE)
+    mix("Color.DARK_ORCHID", Color.DARK_ORCHID)
+    mix("Color.DARK_RED", Color.DARK_RED)
+    mix("Color.DARK_SALMON", Color.DARK_SALMON)
+    mix("Color.DARK_SEA_GREEN", Color.DARK_SEA_GREEN)
+    mix("Color.DARK_SLATE_BLUE", Color.DARK_SLATE_BLUE)
+    mix("Color.DARK_SLATE_GRAY", Color.DARK_SLATE_GRAY)
+    mix("Color.DARK_TURQUOISE", Color.DARK_TURQUOISE)
+    mix("Color.DARK_VIOLET", Color.DARK_VIOLET)
+    mix("Color.DEEP_PINK", Color.DEEP_PINK)
+    mix("Color.DEEP_SKY_BLUE", Color.DEEP_SKY_BLUE)
+    mix("Color.DIM_GRAY", Color.DIM_GRAY)
+    mix("Color.DODGER_BLUE", Color.DODGER_BLUE)
+    mix("Color.FIREBRICK", Color.FIREBRICK)
+    mix("Color.FLORAL_WHITE", Color.FLORAL_WHITE)
+    mix("Color.FOREST_GREEN", Color.FOREST_GREEN)
+    mix("Color.FUCHSIA", Color.FUCHSIA)
+    mix("Color.GAINSBORO", Color.GAINSBORO)
+    mix("Color.GHOST_WHITE", Color.GHOST_WHITE)
+    mix("Color.GOLD", Color.GOLD)
+    mix("Color.GOLDENROD", Color.GOLDENROD)
+    mix("Color.GRAY", Color.GRAY)
+    mix("Color.GREEN", Color.GREEN)
+    mix("Color.GREEN_YELLOW", Color.GREEN_YELLOW)
+    mix("Color.HONEYDEW", Color.HONEYDEW)
+    mix("Color.HOT_PINK", Color.HOT_PINK)
+    mix("Color.INDIAN_RED", Color.INDIAN_RED)
+    mix("Color.INDIGO", Color.INDIGO)
+    mix("Color.IVORY", Color.IVORY)
+    mix("Color.KHAKI", Color.KHAKI)
+    mix("Color.LAVENDER", Color.LAVENDER)
+    mix("Color.LAVENDER_BLUSH", Color.LAVENDER_BLUSH)
+    mix("Color.LAWN_GREEN", Color.LAWN_GREEN)
+    mix("Color.LEMON_CHIFFON", Color.LEMON_CHIFFON)
+    mix("Color.LIGHT_BLUE", Color.LIGHT_BLUE)
+    mix("Color.LIGHT_CORAL", Color.LIGHT_CORAL)
+    mix("Color.LIGHT_CYAN", Color.LIGHT_CYAN)
+    mix("Color.LIGHT_GOLDENROD", Color.LIGHT_GOLDENROD)
+    mix("Color.LIGHT_GRAY", Color.LIGHT_GRAY)
+    mix("Color.LIGHT_GREEN", Color.LIGHT_GREEN)
+    mix("Color.LIGHT_PINK", Color.LIGHT_PINK)
+    mix("Color.LIGHT_SALMON", Color.LIGHT_SALMON)
+    mix("Color.LIGHT_SEA_GREEN", Color.LIGHT_SEA_GREEN)
+    mix("Color.LIGHT_SKY_BLUE", Color.LIGHT_SKY_BLUE)
+    mix("Color.LIGHT_SLATE_GRAY", Color.LIGHT_SLATE_GRAY)
+    mix("Color.LIGHT_STEEL_BLUE", Color.LIGHT_STEEL_BLUE)
+    mix("Color.LIGHT_YELLOW", Color.LIGHT_YELLOW)
+    mix("Color.LIME", Color.LIME)
+    mix("Color.LIME_GREEN", Color.LIME_GREEN)
+    mix("Color.LINEN", Color.LINEN)
+    mix("Color.MAGENTA", Color.MAGENTA)
+    mix("Color.MAROON", Color.MAROON)
+    mix("Color.MEDIUM_AQUAMARINE", Color.MEDIUM_AQUAMARINE)
+    mix("Color.MEDIUM_BLUE", Color.MEDIUM_BLUE)
+    mix("Color.MEDIUM_ORCHID", Color.MEDIUM_ORCHID)
+    mix("Color.MEDIUM_PURPLE", Color.MEDIUM_PURPLE)
+    mix("Color.MEDIUM_SEA_GREEN", Color.MEDIUM_SEA_GREEN)
+    mix("Color.MEDIUM_SLATE_BLUE", Color.MEDIUM_SLATE_BLUE)
+    mix("Color.MEDIUM_SPRING_GREEN", Color.MEDIUM_SPRING_GREEN)
+    mix("Color.MEDIUM_TURQUOISE", Color.MEDIUM_TURQUOISE)
+    mix("Color.MEDIUM_VIOLET_RED", Color.MEDIUM_VIOLET_RED)
+    mix("Color.MIDNIGHT_BLUE", Color.MIDNIGHT_BLUE)
+    mix("Color.MINT_CREAM", Color.MINT_CREAM)
+    mix("Color.MISTY_ROSE", Color.MISTY_ROSE)
+    mix("Color.MOCCASIN", Color.MOCCASIN)
+    mix("Color.NAVAJO_WHITE", Color.NAVAJO_WHITE)
+    mix("Color.NAVY_BLUE", Color.NAVY_BLUE)
+    mix("Color.OLD_LACE", Color.OLD_LACE)
+    mix("Color.OLIVE", Color.OLIVE)
+    mix("Color.OLIVE_DRAB", Color.OLIVE_DRAB)
+    mix("Color.ORANGE", Color.ORANGE)
+    mix("Color.ORANGE_RED", Color.ORANGE_RED)
+    mix("Color.ORCHID", Color.ORCHID)
+    mix("Color.PALE_GOLDENROD", Color.PALE_GOLDENROD)
+    mix("Color.PALE_GREEN", Color.PALE_GREEN)
+    mix("Color.PALE_TURQUOISE", Color.PALE_TURQUOISE)
+    mix("Color.PALE_VIOLET_RED", Color.PALE_VIOLET_RED)
+    mix("Color.PAPAYA_WHIP", Color.PAPAYA_WHIP)
+    mix("Color.PEACH_PUFF", Color.PEACH_PUFF)
+    mix("Color.PERU", Color.PERU)
+    mix("Color.PINK", Color.PINK)
+    mix("Color.PLUM", Color.PLUM)
+    mix("Color.POWDER_BLUE", Color.POWDER_BLUE)
+    mix("Color.PURPLE", Color.PURPLE)
+    mix("Color.REBECCA_PURPLE", Color.REBECCA_PURPLE)
+    mix("Color.RED", Color.RED)
+    mix("Color.ROSY_BROWN", Color.ROSY_BROWN)
+    mix("Color.ROYAL_BLUE", Color.ROYAL_BLUE)
+    mix("Color.SADDLE_BROWN", Color.SADDLE_BROWN)
+    mix("Color.SALMON", Color.SALMON)
+    mix("Color.SANDY_BROWN", Color.SANDY_BROWN)
+    mix("Color.SEA_GREEN", Color.SEA_GREEN)
+    mix("Color.SEASHELL", Color.SEASHELL)
+    mix("Color.SIENNA", Color.SIENNA)
+    mix("Color.SILVER", Color.SILVER)
+    mix("Color.SKY_BLUE", Color.SKY_BLUE)
+    mix("Color.SLATE_BLUE", Color.SLATE_BLUE)
+    mix("Color.SLATE_GRAY", Color.SLATE_GRAY)
+    mix("Color.SNOW", Color.SNOW)
+    mix("Color.SPRING_GREEN", Color.SPRING_GREEN)
+    mix("Color.STEEL_BLUE", Color.STEEL_BLUE)
+    mix("Color.TAN", Color.TAN)
+    mix("Color.TEAL", Color.TEAL)
+    mix("Color.THISTLE", Color.THISTLE)
+    mix("Color.TOMATO", Color.TOMATO)
+    mix("Color.TRANSPARENT", Color.TRANSPARENT)
+    mix("Color.TURQUOISE", Color.TURQUOISE)
+    mix("Color.VIOLET", Color.VIOLET)
+    mix("Color.WEB_GRAY", Color.WEB_GRAY)
+    mix("Color.WEB_GREEN", Color.WEB_GREEN)
+    mix("Color.WEB_MAROON", Color.WEB_MAROON)
+    mix("Color.WEB_PURPLE", Color.WEB_PURPLE)
+    mix("Color.WHEAT", Color.WHEAT)
+    mix("Color.WHITE", Color.WHITE)
+    mix("Color.WHITE_SMOKE", Color.WHITE_SMOKE)
+    mix("Color.YELLOW", Color.YELLOW)
+    mix("Color.YELLOW_GREEN", Color.YELLOW_GREEN)
+    mix("Vector2i.ZERO", Vector2i.ZERO)
+    mix("Vector2i.ONE", Vector2i.ONE)
+    mix("Vector2i.MIN", Vector2i.MIN)
+    mix("Vector2i.MAX", Vector2i.MAX)
+    mix("Vector2i.LEFT", Vector2i.LEFT)
+    mix("Vector2i.RIGHT", Vector2i.RIGHT)
+    mix("Vector2i.UP", Vector2i.UP)
+    mix("Vector2i.DOWN", Vector2i.DOWN)
+    mix("Vector2i.AXIS_X", Vector2i.Axis.X.value)
+    mix("Vector2i.AXIS_Y", Vector2i.Axis.Y.value)
+    mix("Vector3i.ZERO", Vector3i.ZERO)
+    mix("Vector3i.ONE", Vector3i.ONE)
+    mix("Vector3i.MIN", Vector3i.MIN)
+    mix("Vector3i.MAX", Vector3i.MAX)
+    mix("Vector3i.LEFT", Vector3i.LEFT)
+    mix("Vector3i.RIGHT", Vector3i.RIGHT)
+    mix("Vector3i.UP", Vector3i.UP)
+    mix("Vector3i.DOWN", Vector3i.DOWN)
+    mix("Vector3i.FORWARD", Vector3i.FORWARD)
+    mix("Vector3i.BACK", Vector3i.BACK)
+    mix("Vector3i.AXIS_X", Vector3i.Axis.X.value)
+    mix("Vector3i.AXIS_Y", Vector3i.Axis.Y.value)
+    mix("Vector3i.AXIS_Z", Vector3i.Axis.Z.value)
+    mix("Vector4i.ZERO", Vector4i.ZERO)
+    mix("Vector4i.ONE", Vector4i.ONE)
+    mix("Vector4i.MIN", Vector4i.MIN)
+    mix("Vector4i.MAX", Vector4i.MAX)
+    mix("Vector4i.AXIS_X", Vector4i.Axis.X.value)
+    mix("Vector4i.AXIS_Y", Vector4i.Axis.Y.value)
+    mix("Vector4i.AXIS_Z", Vector4i.Axis.Z.value)
+    mix("Vector4i.AXIS_W", Vector4i.Axis.W.value)
   }
 
   private fun pureRound() {
@@ -310,6 +555,382 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     pure276()
     pure277()
     pure278()
+    pure279()
+    pure280()
+    pure281()
+    pure282()
+    pure283()
+    pure284()
+    pure285()
+    pure286()
+    pure287()
+    pure288()
+    pure289()
+    pure290()
+    pure291()
+    pure292()
+    pure293()
+    pure294()
+    pure295()
+    pure296()
+    pure297()
+    pure298()
+    pure299()
+    pure300()
+    pure301()
+    pure302()
+    pure303()
+    pure304()
+    pure305()
+    pure306()
+    pure307()
+    pure308()
+    pure309()
+    pure310()
+    pure311()
+    pure312()
+    pure313()
+    pure314()
+    pure315()
+    pure316()
+    pure317()
+    pure318()
+    pure319()
+    pure320()
+    pure321()
+    pure322()
+    pure323()
+    pure324()
+    pure325()
+    pure326()
+    pure327()
+    pure328()
+    pure329()
+    pure330()
+    pure331()
+    pure332()
+    pure333()
+    pure334()
+  }
+
+  private fun edgeRound() {
+    pure0()
+    pure1()
+    pure2()
+    pure3()
+    pure4()
+    pure5()
+    pure7()
+    pure8()
+    pure9()
+    pure10()
+    pure11()
+    pure12()
+    pure13()
+    pure14()
+    pure15()
+    pure16()
+    pure17()
+    pure18()
+    pure19()
+    pure20()
+    pure21()
+    pure22()
+    pure23()
+    pure24()
+    pure25()
+    pure26()
+    pure27()
+    pure28()
+    pure29()
+    pure30()
+    pure31()
+    pure32()
+    pure33()
+    pure34()
+    pure38()
+    pure39()
+    pure40()
+    pure41()
+    pure42()
+    pure43()
+    pure44()
+    pure45()
+    pure46()
+    pure47()
+    pure48()
+    pure49()
+    pure50()
+    pure51()
+    pure52()
+    pure54()
+    pure55()
+    pure56()
+    pure57()
+    pure59()
+    pure60()
+    pure61()
+    pure62()
+    pure63()
+    pure64()
+    pure65()
+    pure66()
+    pure67()
+    pure68()
+    pure69()
+    pure70()
+    pure71()
+    pure72()
+    pure73()
+    pure74()
+    pure75()
+    pure76()
+    pure77()
+    pure78()
+    pure79()
+    pure80()
+    pure81()
+    pure82()
+    pure83()
+    pure84()
+    pure85()
+    pure86()
+    pure87()
+    pure91()
+    pure92()
+    pure93()
+    pure94()
+    pure95()
+    pure96()
+    pure97()
+    pure98()
+    pure99()
+    pure100()
+    pure101()
+    pure103()
+    pure104()
+    pure105()
+    pure106()
+    pure107()
+    pure108()
+    pure109()
+    pure110()
+    pure111()
+    pure112()
+    pure113()
+    pure114()
+    pure115()
+    pure116()
+    pure117()
+    pure118()
+    pure119()
+    pure120()
+    pure121()
+    pure122()
+    pure123()
+    pure124()
+    pure125()
+    pure126()
+    pure127()
+    pure128()
+    pure129()
+    pure130()
+    pure131()
+    pure132()
+    pure133()
+    pure134()
+    pure135()
+    pure136()
+    pure137()
+    pure138()
+    pure139()
+    pure140()
+    pure142()
+    pure143()
+    pure144()
+    pure145()
+    pure146()
+    pure147()
+    pure148()
+    pure149()
+    pure150()
+    pure151()
+    pure152()
+    pure153()
+    pure154()
+    pure155()
+    pure156()
+    pure157()
+    pure158()
+    pure159()
+    pure160()
+    pure161()
+    pure162()
+    pure163()
+    pure164()
+    pure165()
+    pure166()
+    pure167()
+    pure168()
+    pure169()
+    pure170()
+    pure171()
+    pure172()
+    pure173()
+    pure174()
+    pure175()
+    pure176()
+    pure177()
+    pure178()
+    pure179()
+    pure180()
+    pure181()
+    pure182()
+    pure183()
+    pure184()
+    pure185()
+    pure186()
+    pure187()
+    pure188()
+    pure189()
+    pure190()
+    pure191()
+    pure192()
+    pure193()
+    pure194()
+    pure195()
+    pure196()
+    pure197()
+    pure198()
+    pure199()
+    pure200()
+    pure201()
+    pure202()
+    pure203()
+    pure204()
+    pure205()
+    pure206()
+    pure207()
+    pure208()
+    pure209()
+    pure210()
+    pure211()
+    pure212()
+    pure213()
+    pure214()
+    pure215()
+    pure216()
+    pure217()
+    pure218()
+    pure219()
+    pure220()
+    pure221()
+    pure222()
+    pure223()
+    pure224()
+    pure225()
+    pure226()
+    pure227()
+    pure228()
+    pure229()
+    pure230()
+    pure231()
+    pure232()
+    pure233()
+    pure234()
+    pure235()
+    pure236()
+    pure237()
+    pure238()
+    pure239()
+    pure240()
+    pure241()
+    pure242()
+    pure245()
+    pure246()
+    pure247()
+    pure248()
+    pure249()
+    pure250()
+    pure251()
+    pure252()
+    pure253()
+    pure254()
+    pure255()
+    pure256()
+    pure257()
+    pure258()
+    pure259()
+    pure260()
+    pure261()
+    pure262()
+    pure263()
+    pure264()
+    pure265()
+    pure266()
+    pure267()
+    pure268()
+    pure269()
+    pure270()
+    pure273()
+    pure274()
+    pure275()
+    pure276()
+    pure277()
+    pure278()
+    pure279()
+    pure280()
+    pure281()
+    pure282()
+    pure283()
+    pure284()
+    pure285()
+    pure286()
+    pure287()
+    pure288()
+    pure289()
+    pure290()
+    pure291()
+    pure292()
+    pure293()
+    pure294()
+    pure295()
+    pure296()
+    pure297()
+    pure300()
+    pure301()
+    pure302()
+    pure303()
+    pure304()
+    pure305()
+    pure306()
+    pure307()
+    pure308()
+    pure309()
+    pure310()
+    pure311()
+    pure312()
+    pure313()
+    pure314()
+    pure315()
+    pure316()
+    pure317()
+    pure318()
+    pure319()
+    pure320()
+    pure321()
+    pure322()
+    pure323()
+    pure324()
+    pure325()
+    pure326()
+    pure327()
+    pure328()
+    pure329()
+    pure330()
+    pure331()
+    pure333()
+    pure334()
   }
 
   private fun facadeRound() {
@@ -476,62 +1097,6 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     facade160()
     facade161()
     facade162()
-    facade163()
-    facade164()
-    facade165()
-    facade166()
-    facade167()
-    facade168()
-    facade169()
-    facade170()
-    facade171()
-    facade172()
-    facade173()
-    facade174()
-    facade175()
-    facade176()
-    facade177()
-    facade178()
-    facade179()
-    facade180()
-    facade181()
-    facade182()
-    facade183()
-    facade184()
-    facade185()
-    facade186()
-    facade187()
-    facade188()
-    facade189()
-    facade190()
-    facade191()
-    facade192()
-    facade193()
-    facade194()
-    facade195()
-    facade196()
-    facade197()
-    facade198()
-    facade199()
-    facade200()
-    facade201()
-    facade202()
-    facade203()
-    facade204()
-    facade205()
-    facade206()
-    facade207()
-    facade208()
-    facade209()
-    facade210()
-    facade211()
-    facade212()
-    facade213()
-    facade214()
-    facade215()
-    facade216()
-    facade217()
-    facade218()
   }
 
   private fun pure0() {
@@ -634,190 +1199,253 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun pure17() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.normalized", b.normalized())
+    val a0 = nv()
+    mix("Vector2.limit_length", b.limitLength(a0))
   }
 
   private fun pure18() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.normalized", b.normalized())
+  }
+
+  private fun pure19() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure19() {
+  private fun pure20() {
     val b = Vector2(nv(), nv())
     mix("Vector2.is_zero_approx", b.isZeroApprox())
   }
 
-  private fun pure20() {
+  private fun pure21() {
     val b = Vector2(nv(), nv())
     mix("Vector2.is_finite", b.isFinite())
   }
 
-  private fun pure21() {
-    val b = Vector2(nv(), nv())
-    mix("Vector2.max_axis_index", b.maxAxisIndex())
-  }
-
   private fun pure22() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.min_axis_index", b.minAxisIndex())
+    val a0 = nv()
+    mix("Vector2.posmod", b.posmod(a0))
   }
 
   private fun pure23() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.orthogonal", b.orthogonal())
+    val a0 = Vector2(nv(), nv())
+    mix("Vector2.posmodv", b.posmodv(a0))
   }
 
   private fun pure24() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.floor", b.floor())
+    val a0 = Vector2(nv(), nv())
+    mix("Vector2.project", b.project(a0))
   }
 
   private fun pure25() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.ceil", b.ceil())
+    val a0 = Vector2(nv(), nv())
+    val a1 = nv()
+    mix("Vector2.lerp", b.lerp(a0, a1))
   }
 
   private fun pure26() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.round", b.round())
+    mix("Vector2.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure27() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.aspect", b.aspect())
+    mix("Vector2.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure28() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
-    mix("Vector2.dot", b.dot(a0))
+    val a1 = nv()
+    mix("Vector2.move_toward", b.moveToward(a0, a1))
   }
 
   private fun pure29() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.orthogonal", b.orthogonal())
+  }
+
+  private fun pure30() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.floor", b.floor())
+  }
+
+  private fun pure31() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.ceil", b.ceil())
+  }
+
+  private fun pure32() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.round", b.round())
+  }
+
+  private fun pure33() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.aspect", b.aspect())
+  }
+
+  private fun pure34() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv())
+    mix("Vector2.dot", b.dot(a0))
+  }
+
+  private fun pure35() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv()).normalized()
+    mix("Vector2.slide", b.slide(a0))
+  }
+
+  private fun pure36() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv()).normalized()
+    mix("Vector2.bounce", b.bounce(a0))
+  }
+
+  private fun pure37() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv()).normalized()
+    mix("Vector2.reflect", b.reflect(a0))
+  }
+
+  private fun pure38() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.cross", b.cross(a0))
   }
 
-  private fun pure30() {
+  private fun pure39() {
     val b = Vector2(nv(), nv())
     mix("Vector2.abs", b.abs())
   }
 
-  private fun pure31() {
+  private fun pure40() {
     val b = Vector2(nv(), nv())
     mix("Vector2.sign", b.sign())
   }
 
-  private fun pure32() {
+  private fun pure41() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv())
+    val a1 = Vector2(nv(), nv())
+    mix("Vector2.clamp", b.clamp(a0, a1))
+  }
+
+  private fun pure42() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     val a1 = nv()
     mix("Vector2.clampf", b.clampf(a0, a1))
   }
 
-  private fun pure33() {
+  private fun pure43() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.min", b.min(a0))
   }
 
-  private fun pure34() {
+  private fun pure44() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.minf", b.minf(a0))
   }
 
-  private fun pure35() {
+  private fun pure45() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.max", b.max(a0))
   }
 
-  private fun pure36() {
+  private fun pure46() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.maxf", b.maxf(a0))
   }
 
-  private fun pure37() {
+  private fun pure47() {
     val l = Vector3(nv(), nv(), nv())
     mix("unary- Vector3", -l)
   }
 
-  private fun pure38() {
+  private fun pure48() {
     val l = Vector3(nv(), nv(), nv())
     mix("unary+ Vector3", +l)
   }
 
-  private fun pure39() {
+  private fun pure49() {
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector3 * int", l * r)
   }
 
-  private fun pure40() {
+  private fun pure50() {
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector3 / int", l / r)
   }
 
-  private fun pure41() {
+  private fun pure51() {
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
     mix("Vector3 * float", l * r)
   }
 
-  private fun pure42() {
+  private fun pure52() {
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
     mix("Vector3 / float", l / r)
   }
 
-  private fun pure43() {
+  private fun pure53() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 < Vector3", l < r)
   }
 
-  private fun pure44() {
+  private fun pure54() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 + Vector3", l + r)
   }
 
-  private fun pure45() {
+  private fun pure55() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 - Vector3", l - r)
   }
 
-  private fun pure46() {
+  private fun pure56() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 * Vector3", l * r)
   }
 
-  private fun pure47() {
+  private fun pure57() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 / Vector3", l / r)
   }
 
-  private fun pure48() {
+  private fun pure58() {
     val l = Vector3(nv(), nv(), nv())
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Vector3 * Quaternion", l * r)
   }
 
-  private fun pure49() {
+  private fun pure59() {
     val l = Vector3(nv(), nv(), nv())
     val r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Vector3 * Basis", l * r)
   }
 
-  private fun pure50() {
+  private fun pure60() {
     val l = Vector3(nv(), nv(), nv())
     val r =
       Transform3D(
@@ -827,215 +1455,271 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector3 * Transform3D", l * r)
   }
 
-  private fun pure51() {
+  private fun pure61() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure52() {
+  private fun pure62() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure53() {
+  private fun pure63() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.direction_to", b.directionTo(a0))
   }
 
-  private fun pure54() {
+  private fun pure64() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure55() {
+  private fun pure65() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure56() {
+  private fun pure66() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.length", b.length())
   }
 
-  private fun pure57() {
+  private fun pure67() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.length_squared", b.lengthSquared())
   }
 
-  private fun pure58() {
+  private fun pure68() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = nv()
+    mix("Vector3.limit_length", b.limitLength(a0))
+  }
+
+  private fun pure69() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.normalized", b.normalized())
   }
 
-  private fun pure59() {
+  private fun pure70() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_normalized", b.isNormalized())
   }
 
-  private fun pure60() {
+  private fun pure71() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure61() {
+  private fun pure72() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_zero_approx", b.isZeroApprox())
   }
 
-  private fun pure62() {
+  private fun pure73() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_finite", b.isFinite())
   }
 
-  private fun pure63() {
+  private fun pure74() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.inverse", b.inverse())
   }
 
-  private fun pure64() {
+  private fun pure75() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
     mix("Vector3.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure65() {
+  private fun pure76() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
     mix("Vector3.clampf", b.clampf(a0, a1))
   }
 
-  private fun pure66() {
+  private fun pure77() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    val a1 = nv()
+    mix("Vector3.lerp", b.lerp(a0, a1))
+  }
+
+  private fun pure78() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    val a1 = nv()
+    mix("Vector3.move_toward", b.moveToward(a0, a1))
+  }
+
+  private fun pure79() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.dot", b.dot(a0))
   }
 
-  private fun pure67() {
+  private fun pure80() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.cross", b.cross(a0))
   }
 
-  private fun pure68() {
+  private fun pure81() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.abs", b.abs())
   }
 
-  private fun pure69() {
+  private fun pure82() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.floor", b.floor())
   }
 
-  private fun pure70() {
+  private fun pure83() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.ceil", b.ceil())
   }
 
-  private fun pure71() {
+  private fun pure84() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.round", b.round())
   }
 
-  private fun pure72() {
+  private fun pure85() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = nv()
+    mix("Vector3.posmod", b.posmod(a0))
+  }
+
+  private fun pure86() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Vector3.posmodv", b.posmodv(a0))
+  }
+
+  private fun pure87() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Vector3.project", b.project(a0))
+  }
+
+  private fun pure88() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv()).normalized()
+    mix("Vector3.slide", b.slide(a0))
+  }
+
+  private fun pure89() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv()).normalized()
+    mix("Vector3.bounce", b.bounce(a0))
+  }
+
+  private fun pure90() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv()).normalized()
+    mix("Vector3.reflect", b.reflect(a0))
+  }
+
+  private fun pure91() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.sign", b.sign())
   }
 
-  private fun pure73() {
+  private fun pure92() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.min", b.min(a0))
   }
 
-  private fun pure74() {
+  private fun pure93() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.minf", b.minf(a0))
   }
 
-  private fun pure75() {
+  private fun pure94() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.max", b.max(a0))
   }
 
-  private fun pure76() {
+  private fun pure95() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.maxf", b.maxf(a0))
   }
 
-  private fun pure77() {
+  private fun pure96() {
     val l = Vector4(nv(), nv(), nv(), nv())
     mix("unary- Vector4", -l)
   }
 
-  private fun pure78() {
+  private fun pure97() {
     val l = Vector4(nv(), nv(), nv(), nv())
     mix("unary+ Vector4", +l)
   }
 
-  private fun pure79() {
+  private fun pure98() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector4 * int", l * r)
   }
 
-  private fun pure80() {
+  private fun pure99() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector4 / int", l / r)
   }
 
-  private fun pure81() {
+  private fun pure100() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Vector4 * float", l * r)
   }
 
-  private fun pure82() {
+  private fun pure101() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Vector4 / float", l / r)
   }
 
-  private fun pure83() {
+  private fun pure102() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 < Vector4", l < r)
   }
 
-  private fun pure84() {
+  private fun pure103() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 + Vector4", l + r)
   }
 
-  private fun pure85() {
+  private fun pure104() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 - Vector4", l - r)
   }
 
-  private fun pure86() {
+  private fun pure105() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 * Vector4", l * r)
   }
 
-  private fun pure87() {
+  private fun pure106() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4 / Vector4", l / r)
   }
 
-  private fun pure88() {
+  private fun pure107() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r =
       Projection(
@@ -1047,240 +1731,259 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector4 * Projection", l * r)
   }
 
-  private fun pure89() {
+  private fun pure108() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure90() {
+  private fun pure109() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure91() {
+  private fun pure110() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.length", b.length())
   }
 
-  private fun pure92() {
+  private fun pure111() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.length_squared", b.lengthSquared())
   }
 
-  private fun pure93() {
+  private fun pure112() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.abs", b.abs())
   }
 
-  private fun pure94() {
+  private fun pure113() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.sign", b.sign())
   }
 
-  private fun pure95() {
+  private fun pure114() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.floor", b.floor())
   }
 
-  private fun pure96() {
+  private fun pure115() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.ceil", b.ceil())
   }
 
-  private fun pure97() {
+  private fun pure116() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.round", b.round())
   }
 
-  private fun pure98() {
+  private fun pure117() {
+    val b = Vector4(nv(), nv(), nv(), nv())
+    val a0 = Vector4(nv(), nv(), nv(), nv())
+    val a1 = nv()
+    mix("Vector4.lerp", b.lerp(a0, a1))
+  }
+
+  private fun pure118() {
+    val b = Vector4(nv(), nv(), nv(), nv())
+    val a0 = nv()
+    mix("Vector4.posmod", b.posmod(a0))
+  }
+
+  private fun pure119() {
+    val b = Vector4(nv(), nv(), nv(), nv())
+    val a0 = Vector4(nv(), nv(), nv(), nv())
+    mix("Vector4.posmodv", b.posmodv(a0))
+  }
+
+  private fun pure120() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure99() {
+  private fun pure121() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
     mix("Vector4.clampf", b.clampf(a0, a1))
   }
 
-  private fun pure100() {
+  private fun pure122() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.normalized", b.normalized())
   }
 
-  private fun pure101() {
+  private fun pure123() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.direction_to", b.directionTo(a0))
   }
 
-  private fun pure102() {
+  private fun pure124() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure103() {
+  private fun pure125() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure104() {
+  private fun pure126() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.dot", b.dot(a0))
   }
 
-  private fun pure105() {
+  private fun pure127() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.inverse", b.inverse())
   }
 
-  private fun pure106() {
+  private fun pure128() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure107() {
+  private fun pure129() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_zero_approx", b.isZeroApprox())
   }
 
-  private fun pure108() {
+  private fun pure130() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_finite", b.isFinite())
   }
 
-  private fun pure109() {
+  private fun pure131() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.min", b.min(a0))
   }
 
-  private fun pure110() {
+  private fun pure132() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.minf", b.minf(a0))
   }
 
-  private fun pure111() {
+  private fun pure133() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.max", b.max(a0))
   }
 
-  private fun pure112() {
+  private fun pure134() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.maxf", b.maxf(a0))
   }
 
-  private fun pure113() {
+  private fun pure135() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("unary- Quaternion", -l)
   }
 
-  private fun pure114() {
+  private fun pure136() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("unary+ Quaternion", +l)
   }
 
-  private fun pure115() {
+  private fun pure137() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
     mix("Quaternion * int", l * r)
   }
 
-  private fun pure116() {
+  private fun pure138() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
     mix("Quaternion / int", l / r)
   }
 
-  private fun pure117() {
+  private fun pure139() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
     mix("Quaternion * float", l * r)
   }
 
-  private fun pure118() {
+  private fun pure140() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
     mix("Quaternion / float", l / r)
   }
 
-  private fun pure119() {
+  private fun pure141() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Vector3(nv(), nv(), nv())
     mix("Quaternion * Vector3", l * r)
   }
 
-  private fun pure120() {
+  private fun pure142() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion + Quaternion", l + r)
   }
 
-  private fun pure121() {
+  private fun pure143() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion - Quaternion", l - r)
   }
 
-  private fun pure122() {
+  private fun pure144() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion * Quaternion", l * r)
   }
 
-  private fun pure123() {
+  private fun pure145() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.length", b.length())
   }
 
-  private fun pure124() {
+  private fun pure146() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.length_squared", b.lengthSquared())
   }
 
-  private fun pure125() {
+  private fun pure147() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.normalized", b.normalized())
   }
 
-  private fun pure126() {
+  private fun pure148() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure127() {
+  private fun pure149() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_finite", b.isFinite())
   }
 
-  private fun pure128() {
+  private fun pure150() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.dot", b.dot(a0))
   }
 
-  private fun pure129() {
+  private fun pure151() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary- Plane", -l)
   }
 
-  private fun pure130() {
+  private fun pure152() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary+ Plane", +l)
   }
 
-  private fun pure131() {
+  private fun pure153() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val r =
       Transform3D(
@@ -1290,53 +1993,141 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Plane * Transform3D", l * r)
   }
 
-  private fun pure132() {
+  private fun pure154() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    mix("Plane.get_center", b.getCenter())
+  }
+
+  private fun pure155() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Plane.is_point_over", b.isPointOver(a0))
+  }
+
+  private fun pure156() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Plane.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure133() {
+  private fun pure157() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    val a1 = nv()
+    mix("Plane.has_point", b.hasPoint(a0, a1))
+  }
+
+  private fun pure158() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Plane.project", b.project(a0))
+  }
+
+  private fun pure159() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
     mix("Plane.intersects_ray", b.intersectsRay(a0, a1))
   }
 
-  private fun pure134() {
+  private fun pure160() {
     val l = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Rect2 * Transform2D", l * r)
   }
 
-  private fun pure135() {
+  private fun pure161() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.get_center", b.getCenter())
   }
 
-  private fun pure136() {
+  private fun pure162() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.get_area", b.area())
   }
 
-  private fun pure137() {
+  private fun pure163() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.has_area", b.hasArea())
   }
 
-  private fun pure138() {
+  private fun pure164() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.has_point", b.hasPoint(a0))
   }
 
-  private fun pure139() {
+  private fun pure165() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure140() {
+  private fun pure166() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a1 = rb()
+    mix("Rect2.intersects", b.intersects(a0, a1))
+  }
+
+  private fun pure167() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    mix("Rect2.encloses", b.encloses(a0))
+  }
+
+  private fun pure168() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    mix("Rect2.intersection", b.intersection(a0))
+  }
+
+  private fun pure169() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    mix("Rect2.merge", b.merge(a0))
+  }
+
+  private fun pure170() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = Vector2(nv(), nv())
+    mix("Rect2.expand", b.expand(a0))
+  }
+
+  private fun pure171() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = Vector2(nv(), nv())
+    mix("Rect2.get_support", b.getSupport(a0))
+  }
+
+  private fun pure172() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = nv()
+    mix("Rect2.grow", b.grow(a0))
+  }
+
+  private fun pure173() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = rs().toLong()
+    val a1 = nv()
+    mix("Rect2.grow_side", b.growSide(a0, a1))
+  }
+
+  private fun pure174() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    val a3 = nv()
+    mix("Rect2.grow_individual", b.growIndividual(a0, a1, a2, a3))
+  }
+
+  private fun pure175() {
+    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
+    mix("Rect2.abs", b.abs())
+  }
+
+  private fun pure176() {
     val l = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val r =
       Transform3D(
@@ -1346,81 +2137,99 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("AABB * Transform3D", l * r)
   }
 
-  private fun pure141() {
+  private fun pure177() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_center", b.getCenter())
   }
 
-  private fun pure142() {
+  private fun pure178() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_volume", b.volume())
   }
 
-  private fun pure143() {
+  private fun pure179() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.has_volume", b.hasVolume())
   }
 
-  private fun pure144() {
+  private fun pure180() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.has_surface", b.hasSurface())
   }
 
-  private fun pure145() {
+  private fun pure181() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv())
     mix("AABB.has_point", b.hasPoint(a0))
   }
 
-  private fun pure146() {
+  private fun pure182() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure147() {
+  private fun pure183() {
+    val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
+    val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
+    mix("AABB.intersects", b.intersects(a0))
+  }
+
+  private fun pure184() {
+    val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
+    val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
+    mix("AABB.encloses", b.encloses(a0))
+  }
+
+  private fun pure185() {
+    val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
+    val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
+    mix("AABB.merge", b.merge(a0))
+  }
+
+  private fun pure186() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Basis * int", l * r)
   }
 
-  private fun pure148() {
+  private fun pure187() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Basis / int", l / r)
   }
 
-  private fun pure149() {
+  private fun pure188() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Basis * float", l * r)
   }
 
-  private fun pure150() {
+  private fun pure189() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Basis / float", l / r)
   }
 
-  private fun pure151() {
+  private fun pure190() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = Vector3(nv(), nv(), nv())
     mix("Basis * Vector3", l * r)
   }
 
-  private fun pure152() {
+  private fun pure191() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis * Basis", l * r)
   }
 
-  private fun pure153() {
+  private fun pure192() {
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val a0 = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure154() {
+  private fun pure193() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1430,7 +2239,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D * int", l * r)
   }
 
-  private fun pure155() {
+  private fun pure194() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1440,7 +2249,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D / int", l / r)
   }
 
-  private fun pure156() {
+  private fun pure195() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1450,7 +2259,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D * float", l * r)
   }
 
-  private fun pure157() {
+  private fun pure196() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1460,7 +2269,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D / float", l / r)
   }
 
-  private fun pure158() {
+  private fun pure197() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1470,7 +2279,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D * Vector3", l * r)
   }
 
-  private fun pure159() {
+  private fun pure198() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1480,7 +2289,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D * Plane", l * r)
   }
 
-  private fun pure160() {
+  private fun pure199() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1490,7 +2299,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D * AABB", l * r)
   }
 
-  private fun pure161() {
+  private fun pure200() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1504,7 +2313,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D * Transform3D", l * r)
   }
 
-  private fun pure162() {
+  private fun pure201() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1514,17 +2323,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D * PackedVector3Array", l * r)
   }
 
-  private fun pure163() {
-    val b =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
-    val a0 = Vector3(nv(), nv(), nv())
-    mix("Transform3D.scaled_local", b.scaledLocal(a0))
-  }
-
-  private fun pure164() {
+  private fun pure202() {
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1534,7 +2333,17 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D.translated", b.translated(a0))
   }
 
-  private fun pure165() {
+  private fun pure203() {
+    val b =
+      Transform3D(
+        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
+        Vector3(nv(), nv(), nv()),
+      )
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Transform3D.translated_local", b.translatedLocal(a0))
+  }
+
+  private fun pure204() {
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -1548,66 +2357,95 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure166() {
+  private fun pure205() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = ri().toLong()
     mix("Transform2D * int", l * r)
   }
 
-  private fun pure167() {
+  private fun pure206() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = ri().toLong()
     mix("Transform2D / int", l / r)
   }
 
-  private fun pure168() {
+  private fun pure207() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = nv()
     mix("Transform2D * float", l * r)
   }
 
-  private fun pure169() {
+  private fun pure208() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = nv()
     mix("Transform2D / float", l / r)
   }
 
-  private fun pure170() {
+  private fun pure209() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Vector2(nv(), nv())
     mix("Transform2D * Vector2", l * r)
   }
 
-  private fun pure171() {
+  private fun pure210() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Transform2D * Rect2", l * r)
   }
 
-  private fun pure172() {
+  private fun pure211() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D * Transform2D", l * r)
   }
 
-  private fun pure173() {
+  private fun pure212() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = listOf(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D * PackedVector2Array", l * r)
   }
 
-  private fun pure174() {
+  private fun pure213() {
+    val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
+    mix("Transform2D.inverse", b.inverse())
+  }
+
+  private fun pure214() {
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.get_origin", b.origin)
   }
 
-  private fun pure175() {
+  private fun pure215() {
+    val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
+    val a0 = Vector2(nv(), nv())
+    mix("Transform2D.translated", b.translated(a0))
+  }
+
+  private fun pure216() {
+    val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
+    val a0 = Vector2(nv(), nv())
+    mix("Transform2D.translated_local", b.translatedLocal(a0))
+  }
+
+  private fun pure217() {
+    val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
+    val a0 = Vector2(nv(), nv())
+    mix("Transform2D.basis_xform", b.basisXform(a0))
+  }
+
+  private fun pure218() {
+    val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
+    val a0 = Vector2(nv(), nv())
+    mix("Transform2D.basis_xform_inv", b.basisXformInv(a0))
+  }
+
+  private fun pure219() {
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure176() {
+  private fun pure220() {
     val l =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -1619,7 +2457,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection * Vector4", l * r)
   }
 
-  private fun pure177() {
+  private fun pure221() {
     val l =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -1637,580 +2475,657 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection * Projection", l * r)
   }
 
-  private fun pure178() {
+  private fun pure222() {
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary- Color", -l)
   }
 
-  private fun pure179() {
+  private fun pure223() {
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary+ Color", +l)
   }
 
-  private fun pure180() {
+  private fun pure224() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Color * int", l * r)
   }
 
-  private fun pure181() {
+  private fun pure225() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Color / int", l / r)
   }
 
-  private fun pure182() {
+  private fun pure226() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Color * float", l * r)
   }
 
-  private fun pure183() {
+  private fun pure227() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Color / float", l / r)
   }
 
-  private fun pure184() {
+  private fun pure228() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color + Color", l + r)
   }
 
-  private fun pure185() {
+  private fun pure229() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color - Color", l - r)
   }
 
-  private fun pure186() {
+  private fun pure230() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color * Color", l * r)
   }
 
-  private fun pure187() {
+  private fun pure231() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color / Color", l / r)
   }
 
-  private fun pure188() {
+  private fun pure232() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = rb()
     mix("Color.to_html", b.toHtml(a0))
   }
 
-  private fun pure189() {
+  private fun pure233() {
+    val b = Color(nv(), nv(), nv(), nv())
+    val a0 = Color(nv(), nv(), nv(), nv())
+    val a1 = Color(nv(), nv(), nv(), nv())
+    mix("Color.clamp", b.clamp(a0, a1))
+  }
+
+  private fun pure234() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.inverted", b.inverted())
   }
 
-  private fun pure190() {
+  private fun pure235() {
+    val b = Color(nv(), nv(), nv(), nv())
+    val a0 = Color(nv(), nv(), nv(), nv())
+    val a1 = nv()
+    mix("Color.lerp", b.lerp(a0, a1))
+  }
+
+  private fun pure236() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.get_luminance", b.getLuminance())
   }
 
-  private fun pure191() {
+  private fun pure237() {
     val l = Vector2i(ri(), ri())
     mix("unary- Vector2i", -l)
   }
 
-  private fun pure192() {
+  private fun pure238() {
     val l = Vector2i(ri(), ri())
     mix("unary+ Vector2i", +l)
   }
 
-  private fun pure193() {
+  private fun pure239() {
     val l = Vector2i(ri(), ri())
     val r = ri().toLong()
     mix("Vector2i * int", l * r)
   }
 
-  private fun pure194() {
+  private fun pure240() {
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i / int", l / r)
   }
 
-  private fun pure195() {
+  private fun pure241() {
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i % int", l % r)
   }
 
-  private fun pure196() {
+  private fun pure242() {
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i * float", l * r)
   }
 
-  private fun pure197() {
+  private fun pure243() {
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i / float", l / r)
   }
 
-  private fun pure198() {
+  private fun pure244() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i < Vector2i", l < r)
   }
 
-  private fun pure199() {
+  private fun pure245() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i + Vector2i", l + r)
   }
 
-  private fun pure200() {
+  private fun pure246() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i - Vector2i", l - r)
   }
 
-  private fun pure201() {
+  private fun pure247() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i * Vector2i", l * r)
   }
 
-  private fun pure202() {
+  private fun pure248() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i / Vector2i", l / r)
   }
 
-  private fun pure203() {
+  private fun pure249() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i % Vector2i", l % r)
   }
 
-  private fun pure204() {
+  private fun pure250() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.aspect", b.aspect())
   }
 
-  private fun pure205() {
+  private fun pure251() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure206() {
+  private fun pure252() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure207() {
+  private fun pure253() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure208() {
+  private fun pure254() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure209() {
+  private fun pure255() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.length", b.length())
   }
 
-  private fun pure210() {
+  private fun pure256() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.length_squared", b.lengthSquared())
   }
 
-  private fun pure211() {
+  private fun pure257() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.sign", b.sign())
   }
 
-  private fun pure212() {
+  private fun pure258() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.abs", b.abs())
   }
 
-  private fun pure213() {
+  private fun pure259() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     val a1 = Vector2i(ri(), ri())
     mix("Vector2i.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure214() {
+  private fun pure260() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
     mix("Vector2i.clampi", b.clampi(a0, a1))
   }
 
-  private fun pure215() {
+  private fun pure261() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.min", b.min(a0))
   }
 
-  private fun pure216() {
+  private fun pure262() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.mini", b.mini(a0))
   }
 
-  private fun pure217() {
+  private fun pure263() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.max", b.max(a0))
   }
 
-  private fun pure218() {
+  private fun pure264() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.maxi", b.maxi(a0))
   }
 
-  private fun pure219() {
+  private fun pure265() {
     val l = Vector3i(ri(), ri(), ri())
     mix("unary- Vector3i", -l)
   }
 
-  private fun pure220() {
+  private fun pure266() {
     val l = Vector3i(ri(), ri(), ri())
     mix("unary+ Vector3i", +l)
   }
 
-  private fun pure221() {
+  private fun pure267() {
     val l = Vector3i(ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector3i * int", l * r)
   }
 
-  private fun pure222() {
+  private fun pure268() {
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i / int", l / r)
   }
 
-  private fun pure223() {
+  private fun pure269() {
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i % int", l % r)
   }
 
-  private fun pure224() {
+  private fun pure270() {
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i * float", l * r)
   }
 
-  private fun pure225() {
+  private fun pure271() {
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i / float", l / r)
   }
 
-  private fun pure226() {
+  private fun pure272() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i < Vector3i", l < r)
   }
 
-  private fun pure227() {
+  private fun pure273() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i + Vector3i", l + r)
   }
 
-  private fun pure228() {
+  private fun pure274() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i - Vector3i", l - r)
   }
 
-  private fun pure229() {
+  private fun pure275() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i * Vector3i", l * r)
   }
 
-  private fun pure230() {
+  private fun pure276() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i / Vector3i", l / r)
   }
 
-  private fun pure231() {
+  private fun pure277() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i % Vector3i", l % r)
   }
 
-  private fun pure232() {
+  private fun pure278() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure233() {
+  private fun pure279() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure234() {
+  private fun pure280() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure235() {
+  private fun pure281() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure236() {
+  private fun pure282() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.length", b.length())
   }
 
-  private fun pure237() {
+  private fun pure283() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.length_squared", b.lengthSquared())
   }
 
-  private fun pure238() {
+  private fun pure284() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.sign", b.sign())
   }
 
-  private fun pure239() {
+  private fun pure285() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.abs", b.abs())
   }
 
-  private fun pure240() {
+  private fun pure286() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     val a1 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure241() {
+  private fun pure287() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
     mix("Vector3i.clampi", b.clampi(a0, a1))
   }
 
-  private fun pure242() {
+  private fun pure288() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min", b.min(a0))
   }
 
-  private fun pure243() {
+  private fun pure289() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.mini", b.mini(a0))
   }
 
-  private fun pure244() {
+  private fun pure290() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max", b.max(a0))
   }
 
-  private fun pure245() {
+  private fun pure291() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.maxi", b.maxi(a0))
   }
 
-  private fun pure246() {
+  private fun pure292() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     mix("unary- Vector4i", -l)
   }
 
-  private fun pure247() {
+  private fun pure293() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     mix("unary+ Vector4i", +l)
   }
 
-  private fun pure248() {
+  private fun pure294() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector4i * int", l * r)
   }
 
-  private fun pure249() {
+  private fun pure295() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector4i / int", l / r)
   }
 
-  private fun pure250() {
+  private fun pure296() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector4i % int", l % r)
   }
 
-  private fun pure251() {
+  private fun pure297() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = nv()
     mix("Vector4i * float", l * r)
   }
 
-  private fun pure252() {
+  private fun pure298() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = nv()
     mix("Vector4i / float", l / r)
   }
 
-  private fun pure253() {
+  private fun pure299() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i < Vector4i", l < r)
   }
 
-  private fun pure254() {
+  private fun pure300() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i + Vector4i", l + r)
   }
 
-  private fun pure255() {
+  private fun pure301() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i - Vector4i", l - r)
   }
 
-  private fun pure256() {
+  private fun pure302() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i * Vector4i", l * r)
   }
 
-  private fun pure257() {
+  private fun pure303() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(rnz(), rnz(), rnz(), rnz())
     mix("Vector4i / Vector4i", l / r)
   }
 
-  private fun pure258() {
+  private fun pure304() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(rnz(), rnz(), rnz(), rnz())
     mix("Vector4i % Vector4i", l % r)
   }
 
-  private fun pure259() {
+  private fun pure305() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure260() {
+  private fun pure306() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure261() {
+  private fun pure307() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.length", b.length())
   }
 
-  private fun pure262() {
+  private fun pure308() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.length_squared", b.lengthSquared())
   }
 
-  private fun pure263() {
+  private fun pure309() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.sign", b.sign())
   }
 
-  private fun pure264() {
+  private fun pure310() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.abs", b.abs())
   }
 
-  private fun pure265() {
+  private fun pure311() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     val a1 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure266() {
+  private fun pure312() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
     mix("Vector4i.clampi", b.clampi(a0, a1))
   }
 
-  private fun pure267() {
+  private fun pure313() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.min", b.min(a0))
   }
 
-  private fun pure268() {
+  private fun pure314() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector4i.mini", b.mini(a0))
   }
 
-  private fun pure269() {
+  private fun pure315() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.max", b.max(a0))
   }
 
-  private fun pure270() {
+  private fun pure316() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector4i.maxi", b.maxi(a0))
   }
 
-  private fun pure271() {
+  private fun pure317() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure272() {
+  private fun pure318() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure273() {
+  private fun pure319() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.get_center", b.getCenter())
   }
 
-  private fun pure274() {
+  private fun pure320() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.get_area", b.area())
   }
 
-  private fun pure275() {
+  private fun pure321() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.has_area", b.hasArea())
   }
 
-  private fun pure276() {
+  private fun pure322() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = Vector2i(ri(), ri())
+    mix("Rect2i.has_point", b.hasPoint(a0))
+  }
+
+  private fun pure323() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    mix("Rect2i.intersects", b.intersects(a0))
+  }
+
+  private fun pure324() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    mix("Rect2i.encloses", b.encloses(a0))
+  }
+
+  private fun pure325() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    mix("Rect2i.intersection", b.intersection(a0))
+  }
+
+  private fun pure326() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    mix("Rect2i.merge", b.merge(a0))
+  }
+
+  private fun pure327() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = Vector2i(ri(), ri())
+    mix("Rect2i.expand", b.expand(a0))
+  }
+
+  private fun pure328() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = ri().toLong()
+    mix("Rect2i.grow", b.grow(a0))
+  }
+
+  private fun pure329() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = rs().toLong()
+    val a1 = ri().toLong()
+    mix("Rect2i.grow_side", b.growSide(a0, a1))
+  }
+
+  private fun pure330() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    val a0 = ri().toLong()
+    val a1 = ri().toLong()
+    val a2 = ri().toLong()
+    val a3 = ri().toLong()
+    mix("Rect2i.grow_individual", b.growIndividual(a0, a1, a2, a3))
+  }
+
+  private fun pure331() {
+    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
+    mix("Rect2i.abs", b.abs())
+  }
+
+  private fun pure332() {
     val l = RID(rl())
     val r = RID(rl())
     mix("RID < RID", l < r)
   }
 
-  private fun pure277() {
+  private fun pure333() {
     val b = RID(rl())
     mix("RID.is_valid", b.isValid())
   }
 
-  private fun pure278() {
+  private fun pure334() {
     val b = RID(rl())
     mix("RID.get_id", b.getId())
   }
@@ -2234,48 +3149,17 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun facade3() {
     val b = Vector2(nv(), nv()).normalized()
-    val a0 = nv()
-    mix("Vector2.limit_length", b.limitLength(a0))
-  }
-
-  private fun facade4() {
-    val b = Vector2(nv(), nv()).normalized()
     mix("Vector2.is_normalized", b.isNormalized())
   }
 
-  private fun facade5() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = nv()
-    mix("Vector2.posmod", b.posmod(a0))
-  }
-
-  private fun facade6() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Vector2.posmodv", b.posmodv(a0))
-  }
-
-  private fun facade7() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Vector2.project", b.project(a0))
-  }
-
-  private fun facade8() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = Vector2(nv(), nv()).normalized()
-    val a1 = nv()
-    mix("Vector2.lerp", b.lerp(a0, a1))
-  }
-
-  private fun facade9() {
+  private fun facade4() {
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = nv()
     mix("Vector2.slerp", b.slerp(a0, a1))
   }
 
-  private fun facade10() {
+  private fun facade5() {
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = Vector2(nv(), nv()).normalized()
@@ -2284,7 +3168,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector2.cubic_interpolate", b.cubicInterpolate(a0, a1, a2, a3))
   }
 
-  private fun facade11() {
+  private fun facade6() {
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = Vector2(nv(), nv()).normalized()
@@ -2296,7 +3180,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector2.cubic_interpolate_in_time", b.cubicInterpolateInTime(a0, a1, a2, a3, a4, a5, a6))
   }
 
-  private fun facade12() {
+  private fun facade7() {
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = Vector2(nv(), nv()).normalized()
@@ -2305,7 +3189,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector2.bezier_interpolate", b.bezierInterpolate(a0, a1, a2, a3))
   }
 
-  private fun facade13() {
+  private fun facade8() {
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     val a1 = Vector2(nv(), nv()).normalized()
@@ -2314,114 +3198,69 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector2.bezier_derivative", b.bezierDerivative(a0, a1, a2, a3))
   }
 
-  private fun facade14() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = Vector2(nv(), nv()).normalized()
-    val a1 = nv()
-    mix("Vector2.move_toward", b.moveToward(a0, a1))
-  }
-
-  private fun facade15() {
+  private fun facade9() {
     val b = Vector2(nv(), nv()).normalized()
     val a0 = nv()
     mix("Vector2.rotated", b.rotated(a0))
   }
 
-  private fun facade16() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Vector2.slide", b.slide(a0))
-  }
-
-  private fun facade17() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Vector2.bounce", b.bounce(a0))
-  }
-
-  private fun facade18() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Vector2.reflect", b.reflect(a0))
-  }
-
-  private fun facade19() {
-    val b = Vector2(nv(), nv()).normalized()
-    val a0 = Vector2(nv(), nv()).normalized()
-    val a1 = Vector2(nv(), nv()).normalized()
-    mix("Vector2.clamp", b.clamp(a0, a1))
-  }
-
-  private fun facade20() {
+  private fun facade10() {
     val b = Vector2(nv(), nv()).normalized()
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.snapped", b.snapped(a0))
   }
 
-  private fun facade21() {
+  private fun facade11() {
     val b = Vector2(nv(), nv()).normalized()
     val a0 = nv()
     mix("Vector2.snappedf", b.snappedf(a0))
   }
 
-  private fun facade22() {
+  private fun facade12() {
     val a0 = nv()
     mix("Vector2.from_angle", Vector2.fromAngle(a0))
   }
 
-  private fun facade23() {
+  private fun facade13() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.angle_to", b.angleTo(a0))
   }
 
-  private fun facade24() {
+  private fun facade14() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.signed_angle_to", b.signedAngleTo(a0, a1))
   }
 
-  private fun facade25() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = nv()
-    mix("Vector3.limit_length", b.limitLength(a0))
-  }
-
-  private fun facade26() {
+  private fun facade15() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.snapped", b.snapped(a0))
   }
 
-  private fun facade27() {
+  private fun facade16() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = nv()
     mix("Vector3.snappedf", b.snappedf(a0))
   }
 
-  private fun facade28() {
+  private fun facade17() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
     mix("Vector3.rotated", b.rotated(a0, a1))
   }
 
-  private fun facade29() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    val a1 = nv()
-    mix("Vector3.lerp", b.lerp(a0, a1))
-  }
-
-  private fun facade30() {
+  private fun facade18() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
     mix("Vector3.slerp", b.slerp(a0, a1))
   }
 
-  private fun facade31() {
+  private fun facade19() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -2430,7 +3269,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector3.cubic_interpolate", b.cubicInterpolate(a0, a1, a2, a3))
   }
 
-  private fun facade32() {
+  private fun facade20() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -2442,7 +3281,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector3.cubic_interpolate_in_time", b.cubicInterpolateInTime(a0, a1, a2, a3, a4, a5, a6))
   }
 
-  private fun facade33() {
+  private fun facade21() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -2451,7 +3290,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector3.bezier_interpolate", b.bezierInterpolate(a0, a1, a2, a3))
   }
 
-  private fun facade34() {
+  private fun facade22() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
@@ -2460,73 +3299,23 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector3.bezier_derivative", b.bezierDerivative(a0, a1, a2, a3))
   }
 
-  private fun facade35() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    val a1 = nv()
-    mix("Vector3.move_toward", b.moveToward(a0, a1))
-  }
-
-  private fun facade36() {
+  private fun facade23() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.outer", b.outer(a0))
   }
 
-  private fun facade37() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = nv()
-    mix("Vector3.posmod", b.posmod(a0))
-  }
-
-  private fun facade38() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    mix("Vector3.posmodv", b.posmodv(a0))
-  }
-
-  private fun facade39() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    mix("Vector3.project", b.project(a0))
-  }
-
-  private fun facade40() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    mix("Vector3.slide", b.slide(a0))
-  }
-
-  private fun facade41() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    mix("Vector3.bounce", b.bounce(a0))
-  }
-
-  private fun facade42() {
-    val b = Vector3(nv(), nv(), nv()).normalized()
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    mix("Vector3.reflect", b.reflect(a0))
-  }
-
-  private fun facade43() {
+  private fun facade24() {
     val b = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.octahedron_encode", b.octahedronEncode())
   }
 
-  private fun facade44() {
+  private fun facade25() {
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector3.octahedron_decode", Vector3.octahedronDecode(a0))
   }
 
-  private fun facade45() {
-    val b = Vector4(nv(), nv(), nv(), nv())
-    val a0 = Vector4(nv(), nv(), nv(), nv())
-    val a1 = nv()
-    mix("Vector4.lerp", b.lerp(a0, a1))
-  }
-
-  private fun facade46() {
+  private fun facade26() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = Vector4(nv(), nv(), nv(), nv())
@@ -2535,7 +3324,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector4.cubic_interpolate", b.cubicInterpolate(a0, a1, a2, a3))
   }
 
-  private fun facade47() {
+  private fun facade27() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = Vector4(nv(), nv(), nv(), nv())
@@ -2547,76 +3336,64 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector4.cubic_interpolate_in_time", b.cubicInterpolateInTime(a0, a1, a2, a3, a4, a5, a6))
   }
 
-  private fun facade48() {
-    val b = Vector4(nv(), nv(), nv(), nv())
-    val a0 = nv()
-    mix("Vector4.posmod", b.posmod(a0))
-  }
-
-  private fun facade49() {
-    val b = Vector4(nv(), nv(), nv(), nv())
-    val a0 = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4.posmodv", b.posmodv(a0))
-  }
-
-  private fun facade50() {
+  private fun facade28() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.snapped", b.snapped(a0))
   }
 
-  private fun facade51() {
+  private fun facade29() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.snappedf", b.snappedf(a0))
   }
 
-  private fun facade52() {
+  private fun facade30() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_normalized", b.isNormalized())
   }
 
-  private fun facade53() {
+  private fun facade31() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_normalized", b.isNormalized())
   }
 
-  private fun facade54() {
+  private fun facade32() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.inverse", b.inverse())
   }
 
-  private fun facade55() {
+  private fun facade33() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.log", b.log())
   }
 
-  private fun facade56() {
+  private fun facade34() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.exp", b.exp())
   }
 
-  private fun facade57() {
+  private fun facade35() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.angle_to", b.angleTo(a0))
   }
 
-  private fun facade58() {
+  private fun facade36() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = nv()
     mix("Quaternion.slerp", b.slerp(a0, a1))
   }
 
-  private fun facade59() {
+  private fun facade37() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = nv()
     mix("Quaternion.slerpni", b.slerpni(a0, a1))
   }
 
-  private fun facade60() {
+  private fun facade38() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = Quaternion(nv(), nv(), nv(), nv()).normalized()
@@ -2625,7 +3402,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Quaternion.spherical_cubic_interpolate", b.sphericalCubicInterpolate(a0, a1, a2, a3))
   }
 
-  private fun facade61() {
+  private fun facade39() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a1 = Quaternion(nv(), nv(), nv(), nv()).normalized()
@@ -2640,390 +3417,284 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     )
   }
 
-  private fun facade62() {
+  private fun facade40() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = rs().toLong()
     mix("Quaternion.get_euler", b.getEuler(a0))
   }
 
-  private fun facade63() {
+  private fun facade41() {
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Quaternion.from_euler", Quaternion.fromEuler(a0))
   }
 
-  private fun facade64() {
+  private fun facade42() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.get_axis", b.getAxis())
   }
 
-  private fun facade65() {
+  private fun facade43() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.get_angle", b.getAngle())
   }
 
-  private fun facade66() {
+  private fun facade44() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.normalized", b.normalized())
   }
 
-  private fun facade67() {
-    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-    mix("Plane.get_center", b.getCenter())
-  }
-
-  private fun facade68() {
+  private fun facade45() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun facade69() {
+  private fun facade46() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.is_finite", b.isFinite())
   }
 
-  private fun facade70() {
-    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    mix("Plane.is_point_over", b.isPointOver(a0))
-  }
-
-  private fun facade71() {
-    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    val a1 = nv()
-    mix("Plane.has_point", b.hasPoint(a0, a1))
-  }
-
-  private fun facade72() {
-    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-    val a0 = Vector3(nv(), nv(), nv()).normalized()
-    mix("Plane.project", b.project(a0))
-  }
-
-  private fun facade73() {
+  private fun facade47() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a1 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Plane.intersect_3", b.intersect3(a0, a1))
   }
 
-  private fun facade74() {
+  private fun facade48() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
     mix("Plane.intersects_segment", b.intersectsSegment(a0, a1))
   }
 
-  private fun facade75() {
+  private fun facade49() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.is_finite", b.isFinite())
   }
 
-  private fun facade76() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a1 = rb()
-    mix("Rect2.intersects", b.intersects(a0, a1))
-  }
-
-  private fun facade77() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    mix("Rect2.encloses", b.encloses(a0))
-  }
-
-  private fun facade78() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    mix("Rect2.intersection", b.intersection(a0))
-  }
-
-  private fun facade79() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    mix("Rect2.merge", b.merge(a0))
-  }
-
-  private fun facade80() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Rect2.expand", b.expand(a0))
-  }
-
-  private fun facade81() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Rect2.get_support", b.getSupport(a0))
-  }
-
-  private fun facade82() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = nv()
-    mix("Rect2.grow", b.grow(a0))
-  }
-
-  private fun facade83() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = rs().toLong()
-    val a1 = nv()
-    mix("Rect2.grow_side", b.growSide(a0, a1))
-  }
-
-  private fun facade84() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    val a0 = nv()
-    val a1 = nv()
-    val a2 = nv()
-    val a3 = nv()
-    mix("Rect2.grow_individual", b.growIndividual(a0, a1, a2, a3))
-  }
-
-  private fun facade85() {
-    val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
-    mix("Rect2.abs", b.abs())
-  }
-
-  private fun facade86() {
+  private fun facade50() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.abs", b.abs())
   }
 
-  private fun facade87() {
+  private fun facade51() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.is_finite", b.isFinite())
   }
 
-  private fun facade88() {
-    val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
-    val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
-    mix("AABB.intersects", b.intersects(a0))
-  }
-
-  private fun facade89() {
-    val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
-    val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
-    mix("AABB.encloses", b.encloses(a0))
-  }
-
-  private fun facade90() {
+  private fun facade52() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("AABB.intersects_plane", b.intersectsPlane(a0))
   }
 
-  private fun facade91() {
+  private fun facade53() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.intersection", b.intersection(a0))
   }
 
-  private fun facade92() {
-    val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
-    val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
-    mix("AABB.merge", b.merge(a0))
-  }
-
-  private fun facade93() {
+  private fun facade54() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("AABB.expand", b.expand(a0))
   }
 
-  private fun facade94() {
+  private fun facade55() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = nv()
     mix("AABB.grow", b.grow(a0))
   }
 
-  private fun facade95() {
+  private fun facade56() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("AABB.get_support", b.getSupport(a0))
   }
 
-  private fun facade96() {
+  private fun facade57() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_longest_axis", b.getLongestAxis())
   }
 
-  private fun facade97() {
+  private fun facade58() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_longest_axis_index", b.getLongestAxisIndex())
   }
 
-  private fun facade98() {
+  private fun facade59() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_longest_axis_size", b.getLongestAxisSize())
   }
 
-  private fun facade99() {
+  private fun facade60() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_shortest_axis", b.getShortestAxis())
   }
 
-  private fun facade100() {
+  private fun facade61() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_shortest_axis_index", b.getShortestAxisIndex())
   }
 
-  private fun facade101() {
+  private fun facade62() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_shortest_axis_size", b.getShortestAxisSize())
   }
 
-  private fun facade102() {
+  private fun facade63() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = rs().toLong()
     mix("AABB.get_endpoint", b.getEndpoint(a0))
   }
 
-  private fun facade103() {
+  private fun facade64() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
     mix("AABB.intersects_segment", b.intersectsSegment(a0, a1))
   }
 
-  private fun facade104() {
+  private fun facade65() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
     mix("AABB.intersects_ray", b.intersectsRay(a0, a1))
   }
 
-  private fun facade105() {
+  private fun facade66() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.inverse", b.inverse())
   }
 
-  private fun facade106() {
+  private fun facade67() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.transposed", b.transposed())
   }
 
-  private fun facade107() {
+  private fun facade68() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.orthonormalized", b.orthonormalized())
   }
 
-  private fun facade108() {
+  private fun facade69() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.determinant", b.determinant())
   }
 
-  private fun facade109() {
+  private fun facade70() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
     mix("Basis.rotated", b.rotated(a0, a1))
   }
 
-  private fun facade110() {
+  private fun facade71() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.scaled", b.scaled(a0))
   }
 
-  private fun facade111() {
+  private fun facade72() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.scaled_local", b.scaledLocal(a0))
   }
 
-  private fun facade112() {
+  private fun facade73() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.get_scale", b.getScale())
   }
 
-  private fun facade113() {
+  private fun facade74() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = rs().toLong()
     mix("Basis.get_euler", b.getEuler(a0))
   }
 
-  private fun facade114() {
+  private fun facade75() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.tdotx", b.tdotx(a0))
   }
 
-  private fun facade115() {
+  private fun facade76() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.tdoty", b.tdoty(a0))
   }
 
-  private fun facade116() {
+  private fun facade77() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.tdotz", b.tdotz(a0))
   }
 
-  private fun facade117() {
+  private fun facade78() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a0 = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     val a1 = nv()
     mix("Basis.slerp", b.slerp(a0, a1))
   }
 
-  private fun facade118() {
+  private fun facade79() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.is_conformal", b.isConformal())
   }
 
-  private fun facade119() {
+  private fun facade80() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.is_finite", b.isFinite())
   }
 
-  private fun facade120() {
+  private fun facade81() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.is_orthonormal", b.isOrthonormal())
   }
 
-  private fun facade121() {
+  private fun facade82() {
     val b = Basis(Quaternion(nv(), nv(), nv(), nv()).normalized())
     mix("Basis.get_rotation_quaternion", b.getRotationQuaternion())
   }
 
-  private fun facade122() {
+  private fun facade83() {
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
     val a2 = rb()
     mix("Basis.looking_at", Basis.lookingAt(a0, a1, a2))
   }
 
-  private fun facade123() {
+  private fun facade84() {
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Basis.from_scale", Basis.fromScale(a0))
   }
 
-  private fun facade124() {
+  private fun facade85() {
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = rs().toLong()
     mix("Basis.from_euler", Basis.fromEuler(a0, a1))
   }
 
-  private fun facade125() {
+  private fun facade86() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     mix("Transform3D.inverse", b.inverse())
   }
 
-  private fun facade126() {
+  private fun facade87() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     mix("Transform3D.affine_inverse", b.affineInverse())
   }
 
-  private fun facade127() {
+  private fun facade88() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     mix("Transform3D.orthonormalized", b.orthonormalized())
   }
 
-  private fun facade128() {
+  private fun facade89() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -3031,7 +3702,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D.rotated", b.rotated(a0, a1))
   }
 
-  private fun facade129() {
+  private fun facade90() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -3039,21 +3710,21 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D.rotated_local", b.rotatedLocal(a0, a1))
   }
 
-  private fun facade130() {
+  private fun facade91() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Transform3D.scaled", b.scaled(a0))
   }
 
-  private fun facade131() {
+  private fun facade92() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
-    mix("Transform3D.translated_local", b.translatedLocal(a0))
+    mix("Transform3D.scaled_local", b.scaledLocal(a0))
   }
 
-  private fun facade132() {
+  private fun facade93() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
@@ -3062,7 +3733,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D.looking_at", b.lookingAt(a0, a1, a2))
   }
 
-  private fun facade133() {
+  private fun facade94() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 =
@@ -3071,129 +3742,100 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Transform3D.interpolate_with", b.interpolateWith(a0, a1))
   }
 
-  private fun facade134() {
+  private fun facade95() {
     val b =
       Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     mix("Transform3D.is_finite", b.isFinite())
   }
 
-  private fun facade135() {
-    val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
-    mix("Transform2D.inverse", b.inverse())
-  }
-
-  private fun facade136() {
+  private fun facade96() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.affine_inverse", b.affineInverse())
   }
 
-  private fun facade137() {
+  private fun facade97() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.get_rotation", b.getRotation())
   }
 
-  private fun facade138() {
+  private fun facade98() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.get_scale", b.getScale())
   }
 
-  private fun facade139() {
+  private fun facade99() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.get_skew", b.getSkew())
   }
 
-  private fun facade140() {
+  private fun facade100() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.orthonormalized", b.orthonormalized())
   }
 
-  private fun facade141() {
+  private fun facade101() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = nv()
     mix("Transform2D.rotated", b.rotated(a0))
   }
 
-  private fun facade142() {
+  private fun facade102() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = nv()
     mix("Transform2D.rotated_local", b.rotatedLocal(a0))
   }
 
-  private fun facade143() {
+  private fun facade103() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Transform2D.scaled", b.scaled(a0))
   }
 
-  private fun facade144() {
+  private fun facade104() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Transform2D.scaled_local", b.scaledLocal(a0))
   }
 
-  private fun facade145() {
-    val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Transform2D.translated", b.translated(a0))
-  }
-
-  private fun facade146() {
-    val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Transform2D.translated_local", b.translatedLocal(a0))
-  }
-
-  private fun facade147() {
+  private fun facade105() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.determinant", b.determinant())
   }
 
-  private fun facade148() {
-    val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Transform2D.basis_xform", b.basisXform(a0))
-  }
-
-  private fun facade149() {
-    val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
-    val a0 = Vector2(nv(), nv()).normalized()
-    mix("Transform2D.basis_xform_inv", b.basisXformInv(a0))
-  }
-
-  private fun facade150() {
+  private fun facade106() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a1 = nv()
     mix("Transform2D.interpolate_with", b.interpolateWith(a0, a1))
   }
 
-  private fun facade151() {
+  private fun facade107() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.is_conformal", b.isConformal())
   }
 
-  private fun facade152() {
+  private fun facade108() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     mix("Transform2D.is_finite", b.isFinite())
   }
 
-  private fun facade153() {
+  private fun facade109() {
     val b = rotation2D(Vector2(nv(), nv()).normalized(), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Transform2D.looking_at", b.lookingAt(a0))
   }
 
-  private fun facade154() {
+  private fun facade110() {
     val a0 = rb()
     mix("Projection.create_depth_correction", Projection.createDepthCorrection(a0))
   }
 
-  private fun facade155() {
+  private fun facade111() {
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Projection.create_light_atlas_rect", Projection.createLightAtlasRect(a0))
   }
 
-  private fun facade156() {
+  private fun facade112() {
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -3202,7 +3844,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.create_perspective", Projection.createPerspective(a0, a1, a2, a3, a4))
   }
 
-  private fun facade157() {
+  private fun facade113() {
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -3217,7 +3859,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     )
   }
 
-  private fun facade158() {
+  private fun facade114() {
     val a0 = rs().toLong()
     val a1 = nv()
     val a2 = nv()
@@ -3229,7 +3871,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.create_for_hmd", Projection.createForHmd(a0, a1, a2, a3, a4, a5, a6, a7))
   }
 
-  private fun facade159() {
+  private fun facade115() {
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -3239,7 +3881,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.create_orthogonal", Projection.createOrthogonal(a0, a1, a2, a3, a4, a5))
   }
 
-  private fun facade160() {
+  private fun facade116() {
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -3251,7 +3893,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     )
   }
 
-  private fun facade161() {
+  private fun facade117() {
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -3261,7 +3903,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.create_frustum", Projection.createFrustum(a0, a1, a2, a3, a4, a5))
   }
 
-  private fun facade162() {
+  private fun facade118() {
     val a0 = nv()
     val a1 = nv()
     val a2 = Vector2(nv(), nv()).normalized()
@@ -3271,12 +3913,12 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.create_frustum_aspect", Projection.createFrustumAspect(a0, a1, a2, a3, a4, a5))
   }
 
-  private fun facade163() {
+  private fun facade119() {
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("Projection.create_fit_aabb", Projection.createFitAabb(a0))
   }
 
-  private fun facade164() {
+  private fun facade120() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3287,7 +3929,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.determinant", b.determinant())
   }
 
-  private fun facade165() {
+  private fun facade121() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3299,7 +3941,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.perspective_znear_adjusted", b.perspectiveZnearAdjusted(a0))
   }
 
-  private fun facade166() {
+  private fun facade122() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3311,7 +3953,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_projection_plane", b.getProjectionPlane(a0))
   }
 
-  private fun facade167() {
+  private fun facade123() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3322,7 +3964,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.flipped_y", b.flippedY())
   }
 
-  private fun facade168() {
+  private fun facade124() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3334,13 +3976,13 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.jitter_offseted", b.jitterOffseted(a0))
   }
 
-  private fun facade169() {
+  private fun facade125() {
     val a0 = nv()
     val a1 = nv()
     mix("Projection.get_fovy", Projection.getFovy(a0, a1))
   }
 
-  private fun facade170() {
+  private fun facade126() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3351,7 +3993,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_z_far", b.getZFar())
   }
 
-  private fun facade171() {
+  private fun facade127() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3362,7 +4004,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_z_near", b.getZNear())
   }
 
-  private fun facade172() {
+  private fun facade128() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3373,7 +4015,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_aspect", b.getAspect())
   }
 
-  private fun facade173() {
+  private fun facade129() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3384,7 +4026,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_fov", b.getFov())
   }
 
-  private fun facade174() {
+  private fun facade130() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3395,7 +4037,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.is_orthogonal", b.isOrthogonal())
   }
 
-  private fun facade175() {
+  private fun facade131() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3406,7 +4048,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_viewport_half_extents", b.getViewportHalfExtents())
   }
 
-  private fun facade176() {
+  private fun facade132() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3417,7 +4059,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_far_plane_half_extents", b.getFarPlaneHalfExtents())
   }
 
-  private fun facade177() {
+  private fun facade133() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3428,7 +4070,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.inverse", b.inverse())
   }
 
-  private fun facade178() {
+  private fun facade134() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3440,7 +4082,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_pixels_per_meter", b.getPixelsPerMeter(a0))
   }
 
-  private fun facade179() {
+  private fun facade135() {
     val b =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -3451,111 +4093,97 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Projection.get_lod_multiplier", b.getLodMultiplier())
   }
 
-  private fun facade180() {
+  private fun facade136() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_argb32", b.toArgb32())
   }
 
-  private fun facade181() {
+  private fun facade137() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_abgr32", b.toAbgr32())
   }
 
-  private fun facade182() {
+  private fun facade138() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_rgba32", b.toRgba32())
   }
 
-  private fun facade183() {
+  private fun facade139() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_argb64", b.toArgb64())
   }
 
-  private fun facade184() {
+  private fun facade140() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_abgr64", b.toAbgr64())
   }
 
-  private fun facade185() {
+  private fun facade141() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.to_rgba64", b.toRgba64())
   }
 
-  private fun facade186() {
-    val b = Color(nv(), nv(), nv(), nv())
-    val a0 = Color(nv(), nv(), nv(), nv())
-    val a1 = Color(nv(), nv(), nv(), nv())
-    mix("Color.clamp", b.clamp(a0, a1))
-  }
-
-  private fun facade187() {
-    val b = Color(nv(), nv(), nv(), nv())
-    val a0 = Color(nv(), nv(), nv(), nv())
-    val a1 = nv()
-    mix("Color.lerp", b.lerp(a0, a1))
-  }
-
-  private fun facade188() {
+  private fun facade142() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Color.lightened", b.lightened(a0))
   }
 
-  private fun facade189() {
+  private fun facade143() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Color.darkened", b.darkened(a0))
   }
 
-  private fun facade190() {
+  private fun facade144() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     mix("Color.blend", b.blend(a0))
   }
 
-  private fun facade191() {
+  private fun facade145() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.srgb_to_linear", b.srgbToLinear())
   }
 
-  private fun facade192() {
+  private fun facade146() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.linear_to_srgb", b.linearToSrgb())
   }
 
-  private fun facade193() {
+  private fun facade147() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     mix("Color.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun facade194() {
+  private fun facade148() {
     val a0 = rs().toLong()
     mix("Color.hex", Color.hex(a0))
   }
 
-  private fun facade195() {
+  private fun facade149() {
     val a0 = rs().toLong()
     mix("Color.hex64", Color.hex64(a0))
   }
 
-  private fun facade196() {
+  private fun facade150() {
     val a0 = "#ff8000"
     mix("Color.html", Color.html(a0))
   }
 
-  private fun facade197() {
+  private fun facade151() {
     val a0 = "#ff8000"
     mix("Color.html_is_valid", Color.htmlIsValid(a0))
   }
 
-  private fun facade198() {
+  private fun facade152() {
     val a0 = "#ff8000"
     val a1 = Color(nv(), nv(), nv(), nv())
     mix("Color.from_string", Color.fromString(a0, a1))
   }
 
-  private fun facade199() {
+  private fun facade153() {
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -3563,7 +4191,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Color.from_hsv", Color.fromHsv(a0, a1, a2, a3))
   }
 
-  private fun facade200() {
+  private fun facade154() {
     val a0 = nv()
     val a1 = nv()
     val a2 = nv()
@@ -3571,12 +4199,12 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Color.from_ok_hsl", Color.fromOkHsl(a0, a1, a2, a3))
   }
 
-  private fun facade201() {
+  private fun facade155() {
     val a0 = rs().toLong()
     mix("Color.from_rgbe9995", Color.fromRgbe9995(a0))
   }
 
-  private fun facade202() {
+  private fun facade156() {
     val a0 = rs().toLong()
     val a1 = rs().toLong()
     val a2 = rs().toLong()
@@ -3584,103 +4212,40 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Color.from_rgba8", Color.fromRgba8(a0, a1, a2, a3))
   }
 
-  private fun facade203() {
+  private fun facade157() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.snapped", b.snapped(a0))
   }
 
-  private fun facade204() {
+  private fun facade158() {
     val b = Vector2i(ri(), ri())
     val a0 = rs().toLong()
     mix("Vector2i.snappedi", b.snappedi(a0))
   }
 
-  private fun facade205() {
+  private fun facade159() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.snapped", b.snapped(a0))
   }
 
-  private fun facade206() {
+  private fun facade160() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = rs().toLong()
     mix("Vector3i.snappedi", b.snappedi(a0))
   }
 
-  private fun facade207() {
+  private fun facade161() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.snapped", b.snapped(a0))
   }
 
-  private fun facade208() {
+  private fun facade162() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = rs().toLong()
     mix("Vector4i.snappedi", b.snappedi(a0))
-  }
-
-  private fun facade209() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = Vector2i(ri(), ri())
-    mix("Rect2i.has_point", b.hasPoint(a0))
-  }
-
-  private fun facade210() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    mix("Rect2i.intersects", b.intersects(a0))
-  }
-
-  private fun facade211() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    mix("Rect2i.encloses", b.encloses(a0))
-  }
-
-  private fun facade212() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    mix("Rect2i.intersection", b.intersection(a0))
-  }
-
-  private fun facade213() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    mix("Rect2i.merge", b.merge(a0))
-  }
-
-  private fun facade214() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = Vector2i(ri(), ri())
-    mix("Rect2i.expand", b.expand(a0))
-  }
-
-  private fun facade215() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = rs().toLong()
-    mix("Rect2i.grow", b.grow(a0))
-  }
-
-  private fun facade216() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = rs().toLong()
-    val a1 = rs().toLong()
-    mix("Rect2i.grow_side", b.growSide(a0, a1))
-  }
-
-  private fun facade217() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    val a0 = rs().toLong()
-    val a1 = rs().toLong()
-    val a2 = rs().toLong()
-    val a3 = rs().toLong()
-    mix("Rect2i.grow_individual", b.growIndividual(a0, a1, a2, a3))
-  }
-
-  private fun facade218() {
-    val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
-    mix("Rect2i.abs", b.abs())
   }
 
   private var seed = 2463534242L
@@ -3692,8 +4257,12 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     return seed
   }
 
+  // The edge row draws its decimals from EDGE: ±0, NaN, ±INF, .5 ties, a tiny normal.
+  private var edge = false
+
   private fun nv(): Double {
     val r = nextRandom()
+    if (edge) return EDGE[(r % EDGE.size).toInt()]
     return ((r % 200001) - 100000) / 10000.0 * SCALES[((r ushr 24) % 7).toInt()]
   }
 
@@ -3762,5 +4331,20 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private companion object {
     val SCALES = doubleArrayOf(0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)
+    val EDGE =
+      doubleArrayOf(
+        0.0,
+        -0.0,
+        Double.NaN,
+        Double.POSITIVE_INFINITY,
+        Double.NEGATIVE_INFINITY,
+        0.5,
+        -0.5,
+        1.5,
+        2.5,
+        -2.5,
+        1e-30,
+        3.0,
+      )
   }
 }

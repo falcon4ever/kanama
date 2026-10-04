@@ -219,18 +219,26 @@ data class Vector3i(
    *
    * Generated from Godot docs: Vector3i.snapped
    */
-  fun snapped(step: Vector3i): Vector3i =
-    builtinVector3i(
-      builtinInts(Vector3iMethods.snapped, builtinArg(), 3, listOf(step.builtinArg()))
-    )
+  fun snapped(step: Vector3i): Vector3i {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, step)
+    f.call(Vector3iMethods.snapped, 1)
+    return f.retVector3i()
+  }
 
   /**
    * Returns a new vector with each component snapped to the closest multiple of `step`.
    *
    * Generated from Godot docs: Vector3i.snappedi
    */
-  fun snappedi(step: Long): Vector3i =
-    builtinVector3i(builtinInts(Vector3iMethods.snappedi, builtinArg(), 3, listOf(argLong(step))))
+  fun snappedi(step: Long): Vector3i {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putLong(1, step)
+    f.call(Vector3iMethods.snappedi, 1)
+    return f.retVector3i()
+  }
 
   /**
    * Returns the component-wise minimum of this and `with`, equivalent to `Vector3i(mini(x, with.x),
@@ -275,6 +283,68 @@ data class Vector3i(
   // ===== END GENERATED BUILTIN MEMBERS: Vector3i =====
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Vector3i (generate_builtin_ops.py) =====
+    /**
+     * Min vector, a vector with all components equal to `INT32_MIN`. Can be used as a negative
+     * integer equivalent of `Vector3.INF`.
+     *
+     * Generated from Godot docs: Vector3i.MIN
+     */
+    val MIN: Vector3i = Vector3i(Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE)
+
+    /**
+     * Max vector, a vector with all components equal to `INT32_MAX`. Can be used as an integer
+     * equivalent of `Vector3.INF`.
+     *
+     * Generated from Godot docs: Vector3i.MAX
+     */
+    val MAX: Vector3i = Vector3i(Int.MAX_VALUE, Int.MAX_VALUE, Int.MAX_VALUE)
+
+    /**
+     * Left unit vector. Represents the local direction of left, and the global direction of west.
+     *
+     * Generated from Godot docs: Vector3i.LEFT
+     */
+    val LEFT: Vector3i = Vector3i(-1, 0, 0)
+
+    /**
+     * Right unit vector. Represents the local direction of right, and the global direction of east.
+     *
+     * Generated from Godot docs: Vector3i.RIGHT
+     */
+    val RIGHT: Vector3i = Vector3i(1, 0, 0)
+
+    /**
+     * Up unit vector.
+     *
+     * Generated from Godot docs: Vector3i.UP
+     */
+    val UP: Vector3i = Vector3i(0, 1, 0)
+
+    /**
+     * Down unit vector.
+     *
+     * Generated from Godot docs: Vector3i.DOWN
+     */
+    val DOWN: Vector3i = Vector3i(0, -1, 0)
+
+    /**
+     * Forward unit vector. Represents the local direction of forward, and the global direction of
+     * north.
+     *
+     * Generated from Godot docs: Vector3i.FORWARD
+     */
+    val FORWARD: Vector3i = Vector3i(0, 0, -1)
+
+    /**
+     * Back unit vector. Represents the local direction of back, and the global direction of south.
+     *
+     * Generated from Godot docs: Vector3i.BACK
+     */
+    val BACK: Vector3i = Vector3i(0, 0, 1)
+
+    // ===== END GENERATED BUILTIN STATICS: Vector3i =====
+
     /**
      * Zero vector, a vector with all components set to `0`.
      *

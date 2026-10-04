@@ -199,18 +199,26 @@ data class Vector2i(
    *
    * Generated from Godot docs: Vector2i.snapped
    */
-  fun snapped(step: Vector2i): Vector2i =
-    builtinVector2i(
-      builtinInts(Vector2iMethods.snapped, builtinArg(), 2, listOf(step.builtinArg()))
-    )
+  fun snapped(step: Vector2i): Vector2i {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, step)
+    f.call(Vector2iMethods.snapped, 1)
+    return f.retVector2i()
+  }
 
   /**
    * Returns a new vector with each component snapped to the closest multiple of `step`.
    *
    * Generated from Godot docs: Vector2i.snappedi
    */
-  fun snappedi(step: Long): Vector2i =
-    builtinVector2i(builtinInts(Vector2iMethods.snappedi, builtinArg(), 2, listOf(argLong(step))))
+  fun snappedi(step: Long): Vector2i {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putLong(1, step)
+    f.call(Vector2iMethods.snappedi, 1)
+    return f.retVector2i()
+  }
 
   /**
    * Returns the component-wise minimum of this and `with`, equivalent to `Vector2i(mini(x, with.x),
@@ -253,6 +261,53 @@ data class Vector2i(
   // ===== END GENERATED BUILTIN MEMBERS: Vector2i =====
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Vector2i (generate_builtin_ops.py) =====
+    /**
+     * Min vector, a vector with all components equal to `INT32_MIN`. Can be used as a negative
+     * integer equivalent of `Vector2.INF`.
+     *
+     * Generated from Godot docs: Vector2i.MIN
+     */
+    val MIN: Vector2i = Vector2i(Int.MIN_VALUE, Int.MIN_VALUE)
+
+    /**
+     * Max vector, a vector with all components equal to `INT32_MAX`. Can be used as an integer
+     * equivalent of `Vector2.INF`.
+     *
+     * Generated from Godot docs: Vector2i.MAX
+     */
+    val MAX: Vector2i = Vector2i(Int.MAX_VALUE, Int.MAX_VALUE)
+
+    /**
+     * Left unit vector. Represents the direction of left.
+     *
+     * Generated from Godot docs: Vector2i.LEFT
+     */
+    val LEFT: Vector2i = Vector2i(-1, 0)
+
+    /**
+     * Right unit vector. Represents the direction of right.
+     *
+     * Generated from Godot docs: Vector2i.RIGHT
+     */
+    val RIGHT: Vector2i = Vector2i(1, 0)
+
+    /**
+     * Up unit vector. Y is down in 2D, so this vector points -Y.
+     *
+     * Generated from Godot docs: Vector2i.UP
+     */
+    val UP: Vector2i = Vector2i(0, -1)
+
+    /**
+     * Down unit vector. Y is down in 2D, so this vector points +Y.
+     *
+     * Generated from Godot docs: Vector2i.DOWN
+     */
+    val DOWN: Vector2i = Vector2i(0, 1)
+
+    // ===== END GENERATED BUILTIN STATICS: Vector2i =====
+
     /**
      * Zero vector, a vector with all components set to `0`.
      *

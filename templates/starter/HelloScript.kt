@@ -12,6 +12,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Label
 import net.multigesture.kanama.api.Node2D
+import net.multigesture.kanama.types.*
 
 @ScriptClass(attachTo = "Node2D")
 @GlobalClass

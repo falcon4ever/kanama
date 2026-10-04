@@ -343,10 +343,20 @@ private constructor(
    *
    * Generated from Godot docs: Vector4.lerp
    */
-  fun lerp(to: Vector4, weight: Double): Vector4 =
-    builtinVector4(
-      builtinReals(Vector4Methods.lerp, builtinArg(), 4, listOf(to.builtinArg(), argReal(weight)))
+  fun lerp(to: Vector4, weight: Double): Vector4 {
+    /**
+     * The vector's W component. Also accessible by using the index position `[3]`.
+     *
+     * Generated from Godot docs: Vector4.w
+     */
+    val w = narrowReal(weight)
+    return raw(
+      realLerp(rawX, to.rawX, w),
+      realLerp(rawY, to.rawY, w),
+      realLerp(rawZ, to.rawZ, w),
+      realLerp(rawW, to.rawW, w),
     )
+  }
 
   /**
    * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
@@ -355,15 +365,16 @@ private constructor(
    *
    * Generated from Godot docs: Vector4.cubic_interpolate
    */
-  fun cubicInterpolate(b: Vector4, preA: Vector4, postB: Vector4, weight: Double): Vector4 =
-    builtinVector4(
-      builtinReals(
-        Vector4Methods.cubicInterpolate,
-        builtinArg(),
-        4,
-        listOf(b.builtinArg(), preA.builtinArg(), postB.builtinArg(), argReal(weight)),
-      )
-    )
+  fun cubicInterpolate(b: Vector4, preA: Vector4, postB: Vector4, weight: Double): Vector4 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, b)
+    f.put(2, preA)
+    f.put(3, postB)
+    f.putDouble(4, weight)
+    f.call(Vector4Methods.cubicInterpolate, 4)
+    return f.retVector4()
+  }
 
   /**
    * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
@@ -381,31 +392,34 @@ private constructor(
     bT: Double,
     preAT: Double,
     postBT: Double,
-  ): Vector4 =
-    builtinVector4(
-      builtinReals(
-        Vector4Methods.cubicInterpolateInTime,
-        builtinArg(),
-        4,
-        listOf(
-          b.builtinArg(),
-          preA.builtinArg(),
-          postB.builtinArg(),
-          argReal(weight),
-          argReal(bT),
-          argReal(preAT),
-          argReal(postBT),
-        ),
-      )
-    )
+  ): Vector4 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, b)
+    f.put(2, preA)
+    f.put(3, postB)
+    f.putDouble(4, weight)
+    f.putDouble(5, bT)
+    f.putDouble(6, preAT)
+    f.putDouble(7, postBT)
+    f.call(Vector4Methods.cubicInterpolateInTime, 7)
+    return f.retVector4()
+  }
 
   /**
    * Returns a vector composed of the `@GlobalScope.fposmod` of this vector's components and `mod`.
    *
    * Generated from Godot docs: Vector4.posmod
    */
-  fun posmod(mod: Double): Vector4 =
-    builtinVector4(builtinReals(Vector4Methods.posmod, builtinArg(), 4, listOf(argReal(mod))))
+  fun posmod(mod: Double): Vector4 {
+    val m = narrowReal(mod)
+    return raw(
+      godotFposmod(rawX, m),
+      godotFposmod(rawY, m),
+      godotFposmod(rawZ, m),
+      godotFposmod(rawW, m),
+    )
+  }
 
   /**
    * Returns a vector composed of the `@GlobalScope.fposmod` of this vector's components and
@@ -414,7 +428,12 @@ private constructor(
    * Generated from Godot docs: Vector4.posmodv
    */
   fun posmodv(modv: Vector4): Vector4 =
-    builtinVector4(builtinReals(Vector4Methods.posmodv, builtinArg(), 4, listOf(modv.builtinArg())))
+    raw(
+      godotFposmod(rawX, modv.rawX),
+      godotFposmod(rawY, modv.rawY),
+      godotFposmod(rawZ, modv.rawZ),
+      godotFposmod(rawW, modv.rawW),
+    )
 
   /**
    * Returns a new vector with each component snapped to the nearest multiple of the corresponding
@@ -423,8 +442,13 @@ private constructor(
    *
    * Generated from Godot docs: Vector4.snapped
    */
-  fun snapped(step: Vector4): Vector4 =
-    builtinVector4(builtinReals(Vector4Methods.snapped, builtinArg(), 4, listOf(step.builtinArg())))
+  fun snapped(step: Vector4): Vector4 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, step)
+    f.call(Vector4Methods.snapped, 1)
+    return f.retVector4()
+  }
 
   /**
    * Returns a new vector with each component snapped to the nearest multiple of `step`. This can
@@ -432,8 +456,13 @@ private constructor(
    *
    * Generated from Godot docs: Vector4.snappedf
    */
-  fun snappedf(step: Double): Vector4 =
-    builtinVector4(builtinReals(Vector4Methods.snappedf, builtinArg(), 4, listOf(argReal(step))))
+  fun snappedf(step: Double): Vector4 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putDouble(1, step)
+    f.call(Vector4Methods.snappedf, 1)
+    return f.retVector4()
+  }
 
   /**
    * Returns a new vector with all components clamped between the components of `min` and `max`, by
@@ -486,7 +515,12 @@ private constructor(
    *
    * Generated from Godot docs: Vector4.is_normalized
    */
-  fun isNormalized(): Boolean = builtinBool(Vector4Methods.isNormalized, builtinArg(), emptyList())
+  fun isNormalized(): Boolean {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Vector4Methods.isNormalized, 0)
+    return f.retBool()
+  }
 
   /**
    * Returns the normalized vector pointing from this vector to `to`. This is equivalent to using
@@ -585,6 +619,22 @@ private constructor(
   // ===== END GENERATED BUILTIN MEMBERS: Vector4 =====
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Vector4 (generate_builtin_ops.py) =====
+    /**
+     * Infinity vector, a vector with all components set to `@GDScript.INF`.
+     *
+     * Generated from Godot docs: Vector4.INF
+     */
+    val INF: Vector4 =
+      Vector4(
+        Double.POSITIVE_INFINITY,
+        Double.POSITIVE_INFINITY,
+        Double.POSITIVE_INFINITY,
+        Double.POSITIVE_INFINITY,
+      )
+
+    // ===== END GENERATED BUILTIN STATICS: Vector4 =====
+
     /** A vector from components already at the storage width (marshalling; no conversion). */
     internal fun raw(
       x: GodotRealStorage,

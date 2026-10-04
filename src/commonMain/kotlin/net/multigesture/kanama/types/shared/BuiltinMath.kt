@@ -42,6 +42,28 @@ internal inline fun godotCeil(x: Double): Double = ceil(x)
 
 internal inline fun godotSqrt(x: Double): Double = sqrt(x)
 
+internal inline fun godotSqrt(x: Float): Float = sqrt(x)
+
+/** `Math::lerp(float, float, float)`: `from + (to - from) * weight` (Color's channels). */
+internal inline fun realLerpF(from: Float, to: Float, weight: Float): Float =
+  from + (to - from) * weight
+
+/**
+ * `Math::fposmod`: C `fmod` (Kotlin's `%` on Float/Double), moved to the divisor's sign, then `+ 0`
+ * so a zero result is +0.
+ */
+internal inline fun godotFposmod(x: Float, y: Float): Float {
+  var value = x % y
+  if ((value < 0f && y > 0f) || (value > 0f && y < 0f)) value += y
+  return value + 0f
+}
+
+internal inline fun godotFposmod(x: Double, y: Double): Double {
+  var value = x % y
+  if ((value < 0.0 && y > 0.0) || (value > 0.0 && y < 0.0)) value += y
+  return value + 0.0
+}
+
 /** Godot's `SIGN`: `1`, `-1`, else `0` (so NaN and -0.0 give +0). */
 internal inline fun godotSign(x: Float): Float = if (x > 0f) 1f else if (x < 0f) -1f else 0f
 

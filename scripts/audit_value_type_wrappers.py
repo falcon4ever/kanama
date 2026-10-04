@@ -8,15 +8,15 @@ Transform3D.interpolateWith:
   reimplements math instead of calling the engine through the BuiltinCalls
   facade;
 * a Godot builtin method argument typed as `float` is marshalled as a `real_t`
-  component (`BArg.Floats`) instead of the builtin-call ABI's 8-byte double
-  (`BArg.Real`).
+  component (`putReal`) instead of the builtin-call ABI's 8-byte double
+  (`putDouble`).
 
 The value types are one shared set under src/commonMain since task 104 step 2,
 and they reach the engine only through
-`net.multigesture.kanama.binding.runtime.BuiltinCalls` — the desktop half over
+the builtin-call facade (`BuiltinFrame` / `BuiltinMethod`, task 134 B) — the desktop half over
 Panama, the iOS half over the C shim, kept identical by
-the `expect object BuiltinCalls` in
-`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinCalls.expect.kt`, which the
+the `internal expect class`es in
+`src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/BuiltinFrame.expect.kt`, which the
 compiler holds both backends to (task 104 step 3 parcel C').
 
 The script is intentionally report-only for now. It exits non-zero only when
@@ -120,14 +120,14 @@ FUN_RE = re.compile(
 BUILTIN_CALL_RE = re.compile(
     r"\bBuiltinCalls\.(?:call|callNoArgsFloat32|callScalar|callBool|callInt|invoke\w+)\s*\("
     r"|\bBuiltinTypes\.(?:call|construct)\s*\("
-    # The task 134 B generated members reach the facade through BuiltinMarshalling.kt's shims.
-    r"|\bbuiltin(?:Reals|Ints|Float32s|Double|Long|Bool|VariantReals)\s*\(",
+    # The task 134 B generated members call the engine through the thread's BuiltinFrame.
+    r"|\bbuiltinFrame\s*\(",
 )
 # The two BArg encodings a scalar argument can take. Godot's ptr-ABI passes a
 # Variant FLOAT argument as an 8-byte double (BArg.Real) regardless of real_t
 # precision; BArg.Floats is a buffer of real_t *components* and is wrong for one.
-SCALAR_ARG_RE = re.compile(r"\bBArg\.Real\s*\(|\bargReal\s*\(")
-COMPONENT_ARG_RE = re.compile(r"\bBArg\.Floats\s*\(")
+SCALAR_ARG_RE = re.compile(r"\bBArg\.Real\s*\(|\bputDouble\s*\(")
+COMPONENT_ARG_RE = re.compile(r"\bBArg\.Floats\s*\(|\bputReal\s*\(")
 
 
 @dataclass(frozen=True)

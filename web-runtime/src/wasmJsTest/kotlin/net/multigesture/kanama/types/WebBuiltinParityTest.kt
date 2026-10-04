@@ -40,9 +40,9 @@ class WebBuiltinParityTest {
     pure15()
     skip(2) // Vector2.length_squared
     pure17()
+    pure18()
     skip(4) // Vector2.is_equal_approx
     skip(2) // Vector2.is_zero_approx
-    pure20()
     pure21()
     pure22()
     pure23()
@@ -50,13 +50,13 @@ class WebBuiltinParityTest {
     pure25()
     pure26()
     pure27()
-    skip(4) // Vector2.dot
+    pure28()
     pure29()
     pure30()
     pure31()
     pure32()
     pure33()
-    pure34()
+    skip(4) // Vector2.dot
     pure35()
     pure36()
     pure37()
@@ -70,20 +70,20 @@ class WebBuiltinParityTest {
     pure45()
     pure46()
     pure47()
-    skip(7) // Vector3 * Quaternion
-    skip(12) // Vector3 * Basis
-    skip(15) // Vector3 * Transform3D
+    pure48()
+    pure49()
+    pure50()
     pure51()
-    skip(3) // Vector3.max_axis_index
+    pure52()
     pure53()
     pure54()
     pure55()
     pure56()
     pure57()
-    pure58()
-    skip(3) // Vector3.is_normalized
-    skip(6) // Vector3.is_equal_approx
-    skip(3) // Vector3.is_zero_approx
+    skip(7) // Vector3 * Quaternion
+    skip(12) // Vector3 * Basis
+    skip(15) // Vector3 * Transform3D
+    pure61()
     pure62()
     pure63()
     pure64()
@@ -92,13 +92,32 @@ class WebBuiltinParityTest {
     pure67()
     pure68()
     pure69()
-    pure70()
-    pure71()
-    pure72()
+    skip(3) // Vector3.is_normalized
+    skip(6) // Vector3.is_equal_approx
+    skip(3) // Vector3.is_zero_approx
     pure73()
     pure74()
     pure75()
     pure76()
+    pure77()
+    pure78()
+    pure79()
+    pure80()
+    pure81()
+    pure82()
+    pure83()
+    pure84()
+    pure85()
+    pure86()
+    pure87()
+    pure88()
+    pure89()
+    pure90()
+    pure91()
+    pure92()
+    pure93()
+    pure94()
+    pure95()
     skip(4) // unary- Vector4
     skip(4) // unary+ Vector4
     skip(5) // Vector4 * int
@@ -120,6 +139,9 @@ class WebBuiltinParityTest {
     skip(4) // Vector4.floor
     skip(4) // Vector4.ceil
     skip(4) // Vector4.round
+    skip(9) // Vector4.lerp
+    skip(5) // Vector4.posmod
+    skip(8) // Vector4.posmodv
     skip(12) // Vector4.clamp
     skip(6) // Vector4.clampf
     skip(4) // Vector4.normalized
@@ -136,32 +158,46 @@ class WebBuiltinParityTest {
     skip(8) // Vector4.max
     skip(5) // Vector4.maxf
     skip(4) // unary- Quaternion
-    pure114()
-    pure115()
-    pure116()
-    pure117()
-    pure118()
+    pure136()
+    pure137()
+    pure138()
+    pure139()
+    pure140()
     skip(7) // Quaternion * Vector3
-    pure120()
-    pure121()
+    pure142()
+    pure143()
     skip(8) // Quaternion * Quaternion
     skip(4) // Quaternion.length
     skip(4) // Quaternion.length_squared
-    pure125()
+    pure147()
     skip(8) // Quaternion.is_equal_approx
-    pure127()
+    pure149()
     skip(8) // Quaternion.dot
-    pure129()
-    pure130()
+    pure151()
+    pure152()
     skip(16) // Plane * Transform3D
+    pure154()
+    pure155()
     skip(7) // Plane.distance_to
-    pure133()
+    pure157()
+    pure158()
+    pure159()
     skip(10) // Rect2 * Transform2D
     skip(4) // Rect2.get_center
     skip(4) // Rect2.get_area
     skip(4) // Rect2.has_area
     skip(6) // Rect2.has_point
     skip(8) // Rect2.is_equal_approx
+    skip(9) // Rect2.intersects
+    skip(8) // Rect2.encloses
+    skip(8) // Rect2.intersection
+    skip(8) // Rect2.merge
+    skip(6) // Rect2.expand
+    skip(6) // Rect2.get_support
+    skip(5) // Rect2.grow
+    skip(6) // Rect2.grow_side
+    skip(8) // Rect2.grow_individual
+    skip(4) // Rect2.abs
     skip(18) // AABB * Transform3D
     skip(6) // AABB.get_center
     skip(6) // AABB.get_volume
@@ -169,6 +205,9 @@ class WebBuiltinParityTest {
     skip(6) // AABB.has_surface
     skip(9) // AABB.has_point
     skip(12) // AABB.is_equal_approx
+    skip(12) // AABB.intersects
+    skip(12) // AABB.encloses
+    skip(12) // AABB.merge
     skip(10) // Basis * int
     skip(10) // Basis / int
     skip(10) // Basis * float
@@ -185,8 +224,8 @@ class WebBuiltinParityTest {
     skip(18) // Transform3D * AABB
     skip(24) // Transform3D * Transform3D
     skip(21) // Transform3D * PackedVector3Array
-    skip(15) // Transform3D.scaled_local
     skip(15) // Transform3D.translated
+    skip(15) // Transform3D.translated_local
     skip(24) // Transform3D.is_equal_approx
     skip(7) // Transform2D * int
     skip(7) // Transform2D / int
@@ -196,54 +235,15 @@ class WebBuiltinParityTest {
     skip(10) // Transform2D * Rect2
     skip(12) // Transform2D * Transform2D
     skip(12) // Transform2D * PackedVector2Array
+    skip(6) // Transform2D.inverse
     skip(6) // Transform2D.get_origin
+    skip(8) // Transform2D.translated
+    skip(8) // Transform2D.translated_local
+    skip(8) // Transform2D.basis_xform
+    skip(8) // Transform2D.basis_xform_inv
     skip(12) // Transform2D.is_equal_approx
     skip(20) // Projection * Vector4
     skip(32) // Projection * Projection
-    pure178()
-    pure179()
-    pure180()
-    pure181()
-    pure182()
-    pure183()
-    pure184()
-    pure185()
-    pure186()
-    pure187()
-    pure188()
-    pure189()
-    pure190()
-    pure191()
-    pure192()
-    pure193()
-    pure194()
-    pure195()
-    pure196()
-    pure197()
-    pure198()
-    pure199()
-    pure200()
-    pure201()
-    pure202()
-    pure203()
-    pure204()
-    pure205()
-    pure206()
-    pure207()
-    pure208()
-    pure209()
-    pure210()
-    pure211()
-    pure212()
-    pure213()
-    pure214()
-    pure215()
-    pure216()
-    pure217()
-    pure218()
-    pure219()
-    pure220()
-    pure221()
     pure222()
     pure223()
     pure224()
@@ -268,6 +268,52 @@ class WebBuiltinParityTest {
     pure243()
     pure244()
     pure245()
+    pure246()
+    pure247()
+    pure248()
+    pure249()
+    pure250()
+    pure251()
+    pure252()
+    pure253()
+    pure254()
+    pure255()
+    pure256()
+    pure257()
+    pure258()
+    pure259()
+    pure260()
+    pure261()
+    pure262()
+    pure263()
+    pure264()
+    pure265()
+    pure266()
+    pure267()
+    pure268()
+    pure269()
+    pure270()
+    pure271()
+    pure272()
+    pure273()
+    pure274()
+    pure275()
+    pure276()
+    pure277()
+    pure278()
+    pure279()
+    pure280()
+    pure281()
+    pure282()
+    pure283()
+    pure284()
+    pure285()
+    pure286()
+    pure287()
+    pure288()
+    pure289()
+    pure290()
+    pure291()
     skip(4) // unary- Vector4i
     skip(4) // unary+ Vector4i
     skip(5) // Vector4i * int
@@ -298,6 +344,16 @@ class WebBuiltinParityTest {
     skip(4) // Rect2i.get_center
     skip(4) // Rect2i.get_area
     skip(4) // Rect2i.has_area
+    skip(6) // Rect2i.has_point
+    skip(8) // Rect2i.intersects
+    skip(8) // Rect2i.encloses
+    skip(8) // Rect2i.intersection
+    skip(8) // Rect2i.merge
+    skip(6) // Rect2i.expand
+    skip(5) // Rect2i.grow
+    skip(6) // Rect2i.grow_side
+    skip(8) // Rect2i.grow_individual
+    skip(4) // Rect2i.abs
     skip(2) // RID < RID
     skip(1) // RID.is_valid
     skip(1) // RID.get_id
@@ -375,737 +431,899 @@ class WebBuiltinParityTest {
 
   private fun pure17() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.normalized", b.normalized())
+    val a0 = nv()
+    mix("Vector2.limit_length", b.limitLength(a0))
   }
 
-  private fun pure20() {
+  private fun pure18() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.is_finite", b.isFinite())
+    mix("Vector2.normalized", b.normalized())
   }
 
   private fun pure21() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.max_axis_index", b.maxAxisIndex())
+    mix("Vector2.is_finite", b.isFinite())
   }
 
   private fun pure22() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.min_axis_index", b.minAxisIndex())
+    val a0 = nv()
+    mix("Vector2.posmod", b.posmod(a0))
   }
 
   private fun pure23() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.orthogonal", b.orthogonal())
+    val a0 = Vector2(nv(), nv())
+    mix("Vector2.posmodv", b.posmodv(a0))
   }
 
   private fun pure24() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.floor", b.floor())
+    val a0 = Vector2(nv(), nv())
+    mix("Vector2.project", b.project(a0))
   }
 
   private fun pure25() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.ceil", b.ceil())
+    val a0 = Vector2(nv(), nv())
+    val a1 = nv()
+    mix("Vector2.lerp", b.lerp(a0, a1))
   }
 
   private fun pure26() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.round", b.round())
+    mix("Vector2.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure27() {
     val b = Vector2(nv(), nv())
-    mix("Vector2.aspect", b.aspect())
+    mix("Vector2.min_axis_index", b.minAxisIndex())
+  }
+
+  private fun pure28() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv())
+    val a1 = nv()
+    mix("Vector2.move_toward", b.moveToward(a0, a1))
   }
 
   private fun pure29() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.orthogonal", b.orthogonal())
+  }
+
+  private fun pure30() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.floor", b.floor())
+  }
+
+  private fun pure31() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.ceil", b.ceil())
+  }
+
+  private fun pure32() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.round", b.round())
+  }
+
+  private fun pure33() {
+    val b = Vector2(nv(), nv())
+    mix("Vector2.aspect", b.aspect())
+  }
+
+  private fun pure35() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv()).normalized()
+    mix("Vector2.slide", b.slide(a0))
+  }
+
+  private fun pure36() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv()).normalized()
+    mix("Vector2.bounce", b.bounce(a0))
+  }
+
+  private fun pure37() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv()).normalized()
+    mix("Vector2.reflect", b.reflect(a0))
+  }
+
+  private fun pure38() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.cross", b.cross(a0))
   }
 
-  private fun pure30() {
+  private fun pure39() {
     val b = Vector2(nv(), nv())
     mix("Vector2.abs", b.abs())
   }
 
-  private fun pure31() {
+  private fun pure40() {
     val b = Vector2(nv(), nv())
     mix("Vector2.sign", b.sign())
   }
 
-  private fun pure32() {
+  private fun pure41() {
+    val b = Vector2(nv(), nv())
+    val a0 = Vector2(nv(), nv())
+    val a1 = Vector2(nv(), nv())
+    mix("Vector2.clamp", b.clamp(a0, a1))
+  }
+
+  private fun pure42() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     val a1 = nv()
     mix("Vector2.clampf", b.clampf(a0, a1))
   }
 
-  private fun pure33() {
+  private fun pure43() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.min", b.min(a0))
   }
 
-  private fun pure34() {
+  private fun pure44() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.minf", b.minf(a0))
   }
 
-  private fun pure35() {
+  private fun pure45() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.max", b.max(a0))
   }
 
-  private fun pure36() {
+  private fun pure46() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.maxf", b.maxf(a0))
   }
 
-  private fun pure37() {
+  private fun pure47() {
     val l = Vector3(nv(), nv(), nv())
     mix("unary- Vector3", -l)
   }
 
-  private fun pure38() {
+  private fun pure48() {
     val l = Vector3(nv(), nv(), nv())
     mix("unary+ Vector3", +l)
   }
 
-  private fun pure39() {
+  private fun pure49() {
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector3 * int", l * r)
   }
 
-  private fun pure40() {
+  private fun pure50() {
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
     mix("Vector3 / int", l / r)
   }
 
-  private fun pure41() {
+  private fun pure51() {
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
     mix("Vector3 * float", l * r)
   }
 
-  private fun pure42() {
+  private fun pure52() {
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
     mix("Vector3 / float", l / r)
   }
 
-  private fun pure43() {
+  private fun pure53() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 < Vector3", l < r)
   }
 
-  private fun pure44() {
+  private fun pure54() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 + Vector3", l + r)
   }
 
-  private fun pure45() {
+  private fun pure55() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 - Vector3", l - r)
   }
 
-  private fun pure46() {
+  private fun pure56() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 * Vector3", l * r)
   }
 
-  private fun pure47() {
+  private fun pure57() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
     mix("Vector3 / Vector3", l / r)
   }
 
-  private fun pure51() {
+  private fun pure61() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure53() {
+  private fun pure62() {
+    val b = Vector3(nv(), nv(), nv())
+    mix("Vector3.max_axis_index", b.maxAxisIndex())
+  }
+
+  private fun pure63() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.direction_to", b.directionTo(a0))
   }
 
-  private fun pure54() {
+  private fun pure64() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure55() {
+  private fun pure65() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure56() {
+  private fun pure66() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.length", b.length())
   }
 
-  private fun pure57() {
+  private fun pure67() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.length_squared", b.lengthSquared())
   }
 
-  private fun pure58() {
+  private fun pure68() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = nv()
+    mix("Vector3.limit_length", b.limitLength(a0))
+  }
+
+  private fun pure69() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.normalized", b.normalized())
   }
 
-  private fun pure62() {
+  private fun pure73() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_finite", b.isFinite())
   }
 
-  private fun pure63() {
+  private fun pure74() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.inverse", b.inverse())
   }
 
-  private fun pure64() {
+  private fun pure75() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
     mix("Vector3.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure65() {
+  private fun pure76() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
     mix("Vector3.clampf", b.clampf(a0, a1))
   }
 
-  private fun pure66() {
+  private fun pure77() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    val a1 = nv()
+    mix("Vector3.lerp", b.lerp(a0, a1))
+  }
+
+  private fun pure78() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    val a1 = nv()
+    mix("Vector3.move_toward", b.moveToward(a0, a1))
+  }
+
+  private fun pure79() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.dot", b.dot(a0))
   }
 
-  private fun pure67() {
+  private fun pure80() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.cross", b.cross(a0))
   }
 
-  private fun pure68() {
+  private fun pure81() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.abs", b.abs())
   }
 
-  private fun pure69() {
+  private fun pure82() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.floor", b.floor())
   }
 
-  private fun pure70() {
+  private fun pure83() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.ceil", b.ceil())
   }
 
-  private fun pure71() {
+  private fun pure84() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.round", b.round())
   }
 
-  private fun pure72() {
+  private fun pure85() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = nv()
+    mix("Vector3.posmod", b.posmod(a0))
+  }
+
+  private fun pure86() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Vector3.posmodv", b.posmodv(a0))
+  }
+
+  private fun pure87() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Vector3.project", b.project(a0))
+  }
+
+  private fun pure88() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv()).normalized()
+    mix("Vector3.slide", b.slide(a0))
+  }
+
+  private fun pure89() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv()).normalized()
+    mix("Vector3.bounce", b.bounce(a0))
+  }
+
+  private fun pure90() {
+    val b = Vector3(nv(), nv(), nv())
+    val a0 = Vector3(nv(), nv(), nv()).normalized()
+    mix("Vector3.reflect", b.reflect(a0))
+  }
+
+  private fun pure91() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.sign", b.sign())
   }
 
-  private fun pure73() {
+  private fun pure92() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.min", b.min(a0))
   }
 
-  private fun pure74() {
+  private fun pure93() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.minf", b.minf(a0))
   }
 
-  private fun pure75() {
+  private fun pure94() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.max", b.max(a0))
   }
 
-  private fun pure76() {
+  private fun pure95() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.maxf", b.maxf(a0))
   }
 
-  private fun pure114() {
+  private fun pure136() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("unary+ Quaternion", +l)
   }
 
-  private fun pure115() {
+  private fun pure137() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
     mix("Quaternion * int", l * r)
   }
 
-  private fun pure116() {
+  private fun pure138() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
     mix("Quaternion / int", l / r)
   }
 
-  private fun pure117() {
+  private fun pure139() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
     mix("Quaternion * float", l * r)
   }
 
-  private fun pure118() {
+  private fun pure140() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
     mix("Quaternion / float", l / r)
   }
 
-  private fun pure120() {
+  private fun pure142() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion + Quaternion", l + r)
   }
 
-  private fun pure121() {
+  private fun pure143() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion - Quaternion", l - r)
   }
 
-  private fun pure125() {
+  private fun pure147() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.normalized", b.normalized())
   }
 
-  private fun pure127() {
+  private fun pure149() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_finite", b.isFinite())
   }
 
-  private fun pure129() {
+  private fun pure151() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary- Plane", -l)
   }
 
-  private fun pure130() {
+  private fun pure152() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary+ Plane", +l)
   }
 
-  private fun pure133() {
+  private fun pure154() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    mix("Plane.get_center", b.getCenter())
+  }
+
+  private fun pure155() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Plane.is_point_over", b.isPointOver(a0))
+  }
+
+  private fun pure157() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    val a1 = nv()
+    mix("Plane.has_point", b.hasPoint(a0, a1))
+  }
+
+  private fun pure158() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Plane.project", b.project(a0))
+  }
+
+  private fun pure159() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
     mix("Plane.intersects_ray", b.intersectsRay(a0, a1))
   }
 
-  private fun pure178() {
+  private fun pure222() {
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary- Color", -l)
   }
 
-  private fun pure179() {
+  private fun pure223() {
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary+ Color", +l)
   }
 
-  private fun pure180() {
+  private fun pure224() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Color * int", l * r)
   }
 
-  private fun pure181() {
+  private fun pure225() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
     mix("Color / int", l / r)
   }
 
-  private fun pure182() {
+  private fun pure226() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Color * float", l * r)
   }
 
-  private fun pure183() {
+  private fun pure227() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
     mix("Color / float", l / r)
   }
 
-  private fun pure184() {
+  private fun pure228() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color + Color", l + r)
   }
 
-  private fun pure185() {
+  private fun pure229() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color - Color", l - r)
   }
 
-  private fun pure186() {
+  private fun pure230() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color * Color", l * r)
   }
 
-  private fun pure187() {
+  private fun pure231() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
     mix("Color / Color", l / r)
   }
 
-  private fun pure188() {
+  private fun pure232() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = rb()
     mix("Color.to_html", b.toHtml(a0))
   }
 
-  private fun pure189() {
+  private fun pure233() {
+    val b = Color(nv(), nv(), nv(), nv())
+    val a0 = Color(nv(), nv(), nv(), nv())
+    val a1 = Color(nv(), nv(), nv(), nv())
+    mix("Color.clamp", b.clamp(a0, a1))
+  }
+
+  private fun pure234() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.inverted", b.inverted())
   }
 
-  private fun pure190() {
+  private fun pure235() {
+    val b = Color(nv(), nv(), nv(), nv())
+    val a0 = Color(nv(), nv(), nv(), nv())
+    val a1 = nv()
+    mix("Color.lerp", b.lerp(a0, a1))
+  }
+
+  private fun pure236() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.get_luminance", b.getLuminance())
   }
 
-  private fun pure191() {
+  private fun pure237() {
     val l = Vector2i(ri(), ri())
     mix("unary- Vector2i", -l)
   }
 
-  private fun pure192() {
+  private fun pure238() {
     val l = Vector2i(ri(), ri())
     mix("unary+ Vector2i", +l)
   }
 
-  private fun pure193() {
+  private fun pure239() {
     val l = Vector2i(ri(), ri())
     val r = ri().toLong()
     mix("Vector2i * int", l * r)
   }
 
-  private fun pure194() {
+  private fun pure240() {
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i / int", l / r)
   }
 
-  private fun pure195() {
+  private fun pure241() {
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i % int", l % r)
   }
 
-  private fun pure196() {
+  private fun pure242() {
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i * float", l * r)
   }
 
-  private fun pure197() {
+  private fun pure243() {
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i / float", l / r)
   }
 
-  private fun pure198() {
+  private fun pure244() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i < Vector2i", l < r)
   }
 
-  private fun pure199() {
+  private fun pure245() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i + Vector2i", l + r)
   }
 
-  private fun pure200() {
+  private fun pure246() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i - Vector2i", l - r)
   }
 
-  private fun pure201() {
+  private fun pure247() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i * Vector2i", l * r)
   }
 
-  private fun pure202() {
+  private fun pure248() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i / Vector2i", l / r)
   }
 
-  private fun pure203() {
+  private fun pure249() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i % Vector2i", l % r)
   }
 
-  private fun pure204() {
+  private fun pure250() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.aspect", b.aspect())
   }
 
-  private fun pure205() {
+  private fun pure251() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure206() {
+  private fun pure252() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure207() {
+  private fun pure253() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure208() {
+  private fun pure254() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure209() {
+  private fun pure255() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.length", b.length())
   }
 
-  private fun pure210() {
+  private fun pure256() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.length_squared", b.lengthSquared())
   }
 
-  private fun pure211() {
+  private fun pure257() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.sign", b.sign())
   }
 
-  private fun pure212() {
+  private fun pure258() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.abs", b.abs())
   }
 
-  private fun pure213() {
+  private fun pure259() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     val a1 = Vector2i(ri(), ri())
     mix("Vector2i.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure214() {
+  private fun pure260() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
     mix("Vector2i.clampi", b.clampi(a0, a1))
   }
 
-  private fun pure215() {
+  private fun pure261() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.min", b.min(a0))
   }
 
-  private fun pure216() {
+  private fun pure262() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.mini", b.mini(a0))
   }
 
-  private fun pure217() {
+  private fun pure263() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.max", b.max(a0))
   }
 
-  private fun pure218() {
+  private fun pure264() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.maxi", b.maxi(a0))
   }
 
-  private fun pure219() {
+  private fun pure265() {
     val l = Vector3i(ri(), ri(), ri())
     mix("unary- Vector3i", -l)
   }
 
-  private fun pure220() {
+  private fun pure266() {
     val l = Vector3i(ri(), ri(), ri())
     mix("unary+ Vector3i", +l)
   }
 
-  private fun pure221() {
+  private fun pure267() {
     val l = Vector3i(ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector3i * int", l * r)
   }
 
-  private fun pure222() {
+  private fun pure268() {
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i / int", l / r)
   }
 
-  private fun pure223() {
+  private fun pure269() {
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i % int", l % r)
   }
 
-  private fun pure224() {
+  private fun pure270() {
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i * float", l * r)
   }
 
-  private fun pure225() {
+  private fun pure271() {
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i / float", l / r)
   }
 
-  private fun pure226() {
+  private fun pure272() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i < Vector3i", l < r)
   }
 
-  private fun pure227() {
+  private fun pure273() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i + Vector3i", l + r)
   }
 
-  private fun pure228() {
+  private fun pure274() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i - Vector3i", l - r)
   }
 
-  private fun pure229() {
+  private fun pure275() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i * Vector3i", l * r)
   }
 
-  private fun pure230() {
+  private fun pure276() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i / Vector3i", l / r)
   }
 
-  private fun pure231() {
+  private fun pure277() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i % Vector3i", l % r)
   }
 
-  private fun pure232() {
+  private fun pure278() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure233() {
+  private fun pure279() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure234() {
+  private fun pure280() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure235() {
+  private fun pure281() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure236() {
+  private fun pure282() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.length", b.length())
   }
 
-  private fun pure237() {
+  private fun pure283() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.length_squared", b.lengthSquared())
   }
 
-  private fun pure238() {
+  private fun pure284() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.sign", b.sign())
   }
 
-  private fun pure239() {
+  private fun pure285() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.abs", b.abs())
   }
 
-  private fun pure240() {
+  private fun pure286() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     val a1 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure241() {
+  private fun pure287() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
     mix("Vector3i.clampi", b.clampi(a0, a1))
   }
 
-  private fun pure242() {
+  private fun pure288() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min", b.min(a0))
   }
 
-  private fun pure243() {
+  private fun pure289() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.mini", b.mini(a0))
   }
 
-  private fun pure244() {
+  private fun pure290() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max", b.max(a0))
   }
 
-  private fun pure245() {
+  private fun pure291() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.maxi", b.maxi(a0))
@@ -1167,148 +1385,174 @@ class WebBuiltinParityTest {
     // Godot 4.7.2's hashes for the entries above (scripts/fixtures/builtin_parity_expected.json).
     val EXPECTED =
       mapOf(
-        "unary+_Vector2" to "12350b36",
-        "Vector2_*_int" to "39dbe006",
-        "Vector2_/_int" to "b93a4801",
-        "Vector2_*_float" to "e31fe2b3",
-        "Vector2_/_float" to "8a1dea04",
-        "Vector2_<_Vector2" to "319c7c34",
-        "Vector2_+_Vector2" to "79d8ad68",
-        "Vector2_-_Vector2" to "cda23b7f",
-        "Vector2_*_Vector2" to "7c361abf",
-        "Vector2_/_Vector2" to "a3390e5c",
-        "Vector2.direction_to" to "9595cfb9",
-        "Vector2.length" to "28901a29",
-        "Vector2.normalized" to "392bc976",
+        "unary+_Vector2" to "87182468",
+        "Vector2_*_int" to "cc17162f",
+        "Vector2_/_int" to "d9734e0f",
+        "Vector2_*_float" to "6c7f20fd",
+        "Vector2_/_float" to "e9f8055d",
+        "Vector2_<_Vector2" to "32ae5bbd",
+        "Vector2_+_Vector2" to "d4778dcd",
+        "Vector2_-_Vector2" to "864e752a",
+        "Vector2_*_Vector2" to "bc095606",
+        "Vector2_/_Vector2" to "4913758e",
+        "Vector2.direction_to" to "6df4c227",
+        "Vector2.length" to "7d4b04cb",
+        "Vector2.limit_length" to "376d98eb",
+        "Vector2.normalized" to "f3c21c70",
         "Vector2.is_finite" to "256151c5",
-        "Vector2.max_axis_index" to "51e51815",
-        "Vector2.min_axis_index" to "59598f0d",
-        "Vector2.orthogonal" to "19411e99",
-        "Vector2.floor" to "e316f4c5",
-        "Vector2.ceil" to "f6592845",
-        "Vector2.round" to "4cf2b145",
-        "Vector2.aspect" to "897c02d5",
-        "Vector2.cross" to "ed045418",
-        "Vector2.abs" to "44942578",
+        "Vector2.posmod" to "afb0d439",
+        "Vector2.posmodv" to "2086f53d",
+        "Vector2.project" to "f8ca937c",
+        "Vector2.lerp" to "51971dbd",
+        "Vector2.max_axis_index" to "2dc7c3e5",
+        "Vector2.min_axis_index" to "ec6a4025",
+        "Vector2.move_toward" to "623e1912",
+        "Vector2.orthogonal" to "30a7bc88",
+        "Vector2.floor" to "679042c5",
+        "Vector2.ceil" to "39c78145",
+        "Vector2.round" to "1f6e6dc5",
+        "Vector2.aspect" to "36a24e21",
+        "Vector2.slide" to "6a910763",
+        "Vector2.bounce" to "169f22e",
+        "Vector2.reflect" to "5db40213",
+        "Vector2.cross" to "7de0b2c9",
+        "Vector2.abs" to "1b6b94bb",
         "Vector2.sign" to "29316dc5",
-        "Vector2.clampf" to "2a50e99",
-        "Vector2.min" to "22a6469b",
-        "Vector2.minf" to "1f53f43c",
-        "Vector2.max" to "3fe611a",
-        "Vector2.maxf" to "38b26c92",
-        "unary-_Vector3" to "ffa42c26",
-        "unary+_Vector3" to "7f1ed7ce",
-        "Vector3_*_int" to "45c9fc7",
-        "Vector3_/_int" to "2c39c95c",
-        "Vector3_*_float" to "58cfebe3",
-        "Vector3_/_float" to "6a4f97d0",
-        "Vector3_<_Vector3" to "52647165",
-        "Vector3_+_Vector3" to "635e6e3a",
-        "Vector3_-_Vector3" to "d4668373",
-        "Vector3_*_Vector3" to "915734ae",
-        "Vector3_/_Vector3" to "e206cc65",
-        "Vector3.min_axis_index" to "56aede1c",
-        "Vector3.direction_to" to "36dc2faa",
-        "Vector3.distance_to" to "90c2f166",
-        "Vector3.distance_squared_to" to "3de19e69",
-        "Vector3.length" to "7ceab7f5",
-        "Vector3.length_squared" to "ad11044a",
-        "Vector3.normalized" to "1902abd8",
+        "Vector2.clamp" to "6641f183",
+        "Vector2.clampf" to "c3d31a96",
+        "Vector2.min" to "766ce2a3",
+        "Vector2.minf" to "4ee2b1a1",
+        "Vector2.max" to "55a9eb08",
+        "Vector2.maxf" to "26ace4a9",
+        "unary-_Vector3" to "86035a3c",
+        "unary+_Vector3" to "f9132143",
+        "Vector3_*_int" to "e9687953",
+        "Vector3_/_int" to "273d60ee",
+        "Vector3_*_float" to "dc490226",
+        "Vector3_/_float" to "6b50ad2a",
+        "Vector3_<_Vector3" to "24f4325d",
+        "Vector3_+_Vector3" to "7b6be503",
+        "Vector3_-_Vector3" to "d67229b9",
+        "Vector3_*_Vector3" to "20c9e5da",
+        "Vector3_/_Vector3" to "bccb0238",
+        "Vector3.min_axis_index" to "a4116c2f",
+        "Vector3.max_axis_index" to "a4089404",
+        "Vector3.direction_to" to "a51430f9",
+        "Vector3.distance_to" to "b9b45f8f",
+        "Vector3.distance_squared_to" to "591c172",
+        "Vector3.length" to "52d0848e",
+        "Vector3.length_squared" to "a10ea00c",
+        "Vector3.limit_length" to "3fbc831c",
+        "Vector3.normalized" to "49ef98c3",
         "Vector3.is_finite" to "256151c5",
-        "Vector3.inverse" to "721d603a",
-        "Vector3.clamp" to "526fef31",
-        "Vector3.clampf" to "54f872a0",
-        "Vector3.dot" to "54674b98",
-        "Vector3.cross" to "f7ce3912",
-        "Vector3.abs" to "c9709c27",
-        "Vector3.floor" to "8979b745",
-        "Vector3.ceil" to "d3c53a45",
-        "Vector3.round" to "41cc7ec5",
+        "Vector3.inverse" to "328dc7de",
+        "Vector3.clamp" to "39107bce",
+        "Vector3.clampf" to "b01caf17",
+        "Vector3.lerp" to "d2cb72ab",
+        "Vector3.move_toward" to "82c427a5",
+        "Vector3.dot" to "fbc1cc35",
+        "Vector3.cross" to "7a881afe",
+        "Vector3.abs" to "49182d2a",
+        "Vector3.floor" to "659445",
+        "Vector3.ceil" to "2c0dc9c5",
+        "Vector3.round" to "f538b145",
+        "Vector3.posmod" to "c85f1d46",
+        "Vector3.posmodv" to "577ef991",
+        "Vector3.project" to "6420579c",
+        "Vector3.slide" to "bd8338c1",
+        "Vector3.bounce" to "62d5a53e",
+        "Vector3.reflect" to "f8a53c47",
         "Vector3.sign" to "146bd5c5",
-        "Vector3.min" to "b374a5bf",
-        "Vector3.minf" to "f04e0da3",
-        "Vector3.max" to "d413e125",
-        "Vector3.maxf" to "7e9cbfc3",
-        "unary+_Quaternion" to "fac9c1cc",
-        "Quaternion_*_int" to "ccf27fc6",
-        "Quaternion_/_int" to "4eefb580",
-        "Quaternion_*_float" to "49c97a12",
-        "Quaternion_/_float" to "54e98c9f",
-        "Quaternion_+_Quaternion" to "5e3532bf",
-        "Quaternion_-_Quaternion" to "8ca778a7",
-        "Quaternion.normalized" to "c05176bb",
+        "Vector3.min" to "6bac2da1",
+        "Vector3.minf" to "6c32a94",
+        "Vector3.max" to "42175725",
+        "Vector3.maxf" to "2ddc6cb0",
+        "unary+_Quaternion" to "2dba9b98",
+        "Quaternion_*_int" to "501f87da",
+        "Quaternion_/_int" to "124f3884",
+        "Quaternion_*_float" to "2396c3a4",
+        "Quaternion_/_float" to "8580a26b",
+        "Quaternion_+_Quaternion" to "bf5d1929",
+        "Quaternion_-_Quaternion" to "5a0d5afc",
+        "Quaternion.normalized" to "f68bd34b",
         "Quaternion.is_finite" to "256151c5",
-        "unary-_Plane" to "2c928b5a",
-        "unary+_Plane" to "7f2947b3",
-        "Plane.intersects_ray" to "7d0015eb",
-        "unary-_Color" to "ab9154c6",
-        "unary+_Color" to "368d0b82",
-        "Color_*_int" to "d1d29d24",
-        "Color_/_int" to "37b2c4a1",
-        "Color_*_float" to "985d22cb",
-        "Color_/_float" to "ebfc2f5e",
-        "Color_+_Color" to "fc2df26c",
-        "Color_-_Color" to "ee5fd05c",
-        "Color_*_Color" to "1734c7b",
-        "Color_/_Color" to "b0eded7a",
-        "Color.to_html" to "be5bd7c6",
-        "Color.inverted" to "b16bb569",
-        "Color.get_luminance" to "8b909d73",
-        "unary-_Vector2i" to "3322efd7",
-        "unary+_Vector2i" to "80c9a3e1",
-        "Vector2i_*_int" to "cd6926c0",
-        "Vector2i_/_int" to "9601032a",
-        "Vector2i_%_int" to "27675c41",
-        "Vector2i_*_float" to "ecc4d2ff",
-        "Vector2i_/_float" to "47ecd146",
-        "Vector2i_<_Vector2i" to "e147a7ad",
-        "Vector2i_+_Vector2i" to "c6ba5227",
-        "Vector2i_-_Vector2i" to "a35acb44",
-        "Vector2i_*_Vector2i" to "89bc1e86",
-        "Vector2i_/_Vector2i" to "ce702e58",
-        "Vector2i_%_Vector2i" to "3d26ee20",
-        "Vector2i.aspect" to "7f5b9592",
-        "Vector2i.max_axis_index" to "8e0dbffc",
-        "Vector2i.min_axis_index" to "58c18454",
-        "Vector2i.distance_to" to "cea1ce8f",
-        "Vector2i.distance_squared_to" to "3f7a9c98",
-        "Vector2i.length" to "d00bf041",
-        "Vector2i.length_squared" to "b05cb631",
-        "Vector2i.sign" to "21acfb01",
-        "Vector2i.abs" to "b9c74dc3",
-        "Vector2i.clamp" to "22ab819a",
-        "Vector2i.clampi" to "295f4f2",
-        "Vector2i.min" to "b18da0c4",
-        "Vector2i.mini" to "b45d2a64",
-        "Vector2i.max" to "d7616241",
-        "Vector2i.maxi" to "8b1ddefd",
-        "unary-_Vector3i" to "c8850035",
-        "unary+_Vector3i" to "b4e28029",
-        "Vector3i_*_int" to "63a0e640",
-        "Vector3i_/_int" to "44826f23",
-        "Vector3i_%_int" to "8b429160",
-        "Vector3i_*_float" to "9467a5e6",
-        "Vector3i_/_float" to "1a7b7d57",
-        "Vector3i_<_Vector3i" to "66814424",
-        "Vector3i_+_Vector3i" to "f8ce55e1",
-        "Vector3i_-_Vector3i" to "a74d02e2",
-        "Vector3i_*_Vector3i" to "76c9229c",
-        "Vector3i_/_Vector3i" to "29321311",
-        "Vector3i_%_Vector3i" to "1c74e76a",
-        "Vector3i.min_axis_index" to "49ed6544",
-        "Vector3i.max_axis_index" to "3423fa5",
-        "Vector3i.distance_to" to "8bc4d9e4",
-        "Vector3i.distance_squared_to" to "c5ac5847",
-        "Vector3i.length" to "2c9e503b",
-        "Vector3i.length_squared" to "f7a41c4b",
-        "Vector3i.sign" to "283687bd",
-        "Vector3i.abs" to "ca33d058",
-        "Vector3i.clamp" to "bb36b6a0",
-        "Vector3i.clampi" to "4a1e61e",
-        "Vector3i.min" to "aab8af41",
-        "Vector3i.mini" to "12bd0ef8",
-        "Vector3i.max" to "5d791bd7",
-        "Vector3i.maxi" to "c40da72b",
+        "unary-_Plane" to "1ad24f1",
+        "unary+_Plane" to "fe28113e",
+        "Plane.get_center" to "fa4f1ad2",
+        "Plane.is_point_over" to "b3adceed",
+        "Plane.has_point" to "339f6114",
+        "Plane.project" to "e68ab864",
+        "Plane.intersects_ray" to "15fe3e6c",
+        "unary-_Color" to "237c6c0c",
+        "unary+_Color" to "fa40b47a",
+        "Color_*_int" to "512d3ed6",
+        "Color_/_int" to "8129472",
+        "Color_*_float" to "b84a7917",
+        "Color_/_float" to "bb0ada20",
+        "Color_+_Color" to "33acd714",
+        "Color_-_Color" to "c235c10b",
+        "Color_*_Color" to "336de16d",
+        "Color_/_Color" to "12265580",
+        "Color.to_html" to "a67ec83",
+        "Color.clamp" to "eed8573c",
+        "Color.inverted" to "e21444f5",
+        "Color.lerp" to "40a0e6c0",
+        "Color.get_luminance" to "d4093a28",
+        "unary-_Vector2i" to "8485ffc4",
+        "unary+_Vector2i" to "9c80a3be",
+        "Vector2i_*_int" to "b8cf429e",
+        "Vector2i_/_int" to "90056542",
+        "Vector2i_%_int" to "aa95c33e",
+        "Vector2i_*_float" to "5b9cef41",
+        "Vector2i_/_float" to "51cc0c43",
+        "Vector2i_<_Vector2i" to "bfcd19e5",
+        "Vector2i_+_Vector2i" to "8fe115",
+        "Vector2i_-_Vector2i" to "ccffde03",
+        "Vector2i_*_Vector2i" to "d45b60a4",
+        "Vector2i_/_Vector2i" to "b14ec00a",
+        "Vector2i_%_Vector2i" to "ae0e6b2d",
+        "Vector2i.aspect" to "915fc822",
+        "Vector2i.max_axis_index" to "53c02454",
+        "Vector2i.min_axis_index" to "ea22c985",
+        "Vector2i.distance_to" to "205e0230",
+        "Vector2i.distance_squared_to" to "837d68b1",
+        "Vector2i.length" to "59150efa",
+        "Vector2i.length_squared" to "ed8591d7",
+        "Vector2i.sign" to "1b5e05c6",
+        "Vector2i.abs" to "7bb1ca82",
+        "Vector2i.clamp" to "6c70cc6c",
+        "Vector2i.clampi" to "c25c5a1",
+        "Vector2i.min" to "9e0801fd",
+        "Vector2i.mini" to "7193a776",
+        "Vector2i.max" to "a9988edb",
+        "Vector2i.maxi" to "2a838be5",
+        "unary-_Vector3i" to "23986858",
+        "unary+_Vector3i" to "1a21ecaf",
+        "Vector3i_*_int" to "2147c553",
+        "Vector3i_/_int" to "d10dc1c1",
+        "Vector3i_%_int" to "a5be7c8b",
+        "Vector3i_*_float" to "a3a9dae5",
+        "Vector3i_/_float" to "473dbef0",
+        "Vector3i_<_Vector3i" to "2d6d83ac",
+        "Vector3i_+_Vector3i" to "dc16461f",
+        "Vector3i_-_Vector3i" to "ec70cd50",
+        "Vector3i_*_Vector3i" to "55b62d44",
+        "Vector3i_/_Vector3i" to "1fdfc2cf",
+        "Vector3i_%_Vector3i" to "8be6b0c4",
+        "Vector3i.min_axis_index" to "68c0c6d7",
+        "Vector3i.max_axis_index" to "429d475f",
+        "Vector3i.distance_to" to "6ddd8033",
+        "Vector3i.distance_squared_to" to "a2399bc7",
+        "Vector3i.length" to "65f1e190",
+        "Vector3i.length_squared" to "cab5b078",
+        "Vector3i.sign" to "6156c951",
+        "Vector3i.abs" to "a41a9fc9",
+        "Vector3i.clamp" to "e34d4f22",
+        "Vector3i.clampi" to "ddd8c7a1",
+        "Vector3i.min" to "f1f3af30",
+        "Vector3i.mini" to "5815cc04",
+        "Vector3i.max" to "212e701e",
+        "Vector3i.maxi" to "1379d37c",
       )
   }
 }

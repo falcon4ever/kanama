@@ -162,26 +162,40 @@ PROPERTY_MEMBERS = {
 }
 
 # Methods implemented in pure Kotlin (Godot's formula; parity-tested), by Godot name. Every other
-# method of a value type is a facade call. Kept to short, exactly portable formulas: anything with
-# a transcendental, a MATH_CHECKS early return, or a long body stays with the engine.
-_VEC_PURE = {"abs", "floor", "ceil", "round", "sign", "min", "max", "minf", "maxf", "clampf", "is_finite"}
+# method of a value type is a facade call. The rule: an exactly portable formula -- arithmetic,
+# comparisons, sqrt and fmod, in Godot's operand order -- is Kotlin (no round trip, never slower
+# than GDScript); anything with a transcendental (sin/cos/atan2/exp/pow) or a long body stays with
+# the engine. A method Godot guards with a debug-only MATH_CHECKS early return (`slide`, `reflect`,
+# `bounce` on a non-normalized normal) computes the formula in Kotlin without that check
+# (documented in godot-api.md).
+_VEC_PURE = {"abs", "floor", "ceil", "round", "sign", "min", "max", "minf", "maxf", "clampf", "is_finite",
+             "clamp", "lerp", "posmod", "posmodv", "direction_to", "distance_to", "distance_squared_to"}
+_VEC23_PURE = {"move_toward", "slide", "bounce", "reflect", "project", "limit_length", "inverse"}
 _INT_PURE = {"abs", "sign", "min", "max", "mini", "maxi", "clamp", "clampi", "length_squared", "length",
              "distance_squared_to", "distance_to", "max_axis_index", "min_axis_index"}
 PURE_METHODS: dict[str, set[str]] = {
-    "Vector2": _VEC_PURE | {"direction_to", "cross", "orthogonal", "aspect", "max_axis_index", "min_axis_index"},
-    "Vector3": _VEC_PURE | {"direction_to", "inverse", "min_axis_index", "clamp"},
-    "Vector4": _VEC_PURE | {"inverse", "max_axis_index", "min_axis_index", "clamp", "normalized", "direction_to",
-                            "distance_to", "distance_squared_to"},
+    "Vector2": _VEC_PURE | _VEC23_PURE | {"cross", "orthogonal", "aspect", "max_axis_index", "min_axis_index"},
+    "Vector3": _VEC_PURE | _VEC23_PURE | {"min_axis_index", "max_axis_index"},
+    "Vector4": _VEC_PURE | {"inverse", "max_axis_index", "min_axis_index", "normalized"},
     "Vector2i": _INT_PURE | {"aspect"},
     "Vector3i": set(_INT_PURE),
     "Vector4i": set(_INT_PURE),
     "Quaternion": {"is_finite"},
-    "Color": {"inverted", "get_luminance", "to_html"},
-    "Rect2": {"get_center", "has_area"},
-    "Rect2i": {"get_center", "has_area"},
-    "AABB": {"get_center", "has_volume", "has_surface"},
+    "Color": {"inverted", "get_luminance", "to_html", "lerp", "clamp"},
+    "Rect2": {"get_center", "has_area", "intersects", "encloses", "merge", "grow", "grow_side",
+              "grow_individual", "intersection", "expand", "abs", "get_support", "has_point"},
+    "Rect2i": {"get_center", "has_area", "has_point", "intersects", "encloses", "intersection", "merge",
+               "expand", "grow", "grow_side", "grow_individual", "abs"},
+    "AABB": {"get_center", "has_volume", "has_surface", "intersects", "encloses", "merge", "has_point"},
+    "Plane": {"get_center", "is_point_over", "has_point", "project"},
+    "Transform2D": {"translated", "translated_local", "basis_xform", "basis_xform_inv", "inverse"},
+    "Transform3D": {"translated", "translated_local"},
     "RID": {"get_id"},
 }
+
+# Pure methods whose vector arguments the parity row feeds normalized: Godot's debug build
+# rejects a non-normalized normal there (MATH_CHECKS), so only normalized inputs are comparable.
+NORMALIZED_ARGS = {(c, n) for c in ("Vector2", "Vector3") for n in ("slide", "bounce", "reflect")}
 
 # Members with no Kotlin implementation, and why (the coverage gate reads these).
 DEFERRED_METHODS: dict[tuple[str, str], str] = {}
@@ -450,7 +464,213 @@ def interesting_ops(cls_api: dict) -> list[dict]:
 # ----- pure method templates -----------------------------------------------------------------
 
 
+def _vec_dot(comps, a: str, b: str) -> str:
+    """Godot's `dot`: products summed left to right."""
+    return " + ".join(f"{a}{c} * {b}{c}" for c in comps)
+
+
+def pure_extra(cls: str, m: dict) -> str | None:
+    """The task 134 B review's ports (Godot's formulas, operand order kept)."""
+    name = m["name"]
+    vt = VALUE_TYPES.get(cls)
+    if cls in ("Vector2", "Vector3", "Vector4"):
+        c = vt.comps
+        if name == "lerp":
+            return (f"fun lerp(to: {cls}, weight: Double): {cls} {{\n  val w = narrowReal(weight)\n  return "
+                    + componentwise(vt, "realLerp({c}, to.{c}, w)") + "\n}")
+        if name == "posmod":
+            return (f"fun posmod(mod: Double): {cls} {{\n  val m = narrowReal(mod)\n  return "
+                    + componentwise(vt, "godotFposmod({c}, m)") + "\n}")
+        if name == "posmodv":
+            return f"fun posmodv(modv: {cls}): {cls} = " + componentwise(vt, "godotFposmod({c}, modv.{c})")
+        if name == "move_toward":
+            # `vd = to - v; len = vd.length(); len <= delta || len < CMP_EPSILON ? to : v + vd / len * delta`
+            lines = [f"fun moveToward(to: {cls}, delta: Double): {cls} {{", "  val d = narrowReal(delta)"]
+            lines += [f"  val v{i} = to.{x} - {x}" for i, x in enumerate(c)]
+            lines.append("  val len = godotSqrt(" + " + ".join(f"v{i} * v{i}" for i in range(len(c))) + ")")
+            lines.append("  if (len <= d || len < narrowReal(0.00001)) return to")
+            lines.append("  return raw(" + ", ".join(f"{x} + v{i} / len * d" for i, x in enumerate(c)) + ")")
+            lines.append("}")
+            return "\n".join(lines)
+        if name in ("slide", "reflect", "bounce"):
+            dot = _vec_dot(c, "", "n.")
+            if name == "slide":  # `*this - n * dot(n)`
+                body = ", ".join(f"{x} - n.{x} * d" for x in c)
+            elif name == "reflect":  # `2.0f * n * dot(n) - *this`
+                body = ", ".join(f"n.{x} * two * d - {x}" for x in c)
+            else:  # `-reflect(n)`
+                body = ", ".join(f"-(n.{x} * two * d - {x})" for x in c)
+            two = "  val two = narrowReal(2.0)\n" if name != "slide" else ""
+            param = "line" if name == "reflect" else "n"
+            if param != "n":
+                dot = dot.replace("n.", f"{param}.")
+                body = body.replace("n.", f"{param}.")
+            return f"fun {camel(name)}({param}: {cls}): {cls} {{\n  val d = {dot}\n{two}  return raw({body})\n}}"
+        if name == "project":  # `b * (dot(b) / b.length_squared())`
+            return (f"fun project(b: {cls}): {cls} {{\n  val s = ({_vec_dot(c, '', 'b.')}) / ({_vec_dot(c, 'b.', 'b.')})\n"
+                    f"  return " + raw_ctor(vt, [f"b.{x} * s" for x in c]) + "\n}")
+        if name == "limit_length":  # `l = length(); if (l > 0 && len < l) { v /= l; v *= len }`
+            lines = [f"fun limitLength(length: Double = 1.0): {cls} {{", "  val p = narrowReal(length)",
+                     "  val l = godotSqrt(" + _vec_dot(c, "", "") + ")",
+                     "  if (!(l > narrowReal(0.0) && p < l)) return this",
+                     "  return raw(" + ", ".join(f"{x} / l * p" for x in c) + ")", "}"]
+            return "\n".join(lines)
+        if name in ("distance_to", "distance_squared_to") and cls != "Vector4":
+            return None
+    if cls == "Color":
+        if name == "lerp":
+            return ("fun lerp(to: Color, weight: Double): Color {\n  val w = weight.toFloat()\n  return "
+                    + componentwise(vt, "realLerpF({c}, to.{c}, w)") + "\n}")
+        if name == "clamp":
+            return ("fun clamp(min: Color = Color(0.0, 0.0, 0.0, 0.0), max: Color = Color(1.0, 1.0, 1.0, 1.0)): Color = "
+                    + componentwise(vt, "godotClamp({c}, min.{c}, max.{c})"))
+    if cls in ("Rect2", "Rect2i"):
+        integer = cls == "Rect2i"
+        vec = "Vector2i" if integer else "Vector2"
+        X, Y = ("x", "y") if integer else ("rawX", "rawY")
+        mk = (lambda a, b: f"Vector2i({a}, {b})") if integer else (lambda a, b: f"Vector2.raw({a}, {b})")
+        num = "Int" if integer else "Double"
+        if name == "has_point":
+            return (f"fun hasPoint(point: {vec}): Boolean =\n  !(point.{X} < position.{X} || point.{Y} < position.{Y} ||"
+                    f" point.{X} >= position.{X} + size.{X} || point.{Y} >= position.{Y} + size.{Y})")
+        if name == "intersects":
+            strict = (f"position.{X} >= b.position.{X} + b.size.{X} || position.{X} + size.{X} <= b.position.{X} ||"
+                      f" position.{Y} >= b.position.{Y} + b.size.{Y} || position.{Y} + size.{Y} <= b.position.{Y}")
+            if integer:
+                return f"fun intersects(b: Rect2i): Boolean = !({strict})"
+            borders = (f"position.{X} > b.position.{X} + b.size.{X} || position.{X} + size.{X} < b.position.{X} ||"
+                       f" position.{Y} > b.position.{Y} + b.size.{Y} || position.{Y} + size.{Y} < b.position.{Y}")
+            return (f"fun intersects(b: Rect2, includeBorders: Boolean = false): Boolean =\n"
+                    f"  if (includeBorders) !({borders}) else !({strict})")
+        if name == "encloses":
+            return (f"fun encloses(b: {cls}): Boolean =\n  b.position.{X} >= position.{X} && b.position.{Y} >= position.{Y} &&"
+                    f" b.position.{X} + b.size.{X} <= position.{X} + size.{X} && b.position.{Y} + b.size.{Y} <= position.{Y} + size.{Y}")
+        mn = "godotMin"
+        mx = "godotMax"
+        if name == "merge":  # `pos = b.pos.min(pos); size = (b.pos + b.size).max(pos + size) - pos`
+            return "\n".join([
+                f"fun merge(b: {cls}): {cls} {{",
+                f"  val px = {mn}(b.position.{X}, position.{X})",
+                f"  val py = {mn}(b.position.{Y}, position.{Y})",
+                f"  val ex = {mx}(b.position.{X} + b.size.{X}, position.{X} + size.{X})",
+                f"  val ey = {mx}(b.position.{Y} + b.size.{Y}, position.{Y} + size.{Y})",
+                f"  return {cls}({mk('px', 'py')}, {mk('ex - px', 'ey - py')})",
+                "}"])
+        if name == "intersection":
+            empty = "Rect2i(Vector2i(0, 0), Vector2i(0, 0))" if integer else "Rect2(Vector2.ZERO, Vector2.ZERO)"
+            return "\n".join([
+                f"fun intersection(b: {cls}): {cls} {{",
+                f"  if (!b.intersects(this)) return {empty}",
+                f"  val px = {mx}(b.position.{X}, position.{X})",
+                f"  val py = {mx}(b.position.{Y}, position.{Y})",
+                f"  val ex = {mn}(b.position.{X} + b.size.{X}, position.{X} + size.{X})",
+                f"  val ey = {mn}(b.position.{Y} + b.size.{Y}, position.{Y} + size.{Y})",
+                f"  return {cls}({mk('px', 'py')}, {mk('ex - px', 'ey - py')})",
+                "}"])
+        if name == "expand":  # `expand_to`: begin/end widened to the point, size = end - begin
+            return "\n".join([
+                f"fun expand(to: {vec}): {cls} {{",
+                f"  var bx = position.{X}", f"  var by = position.{Y}",
+                f"  var ex = position.{X} + size.{X}", f"  var ey = position.{Y} + size.{Y}",
+                f"  if (to.{X} < bx) bx = to.{X}", f"  if (to.{Y} < by) by = to.{Y}",
+                f"  if (to.{X} > ex) ex = to.{X}", f"  if (to.{Y} > ey) ey = to.{Y}",
+                f"  return {cls}({mk('bx', 'by')}, {mk('ex - bx', 'ey - by')})",
+                "}"])
+        if integer:
+            conv, typ = "amount.toInt()", "Long"
+            two = "2"
+        else:
+            conv, typ = "narrowReal(amount)", "Double"
+            two = "narrowReal(2.0)"
+        if name == "grow":  # position -= a; size += a * 2
+            return (f"fun grow(amount: {typ}): {cls} {{\n  val a = {conv}\n  return {cls}("
+                    f"{mk(f'position.{X} - a', f'position.{Y} - a')}, {mk(f'size.{X} + a * {two}', f'size.{Y} + a * {two}')})\n}}")
+        if name == "grow_individual":
+            cv = (lambda v: f"{v}.toInt()") if integer else (lambda v: f"narrowReal({v})")
+            return "\n".join([
+                f"fun growIndividual(left: {typ}, top: {typ}, right: {typ}, bottom: {typ}): {cls} {{",
+                f"  val l = {cv('left')}", f"  val t = {cv('top')}", f"  val r = {cv('right')}", f"  val b = {cv('bottom')}",
+                f"  return {cls}({mk(f'position.{X} - l', f'position.{Y} - t')}, {mk(f'size.{X} + (l + r)', f'size.{Y} + (t + b)')})",
+                "}"])
+        if name == "grow_side":  # Side: 0 left, 1 top, 2 right, 3 bottom
+            zero = "0L" if integer else "0.0"
+            return (f"fun growSide(side: Long, amount: {typ}): {cls} =\n  growIndividual("
+                    f"if (side == 0L) amount else {zero}, if (side == 1L) amount else {zero}, "
+                    f"if (side == 2L) amount else {zero}, if (side == 3L) amount else {zero})")
+        if name == "abs":  # `Rect2(position + size.minf(0), size.abs())`
+            if integer:
+                return ("fun abs(): Rect2i =\n  Rect2i(Vector2i(position.x + godotMin(size.x, 0), position.y + godotMin(size.y, 0)), "
+                        "Vector2i(godotAbs(size.x), godotAbs(size.y)))")
+            return ("fun abs(): Rect2 {\n  val zero = narrowReal(0.0)\n  return Rect2(Vector2.raw(position.rawX + godotMin(size.rawX, zero), "
+                    "position.rawY + godotMin(size.rawY, zero)), Vector2.raw(godotFabs(size.rawX), godotFabs(size.rawY)))\n}")
+        if name == "get_support":
+            return ("fun getSupport(direction: Vector2): Vector2 {\n  val zero = narrowReal(0.0)\n"
+                    "  return Vector2.raw(if (direction.rawX > zero) position.rawX + size.rawX else position.rawX, "
+                    "if (direction.rawY > zero) position.rawY + size.rawY else position.rawY)\n}")
+    if cls == "AABB":
+        axes = ("rawX", "rawY", "rawZ")
+        if name == "has_point":  # below position, or beyond position + size (`>`, not `>=`)
+            cond = " || ".join(f"point.{a} < position.{a}" for a in axes) + " || " + " || ".join(
+                f"point.{a} > position.{a} + size.{a}" for a in axes)
+            return f"fun hasPoint(point: Vector3): Boolean = !({cond})"
+        if name == "intersects":
+            cond = " || ".join(f"position.{a} >= with.position.{a} + with.size.{a} || position.{a} + size.{a} <= with.position.{a}" for a in axes)
+            return f"fun intersects(with: AABB): Boolean = !({cond})"
+        if name == "encloses":
+            cond = " && ".join(f"position.{a} <= with.position.{a} && position.{a} + size.{a} >= with.position.{a} + with.size.{a}" for a in axes)
+            return f"fun encloses(with: AABB): Boolean = {cond}"
+        if name == "merge":  # merge_with: begin/end, ternary min/max, size = max - min
+            lines = ["fun merge(with: AABB): AABB {"]
+            for a in axes:
+                lines.append(f"  val e1{a[-1]} = size.{a} + position.{a}")
+                lines.append(f"  val e2{a[-1]} = with.size.{a} + with.position.{a}")
+                lines.append(f"  val n{a[-1]} = if (position.{a} < with.position.{a}) position.{a} else with.position.{a}")
+                lines.append(f"  val x{a[-1]} = if (e1{a[-1]} > e2{a[-1]}) e1{a[-1]} else e2{a[-1]}")
+            lines.append("  return AABB(Vector3.raw(nX, nY, nZ), Vector3.raw(xX - nX, xY - nY, xZ - nZ))")
+            lines.append("}")
+            return "\n".join(lines)
+    if cls == "Plane":
+        dot = "normal.rawX * point.rawX + normal.rawY * point.rawY + normal.rawZ * point.rawZ"
+        if name == "get_center":
+            return "fun getCenter(): Vector3 = Vector3.raw(normal.rawX * rawD, normal.rawY * rawD, normal.rawZ * rawD)"
+        if name == "is_point_over":
+            return f"fun isPointOver(point: Vector3): Boolean = {dot} > rawD"
+        if name == "has_point":
+            return (f"fun hasPoint(point: Vector3, tolerance: Double = 1e-05): Boolean =\n"
+                    f"  godotFabs({dot} - rawD) <= narrowReal(tolerance)")
+        if name == "project":  # `p - normal * distance_to(p)`
+            return (f"fun project(point: Vector3): Vector3 {{\n  val d = {dot} - rawD\n"
+                    "  return Vector3.raw(point.rawX - normal.rawX * d, point.rawY - normal.rawY * d, point.rawZ - normal.rawZ * d)\n}")
+    if cls == "Transform2D":
+        if name == "translated":
+            return "fun translated(offset: Vector2): Transform2D = Transform2D(x, y, origin + offset)"
+        if name == "translated_local":  # columns[2] + basis_xform(offset)
+            return "fun translatedLocal(offset: Vector2): Transform2D = Transform2D(x, y, origin + basisXform(offset))"
+        if name == "basis_xform":  # (tdotx(v), tdoty(v))
+            return ("fun basisXform(v: Vector2): Vector2 =\n  Vector2.raw(x.rawX * v.rawX + y.rawX * v.rawY, x.rawY * v.rawX + y.rawY * v.rawY)")
+        if name == "basis_xform_inv":  # (columns[0].dot(v), columns[1].dot(v))
+            return ("fun basisXformInv(v: Vector2): Vector2 =\n  Vector2.raw(x.rawX * v.rawX + x.rawY * v.rawY, y.rawX * v.rawX + y.rawY * v.rawY)")
+        if name == "inverse":  # swap columns[0][1] and columns[1][0]; origin = basis_xform(-origin)
+            return "\n".join([
+                "fun inverse(): Transform2D {",
+                "  val ix = Vector2.raw(x.rawX, y.rawX)",
+                "  val iy = Vector2.raw(x.rawY, y.rawY)",
+                "  val ox = -origin.rawX",
+                "  val oy = -origin.rawY",
+                "  return Transform2D(ix, iy, Vector2.raw(ix.rawX * ox + iy.rawX * oy, ix.rawY * ox + iy.rawY * oy))",
+                "}"])
+    if cls == "Transform3D":
+        if name == "translated":
+            return "fun translated(offset: Vector3): Transform3D = Transform3D(basis, origin + offset)"
+        if name == "translated_local":
+            return "fun translatedLocal(offset: Vector3): Transform3D = Transform3D(basis, origin + basis * offset)"
+    return None
+
+
 def pure_method(cls: str, m: dict) -> str:
+    custom = pure_extra(cls, m)
+    if custom is not None:
+        return custom
     vt = VALUE_TYPES.get(cls)
     name = m["name"]
     kn = kotlin_name(cls, name)
@@ -579,21 +799,23 @@ def axis_index(cls: str, name: str, vt: ValueType) -> str:
 # ----- facade method template ------------------------------------------------------------------
 
 
-def facade_arg(godot_type: str, expr: str) -> str:
+def facade_put(godot_type: str, slot: int, expr: str) -> str:
+    """The frame write of one argument (slot 0 is the base)."""
     if godot_type == "float":
-        return f"argReal({expr})"
+        return f"f.putDouble({slot}, {expr})"
     if godot_type == "int":
-        return f"argLong({expr})"
+        return f"f.putLong({slot}, {expr})"
     if godot_type == "bool":
-        return f"argBool({expr})"
+        return f"f.putBool({slot}, {expr})"
     if godot_type == "String":
-        return f"argString({expr})"
+        return f"f.putString({slot}, {expr})"
     if godot_type in VALUE_TYPES:
-        return f"{expr}.builtinArg()"
+        return f"f.put({slot}, {expr})"
     raise SystemExit(f"[generate_builtin_ops] no facade argument form for {godot_type}")
 
 
 def facade_method(cls: str, m: dict) -> str:
+    """An engine-backed member: values into the thread's BuiltinFrame, one call, the return out."""
     kn = kotlin_name(cls, m["name"])
     static = m.get("is_static", False)
     params = []
@@ -601,28 +823,32 @@ def facade_method(cls: str, m: dict) -> str:
         ktype = kotlin_type(arg["type"])
         default = f" = {kotlin_default(arg['type'], arg['default_value'])}" if "default_value" in arg else ""
         params.append(f"{camel(arg['name'])}: {ktype}{default}")
-    args = [facade_arg(a["type"], camel(a["name"])) for a in m.get("arguments", [])]
-    arglist = f"listOf({', '.join(args)})" if args else "emptyList()"
-    base = "null" if static else "builtinArg()"
-    bind = f"{cls}Methods.{kn}"
     ret = m.get("return_type", "void")
     if ret == "float":
-        rtype, call = "Double", f"builtinDouble({bind}, {base}, {arglist})"
+        rtype, result = "Double", "f.retDouble()"
     elif ret == "int":
-        rtype, call = "Long", f"builtinLong({bind}, {base}, {arglist})"
+        rtype, result = "Long", "f.retLong()"
     elif ret == "bool":
-        rtype, call = "Boolean", f"builtinBool({bind}, {base}, {arglist})"
+        rtype, result = "Boolean", "f.retBool()"
     elif ret == "Variant":
         # Plane.intersect_3 / intersects_* and AABB.intersects_*: a Vector3 or null.
         rtype = "Vector3?"
-        call = f"builtinVariantReals({bind}, {base}, 3, {arglist})?.let {{ c -> Vector3.raw(c[0], c[1], c[2]) }}"
+        result = "if (f.retVariantIsNil()) null else Vector3.raw(f.retVariantReal(0), f.retVariantReal(1), f.retVariantReal(2))"
     elif ret in VALUE_TYPES:
-        vt = VALUE_TYPES[ret]
-        fn = {"real": "builtinReals", "int": "builtinInts", "color": "builtinFloat32s"}[vt.kind]
-        rtype, call = ret, f"builtin{ret}({fn}({bind}, {base}, {vt.count}, {arglist}))"
+        rtype, result = ret, f"f.ret{ret}()"
     else:
         raise SystemExit(f"[generate_builtin_ops] no facade return form for {cls}.{m['name']} -> {ret}")
-    return f"fun {kn}({', '.join(params)}): {rtype} =\n  {call}"
+    lines = [f"fun {kn}({', '.join(params)}): {rtype} {{", "  val f = builtinFrame()"]
+    if not static:
+        lines.append("  f.put(0, this)")
+    args = m.get("arguments", [])
+    for i, arg in enumerate(args, start=1):
+        lines.append("  " + facade_put(arg["type"], i, camel(arg["name"])))
+    call = "callStatic" if static else "call"
+    lines.append(f"  f.{call}({cls}Methods.{kn}, {len(args)})")
+    lines.append(f"  return {result}")
+    lines.append("}")
+    return "\n".join(lines)
 
 
 def facade_supported(m: dict) -> str | None:
@@ -655,6 +881,61 @@ def builtin_class(api: dict, name: str) -> dict:
 def op_key(cls: str, op: dict) -> str:
     right = op.get("right_type", "")
     return f"{op['name']} {cls}" if not right else f"{cls} {op['name']} {right}"
+
+
+# ----- builtin constants (task 134 B review) ----------------------------------------------------
+
+
+def _num(text: str, kind: str) -> str:
+    """One component of a constant's API text as a Kotlin literal of the storage kind."""
+    if text in ("inf", "-inf"):
+        sign = "NEGATIVE" if text.startswith("-") else "POSITIVE"
+        return f"Float.{sign}_INFINITY" if kind == "color" else f"Double.{sign}_INFINITY"
+    if kind == "int":
+        return {"-2147483648": "Int.MIN_VALUE", "2147483647": "Int.MAX_VALUE"}.get(text, text)
+    if kind == "color":
+        return f"{text}f"
+    return text if any(ch in text for ch in ".e") else f"{text}.0"
+
+
+def constant_expr(cls: str, value: str) -> str:
+    """A builtin constant's API text (`Vector2(inf, inf)`, `Color(0.9411765, ...)`) as Kotlin."""
+    match = re.fullmatch(r"(\w+)\((.*)\)", value)
+    if not match or match.group(1) != cls:
+        raise SystemExit(f"[generate_builtin_ops] cannot read constant {cls} = {value}")
+    args = [a.strip() for a in match.group(2).split(",")]
+    if cls == "Color":
+        # Godot prints the float32 channels in their shortest round-trip form: exact as Float.
+        return "raw(" + ", ".join(_num(a, "color") for a in args) + ")"
+    if cls in ("Vector2i", "Vector3i", "Vector4i"):
+        return f"{cls}(" + ", ".join(_num(a, "int") for a in args) + ")"
+    r = [_num(a, "real") for a in args]
+    if cls in ("Vector2", "Vector3", "Vector4", "Quaternion"):
+        return f"{cls}(" + ", ".join(r) + ")"
+    if cls == "Plane":
+        return f"Plane(Vector3({r[0]}, {r[1]}, {r[2]}), {r[3]})"
+    if cls == "Basis":  # rows -> columns
+        return f"Basis(Vector3({r[0]}, {r[3]}, {r[6]}), Vector3({r[1]}, {r[4]}, {r[7]}), Vector3({r[2]}, {r[5]}, {r[8]}))"
+    if cls == "Transform3D":
+        return (f"Transform3D(Basis(Vector3({r[0]}, {r[3]}, {r[6]}), Vector3({r[1]}, {r[4]}, {r[7]}), "
+                f"Vector3({r[2]}, {r[5]}, {r[8]})), Vector3({r[9]}, {r[10]}, {r[11]}))")
+    if cls == "Transform2D":
+        return f"Transform2D(Vector2({r[0]}, {r[1]}), Vector2({r[2]}, {r[3]}), Vector2({r[4]}, {r[5]}))"
+    raise SystemExit(f"[generate_builtin_ops] no constant form for {cls}")
+
+
+VAL_RE = re.compile(r"^\s*(?:@JvmField\s+)?val\s+([A-Z][A-Z0-9_]*)\b", re.M)
+
+
+def constant_sources(api: dict, cls: str, body: str) -> list[str]:
+    """`val NAME = ...` for each API constant of [cls] its hand-written body lacks."""
+    have = set(VAL_RE.findall(strip_regions(body)))
+    out = []
+    for const in builtin_class(api, cls).get("constants", []):
+        if const["name"] in have:
+            continue
+        out.append(f"val {const['name']}: {cls} = {constant_expr(cls, const['value'])}")
+    return out
 
 
 def build_members(api: dict, hand_bodies: dict[str, str]) -> list[Member]:
@@ -703,15 +984,14 @@ def build_members(api: dict, hand_bodies: dict[str, str]) -> list[Member]:
 
 # The Web value types (web-runtime) share the stored-component layout for these classes; only
 # component-wise members (no Basis/Transform formulas, no facade) are emitted there.
+# The Web value types (web-runtime) get every pure method of the classes they have (same stored
+# components, same shared helpers); they have no builtin-call path yet, so the facade methods wait
+# for parcel D. Nothing is excluded today; an entry here would need a reason.
+WEB_METHOD_EXCLUDED: dict[tuple[str, str], str] = {}
 WEB_METHOD_OK = {
-    "Vector2": {"abs", "floor", "ceil", "round", "sign", "min", "max", "minf", "maxf", "clampf", "is_finite",
-                "direction_to", "cross", "orthogonal", "aspect", "max_axis_index", "min_axis_index"},
-    "Vector3": {"abs", "floor", "ceil", "round", "sign", "min", "max", "minf", "maxf", "clampf", "is_finite",
-                "direction_to", "inverse", "min_axis_index", "clamp"},
-    "Vector2i": set(_INT_PURE) | {"aspect"},
-    "Vector3i": set(_INT_PURE),
-    "Quaternion": {"is_finite"},
-    "Color": {"inverted", "get_luminance", "to_html"},
+    cls: {n for n in names if (cls, n) not in WEB_METHOD_EXCLUDED}
+    for cls, names in PURE_METHODS.items()
+    if cls in VALUE_TYPES and VALUE_TYPES[cls].web
 }
 
 
@@ -802,70 +1082,29 @@ def render_marshalling(api: dict, members: list[Member]) -> str:
         f"// GENERATED by {GENERATOR} from extension_api.json — do not edit.",
         "package net.multigesture.kanama.types",
         "",
-        "import net.multigesture.kanama.binding.runtime.BArg",
-        "import net.multigesture.kanama.binding.runtime.BuiltinCalls",
-        "import net.multigesture.kanama.binding.runtime.PT_AABB",
-        "import net.multigesture.kanama.binding.runtime.PT_BASIS",
-        "import net.multigesture.kanama.binding.runtime.PT_PLANE",
-        "import net.multigesture.kanama.binding.runtime.PT_PROJECTION",
-        "import net.multigesture.kanama.binding.runtime.PT_QUATERNION",
-        "import net.multigesture.kanama.binding.runtime.PT_RECT2",
-        "import net.multigesture.kanama.binding.runtime.PT_TRANSFORM2D",
-        "import net.multigesture.kanama.binding.runtime.PT_TRANSFORM3D",
-        "import net.multigesture.kanama.binding.runtime.PT_VECTOR2",
-        "import net.multigesture.kanama.binding.runtime.PT_VECTOR3",
-        "import net.multigesture.kanama.binding.runtime.PT_VECTOR4",
+        "import kotlin.jvm.JvmField",
+        "import net.multigesture.kanama.binding.runtime.BuiltinFrame",
+        "import net.multigesture.kanama.binding.runtime.BuiltinMethod",
         "",
-        "// The value types' facade glue (task 134 B): each type's Godot memory layout as a builtin-call",
-        "// argument and back, the resolved method pointers (one lazy per method), and short names for",
-        "// the BuiltinCalls entry points the generated members call.",
+        "// The value types' facade glue (task 134 B): each type's Godot memory layout written into a",
+        "// BuiltinFrame slot and read back from the return slot, and one BuiltinMethod constant per",
+        "// engine-backed method (resolved on its first call). Nothing here allocates per call.",
         "",
-        "internal fun argReal(value: Double): BArg = BArg.Real(value)",
-        "",
-        "internal fun argLong(value: Long): BArg = BArg.Int64(value)",
-        "",
-        "internal fun argBool(value: Boolean): BArg = BArg.Bool(value)",
-        "",
-        "internal fun argString(value: String): BArg = BArg.Str(value)",
-        "",
-        "internal fun builtinReals(method: Long, base: BArg?, count: Int, args: List<BArg>): GodotRealArray =",
-        "  BuiltinCalls.invokeReals(method, base, count, args)",
-        "",
-        "internal fun builtinInts(method: Long, base: BArg?, count: Int, args: List<BArg>): IntArray =",
-        "  BuiltinCalls.invokeInts(method, base, count, args)",
-        "",
-        "internal fun builtinFloat32s(method: Long, base: BArg?, count: Int, args: List<BArg>): FloatArray =",
-        "  BuiltinCalls.invokeFloat32s(method, base, count, args)",
-        "",
-        "internal fun builtinDouble(method: Long, base: BArg?, args: List<BArg>): Double =",
-        "  BuiltinCalls.invokeDouble(method, base, args)",
-        "",
-        "internal fun builtinLong(method: Long, base: BArg?, args: List<BArg>): Long =",
-        "  BuiltinCalls.invokeLong(method, base, args)",
-        "",
-        "internal fun builtinBool(method: Long, base: BArg?, args: List<BArg>): Boolean =",
-        "  BuiltinCalls.invokeBool(method, base, args)",
-        "",
-        "internal fun builtinVariantReals(method: Long, base: BArg?, count: Int, args: List<BArg>): GodotRealArray? =",
-        "  BuiltinCalls.invokeVariantReals(method, base, count, args)",
+        "/** The calling thread's builtin-call frame (see `BuiltinFrame.expect.kt`). */",
+        "@Suppress(\"NOTHING_TO_INLINE\")",
+        "internal inline fun builtinFrame(): BuiltinFrame = net.multigesture.kanama.binding.runtime.builtinFrame()",
         "",
     ]
+    getter = {"real": "retReal", "int": "retInt32", "color": "retFloat32"}
+    putter = {"real": "putReal", "int": "putInt32", "color": "putFloat32"}
     for name, vt in VALUE_TYPES.items():
-        values = ", ".join(e.replace("v.", "") for e in vt.pack)
-        if vt.kind == "real":
-            assigns = "; ".join(f"it[{i}] = {e.replace('v.', '')}" for i, e in enumerate(vt.pack))
-            out.append(f"internal fun {name}.builtinArg(): BArg =")
-            out.append(f"  BArg.Floats({vt.tag}, GodotRealArray({vt.count}).also {{ {assigns} }})")
-            out.append("")
-            out.append(f"internal fun builtin{name}(c: GodotRealArray): {name} = {vt.unpack}")
-        elif vt.kind == "int":
-            out.append(f"internal fun {name}.builtinArg(): BArg = BArg.Ints(intArrayOf({values}))")
-            out.append("")
-            out.append(f"internal fun builtin{name}(c: IntArray): {name} = {vt.unpack}")
-        else:
-            out.append(f"internal fun {name}.builtinArg(): BArg = BArg.Float32s(floatArrayOf({values}))")
-            out.append("")
-            out.append(f"internal fun builtin{name}(c: FloatArray): {name} = {vt.unpack}")
+        out.append(f"internal fun BuiltinFrame.put(slot: Int, v: {name}) {{")
+        for i, expr in enumerate(vt.pack):
+            out.append(f"  {putter[vt.kind]}(slot, {i}, {expr})")
+        out.append("}")
+        out.append("")
+        unpack = re.sub(r"c\[(\d+)\]", lambda mm: f"{getter[vt.kind]}({mm.group(1)})", vt.unpack)
+        out.append(f"internal fun BuiltinFrame.ret{name}(): {name} = {unpack}")
         out.append("")
     by_class: dict[str, list[Member]] = {}
     for member in members:
@@ -873,12 +1112,12 @@ def render_marshalling(api: dict, members: list[Member]) -> str:
             by_class.setdefault(member.cls, []).append(member)
     for cls, facade in by_class.items():
         vid = variant_ids[cls.upper()]
-        out.append(f"/** {cls}'s builtin method pointers, resolved on first use. */")
+        out.append(f"/** {cls}'s engine-backed builtin methods. */")
         out.append(f"internal object {cls}Methods {{")
         for member in facade:
             m = member.godot
             kn = kotlin_name(cls, m["name"])
-            out.append(f"  val {kn}: Long by lazy {{ BuiltinCalls.getBuiltinMethod({vid}, \"{m['name']}\", {m['hash']}L) }}")
+            out.append(f"  @JvmField val {kn} = BuiltinMethod({vid}, \"{m['name']}\", {m['hash']}L)")
             out.append("")
         if out[-1] == "":
             out.pop()
@@ -987,13 +1226,15 @@ def gd_input(godot_type: str, expr: str) -> str:
     return to_gd(expr)
 
 
-def call_args(m: dict, table: dict, nonzero: bool = False) -> list[tuple[str, str, str]]:
+def call_args(m: dict, table: dict, normalized: bool = False) -> list[tuple[str, str, str]]:
     out = []
     for arg in m.get("arguments", []):
         t = arg["type"]
         expr = table[t]
         if t == "int" and table is INPUT_KT:
-            expr = "ri()"
+            expr = "rs()" if arg["name"] == "side" else "ri()"
+        if normalized and t in ("Vector2", "Vector3"):
+            expr += ".normalized()"
         out.append((t, expr + (".toLong()" if t == "int" else ""), gd_input(t, expr)))
     return out
 
@@ -1054,7 +1295,7 @@ def parity_entries(members: list[Member]) -> tuple[list[tuple[str, list[str], li
         kn = kotlin_name(cls, m["name"])
         is_facade = member.impl in ("facade",) or (member.impl == "hand" and member_calls_engine(member))
         table = FACADE_INPUT_KT if is_facade else INPUT_KT
-        args = call_args(m, table)
+        args = call_args(m, table, normalized=(cls, m["name"]) in NORMALIZED_ARGS)
         kt = []
         gd = []
         for i, (t, k, g) in enumerate(args):
@@ -1238,7 +1479,7 @@ def parse_gdscript_pure(log: str) -> dict[str, str]:
     return dict(item.rsplit("=", 1) for item in match.group(1).split())
 
 
-ENGINE_CALL_RE = re.compile(r"\bBuiltinCalls\.|\bbuiltin(?:Reals|Ints|Float32s|Double|Long|Bool|VariantReals)\s*\(|\bcallVector3RealRetVector3\s*\(")
+ENGINE_CALL_RE = re.compile(r"\bbuiltinFrame\s*\(")
 HAND_BODIES: dict[str, str] = {}
 
 
@@ -1255,6 +1496,49 @@ def member_calls_engine(member: Member) -> bool:
         return True
     # One level of private helper (e.g. `fromGodotRealArray(BuiltinCalls...)` lives in the body).
     return False
+
+
+EDGE_INPUTS = 64
+
+
+def edge_excluded(key: str) -> str | None:
+    """Why a pure entry is left out of the edge row (±0, NaN, ±INF, .5 ties, 1e-30), or None."""
+    if re.search(r" (<|<=|>|>=) ", key):
+        return "a NaN component: Godot answers false to all four comparisons, one compareTo cannot"
+    meta = ENTRY_META.get(key)
+    if meta and (meta[0], key.split(".", 1)[-1]) in NORMALIZED_ARGS:
+        return "a non-finite normal: Godot's debug build returns Vector2()/Vector3() (MATH_CHECKS)"
+    if re.fullmatch(r"Vector[234]i / float", key):
+        return "a zero divisor: GDScript reports a division-by-zero error, the C++ operator (and Kotlin) give ±INF/NaN"
+    if key in ("Quaternion * Vector3", "Vector3 * Quaternion"):
+        return "a non-finite quaternion: Godot's debug build returns the vector unchanged (MATH_CHECKS)"
+    return None
+
+
+def edge_indices(pure) -> list[int]:
+    return [i for i, (key, _, _) in enumerate(pure) if edge_excluded(key) is None]
+
+
+CONST_ENTRIES: list[tuple[str, str, str]] = []  # (key, kotlin expression, gdscript expression)
+
+
+def constant_entries(api: dict, sources: dict[str, str]) -> list[tuple[str, str, str]]:
+    """Every builtin constant and enum value of the owned classes, for the parity `const=` row."""
+    out = []
+    for cls in VALUE_TYPES:
+        cls_api = builtin_class(api, cls)
+        for const in cls_api.get("constants", []):
+            out.append((f"{cls}.{const['name']}", f"{cls}.{const['name']}", f"{cls}.{const['name']}"))
+        for enum in cls_api.get("enums", []):
+            region = re.search(rf"value class {enum['name']}\b.*?\n  }}", sources[cls], re.S)
+            names = dict(re.findall(rf"val (\w+): {enum['name']}\s+get\(\) = {enum['name']}\((-?\d+)L\)", region.group(0) if region else ""))
+            by_value = {v: k for k, v in names.items()}
+            for value in enum["values"]:
+                kname = by_value.get(str(value["value"]))
+                if kname is None:
+                    raise SystemExit(f"[generate_builtin_ops] {cls}.{enum['name']} has no Kotlin value {value['value']}")
+                out.append((f"{cls}.{value['name']}", f"{cls}.{enum['name']}.{kname}.value", f"{cls}.{value['name']}"))
+    return out
 
 
 def render_parity_kt(pure, facade) -> str:
@@ -1296,13 +1580,29 @@ def render_parity_kt(pure, facade) -> str:
         f"    repeat({PARITY_INPUTS}) {{ pureRound() }}",
         f"    report(\"pure=n={PARITY_INPUTS} \" + summary())",
         "    hashes.clear()",
+        "    edge = true",
+        f"    repeat({EDGE_INPUTS}) {{ edgeRound() }}",
+        "    edge = false",
+        f"    report(\"edge=n={EDGE_INPUTS} \" + summary())",
+        "    hashes.clear()",
         f"    repeat({FACADE_INPUTS}) {{ facadeRound() }}",
         f"    report(\"facade=n={FACADE_INPUTS} \" + summary())",
+        "    hashes.clear()",
+        "    constants()",
+        "    report(\"const=n=1 \" + summary())",
+        "  }",
+        "",
+        "  private fun constants() {",
+        *[f'    mix("{k}", {kt})' for k, kt, _ in CONST_ENTRIES],
         "  }",
         "",
         "  private fun pureRound() {",
     ]
     out.extend(f"    pure{i}()" for i in range(len(pure)))
+    out.append("  }")
+    out.append("")
+    out.append("  private fun edgeRound() {")
+    out.extend(f"    pure{i}()" for i in edge_indices(pure))
     out.append("  }")
     out.append("")
     out.append("  private fun facadeRound() {")
@@ -1322,8 +1622,12 @@ def render_parity_kt(pure, facade) -> str:
             "    return seed",
             "  }",
             "",
+            "  // The edge row draws its decimals from EDGE: ±0, NaN, ±INF, .5 ties, a tiny normal.",
+            "  private var edge = false",
+            "",
             "  private fun nv(): Double {",
             "    val r = nextRandom()",
+            "    if (edge) return EDGE[(r % EDGE.size).toInt()]",
             "    return ((r % 200001) - 100000) / 10000.0 * SCALES[((r ushr 24) % 7).toInt()]",
             "  }",
             "",
@@ -1390,6 +1694,8 @@ def render_parity_kt(pure, facade) -> str:
             "",
             "  private companion object {",
             "    val SCALES = doubleArrayOf(0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)",
+            "    val EDGE =",
+            "      doubleArrayOf(0.0, -0.0, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)",
             "  }",
             "}",
         ]
@@ -1408,6 +1714,12 @@ def render_parity_gd(pure, facade) -> str:
         "var seed := 2463534242",
         "var hashes := {}",
         "var hash_order := []",
+        "# The edge row's decimals: ±0 (-0.0 built from bytes: GDScript merges the 0.0 and -0.0",
+        "# literals), NaN, ±INF, .5 ties, a tiny normal.",
+        "var edge := false",
+        "var edge_values := [PackedByteArray([0, 0, 0, 0, 0, 0, 0, 0]).decode_double(0),",
+        "\tPackedByteArray([0, 0, 0, 0, 0, 0, 0, 0x80]).decode_double(0), NAN, INF, -INF, 0.5, -0.5, 1.5, 2.5, -2.5,",
+        "\t1e-30, 3.0]",
         "",
         "",
         "func _ready() -> void:",
@@ -1416,9 +1728,24 @@ def render_parity_gd(pure, facade) -> str:
         f"\treport(\"pure=n={PARITY_INPUTS} \" + summary())",
         "\thashes.clear()",
         "\thash_order.clear()",
+        "\tedge = true",
+        f"\tfor i in {EDGE_INPUTS}:",
+        "\t\tedge_round()",
+        "\tedge = false",
+        f"\treport(\"edge=n={EDGE_INPUTS} \" + summary())",
+        "\thashes.clear()",
+        "\thash_order.clear()",
         f"\tfor i in {FACADE_INPUTS}:",
         "\t\tfacade_round()",
         f"\treport(\"facade=n={FACADE_INPUTS} \" + summary())",
+        "\thashes.clear()",
+        "\thash_order.clear()",
+        "\tconstants()",
+        "\treport(\"const=n=1 \" + summary())",
+        "",
+        "",
+        "func constants() -> void:",
+        *[f'\tmix("{k}", {g})' for k, _, g in CONST_ENTRIES],
         "",
         "",
         "func pure_round() -> void:",
@@ -1426,6 +1753,10 @@ def render_parity_gd(pure, facade) -> str:
     out.extend(f"\tpure{i}()" for i in range(len(pure)))
     if not pure:
         out.append("\tpass")
+    out.append("")
+    out.append("")
+    out.append("func edge_round() -> void:")
+    out.extend(f"\tpure{i}()" for i in edge_indices(pure))
     out.append("")
     out.append("")
     out.append("func facade_round() -> void:")
@@ -1451,6 +1782,8 @@ def render_parity_gd(pure, facade) -> str:
             "",
             "func nv() -> float:",
             "\tvar r := next_random()",
+            "\tif edge:",
+            "\t\treturn edge_values[r % edge_values.size()]",
             "\treturn ((r % 200001) - 100000) / 10000.0 * SCALES[(r >> 24) % 7]",
             "",
             "",
@@ -1561,6 +1894,15 @@ def class_file(cls: str) -> Path:
     return TYPES_DIR / f"{cls}.kt"
 
 
+def native_enum_region(source: str, cls: str) -> str:
+    """The body of the native class's GENERATED ENUMS region (the Web class gets the same enums)."""
+    match = re.search(rf"// ===== BEGIN GENERATED ENUMS: {cls} [^\n]*\n(.*?)\n\s*// ===== END GENERATED ENUMS: {cls} =====", source, re.S)
+    if not match:
+        return ""
+    text = "\n".join(line[2:] if line.startswith("  ") else line for line in match.group(1).splitlines())
+    return text.strip("\n").replace("@JvmInline", "@kotlin.jvm.JvmInline")
+
+
 def regenerate(api: dict) -> dict[Path, str]:
     """Every output path -> its regenerated content."""
     outputs: dict[Path, str] = {}
@@ -1572,7 +1914,8 @@ def regenerate(api: dict) -> dict[Path, str]:
     for cls in OWNED_CLASSES:
         source = sources[cls]
         instance = [m.code for m in members if m.cls == cls and m.code and not m.static]
-        statics = [m.code for m in members if m.cls == cls and m.code and m.static]
+        statics = constant_sources(api, cls, hand_bodies[cls]) if cls in VALUE_TYPES else []
+        statics += [m.code for m in members if m.cls == cls and m.code and m.static]
         if instance:
             region = render_region(cls, instance, BEGIN, END, "  ")
             source = splice(source, cls, region, BEGIN, END, class_companion_anchor(cls, False))
@@ -1599,12 +1942,21 @@ def regenerate(api: dict) -> dict[Path, str]:
             if fn_match and not fn_match.group(2) and has_member(web_hand, fn_match.group(1)):
                 continue
             codes.append(m.web)
+        # Godot's enums of the class, as the native class carries them (generate_api_wrapper.py).
+        enum = native_enum_region(sources[cls], cls)
+        if enum:
+            codes.insert(0, enum)
         if codes:
             region = render_region(cls, codes, BEGIN, END, "  ")
             web_source = splice(web_source, cls, region, BEGIN, END, class_companion_anchor(cls, True))
+        consts = constant_sources(api, cls, class_body(web_source, cls))
+        if consts:
+            region = render_region(cls, consts, SBEGIN, SEND, "    ")
+            web_source = splice(web_source, cls, region, SBEGIN, SEND, companion_open_anchor(cls))
     outputs[WEB_TYPES] = web_source
     outputs[WEB_SCALAR_OPS] = render_scalar_ops(api, web=True)
     pure, facade = parity_entries(members)
+    CONST_ENTRIES[:] = constant_entries(api, {cls: outputs[class_file(cls)] for cls in VALUE_TYPES})
     outputs[PARITY_KT] = render_parity_kt(pure, facade)
     outputs[PARITY_GD] = render_parity_gd(pure, facade)
     outputs[WEB_TEST] = render_web_test(pure, web_source)
@@ -1683,7 +2035,11 @@ def main() -> int:
             print(f"[generate_builtin_ops] FAIL: {len(stale)} file(s) differ from a fresh generation:", file=sys.stderr)
             for path in stale:
                 print(f"    {path.relative_to(ROOT)}", file=sys.stderr)
-            print("    fix: python3 scripts/generate_builtin_ops.py --write && ./gradlew ktfmtFormat", file=sys.stderr)
+            print(
+                "    fix: python3 scripts/generate_builtin_ops.py --write && ./gradlew ktfmtFormat && "
+                'python3 scripts/sync_kdoc_from_godot_docs.py --godot-docs "$GODOT_DOCS" --scope types --write',
+                file=sys.stderr,
+            )
             return 1
         print(f"[generate_builtin_ops] PASS: {len(outputs)} outputs current")
         return 0

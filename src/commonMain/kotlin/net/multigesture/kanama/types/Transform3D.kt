@@ -1,14 +1,5 @@
 package net.multigesture.kanama.types
 
-import net.multigesture.kanama.binding.runtime.BArg
-import net.multigesture.kanama.binding.runtime.BuiltinCalls
-import net.multigesture.kanama.binding.runtime.PT_TRANSFORM3D
-import net.multigesture.kanama.binding.runtime.PT_VECTOR3
-import net.multigesture.kanama.binding.runtime.VT_TRANSFORM3D
-
-private const val LOOKING_AT_HASH = 90889270L
-private const val INTERPOLATE_WITH_HASH = 1786453358L
-private const val NO_ARG_SELF_HASH = 3816817146L
 private const val VECTOR3_ARG_SELF_HASH = 1405596198L
 
 // One body for every backend (task 104 step 2): every method here is computed by the engine through
@@ -61,137 +52,9 @@ data class Transform3D(
 
   operator fun times(vector: Vector3): Vector3 = basis * vector + origin
 
-  /**
-   * Returns the inverted version of this transform
-   * (https://en.wikipedia.org/wiki/Invertible_matrix). See also `Basis.inverse`. Note: For this
-   * method to return correctly, the transform's `basis` needs to be orthonormal (see
-   * `orthonormalized`). That means the basis should only represent a rotation. If it does not, use
-   * `affine_inverse` instead.
-   *
-   * Generated from Godot docs: Transform3D.inverse
-   */
-  fun inverse(): Transform3D =
-    fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(inverseBind, toGodotRealArray()))
-
-  /**
-   * Returns the inverted version of this transform. Unlike `inverse`, this method works with almost
-   * any `basis`, including non-uniform ones, but is slower. See also `Basis.inverse`. Note: For
-   * this method to return correctly, the transform's `basis` needs to have a determinant that is
-   * not exactly `0.0` (see `Basis.determinant`).
-   *
-   * Generated from Godot docs: Transform3D.affine_inverse
-   */
-  fun affineInverse(): Transform3D =
-    fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(affineInverseBind, toGodotRealArray()))
-
-  /**
-   * Returns a copy of this transform with its `basis` orthonormalized. An orthonormal basis is both
-   * orthogonal (the axes are perpendicular to each other) and normalized (the axes have a length of
-   * `1.0`), which also means it can only represent a rotation. See also `Basis.orthonormalized`.
-   *
-   * Generated from Godot docs: Transform3D.orthonormalized
-   */
-  fun orthonormalized(): Transform3D =
-    fromGodotRealArray(BuiltinCalls.callNoArgsFloat32(orthonormalizedBind, toGodotRealArray()))
-
-  /**
-   * Returns the result of the linear interpolation between this transform and `xform` by the given
-   * `weight`. The `weight` should be between `0.0` and `1.0` (inclusive). Values outside this range
-   * are allowed and can be used to perform extrapolation instead.
-   *
-   * Generated from Godot docs: Transform3D.interpolate_with
-   */
-  fun interpolateWith(to: Transform3D, weight: Double): Transform3D =
-    fromGodotRealArray(
-      BuiltinCalls.call(
-        interpolateWithBind,
-        toGodotRealArray(),
-        12,
-        listOf(BArg.Floats(PT_TRANSFORM3D, to.toGodotRealArray()), BArg.Real(weight)),
-      )
-    )
-
-  /**
-   * Returns a copy of this transform rotated so that the forward axis (-Z) points towards the
-   * `target` position. The up axis (+Y) points as close to the `up` vector as possible while
-   * staying perpendicular to the forward axis. The resulting transform is orthonormalized. The
-   * existing rotation, scale, and skew information from the original transform is discarded. The
-   * `target` and `up` vectors cannot be zero, cannot be parallel to each other, and are defined in
-   * global/parent space. If `use_model_front` is `true`, the +Z axis (asset front) is treated as
-   * forward (implies +X is left) and points toward the `target` position. By default, the -Z axis
-   * (camera forward) is treated as forward (implies +X is right).
-   *
-   * Generated from Godot docs: Transform3D.looking_at
-   */
-  fun lookingAt(
-    target: Vector3,
-    up: Vector3 = Vector3.UP,
-    useModelFront: Boolean = false,
-  ): Transform3D =
-    fromGodotRealArray(
-      BuiltinCalls.call(
-        lookingAtBind,
-        toGodotRealArray(),
-        12,
-        listOf(
-          BArg.Floats(PT_VECTOR3, vector3Array(target)),
-          BArg.Floats(PT_VECTOR3, vector3Array(up)),
-          BArg.Bool(useModelFront),
-        ),
-      )
-    )
-
-  /**
-   * Returns a copy of this transform scaled by the given `scale` factor. This method is an
-   * optimized version of multiplying the given transform `X` with a corresponding scaling transform
-   * `S` from the right, i.e., `X * S`. This can be seen as transforming with respect to the local
-   * frame.
-   *
-   * Generated from Godot docs: Transform3D.scaled_local
-   */
-  fun scaledLocal(scale: Vector3): Transform3D = callVector3RetSelf(scaledLocalBind, scale)
-
-  /**
-   * Returns a copy of this transform translated by the given `offset`. This method is an optimized
-   * version of multiplying the given transform `X` with a corresponding translation transform `T`
-   * from the left, i.e., `T * X`. This can be seen as transforming with respect to the
-   * global/parent frame.
-   *
-   * Generated from Godot docs: Transform3D.translated
-   */
-  fun translated(offset: Vector3): Transform3D = callVector3RetSelf(translatedBind, offset)
-
   fun withBasis(value: Basis): Transform3D = copy(basis = value)
 
   fun withOrigin(value: Vector3): Transform3D = copy(origin = value)
-
-  // The (Vector3) -> Self shape that scaled_local and translated share.
-  private fun callVector3RetSelf(methodPtr: Long, vector: Vector3): Transform3D =
-    fromGodotRealArray(
-      BuiltinCalls.call(
-        methodPtr,
-        toGodotRealArray(),
-        12,
-        listOf(BArg.Floats(PT_VECTOR3, vector3Array(vector))),
-      )
-    )
-
-  // Column-major real_t values, matching the ObjectCalls Transform3D ptrcall layout.
-  private fun toGodotRealArray(): GodotRealArray =
-    GodotRealArray(12).also {
-      it[0] = basis.x.rawX
-      it[1] = basis.y.rawX
-      it[2] = basis.z.rawX
-      it[3] = basis.x.rawY
-      it[4] = basis.y.rawY
-      it[5] = basis.z.rawY
-      it[6] = basis.x.rawZ
-      it[7] = basis.y.rawZ
-      it[8] = basis.z.rawZ
-      it[9] = origin.rawX
-      it[10] = origin.rawY
-      it[11] = origin.rawZ
-    }
 
   // ===== BEGIN GENERATED BUILTIN MEMBERS: Transform3D (generate_builtin_ops.py) =====
   operator fun times(scalar: Int): Transform3D = times(scalar.toDouble())
@@ -221,6 +84,51 @@ data class Transform3D(
   operator fun times(other: List<Vector3>): List<Vector3> = other.map { transform3DXform(this, it) }
 
   /**
+   * Returns the inverted version of this transform
+   * (https://en.wikipedia.org/wiki/Invertible_matrix). See also `Basis.inverse`. Note: For this
+   * method to return correctly, the transform's `basis` needs to be orthonormal (see
+   * `orthonormalized`). That means the basis should only represent a rotation. If it does not, use
+   * `affine_inverse` instead.
+   *
+   * Generated from Godot docs: Transform3D.inverse
+   */
+  fun inverse(): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform3DMethods.inverse, 0)
+    return f.retTransform3D()
+  }
+
+  /**
+   * Returns the inverted version of this transform. Unlike `inverse`, this method works with almost
+   * any `basis`, including non-uniform ones, but is slower. See also `Basis.inverse`. Note: For
+   * this method to return correctly, the transform's `basis` needs to have a determinant that is
+   * not exactly `0.0` (see `Basis.determinant`).
+   *
+   * Generated from Godot docs: Transform3D.affine_inverse
+   */
+  fun affineInverse(): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform3DMethods.affineInverse, 0)
+    return f.retTransform3D()
+  }
+
+  /**
+   * Returns a copy of this transform with its `basis` orthonormalized. An orthonormal basis is both
+   * orthogonal (the axes are perpendicular to each other) and normalized (the axes have a length of
+   * `1.0`), which also means it can only represent a rotation. See also `Basis.orthonormalized`.
+   *
+   * Generated from Godot docs: Transform3D.orthonormalized
+   */
+  fun orthonormalized(): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform3DMethods.orthonormalized, 0)
+    return f.retTransform3D()
+  }
+
+  /**
    * Returns a copy of this transform rotated around the given `axis` by the given `angle` (in
    * radians). The `axis` must be a normalized vector (see `Vector3.normalized`). If `angle` is
    * positive, the basis is rotated counter-clockwise around the axis. This method is an optimized
@@ -230,15 +138,14 @@ data class Transform3D(
    *
    * Generated from Godot docs: Transform3D.rotated
    */
-  fun rotated(axis: Vector3, angle: Double): Transform3D =
-    builtinTransform3D(
-      builtinReals(
-        Transform3DMethods.rotated,
-        builtinArg(),
-        12,
-        listOf(axis.builtinArg(), argReal(angle)),
-      )
-    )
+  fun rotated(axis: Vector3, angle: Double): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, axis)
+    f.putDouble(2, angle)
+    f.call(Transform3DMethods.rotated, 2)
+    return f.retTransform3D()
+  }
 
   /**
    * Returns a copy of this transform rotated around the given `axis` by the given `angle` (in
@@ -250,15 +157,14 @@ data class Transform3D(
    *
    * Generated from Godot docs: Transform3D.rotated_local
    */
-  fun rotatedLocal(axis: Vector3, angle: Double): Transform3D =
-    builtinTransform3D(
-      builtinReals(
-        Transform3DMethods.rotatedLocal,
-        builtinArg(),
-        12,
-        listOf(axis.builtinArg(), argReal(angle)),
-      )
-    )
+  fun rotatedLocal(axis: Vector3, angle: Double): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, axis)
+    f.putDouble(2, angle)
+    f.call(Transform3DMethods.rotatedLocal, 2)
+    return f.retTransform3D()
+  }
 
   /**
    * Returns a copy of this transform scaled by the given `scale` factor. This method is an
@@ -268,10 +174,39 @@ data class Transform3D(
    *
    * Generated from Godot docs: Transform3D.scaled
    */
-  fun scaled(scale: Vector3): Transform3D =
-    builtinTransform3D(
-      builtinReals(Transform3DMethods.scaled, builtinArg(), 12, listOf(scale.builtinArg()))
-    )
+  fun scaled(scale: Vector3): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, scale)
+    f.call(Transform3DMethods.scaled, 1)
+    return f.retTransform3D()
+  }
+
+  /**
+   * Returns a copy of this transform scaled by the given `scale` factor. This method is an
+   * optimized version of multiplying the given transform `X` with a corresponding scaling transform
+   * `S` from the right, i.e., `X * S`. This can be seen as transforming with respect to the local
+   * frame.
+   *
+   * Generated from Godot docs: Transform3D.scaled_local
+   */
+  fun scaledLocal(scale: Vector3): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, scale)
+    f.call(Transform3DMethods.scaledLocal, 1)
+    return f.retTransform3D()
+  }
+
+  /**
+   * Returns a copy of this transform translated by the given `offset`. This method is an optimized
+   * version of multiplying the given transform `X` with a corresponding translation transform `T`
+   * from the left, i.e., `T * X`. This can be seen as transforming with respect to the
+   * global/parent frame.
+   *
+   * Generated from Godot docs: Transform3D.translated
+   */
+  fun translated(offset: Vector3): Transform3D = Transform3D(basis, origin + offset)
 
   /**
    * Returns a copy of this transform translated by the given `offset`. This method is an optimized
@@ -281,15 +216,49 @@ data class Transform3D(
    *
    * Generated from Godot docs: Transform3D.translated_local
    */
-  fun translatedLocal(offset: Vector3): Transform3D =
-    builtinTransform3D(
-      builtinReals(
-        Transform3DMethods.translatedLocal,
-        builtinArg(),
-        12,
-        listOf(offset.builtinArg()),
-      )
-    )
+  fun translatedLocal(offset: Vector3): Transform3D = Transform3D(basis, origin + basis * offset)
+
+  /**
+   * Returns a copy of this transform rotated so that the forward axis (-Z) points towards the
+   * `target` position. The up axis (+Y) points as close to the `up` vector as possible while
+   * staying perpendicular to the forward axis. The resulting transform is orthonormalized. The
+   * existing rotation, scale, and skew information from the original transform is discarded. The
+   * `target` and `up` vectors cannot be zero, cannot be parallel to each other, and are defined in
+   * global/parent space. If `use_model_front` is `true`, the +Z axis (asset front) is treated as
+   * forward (implies +X is left) and points toward the `target` position. By default, the -Z axis
+   * (camera forward) is treated as forward (implies +X is right).
+   *
+   * Generated from Godot docs: Transform3D.looking_at
+   */
+  fun lookingAt(
+    target: Vector3,
+    up: Vector3 = Vector3(0.0, 1.0, 0.0),
+    useModelFront: Boolean = false,
+  ): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, target)
+    f.put(2, up)
+    f.putBool(3, useModelFront)
+    f.call(Transform3DMethods.lookingAt, 3)
+    return f.retTransform3D()
+  }
+
+  /**
+   * Returns the result of the linear interpolation between this transform and `xform` by the given
+   * `weight`. The `weight` should be between `0.0` and `1.0` (inclusive). Values outside this range
+   * are allowed and can be used to perform extrapolation instead.
+   *
+   * Generated from Godot docs: Transform3D.interpolate_with
+   */
+  fun interpolateWith(xform: Transform3D, weight: Double): Transform3D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, xform)
+    f.putDouble(2, weight)
+    f.call(Transform3DMethods.interpolateWith, 2)
+    return f.retTransform3D()
+  }
 
   /**
    * Returns `true` if this transform is finite, by calling `@GlobalScope.is_finite` on each
@@ -297,11 +266,55 @@ data class Transform3D(
    *
    * Generated from Godot docs: Transform3D.is_finite
    */
-  fun isFinite(): Boolean = builtinBool(Transform3DMethods.isFinite, builtinArg(), emptyList())
+  fun isFinite(): Boolean {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform3DMethods.isFinite, 0)
+    return f.retBool()
+  }
 
   // ===== END GENERATED BUILTIN MEMBERS: Transform3D =====
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Transform3D (generate_builtin_ops.py) =====
+    /**
+     * `Transform3D` with mirroring applied perpendicular to the YZ plane. Its `basis` is equal to
+     * `Basis.FLIP_X`.
+     *
+     * Generated from Godot docs: Transform3D.FLIP_X
+     */
+    val FLIP_X: Transform3D =
+      Transform3D(
+        Basis(Vector3(-1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0)),
+        Vector3(0.0, 0.0, 0.0),
+      )
+
+    /**
+     * `Transform3D` with mirroring applied perpendicular to the XZ plane. Its `basis` is equal to
+     * `Basis.FLIP_Y`.
+     *
+     * Generated from Godot docs: Transform3D.FLIP_Y
+     */
+    val FLIP_Y: Transform3D =
+      Transform3D(
+        Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, -1.0, 0.0), Vector3(0.0, 0.0, 1.0)),
+        Vector3(0.0, 0.0, 0.0),
+      )
+
+    /**
+     * `Transform3D` with mirroring applied perpendicular to the XY plane. Its `basis` is equal to
+     * `Basis.FLIP_Z`.
+     *
+     * Generated from Godot docs: Transform3D.FLIP_Z
+     */
+    val FLIP_Z: Transform3D =
+      Transform3D(
+        Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, -1.0)),
+        Vector3(0.0, 0.0, 0.0),
+      )
+
+    // ===== END GENERATED BUILTIN STATICS: Transform3D =====
+
     /**
      * The identity `Transform3D`. This is a transform with no translation, no rotation, and a scale
      * of `Vector3.ONE`. Its `basis` is equal to `Basis.IDENTITY`. This also means that: - Its
@@ -311,48 +324,5 @@ data class Transform3D(
      * Generated from Godot docs: Transform3D.IDENTITY
      */
     val IDENTITY = Transform3D(Basis.IDENTITY, Vector3.ZERO)
-
-    // The hash keys the signature SHAPE, the name selects the method: inverse, affine_inverse and
-    // orthonormalized are all no-arg -> Self; scaled_local and translated are both (Vector3) ->
-    // Self.
-    private val inverseBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "inverse", NO_ARG_SELF_HASH)
-    }
-    private val affineInverseBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "affine_inverse", NO_ARG_SELF_HASH)
-    }
-    private val orthonormalizedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "orthonormalized", NO_ARG_SELF_HASH)
-    }
-    private val lookingAtBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "looking_at", LOOKING_AT_HASH)
-    }
-    private val interpolateWithBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "interpolate_with", INTERPOLATE_WITH_HASH)
-    }
-    private val scaledLocalBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "scaled_local", VECTOR3_ARG_SELF_HASH)
-    }
-    private val translatedBind by lazy {
-      BuiltinCalls.getBuiltinMethod(VT_TRANSFORM3D, "translated", VECTOR3_ARG_SELF_HASH)
-    }
-
-    private fun vector3Array(v: Vector3): GodotRealArray =
-      GodotRealArray(3).also {
-        it[0] = v.rawX
-        it[1] = v.rawY
-        it[2] = v.rawZ
-      }
-
-    private fun fromGodotRealArray(c: GodotRealArray): Transform3D =
-      Transform3D(
-        basis =
-          Basis(
-            Vector3.raw(c[0], c[3], c[6]),
-            Vector3.raw(c[1], c[4], c[7]),
-            Vector3.raw(c[2], c[5], c[8]),
-          ),
-        origin = Vector3.raw(c[9], c[10], c[11]),
-      )
   }
 }

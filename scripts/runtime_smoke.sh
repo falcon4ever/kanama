@@ -397,11 +397,14 @@ for vts_row in roundtrip_eq str bits parity; do
 done
 # task 134 B -- the generated probe pair (scripts/generate_builtin_ops.py): `pure=` hashes every
 # value-type operator and every Kotlin-implemented method over 256 fixed-seed random inputs,
-# `facade=` every engine-backed method over 8; each Kotlin line must equal the GDScript line, and a
-# mismatch names the members whose hashes differ.
+# `edge=` the same members over ±0, NaN, ±INF, .5 ties and 1e-30 (where Godot's result is
+# defined), `facade=` every engine-backed method over 8, `const=` every builtin constant and enum
+# value; each Kotlin line must equal the GDScript line, and a mismatch names the differing members.
 check "BuiltinParity kotlin pure=n=256 [^ ]+=[0-9a-f]+ "
+check "BuiltinParity kotlin edge=n=64 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin facade=n=8 [^ ]+=[0-9a-f]+ "
-for bp_row in pure facade; do
+check "BuiltinParity kotlin const=n=1 [^ ]+=[0-9a-f]+ "
+for bp_row in pure edge facade const; do
   bp_kotlin="$(grep -o "BuiltinParity kotlin ${bp_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinParity kotlin //')"
   bp_gdscript="$(grep -o "BuiltinParity gdscript ${bp_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinParity gdscript //')"
   if [[ -z "$bp_kotlin" || "$bp_kotlin" != "$bp_gdscript" ]]; then

@@ -81,8 +81,17 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.inverse
    */
-  fun inverse(): Transform2D =
-    builtinTransform2D(builtinReals(Transform2DMethods.inverse, builtinArg(), 6, emptyList()))
+  fun inverse(): Transform2D {
+    val ix = Vector2.raw(x.rawX, y.rawX)
+    val iy = Vector2.raw(x.rawY, y.rawY)
+    val ox = -origin.rawX
+    val oy = -origin.rawY
+    return Transform2D(
+      ix,
+      iy,
+      Vector2.raw(ix.rawX * ox + iy.rawX * oy, ix.rawY * ox + iy.rawY * oy),
+    )
+  }
 
   /**
    * Returns the inverted version of this transform. Unlike `inverse`, this method works with almost
@@ -92,8 +101,12 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.affine_inverse
    */
-  fun affineInverse(): Transform2D =
-    builtinTransform2D(builtinReals(Transform2DMethods.affineInverse, builtinArg(), 6, emptyList()))
+  fun affineInverse(): Transform2D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform2DMethods.affineInverse, 0)
+    return f.retTransform2D()
+  }
 
   /**
    * Returns this transform's rotation (in radians). This is equivalent to `x`'s angle (see
@@ -101,8 +114,12 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.get_rotation
    */
-  fun getRotation(): Double =
-    builtinDouble(Transform2DMethods.getRotation, builtinArg(), emptyList())
+  fun getRotation(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform2DMethods.getRotation, 0)
+    return f.retDouble()
+  }
 
   /**
    * Returns the length of both `x` and `y`, as a `Vector2`. If this transform's basis is not
@@ -110,15 +127,24 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.get_scale
    */
-  fun getScale(): Vector2 =
-    builtinVector2(builtinReals(Transform2DMethods.getScale, builtinArg(), 2, emptyList()))
+  fun getScale(): Vector2 {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform2DMethods.getScale, 0)
+    return f.retVector2()
+  }
 
   /**
    * Returns this transform's skew (in radians).
    *
    * Generated from Godot docs: Transform2D.get_skew
    */
-  fun getSkew(): Double = builtinDouble(Transform2DMethods.getSkew, builtinArg(), emptyList())
+  fun getSkew(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform2DMethods.getSkew, 0)
+    return f.retDouble()
+  }
 
   /**
    * Returns a copy of this transform with its basis orthonormalized. An orthonormal basis is both
@@ -127,10 +153,12 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.orthonormalized
    */
-  fun orthonormalized(): Transform2D =
-    builtinTransform2D(
-      builtinReals(Transform2DMethods.orthonormalized, builtinArg(), 6, emptyList())
-    )
+  fun orthonormalized(): Transform2D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform2DMethods.orthonormalized, 0)
+    return f.retTransform2D()
+  }
 
   /**
    * Returns a copy of this transform rotated by the given `angle` (in radians). If `angle` is
@@ -140,10 +168,13 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.rotated
    */
-  fun rotated(angle: Double): Transform2D =
-    builtinTransform2D(
-      builtinReals(Transform2DMethods.rotated, builtinArg(), 6, listOf(argReal(angle)))
-    )
+  fun rotated(angle: Double): Transform2D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putDouble(1, angle)
+    f.call(Transform2DMethods.rotated, 1)
+    return f.retTransform2D()
+  }
 
   /**
    * Returns a copy of the transform rotated by the given `angle` (in radians). This method is an
@@ -153,10 +184,13 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.rotated_local
    */
-  fun rotatedLocal(angle: Double): Transform2D =
-    builtinTransform2D(
-      builtinReals(Transform2DMethods.rotatedLocal, builtinArg(), 6, listOf(argReal(angle)))
-    )
+  fun rotatedLocal(angle: Double): Transform2D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.putDouble(1, angle)
+    f.call(Transform2DMethods.rotatedLocal, 1)
+    return f.retTransform2D()
+  }
 
   /**
    * Returns a copy of the transform scaled by the given `scale` factor. This method is an optimized
@@ -166,10 +200,13 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.scaled
    */
-  fun scaled(scale: Vector2): Transform2D =
-    builtinTransform2D(
-      builtinReals(Transform2DMethods.scaled, builtinArg(), 6, listOf(scale.builtinArg()))
-    )
+  fun scaled(scale: Vector2): Transform2D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, scale)
+    f.call(Transform2DMethods.scaled, 1)
+    return f.retTransform2D()
+  }
 
   /**
    * Returns a copy of the transform scaled by the given `scale` factor. This method is an optimized
@@ -178,10 +215,13 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.scaled_local
    */
-  fun scaledLocal(scale: Vector2): Transform2D =
-    builtinTransform2D(
-      builtinReals(Transform2DMethods.scaledLocal, builtinArg(), 6, listOf(scale.builtinArg()))
-    )
+  fun scaledLocal(scale: Vector2): Transform2D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, scale)
+    f.call(Transform2DMethods.scaledLocal, 1)
+    return f.retTransform2D()
+  }
 
   /**
    * Returns a copy of the transform translated by the given `offset`. This method is an optimized
@@ -191,10 +231,7 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.translated
    */
-  fun translated(offset: Vector2): Transform2D =
-    builtinTransform2D(
-      builtinReals(Transform2DMethods.translated, builtinArg(), 6, listOf(offset.builtinArg()))
-    )
+  fun translated(offset: Vector2): Transform2D = Transform2D(x, y, origin + offset)
 
   /**
    * Returns a copy of the transform translated by the given `offset`. This method is an optimized
@@ -204,10 +241,7 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.translated_local
    */
-  fun translatedLocal(offset: Vector2): Transform2D =
-    builtinTransform2D(
-      builtinReals(Transform2DMethods.translatedLocal, builtinArg(), 6, listOf(offset.builtinArg()))
-    )
+  fun translatedLocal(offset: Vector2): Transform2D = Transform2D(x, y, origin + basisXform(offset))
 
   /**
    * Returns the determinant (https://en.wikipedia.org/wiki/Determinant) of this transform basis's
@@ -218,8 +252,12 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.determinant
    */
-  fun determinant(): Double =
-    builtinDouble(Transform2DMethods.determinant, builtinArg(), emptyList())
+  fun determinant(): Double {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform2DMethods.determinant, 0)
+    return f.retDouble()
+  }
 
   /**
    * Returns a copy of the `v` vector, transformed (multiplied) by the transform basis's matrix.
@@ -228,9 +266,7 @@ data class Transform2D(
    * Generated from Godot docs: Transform2D.basis_xform
    */
   fun basisXform(v: Vector2): Vector2 =
-    builtinVector2(
-      builtinReals(Transform2DMethods.basisXform, builtinArg(), 2, listOf(v.builtinArg()))
-    )
+    Vector2.raw(x.rawX * v.rawX + y.rawX * v.rawY, x.rawY * v.rawX + y.rawY * v.rawY)
 
   /**
    * Returns a copy of the `v` vector, transformed (multiplied) by the inverse transform basis's
@@ -241,9 +277,7 @@ data class Transform2D(
    * Generated from Godot docs: Transform2D.basis_xform_inv
    */
   fun basisXformInv(v: Vector2): Vector2 =
-    builtinVector2(
-      builtinReals(Transform2DMethods.basisXformInv, builtinArg(), 2, listOf(v.builtinArg()))
-    )
+    Vector2.raw(x.rawX * v.rawX + x.rawY * v.rawY, y.rawX * v.rawX + y.rawY * v.rawY)
 
   /**
    * Returns the result of the linear interpolation between this transform and `xform` by the given
@@ -252,15 +286,14 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.interpolate_with
    */
-  fun interpolateWith(xform: Transform2D, weight: Double): Transform2D =
-    builtinTransform2D(
-      builtinReals(
-        Transform2DMethods.interpolateWith,
-        builtinArg(),
-        6,
-        listOf(xform.builtinArg(), argReal(weight)),
-      )
-    )
+  fun interpolateWith(xform: Transform2D, weight: Double): Transform2D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, xform)
+    f.putDouble(2, weight)
+    f.call(Transform2DMethods.interpolateWith, 2)
+    return f.retTransform2D()
+  }
 
   /**
    * Returns `true` if this transform's basis is conformal. A conformal basis is both orthogonal
@@ -269,8 +302,12 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.is_conformal
    */
-  fun isConformal(): Boolean =
-    builtinBool(Transform2DMethods.isConformal, builtinArg(), emptyList())
+  fun isConformal(): Boolean {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform2DMethods.isConformal, 0)
+    return f.retBool()
+  }
 
   /**
    * Returns `true` if this transform is finite, by calling `@GlobalScope.is_finite` on each
@@ -278,7 +315,12 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.is_finite
    */
-  fun isFinite(): Boolean = builtinBool(Transform2DMethods.isFinite, builtinArg(), emptyList())
+  fun isFinite(): Boolean {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.call(Transform2DMethods.isFinite, 0)
+    return f.retBool()
+  }
 
   /**
    * Returns a copy of the transform rotated such that the rotated X-axis points towards the
@@ -286,14 +328,38 @@ data class Transform2D(
    *
    * Generated from Godot docs: Transform2D.looking_at
    */
-  fun lookingAt(target: Vector2 = Vector2(0.0, 0.0)): Transform2D =
-    builtinTransform2D(
-      builtinReals(Transform2DMethods.lookingAt, builtinArg(), 6, listOf(target.builtinArg()))
-    )
+  fun lookingAt(target: Vector2 = Vector2(0.0, 0.0)): Transform2D {
+    val f = builtinFrame()
+    f.put(0, this)
+    f.put(1, target)
+    f.call(Transform2DMethods.lookingAt, 1)
+    return f.retTransform2D()
+  }
 
   // ===== END GENERATED BUILTIN MEMBERS: Transform2D =====
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Transform2D (generate_builtin_ops.py) =====
+    /**
+     * When any transform is multiplied by `FLIP_X`, it negates all components of the `x` axis (the
+     * X column). When `FLIP_X` is multiplied by any transform, it negates the `Vector2.x` component
+     * of all axes (the X row).
+     *
+     * Generated from Godot docs: Transform2D.FLIP_X
+     */
+    val FLIP_X: Transform2D = Transform2D(Vector2(-1.0, 0.0), Vector2(0.0, 1.0), Vector2(0.0, 0.0))
+
+    /**
+     * When any transform is multiplied by `FLIP_Y`, it negates all components of the `y` axis (the
+     * Y column). When `FLIP_Y` is multiplied by any transform, it negates the `Vector2.y` component
+     * of all axes (the Y row).
+     *
+     * Generated from Godot docs: Transform2D.FLIP_Y
+     */
+    val FLIP_Y: Transform2D = Transform2D(Vector2(1.0, 0.0), Vector2(0.0, -1.0), Vector2(0.0, 0.0))
+
+    // ===== END GENERATED BUILTIN STATICS: Transform2D =====
+
     /**
      * The identity `Transform2D`. This is a transform with no translation, no rotation, and a scale
      * of `Vector2.ONE`. This also means that: - The `x` points right (`Vector2.RIGHT`); - The `y`

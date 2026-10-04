@@ -69,6 +69,8 @@ internal object KanamaScriptTemplate {
           "net.multigesture.kanama.api.GodotHandle",
           "net.multigesture.kanama.api.KanamaScript",
           "net.multigesture.kanama.api.$wrapper",
+          // The value types with their extension operators (`2.0 * v`), as GDScript has them.
+          "net.multigesture.kanama.types.*",
         )
         .distinct()
         .sorted()

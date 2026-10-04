@@ -58,7 +58,10 @@ data class Rect2i(
    * Generated from Godot docs: Rect2i.has_point
    */
   fun hasPoint(point: Vector2i): Boolean =
-    builtinBool(Rect2iMethods.hasPoint, builtinArg(), listOf(point.builtinArg()))
+    !(point.x < position.x ||
+      point.y < position.y ||
+      point.x >= position.x + size.x ||
+      point.y >= position.y + size.y)
 
   /**
    * Returns `true` if this rectangle overlaps with the `b` rectangle. The edges of both rectangles
@@ -67,7 +70,10 @@ data class Rect2i(
    * Generated from Godot docs: Rect2i.intersects
    */
   fun intersects(b: Rect2i): Boolean =
-    builtinBool(Rect2iMethods.intersects, builtinArg(), listOf(b.builtinArg()))
+    !(position.x >= b.position.x + b.size.x ||
+      position.x + size.x <= b.position.x ||
+      position.y >= b.position.y + b.size.y ||
+      position.y + size.y <= b.position.y)
 
   /**
    * Returns `true` if this `Rect2i` completely encloses another one.
@@ -75,7 +81,10 @@ data class Rect2i(
    * Generated from Godot docs: Rect2i.encloses
    */
   fun encloses(b: Rect2i): Boolean =
-    builtinBool(Rect2iMethods.encloses, builtinArg(), listOf(b.builtinArg()))
+    b.position.x >= position.x &&
+      b.position.y >= position.y &&
+      b.position.x + b.size.x <= position.x + size.x &&
+      b.position.y + b.size.y <= position.y + size.y
 
   /**
    * Returns the intersection between this rectangle and `b`. If the rectangles do not intersect,
@@ -83,8 +92,14 @@ data class Rect2i(
    *
    * Generated from Godot docs: Rect2i.intersection
    */
-  fun intersection(b: Rect2i): Rect2i =
-    builtinRect2i(builtinInts(Rect2iMethods.intersection, builtinArg(), 4, listOf(b.builtinArg())))
+  fun intersection(b: Rect2i): Rect2i {
+    if (!b.intersects(this)) return Rect2i(Vector2i(0, 0), Vector2i(0, 0))
+    val px = godotMax(b.position.x, position.x)
+    val py = godotMax(b.position.y, position.y)
+    val ex = godotMin(b.position.x + b.size.x, position.x + size.x)
+    val ey = godotMin(b.position.y + b.size.y, position.y + size.y)
+    return Rect2i(Vector2i(px, py), Vector2i(ex - px, ey - py))
+  }
 
   /**
    * Returns a `Rect2i` that encloses both this rectangle and `b` around the edges. See also
@@ -92,8 +107,13 @@ data class Rect2i(
    *
    * Generated from Godot docs: Rect2i.merge
    */
-  fun merge(b: Rect2i): Rect2i =
-    builtinRect2i(builtinInts(Rect2iMethods.merge, builtinArg(), 4, listOf(b.builtinArg())))
+  fun merge(b: Rect2i): Rect2i {
+    val px = godotMin(b.position.x, position.x)
+    val py = godotMin(b.position.y, position.y)
+    val ex = godotMax(b.position.x + b.size.x, position.x + size.x)
+    val ey = godotMax(b.position.y + b.size.y, position.y + size.y)
+    return Rect2i(Vector2i(px, py), Vector2i(ex - px, ey - py))
+  }
 
   /**
    * Returns a copy of this rectangle expanded to align the edges with the given `to` point, if
@@ -101,8 +121,17 @@ data class Rect2i(
    *
    * Generated from Godot docs: Rect2i.expand
    */
-  fun expand(to: Vector2i): Rect2i =
-    builtinRect2i(builtinInts(Rect2iMethods.expand, builtinArg(), 4, listOf(to.builtinArg())))
+  fun expand(to: Vector2i): Rect2i {
+    var bx = position.x
+    var by = position.y
+    var ex = position.x + size.x
+    var ey = position.y + size.y
+    if (to.x < bx) bx = to.x
+    if (to.y < by) by = to.y
+    if (to.x > ex) ex = to.x
+    if (to.y > ey) ey = to.y
+    return Rect2i(Vector2i(bx, by), Vector2i(ex - bx, ey - by))
+  }
 
   /**
    * Returns a copy of this rectangle extended on all sides by the given `amount`. A negative
@@ -110,8 +139,13 @@ data class Rect2i(
    *
    * Generated from Godot docs: Rect2i.grow
    */
-  fun grow(amount: Long): Rect2i =
-    builtinRect2i(builtinInts(Rect2iMethods.grow, builtinArg(), 4, listOf(argLong(amount))))
+  fun grow(amount: Long): Rect2i {
+    val a = amount.toInt()
+    return Rect2i(
+      Vector2i(position.x - a, position.y - a),
+      Vector2i(size.x + a * 2, size.y + a * 2),
+    )
+  }
 
   /**
    * Returns a copy of this rectangle with its `side` extended by the given `amount` (see `Side`
@@ -121,8 +155,11 @@ data class Rect2i(
    * Generated from Godot docs: Rect2i.grow_side
    */
   fun growSide(side: Long, amount: Long): Rect2i =
-    builtinRect2i(
-      builtinInts(Rect2iMethods.growSide, builtinArg(), 4, listOf(argLong(side), argLong(amount)))
+    growIndividual(
+      if (side == 0L) amount else 0L,
+      if (side == 1L) amount else 0L,
+      if (side == 2L) amount else 0L,
+      if (side == 3L) amount else 0L,
     )
 
   /**
@@ -132,15 +169,16 @@ data class Rect2i(
    *
    * Generated from Godot docs: Rect2i.grow_individual
    */
-  fun growIndividual(left: Long, top: Long, right: Long, bottom: Long): Rect2i =
-    builtinRect2i(
-      builtinInts(
-        Rect2iMethods.growIndividual,
-        builtinArg(),
-        4,
-        listOf(argLong(left), argLong(top), argLong(right), argLong(bottom)),
-      )
+  fun growIndividual(left: Long, top: Long, right: Long, bottom: Long): Rect2i {
+    val l = left.toInt()
+    val t = top.toInt()
+    val r = right.toInt()
+    val b = bottom.toInt()
+    return Rect2i(
+      Vector2i(position.x - l, position.y - t),
+      Vector2i(size.x + (l + r), size.y + (t + b)),
     )
+  }
 
   /**
    * Returns a `Rect2i` equivalent to this rectangle, with its width and height modified to be
@@ -148,7 +186,11 @@ data class Rect2i(
    *
    * Generated from Godot docs: Rect2i.abs
    */
-  fun abs(): Rect2i = builtinRect2i(builtinInts(Rect2iMethods.abs, builtinArg(), 4, emptyList()))
+  fun abs(): Rect2i =
+    Rect2i(
+      Vector2i(position.x + godotMin(size.x, 0), position.y + godotMin(size.y, 0)),
+      Vector2i(godotAbs(size.x), godotAbs(size.y)),
+    )
 
   // ===== END GENERATED BUILTIN MEMBERS: Rect2i =====
 

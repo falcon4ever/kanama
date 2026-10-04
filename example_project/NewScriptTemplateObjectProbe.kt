@@ -7,6 +7,7 @@ import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.types.*
 
 @ScriptClass(attachTo = "Object")
 class NewScriptTemplateObjectProbe(godotObject: GodotHandle) :
