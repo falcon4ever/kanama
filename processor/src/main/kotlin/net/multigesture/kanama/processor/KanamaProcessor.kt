@@ -556,6 +556,30 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     )
   }
 
+  /**
+   * A member property named like a generated typed signal handle (`val coinCollected` beside
+   * `@Signal fun coinCollected(...)`) would shadow the `val Player.coinCollected` extension: inside
+   * the script `coinCollected.emit(…)` would reach the member. Rejected (task 134 C review), so the
+   * handle always means the signal. The `@Signal fun` itself only declares the signal: calling it
+   * runs its empty body and emits nothing; emit with `coinCollected.emit(…)`.
+   */
+  private fun checkSignalHandleShadowing(
+    cls: KSClassDeclaration,
+    simpleName: String,
+    signals: List<SignalModel>,
+    errors: ErrorCollector,
+  ) {
+    val handles = typedSignalSpecs(signals).associateBy { it.name }
+    for (prop in cls.getAllProperties()) {
+      val spec = handles[prop.simpleName.asString()] ?: continue
+      errors.add(
+        "$simpleName.${prop.simpleName.asString()}: this property shadows the typed handle KSP " +
+          "generates for @Signal ${spec.godotName} (`val $simpleName.${spec.name}`); rename it",
+        prop,
+      )
+    }
+  }
+
   private fun buildSignalModel(
     fn: KSFunctionDeclaration,
     ann: com.google.devtools.ksp.symbol.KSAnnotation,
@@ -1322,6 +1346,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         virtuals.map { it.virtualName to (shownNames[it.kotlinMethodName] ?: it.kotlinMethodName) },
       cls,
     )
+    checkSignalHandleShadowing(cls, simpleName, signals, errors)
 
     val exportedNames = mutableListOf<Pair<String, String>>()
     for (member in scriptProperties(hierarchy)) {
@@ -2634,37 +2659,113 @@ internal fun signalArgTypeExpr(arg: ArgModel): String? {
 }
 
 /**
- * Typed handles for a script's `@Signal` declarations (task 134 D4), as top-level extension
- * properties next to the `<Class>Signals` helpers: `player.coinCollected.connect { coins -> }`,
- * `coinCollected.emit(coins)`, `player.coinCollected.await()`. A signal with an argument that has
- * no typed decode, or more than five arguments, is left to the helpers.
+ * Whether the Web bridge delivers [arg] to a typed lambda: it carries one argument, an object or a
+ * packed scalar (`int`, `float`, `bool`, `String`, `Vector2`, `Vector2i`, `Vector3`, an enum).
  */
-internal fun typedSignalAccessors(fqClassName: String, signals: List<SignalModel>): String {
-  val sb = StringBuilder()
+internal fun webDeliversSignalArg(arg: ArgModel): Boolean =
+  arg.godotEnum != null ||
+    arg.objectWrapperFqName != null ||
+    arg.type in
+      setOf(
+        TypeMapping.OBJECT,
+        TypeMapping.INT,
+        TypeMapping.FLOAT,
+        TypeMapping.BOOL,
+        TypeMapping.STRING,
+        TypeMapping.VECTOR2,
+        TypeMapping.VECTOR2I,
+        TypeMapping.VECTOR3,
+      )
+
+/** One `@Signal` with a typed decode for every argument (task 134 D4). */
+internal class TypedSignalSpec(
+  val godotName: String,
+  /** The Kotlin name of the handle: `coin_collected` -> `coinCollected`. */
+  val name: String,
+  /** `net.multigesture.kanama.api.Signal1<Long>`. */
+  val type: String,
+  /** The constructor's arguments after the emitter: the quoted name and the arg types. */
+  val ctorTail: String,
+)
+
+/**
+ * The `@Signal`s that get typed handles: every argument has a typed decode and there are at most
+ * five. Others keep only the `<Class>Signals` helpers.
+ */
+internal fun typedSignalSpecs(
+  signals: List<SignalModel>,
+  web: Boolean = false,
+): List<TypedSignalSpec> {
   val seen = mutableSetOf<String>()
+  val out = mutableListOf<TypedSignalSpec>()
   for (s in signals) {
-    if (s.args.size > 5) continue
-    val types = s.args.map { signalArgTypeExpr(it) ?: return@map null }
+    if (s.args.size > (if (web) 1 else 5)) continue
+    if (web && s.args.any { !webDeliversSignalArg(it) }) continue
+    val types = s.args.map { signalArgTypeExpr(it) }
     if (types.any { it == null }) continue
     val name = signalHelperSuffix(s.godotName).replaceFirstChar { it.lowercase() }
     if (!seen.add(name)) continue
     val typeArgs =
       if (s.args.isEmpty()) ""
       else s.args.joinToString(", ", prefix = "<", postfix = ">") { it.kotlinType }
-    val ctorArgs =
-      (listOf(
-          "net.multigesture.kanama.api.GodotObject(godotObject)",
-          "\"${kotlinStringLiteral(s.godotName)}\"",
-        ) + types.map { it!! })
-        .joinToString(", ")
+    val tail =
+      (listOf("\"${kotlinStringLiteral(s.godotName)}\"") + types.map { it!! }).joinToString(", ")
+    out +=
+      TypedSignalSpec(
+        s.godotName,
+        name,
+        "net.multigesture.kanama.api.Signal${s.args.size}$typeArgs",
+        tail,
+      )
+  }
+  return out
+}
+
+/**
+ * Typed handles for a script's `@Signal` declarations (task 134 D4), as top-level extension
+ * properties next to the `<Class>Signals` helpers: `player.coinCollected.connect { coins -> }`,
+ * `coinCollected.emit(coins)`, `player.coinCollected.await()`. The processor rejects a member of
+ * the script that would shadow one (see `checkSignalHandleShadowing`).
+ */
+internal fun typedSignalAccessors(
+  fqClassName: String,
+  signals: List<SignalModel>,
+  web: Boolean = false,
+): String {
+  val sb = StringBuilder()
+  for (spec in typedSignalSpecs(signals, web)) {
+    val ctor = spec.type.substringBefore('<')
     sb.appendLine()
     sb.appendLine(
-      "/** Typed handle for the `${kotlinStringLiteral(s.godotName)}` signal; see `net.multigesture.kanama.api.TypedSignal`. */"
+      "/** Typed handle for the `${kotlinStringLiteral(spec.godotName)}` signal; see `net.multigesture.kanama.api.TypedSignal`. */"
+    )
+    sb.appendLine("val $fqClassName.${spec.name}: ${spec.type}")
+    // The Web script base (`KanamaWebScript`) names its handle `objectId`.
+    val handle = if (web) "objectId" else "godotObject"
+    sb.appendLine(
+      "    get() = $ctor(net.multigesture.kanama.api.GodotObject($handle), ${spec.ctorTail})"
+    )
+  }
+  return sb.toString()
+}
+
+/**
+ * The same handles for an emitter you hold as a Godot object (an autoload node, `get_node`), not as
+ * the script: `EventsSignals.flagReached(eventsNode).connect { }` (task 134 C review). Lines for
+ * the body of `object <Class>Signals`.
+ */
+internal fun typedSignalFactories(signals: List<SignalModel>, web: Boolean = false): String {
+  val sb = StringBuilder()
+  for (spec in typedSignalSpecs(signals, web)) {
+    val ctor = spec.type.substringBefore('<')
+    sb.appendLine()
+    sb.appendLine(
+      "    /** The typed `${kotlinStringLiteral(spec.godotName)}` handle of [emitter], an object this script is attached to. */"
     )
     sb.appendLine(
-      "val $fqClassName.$name: net.multigesture.kanama.api.Signal${s.args.size}$typeArgs"
+      "    fun ${spec.name}(emitter: net.multigesture.kanama.api.GodotObject): ${spec.type} ="
     )
-    sb.appendLine("    get() = net.multigesture.kanama.api.Signal${s.args.size}($ctorArgs)")
+    sb.appendLine("        $ctor(emitter, ${spec.ctorTail})")
   }
   return sb.toString()
 }
@@ -4188,6 +4289,7 @@ internal class ScriptCodeEmitter(
       sb.appendLine("        return ${signalAwaitReturnExpr(s.args)}")
       sb.appendLine("    }")
     }
+    sb.append(typedSignalFactories(model.signals))
     sb.appendLine("}")
   }
 

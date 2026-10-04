@@ -71,6 +71,10 @@ class TypedSignalAccessorsTest {
       source.contains("val demo.Player.raw:"),
       "a signal without a typed decode has no accessor",
     )
+    // The factory for an emitter held as a Godot object, in the Signals object (task 134 C review).
+    has("    fun coinCollected(emitter: $api.GodotObject): $api.Signal1<Long> =")
+    has("        $api.Signal1(emitter, \"coin_collected\", $api.SignalArgType.LONG)")
+    has("    fun hit(emitter: $api.GodotObject): $api.Signal0 =")
   }
 
   @Test

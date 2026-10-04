@@ -45,7 +45,7 @@ Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrapp
 - **Every engine signal is a typed property** of its class, generated from `extension_api.json`
   (all 503: `scripts/check_wrapper_generator.py` fails on a missing or mistyped one):
   `area.bodyEntered: Signal1<Node3D>`, `timer.timeout: Signal0`,
-  `area.bodyShapeEntered: Signal4<RID, Node3D, Long, Long>`, on top of the runtime classes
+  `area.bodyShapeEntered: Signal4<RID, Node3D?, Long, Long>`, on top of the runtime classes
   `Signal0` … `Signal5` (`TypedSignal`). GDScript's `area.body_entered.connect(func(body): …)` is
   `area.bodyEntered.connect { body -> … }` inside a `KanamaScript` (the lambda is bound to the
   script's object, as a GDScript lambda is bound to its script) or `connect(target) { … }`
@@ -54,9 +54,23 @@ Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrapp
   (`val body = area.bodyEntered.await()`), or a `SignalArgs2` … `SignalArgs5` to destructure for
   two or more (GDScript returns an `Array`); it is cancelled if the emitter is freed first.
   `emit(…)` emits with typed arguments, `connect(target, "method")` connects a registered method.
+  `close()` disconnects every connection while the emitter lives, a `ONE_SHOT` one that has not
+  fired and a cancelled `await` included. `TypedSignal.emitter` is the emitting object.
 - Arguments are decoded as their API type: `int` → `Long`, `float` → `Double`,
-  `String`/`StringName` → `String`, an object → its wrapper (borrowed, non-null except
-  `Resource`-like types), value types and collections as usual, `Variant` → `Any?`. Godot's API
+  `String`/`StringName` → `String`, an object → its wrapper, value types and collections as usual,
+  `Variant` → `Any?`. An object is non-null unless Godot's source emits null for it: the generator
+  records what a scan of every `emit_signal` site in Godot 4.7.2 found
+  (`SIGNAL_NULLABLE_OBJECT_ARGS`: `Area2D`/`Area3D` `bodyShapeEntered`/`Exited` and
+  `areaShapeEntered`/`Exited`, `EditorPlugin.sceneChanged`; `SIGNAL_NON_NULL_RESOURCE_ARGS`: the
+  `InputEvent` of `Control.guiInput`, `CollisionObject2D/3D.inputEvent`, `Window.windowInput` /
+  `nonclientWindowInput`, `GDExtensionManager`, `WebRTCPeerConnection.dataChannelReceived`,
+  `XRPositionalTracker`; the editor's `Resource`/`Script` arguments stay nullable), and
+  `OpenXRFutureResult.completed` emits its result `Variant` though it declares an
+  `OpenXRFutureResult`. A `RefCounted` argument (an `InputEvent`, a `Resource`) is owned: the
+  wrapper takes a reference of its own (task 132: `close()` it or the GC releases it), because a
+  lambda may keep it and `await()` resumes a frame later, after Godot dropped its own. A `Node`
+  argument is a view, as in GDScript: a node freed in the frame its signal fired is gone by the
+  time `await()` resumes. Godot's API
   marks no engine signal argument as an enum, so those stay `Long`. A wrongly typed emission (a
   GDScript `emit_signal` is unchecked) is reported as a script error naming the signal and the
   lambda is not called. `SignalArgType` (`LONG`, `DOUBLE`, `STRING`, `objectOf`, `enumOf`,
@@ -68,19 +82,34 @@ Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrapp
 - **`@Signal` declarations get typed handles too**: KSP generates an extension property per
   signal next to the `<Class>Signals` helpers (`val Player.coinCollected: Signal1<Long>`), so
   `coinCollected.emit(coins)` and `player.coinCollected.connect { coins -> }` work like the engine
-  signals; enum arguments are typed. A signal with an argument that has no typed decode (a
-  primitive packed array, a script class) or more than five arguments keeps only the helpers.
+  signals, and a factory for an emitter held as a Godot object (an autoload node):
+  `EventsSignals.flagReached(eventsNode).connect { }`; enum arguments are typed. A signal with an
+  argument that has no typed decode (a primitive packed array, a script class) or more than five
+  arguments keeps only the helpers (on Web: more than one argument, or an argument the Web bridge
+  does not deliver). KSP rejects a property of the script named like a handle (it would shadow
+  it). The `@Signal fun` itself only declares the signal: calling it emits nothing.
 - No argument limit and no per-emission list: lambda connections read Godot's argument array in
   place (desktop `JvmSignalArgReader`, one per-thread scratch cell; iOS: the C shim forwards every
   argument as the PT-tagged cells a script method call gets, instead of four scalars). The untyped
-  `connect(target, argumentCount)` no longer rejects more than three arguments. Desktop reads the
+  `connect(target, argumentCount)` no longer rejects more than three arguments. On iOS the 17
+  engine signals with a `Dictionary`, `Array`, `PackedStringArray`, `PackedByteArray`, `Rect2` or
+  `Array[StringName]` argument (`NavigationAgent2D/3D.waypointReached`, `FileDialog.filesSelected`,
+  `HTTPRequest.requestCompleted`, …) report a script error naming the type, and their KDoc says so;
+  an emission with more arguments than the shim's 16 cells is a call error, never truncated.
+  Desktop reads the
   argument pointers and Variants as raw addresses (two new prewarmed downcall shapes,
-  `variant_type_by_address` and `two_address_void`), so nothing is allocated per emission.
-  Measured on the editor binary (Apple M1 Max, a GDScript loop emitting a 2-`int` signal 200,000
-  times, medians of 7): a typed `Signal2<Long, Long>` lambda costs ~152–160 ns per emission and
-  allocates 0 B (a GDScript lambda: ~131–135 ns; the untyped `List` lambda: ~291–300 ns and 568 B
-  before, ~291 ns and 487 B now; the emission alone: ~45 ns). Connect + close of a lambda is
-  ~1.03–1.06 µs typed or untyped (GDScript connect + disconnect: ~0.35 µs).
+  `variant_type_by_address` and `two_address_void`). A typed `emit(…)` builds its Variants in a
+  per-thread native frame and calls `Object.emit_signal` by address (`one_address_void`,
+  `method_bind_call_by_address`), and connect/close use per-thread native cells and the wrapper's
+  liveness flag. Measured on the desktop editor binary (Apple M1 Max, medians of 7, the machine
+  under load 9–12; Android goes through `invokeWithArguments` and was not measured), desktop
+  receive: a GDScript loop emitting a 2-`int` signal to a typed `Signal2<Long, Long>` lambda
+  ~152–155 ns and 0 B per emission (a GDScript lambda ~130–132 ns; the untyped `List` lambda
+  ~277–291 ns and 487 B, 568 B before; the emission alone ~44 ns); an `InputEvent` argument, now
+  owned, ~198–200 ns (~174–176 ns borrowed). Desktop emit, no listener: `Signal0.emit()` ~66–85 ns
+  and `Signal2.emit(1, 2)` ~78–84 ns, 0 B (GDScript ~43–44 ns; the untyped `emitSignal` ~360 ns,
+  920 B); to a GDScript listener ~166 ns (~450 ns untyped). Connect + close of a lambda ~560 ns,
+  240 B (~1.04 µs and ~1.5 KB before; GDScript connect + disconnect ~337 ns).
 - **Web**: the bridge delivers one argument, so Web has `Signal0` and `Signal1` (object, `int`,
   `float`, `bool`, `String`/`StringName`, `Vector2`, `Vector2i`, `Vector3`, enum) for the signals
   the Web wrappers expose (`Timer.timeout`, `BaseButton.pressed`, `Tween`/`AudioStreamPlayer`/
@@ -92,8 +121,16 @@ Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrapp
 - Proof: `typed_signal_smoke.tscn` in `scripts/runtime_smoke.sh` (typed connect, close, one-shot,
   deferred, `await` of one value / a pair / cancelled on free, freed receiver not called, `emit` of
   a `Vector2` and a `Node.ProcessMode` seen by a GDScript lambda exactly as a GDScript emit, a
-  GDScript emit decoded typed, a wrongly typed emit reported), `TypedSignalArgsTest`,
+  GDScript emit decoded typed, a wrongly typed emit reported; and, from the review, an `InputEvent`
+  kept by a lambda and returned by `await()` still alive, a closed one-shot and cancelled awaits
+  leaving no connection, a null body delivered to `bodyShapeEntered`), `TypedSignalArgsTest`,
   `TypedSignalAccessorsTest` (processor), and the iOS self-test rows `typed-signal(...)`.
+
+- **Source break:** `TypedSignal`, `Signal0`, `Signal1`, `Signal2`, `Signal3`, `Signal4`, `Signal5`, `Area2D`, `Area3D`, `EditorPlugin`, `CollisionObject2D`, `CollisionObject3D`, `Control`, `Window`, `GDExtensionManager`, `WebRTCPeerConnection`, `XRPositionalTracker`, `OpenXRFutureResult` -- only against this entry's own first version (no release had these declarations, so nothing to migrate):
+  `TypedSignal.owner` is `TypedSignal.emitter` and the `Signal0` … `Signal5` constructors name it
+  `emitter`; the shape signals of `Area2D`/`Area3D` and `EditorPlugin.sceneChanged` are nullable,
+  the `InputEvent`/`Resource` argument of the others non-null, and `OpenXRFutureResult.completed`
+  is a `Signal1<Any?>`, per the scan above.
 
 ### Fixed — StringName values decoded as nil (task 134 D4)
 

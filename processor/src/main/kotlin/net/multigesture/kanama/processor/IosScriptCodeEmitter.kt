@@ -582,6 +582,7 @@ internal class IosScriptCodeEmitter(
           builder.appendLine("        emitIosSignal(instance, $signalLiteral, args)")
           builder.appendLine("    }")
         }
+        builder.append(typedSignalFactories(script.signalModels))
         builder.appendLine("}")
       }
       if (script.signalModels.isNotEmpty()) {

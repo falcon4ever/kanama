@@ -47,13 +47,27 @@ fun ready() {
   scene connection.
 
 Argument types follow the API: Godot `int` is `Long`, `float` is `Double`,
-`String` and `StringName` are `String`, an object is its wrapper (borrowed, as a
-registered function's argument; `null` only for `Resource`-like types), value types
-and collections are the usual Kotlin types, and `Variant` is `Any?`. Godot's API does
-not mark engine signal arguments as enums, so they arrive as `Long`. A value of
-another type (a GDScript `emit_signal` is not type-checked) is reported as a script
-error naming the signal, and the lambda is not called. A property that would
-collide with a member of its class gets a `Signal` suffix; no Godot 4.7 signal does.
+`String` and `StringName` are `String`, an object is its wrapper, value types and
+collections are the usual Kotlin types, and `Variant` is `Any?`. Godot's API does
+not mark engine signal arguments as enums, so they arrive as `Long`. An object is
+non-null unless Godot emits null for it: `Area2D`/`Area3D` `bodyShapeEntered`,
+`bodyShapeExited`, `areaShapeEntered` and `areaShapeExited` give a null body or
+area when it has no node, and the editor's `Resource` arguments may be null.
+
+A `RefCounted` argument (an `InputEvent`, a `Resource`) is owned by its wrapper, so
+keeping it is safe, as in GDScript: `control.guiInput.connect { ev -> lastEvent = ev }`
+and `val ev = control.guiInput.await()` (which resumes a frame later) both hold a
+reference of their own. `close()` it when you are done, or the garbage collector
+releases it (see [Resource Ownership](godot-api.md#resource-ownership)). A `Node`
+argument is a view, as in GDScript: a node freed in the frame its signal fired is
+gone by the time `await()` resumes, and a call through it reports the freed object.
+
+A value of another type (a GDScript `emit_signal` is not type-checked) is reported
+as a script error naming the signal, and the lambda is not called. A property that
+would collide with a member of its class gets a `Signal` suffix; no Godot 4.7
+signal does. On iOS a signal with a `Dictionary`, `Array`, packed-array or `Rect2`
+argument is not delivered yet (its KDoc says so; the connection reports a script
+error).
 
 A signal Godot or a GDScript declares at runtime gets a typed handle the same way:
 
@@ -124,7 +138,12 @@ KSP also generates a typed handle per signal, an extension property on the
 script class in `net.multigesture.kanama.generated` (the same `Signal0`…`Signal5`
 as the engine signals): `coinCollected.emit(coins)` inside `Player`,
 `player.coinCollected.connect { coins -> }` and `player.coinCollected.await()`
-outside it. A signal with an argument that has no typed decode (a primitive
+outside it. When you hold the emitter as a Godot object rather than as the script
+(an autoload node, `get_node`), the `Signals` object has the same handle:
+`EventsSignals.flagReached(eventsNode).connect { }`. The `@Signal fun` only
+declares the signal; calling it runs its empty body and emits nothing, so emit
+with `coinCollected.emit(coins)`. KSP rejects a property of the script named like
+one of these handles, which would shadow it. A signal with an argument that has no typed decode (a primitive
 packed array, a script class) or more than five arguments keeps only the helpers
 above.
 

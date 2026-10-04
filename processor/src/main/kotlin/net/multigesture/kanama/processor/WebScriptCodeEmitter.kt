@@ -1131,7 +1131,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine("    emitWebSignal(instance, ${quote(signal.godotName)}, arrayOf($args))")
           appendLine("  }")
         }
+        // Typed handles (task 134 C review), for the signals the Web bridge can deliver.
+        append(typedSignalFactories(model.signals, web = true))
         appendLine("}")
+        append(typedSignalAccessors(model.fqName, model.signals, web = true))
       }
       appendWebMethodHelpers(model)
       appendWebRpcHelpers(model)
