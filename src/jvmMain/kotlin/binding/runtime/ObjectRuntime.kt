@@ -1,9 +1,8 @@
 package net.multigesture.kanama.binding.runtime
 
 import java.lang.foreign.FunctionDescriptor
-import java.lang.foreign.MemorySegment
-import java.lang.foreign.ValueLayout.ADDRESS
 import java.lang.foreign.ValueLayout.JAVA_LONG
+import java.lang.invoke.MethodHandle
 import net.multigesture.kanama.binding.ScriptBridge
 import net.multigesture.kanama.ffi.GodotFFI
 
@@ -24,10 +23,17 @@ internal actual object ObjectRuntime {
 
   /**
    * `GDExtensionObjectPtr object_get_instance_from_id(GDObjectInstanceID)`: one interface downcall,
-   * on the `instance_from_id_probe` shape prewarmed by `NativeCallSurface`.
+   * on the `instance_from_id_probe` shape prewarmed by `NativeCallSurface`. The pointer comes back
+   * as a `long` (every supported target is 64-bit), so the check allocates no `MemorySegment`.
+   *
+   * A JVM constant (task 131 item 16): `@JvmField` in an `object` is a `static final` field, which
+   * the JIT folds, and [isLive] calls it with `invokeExact` on its exact `(J)J` type -- no generic
+   * invoker, no `asType`. The holder class initializes on first use, after `GodotFFI.bootstrap`.
    */
-  private val objectGetInstanceFromId by lazy {
-    GodotFFI.lookup("object_get_instance_from_id", FunctionDescriptor.of(ADDRESS, JAVA_LONG))
+  private object InstanceLookup {
+    @JvmField
+    val FROM_ID: MethodHandle =
+      GodotFFI.lookup("object_get_instance_from_id", FunctionDescriptor.of(JAVA_LONG, JAVA_LONG))
   }
 
   /**
@@ -35,7 +41,7 @@ internal actual object ObjectRuntime {
    * 131): false turns the check off with one log line instead of failing every wrapper call.
    */
   internal fun instanceLookupAvailable(): Boolean =
-    runCatching { objectGetInstanceFromId }
+    runCatching { InstanceLookup.FROM_ID }
       .onFailure { System.err.println("[kanama:kt] object_get_instance_from_id: ${it.message}") }
       .isSuccess
 
@@ -46,8 +52,7 @@ internal actual object ObjectRuntime {
     isLiveOverride?.let {
       return it(segment, instanceId)
     }
-    val live = objectGetInstanceFromId.invoke(instanceId) as MemorySegment
-    return live.address() == segment.address()
+    return (InstanceLookup.FROM_ID.invokeExact(instanceId) as Long) == segment.address()
   }
 
   // Task 132 D7: the instance-binding liveness flag ([InstanceBindings]); null while the binding

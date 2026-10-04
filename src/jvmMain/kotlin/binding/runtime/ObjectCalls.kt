@@ -9,6 +9,7 @@ import java.lang.foreign.ValueLayout.JAVA_DOUBLE
 import java.lang.foreign.ValueLayout.JAVA_FLOAT
 import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
+import java.lang.invoke.MethodHandle
 import net.multigesture.kanama.api.Area2D
 import net.multigesture.kanama.api.Area3D
 import net.multigesture.kanama.api.BaseButton
@@ -68,11 +69,46 @@ actual object ObjectCalls {
     GodotFFI.lookup("classdb_construct_object3", FunctionDescriptor.of(ADDRESS, ADDRESS))
   }
 
-  private val objectMethodBindPtrcall by lazy {
-    GodotFFI.lookup(
-      "object_method_bind_ptrcall",
-      FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, ADDRESS),
-    )
+  // The per-call downcall handles as JVM constants (task 131 item 16). `@JvmField` in an `object`
+  // is
+  // a `static final` field, which the JIT folds into the call site, and every caller uses
+  // `invokeExact` with the handle's exact type: no `Lazy` read, no generic invoker and no `asType`
+  // per wrapper call. One holder per handle, so each entry point is resolved on its own first use
+  // (after `GodotFFI.bootstrap`), as `by lazy` did.
+
+  /**
+   * `object_method_bind_ptrcall`: `(MemorySegment, MemorySegment, MemorySegment, MemorySegment)V`.
+   */
+  private object PtrcallHandle {
+    @JvmField
+    val HANDLE: MethodHandle =
+      GodotFFI.lookup(
+        "object_method_bind_ptrcall",
+        FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, ADDRESS),
+      )
+  }
+
+  /** `object_get_instance_id`, once per wrapper construction: `(MemorySegment)J`. */
+  private object InstanceIdHandle {
+    @JvmField
+    val HANDLE: MethodHandle =
+      GodotFFI.lookup("object_get_instance_id", FunctionDescriptor.of(JAVA_LONG, ADDRESS))
+  }
+
+  /**
+   * `object_method_bind_ptrcall(method_bind, instance, args, ret)`: every wrapper ptrcall goes
+   * through here. Block-bodied on purpose: the `invokeExact` is a statement, so it compiles to the
+   * handle's exact `(MemorySegment, MemorySegment, MemorySegment, MemorySegment)V` type. Written
+   * inline as the last expression of a `use {}` lambda or a `try` it would be typed `...Object` and
+   * throw `WrongMethodTypeException`. The JIT inlines this one-liner into every caller.
+   */
+  private fun bindPtrcall(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    args: MemorySegment,
+    ret: MemorySegment,
+  ) {
+    PtrcallHandle.HANDLE.invokeExact(methodBind, instance, args, ret)
   }
 
   private val notificationBind by lazy { getMethodBind("Object", "notification", 4023243586L) }
@@ -125,7 +161,7 @@ actual object ObjectCalls {
   ): List<T> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         reader(ret)
       } finally {
@@ -142,7 +178,7 @@ actual object ObjectCalls {
   ): Any? {
     val ret = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
     try {
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return BuiltinTypes.readVariantScalar(ret, arena)
     } finally {
       BuiltinTypes.destroyVariant(ret)
@@ -164,10 +200,6 @@ actual object ObjectCalls {
 
   private val objectDestroy by lazy {
     GodotFFI.lookup("object_destroy", FunctionDescriptor.ofVoid(ADDRESS))
-  }
-
-  private val objectGetInstanceId by lazy {
-    GodotFFI.lookup("object_get_instance_id", FunctionDescriptor.of(JAVA_LONG, ADDRESS))
   }
 
   /**
@@ -253,7 +285,7 @@ actual object ObjectCalls {
           }
           arr
         }
-      objectMethodBindPtrcall.invoke(methodBind, instance, argsArray, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, argsArray, MemorySegment.NULL)
     }
   }
 
@@ -269,7 +301,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -285,7 +317,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readTransform2D(ret)
     }
   }
@@ -313,7 +345,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, stringCell)
         arr.setAtIndex(ADDRESS, 2, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -343,7 +375,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         arr.setAtIndex(ADDRESS, 2, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -371,7 +403,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, boolCell)
         arr.setAtIndex(ADDRESS, 2, stringCell2)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell0)
@@ -506,7 +538,7 @@ actual object ObjectCalls {
           arr
         }
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, argsArray, ret)
+      bindPtrcall(methodBind, instance, argsArray, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -531,7 +563,7 @@ actual object ObjectCalls {
           arr
         }
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, argsArray, ret)
+      bindPtrcall(methodBind, instance, argsArray, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -557,7 +589,7 @@ actual object ObjectCalls {
       )
       arr.setAtIndex(ADDRESS, 1, boolCell)
 
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -579,7 +611,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, boolCell)
 
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -602,7 +634,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, boolCell)
 
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -622,7 +654,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -647,7 +679,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, dict)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
       }
@@ -669,7 +701,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -694,7 +726,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, boolCell)
 
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readTypedNodePath(ret, arena)
       } finally {
@@ -721,7 +753,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, rectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -740,7 +772,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, rectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -801,7 +833,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 9, sizeInPercentCell)
         args.setAtIndex(ADDRESS, 10, altTextCell)
         args.setAtIndex(ADDRESS, 11, textCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(textCell)
         GodotStrings.destroyString(tooltipCell)
@@ -822,7 +854,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -840,7 +872,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, obj0)
       arr.setAtIndex(ADDRESS, 1, obj1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -859,7 +891,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, obj0)
       arr.setAtIndex(ADDRESS, 1, obj1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -883,7 +915,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, obj1)
       arr.setAtIndex(ADDRESS, 2, valueCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -906,7 +938,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, longCell)
       arr.setAtIndex(ADDRESS, 1, obj0)
       arr.setAtIndex(ADDRESS, 2, obj1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -932,7 +964,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, rectCell)
       arr.setAtIndex(ADDRESS, 2, positionCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -962,7 +994,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, secondObjCell)
       arr.setAtIndex(ADDRESS, 2, rectCell)
       arr.setAtIndex(ADDRESS, 3, positionCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -981,7 +1013,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -999,7 +1031,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -1022,7 +1054,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, vectorCell)
       arr.setAtIndex(ADDRESS, 2, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -1039,7 +1071,7 @@ actual object ObjectCalls {
       try {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(argString)
@@ -1053,7 +1085,7 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val retString = arena.allocate(8L, 8L)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, retString)
+        bindPtrcall(methodBind, instance, MemorySegment.NULL, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -1068,7 +1100,7 @@ actual object ObjectCalls {
   ): List<String> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedStringArray(ret)
       } finally {
@@ -1084,7 +1116,7 @@ actual object ObjectCalls {
   ): ByteArray {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -1100,7 +1132,7 @@ actual object ObjectCalls {
   ): List<Int> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -1121,7 +1153,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -1145,7 +1177,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedFloat32Array(ret)
       } finally {
@@ -1161,7 +1193,7 @@ actual object ObjectCalls {
   ): List<Long> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedInt64Array(ret)
       } finally {
@@ -1180,7 +1212,7 @@ actual object ObjectCalls {
   ): List<Float> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedFloat32Array(ret)
       } finally {
@@ -1199,7 +1231,7 @@ actual object ObjectCalls {
   ): List<Double> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedFloat64Array(ret)
       } finally {
@@ -1218,7 +1250,7 @@ actual object ObjectCalls {
   ): List<Vector2> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -1248,7 +1280,7 @@ actual object ObjectCalls {
   ): List<Vector3> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedVector3Array(ret)
       } finally {
@@ -1267,7 +1299,7 @@ actual object ObjectCalls {
   ): List<Color> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedColorArray(ret)
       } finally {
@@ -1286,7 +1318,7 @@ actual object ObjectCalls {
   ): List<Vector4> {
     Arena.ofConfined().use { arena ->
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readPackedVector4Array(ret)
       } finally {
@@ -1305,7 +1337,7 @@ actual object ObjectCalls {
   ): List<GodotObject> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
@@ -1330,7 +1362,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetArray(methodBind: MemorySegment, instance: MemorySegment): List<Any?> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayScalars(ret)
       } finally {
@@ -1480,7 +1512,7 @@ actual object ObjectCalls {
   ): List<Vector3i> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayVector3i(ret)
       } finally {
@@ -1496,7 +1528,7 @@ actual object ObjectCalls {
   ): List<Long> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayLongs(ret)
       } finally {
@@ -1511,7 +1543,7 @@ actual object ObjectCalls {
   ): List<RID> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayRids(ret)
       } finally {
@@ -1526,7 +1558,7 @@ actual object ObjectCalls {
   ): List<String> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayStrings(ret)
       } finally {
@@ -1541,7 +1573,7 @@ actual object ObjectCalls {
   ): List<String> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayStringNames(ret)
       } finally {
@@ -1556,7 +1588,7 @@ actual object ObjectCalls {
   ): List<Map<String, Any?>> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readArrayDictionaries(ret)
       } finally {
@@ -1575,12 +1607,7 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): List<GodotObject> {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(
-      methodBind,
-      instance,
-      scratch.setBoolArg(boolArg),
-      scratch.arrayRet,
-    )
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(boolArg), scratch.arrayRet)
     return try {
       BuiltinTypes.readArrayObjectsOwned(scratch.arrayRet)
     } finally {
@@ -1595,12 +1622,7 @@ actual object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(
-      methodBind,
-      instance,
-      scratch.setBoolArg(boolArg),
-      scratch.arrayRet,
-    )
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(boolArg), scratch.arrayRet)
     return try {
       BuiltinTypes.readArrayObjectsOwned(scratch.arrayRet, wrapper)
     } finally {
@@ -1630,7 +1652,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readArrayObjectsOwned(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
@@ -1696,7 +1718,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
@@ -1754,7 +1776,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, firstBoolCell)
       args.setAtIndex(ADDRESS, 4, secondBoolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
       } finally {
@@ -1818,7 +1840,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, firstBoolCell)
       args.setAtIndex(ADDRESS, 4, valueCell)
       args.setAtIndex(ADDRESS, 5, secondBoolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
       } finally {
@@ -1896,7 +1918,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, valueVariant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(valueVariant)
       }
@@ -1938,7 +1960,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, stringCell)
         arr.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(stringCell)
@@ -1967,7 +1989,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(group))
         args.setAtIndex(ADDRESS, 2, methodCell)
         args.setAtIndex(ADDRESS, 3, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(methodCell)
@@ -1991,7 +2013,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, variant)
         arr.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -2016,7 +2038,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, variant)
         arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(secondName))
         arr.setAtIndex(ADDRESS, 3, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -2037,7 +2059,7 @@ actual object ObjectCalls {
         initialized = true
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         if (initialized) {
           BuiltinTypes.destroyVariant(variant)
@@ -2083,7 +2105,7 @@ actual object ObjectCalls {
           arr.setAtIndex(ADDRESS, 0, firstVariant)
           arr.setAtIndex(ADDRESS, 1, secondVariant)
           val ret = arena.allocate(8L, 8L)
-          objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+          bindPtrcall(methodBind, instance, arr, ret)
           return try {
             BuiltinTypes.readDictionaryScalars(ret)
           } finally {
@@ -2149,7 +2171,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, variant)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2168,7 +2190,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, variant)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2187,7 +2209,7 @@ actual object ObjectCalls {
       try {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -2207,7 +2229,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, variant)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2226,7 +2248,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, variant)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2245,7 +2267,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, pointerCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform3D(ret)
     }
   }
@@ -2260,7 +2282,7 @@ actual object ObjectCalls {
       pointerCell.set(ADDRESS, 0, pointer)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, pointerCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -2280,7 +2302,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, pathCell)
         args.setAtIndex(ADDRESS, 1, initializerCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(pathCell)
@@ -2299,7 +2321,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, variant)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return readRect2(ret)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2321,7 +2343,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, variant)
         arr.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -2342,7 +2364,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, variant)
         arr.setAtIndex(ADDRESS, 1, objectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -2364,7 +2386,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, variant)
         arr.setAtIndex(ADDRESS, 1, boolCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2387,7 +2409,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, variant)
         arr.setAtIndex(ADDRESS, 1, boolCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2410,7 +2432,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, variant)
         arr.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -2446,7 +2468,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 3, intCell)
         arr.setAtIndex(ADDRESS, 4, doubleCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2477,7 +2499,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, longCell)
         arr.setAtIndex(ADDRESS, 3, doubleCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2542,7 +2564,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 9, tooltipCell)
         args.setAtIndex(ADDRESS, 10, sizeInPercentCell)
         args.setAtIndex(ADDRESS, 11, altTextCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(tooltipCell)
         BuiltinTypes.destroyVariant(keyVariant)
@@ -2568,7 +2590,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, variant)
         args.setAtIndex(ADDRESS, 1, longCell)
         args.setAtIndex(ADDRESS, 2, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
         BuiltinTypes.destroyVariant(variant)
@@ -2599,7 +2621,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, stringCell)
         args.setAtIndex(ADDRESS, 2, bool0)
         args.setAtIndex(ADDRESS, 3, bool1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -2627,7 +2649,7 @@ actual object ObjectCalls {
           args.setAtIndex(ADDRESS, 0, intCell)
           args.setAtIndex(ADDRESS, 1, firstVariant)
           args.setAtIndex(ADDRESS, 2, secondVariant)
-          objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+          bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
         } finally {
           BuiltinTypes.destroyVariant(secondVariant)
         }
@@ -2656,7 +2678,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(arg1)
@@ -2734,7 +2756,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readVariantScalarOwned(ret, arena)
       } finally {
         BuiltinTypes.destroyVariant(ret)
@@ -2859,7 +2881,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         val ret = arena.allocate(16L, 4L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return Color(
           ret.get(JAVA_FLOAT, 0),
           ret.get(JAVA_FLOAT, 4),
@@ -2917,7 +2939,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -2939,7 +2961,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return readRect2(ret)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -2962,7 +2984,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, array)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
       }
@@ -2985,7 +3007,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, array)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
@@ -3012,7 +3034,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, int0)
         arr.setAtIndex(ADDRESS, 1, int1)
         arr.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -3038,7 +3060,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, int1)
       arr.setAtIndex(ADDRESS, 2, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -3062,7 +3084,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, int0)
         arr.setAtIndex(ADDRESS, 1, int1)
         arr.setAtIndex(ADDRESS, 2, byteArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
       }
@@ -3088,7 +3110,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, int0)
         arr.setAtIndex(ADDRESS, 1, int1)
         arr.setAtIndex(ADDRESS, 2, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, packed)
       }
@@ -3110,7 +3132,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, int1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -3138,7 +3160,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, int0)
         arr.setAtIndex(ADDRESS, 1, byteArray)
         arr.setAtIndex(ADDRESS, 2, int1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
       }
@@ -3165,7 +3187,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, byteArray)
         arr.setAtIndex(ADDRESS, 2, int1)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
@@ -3188,7 +3210,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(stringCell)
@@ -3211,7 +3233,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -3257,7 +3279,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(8L, 8L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return try {
           BuiltinTypes.readDictionaryScalars(ret)
         } finally {
@@ -3289,7 +3311,7 @@ actual object ObjectCalls {
           arr.setAtIndex(ADDRESS, 1, firstVariant)
           arr.setAtIndex(ADDRESS, 2, secondVariant)
           val ret = arena.allocate(8L, 8L)
-          objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+          bindPtrcall(methodBind, instance, arr, ret)
           return try {
             BuiltinTypes.readDictionaryScalars(ret)
           } finally {
@@ -3323,7 +3345,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         arr.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(stringCell)
@@ -3350,7 +3372,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, stringCell)
         arr.setAtIndex(ADDRESS, 2, variant)
         val ret = arena.allocate(8L, 8L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return try {
           BuiltinTypes.readDictionaryScalars(ret)
         } finally {
@@ -3380,7 +3402,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -3407,7 +3429,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, objectCell)
         args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(name))
         args.setAtIndex(ADDRESS, 3, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(stringCell)
@@ -3435,7 +3457,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, object1)
         args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(name))
         args.setAtIndex(ADDRESS, 3, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -3457,7 +3479,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, objectCell)
         args.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -3498,7 +3520,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 2, variant)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -3518,7 +3540,7 @@ actual object ObjectCalls {
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 0, objCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedStringArray(ret)
       } finally {
@@ -3539,7 +3561,7 @@ actual object ObjectCalls {
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 0, objCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -3575,7 +3597,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, stringArg)
         arr.setAtIndex(ADDRESS, 2, longArg)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringArg)
@@ -3586,35 +3608,35 @@ actual object ObjectCalls {
   /** Calls [methodBind] with no arguments and bool return value. */
   actual fun ptrcallNoArgsRetBool(methodBind: MemorySegment, instance: MemorySegment): Boolean {
     val ret = ptrcallScratch.get().byteRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return ret.get(JAVA_BYTE, 0) != 0.toByte()
   }
 
   /** Calls [methodBind] with no arguments and int64 return value. */
   actual fun ptrcallNoArgsRetLong(methodBind: MemorySegment, instance: MemorySegment): Long {
     val ret = ptrcallScratch.get().longRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return ret.get(JAVA_LONG, 0)
   }
 
   /** Calls [methodBind] with no arguments and uint32 return value. */
   actual fun ptrcallNoArgsRetUInt32(methodBind: MemorySegment, instance: MemorySegment): Long {
     val ret = ptrcallScratch.get().intRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
   }
 
   /** Calls [methodBind] with no arguments and RID return value. */
   actual fun ptrcallNoArgsRetRID(methodBind: MemorySegment, instance: MemorySegment): RID {
     val ret = ptrcallScratch.get().longRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return RID(ret.get(JAVA_LONG, 0))
   }
 
   /** Calls [methodBind] with no arguments and int32 return value. */
   actual fun ptrcallNoArgsRetInt(methodBind: MemorySegment, instance: MemorySegment): Int {
     val ret = ptrcallScratch.get().intRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return ret.get(JAVA_INT, 0)
   }
 
@@ -3624,7 +3646,7 @@ actual object ObjectCalls {
   ): NodePath {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readTypedNodePath(ret, arena)
       } finally {
@@ -3635,13 +3657,13 @@ actual object ObjectCalls {
 
   /** Calls [methodBind] with no arguments and no return value. */
   actual fun ptrcallNoArgs(methodBind: MemorySegment, instance: MemorySegment) {
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, MemorySegment.NULL)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, MemorySegment.NULL)
   }
 
   /** Calls [methodBind] with no arguments and float(double) return value. */
   actual fun ptrcallNoArgsRetDouble(methodBind: MemorySegment, instance: MemorySegment): Double {
     val ret = ptrcallScratch.get().doubleRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return ret.get(JAVA_DOUBLE, 0)
   }
 
@@ -3652,7 +3674,7 @@ actual object ObjectCalls {
       ridCell.set(JAVA_LONG, 0, value.value)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -3667,7 +3689,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -3683,7 +3705,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -3699,7 +3721,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -3715,7 +3737,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
     }
   }
@@ -3731,7 +3753,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -3747,7 +3769,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -3791,7 +3813,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -3808,7 +3830,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, ridCell)
       val retString = arena.allocate(8L, 8L)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -3827,7 +3849,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -3843,7 +3865,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -3863,7 +3885,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
     }
   }
@@ -3879,7 +3901,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readArrayRids(ret)
       } finally {
@@ -3942,7 +3964,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -3962,7 +3984,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readAABB(ret)
     }
   }
@@ -3978,7 +4000,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform2D(ret)
     }
   }
@@ -3994,7 +4016,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform3D(ret)
     }
   }
@@ -4013,7 +4035,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4035,7 +4057,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
       args.setAtIndex(ADDRESS, 2, rectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4053,7 +4075,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4071,7 +4093,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4090,7 +4112,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -4111,7 +4133,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, valueCell)
       val retString = arena.allocate(8L, 8L)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, retString)
+        bindPtrcall(methodBind, instance, args, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -4134,7 +4156,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform3D(ret)
     }
   }
@@ -4154,7 +4176,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -4178,7 +4200,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -4197,7 +4219,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -4219,7 +4241,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -4242,7 +4264,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -4265,7 +4287,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -4288,7 +4310,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return readRect2(ret)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -4311,7 +4333,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, variant)
         val ret = arena.allocate(8L, 4L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return readVector2i(ret)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -4350,7 +4372,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, long1)
         args.setAtIndex(ADDRESS, 5, doubleCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -4385,7 +4407,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, longCell)
         args.setAtIndex(ADDRESS, 4, doubleCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -4411,7 +4433,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, longCell)
         args.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -4434,7 +4456,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
         args.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -4473,7 +4495,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4492,7 +4514,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -4512,7 +4534,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -4532,7 +4554,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -4552,7 +4574,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -4593,7 +4615,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, indexCell)
         args.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -4615,7 +4637,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -4639,7 +4661,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform2D(ret)
     }
   }
@@ -4659,7 +4681,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform3D(ret)
     }
   }
@@ -4683,7 +4705,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, otherCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4705,7 +4727,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, transformCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4727,7 +4749,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, transformCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4751,7 +4773,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4778,7 +4800,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, int0)
         args.setAtIndex(ADDRESS, 2, int1)
         args.setAtIndex(ADDRESS, 3, byteArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
       }
@@ -4799,7 +4821,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4818,7 +4840,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -4841,7 +4863,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4867,7 +4889,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -4886,7 +4908,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -4912,7 +4934,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, intCell)
         args.setAtIndex(ADDRESS, 2, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -4946,7 +4968,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, variant)
         args.setAtIndex(ADDRESS, 4, intCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -4971,7 +4993,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -4993,7 +5015,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5016,7 +5038,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstObjectCell)
       args.setAtIndex(ADDRESS, 2, secondObjectCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -5039,7 +5061,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, objCell)
       args.setAtIndex(ADDRESS, 2, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5062,7 +5084,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -5085,7 +5107,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5111,7 +5133,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5142,7 +5164,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, arg1)
       args.setAtIndex(ADDRESS, 3, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -5168,7 +5190,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -5194,7 +5216,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -5216,7 +5238,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -5236,7 +5258,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5256,7 +5278,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -5277,7 +5299,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -5298,7 +5320,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -5323,7 +5345,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5349,7 +5371,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, anchorCell)
       args.setAtIndex(ADDRESS, 2, firstBodyCell)
       args.setAtIndex(ADDRESS, 3, secondBodyCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5380,7 +5402,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, uint1)
       args.setAtIndex(ADDRESS, 4, uint2)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -5428,7 +5450,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 7, uint2)
       args.setAtIndex(ADDRESS, 8, uint3)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -5463,7 +5485,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, uint0)
       args.setAtIndex(ADDRESS, 4, uint1)
       args.setAtIndex(ADDRESS, 5, uint2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5493,7 +5515,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, vector0)
       args.setAtIndex(ADDRESS, 3, rid2)
       args.setAtIndex(ADDRESS, 4, vector1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5534,7 +5556,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, long1)
       args.setAtIndex(ADDRESS, 5, colorCell)
       args.setAtIndex(ADDRESS, 6, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5579,7 +5601,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, long2)
       args.setAtIndex(ADDRESS, 6, colorCell)
       args.setAtIndex(ADDRESS, 7, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5619,7 +5641,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, color0)
       args.setAtIndex(ADDRESS, 4, color1)
       args.setAtIndex(ADDRESS, 5, flagsCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5653,7 +5675,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, bool0)
       args.setAtIndex(ADDRESS, 4, bool1)
       args.setAtIndex(ADDRESS, 5, bool2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5686,7 +5708,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, vectorCell)
       args.setAtIndex(ADDRESS, 3, long1)
       args.setAtIndex(ADDRESS, 4, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5727,7 +5749,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, double1)
       args.setAtIndex(ADDRESS, 5, colorCell)
       args.setAtIndex(ADDRESS, 6, double2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5772,7 +5794,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, longCell)
       args.setAtIndex(ADDRESS, 6, colorCell)
       args.setAtIndex(ADDRESS, 7, double2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5802,7 +5824,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, firstBodyCell)
       args.setAtIndex(ADDRESS, 4, secondBodyCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5836,7 +5858,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, thirdCell)
       args.setAtIndex(ADDRESS, 4, firstBodyCell)
       args.setAtIndex(ADDRESS, 5, secondBodyCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5855,7 +5877,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5878,7 +5900,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -5902,7 +5924,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -5927,7 +5949,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -5956,7 +5978,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readRect2(ret)
     }
   }
@@ -5981,7 +6003,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -6006,7 +6028,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -6035,7 +6057,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       args.setAtIndex(ADDRESS, 3, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6062,7 +6084,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       args.setAtIndex(ADDRESS, 3, rectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6089,7 +6111,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, firstLongCell)
       args.setAtIndex(ADDRESS, 3, secondLongCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6107,7 +6129,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, transformCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6133,7 +6155,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, rid1)
       args.setAtIndex(ADDRESS, 2, transformCell)
       args.setAtIndex(ADDRESS, 3, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6156,7 +6178,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, rid0)
       args.setAtIndex(ADDRESS, 1, rid1)
       args.setAtIndex(ADDRESS, 2, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6178,7 +6200,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, rid0)
       args.setAtIndex(ADDRESS, 1, rid1)
       args.setAtIndex(ADDRESS, 2, transformCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6211,7 +6233,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, transformCell)
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, rid2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6229,7 +6251,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, transformCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6255,7 +6277,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, rid1)
       args.setAtIndex(ADDRESS, 2, transformCell)
       args.setAtIndex(ADDRESS, 3, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6273,7 +6295,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, aabbCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6291,7 +6313,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, rectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6312,7 +6334,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6347,7 +6369,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, intCell)
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6385,7 +6407,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, uint2)
       args.setAtIndex(ADDRESS, 5, uint3)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -6423,7 +6445,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, double0)
       args.setAtIndex(ADDRESS, 4, double1)
       args.setAtIndex(ADDRESS, 5, long1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6459,7 +6481,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, color0)
       args.setAtIndex(ADDRESS, 3, color1)
       args.setAtIndex(ADDRESS, 4, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6499,7 +6521,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, color0)
       args.setAtIndex(ADDRESS, 4, color1)
       args.setAtIndex(ADDRESS, 5, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6536,7 +6558,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, int1)
       args.setAtIndex(ADDRESS, 4, colorCell)
       args.setAtIndex(ADDRESS, 5, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6574,7 +6596,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, colorCell)
       args.setAtIndex(ADDRESS, 5, oversamplingCell)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -6617,7 +6639,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, colorCell)
       args.setAtIndex(ADDRESS, 6, oversamplingCell)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -6676,7 +6698,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 8, directionCell)
         args.setAtIndex(ADDRESS, 9, orientationCell)
         args.setAtIndex(ADDRESS, 10, oversamplingCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -6741,7 +6763,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 9, directionCell)
         args.setAtIndex(ADDRESS, 10, orientationCell)
         args.setAtIndex(ADDRESS, 11, oversamplingCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -6810,7 +6832,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 10, directionCell)
         args.setAtIndex(ADDRESS, 11, orientationCell)
         args.setAtIndex(ADDRESS, 12, oversamplingCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -6883,7 +6905,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 11, directionCell)
         args.setAtIndex(ADDRESS, 12, orientationCell)
         args.setAtIndex(ADDRESS, 13, oversamplingCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -6917,7 +6939,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, colorCell)
       args.setAtIndex(ADDRESS, 3, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6947,7 +6969,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, colorCell)
       args.setAtIndex(ADDRESS, 3, transposeCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -6985,7 +7007,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, widthCell)
       args.setAtIndex(ADDRESS, 5, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7019,7 +7041,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, doubleCell)
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7057,7 +7079,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, double1)
       args.setAtIndex(ADDRESS, 4, colorCell)
       args.setAtIndex(ADDRESS, 5, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7091,7 +7113,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, tileCell)
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, transposeCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7121,7 +7143,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, rectCell)
       args.setAtIndex(ADDRESS, 2, colorCell)
       args.setAtIndex(ADDRESS, 3, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7159,7 +7181,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, tileCell)
       args.setAtIndex(ADDRESS, 4, colorCell)
       args.setAtIndex(ADDRESS, 5, transposeCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7201,7 +7223,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, colorCell)
       args.setAtIndex(ADDRESS, 5, tileCell)
       args.setAtIndex(ADDRESS, 6, transposeCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7239,7 +7261,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, tileCell)
       args.setAtIndex(ADDRESS, 5, transposeCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7258,7 +7280,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -7278,7 +7300,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -7298,7 +7320,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
     }
   }
@@ -7318,7 +7340,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -7346,7 +7368,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -7370,7 +7392,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -7394,7 +7416,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -7422,7 +7444,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -7446,7 +7468,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -7469,7 +7491,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7496,7 +7518,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
       args.setAtIndex(ADDRESS, 3, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7522,7 +7544,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg0)
       args.setAtIndex(ADDRESS, 2, arg1)
       args.setAtIndex(ADDRESS, 3, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7575,7 +7597,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         GodotStrings.readString(ret)
       } finally {
@@ -7599,7 +7621,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         GodotStrings.readString(ret)
       } finally {
@@ -7623,7 +7645,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -7643,7 +7665,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -7670,7 +7692,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7697,7 +7719,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, intCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
       args.setAtIndex(ADDRESS, 3, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7727,7 +7749,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, vectorCell)
       args.setAtIndex(ADDRESS, 3, double1)
       args.setAtIndex(ADDRESS, 4, double2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7749,7 +7771,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, longCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7772,7 +7794,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, longCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -7796,7 +7818,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, longCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -7823,7 +7845,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell0)
       args.setAtIndex(ADDRESS, 2, intCell1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7845,7 +7867,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, longCell)
       args.setAtIndex(ADDRESS, 2, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -7856,7 +7878,7 @@ actual object ObjectCalls {
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -7869,7 +7891,7 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val retVariant = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, retVariant)
+        bindPtrcall(methodBind, instance, MemorySegment.NULL, retVariant)
         val scratch = arena.allocate(ADDRESS)
         VariantConverters.variantToType(VariantType.OBJECT).invoke(scratch, retVariant)
         return scratch.get(ADDRESS, 0)
@@ -7886,7 +7908,7 @@ actual object ObjectCalls {
   ): String {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -7907,7 +7929,7 @@ actual object ObjectCalls {
         GodotStrings.initString(argString, value)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(argString)
       }
@@ -7930,7 +7952,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg0)
         GodotStrings.destroyString(arg1)
@@ -7957,7 +7979,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg1)
         GodotStrings.destroyString(arg0)
@@ -7984,7 +8006,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg0)
         GodotStrings.destroyString(arg1)
@@ -8021,7 +8043,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, arg2)
         arr.setAtIndex(ADDRESS, 3, arg3)
         arr.setAtIndex(ADDRESS, 4, arg4)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -8048,7 +8070,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg0)
       }
@@ -8079,7 +8101,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, arg2)
         arr.setAtIndex(ADDRESS, 3, arg3)
         val ret = arena.allocate(8L, 4L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return readVector2i(ret)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -8123,7 +8145,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 5, directionCell)
         args.setAtIndex(ADDRESS, 6, orientationCell)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return Vector2(
           x = GodotRealSegment.readIndex(ret, 0),
           y = GodotRealSegment.readIndex(ret, 1),
@@ -8178,7 +8200,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 7, directionCell)
         args.setAtIndex(ADDRESS, 8, orientationCell)
         val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return Vector2(
           x = GodotRealSegment.readIndex(ret, 0),
           y = GodotRealSegment.readIndex(ret, 1),
@@ -8205,7 +8227,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg0)
       }
@@ -8231,7 +8253,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         arr.setAtIndex(ADDRESS, 2, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(textCell)
         GodotStrings.destroyString(stringCell)
@@ -8258,7 +8280,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, firstIntCell)
         arr.setAtIndex(ADDRESS, 2, secondIntCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(textCell)
       }
@@ -8284,7 +8306,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         arr.setAtIndex(ADDRESS, 2, longCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(textCell)
       }
@@ -8307,7 +8329,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(textCell)
@@ -8332,7 +8354,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         val ret = arena.allocate(8L, 4L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
       } finally {
         GodotStrings.destroyString(textCell)
@@ -8359,7 +8381,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         arr.setAtIndex(ADDRESS, 2, byteArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
         GodotStrings.destroyString(textCell)
@@ -8384,7 +8406,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -8412,7 +8434,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, valueCell)
         arr.setAtIndex(ADDRESS, 2, secondStringCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(secondStringCell)
@@ -8441,7 +8463,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, firstCell)
         arr.setAtIndex(ADDRESS, 2, secondCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -8473,7 +8495,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, firstArray)
         arr.setAtIndex(ADDRESS, 3, secondArray)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, secondArray)
@@ -8507,7 +8529,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, secondStringCell)
         arr.setAtIndex(ADDRESS, 3, flagCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(secondStringCell)
@@ -8537,7 +8559,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -8562,7 +8584,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg0)
       }
@@ -8575,12 +8597,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
     value: Boolean,
   ) {
-    objectMethodBindPtrcall.invoke(
-      methodBind,
-      instance,
-      ptrcallScratch.get().setBoolArg(value),
-      MemorySegment.NULL,
-    )
+    bindPtrcall(methodBind, instance, ptrcallScratch.get().setBoolArg(value), MemorySegment.NULL)
   }
 
   actual fun ptrcallWithBoolArgRetArray(
@@ -8589,12 +8606,7 @@ actual object ObjectCalls {
     value: Boolean,
   ): List<Any?> {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(
-      methodBind,
-      instance,
-      scratch.setBoolArg(value),
-      scratch.arrayRet,
-    )
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.arrayRet)
     return try {
       BuiltinTypes.readArrayScalars(scratch.arrayRet)
     } finally {
@@ -8609,7 +8621,7 @@ actual object ObjectCalls {
     value: Boolean,
   ): Long {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(methodBind, instance, scratch.setBoolArg(value), scratch.longRet)
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.longRet)
     return scratch.longRet.get(JAVA_LONG, 0)
   }
 
@@ -8620,7 +8632,7 @@ actual object ObjectCalls {
     value: Boolean,
   ): RID {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(methodBind, instance, scratch.setBoolArg(value), scratch.longRet)
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.longRet)
     return RID(scratch.longRet.get(JAVA_LONG, 0))
   }
 
@@ -8646,7 +8658,7 @@ actual object ObjectCalls {
     value: Boolean,
   ): Int {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(methodBind, instance, scratch.setBoolArg(value), scratch.intRet)
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.intRet)
     return scratch.intRet.get(JAVA_INT, 0)
   }
 
@@ -8657,7 +8669,7 @@ actual object ObjectCalls {
     value: Boolean,
   ): Boolean {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(methodBind, instance, scratch.setBoolArg(value), scratch.byteRet)
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.byteRet)
     return scratch.byteRet.get(JAVA_BYTE, 0) != 0.toByte()
   }
 
@@ -8668,12 +8680,7 @@ actual object ObjectCalls {
     value: Boolean,
   ): ByteArray {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(
-      methodBind,
-      instance,
-      scratch.setBoolArg(value),
-      scratch.packedArrayRet,
-    )
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.packedArrayRet)
     return try {
       BuiltinTypes.readPackedByteArray(scratch.packedArrayRet)
     } finally {
@@ -8688,12 +8695,7 @@ actual object ObjectCalls {
     value: Boolean,
   ): List<Int> {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(
-      methodBind,
-      instance,
-      scratch.setBoolArg(value),
-      scratch.packedArrayRet,
-    )
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.packedArrayRet)
     return try {
       BuiltinTypes.readPackedInt32Array(scratch.packedArrayRet)
     } finally {
@@ -8716,7 +8718,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, bool0)
       arr.setAtIndex(ADDRESS, 1, bool1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -8739,7 +8741,7 @@ actual object ObjectCalls {
       bool1.set(java.lang.foreign.ValueLayout.JAVA_BYTE, 0, if (second) 1.toByte() else 0.toByte())
       arr.setAtIndex(ADDRESS, 1, bool0)
       arr.setAtIndex(ADDRESS, 2, bool1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -8766,7 +8768,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       arr.setAtIndex(ADDRESS, 2, longCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -8790,7 +8792,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, boolCell)
         arr.setAtIndex(ADDRESS, 2, stringCell)
         val ret = arena.allocate(8L, 8L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return try {
           BuiltinTypes.readDictionaryScalars(ret)
         } finally {
@@ -8826,7 +8828,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, stringCell)
         arr.setAtIndex(ADDRESS, 3, secondBoolCell)
         val ret = arena.allocate(8L, 8L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return try {
           BuiltinTypes.readDictionaryScalars(ret)
         } finally {
@@ -8862,7 +8864,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, stringCell)
         arr.setAtIndex(ADDRESS, 3, longCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -8898,7 +8900,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 3, packedCell)
         arr.setAtIndex(ADDRESS, 4, longCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packedCell)
@@ -8926,7 +8928,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
       arr.setAtIndex(ADDRESS, 2, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -8953,7 +8955,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, intCell)
       arr.setAtIndex(ADDRESS, 2, boolCell0)
       arr.setAtIndex(ADDRESS, 3, boolCell1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -8980,7 +8982,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, objCell1)
       arr.setAtIndex(ADDRESS, 2, intCell)
       arr.setAtIndex(ADDRESS, 3, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -9011,7 +9013,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, intCell)
       arr.setAtIndex(ADDRESS, 3, boolCell0)
       arr.setAtIndex(ADDRESS, 4, boolCell1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -9034,7 +9036,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, objCell1)
       arr.setAtIndex(ADDRESS, 2, intCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -9063,7 +9065,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, stringCell)
         arr.setAtIndex(ADDRESS, 2, intCell)
         arr.setAtIndex(ADDRESS, 3, longCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -9086,7 +9088,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, longCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -9106,7 +9108,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -9128,7 +9130,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, secondCell)
       arr.setAtIndex(ADDRESS, 2, thirdCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -9158,7 +9160,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, transform0)
       args.setAtIndex(ADDRESS, 3, rid2)
       args.setAtIndex(ADDRESS, 4, transform1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -9186,7 +9188,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(vecCell, 1, vector2Arg.y)
       arr.setAtIndex(ADDRESS, 2, vecCell)
 
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -9212,7 +9214,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, objCell)
       arr.setAtIndex(ADDRESS, 2, vecCell)
       arr.setAtIndex(ADDRESS, 3, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -9231,7 +9233,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -9254,7 +9256,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, vec)
       args.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -9274,7 +9276,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -9292,7 +9294,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, transformArg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -9310,7 +9312,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, transformArg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -9329,7 +9331,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, transformArg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform3D(ret)
     }
   }
@@ -9354,7 +9356,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, vec)
       args.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -9367,7 +9369,7 @@ actual object ObjectCalls {
     val scratch = ptrcallScratch.get()
     scratch.doubleCell.set(JAVA_DOUBLE, 0, value)
     scratch.args1.setAtIndex(ADDRESS, 0, scratch.doubleCell)
-    objectMethodBindPtrcall.invoke(methodBind, instance, scratch.args1, MemorySegment.NULL)
+    bindPtrcall(methodBind, instance, scratch.args1, MemorySegment.NULL)
   }
 
   /**
@@ -9387,7 +9389,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -9404,7 +9406,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -9425,7 +9427,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -9442,7 +9444,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -9460,7 +9462,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
         val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(argString)
@@ -9481,7 +9483,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(argString)
@@ -9504,7 +9506,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, objCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -9527,7 +9529,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, objCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -9551,7 +9553,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, objCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -9575,7 +9577,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, stringCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -9603,7 +9605,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, stringCell)
         arr.setAtIndex(ADDRESS, 2, secondObjCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -9640,7 +9642,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
       arr.setAtIndex(ADDRESS, 2, transform)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -9658,7 +9660,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, transform)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -9681,7 +9683,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, obj0)
         arr.setAtIndex(ADDRESS, 2, obj1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -9707,7 +9709,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, colorCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -9730,7 +9732,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -9755,7 +9757,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(arg0)
@@ -9781,7 +9783,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -9807,7 +9809,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -9834,7 +9836,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -9860,7 +9862,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -9887,7 +9889,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedInt32Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, ret)
@@ -9921,7 +9923,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, arg2)
         arr.setAtIndex(ADDRESS, 3, arg3)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -9947,7 +9949,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -9971,7 +9973,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -9996,7 +9998,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, doubleCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -10025,7 +10027,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -10069,7 +10071,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, double1)
         args.setAtIndex(ADDRESS, 5, longCell)
         args.setAtIndex(ADDRESS, 6, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg1)
         GodotStrings.destroyString(arg0)
@@ -10100,7 +10102,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedInt32Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, ret)
@@ -10123,7 +10125,7 @@ actual object ObjectCalls {
         GodotStrings.initString(argString, value)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedStringArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, ret)
@@ -10145,7 +10147,7 @@ actual object ObjectCalls {
         GodotStrings.initString(argString, value)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -10186,7 +10188,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 4, int3)
         arr.setAtIndex(ADDRESS, 5, int4)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -10207,7 +10209,7 @@ actual object ObjectCalls {
       try {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, arg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -10235,7 +10237,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, bytesCell)
         args.setAtIndex(ADDRESS, 2, flagsCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bytesCell)
@@ -10263,7 +10265,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, bytesCell)
         args.setAtIndex(ADDRESS, 2, flagsCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bytesCell)
@@ -10290,7 +10292,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, longCell)
         args.setAtIndex(ADDRESS, 1, bytesCell)
         args.setAtIndex(ADDRESS, 2, flagsCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bytesCell)
       }
@@ -10316,7 +10318,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, longCell)
         args.setAtIndex(ADDRESS, 1, bytesCell)
         args.setAtIndex(ADDRESS, 2, sizeCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bytesCell)
       }
@@ -10345,7 +10347,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, boolCell)
       args.setAtIndex(ADDRESS, 2, firstCell)
       args.setAtIndex(ADDRESS, 3, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -10371,7 +10373,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -10395,7 +10397,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, layerCell)
         args.setAtIndex(ADDRESS, 2, bytesCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bytesCell)
@@ -10423,7 +10425,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, formatCell)
         args.setAtIndex(ADDRESS, 2, bytesCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bytesCell)
@@ -10444,7 +10446,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argBytes)
         val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, argBytes)
@@ -10464,7 +10466,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedByteArray(argBytes, value)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argBytes)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, argBytes)
       }
@@ -10484,7 +10486,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argBytes)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, argBytes)
@@ -10523,7 +10525,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedByteArray(argBytes, value)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argBytes)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -10545,7 +10547,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argBytes)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, argBytes)
@@ -10570,7 +10572,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, argBytes)
         arr.setAtIndex(ADDRESS, 1, doubleCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, argBytes)
@@ -10594,7 +10596,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, byteArray)
         arr.setAtIndex(ADDRESS, 1, dict)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
@@ -10620,7 +10622,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, argBytes)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -10646,7 +10648,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, firstBytes)
         arr.setAtIndex(ADDRESS, 1, secondBytes)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, secondBytes)
@@ -10679,7 +10681,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, firstBytes)
         arr.setAtIndex(ADDRESS, 2, secondBytes)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, secondBytes)
@@ -10712,7 +10714,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, modeCell)
         arr.setAtIndex(ADDRESS, 1, firstBytes)
         arr.setAtIndex(ADDRESS, 2, secondBytes)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -10739,7 +10741,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, modeCell)
         arr.setAtIndex(ADDRESS, 1, argBytes)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, argBytes)
@@ -10762,7 +10764,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, modeCell)
         arr.setAtIndex(ADDRESS, 1, argBytes)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, argBytes)
       }
@@ -10785,7 +10787,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, argBytes)
         arr.setAtIndex(ADDRESS, 1, modeCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, argBytes)
@@ -10810,7 +10812,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, argString)
         val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(argString)
@@ -10835,7 +10837,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, packedCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packedCell)
@@ -10856,7 +10858,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedStringArray(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, argPacked)
       }
@@ -10876,7 +10878,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, argPacked)
@@ -10896,7 +10898,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedStringArray(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -10916,7 +10918,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArrayOfRids(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -10934,7 +10936,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -10956,7 +10958,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, argArray)
         args.setAtIndex(ADDRESS, 1, modeCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -10974,7 +10976,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArrayOfObjects(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -10993,7 +10995,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
@@ -11017,7 +11019,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, argArray)
         args.setAtIndex(ADDRESS, 1, typeCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
@@ -11042,7 +11044,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, argArray)
         args.setAtIndex(ADDRESS, 1, countCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
@@ -11071,7 +11073,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, secondArray)
         args.setAtIndex(ADDRESS, 2, countCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, secondArray)
@@ -11101,7 +11103,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, ridCell)
         args.setAtIndex(ADDRESS, 2, setCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, objectArray)
@@ -11130,7 +11132,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, setCell)
         args.setAtIndex(ADDRESS, 2, objectArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, objectArray)
@@ -11154,7 +11156,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, objectArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, objectArray)
@@ -11182,7 +11184,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, objectArray)
         args.setAtIndex(ADDRESS, 2, objectCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, objectArray)
@@ -11243,7 +11245,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
         GodotStrings.destroyString(stringCell)
@@ -11266,7 +11268,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -11289,7 +11291,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, argArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
@@ -11322,7 +11324,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, thirdArray)
         args.setAtIndex(ADDRESS, 3, countCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, thirdArray)
@@ -11355,7 +11357,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, argArray)
         args.setAtIndex(ADDRESS, 2, firstCell)
         args.setAtIndex(ADDRESS, 3, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -11400,7 +11402,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, colorCell)
         args.setAtIndex(ADDRESS, 4, intCell)
         args.setAtIndex(ADDRESS, 5, objectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, secondArray)
         BuiltinTypes.destroyTyped(VariantType.ARRAY, firstArray)
@@ -11428,7 +11430,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, transformArray)
         args.setAtIndex(ADDRESS, 2, boolCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, transformArray)
@@ -11456,7 +11458,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, ridCell)
       args.setAtIndex(ADDRESS, 2, objectCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -11489,7 +11491,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, longCell)
         args.setAtIndex(ADDRESS, 4, secondBool)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -11549,7 +11551,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 9, longCell)
         args.setAtIndex(ADDRESS, 10, colorsPacked)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_COLOR_ARRAY, colorsPacked)
@@ -11596,7 +11598,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, colorCell)
         args.setAtIndex(ADDRESS, 4, secondArray)
         args.setAtIndex(ADDRESS, 5, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, secondArray)
         BuiltinTypes.destroyTyped(VariantType.ARRAY, firstArray)
@@ -11619,7 +11621,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
         GodotStrings.destroyString(stringCell)
@@ -11639,7 +11641,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
@@ -11663,7 +11665,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, argArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
@@ -11688,7 +11690,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, argArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0) to BuiltinTypes.readArrayScalars(argArray)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
@@ -11716,7 +11718,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, boolCell)
         arr.setAtIndex(ADDRESS, 2, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
         GodotStrings.destroyString(stringCell)
@@ -11737,7 +11739,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -11761,7 +11763,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, argArray)
         arr.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -11785,7 +11787,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, boolCell)
         arr.setAtIndex(ADDRESS, 2, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -11807,7 +11809,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, argArray)
         arr.setAtIndex(ADDRESS, 1, transformCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -11833,7 +11835,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, firstCell)
         arr.setAtIndex(ADDRESS, 1, secondCell)
         arr.setAtIndex(ADDRESS, 2, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -11882,7 +11884,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, dict)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
@@ -11921,7 +11923,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, thirdCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         if (thirdInitialized) GodotStrings.destroyString(thirdCell)
@@ -11955,7 +11957,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, dict)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
@@ -12004,7 +12006,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 5, uint32Cell)
         args.setAtIndex(ADDRESS, 6, boolCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         if (secondStringInitialized) GodotStrings.destroyString(secondStringCell)
@@ -12044,7 +12046,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, secondObjectCell)
         args.setAtIndex(ADDRESS, 3, intCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
@@ -12068,7 +12070,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, boolCell)
       args.setAtIndex(ADDRESS, 1, objectCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -12088,7 +12090,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, transformCell)
       args.setAtIndex(ADDRESS, 1, ridCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -12124,7 +12126,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, valueCell)
       args.setAtIndex(ADDRESS, 5, thirdBoolCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -12140,7 +12142,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12158,7 +12160,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12176,7 +12178,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArrayOfDictionaries(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12199,7 +12201,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, dictionaryArray)
         args.setAtIndex(ADDRESS, 1, compressionCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, dictionaryArray)
@@ -12218,7 +12220,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12236,7 +12238,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12254,7 +12256,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12284,7 +12286,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, int0)
         arr.setAtIndex(ADDRESS, 2, int1)
         arr.setAtIndex(ADDRESS, 3, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12318,7 +12320,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, int1)
         arr.setAtIndex(ADDRESS, 3, int2)
         arr.setAtIndex(ADDRESS, 4, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12336,7 +12338,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -12356,7 +12358,7 @@ actual object ObjectCalls {
       try {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, arg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -12377,7 +12379,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(argString)
@@ -12398,7 +12400,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(argString)
@@ -12431,7 +12433,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, argBool)
         arr.setAtIndex(ADDRESS, 2, argLong)
         val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(argString)
@@ -12460,7 +12462,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, argBool)
         arr.setAtIndex(ADDRESS, 2, argInt)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(argString)
@@ -12485,7 +12487,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -12510,7 +12512,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -12535,7 +12537,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -12561,7 +12563,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -12586,7 +12588,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -12612,7 +12614,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -12637,7 +12639,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedStringArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, ret)
@@ -12667,7 +12669,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -12708,7 +12710,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, arg3)
         args.setAtIndex(ADDRESS, 4, arg4)
         args.setAtIndex(ADDRESS, 5, longCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg4)
         GodotStrings.destroyString(arg3)
@@ -12763,7 +12765,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, firstIntCell)
         args.setAtIndex(ADDRESS, 5, secondIntCell)
         args.setAtIndex(ADDRESS, 6, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedStringArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, ret)
@@ -12791,7 +12793,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -12815,7 +12817,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -12838,7 +12840,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -12854,7 +12856,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedInt32Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, argPacked)
       }
@@ -12873,7 +12875,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedInt64Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT64_ARRAY, argPacked)
       }
@@ -12895,7 +12897,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedFloat32Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, argPacked)
       }
@@ -12917,7 +12919,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, firstPacked)
         arr.setAtIndex(ADDRESS, 1, secondPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, secondPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, firstPacked)
@@ -12940,7 +12942,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, floatPacked)
         arr.setAtIndex(ADDRESS, 1, intPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, intPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, floatPacked)
@@ -12968,7 +12970,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, boolCell)
         val ret = arena.allocate(JAVA_DOUBLE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_DOUBLE, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, argPacked)
@@ -12995,7 +12997,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, indexCell)
         arr.setAtIndex(ADDRESS, 1, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, argPacked)
       }
@@ -13017,7 +13019,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedFloat64Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT64_ARRAY, argPacked)
       }
@@ -13039,7 +13041,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector2Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, argPacked)
       }
@@ -13058,7 +13060,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, argPacked)
@@ -13078,7 +13080,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector2Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -13102,7 +13104,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, argPacked)
       }
@@ -13125,7 +13127,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, doubleCell)
         val ret = BuiltinTypes.allocatePackedArray(arena)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return try {
           BuiltinTypes.readPackedVector2Array(ret)
         } finally {
@@ -13152,7 +13154,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, pointsPacked)
         arr.setAtIndex(ADDRESS, 1, indicesPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, indicesPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, pointsPacked)
@@ -13172,7 +13174,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector2Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readPackedInt32Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, ret)
@@ -13193,7 +13195,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector2Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
@@ -13217,7 +13219,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, argPacked)
       }
@@ -13235,7 +13237,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArrayOfPackedVector2Arrays(argArray, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -13258,7 +13260,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, firstPacked)
         arr.setAtIndex(ADDRESS, 1, secondPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
@@ -13288,7 +13290,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, amountCell)
         arr.setAtIndex(ADDRESS, 2, modeCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
@@ -13321,7 +13323,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, amountCell)
         arr.setAtIndex(ADDRESS, 2, joinTypeCell)
         arr.setAtIndex(ADDRESS, 3, endTypeCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ret)
@@ -13357,7 +13359,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, colorCell)
         arr.setAtIndex(ADDRESS, 2, widthCell)
         arr.setAtIndex(ADDRESS, 3, antialiasedCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, pointsPacked)
       }
@@ -13387,7 +13389,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, colorsPacked)
         arr.setAtIndex(ADDRESS, 2, widthCell)
         arr.setAtIndex(ADDRESS, 3, antialiasedCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_COLOR_ARRAY, colorsPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, pointsPacked)
@@ -13422,7 +13424,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, colorsPacked)
         arr.setAtIndex(ADDRESS, 3, widthCell)
         arr.setAtIndex(ADDRESS, 4, antialiasedCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_COLOR_ARRAY, colorsPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, pointsPacked)
@@ -13457,7 +13459,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, colorCell)
         arr.setAtIndex(ADDRESS, 2, uvsPacked)
         arr.setAtIndex(ADDRESS, 3, textureCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, uvsPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, pointsPacked)
@@ -13488,7 +13490,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, colorsPacked)
         arr.setAtIndex(ADDRESS, 2, uvsPacked)
         arr.setAtIndex(ADDRESS, 3, textureCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, uvsPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_COLOR_ARRAY, colorsPacked)
@@ -13524,7 +13526,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, colorsPacked)
         arr.setAtIndex(ADDRESS, 3, uvsPacked)
         arr.setAtIndex(ADDRESS, 4, textureRidCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, uvsPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_COLOR_ARRAY, colorsPacked)
@@ -13548,7 +13550,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector3Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, argPacked)
       }
@@ -13567,7 +13569,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, argPacked)
@@ -13591,7 +13593,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, doubleCell)
         val ret = BuiltinTypes.allocatePackedArray(arena)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return try {
           BuiltinTypes.readPackedVector3Array(ret)
         } finally {
@@ -13618,7 +13620,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, pointsPacked)
         arr.setAtIndex(ADDRESS, 1, indicesPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, indicesPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, pointsPacked)
@@ -13652,7 +13654,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, objectCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
         args.setAtIndex(ADDRESS, 3, colorCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, pointsPacked)
       }
@@ -13686,7 +13688,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, idsPacked)
         args.setAtIndex(ADDRESS, 3, bool0)
         args.setAtIndex(ADDRESS, 4, bool1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, idsPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, pointsPacked)
@@ -13709,7 +13711,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, transformCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, argPacked)
       }
@@ -13739,7 +13741,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
         arr.setAtIndex(ADDRESS, 3, arg3)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, argPacked)
       }
@@ -13761,7 +13763,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedColorArray(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_COLOR_ARRAY, argPacked)
       }
@@ -13783,7 +13785,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector4Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR4_ARRAY, argPacked)
       }
@@ -13811,7 +13813,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, arg2)
@@ -13837,7 +13839,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, byteArrayCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArrayCell)
@@ -13853,7 +13855,7 @@ actual object ObjectCalls {
       arg0.set(JAVA_LONG, 0, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -13864,7 +13866,7 @@ actual object ObjectCalls {
       arg0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -13883,7 +13885,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -13905,7 +13907,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -13924,7 +13926,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -13942,7 +13944,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, longCell)
       arr.setAtIndex(ADDRESS, 1, ridCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -13961,7 +13963,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, uintCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -13981,7 +13983,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, uintCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -14021,7 +14023,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, uint2)
       args.setAtIndex(ADDRESS, 6, uint3)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -14065,7 +14067,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 6, int3)
       args.setAtIndex(ADDRESS, 7, long3)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -14117,7 +14119,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 8, long8)
       args.setAtIndex(ADDRESS, 9, long9)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -14140,7 +14142,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, long0)
       arr.setAtIndex(ADDRESS, 1, ridCell)
       arr.setAtIndex(ADDRESS, 2, long1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -14163,7 +14165,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, ridCell)
       args.setAtIndex(ADDRESS, 2, long1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -14186,7 +14188,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, longCell)
       arr.setAtIndex(ADDRESS, 1, ridCell)
       arr.setAtIndex(ADDRESS, 2, uintCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -14197,7 +14199,7 @@ actual object ObjectCalls {
       arg0.set(JAVA_INT, 0, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -14213,7 +14215,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(JAVA_BYTE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -14230,7 +14232,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(JAVA_DOUBLE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -14247,7 +14249,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -14264,7 +14266,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -14281,7 +14283,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
     }
   }
@@ -14298,7 +14300,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -14316,7 +14318,7 @@ actual object ObjectCalls {
       try {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, arg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -14336,7 +14338,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -14353,7 +14355,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
     }
   }
@@ -14370,7 +14372,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -14391,7 +14393,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readTypedNodePath(ret, arena)
       } finally {
@@ -14411,7 +14413,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -14432,7 +14434,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -14449,7 +14451,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(JAVA_BYTE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -14466,7 +14468,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(JAVA_LONG)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -14483,7 +14485,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(JAVA_INT)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -14500,7 +14502,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(ADDRESS)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -14518,7 +14520,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg)
       val retString = arena.allocate(8L, 8L)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -14538,7 +14540,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(JAVA_DOUBLE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -14555,7 +14557,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -14576,7 +14578,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readTransform2D(ret)
     }
   }
@@ -14593,7 +14595,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readTransform3D(ret)
     }
   }
@@ -14610,7 +14612,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 16, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readProjection(ret)
     }
   }
@@ -14626,7 +14628,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt64Array(ret)
       } finally {
@@ -14650,7 +14652,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, uintCell)
       args.setAtIndex(ADDRESS, 1, transformCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform3D(ret)
     }
   }
@@ -14678,7 +14680,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, double1)
       args.setAtIndex(ADDRESS, 3, double2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 16, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readProjection(ret)
     }
   }
@@ -14695,7 +14697,7 @@ actual object ObjectCalls {
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0)
     }
   }
@@ -14712,7 +14714,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -14729,7 +14731,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -14746,7 +14748,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
     }
   }
@@ -14762,7 +14764,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -14779,7 +14781,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -14796,7 +14798,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -14817,7 +14819,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
     }
   }
@@ -14833,7 +14835,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedInt64Array(ret)
       } finally {
@@ -14853,7 +14855,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -14873,7 +14875,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readTransform3D(ret)
     }
   }
@@ -14889,7 +14891,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 16, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readProjection(ret)
     }
   }
@@ -14906,7 +14908,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -14921,7 +14923,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Vector2i {
     val ret = ptrcallScratch.get().vector2iRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
   }
 
@@ -14930,14 +14932,14 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Vector3i {
     val ret = ptrcallScratch.get().vector3iRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return readVector3i(ret)
   }
 
   actual fun ptrcallNoArgsRetRect2i(methodBind: MemorySegment, instance: MemorySegment): Rect2i {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return Rect2i(
         position = Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4)),
         size = Vector2i(x = ret.get(JAVA_INT, 8), y = ret.get(JAVA_INT, 12)),
@@ -14956,7 +14958,7 @@ actual object ObjectCalls {
       arg.set(JAVA_INT, 4, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -14973,7 +14975,7 @@ actual object ObjectCalls {
       rect.set(JAVA_INT, 12, value.size.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, rect)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -14991,7 +14993,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, rect)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -15034,7 +15036,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, rect)
       arr.setAtIndex(ADDRESS, 1, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15071,7 +15073,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, colorCell)
       args.setAtIndex(ADDRESS, 3, intCell)
       args.setAtIndex(ADDRESS, 4, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -15092,7 +15094,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, rect)
       arr.setAtIndex(ADDRESS, 1, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15113,7 +15115,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, rect)
       arr.setAtIndex(ADDRESS, 1, amountCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15135,7 +15137,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, rect)
       arr.setAtIndex(ADDRESS, 1, amountCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readArrayPackedVector2Arrays(ret)
       } finally {
@@ -15156,7 +15158,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -15173,7 +15175,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -15189,7 +15191,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Rect2i(
         position = Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4)),
         size = Vector2i(x = ret.get(JAVA_INT, 8), y = ret.get(JAVA_INT, 12)),
@@ -15222,7 +15224,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, argCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -15271,7 +15273,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Rect2(
         position =
           Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1)),
@@ -15296,7 +15298,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, indexCell)
       arr.setAtIndex(ADDRESS, 1, rectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15311,7 +15313,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readTransform2D(ret)
     }
   }
@@ -15330,7 +15332,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, transformCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15345,7 +15347,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readTransform3D(ret)
     }
   }
@@ -15362,7 +15364,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Color(
         ret.get(JAVA_FLOAT, 0),
         ret.get(JAVA_FLOAT, 4),
@@ -15387,7 +15389,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15406,7 +15408,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15425,7 +15427,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15445,7 +15447,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -15466,7 +15468,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -15490,7 +15492,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15510,7 +15512,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -15531,7 +15533,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -15552,7 +15554,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -15576,7 +15578,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15625,7 +15627,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 6, bool0)
       args.setAtIndex(ADDRESS, 7, int2)
       args.setAtIndex(ADDRESS, 8, bool1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -15660,7 +15662,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, arg2)
         arr.setAtIndex(ADDRESS, 3, arg3)
         arr.setAtIndex(ADDRESS, 4, arg4)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, arg4)
       }
@@ -15685,7 +15687,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15708,7 +15710,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -15732,7 +15734,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readVector2i(ret)
     }
   }
@@ -15756,7 +15758,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -15783,7 +15785,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15809,7 +15811,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15836,7 +15838,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -15864,7 +15866,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -15899,7 +15901,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15929,7 +15931,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -15960,7 +15962,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -15983,7 +15985,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16006,7 +16008,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, firstCell)
         arr.setAtIndex(ADDRESS, 1, secondCell)
         arr.setAtIndex(ADDRESS, 2, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -16035,7 +16037,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, secondCell)
       arr.setAtIndex(ADDRESS, 2, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16059,7 +16061,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, secondCell)
       arr.setAtIndex(ADDRESS, 2, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16079,7 +16081,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -16099,7 +16101,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Color(
         ret.get(JAVA_FLOAT, 0),
         ret.get(JAVA_FLOAT, 4),
@@ -16124,7 +16126,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -16152,7 +16154,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16173,7 +16175,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16200,7 +16202,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16222,7 +16224,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16245,7 +16247,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -16272,7 +16274,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16292,7 +16294,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -16334,7 +16336,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readTypedNodePath(ret, arena)
       } finally {
@@ -16358,7 +16360,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readVector2i(ret)
     }
   }
@@ -16378,7 +16380,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readRect2i(ret)
     }
   }
@@ -16406,7 +16408,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -16437,7 +16439,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, nodePath)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -16460,7 +16462,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -16482,7 +16484,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -16507,7 +16509,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       val retVariant = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retVariant)
+        bindPtrcall(methodBind, instance, arr, retVariant)
         return BuiltinTypes.readVariantScalar(retVariant, arena)
       } finally {
         BuiltinTypes.destroyVariant(retVariant)
@@ -16531,7 +16533,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -16559,7 +16561,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -16587,7 +16589,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, bool1)
       arr.setAtIndex(ADDRESS, 3, bool2)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -16619,7 +16621,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, bool1)
       arr.setAtIndex(ADDRESS, 4, bool2)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -16643,7 +16645,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, int1)
       arr.setAtIndex(ADDRESS, 2, int2)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -16680,7 +16682,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, useMipmapsCell)
         args.setAtIndex(ADDRESS, 5, imageArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, imageArray)
@@ -16720,7 +16722,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, useMipmapsCell)
         args.setAtIndex(ADDRESS, 5, imageArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, imageArray)
@@ -16754,7 +16756,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, int1)
       arr.setAtIndex(ADDRESS, 3, int2)
       arr.setAtIndex(ADDRESS, 4, int3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16785,7 +16787,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, int2)
       arr.setAtIndex(ADDRESS, 4, int3)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -16820,7 +16822,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
       arr.setAtIndex(ADDRESS, 5, arg5)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16859,7 +16861,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -16879,7 +16881,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16899,7 +16901,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -16922,7 +16924,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, objCell)
       arr.setAtIndex(ADDRESS, 2, int1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16944,7 +16946,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, objCell)
       arr.setAtIndex(ADDRESS, 2, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16966,7 +16968,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, doubleCell)
       arr.setAtIndex(ADDRESS, 2, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -16989,7 +16991,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, vectorCell)
       arr.setAtIndex(ADDRESS, 2, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17005,7 +17007,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -17031,7 +17033,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, longCell)
         arr.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -17058,7 +17060,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17077,7 +17079,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17097,7 +17099,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -17121,7 +17123,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, intCell)
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -17145,7 +17147,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, intCell)
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         GodotRealSegment.readIndex(ret, 0),
         GodotRealSegment.readIndex(ret, 1),
@@ -17169,7 +17171,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -17189,7 +17191,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readTypedNodePath(ret, arena)
       } finally {
@@ -17213,7 +17215,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readRect2(ret)
     }
   }
@@ -17236,7 +17238,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17262,7 +17264,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17288,7 +17290,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17318,7 +17320,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17337,7 +17339,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17359,7 +17361,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17382,7 +17384,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -17402,7 +17404,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -17422,7 +17424,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -17443,7 +17445,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg1)
       }
@@ -17467,7 +17469,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(arg1)
@@ -17495,7 +17497,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, secondCell)
         arr.setAtIndex(ADDRESS, 2, stringCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -17519,7 +17521,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(arg1)
@@ -17556,7 +17558,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 3, string1)
         arr.setAtIndex(ADDRESS, 4, int2)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(string1)
@@ -17589,7 +17591,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, int1)
         arr.setAtIndex(ADDRESS, 2, string0)
         arr.setAtIndex(ADDRESS, 3, string1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -17616,7 +17618,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, bool0)
         arr.setAtIndex(ADDRESS, 1, bool1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -17639,7 +17641,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -17663,7 +17665,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17682,7 +17684,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17702,7 +17704,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -17727,7 +17729,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -17755,7 +17757,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, secondCell)
       arr.setAtIndex(ADDRESS, 2, longCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -17776,7 +17778,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -17797,7 +17799,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readTransform2D(ret)
     }
   }
@@ -17817,7 +17819,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, boolCell)
       arr.setAtIndex(ADDRESS, 1, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17835,7 +17837,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, boolCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -17854,7 +17856,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, boolCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -17874,7 +17876,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, boolCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -17897,7 +17899,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, boolCell)
       arr.setAtIndex(ADDRESS, 1, doubleCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -17940,7 +17942,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -17960,7 +17962,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -17980,7 +17982,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -18000,7 +18002,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -18020,7 +18022,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -18039,7 +18041,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18062,7 +18064,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -18085,7 +18087,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18107,7 +18109,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18130,7 +18132,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -18154,7 +18156,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedInt64Array(ret)
       } finally {
@@ -18182,7 +18184,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -18210,7 +18212,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedVector3Array(ret)
       } finally {
@@ -18235,7 +18237,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -18256,7 +18258,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0)
     }
   }
@@ -18276,7 +18278,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Quaternion(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -18302,7 +18304,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -18327,7 +18329,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -18347,7 +18349,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18370,7 +18372,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18389,7 +18391,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18409,7 +18411,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -18429,7 +18431,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -18449,7 +18451,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -18469,7 +18471,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -18498,7 +18500,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -18526,7 +18528,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -18551,7 +18553,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -18606,7 +18608,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, variant)
         arr.setAtIndex(ADDRESS, 3, arg3)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -18644,7 +18646,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -18682,7 +18684,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -18718,7 +18720,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -18743,7 +18745,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Quaternion(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -18771,7 +18773,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(name))
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -18797,7 +18799,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -18821,7 +18823,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         GodotRealSegment.readIndex(ret, 0),
         GodotRealSegment.readIndex(ret, 1),
@@ -18845,7 +18847,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -18869,7 +18871,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedVector3Array(ret)
       } finally {
@@ -18893,7 +18895,7 @@ actual object ObjectCalls {
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18912,7 +18914,7 @@ actual object ObjectCalls {
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18931,7 +18933,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18950,7 +18952,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, transformCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18969,7 +18971,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, transformCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -18999,7 +19001,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, transform)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19019,7 +19021,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -19045,7 +19047,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       val retVariant = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retVariant)
+        bindPtrcall(methodBind, instance, arr, retVariant)
         return BuiltinTypes.readVariantScalar(retVariant, arena)
       } finally {
         BuiltinTypes.destroyVariant(retVariant)
@@ -19076,7 +19078,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19103,7 +19105,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19131,7 +19133,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, bool1)
       arr.setAtIndex(ADDRESS, 3, bool2)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -19153,7 +19155,7 @@ actual object ObjectCalls {
       try {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -19170,7 +19172,7 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19184,7 +19186,7 @@ actual object ObjectCalls {
       try {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -19221,7 +19223,7 @@ actual object ObjectCalls {
       )
       arr.setAtIndex(ADDRESS, 3, boolCell)
 
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19261,7 +19263,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, bool1)
       args.setAtIndex(ADDRESS, 5, double2)
       args.setAtIndex(ADDRESS, 6, longCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -19310,7 +19312,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 7, bool2)
       args.setAtIndex(ADDRESS, 8, bool3)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -19339,7 +19341,7 @@ actual object ObjectCalls {
       )
       arr.setAtIndex(ADDRESS, 2, boolCell)
 
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19356,7 +19358,7 @@ actual object ObjectCalls {
       val floatCell = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
       floatCell.set(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0, floatArg)
       arr.setAtIndex(ADDRESS, 1, floatCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19375,7 +19377,7 @@ actual object ObjectCalls {
       colorCell.set(JAVA_FLOAT, 8, color.b)
       colorCell.set(JAVA_FLOAT, 12, color.a)
       arr.setAtIndex(ADDRESS, 1, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19392,7 +19394,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(vec, 0, value.x)
       GodotRealSegment.writeIndex(vec, 1, value.y)
       arr.setAtIndex(ADDRESS, 1, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19426,7 +19428,7 @@ actual object ObjectCalls {
       )
       arr.setAtIndex(ADDRESS, 2, secondBoolCell)
 
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19441,7 +19443,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19456,7 +19458,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -19472,7 +19474,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -19488,7 +19490,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -19507,7 +19509,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 2, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19522,7 +19524,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -19542,7 +19544,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -19562,7 +19564,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -19582,7 +19584,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -19603,7 +19605,7 @@ actual object ObjectCalls {
       try {
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
         arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -19628,7 +19630,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, intCell)
       arr.setAtIndex(ADDRESS, 3, GodotStrings.makeStringName(third))
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -19649,7 +19651,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(third))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19667,7 +19669,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, intCell)
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(second))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19689,7 +19691,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, firstIntCell)
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 3, secondIntCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19712,7 +19714,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 3, secondIntCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -19740,7 +19742,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, secondIntCell)
       arr.setAtIndex(ADDRESS, 4, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -19767,7 +19769,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 3, secondIntCell)
       arr.setAtIndex(ADDRESS, 4, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -19781,7 +19783,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -19796,7 +19798,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -19810,7 +19812,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -19829,7 +19831,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -19844,7 +19846,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -19858,7 +19860,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Color(
         ret.get(JAVA_FLOAT, 0),
         ret.get(JAVA_FLOAT, 4),
@@ -19877,7 +19879,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -19892,7 +19894,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -19920,7 +19922,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readArrayObjectsOwned(ret, wrapper)
       } finally {
@@ -19961,7 +19963,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
@@ -19994,7 +19996,7 @@ actual object ObjectCalls {
         )
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, nodePath)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20049,7 +20051,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
@@ -20078,7 +20080,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
@@ -20112,7 +20114,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
@@ -20140,7 +20142,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
@@ -20173,7 +20175,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, longCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
@@ -20202,7 +20204,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20232,7 +20234,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, longCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20262,7 +20264,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, longCell)
         arr.setAtIndex(ADDRESS, 1, nodePath)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20292,7 +20294,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, intArg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20322,7 +20324,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, boolArg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20360,7 +20362,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, boolCell)
         arr.setAtIndex(ADDRESS, 2, nodePath)
         arr.setAtIndex(ADDRESS, 3, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20398,7 +20400,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, rectCell)
         arr.setAtIndex(ADDRESS, 2, firstCell)
         arr.setAtIndex(ADDRESS, 3, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20431,7 +20433,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, nodePath)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20475,7 +20477,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, variant)
         arr.setAtIndex(ADDRESS, 3, doubleCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         if (variantInitialized) {
@@ -20517,7 +20519,7 @@ actual object ObjectCalls {
       val floatCell = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
       floatCell.set(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0, value)
       arr.setAtIndex(ADDRESS, 1, floatCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -20545,7 +20547,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, doubleCell)
       arr.setAtIndex(ADDRESS, 2, longCell0)
       arr.setAtIndex(ADDRESS, 3, longCell1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -20568,7 +20570,7 @@ actual object ObjectCalls {
       )
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -20599,7 +20601,7 @@ actual object ObjectCalls {
       )
       arr.setAtIndex(ADDRESS, 2, secondBoolCell)
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -20621,7 +20623,7 @@ actual object ObjectCalls {
         if (boolArg) 1.toByte() else 0.toByte(),
       )
       arr.setAtIndex(ADDRESS, 1, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -20645,7 +20647,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
         arr.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -20671,7 +20673,7 @@ actual object ObjectCalls {
       )
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0)
     }
   }
@@ -20692,7 +20694,7 @@ actual object ObjectCalls {
       )
       arr.setAtIndex(ADDRESS, 0, boolCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -20718,7 +20720,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, dict)
         arr.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, retString)
+        bindPtrcall(methodBind, instance, arr, retString)
         return GodotStrings.readString(retString)
       } finally {
         GodotStrings.destroyString(retString)
@@ -20771,7 +20773,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 7, spacingGlyphCell)
         args.setAtIndex(ADDRESS, 8, baselineOffsetCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, variationCoordinatesCell)
@@ -20795,7 +20797,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, dictionaryCell)
         args.setAtIndex(ADDRESS, 1, dictionaryArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -20818,7 +20820,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, dict)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
@@ -20838,7 +20840,7 @@ actual object ObjectCalls {
         BuiltinTypes.initDictionary(dict, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, dict)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
       }
@@ -20861,7 +20863,7 @@ actual object ObjectCalls {
         BuiltinTypes.initDictionary(dict, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, dict)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -20886,7 +20888,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, dict)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
       }
@@ -20910,7 +20912,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, dict)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
@@ -20934,7 +20936,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, dict)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
       }
@@ -20972,7 +20974,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, blendShapesCell)
         args.setAtIndex(ADDRESS, 4, lodsCell)
         args.setAtIndex(ADDRESS, 5, flagsCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, lodsCell)
         BuiltinTypes.destroyTyped(VariantType.ARRAY, blendShapesCell)
@@ -21016,7 +21018,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 5, languageCell)
         args.setAtIndex(ADDRESS, 6, metaVariant)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyVariant(metaVariant)
@@ -21055,7 +21057,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, fontsArray)
         args.setAtIndex(ADDRESS, 3, sizeCell)
         args.setAtIndex(ADDRESS, 4, featuresCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, featuresCell)
         BuiltinTypes.destroyTyped(VariantType.ARRAY, fontsArray)
@@ -21072,7 +21074,7 @@ actual object ObjectCalls {
   ): Map<String, Any?> {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -21096,7 +21098,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, intCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -21120,7 +21122,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -21158,7 +21160,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, argArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
       }
@@ -21184,7 +21186,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, boolCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -21208,7 +21210,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, longCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -21241,7 +21243,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, argString)
         arr.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -21319,7 +21321,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, boolCell)
 
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -21337,7 +21339,7 @@ actual object ObjectCalls {
       intCell.set(JAVA_LONG, 0, value)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21356,7 +21358,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21376,7 +21378,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -21397,7 +21399,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -21418,7 +21420,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -21439,7 +21441,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -21460,7 +21462,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
     }
   }
@@ -21485,7 +21487,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
     }
   }
@@ -21503,7 +21505,7 @@ actual object ObjectCalls {
       intCell.set(JAVA_INT, 0, value)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21539,7 +21541,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -21569,7 +21571,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, nodePath)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -21593,7 +21595,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21612,7 +21614,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vecCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21631,7 +21633,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vecCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -21651,7 +21653,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vecCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -21671,7 +21673,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vecCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -21711,7 +21713,7 @@ actual object ObjectCalls {
       val intCell = arena.allocate(JAVA_LONG)
       intCell.set(JAVA_LONG, 0, value)
       arr.setAtIndex(ADDRESS, 1, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21728,7 +21730,7 @@ actual object ObjectCalls {
       val intCell = arena.allocate(JAVA_INT)
       intCell.set(JAVA_INT, 0, value)
       arr.setAtIndex(ADDRESS, 1, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21745,7 +21747,7 @@ actual object ObjectCalls {
       intCell.set(JAVA_INT, 0, value)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -21763,7 +21765,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -21783,7 +21785,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(second))
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21823,7 +21825,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(first))
         arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(second))
         arr.setAtIndex(ADDRESS, 3, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -21847,7 +21849,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       arr.setAtIndex(ADDRESS, 2, int1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21868,7 +21870,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       arr.setAtIndex(ADDRESS, 2, int1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21902,7 +21904,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, secondLongCell)
         args.setAtIndex(ADDRESS, 4, secondStringCell)
         args.setAtIndex(ADDRESS, 5, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(secondStringCell)
@@ -21948,7 +21950,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, objectCell)
         args.setAtIndex(ADDRESS, 5, variant)
         args.setAtIndex(ADDRESS, 6, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(secondStringCell)
@@ -21974,7 +21976,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       arr.setAtIndex(ADDRESS, 2, int1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21995,7 +21997,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       arr.setAtIndex(ADDRESS, 2, int1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -22012,7 +22014,7 @@ actual object ObjectCalls {
       val objCell = arena.allocate(ADDRESS)
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 1, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -22030,7 +22032,7 @@ actual object ObjectCalls {
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 1, objCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -22056,7 +22058,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(vectorCell, 1, vector.y)
       arr.setAtIndex(ADDRESS, 2, vectorCell)
 
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -22075,7 +22077,7 @@ actual object ObjectCalls {
       val objCell = arena.allocate(ADDRESS)
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 2, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -22094,7 +22096,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22121,7 +22123,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, callable)
         arr.setAtIndex(ADDRESS, 2, flagsArg)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -22149,7 +22151,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, callable)
         arr.setAtIndex(ADDRESS, 2, flagsArg)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -22192,7 +22194,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, boundCallable)
         arr.setAtIndex(ADDRESS, 2, flagsArg)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, boundCallable)
@@ -22217,7 +22219,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22240,7 +22242,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, callable)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -22260,7 +22262,7 @@ actual object ObjectCalls {
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22280,7 +22282,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, callable)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -22304,7 +22306,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, callable)
         arr.setAtIndex(ADDRESS, 1, valueCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22328,7 +22330,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, callable)
         arr.setAtIndex(ADDRESS, 1, valueCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -22352,7 +22354,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, valueCell)
         arr.setAtIndex(ADDRESS, 1, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22375,7 +22377,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, valueCell)
         arr.setAtIndex(ADDRESS, 1, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22398,7 +22400,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22425,7 +22427,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, valueCell)
         arr.setAtIndex(ADDRESS, 2, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22452,7 +22454,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, valueCell)
         arr.setAtIndex(ADDRESS, 2, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22475,7 +22477,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
         GodotStrings.destroyString(stringCell)
@@ -22503,7 +22505,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, indexCell)
         arr.setAtIndex(ADDRESS, 2, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
         GodotStrings.destroyString(stringCell)
@@ -22527,7 +22529,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, objectCell)
         arr.setAtIndex(ADDRESS, 1, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22554,7 +22556,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, objectCell)
         arr.setAtIndex(ADDRESS, 1, callable)
         arr.setAtIndex(ADDRESS, 2, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -22583,7 +22585,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, ridCell)
         arr.setAtIndex(ADDRESS, 2, callable)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -22611,7 +22613,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, callable)
         arr.setAtIndex(ADDRESS, 2, objectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
         GodotStrings.destroyString(stringCell)
@@ -22639,7 +22641,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, firstCell)
         arr.setAtIndex(ADDRESS, 1, secondCell)
         arr.setAtIndex(ADDRESS, 2, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22670,7 +22672,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, secondCell)
         arr.setAtIndex(ADDRESS, 2, thirdCell)
         arr.setAtIndex(ADDRESS, 3, callable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
       }
@@ -22717,7 +22719,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 5, flagsCell)
         arr.setAtIndex(ADDRESS, 6, indexCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         if (variantInitialized) {
@@ -22775,7 +22777,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 6, flagsCell)
         arr.setAtIndex(ADDRESS, 7, indexCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         if (variantInitialized) {
@@ -22829,7 +22831,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 5, flagsCell)
         arr.setAtIndex(ADDRESS, 6, indexCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         if (variantInitialized) {
@@ -22886,7 +22888,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 6, flagsCell)
         arr.setAtIndex(ADDRESS, 7, indexCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         if (variantInitialized) {
@@ -22916,7 +22918,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, firstCallable)
         arr.setAtIndex(ADDRESS, 1, secondCallable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, secondCallable)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, firstCallable)
@@ -22946,7 +22948,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, firstCallable)
         arr.setAtIndex(ADDRESS, 1, secondCallable)
         arr.setAtIndex(ADDRESS, 2, thirdCallable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, thirdCallable)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, secondCallable)
@@ -22976,7 +22978,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, firstCallable)
         arr.setAtIndex(ADDRESS, 2, secondCallable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, secondCallable)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, firstCallable)
@@ -23006,7 +23008,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, firstCallable)
         arr.setAtIndex(ADDRESS, 2, secondCallable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, secondCallable)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, firstCallable)
@@ -23036,7 +23038,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, callable)
         arr.setAtIndex(ADDRESS, 2, variantCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         if (variantInitialized) {
           BuiltinTypes.destroyVariant(variantCell)
@@ -23070,7 +23072,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, secondStringCell)
         arr.setAtIndex(ADDRESS, 2, callable)
         arr.setAtIndex(ADDRESS, 3, thirdStringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(thirdStringCell)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23101,7 +23103,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, boolCell)
         arr.setAtIndex(ADDRESS, 2, stringCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -23139,7 +23141,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 3, boolCell)
         arr.setAtIndex(ADDRESS, 4, stringCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -23169,7 +23171,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, stringCell)
         arr.setAtIndex(ADDRESS, 2, callable)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23199,7 +23201,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, valueCell)
         arr.setAtIndex(ADDRESS, 2, callable)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23232,7 +23234,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, firstCell)
         arr.setAtIndex(ADDRESS, 3, secondCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23266,7 +23268,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, firstCallable)
         arr.setAtIndex(ADDRESS, 3, secondCallable)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, secondCallable)
@@ -23304,7 +23306,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, rectCell)
         arr.setAtIndex(ADDRESS, 3, firstCallable)
         arr.setAtIndex(ADDRESS, 4, secondCallable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, secondCallable)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, firstCallable)
@@ -23334,7 +23336,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, callable)
         arr.setAtIndex(ADDRESS, 2, arrayCell)
         arr.setAtIndex(ADDRESS, 3, valueCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayCell)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23358,7 +23360,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, callable)
         arr.setAtIndex(ADDRESS, 1, arrayCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayCell)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23386,7 +23388,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, callable)
         arr.setAtIndex(ADDRESS, 1, arrayCell)
         arr.setAtIndex(ADDRESS, 2, objectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayCell)
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23420,7 +23422,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, firstStringCell)
         arr.setAtIndex(ADDRESS, 3, secondStringCell)
         arr.setAtIndex(ADDRESS, 4, arrayCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayCell)
         GodotStrings.destroyString(secondStringCell)
@@ -23454,7 +23456,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, callable)
         arr.setAtIndex(ADDRESS, 2, packedCell)
         arr.setAtIndex(ADDRESS, 3, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, packedCell)
@@ -23488,7 +23490,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, packedCell)
         arr.setAtIndex(ADDRESS, 3, callable)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23524,7 +23526,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, thirdStringCell)
         arr.setAtIndex(ADDRESS, 3, callable)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23576,7 +23578,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 6, callable)
         arr.setAtIndex(ADDRESS, 7, indexCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23637,7 +23639,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 8, callable)
         arr.setAtIndex(ADDRESS, 9, indexCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23699,7 +23701,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 7, flagsCell)
         arr.setAtIndex(ADDRESS, 8, indexCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         if (variantInitialized) {
@@ -23761,7 +23763,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 7, flagsCell)
         arr.setAtIndex(ADDRESS, 8, indexCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         if (variantInitialized) {
@@ -23795,7 +23797,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, objectCell)
         arr.setAtIndex(ADDRESS, 2, callable)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23829,7 +23831,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, objectCell)
         arr.setAtIndex(ADDRESS, 3, callable)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23855,7 +23857,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, callable)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23889,7 +23891,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, objectCell)
         arr.setAtIndex(ADDRESS, 3, callable)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23927,7 +23929,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 3, secondObjectCell)
         arr.setAtIndex(ADDRESS, 4, callable)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23943,7 +23945,7 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
-        objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, callable)
+        bindPtrcall(methodBind, instance, MemorySegment.NULL, callable)
         return BuiltinTypes.readCallable(callable)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23963,7 +23965,7 @@ actual object ObjectCalls {
         valueCell.set(JAVA_INT, 0, value)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, valueCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, callable)
+        bindPtrcall(methodBind, instance, arr, callable)
         return BuiltinTypes.readCallable(callable)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -23983,7 +23985,7 @@ actual object ObjectCalls {
         ridCell.set(JAVA_LONG, 0, rid.value)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, ridCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, callable)
+        bindPtrcall(methodBind, instance, arr, callable)
         return BuiltinTypes.readCallable(callable)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -24007,7 +24009,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, valueCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, callable)
+        bindPtrcall(methodBind, instance, arr, callable)
         return BuiltinTypes.readCallable(callable)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -24031,7 +24033,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, indexCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, callable)
+        bindPtrcall(methodBind, instance, arr, callable)
         return BuiltinTypes.readCallable(callable)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -24054,7 +24056,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, callable)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -24080,7 +24082,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, signal)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.SIGNAL, signal)
@@ -24106,7 +24108,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, valueCell)
         arr.setAtIndex(ADDRESS, 1, callable)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
@@ -24145,7 +24147,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, toVariant)
         arr.setAtIndex(ADDRESS, 3, durationCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         if (toInitialized) {
@@ -24187,7 +24189,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, boundCallable)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, boundCallable)
         BuiltinTypes.destroyTyped(VariantType.ARRAY, boundArray)
@@ -24212,7 +24214,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringArg)
         arr.setAtIndex(ADDRESS, 1, arrayArg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayArg)
         GodotStrings.destroyString(stringArg)
@@ -24234,7 +24236,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, arrayArg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayArg)
       }
@@ -24263,7 +24265,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, boolArg)
         arr.setAtIndex(ADDRESS, 2, arrayArg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayArg)
       }
@@ -24290,7 +24292,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, boolArg)
         arr.setAtIndex(ADDRESS, 1, packedArg)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packedArg)
       }
@@ -24311,7 +24313,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -24330,7 +24332,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -24347,7 +24349,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0)
     }
   }
@@ -24377,7 +24379,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -24397,7 +24399,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Color(
         ret.get(JAVA_FLOAT, 0),
         ret.get(JAVA_FLOAT, 4),
@@ -24425,7 +24427,7 @@ actual object ObjectCalls {
       colorCell.set(JAVA_FLOAT, 8, color.b)
       colorCell.set(JAVA_FLOAT, 12, color.a)
       arr.setAtIndex(ADDRESS, 2, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24443,7 +24445,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 2, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24462,7 +24464,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       args.setAtIndex(ADDRESS, 2, indexCell)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readVector2i(ret)
     }
   }
@@ -24494,7 +24496,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, cCell)
       args.setAtIndex(ADDRESS, 5, dCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -24542,7 +24544,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 8, bool0)
       args.setAtIndex(ADDRESS, 9, bool1)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -24572,7 +24574,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, deadzoneCell)
 
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -24580,7 +24582,7 @@ actual object ObjectCalls {
   /** Calls [methodBind] with no args and returns Vector2. */
   actual fun ptrcallNoArgsRetVector2(methodBind: MemorySegment, instance: MemorySegment): Vector2 {
     val scratch = ptrcallScratch.get()
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, scratch.vector2Ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, scratch.vector2Ret)
     return Vector2(
       x = GodotRealSegment.readIndex(scratch.vector2Ret, 0),
       y = GodotRealSegment.readIndex(scratch.vector2Ret, 1),
@@ -24590,7 +24592,7 @@ actual object ObjectCalls {
   /** Calls [methodBind] with no args and returns Rect2. */
   actual fun ptrcallNoArgsRetRect2(methodBind: MemorySegment, instance: MemorySegment): Rect2 {
     val ret = ptrcallScratch.get().rect2Ret
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return Rect2(
       position =
         Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1)),
@@ -24604,14 +24606,14 @@ actual object ObjectCalls {
       writeRect2(rect, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, rect)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
   actual fun ptrcallNoArgsRetAABB(methodBind: MemorySegment, instance: MemorySegment): AABB {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return readAABB(ret)
     }
   }
@@ -24622,14 +24624,14 @@ actual object ObjectCalls {
       writeAABB(aabb, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, aabb)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
   actual fun ptrcallNoArgsRetPlane(methodBind: MemorySegment, instance: MemorySegment): Plane {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return Plane(
         normal =
           Vector3(
@@ -24651,7 +24653,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(plane, 3, value.d)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, plane)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24672,7 +24674,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, plane)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24682,7 +24684,7 @@ actual object ObjectCalls {
   ): Transform2D {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return readTransform2D(ret)
     }
   }
@@ -24697,7 +24699,7 @@ actual object ObjectCalls {
       writeTransform2D(transform, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, transform)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24734,7 +24736,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, color0)
       arr.setAtIndex(ADDRESS, 3, color1)
       arr.setAtIndex(ADDRESS, 4, flagsCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24770,7 +24772,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, color0)
       arr.setAtIndex(ADDRESS, 3, color1)
       arr.setAtIndex(ADDRESS, 4, flagsCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24805,7 +24807,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, marginCell)
       args.setAtIndex(ADDRESS, 4, boolCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -24823,7 +24825,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -24831,7 +24833,7 @@ actual object ObjectCalls {
   /** Calls [methodBind] with no args and returns Vector3. */
   actual fun ptrcallNoArgsRetVector3(methodBind: MemorySegment, instance: MemorySegment): Vector3 {
     val ret = ptrcallScratch.get().vector3Ret
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return Vector3(
       x = GodotRealSegment.readIndex(ret, 0),
       y = GodotRealSegment.readIndex(ret, 1),
@@ -24842,7 +24844,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetVector4(methodBind: MemorySegment, instance: MemorySegment): Vector4 {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return readVector4(ret)
     }
   }
@@ -24860,7 +24862,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(vec, 3, value.w)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24877,7 +24879,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(vec, 2, value.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24897,7 +24899,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24918,7 +24920,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vec)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -24940,7 +24942,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, rect)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -24958,7 +24960,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -24980,7 +24982,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -24998,7 +25000,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -25016,7 +25018,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -25034,7 +25036,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(12L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readVector3i(ret)
     }
   }
@@ -25055,7 +25057,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, amountCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25078,7 +25080,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vectorCell)
       arr.setAtIndex(ADDRESS, 1, floatCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25118,7 +25120,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 4, intCell)
 
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -25135,7 +25137,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -25161,7 +25163,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readBasis(ret)
     }
   }
@@ -25177,14 +25179,14 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readPlane(ret)
     }
   }
 
   actual fun ptrcallNoArgsRetBasis(methodBind: MemorySegment, instance: MemorySegment): Basis {
     val ret = ptrcallScratch.get().basisRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return Basis(
       x =
         Vector3(
@@ -25221,7 +25223,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(basis, 8, value.z.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, basis)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25247,7 +25249,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, ridCell)
       arr.setAtIndex(ADDRESS, 1, basis)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25270,7 +25272,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, basis)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -25294,7 +25296,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, basis)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -25304,7 +25306,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Transform3D {
     val ret = ptrcallScratch.get().transform3dRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return Transform3D(
       basis =
         Basis(
@@ -25357,7 +25359,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(transform, 11, value.origin.z)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, transform)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25395,7 +25397,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, color0)
       arr.setAtIndex(ADDRESS, 3, color1)
       arr.setAtIndex(ADDRESS, 4, flagsCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25431,7 +25433,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, color0)
       arr.setAtIndex(ADDRESS, 3, color1)
       arr.setAtIndex(ADDRESS, 4, flagsCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25470,7 +25472,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, boolCell)
       args.setAtIndex(ADDRESS, 5, maxCollisionsCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -25501,7 +25503,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, transform)
       arr.setAtIndex(ADDRESS, 1, longArg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readTransform3D(ret)
     }
   }
@@ -25521,7 +25523,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, transform)
       arr.setAtIndex(ADDRESS, 1, doubleArg)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -25532,7 +25534,7 @@ actual object ObjectCalls {
   ): Projection {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 16, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return Projection(
         x =
           Vector4(
@@ -25592,7 +25594,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25629,7 +25631,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25654,7 +25656,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25677,7 +25679,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -25707,7 +25709,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         GodotRealSegment.readIndex(ret, 0),
         GodotRealSegment.readIndex(ret, 1),
@@ -25738,7 +25740,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25761,7 +25763,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -25776,7 +25778,7 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): Quaternion {
     val ret = ptrcallScratch.get().quaternionRet
-    objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
     return Quaternion(
       x = GodotRealSegment.readIndex(ret, 0),
       y = GodotRealSegment.readIndex(ret, 1),
@@ -25796,7 +25798,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, intCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Quaternion(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -25820,7 +25822,7 @@ actual object ObjectCalls {
       GodotRealSegment.writeIndex(q, 3, value.w)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, q)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25841,7 +25843,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, q)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25860,7 +25862,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Quaternion(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -25891,7 +25893,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, q)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -25905,7 +25907,7 @@ actual object ObjectCalls {
     GodotRealSegment.writeIndex(scratch.vector2Cell, 0, value.x)
     GodotRealSegment.writeIndex(scratch.vector2Cell, 1, value.y)
     scratch.args1.setAtIndex(ADDRESS, 0, scratch.vector2Cell)
-    objectMethodBindPtrcall.invoke(methodBind, instance, scratch.args1, MemorySegment.NULL)
+    bindPtrcall(methodBind, instance, scratch.args1, MemorySegment.NULL)
   }
 
   actual fun ptrcallWithVector2ArgRetVector2(
@@ -25920,7 +25922,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -25937,7 +25939,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
     }
   }
@@ -25954,7 +25956,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -25971,7 +25973,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -25988,7 +25990,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -26013,7 +26015,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vectorCell)
       arr.setAtIndex(ADDRESS, 1, doubleCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -26038,7 +26040,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vectorCell)
       arr.setAtIndex(ADDRESS, 1, doubleCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -26072,7 +26074,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, floatCell)
       args.setAtIndex(ADDRESS, 3, secondBoolCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -26089,7 +26091,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         GodotStrings.readString(ret)
       } finally {
@@ -26117,7 +26119,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26138,7 +26140,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -26169,7 +26171,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -26201,7 +26203,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -26228,7 +26230,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26244,7 +26246,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -26261,7 +26263,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -26278,7 +26280,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
     }
   }
@@ -26295,7 +26297,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -26312,7 +26314,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -26329,7 +26331,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Color(
         ret.get(JAVA_FLOAT, 0),
         ret.get(JAVA_FLOAT, 4),
@@ -26350,7 +26352,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -26386,7 +26388,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, longCell)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
     }
   }
@@ -26405,7 +26407,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, longCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26425,7 +26427,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, firstVec)
       arr.setAtIndex(ADDRESS, 1, secondVec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26447,7 +26449,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26482,7 +26484,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 4, arg4)
       arr.setAtIndex(ADDRESS, 5, arg5)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -26528,7 +26530,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, secondVec)
       arr.setAtIndex(ADDRESS, 2, objCell)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4))
     }
   }
@@ -26554,7 +26556,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, secondVec)
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -26578,7 +26580,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26602,7 +26604,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, bool0)
       arr.setAtIndex(ADDRESS, 2, bool1)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readVector2i(ret)
     }
   }
@@ -26622,7 +26624,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, amountCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26644,7 +26646,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26666,7 +26668,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26685,7 +26687,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26705,7 +26707,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -26726,7 +26728,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -26747,7 +26749,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -26768,7 +26770,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Rect2i(
         position = Vector2i(ret.get(JAVA_INT, 0), ret.get(JAVA_INT, 4)),
         size = Vector2i(ret.get(JAVA_INT, 8), ret.get(JAVA_INT, 12)),
@@ -26796,7 +26798,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, vec)
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -26821,7 +26823,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, vec)
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(8L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2i(ret.get(JAVA_INT, 0), ret.get(JAVA_INT, 4))
     }
   }
@@ -26846,7 +26848,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, vec)
       arr.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -26870,7 +26872,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, vec)
       arr.setAtIndex(ADDRESS, 2, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -26894,7 +26896,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, vec)
       arr.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -26918,7 +26920,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -26972,7 +26974,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
         arr.setAtIndex(ADDRESS, 3, arg3)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, arg3)
       }
@@ -27003,7 +27005,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, vec2i)
       arr.setAtIndex(ADDRESS, 2, secondCell)
       arr.setAtIndex(ADDRESS, 3, vec2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27031,7 +27033,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, int0)
       arr.setAtIndex(ADDRESS, 2, vec1)
       arr.setAtIndex(ADDRESS, 3, int1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27070,7 +27072,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -27085,7 +27087,7 @@ actual object ObjectCalls {
       writeVector3i(vec, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27100,7 +27102,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -27120,7 +27122,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readBasis(ret)
     }
   }
@@ -27182,7 +27184,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, longCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedColorArray(ret)
       } finally {
@@ -27206,7 +27208,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedColorArray(ret)
       } finally {
@@ -27227,7 +27229,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, dict)
         val ret = arena.allocate(8L, 8L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return try {
           BuiltinTypes.readArrayScalars(ret)
         } finally {
@@ -27253,7 +27255,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, firstVec)
       arr.setAtIndex(ADDRESS, 1, secondVec)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27275,7 +27277,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27298,7 +27300,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -27322,7 +27324,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -27346,7 +27348,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readRect2(ret)
     }
   }
@@ -27373,7 +27375,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27399,7 +27401,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27425,7 +27427,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27451,7 +27453,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27481,7 +27483,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27515,7 +27517,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
       arr.setAtIndex(ADDRESS, 5, arg5)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27539,7 +27541,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27559,7 +27561,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -27580,7 +27582,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -27602,7 +27604,7 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -27625,7 +27627,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27647,7 +27649,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27669,7 +27671,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, intCell)
       args.setAtIndex(ADDRESS, 1, colorCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -27707,7 +27709,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, longCell)
       args.setAtIndex(ADDRESS, 4, bool0)
       args.setAtIndex(ADDRESS, 5, bool1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -27721,7 +27723,7 @@ actual object ObjectCalls {
       colorCell.set(JAVA_FLOAT, 12, color.a)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27746,7 +27748,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, color0)
       arr.setAtIndex(ADDRESS, 1, color1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -27754,7 +27756,7 @@ actual object ObjectCalls {
   actual fun ptrcallNoArgsRetColor(methodBind: MemorySegment, instance: MemorySegment): Color {
     Arena.ofConfined().use { arena ->
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, MemorySegment.NULL, ret)
+      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
       return Color(
         ret.get(JAVA_FLOAT, 0),
         ret.get(JAVA_FLOAT, 4),
@@ -27775,7 +27777,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -27791,7 +27793,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -27807,7 +27809,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
     }
   }
@@ -27823,7 +27825,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         GodotStrings.readStringName(ret)
       } finally {
@@ -27843,7 +27845,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -27859,7 +27861,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readDictionaryScalars(ret)
       } finally {
@@ -27901,7 +27903,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedFloat32Array(ret)
       } finally {
@@ -27926,7 +27928,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, arg0)
         args.setAtIndex(ADDRESS, 1, arg1)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(arg0)
@@ -27951,7 +27953,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, boolCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -27968,7 +27970,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedStringArray(ret)
       } finally {
@@ -27988,7 +27990,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -28008,7 +28010,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       args.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -28028,7 +28030,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       args.setAtIndex(ADDRESS, 2, boolCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedStringArray(ret)
       } finally {
@@ -28050,7 +28052,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 1, boolCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedStringArray(ret)
       } finally {
@@ -28070,7 +28072,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedStringArray(ret)
       } finally {
@@ -28094,7 +28096,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -28114,7 +28116,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, longCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -28140,7 +28142,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, firstCell)
         args.setAtIndex(ADDRESS, 1, secondCell)
         args.setAtIndex(ADDRESS, 2, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -28163,7 +28165,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, longCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -28187,7 +28189,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, longCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedStringArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, ret)
@@ -28207,7 +28209,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -28227,7 +28229,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedStringArray(ret)
       } finally {
@@ -28247,7 +28249,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -28267,7 +28269,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readRect2(ret)
     }
   }
@@ -28283,7 +28285,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector3Array(ret)
       } finally {
@@ -28307,7 +28309,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedFloat32Array(ret)
       } finally {
@@ -28331,7 +28333,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -28355,7 +28357,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector3Array(ret)
       } finally {
@@ -28379,7 +28381,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -28403,7 +28405,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -28427,7 +28429,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -28448,7 +28450,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, valueCell)
       // Color components use fixed 32-bit storage, unlike scalar float method args.
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Color(
         ret.get(JAVA_FLOAT, 0),
         ret.get(JAVA_FLOAT, 4),
@@ -28480,7 +28482,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -28502,7 +28504,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, secondRidCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -28520,7 +28522,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, intCell)
       args.setAtIndex(ADDRESS, 1, ridCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -28535,7 +28537,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArrayOfStringNames(array, values)
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, array)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
       }
@@ -28553,7 +28555,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(array, values.map { it as Any? })
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, array)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
       }
@@ -28587,7 +28589,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, blendShapesCell)
         args.setAtIndex(ADDRESS, 3, lodsCell)
         args.setAtIndex(ADDRESS, 4, flagsCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, lodsCell)
         BuiltinTypes.destroyTyped(VariantType.ARRAY, blendShapesCell)
@@ -28631,7 +28633,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, materialCell)
         args.setAtIndex(ADDRESS, 5, nameCell)
         args.setAtIndex(ADDRESS, 6, flagsCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(nameCell)
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, lodsCell)
@@ -28652,7 +28654,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(array, values.map { it as Any? })
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, array)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
       }
@@ -28670,7 +28672,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArrayOfPackedStringArrays(array, values)
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, array)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
       }
@@ -28688,7 +28690,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(array, values.map { it as Any? })
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, array)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
       }
@@ -28706,7 +28708,7 @@ actual object ObjectCalls {
         BuiltinTypes.initArray(array, values.map { it as Any? })
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, array)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
       }
@@ -28725,7 +28727,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, array)
         val ret = BuiltinTypes.allocatePackedArray(arena)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return try {
           BuiltinTypes.readPackedVector3Array(ret)
         } finally {
@@ -28753,7 +28755,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, array)
         args.setAtIndex(ADDRESS, 1, ridCell)
         val ret = BuiltinTypes.allocatePackedArray(arena)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return try {
           BuiltinTypes.readPackedInt64Array(ret)
         } finally {
@@ -28780,7 +28782,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, array)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
       }
@@ -28801,7 +28803,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -28823,7 +28825,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, doubleCell)
       args.setAtIndex(ADDRESS, 1, bool0)
       args.setAtIndex(ADDRESS, 2, bool1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -28846,7 +28848,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, bool0)
       args.setAtIndex(ADDRESS, 2, bool1)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform3D(ret)
     }
   }
@@ -28873,7 +28875,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg1)
       args.setAtIndex(ADDRESS, 2, arg2)
       args.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -28899,7 +28901,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg1)
       args.setAtIndex(ADDRESS, 2, arg2)
       args.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -28925,7 +28927,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg1)
       args.setAtIndex(ADDRESS, 2, arg2)
       args.setAtIndex(ADDRESS, 3, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -28940,7 +28942,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, longCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedStringArray(ret)
       } finally {
@@ -28960,7 +28962,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, longCell)
       val ret = arena.allocate(8L, 8L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readTypedNodePath(ret, arena)
       } finally {
@@ -28980,7 +28982,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, longCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform2D(ret)
     }
   }
@@ -28996,7 +28998,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, doubleCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -29012,7 +29014,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, doubleCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -29032,7 +29034,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, doubleCell)
       val ret = arena.allocate(16L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Color(
         ret.get(JAVA_FLOAT, 0),
         ret.get(JAVA_FLOAT, 4),
@@ -29059,7 +29061,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, doubleCell)
       args.setAtIndex(ADDRESS, 1, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -29074,7 +29076,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, doubleCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -29095,7 +29097,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, vectorCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -29111,7 +29113,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, rectCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -29127,7 +29129,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, intCell)
       val ret = arena.allocate(12L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4), z = ret.get(JAVA_INT, 8))
     }
   }
@@ -29144,7 +29146,7 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -29165,7 +29167,7 @@ actual object ObjectCalls {
         BuiltinTypes.initDictionary(dict, values)
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, dict)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -29186,7 +29188,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, dict)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
@@ -29206,7 +29208,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, argPacked)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, argPacked)
@@ -29226,7 +29228,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, argPacked)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, argPacked)
@@ -29246,7 +29248,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedByteArray(byteArray, bytes)
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, byteArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -29266,7 +29268,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedFloat32Array(ret)
       } finally {
@@ -29290,7 +29292,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, packed)
       }
@@ -29313,7 +29315,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, packed)
         val ret = arena.allocate(JAVA_DOUBLE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_DOUBLE, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, packed)
@@ -29340,7 +29342,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, firstPacked)
         args.setAtIndex(ADDRESS, 2, secondPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, secondPacked)
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, firstPacked)
@@ -29376,7 +29378,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, boolCell)
         args.setAtIndex(ADDRESS, 4, flagsCell)
         val ret = BuiltinTypes.allocatePackedArray(arena)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return try {
           BuiltinTypes.readPackedInt32Array(ret)
         } finally {
@@ -29403,7 +29405,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, packed)
       }
@@ -29429,7 +29431,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, packed)
         args.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, packed)
       }
@@ -29451,7 +29453,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, packed)
       }
@@ -29473,7 +29475,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, byteArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
       }
@@ -29495,7 +29497,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -29527,7 +29529,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, vectorCell)
         args.setAtIndex(ADDRESS, 2, indexCell)
         args.setAtIndex(ADDRESS, 3, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, packed)
       }
@@ -29545,7 +29547,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = arena.allocate(12L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3i(x = ret.get(JAVA_INT, 0), y = ret.get(JAVA_INT, 4), z = ret.get(JAVA_INT, 8))
     }
   }
@@ -29561,7 +29563,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedColorArray(ret)
       } finally {
@@ -29674,7 +29676,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, array)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
@@ -29698,7 +29700,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, intCell)
         args.setAtIndex(ADDRESS, 1, array)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
@@ -29772,7 +29774,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, intCell)
         args.setAtIndex(ADDRESS, 1, byteArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
@@ -29796,7 +29798,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, byteArray)
         args.setAtIndex(ADDRESS, 1, boolCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
@@ -29828,7 +29830,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, modeCell)
         args.setAtIndex(ADDRESS, 3, channelCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
@@ -29851,7 +29853,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, intCell)
         args.setAtIndex(ADDRESS, 1, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packed)
       }
@@ -29877,7 +29879,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, packed)
         args.setAtIndex(ADDRESS, 2, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packed)
         GodotStrings.destroyString(stringCell)
@@ -29900,7 +29902,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -29924,7 +29926,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, intCell)
         args.setAtIndex(ADDRESS, 1, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, packed)
       }
@@ -29946,7 +29948,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, intCell)
         args.setAtIndex(ADDRESS, 1, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, packed)
       }
@@ -29973,7 +29975,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, packed)
         args.setAtIndex(ADDRESS, 2, offsetCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, packed)
@@ -29996,7 +29998,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         args.setAtIndex(ADDRESS, 1, packed)
         args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(context))
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packed)
       }
@@ -30018,7 +30020,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -30038,7 +30040,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -30058,7 +30060,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return readTransform3D(ret)
     }
   }
@@ -30078,7 +30080,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -30102,7 +30104,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -30126,7 +30128,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -30153,7 +30155,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30176,7 +30178,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, vectorCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -30203,7 +30205,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, vectorCell)
       args.setAtIndex(ADDRESS, 3, advanceCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30229,7 +30231,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30251,7 +30253,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, widthCell)
       args.setAtIndex(ADDRESS, 2, flagsCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30274,7 +30276,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, widthCell)
       args.setAtIndex(ADDRESS, 2, flagsCell)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -30302,7 +30304,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, startCell)
       args.setAtIndex(ADDRESS, 3, flagsCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -30330,7 +30332,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt32Array(ret)
       } finally {
@@ -30354,7 +30356,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -30374,7 +30376,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -30397,7 +30399,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, thirdCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30419,7 +30421,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30439,7 +30441,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30470,7 +30472,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, fourthCell)
       args.setAtIndex(ADDRESS, 4, fifthCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -30490,7 +30492,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, valueCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -30515,7 +30517,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, recursiveCell)
         args.setAtIndex(ADDRESS, 2, ownedCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -30538,7 +30540,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, indexCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -30562,7 +30564,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, columnCell)
       args.setAtIndex(ADDRESS, 2, buttonCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Rect2(
         position = Vector2(GodotRealSegment.readIndex(ret, 0), GodotRealSegment.readIndex(ret, 1)),
         size = Vector2(GodotRealSegment.readIndex(ret, 2), GodotRealSegment.readIndex(ret, 3)),
@@ -30581,7 +30583,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, vectorCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -30605,7 +30607,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, coordsCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -30628,7 +30630,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, layerCell)
       args.setAtIndex(ADDRESS, 1, coordsCell)
       args.setAtIndex(ADDRESS, 2, objectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30654,7 +30656,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, coordsCell)
       args.setAtIndex(ADDRESS, 2, int1)
       args.setAtIndex(ADDRESS, 3, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30669,7 +30671,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, coordsCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -30688,7 +30690,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, coordsCell)
       args.setAtIndex(ADDRESS, 1, objectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30707,7 +30709,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, coordsCell)
       args.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -30725,7 +30727,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 1, objectCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -30746,7 +30748,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 1, objectCell)
       args.setAtIndex(ADDRESS, 2, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30766,7 +30768,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         args.setAtIndex(ADDRESS, 1, longCell)
         args.setAtIndex(ADDRESS, 2, variant)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -30790,7 +30792,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(action))
       args.setAtIndex(ADDRESS, 2, boolCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -30811,7 +30813,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, boolCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -30839,7 +30841,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, offsetCell)
         args.setAtIndex(ADDRESS, 2, endCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -30875,7 +30877,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, boolCell)
         args.setAtIndex(ADDRESS, 3, offsetCell)
         args.setAtIndex(ADDRESS, 4, endCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -30900,7 +30902,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, objectCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -30926,7 +30928,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, objectCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -30955,7 +30957,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30973,7 +30975,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       args.setAtIndex(ADDRESS, 2, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -30991,7 +30993,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         args.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -31027,7 +31029,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, thirdCell)
         args.setAtIndex(ADDRESS, 4, indexCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(thirdCell)
@@ -31066,7 +31068,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, thirdCell)
         args.setAtIndex(ADDRESS, 4, fourthCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(fourthCell)
@@ -31097,7 +31099,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, packed)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(secondCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packed)
@@ -31125,7 +31127,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, packed)
         args.setAtIndex(ADDRESS, 2, objectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packed)
         GodotStrings.destroyString(stringCell)
@@ -31152,7 +31154,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, packed)
         args.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, packed)
         GodotStrings.destroyString(stringCell)
@@ -31176,7 +31178,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, ridCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -31200,7 +31202,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, indexCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -31227,7 +31229,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, indexCell)
         args.setAtIndex(ADDRESS, 2, objectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -31258,7 +31260,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, thirdCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -31282,7 +31284,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, objectCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -31313,7 +31315,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, objectCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
         args.setAtIndex(ADDRESS, 3, suffixCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(suffixCell)
         GodotStrings.destroyString(stringCell)
@@ -31336,7 +31338,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, valueCell)
       args.setAtIndex(ADDRESS, 1, objectCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -31357,7 +31359,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -31384,7 +31386,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, indexCell)
       args.setAtIndex(ADDRESS, 1, objectCell)
       args.setAtIndex(ADDRESS, 2, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31404,7 +31406,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, indexCell)
       args.setAtIndex(ADDRESS, 1, objectCell)
       args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31430,7 +31432,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, indexCell)
       args.setAtIndex(ADDRESS, 1, colorCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31460,7 +31462,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, maxCell)
       args.setAtIndex(ADDRESS, 3, stepCell)
       args.setAtIndex(ADDRESS, 4, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31504,7 +31506,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 6, bool2)
       args.setAtIndex(ADDRESS, 7, bool3)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -31540,7 +31542,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, boolCell)
         args.setAtIndex(ADDRESS, 4, tooltipCell)
         args.setAtIndex(ADDRESS, 5, descriptionCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(descriptionCell)
         GodotStrings.destroyString(tooltipCell)
@@ -31567,7 +31569,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, kindCell)
       args.setAtIndex(ADDRESS, 2, indexCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -31599,7 +31601,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, indexCell)
       args.setAtIndex(ADDRESS, 4, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -31622,7 +31624,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, indexCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31648,7 +31650,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31678,7 +31680,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, firstIndexCell)
       args.setAtIndex(ADDRESS, 3, thirdRidCell)
       args.setAtIndex(ADDRESS, 4, secondIndexCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31713,7 +31715,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, firstCell)
         args.setAtIndex(ADDRESS, 4, secondCell)
         args.setAtIndex(ADDRESS, 5, thirdCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -31743,7 +31745,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -31774,7 +31776,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, fourthCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31795,7 +31797,7 @@ actual object ObjectCalls {
     scratch.args3.setAtIndex(ADDRESS, 0, scratch.objectCell)
     scratch.args3.setAtIndex(ADDRESS, 1, scratch.vector2Cell)
     scratch.args3.setAtIndex(ADDRESS, 2, scratch.colorCell)
-    objectMethodBindPtrcall.invoke(methodBind, instance, scratch.args3, MemorySegment.NULL)
+    bindPtrcall(methodBind, instance, scratch.args3, MemorySegment.NULL)
   }
 
   /** Calls [methodBind] with (Object*, scalar float, Color) and no return value. */
@@ -31820,7 +31822,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31849,7 +31851,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, colorCell)
       args.setAtIndex(ADDRESS, 2, bool0)
       args.setAtIndex(ADDRESS, 3, bool1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31878,7 +31880,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, colorCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       args.setAtIndex(ADDRESS, 3, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -31916,7 +31918,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, indexCell)
         args.setAtIndex(ADDRESS, 4, colorCell)
         args.setAtIndex(ADDRESS, 5, sizeCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -31961,7 +31963,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, int1)
         args.setAtIndex(ADDRESS, 5, colorCell)
         args.setAtIndex(ADDRESS, 6, sizeCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -32022,7 +32024,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 8, directionCell)
         args.setAtIndex(ADDRESS, 9, orientationCell)
         args.setAtIndex(ADDRESS, 10, oversamplingCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -32087,7 +32089,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 9, directionCell)
         args.setAtIndex(ADDRESS, 10, orientationCell)
         args.setAtIndex(ADDRESS, 11, oversamplingCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -32156,7 +32158,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 10, directionCell)
         args.setAtIndex(ADDRESS, 11, orientationCell)
         args.setAtIndex(ADDRESS, 12, oversamplingCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -32229,7 +32231,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 11, directionCell)
         args.setAtIndex(ADDRESS, 12, orientationCell)
         args.setAtIndex(ADDRESS, 13, oversamplingCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -32261,7 +32263,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32290,7 +32292,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondObjectCell)
       args.setAtIndex(ADDRESS, 2, transformCell)
       args.setAtIndex(ADDRESS, 3, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32316,7 +32318,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondObjectCell)
       args.setAtIndex(ADDRESS, 2, transformCell)
       args.setAtIndex(ADDRESS, 3, thirdObjectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32349,7 +32351,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, colorCell)
       args.setAtIndex(ADDRESS, 3, widthCell)
       args.setAtIndex(ADDRESS, 4, antialiasedCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32382,7 +32384,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, filledCell)
       args.setAtIndex(ADDRESS, 3, widthCell)
       args.setAtIndex(ADDRESS, 4, antialiasedCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32419,7 +32421,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, filledCell)
       args.setAtIndex(ADDRESS, 4, widthCell)
       args.setAtIndex(ADDRESS, 5, antialiasedCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32460,7 +32462,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, filledCell)
       args.setAtIndex(ADDRESS, 5, lineWidthCell)
       args.setAtIndex(ADDRESS, 6, antialiasedCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32493,7 +32495,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, tileCell)
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, transposeCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32530,7 +32532,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, tileCell)
       args.setAtIndex(ADDRESS, 5, transposeCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32571,7 +32573,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, firstDoubleCell)
       args.setAtIndex(ADDRESS, 5, secondDoubleCell)
       args.setAtIndex(ADDRESS, 6, thirdDoubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32589,7 +32591,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, boolCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32613,7 +32615,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, boolCell)
         args.setAtIndex(ADDRESS, 2, valueCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -32639,7 +32641,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, vectorCell)
       args.setAtIndex(ADDRESS, 1, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32657,7 +32659,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, vectorCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32681,7 +32683,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, objectCell)
       args.setAtIndex(ADDRESS, 2, durationCell)
       args.setAtIndex(ADDRESS, 3, indexCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32705,7 +32707,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, indexCell)
       args.setAtIndex(ADDRESS, 2, objectCell)
       args.setAtIndex(ADDRESS, 3, durationCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32722,7 +32724,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -32739,7 +32741,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector2Array(argPacked, values)
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector2Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, ret)
@@ -32764,7 +32766,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, vectorCell)
         args.setAtIndex(ADDRESS, 1, packedCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, packedCell)
@@ -32790,7 +32792,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -32813,7 +32815,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, valueCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -32841,7 +32843,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, valueCell)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -32869,7 +32871,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, fourthCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -32897,7 +32899,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, fourthCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector2Array(ret)
       } finally {
@@ -32944,7 +32946,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedVector3Array(argPacked, values)
         val args = arena.allocate(ADDRESS, 1)
         args.setAtIndex(ADDRESS, 0, argPacked)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedInt32Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, ret)
@@ -32976,7 +32978,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, firstDoubleCell)
       args.setAtIndex(ADDRESS, 3, secondDoubleCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector3Array(ret)
       } finally {
@@ -33008,7 +33010,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, valueCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector3Array(ret)
       } finally {
@@ -33040,7 +33042,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, fourthCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return Vector3(
         x = GodotRealSegment.readIndex(ret, 0),
         y = GodotRealSegment.readIndex(ret, 1),
@@ -33072,7 +33074,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, fourthCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedVector3Array(ret)
       } finally {
@@ -33127,7 +33129,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(third))
       args.setAtIndex(ADDRESS, 3, valueCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33155,7 +33157,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, firstDoubleCell)
       args.setAtIndex(ADDRESS, 4, secondDoubleCell)
       args.setAtIndex(ADDRESS, 5, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33183,7 +33185,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, vector0)
       args.setAtIndex(ADDRESS, 3, vector1)
       args.setAtIndex(ADDRESS, 4, longCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33207,7 +33209,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33239,7 +33241,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, thirdCell)
       args.setAtIndex(ADDRESS, 4, fourthCell)
       args.setAtIndex(ADDRESS, 5, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33275,7 +33277,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, boolCell)
       args.setAtIndex(ADDRESS, 5, firstLongCell)
       args.setAtIndex(ADDRESS, 6, secondLongCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33317,7 +33319,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, secondDoubleCell)
       args.setAtIndex(ADDRESS, 5, firstBoolCell)
       args.setAtIndex(ADDRESS, 6, secondBoolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33363,7 +33365,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, colorCell)
       args.setAtIndex(ADDRESS, 6, fourthDoubleCell)
       args.setAtIndex(ADDRESS, 7, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33413,7 +33415,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 6, colorCell)
       args.setAtIndex(ADDRESS, 7, fifthDoubleCell)
       args.setAtIndex(ADDRESS, 8, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -33437,7 +33439,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, stringCell)
         args.setAtIndex(ADDRESS, 2, secondObjectCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -33465,7 +33467,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, secondCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(secondCell)
@@ -33497,7 +33499,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, customImporterCell)
         args.setAtIndex(ADDRESS, 3, variant)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyVariant(variant)
@@ -33535,7 +33537,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, secondCell)
         args.setAtIndex(ADDRESS, 2, colorCell)
         args.setAtIndex(ADDRESS, 3, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(secondCell)
         GodotStrings.destroyString(firstCell)
@@ -33566,7 +33568,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, secondCell)
         args.setAtIndex(ADDRESS, 2, firstObjectCell)
         args.setAtIndex(ADDRESS, 3, secondObjectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(secondCell)
         GodotStrings.destroyString(firstCell)
@@ -33594,7 +33596,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, objectCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -33621,7 +33623,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, objectCell)
         args.setAtIndex(ADDRESS, 2, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -33655,7 +33657,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, objectCell)
         args.setAtIndex(ADDRESS, 3, bool0)
         args.setAtIndex(ADDRESS, 4, bool1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -33686,7 +33688,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, uintCell)
         args.setAtIndex(ADDRESS, 3, secondString)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(secondString)
@@ -33722,7 +33724,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, languageCell)
         args.setAtIndex(ADDRESS, 4, variant)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(languageCell)
@@ -33760,7 +33762,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, rectCell)
         args.setAtIndex(ADDRESS, 4, languageCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         GodotStrings.destroyString(languageCell)
@@ -33796,7 +33798,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, objectCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
         args.setAtIndex(ADDRESS, 3, colorCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -33827,7 +33829,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, boolCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(secondCell)
@@ -33855,7 +33857,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, boolCell)
         args.setAtIndex(ADDRESS, 2, objectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -33893,7 +33895,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, firstCell)
         args.setAtIndex(ADDRESS, 3, secondCell)
         args.setAtIndex(ADDRESS, 4, thirdCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -33919,7 +33921,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, firstCell)
         args.setAtIndex(ADDRESS, 1, longCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(secondCell)
         GodotStrings.destroyString(firstCell)
@@ -33946,7 +33948,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -33973,7 +33975,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -34009,7 +34011,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, thirdCell)
         args.setAtIndex(ADDRESS, 4, fourthCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -34045,7 +34047,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, secondCell)
         args.setAtIndex(ADDRESS, 4, thirdCell)
         args.setAtIndex(ADDRESS, 5, fourthCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -34075,7 +34077,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, longCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
         args.setAtIndex(ADDRESS, 3, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -34105,7 +34107,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, longCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -34136,7 +34138,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, lineCell)
         args.setAtIndex(ADDRESS, 3, columnCell)
         val ret = arena.allocate(8L, 4L)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return readVector2i(ret)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -34167,7 +34169,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -34198,7 +34200,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
       args.setAtIndex(ADDRESS, 4, fourthCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -34231,7 +34233,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, textureCell)
       args.setAtIndex(ADDRESS, 3, srcRectCell)
       args.setAtIndex(ADDRESS, 4, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -34276,7 +34278,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, intCell)
       args.setAtIndex(ADDRESS, 6, double0)
       args.setAtIndex(ADDRESS, 7, double1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -34329,7 +34331,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 7, long1)
       args.setAtIndex(ADDRESS, 8, boolCell)
       args.setAtIndex(ADDRESS, 9, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -34386,7 +34388,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 8, double1)
       args.setAtIndex(ADDRESS, 9, double2)
       args.setAtIndex(ADDRESS, 10, double3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -34412,7 +34414,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, rectCell)
       args.setAtIndex(ADDRESS, 3, indexCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -34436,7 +34438,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, pointCell)
       args.setAtIndex(ADDRESS, 2, valueCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -34464,7 +34466,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, pointCell)
       args.setAtIndex(ADDRESS, 2, valueCell)
       args.setAtIndex(ADDRESS, 3, objCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -34488,7 +34490,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, boolCell)
       args.setAtIndex(ADDRESS, 2, sizeCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -34517,7 +34519,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, boolCell)
       args.setAtIndex(ADDRESS, 3, sizeCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -34542,7 +34544,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, pointCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -34563,7 +34565,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, transformCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -34786,7 +34788,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -34810,7 +34812,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, arg1)
       args.setAtIndex(ADDRESS, 2, arg2)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -34838,7 +34840,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, arg2)
       args.setAtIndex(ADDRESS, 3, arg3)
       val ret = arena.allocate(JAVA_DOUBLE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_DOUBLE, 0)
     }
   }
@@ -34858,7 +34860,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(first))
       args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(second))
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -34879,7 +34881,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(first))
       args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(second))
       args.setAtIndex(ADDRESS, 3, GodotStrings.makeStringName(third))
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -34902,7 +34904,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, arg0)
         args.setAtIndex(ADDRESS, 1, arg1)
         args.setAtIndex(ADDRESS, 2, arg2)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg0)
         GodotStrings.destroyString(arg1)
@@ -34937,7 +34939,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, arg2)
         args.setAtIndex(ADDRESS, 3, arg3)
         args.setAtIndex(ADDRESS, 4, arg4)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -34963,7 +34965,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, longCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -34989,7 +34991,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, longCell)
         args.setAtIndex(ADDRESS, 1, arg1)
         args.setAtIndex(ADDRESS, 2, arg2)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(arg1)
         GodotStrings.destroyString(arg2)
@@ -35013,7 +35015,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -35036,7 +35038,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, arg1)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -35056,7 +35058,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -35079,7 +35081,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
       args.setAtIndex(ADDRESS, 2, longCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -35101,7 +35103,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
       args.setAtIndex(ADDRESS, 2, objectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -35133,7 +35135,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, arg3)
         args.setAtIndex(ADDRESS, 4, arg4)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, arg4)
@@ -35161,7 +35163,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, packedCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packedCell)
@@ -35190,7 +35192,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, packedCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readDictionaryScalars(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
@@ -35219,7 +35221,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, bytesCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(secondCell)
         GodotStrings.destroyString(firstCell)
@@ -35244,7 +35246,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, objectCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -35273,7 +35275,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -35297,7 +35299,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, bytesCell)
         args.setAtIndex(ADDRESS, 1, ridCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bytesCell)
@@ -35325,7 +35327,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, longCell)
         args.setAtIndex(ADDRESS, 2, bytesCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bytesCell)
@@ -35353,7 +35355,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, modeCell)
         args.setAtIndex(ADDRESS, 1, bytesCell)
         args.setAtIndex(ADDRESS, 2, objectCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -35386,7 +35388,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, objectCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, secondCell)
@@ -35419,7 +35421,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, fromCell)
         args.setAtIndex(ADDRESS, 1, toCell)
         args.setAtIndex(ADDRESS, 2, planeArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector3Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, ret)
@@ -35447,7 +35449,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, pointsCell)
         args.setAtIndex(ADDRESS, 1, planeCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector3Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, ret)
@@ -35486,7 +35488,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, toCell)
         args.setAtIndex(ADDRESS, 3, boolCell)
         args.setAtIndex(ADDRESS, 4, longCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector2Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, ret)
@@ -35526,7 +35528,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, toCell)
         args.setAtIndex(ADDRESS, 3, boolCell)
         args.setAtIndex(ADDRESS, 4, longCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector3Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, ret)
@@ -35564,7 +35566,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, toCell)
         args.setAtIndex(ADDRESS, 3, boolCell)
         args.setAtIndex(ADDRESS, 4, layersCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector2Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, ret)
@@ -35604,7 +35606,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, toCell)
         args.setAtIndex(ADDRESS, 3, boolCell)
         args.setAtIndex(ADDRESS, 4, layersCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector3Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, ret)
@@ -35632,7 +35634,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, firstCell)
         args.setAtIndex(ADDRESS, 1, objectCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector2Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, ret)
@@ -35659,7 +35661,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, objectCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -35694,7 +35696,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, objectCell)
         args.setAtIndex(ADDRESS, 3, transform1)
         args.setAtIndex(ADDRESS, 4, motion1)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedVector2Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, ret)
@@ -35729,7 +35731,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, transform1)
       args.setAtIndex(ADDRESS, 4, motion1)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -35751,7 +35753,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, vectorCell)
         args.setAtIndex(ADDRESS, 1, pointsCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, pointsCell)
@@ -35781,7 +35783,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, nodePath)
         args.setAtIndex(ADDRESS, 1, packedCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, packedCell)
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
@@ -35908,7 +35910,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, maskCell)
         args.setAtIndex(ADDRESS, 3, excludeCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, excludeCell)
@@ -35943,7 +35945,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, maskCell)
         args.setAtIndex(ADDRESS, 3, excludeCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, excludeCell)
@@ -35979,7 +35981,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, maskCell)
         args.setAtIndex(ADDRESS, 3, excludeCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, excludeCell)
@@ -36016,7 +36018,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, maskCell)
         args.setAtIndex(ADDRESS, 3, excludeCell)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, excludeCell)
@@ -36042,7 +36044,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
         args.setAtIndex(ADDRESS, 2, countCell)
         args.setAtIndex(ADDRESS, 3, GodotStrings.makeStringName(context))
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -36066,7 +36068,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, intCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -36094,7 +36096,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, stringCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -36122,7 +36124,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, stringCell)
         args.setAtIndex(ADDRESS, 2, objectCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -36150,7 +36152,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(firstName))
         args.setAtIndex(ADDRESS, 2, indexCell)
         args.setAtIndex(ADDRESS, 3, GodotStrings.makeStringName(secondName))
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -36175,7 +36177,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, objectCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -36202,7 +36204,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -36221,7 +36223,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -36250,7 +36252,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, intCell)
         args.setAtIndex(ADDRESS, 2, otherCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(otherCell)
@@ -36279,7 +36281,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, intCell)
         args.setAtIndex(ADDRESS, 2, objectCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(textCell)
@@ -36311,7 +36313,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, boolCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return GodotStrings.readString(ret)
       } finally {
         GodotStrings.destroyString(ret)
@@ -36335,7 +36337,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, longCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -36358,7 +36360,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36394,7 +36396,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, longCell)
       args.setAtIndex(ADDRESS, 5, GodotStrings.makeStringName(name))
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -36422,7 +36424,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, longCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
       args.setAtIndex(ADDRESS, 3, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36441,7 +36443,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -36465,7 +36467,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, longCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -36493,7 +36495,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, firstBoolCell)
       args.setAtIndex(ADDRESS, 3, secondBoolCell)
       val ret = arena.allocate(ADDRESS)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(ADDRESS, 0)
     }
   }
@@ -36513,7 +36515,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -36533,7 +36535,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -36557,7 +36559,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -36581,7 +36583,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -36606,7 +36608,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedByteArray(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, ret)
@@ -36633,7 +36635,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -36653,7 +36655,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -36676,7 +36678,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36698,7 +36700,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
       args.setAtIndex(ADDRESS, 2, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36722,7 +36724,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 2, textureCell)
       args.setAtIndex(ADDRESS, 3, indexCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36743,7 +36745,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 2, intCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -36766,7 +36768,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
       args.setAtIndex(ADDRESS, 2, doubleCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36800,7 +36802,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, double0)
       args.setAtIndex(ADDRESS, 4, double1)
       args.setAtIndex(ADDRESS, 5, double2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36827,7 +36829,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, boolCell)
       args.setAtIndex(ADDRESS, 2, arg0)
       args.setAtIndex(ADDRESS, 3, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36869,7 +36871,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, double2)
       args.setAtIndex(ADDRESS, 6, double3)
       args.setAtIndex(ADDRESS, 7, double4)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36900,7 +36902,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, arg0)
       args.setAtIndex(ADDRESS, 3, arg1)
       args.setAtIndex(ADDRESS, 4, arg2)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36938,7 +36940,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, double2)
       args.setAtIndex(ADDRESS, 5, bool1)
       args.setAtIndex(ADDRESS, 6, textureCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -36973,7 +36975,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, arg1)
       args.setAtIndex(ADDRESS, 4, arg2)
       args.setAtIndex(ADDRESS, 5, arg3)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37023,7 +37025,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 7, double5)
       args.setAtIndex(ADDRESS, 8, double6)
       args.setAtIndex(ADDRESS, 9, double7)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37080,7 +37082,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 8, double5)
       args.setAtIndex(ADDRESS, 9, double6)
       args.setAtIndex(ADDRESS, 10, longCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37134,7 +37136,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 8, double2)
       args.setAtIndex(ADDRESS, 9, double3)
       args.setAtIndex(ADDRESS, 10, double4)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37206,7 +37208,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 11, double6)
       args.setAtIndex(ADDRESS, 12, double7)
       args.setAtIndex(ADDRESS, 13, double8)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37240,7 +37242,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, bool0)
       args.setAtIndex(ADDRESS, 4, double1)
       args.setAtIndex(ADDRESS, 5, bool1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37262,7 +37264,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, doubleCell)
       args.setAtIndex(ADDRESS, 2, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37289,7 +37291,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, modeCell)
       args.setAtIndex(ADDRESS, 2, arg0)
       args.setAtIndex(ADDRESS, 3, arg1)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37324,7 +37326,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, arg2)
       args.setAtIndex(ADDRESS, 4, arg3)
       args.setAtIndex(ADDRESS, 5, modeCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37346,7 +37348,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, rectCell)
       args.setAtIndex(ADDRESS, 2, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37372,7 +37374,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, firstIntCell)
       args.setAtIndex(ADDRESS, 3, secondIntCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37395,7 +37397,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, radiusCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -37422,7 +37424,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, boolCell)
       args.setAtIndex(ADDRESS, 2, instancesCell)
       args.setAtIndex(ADDRESS, 3, vertexCountCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37448,7 +37450,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, thirdCell)
       args.setAtIndex(ADDRESS, 3, fourthCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37466,7 +37468,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, listCell)
       args.setAtIndex(ADDRESS, 1, rectCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -37485,7 +37487,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -37505,7 +37507,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, valuesCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, valuesCell)
       }
@@ -37576,7 +37578,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, objectArray)
         args.setAtIndex(ADDRESS, 2, countCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, objectArray)
@@ -37606,7 +37608,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, formatCell)
         args.setAtIndex(ADDRESS, 2, countCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, ridArray)
@@ -37639,7 +37641,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, formatCell)
         args.setAtIndex(ADDRESS, 3, countCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, objectArray)
@@ -37673,7 +37675,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, ridArray)
         args.setAtIndex(ADDRESS, 3, offsetsArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT64_ARRAY, offsetsArray)
@@ -37710,7 +37712,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, vertexCountCell)
         args.setAtIndex(ADDRESS, 3, vertexBufferArray)
         args.setAtIndex(ADDRESS, 4, offsetsArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT64_ARRAY, offsetsArray)
         BuiltinTypes.destroyTyped(VariantType.ARRAY, vertexBufferArray)
@@ -37756,7 +37758,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 5, regionCell)
         args.setAtIndex(ADDRESS, 6, breadcrumbCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_COLOR_ARRAY, clearColorArray)
@@ -37818,7 +37820,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 8, clearStencilCell)
         args.setAtIndex(ADDRESS, 9, regionCell)
         args.setAtIndex(ADDRESS, 10, storageTextureArray)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return BuiltinTypes.readPackedInt64Array(ret)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT64_ARRAY, ret)
@@ -37854,7 +37856,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, sizeCell)
         args.setAtIndex(ADDRESS, 3, dataArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, dataArray)
@@ -37891,7 +37893,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, restartCell)
         args.setAtIndex(ADDRESS, 4, creationBitsCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, dataArray)
@@ -37924,7 +37926,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, usageCell)
         args.setAtIndex(ADDRESS, 3, creationBitsCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, dataArray)
@@ -37957,7 +37959,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, stateCell)
         args.setAtIndex(ADDRESS, 3, flagsCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(pathCell)
@@ -37989,7 +37991,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, secondObjectCell)
       args.setAtIndex(ADDRESS, 4, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -38011,7 +38013,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(thirdName))
       args.setAtIndex(ADDRESS, 3, objectCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -38051,7 +38053,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 5, fourthCell)
       args.setAtIndex(ADDRESS, 6, objectCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -38071,7 +38073,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, ridCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -38092,7 +38094,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, objectCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -38120,7 +38122,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, secondObjectCell)
         args.setAtIndex(ADDRESS, 2, dataArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, dataArray)
@@ -38162,7 +38164,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 4, thirdCell)
       args.setAtIndex(ADDRESS, 5, modeCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -38191,7 +38193,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, valuesArray)
         args.setAtIndex(ADDRESS, 3, objectCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT64_ARRAY, valuesArray)
@@ -38253,7 +38255,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 9, countCell)
         args.setAtIndex(ADDRESS, 10, objectArray)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return RID(ret.get(JAVA_LONG, 0))
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, objectArray)
@@ -38320,7 +38322,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 10, seventhCell)
         args.setAtIndex(ADDRESS, 11, eighthCell)
         args.setAtIndex(ADDRESS, 12, targetCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, levelsCell)
       }
@@ -38370,7 +38372,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 6, weightsCell)
         args.setAtIndex(ADDRESS, 7, textureCell)
         args.setAtIndex(ADDRESS, 8, countCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, weightsCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, bonesCell)
@@ -38410,7 +38412,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, readStderrCell)
         args.setAtIndex(ADDRESS, 4, openConsoleCell)
         val ret = arena.allocate(JAVA_INT)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_INT, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, outputCell)
@@ -38452,7 +38454,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, outputCell)
         args.setAtIndex(ADDRESS, 5, portCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, outputCell)
@@ -38486,7 +38488,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(method))
         args.setAtIndex(ADDRESS, 3, argumentsCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argumentsCell)
@@ -38546,7 +38548,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 7, leftIconCell)
       args.setAtIndex(ADDRESS, 8, rightIconCell)
       args.setAtIndex(ADDRESS, 9, drawStyleBoxCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -38620,7 +38622,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, formatCell)
         args.setAtIndex(ADDRESS, 2, blendsCell)
         val ret = arena.allocate(JAVA_BYTE)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_BYTE, 0) != 0.toByte()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, blendsCell)
@@ -38675,7 +38677,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, transformCell)
         args.setAtIndex(ADDRESS, 1, pointsCell)
         args.setAtIndex(ADDRESS, 2, indicesCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, indicesCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR2_ARRAY, pointsCell)
@@ -38702,7 +38704,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, pointsCell)
         args.setAtIndex(ADDRESS, 2, indicesCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, indicesCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, pointsCell)
@@ -38737,7 +38739,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, colorsCell)
         args.setAtIndex(ADDRESS, 3, firstIndicesCell)
         args.setAtIndex(ADDRESS, 4, secondIndicesCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, secondIndicesCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, firstIndicesCell)
@@ -38782,7 +38784,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, secondDataCell)
         args.setAtIndex(ADDRESS, 5, thirdDataCell)
         args.setAtIndex(ADDRESS, 6, indicesCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, indicesCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, thirdDataCell)
@@ -38831,7 +38833,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 5, secondDataCell)
         args.setAtIndex(ADDRESS, 6, thirdDataCell)
         args.setAtIndex(ADDRESS, 7, indicesCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, indicesCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, thirdDataCell)
@@ -38872,7 +38874,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, thirdModeCell)
         args.setAtIndex(ADDRESS, 4, flagsCell)
         args.setAtIndex(ADDRESS, 5, valuesCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, valuesCell)
         GodotStrings.destroyString(stringCell)
@@ -38921,7 +38923,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 4, firstColorCell)
         args.setAtIndex(ADDRESS, 5, secondSizeCell)
         args.setAtIndex(ADDRESS, 6, secondColorCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -38959,7 +38961,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 3, uv2sCell)
         args.setAtIndex(ADDRESS, 4, normalsCell)
         args.setAtIndex(ADDRESS, 5, tangentsCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, tangentsCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_VECTOR3_ARRAY, normalsCell)
@@ -38989,7 +38991,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, intCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39014,7 +39016,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, colorCell)
       args.setAtIndex(ADDRESS, 2, energyCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39037,7 +39039,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, samplesCell)
       args.setAtIndex(ADDRESS, 2, formatCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -39057,7 +39059,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, aabbCell)
       args.setAtIndex(ADDRESS, 1, scenarioCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt64Array(ret)
       } finally {
@@ -39085,7 +39087,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, toCell)
       args.setAtIndex(ADDRESS, 2, scenarioCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedInt64Array(ret)
       } finally {
@@ -39112,7 +39114,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, boolCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39139,7 +39141,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, secondCell)
         args.setAtIndex(ADDRESS, 2, firstFlagCell)
         args.setAtIndex(ADDRESS, 3, secondFlagCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(secondCell)
         GodotStrings.destroyString(firstCell)
@@ -39171,7 +39173,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, flagCell)
         args.setAtIndex(ADDRESS, 3, modeCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(secondCell)
@@ -39204,7 +39206,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, methodCell)
         args.setAtIndex(ADDRESS, 3, bodyCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bodyCell)
@@ -39238,7 +39240,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, methodCell)
         args.setAtIndex(ADDRESS, 3, bodyCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(bodyCell)
@@ -39272,7 +39274,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, headersCell)
         args.setAtIndex(ADDRESS, 3, bodyCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, bodyCell)
@@ -39306,7 +39308,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, headersCell)
         args.setAtIndex(ADDRESS, 3, bodyCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(bodyCell)
@@ -39331,7 +39333,7 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, textCell)
         args.setAtIndex(ADDRESS, 1, transformCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(textCell)
       }
@@ -39365,7 +39367,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, firstFlagCell)
         args.setAtIndex(ADDRESS, 4, secondFlagCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(textCell)
       }
@@ -39387,7 +39389,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, pointCell)
       args.setAtIndex(ADDRESS, 1, rectCell)
       val ret = arena.allocate(JAVA_BYTE)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_BYTE, 0) != 0.toByte()
     }
   }
@@ -39414,7 +39416,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, transformCell)
       args.setAtIndex(ADDRESS, 2, amountCell)
       args.setAtIndex(ADDRESS, 3, persistentCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39440,7 +39442,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, transformCell)
       args.setAtIndex(ADDRESS, 2, amountCell)
       args.setAtIndex(ADDRESS, 3, persistentCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39473,7 +39475,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -39496,7 +39498,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return Vector2(x = GodotRealSegment.readIndex(ret, 0), y = GodotRealSegment.readIndex(ret, 1))
     }
   }
@@ -39520,7 +39522,7 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, intCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39539,7 +39541,7 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
       val ret = arena.allocate(12L, 4L)
-      objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+      bindPtrcall(methodBind, instance, arr, ret)
       return readVector3i(ret)
     }
   }
@@ -39572,7 +39574,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 1, firstCell)
         args.setAtIndex(ADDRESS, 2, secondCell)
         args.setAtIndex(ADDRESS, 3, doubleCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+        bindPtrcall(methodBind, instance, args, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         GodotStrings.destroyString(stringCell)
@@ -39603,7 +39605,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, secondCell)
       args.setAtIndex(ADDRESS, 2, doubleCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return try {
         BuiltinTypes.readPackedByteArray(ret)
       } finally {
@@ -39635,7 +39637,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       val ret = arena.allocate(JAVA_INT)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_INT, 0)
     }
   }
@@ -39671,7 +39673,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, boolCell)
       args.setAtIndex(ADDRESS, 3, doubleCell)
       args.setAtIndex(ADDRESS, 4, vectorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39694,7 +39696,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -39718,7 +39720,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return ret.get(JAVA_LONG, 0)
     }
   }
@@ -39749,7 +39751,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39787,7 +39789,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, secondCell)
       args.setAtIndex(ADDRESS, 3, thirdCell)
       args.setAtIndex(ADDRESS, 4, colorCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39815,7 +39817,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, doubleCell)
       args.setAtIndex(ADDRESS, 2, intCell)
       args.setAtIndex(ADDRESS, 3, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39844,7 +39846,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 1, vectorCell)
       args.setAtIndex(ADDRESS, 2, intCell)
       args.setAtIndex(ADDRESS, 3, GodotStrings.makeStringName(name))
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39882,7 +39884,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 2, longCell)
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, boolCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39921,7 +39923,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, colorCell)
       args.setAtIndex(ADDRESS, 4, boolCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -39960,7 +39962,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 3, secondCell)
       args.setAtIndex(ADDRESS, 4, thirdCell)
       args.setAtIndex(ADDRESS, 5, fourthCell)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
     }
   }
 
@@ -39983,7 +39985,7 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, intCell)
       args.setAtIndex(ADDRESS, 1, longCell)
       val ret = arena.allocate(JAVA_LONG)
-      objectMethodBindPtrcall.invoke(methodBind, instance, args, ret)
+      bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))
     }
   }
@@ -40031,7 +40033,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, variant)
         arr.setAtIndex(ADDRESS, 2, intCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(stringCell)
@@ -40100,7 +40102,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 9, widthInPercentCell)
         args.setAtIndex(ADDRESS, 10, heightInPercentCell)
         args.setAtIndex(ADDRESS, 11, textCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(textCell)
         GodotStrings.destroyString(tooltipCell)
@@ -40170,7 +40172,7 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 9, tooltipCell)
         args.setAtIndex(ADDRESS, 10, widthInPercentCell)
         args.setAtIndex(ADDRESS, 11, heightInPercentCell)
-        objectMethodBindPtrcall.invoke(methodBind, instance, args, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         GodotStrings.destroyString(tooltipCell)
         BuiltinTypes.destroyVariant(keyVariant)
@@ -40199,7 +40201,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, byteArray)
         arr.setAtIndex(ADDRESS, 2, boolCell)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
@@ -40225,7 +40227,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, packed)
         val ret = arena.allocate(ADDRESS)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packed)
@@ -40253,7 +40255,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, stringCell)
         arr.setAtIndex(ADDRESS, 2, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packed)
         GodotStrings.destroyString(stringCell)
@@ -40277,7 +40279,7 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, packed)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, MemorySegment.NULL)
+        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_COLOR_ARRAY, packed)
       }
@@ -40309,7 +40311,7 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, uintCell)
         arr.setAtIndex(ADDRESS, 3, packed)
         val ret = arena.allocate(JAVA_LONG)
-        objectMethodBindPtrcall.invoke(methodBind, instance, arr, ret)
+        bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(JAVA_LONG, 0)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_INT32_ARRAY, packed)
@@ -40324,7 +40326,7 @@ actual object ObjectCalls {
    * possibly-freed pointer (task 98). Undefined for a pointer whose object has already been freed.
    */
   fun objectGetInstanceId(instance: MemorySegment): Long =
-    objectGetInstanceId.invoke(instance) as Long
+    InstanceIdHandle.HANDLE.invokeExact(instance) as Long
 
   /** Destroys a Godot Object pointer allocated via classdb_construct_object3. */
   actual fun destroyObject(instance: MemorySegment) {

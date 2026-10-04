@@ -38,6 +38,20 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — faster wrapper calls on desktop (task 131 item 16)
+
+- The downcall handles every wrapper call goes through (`object_method_bind_ptrcall`,
+  `object_get_instance_id`, the freed-object check's `object_get_instance_from_id`, and the String
+  argument/return helpers) are JVM constants called with `invokeExact`, instead of `by lazy`
+  handles called through the generic invoker; the freed-object check no longer allocates a
+  `MemorySegment` per call. Measured on the editor binary (Apple M1 Max, freed-object checks on as
+  in every debug build): a wrapper call ~28.5 → ~21 ns (~17 → ~13 ns with the check off), a
+  wrapper construction ~7 → ~4 ns; Bunnymark frame time V1 Sprites −10 %, V1 DrawTexture −11 %,
+  V2 −7 %, V3 −8 % (10,000 bunnies, 6 ABBA rounds, faster in every round). No behaviour change:
+  a call through a freed object still raises the same script error. Android shares the constant
+  handles but keeps `invokeWithArguments` (Kotlin cannot emit an exact call against android.jar);
+  iOS (direct C calls) and Web had no such overhead and are unchanged.
+
 ### Added — script authoring like GDScript: node access, checked casts, await, preload (task 133 A)
 
 Desktop, Android and iOS; Web gets the coroutine members, `isScript`/`asScript` and the tree
