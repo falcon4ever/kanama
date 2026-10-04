@@ -302,7 +302,7 @@ uninstall_bundle() {
   fi
   DEVELOPER_DIR="$XCODE_DEVELOPER_DIR" xcrun devicectl device uninstall app \
     --device "$DEVICE_ID" \
-    "$bundle_id" >/dev/null 2>&1 || true
+    "$bundle_id" >/dev/null 2>&1 || true  # justified: the bundle is usually not installed; the next install and launch are the checks
 }
 
 uninstall_other_gate_bundles() {
@@ -389,9 +389,11 @@ PARALLEL_JOB_ROOTS=()
 cleanup_job_worktrees() {
   local root
   for root in ${PARALLEL_JOB_ROOTS[@]+"${PARALLEL_JOB_ROOTS[@]}"}; do
+    # justified: a throwaway worktree; if git cannot remove it the directory is deleted instead.
     git -C "$ROOT_DIR" worktree remove --force "$root" >/dev/null 2>&1 || rm -rf "$root"
   done
   PARALLEL_JOB_ROOTS=()
+  # justified: housekeeping of throwaway worktrees; a stale registration is cleared again before the next build phase.
   git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 || true
 }
 
@@ -425,7 +427,7 @@ if [[ "$RUN_FRESH" -eq 1 ]]; then
   if [[ "$ALLOW_PROVISIONING_UPDATES" -eq 1 ]]; then
     fresh_args+=(--allow-provisioning-updates)
   fi
-  # run_step records the FAIL itself; keep going so the demo matrix still runs
+  # justified: run_step records the FAIL itself; keep going so the demo matrix still runs
   # and the final aggregation below decides the overall exit status.
   run_step "fresh-starter-project" "$OUTPUT_DIR/fresh-starter.log" "${fresh_args[@]}" || true
 fi
@@ -450,6 +452,7 @@ run_demo_matrix_serial() {
     fi
     demo_run_path="$(prepare_demo_copy "$demo_path" "${demo_apps[$i]}")"
     uninstall_other_gate_bundles "$GATE_BUNDLE_ID"
+    # justified: run_step records the FAIL itself; the final aggregation below decides the exit status.
     run_step \
       "${demo_names[$i]}" \
       "$OUTPUT_DIR/${demo_apps[$i]}.log" \
@@ -458,7 +461,7 @@ run_demo_matrix_serial() {
       "$demo_run_path" \
       "$GATE_BUNDLE_ID" \
       "${demo_apps[$i]}" \
-      "$OUTPUT_DIR/${demo_apps[$i]}" || true
+      "$OUTPUT_DIR/${demo_apps[$i]}" || true  # justified: run_step already recorded the FAIL row
     keep_console_log "${demo_apps[$i]}"
   done
 }
@@ -475,6 +478,7 @@ run_demo_matrix_parallel() {
   mkdir -p "$roots_dir"
   # A previous run that was killed mid-build leaves its job worktrees registered (and possibly
   # their directories behind): prune the registrations and clear the paths before re-adding.
+  # justified: housekeeping; a stale registration would make the `worktree add` below fail loudly.
   git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 || true
   for ((k = 0; k < BUILD_JOBS; k++)); do
     local root="$roots_dir/job$k"
@@ -534,6 +538,7 @@ run_demo_matrix_parallel() {
     pids+=("$!")
   done
   local pid
+  # justified: each build job records .build.ok / .build.failed itself; a job without either is reported FAIL below.
   for pid in "${pids[@]}"; do wait "$pid" || true; done
   local build_ended
   build_ended="$(date +%s)"
@@ -548,6 +553,7 @@ run_demo_matrix_parallel() {
       continue
     fi
     uninstall_other_gate_bundles "$GATE_BUNDLE_ID"
+    # justified: run_step records the FAIL itself; the final aggregation below decides the exit status.
     KANAMA_IOS_RUN_STAGE=launch run_step \
       "${demo_names[$idx]}" \
       "$OUTPUT_DIR/$app.log" \
@@ -556,7 +562,7 @@ run_demo_matrix_parallel() {
       "$OUTPUT_DIR/project-copies/$app" \
       "$GATE_BUNDLE_ID" \
       "$app" \
-      "$OUTPUT_DIR/$app" || true
+      "$OUTPUT_DIR/$app" || true  # justified: run_step already recorded the FAIL row
     keep_console_log "$app"
   done
 }
@@ -578,6 +584,14 @@ if [[ "$RUN_DEMOS" -eq 1 ]]; then
 fi
 if rg -q $'\tFAIL\t' "$RESULTS_TSV"; then
   echo "[ios_device_gate] one or more gate steps failed; summary: $SUMMARY" >&2
+  exit 1
+fi
+# Task 118: no FAIL row is not enough. Every planned step must have a row (a step that never ran leaves
+# none, and the old check printed PASS for the rows that did).
+expected_rows=$((RUN_FRESH + RUN_DEMOS * ${#demo_names[@]}))
+actual_rows=$(($(wc -l <"$RESULTS_TSV") - 1))
+if [[ "$actual_rows" -ne "$expected_rows" ]]; then
+  echo "[ios_device_gate] expected $expected_rows result rows (fresh=$RUN_FRESH demos=$RUN_DEMOS) but $RESULTS_TSV has $actual_rows; a step did not run" >&2
   exit 1
 fi
 

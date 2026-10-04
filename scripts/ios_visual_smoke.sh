@@ -352,6 +352,7 @@ fi
 if [[ "$physical_device" -eq 1 && -z "$device_udid" && "$build_only" -eq 0 ]]; then
   echo "[ios_visual_smoke] pass --device with a physical iOS device identifier or UDID" >&2
   echo "[ios_visual_smoke] available devices:" >&2
+  # justified: diagnostics before the exit 2 on the next line.
   DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl list devices >&2 || true
   exit 2
 fi
@@ -390,6 +391,23 @@ export_dir="$work_dir/export"
 derived_dir="$work_dir/derived"
 app_name="KanamaIosVisualSmoke"
 bundle_id="net.multigesture.kanama.iosvisualsmoke"
+
+# Task 118: the artifact this gate launches must be the one it built. The export preset below writes
+# $bundle_id, but a stale preset or a changed template would build a different id, and `launch
+# "$bundle_id"` would then start whatever older build sits under it (the iOS launch mismatch of task
+# 115). Read the id out of the built .app itself before installing it.
+assert_built_bundle_id() {
+  local app="$1" actual
+  actual="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist" 2>&1)" || {
+    echo "[ios_visual_smoke] cannot read CFBundleIdentifier from $app/Info.plist: $actual" >&2
+    return 1
+  }
+  if [[ "$actual" != "$bundle_id" ]]; then
+    echo "[ios_visual_smoke] the built app's bundle id is '$actual' but this run launches '$bundle_id'; refusing to install a different app than the one it would launch." >&2
+    return 1
+  fi
+  echo "[ios_visual_smoke] built app bundle id verified: $actual"
+}
 screenshot_path="$work_dir/kanama-ios-visual-smoke.png"
 stdout_log="$work_dir/launch.stdout.log"
 stderr_log="$work_dir/launch.stderr.log"
@@ -2558,6 +2576,7 @@ if [[ "$physical_device" -eq 1 ]]; then
     echo "[ios_visual_smoke] PASS"
     exit 0
   fi
+  assert_built_bundle_id "$app_path" || exit 1
   DEVELOPER_DIR="$xcode_developer_dir" xcrun devicectl device install app \
     --device "$device_udid" \
     "$app_path"
@@ -2587,6 +2606,7 @@ if [[ "$physical_device" -eq 1 ]]; then
   launch_timeout="${KANAMA_IOS_LAUNCH_TIMEOUT:-120}"
   waited=0
   while [[ "$waited" -lt "$launch_timeout" ]]; do
+    # justified: a poll loop; the logs may not exist yet. The loader/self-test assertions after the loop decide.
     if rg -q 'OBJECTCALLS SELFTEST:' "$stderr_log" "$stdout_log" 2>/dev/null; then
       break
     fi
@@ -2596,6 +2616,7 @@ if [[ "$physical_device" -eq 1 ]]; then
   post_wait=$((launch_sleep + 5))
   echo "[ios_visual_smoke] scene-init reached after ${waited}s (timeout ${launch_timeout}s); capturing ${post_wait}s more"
   sleep "$post_wait"
+  # justified: stopping our own console stream after the capture window; it may already have exited.
   kill "$launch_pid" >/dev/null 2>&1 || true
   wait "$launch_pid" >/dev/null 2>&1 || true
   launch_pid=""
@@ -2616,6 +2637,7 @@ else
     echo "[ios_visual_smoke] PASS"
     exit 0
   fi
+  assert_built_bundle_id "$app_path" || exit 1
   DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl install "$device_udid" "$app_path"
 
   if [[ -n "$godot_project_baseline_dir" ]]; then
@@ -2643,6 +2665,7 @@ else
   DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl io "$device_udid" screenshot "$screenshot_path"
 
   if [[ -n "$launch_pid" ]]; then
+    # justified: stopping our own console stream after the capture window; it may already have exited.
     kill "$launch_pid" >/dev/null 2>&1 || true
     wait "$launch_pid" >/dev/null 2>&1 || true
   fi
@@ -2714,6 +2737,7 @@ if [[ "$kanama_user_script_probe" -eq 1 ]]; then
   # summary line was checked, so "197 passed, 1 failed" printed OK.
   if rg -q 'SELFTEST FAIL:|SELFTEST( MATRIX)?: [0-9]+ passed, [1-9][0-9]* failed' "$stderr_log" "$stdout_log"; then
     echo "[ios_visual_smoke] runtime self-test reported failures:" >&2
+    # justified: printing the evidence; the exit 1 on the next line is the verdict.
     rg 'SELFTEST FAIL:|SELFTEST( MATRIX)?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 || true
     exit 1
   fi
@@ -2797,6 +2821,7 @@ fi
 if [[ "$kanama_bunnymark_probe" -eq 1 ]]; then
   bunnymark_add_calls="$(
     {
+      # justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict.
       rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" || true
     } | wc -l | tr -d '[:space:]'
   )"
@@ -2934,6 +2959,7 @@ echo "[ios_visual_smoke] stderr: $stderr_log"
 if [[ "$physical_device" -eq 1 ]]; then
   echo "[ios_visual_smoke] physical-device app left running"
 elif [[ "$keep_running" -ne 1 ]]; then
+  # justified: closing the app after the verdict; it may already have exited.
   DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl terminate "$device_udid" "$bundle_id" >/dev/null 2>&1 || true
 else
   DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null

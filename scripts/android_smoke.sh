@@ -2,6 +2,10 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/gate_skip.sh
+source "$ROOT_DIR/scripts/gate_skip.sh"
+# shellcheck source=scripts/android_apk_id.sh
+source "$ROOT_DIR/scripts/android_apk_id.sh"
 
 usage() {
   cat <<'EOF'
@@ -117,6 +121,8 @@ adb_retry() {
       return 1
     fi
     echo "[android_smoke] adb command failed, restarting daemon and retrying: $*" >&2
+    # justified: the daemon restart is best effort; the retried command on the next loop turn is the check
+    # (after 3 attempts adb_retry returns 1).
     "$ADB_BIN" kill-server >/dev/null 2>&1 || true
     sleep 1
     "$ADB_BIN" start-server >/dev/null 2>&1 || true
@@ -127,6 +133,7 @@ adb_retry() {
 
 cleanup() {
   if [[ "${PACKAGE_LAUNCHED:-0}" == "1" ]]; then
+    # justified: cleanup after the verdict; the app may already have exited.
     "$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
   fi
   if [[ -n "$PROJECT_GODOT_BACKUP" && -f "$PROJECT_GODOT_BACKUP" ]]; then
@@ -186,10 +193,17 @@ fi
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar "${addon_args[@]}"
 
 echo "[android_smoke] install android build template"
-"$GODOT_BIN" --headless \
+# In 4.7.2 this installs nothing on its own (task 116), so its exit status is not the verdict: the
+# build.gradle check below is, and installs the template by hand when this left it missing. Keep the
+# output and show it when the command failed, instead of discarding it (task 118).
+TEMPLATE_LOG="${APK_PATH%.apk}.install-template.log"
+if ! "$GODOT_BIN" --headless \
   --path "$DEMO_DIR" \
   --install-android-build-template \
-  --quit >/dev/null 2>&1 || true
+  --quit >"$TEMPLATE_LOG" 2>&1; then
+  echo "[android_smoke] note: --install-android-build-template exited non-zero (output below; the build.gradle check decides):" >&2
+  tail -n 20 "$TEMPLATE_LOG" >&2
+fi
 
 BUILD_GRADLE="$DEMO_DIR/android/build/build.gradle"
 if [[ ! -f "$BUILD_GRADLE" ]]; then
@@ -270,6 +284,7 @@ fi
 # loader means the exported scenes carry none of that script's @Export values (task 106).
 if grep -qE 'No loader found for resource: res://.*\.kt|ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG"; then
   echo "[android_smoke] the export-time editor could not bind the project's .kt scripts:" >&2
+  # justified: diagnostics only; the next line exits 1 whatever this prints.
   grep -E 'No loader found for resource: res://.*\.kt|_load path=' "$EXPORT_LOG" | head -5 >&2 || true
   echo "[android_smoke] scene-stored @Export values would be missing from this APK; refusing to install it." >&2
   exit 1
@@ -281,33 +296,46 @@ if ! "$GODOT_BIN" --headless --path "$DEMO_DIR" --script "$SCENE_PARITY_CHECK"; 
   exit 1
 fi
 
+# Task 118: prove the APK is the package this run will launch, before anything is installed.
+assert_apk_package_id "[android_smoke]" "$ANDROID_SDK_DIR" "$APK_PATH" "$PACKAGE_NAME" || exit 1
+
 echo "[android_smoke] install: $PACKAGE_NAME"
 adb_retry start-server >/dev/null
-if ! "$ADB_BIN" install -r "$APK_PATH" >/dev/null 2>&1; then
+INSTALL_LOG="${APK_PATH%.apk}.install.log"
+if ! "$ADB_BIN" install -r "$APK_PATH" >"$INSTALL_LOG" 2>&1; then
   # A leftover install from an older run may carry a different debug-keystore
   # signature (INSTALL_FAILED_UPDATE_INCOMPATIBLE). Smoke installs hold no user
   # data, so drop the stale package and install fresh.
-  echo "[android_smoke] install -r failed; uninstalling stale $PACKAGE_NAME and retrying"
+  echo "[android_smoke] install -r failed (output below); uninstalling stale $PACKAGE_NAME and retrying"
+  cat "$INSTALL_LOG" >&2
+  # justified: the package may simply not be installed; the retried install on the next line is the check.
   "$ADB_BIN" uninstall "$PACKAGE_NAME" >/dev/null 2>&1 || true
   adb_retry install "$APK_PATH" >/dev/null
 fi
 adb_retry logcat -c
+# justified: the app may not be running yet; the launch below and the pid check after it decide.
 adb_retry shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 || true
 # A dozing/locked screen fails renderer surface creation at launch (seen as
 # "Failed to create vulkan window" under the Mobile renderer). Wake the device
 # and dismiss a non-secure keyguard before launching; a PIN-locked keyguard
 # still needs a human unlock.
+# justified: best effort; a screen that stayed locked fails the launch/renderer/screenshot checks below.
 adb_retry shell input keyevent KEYCODE_WAKEUP >/dev/null 2>&1 || true
 adb_retry shell wm dismiss-keyguard >/dev/null 2>&1 || true
 adb_retry shell monkey -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null
 PACKAGE_LAUNCHED=1
 sleep "$LAUNCH_WAIT"
+# justified: an empty pid is handled right below (the run fails), so pidof's own exit status adds nothing.
 APP_PID="$("$ADB_BIN" shell pidof -s "$PACKAGE_NAME" 2>/dev/null | tr -d '\r' || true)"
-if [[ -n "$APP_PID" ]]; then
-  adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
-else
+if [[ -z "$APP_PID" ]]; then
+  # Task 118: this used to fall back to the whole device logcat, which can hold the startup lines of an app
+  # that has since crashed (a native crash prints no "FATAL EXCEPTION"). A gate judges the live process or fails.
   adb_retry logcat -d >"$LOG_FILE"
+  echo "[android_smoke] $PACKAGE_NAME is not running ${LAUNCH_WAIT}s after launch (crashed or never started); logcat: $LOG_FILE" >&2
+  tail -n 80 "$LOG_FILE" >&2
+  exit 1
 fi
+adb_retry logcat --pid "$APP_PID" -d >"$LOG_FILE"
 
 check_log "Initializing Godot plugin KanamaAndroid"
 check_log "registered KanamaScriptLanguage"
