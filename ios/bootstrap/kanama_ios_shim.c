@@ -11144,6 +11144,15 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
             instance->runtime_handle, property_index, KANAMA_IOS_PT_VECTOR2,
             (const uint8_t *)comps, (int32_t)sizeof(comps));
         return (GDExtensionBool)ok;
+    } else if (type == KANAMA_IOS_VARIANT_TYPE_VECTOR2I && g_variant_to_vector2i != NULL) {
+        // Task 133 C2 (task 131 item 15): a Vector2i @Export is 2x int32 in every build.
+        int32_t comps[2] = {0};
+        g_variant_to_vector2i(
+            (GDExtensionUninitializedTypePtr)comps, (GDExtensionVariantPtr)(intptr_t)value);
+        int32_t ok = kanama_ios_runtime_script_instance_set_property_value(
+            instance->runtime_handle, property_index, KANAMA_IOS_PT_VECTOR2I,
+            (const uint8_t *)comps, (int32_t)sizeof(comps));
+        return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_VECTOR3 && g_variant_to_vector3 != NULL) {
         float comps[3] = {0};
         g_variant_to_vector3(

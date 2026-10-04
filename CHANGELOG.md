@@ -38,6 +38,122 @@ only `--write`.
 
 ## Unreleased
 
+### Added — `Color` script type, Kotlin-typed constant folding, autoloads from threads and across hot reload (task 133 C2)
+
+Desktop, Android, iOS and Web.
+
+- **`Color` is a script type** on every backend: an `@Export var tint: Color`, a registered
+  function's `Color` parameter or return, and a `@Signal` `Color` argument (before, each failed the
+  build). Four float32 channels, 16 bytes in every build, independent of `real_t`; a default of
+  `Color(r, g, b[, a])` or a named color (`Color.RED`) is the inspector default. Proof:
+  `ColorScriptTypeTest` (three emitters) and the `ColorScript` row of `scripts/runtime_smoke.sh`: a
+  `Color` stored in a `.tscn`, read back, set/get through `Object`, passed to and returned from a
+  function and carried by a signal prints the same line as its GDScript twin.
+- **`@ExportColorNoAlpha`** (GDScript `@export_color_no_alpha`, hint 21); the hint twin row count
+  is 38.
+- **iOS:** a `Vector2i` export reaches the script (task 131 item 15; before, a build error unless
+  `-PkanamaIosAllowExportSkips=true`).
+- **Web:** protocol 30 adds the `Color` export push arm (`kanamaWebSetColorProperty`); a `Color`
+  rides the numeric argument channel, the packed return channel and the one-argument signal
+  channel (`GodotSignal.connectColor`).
+- **Web:** NaN and the infinities cross the text channels (a pulled property, a packed return, a
+  one-argument signal) for `Double`, the vectors and `Color` in both directions; before, Kotlin's
+  `NaN` arrived in GDScript as `0.0` and GDScript's `nan` failed Kotlin's parse.
+- A registered function with a type Kanama does not marshal names Kanama's limit and the
+  supported types (it said Godot could not pass the type).
+- **Behaviour change — constant folding follows Kotlin's types:** each subexpression is an `Int`,
+  `Long`, `Float` or `Double` as in Kotlin (an unsuffixed integer literal is an `Int` unless it
+  does not fit, whatever the property's type), evaluated in that type and widened to the property
+  at the end: `5 / 2 + 0.5` folds to `2.5` (it folded to `3.0`), `1f / 3f` to Kotlin's float, and
+  `val x: Long = 2147483647 + 1` to `-2147483648`, as Kotlin computes it. A `1d` literal (not
+  Kotlin) is not folded. `Float` and `Int` properties fold too.
+- **Autoloads:** the node is resolved once on the main thread and kept while alive (an instance-id
+  check per read); a worker thread can read an autoload the main thread has resolved, and one it
+  has not throws, naming the thread rule (before, every read queried the scene tree, which fails
+  off the main thread). A desktop hot reload resets each Kotlin autoload in place (the same node, so
+  `Autoloads`, GDScript's global name and held references keep working): the lambda connections it
+  made are disconnected, runtime-created children are freed, each Kotlin node gets a new script
+  object from the new build, a stored property keeps its value only when its type is unchanged
+  (else the new default or the autoload scene's value), and `_ready` runs again, children first;
+  the "throws until restart" limit is gone. Feature-tag keys
+  (`Music.android=...`) are skipped with a warning, `uid://` autoload paths are resolved through
+  the `.uid` sidecar or scene header, and a one-line `class_name Foo extends Node2D` is read.
+- **KSP inputs:** every build that runs KSP on scripts, and the consumer Gradle template, declares
+  `project.godot` and the scene / GDScript that types each autoload as inputs, so editing them
+  re-runs KSP.
+- **Script inheritance:** a generic base's members are typed for the subclass (`Base<Long>`'s
+  `var amount: T` exports a `Long`; `override fun f(x: Long)` and the base's `open fun f(x: T)`
+  are one method); a superclass from a library (whose annotations KSP cannot see) is a build
+  warning naming it.
+- `scripts/check_hand_copies.py` (a `local_ci.sh` stage) holds the iOS copy of the annotations
+  equal to `annotations/` and the four `kanamaAutoloadInputs` copies equal.
+
+### Changed — typed export hints, generated autoloads, script inheritance (task 133 C) — BREAKING
+
+Desktop, Android, iOS and Web.
+
+- **Typed export hints**, one per GDScript `@export_*` annotation of Godot 4.7: `@ExportRange`,
+  `@ExportEnum`, `@ExportFlags`, `@ExportFlags2DRender` / `2DPhysics` / `2DNavigation` /
+  `3DRender` / `3DPhysics` / `3DNavigation`, `@ExportFlagsAvoidance`, `@ExportFile`,
+  `@ExportFilePath`, `@ExportDir`, `@ExportGlobalFile`, `@ExportGlobalDir`, `@ExportMultiline`,
+  `@ExportPlaceholder`, `@ExportExpEasing`, `@ExportNodePath`, `@ExportStorage` and
+  `@ExportCustom` (GDScript `@export_custom`, any `PropertyHint` with a hand-written hint string).
+  Each exports the property by itself, as in GDScript (`@ExportRange(0.0, 100.0, 1.0) var health
+  = 100L`); `@Export` next to one sets only `name` / `usage`. The processor builds the hint string
+  exactly as GDScript's parser does (Godot's float formatting: `"0.0,100.0,1.0"`; GDScript's
+  argument checks are build errors), and a runtime smoke compares a Kotlin script with each hint
+  against its GDScript twin's `get_property_list()`: 36 rows, identical type, hint and hint string.
+  On a `List<String>` the hint applies to each element. `@ExportColorNoAlpha` came with the
+  `Color` script type (task 133 C2, above). On Web a typed hint reaches the proxy verbatim
+  as `@export_custom(...)` (the former `@export_range` rewrite and its hint-string parser are gone).
+- `PropertyHint` lists all 44 Godot 4.7 `PROPERTY_HINT_*` values (it had 18), on desktop, Android,
+  Web and in the iOS annotation copy.
+- **Constant-folded defaults**: an `@Export` initializer such as `Mathf.PI / 3.0`, `GD.degToRad(-60.0)`
+  or `60 * 5` folds to its literal (`1.0471975511965976`), reported as the inspector default and
+  declared by the Web proxy, as GDScript folds `PI / 3.0` (a Web build no longer rejects it). A
+  `Math.toRadians(x)` default is folded too instead of being re-emitted as a call.
+- **Source break:** `Export` loses its `hint` and `hintString` parameters (`@Export(name, usage)`
+  remains). Migrate with `python3 scripts/migrate_export_hints.py path/to/kotlin-src`:
+
+  | Before | After |
+  |---|---|
+  | `@Export(hint = PropertyHint.RANGE, hintString = "0,100,1")` | `@ExportRange(0.0, 100.0, 1.0)` |
+  | `@Export(hint = PropertyHint.RANGE, hintString = "0,1,0.01,or_greater")` | `@ExportRange(0.0, 1.0, 0.01, orGreater = true)` |
+  | `@Export(hint = PropertyHint.ENUM, hintString = "A,B")` | `@ExportEnum("A", "B")` |
+  | `@Export(hint = PropertyHint.FILE, hintString = "*.png")` | `@ExportFile("*.png")` |
+  | `@Export(hint = PropertyHint.MULTILINE_TEXT)` | `@ExportMultiline` |
+  | `@Export(name = "x", hint = <other>, hintString = "s")` | `@Export(name = "x") @ExportCustom(<other>, "s")` |
+
+  A range hint string now reads like GDScript's (`"0.0,100.0,1.0"` where the old raw string was
+  `"0,100,1"`); the inspector behaves the same.
+- **Generated autoloads** (GDScript's global autoload names): the processor reads the
+  `project.godot` `[autoload]` section and generates `net.multigesture.kanama.generated.Autoloads`,
+  one property per enabled autoload, typed to its Kotlin script class (a `.kt` autoload, or a scene
+  whose root has a Kotlin script), its scene root class, or the class a GDScript autoload `extends`
+  (else `Node`): `Autoloads.Settings.loadSettings()`, `Autoloads.Audio.call("play", path)`. Each
+  read looks up `/root/<Name>` and throws an `IllegalStateException` naming the autoload when it is
+  missing or of another class. Generated by KSP in every build that compiles scripts (scripts jar,
+  hot reload, Android scripts AAR, iOS, Web), which already knows the script classes; the builds
+  declare `project.godot` as a KSP input, and the `kanamaGodotProjectDir` KSP option points at a
+  project that is not above the script sources (the Web build sets it). Runtime:
+  `AutoloadAccess` (common, and a Web counterpart that resolves through the running script's
+  node). Proof: `AutoloadSourceTest`, the `autoload` row of `scripts/runtime_smoke.sh`. Task 133
+  C2 (above) caches the node, admits worker-thread reads and re-creates Kotlin autoloads on a hot
+  reload.
+- **Source break:** on Web, `KanamaScript.self` is public (it was `protected`), as on desktop,
+  Android and iOS, so shared code can reach an autoload's node (`Autoloads.Events.self`). Widening
+  breaks no caller; the snapshot records it as a change.
+- **Script inheritance**: a script class that extends another class of the same build (a
+  `@ScriptClass` base or a plain abstract one) has all of its members — exports, signals,
+  lifecycle handlers, `@OverrideVirtual`s, tool buttons and registered public functions — with no
+  forwarding overrides. The most derived declaration is the one Godot calls; an override without
+  Kanama annotations keeps the overridden declaration's (`override fun ready()` of a base
+  `@OnReady open fun ready()` stays the `_ready` handler), and one with its own annotations uses
+  them. Two functions of the chain on one Godot name, or two exported properties on one name, are
+  build errors naming both. Behaviour change: before, a subclass registered only its own
+  declarations, and an unannotated `override fun ready()` registered a public method `ready`.
+  Proof: `ScriptInheritanceTest`, the `inheritance` row of `scripts/runtime_smoke.sh`.
+
 ### Added — every value-type operator, method, constant and enum, generated from the Godot API (task 134 B)
 
 - **Operators:** every operator Godot declares for a value type is a Kotlin operator with GDScript's

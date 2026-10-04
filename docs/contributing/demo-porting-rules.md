@@ -62,9 +62,12 @@ attached to. `@GlobalClass` makes a script usable as a typed value in Godot's
 inspector, including custom resource scripts such as `Weapon` and node scripts
 such as `Vehicle`.
 
-Inherited Kotlin methods are not registered automatically for subclassed
-scripts yet. If a subclass must expose a callback or lifecycle method to Godot,
-add an annotated forwarding method on that subclass.
+A script class that extends another script class of the project (GDScript
+`extends Vehicle`) inherits its exports, signals, lifecycle handlers and public
+functions: do not add forwarding overrides. Override only what the subclass
+changes; an override without annotations keeps the base's role
+(`override fun ready()` of a base `@OnReady open fun ready()` is still the
+`_ready` handler). See [Scripts](../game-dev/scripts.md#script-inheritance).
 
 ## Exports And Scene Data
 
@@ -149,9 +152,12 @@ Use annotation constants for inspector metadata instead of private magic
 numbers in gameplay scripts:
 
 ```kotlin
-@Export(hint = PropertyHint.RANGE, hintString = "0,100,1")
-var health = 100
+@ExportRange(0.0, 100.0, 1.0)
+var health = 100L
 ```
+
+Use the typed hint annotation that matches the original `@export_*` (see
+[Exports and Resources](../game-dev/properties-resources.md#export-hints)).
 
 ## Mobile Runtime Warmup
 
@@ -388,13 +394,13 @@ workaround for missing wrappers or marshalling support unless the user asks
 for a temporary workaround. Real demo ports should drive real framework fixes.
 
 Do not make required autoloads or scene nodes optional just to avoid a crash.
-If the original GDScript directly uses an autoload such as `Events`, the
-Kotlin port should fail loudly when it is missing:
+If the original GDScript directly uses an autoload such as `Events`, use the
+generated `Autoloads.Events` (typed to the autoload's Kotlin script, scene root
+class or `extends` class); it fails loudly, naming the autoload, when the node is
+missing:
 
 ```kotlin
-fun Node.eventsNode(): Node =
-    getTreeRootNode().getAsOrNull("Events", ::Node)
-        ?: error("Events autoload is missing")
+EventsSignals.flagReached(Autoloads.Events) // GDScript: Events.flag_reached.emit()
 ```
 
 Silent fallback should not be the default in Kanama examples. Kotlin's value

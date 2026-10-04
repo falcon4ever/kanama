@@ -79,7 +79,7 @@ STAGE_PROVES_FALLBACK = {
     "web bridge + driver syntax": "`node --check` parses the JS bridge and every Web driver.",
     "runtime smoke: $godot_bin": "Godot loads the GDExtension, starts the JVM, registers the script language and resource loader, loads Kotlin scripts, and runs the example project to its expected log markers.",
     "@Tool smoke: $godot_bin": "A `@Tool` script executes inside the headless editor process and its expected log patterns appear.",
-    "hot reload smoke: $godot_bin": "Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound)` marker appears.",
+    "hot reload smoke: $godot_bin": "Across two editor runs around a HelloScript.kt rebuild, the `hot-reload: reloaded scripts from ...kanama-scripts.jar (loader, old_loader, rebound, autoloads)` marker appears.",
     "in-process hot reload smoke: $godot_bin": "One running editor process reloads an edited script after the `in-process hot reload smoke ready` signal, without a restart.",
 }
 

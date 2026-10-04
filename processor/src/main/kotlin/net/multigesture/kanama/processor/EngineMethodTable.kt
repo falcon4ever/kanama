@@ -37,6 +37,23 @@ internal object EngineMethodTable {
     methodsByClass = methods
   }
 
+  /** True when [name] is an engine class (`Object` and every class that inherits). */
+  fun isClass(name: String): Boolean = name == "Object" || name in inherits
+
+  /** [name] and its engine ancestors, nearest first (`Button`, `BaseButton`, ..., `Object`). */
+  fun lineage(name: String): List<String> {
+    val chain = mutableListOf<String>()
+    var cls: String? = name
+    while (cls != null && cls !in chain) {
+      chain += cls
+      cls = inherits[cls]
+    }
+    return chain
+  }
+
+  /** True when the engine class [name] is [base] or inherits it. */
+  fun inheritsFrom(name: String, base: String): Boolean = isClass(name) && base in lineage(name)
+
   /**
    * The class in [attachTo]'s inheritance chain (itself first) that declares the engine method
    * [godotName], or null when none does.

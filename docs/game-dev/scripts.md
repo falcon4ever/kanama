@@ -194,14 +194,19 @@ number with `Shader.Mode(raw)` and read one with `.value`. The two
 | GDScript | Kanama |
 |---|---|
 | `@export var speed = 5.0` | `@Export var speed: Double = 5.0` |
+| `@export_range(0, 10, 0.5) var speed = 5.0` | `@ExportRange(0.0, 10.0, 0.5) var speed: Double = 5.0` |
+| `@export_file("*.png") var icon: String` | `@ExportFile("*.png") var icon: String = ""` |
+| `@export_flags_3d_physics var mask: int` | `@ExportFlags3DPhysics var mask: Long = 0` |
+| `@export var fov := PI / 3.0` | `@Export var fov: Double = Mathf.PI / 3.0` (the default folds to `1.0471975511965976`) |
 | `@export_group("Movement")` | `@ExportGroup("Movement")` on first property in group |
 | `@export var scene: PackedScene` | `@Export var scene: PackedScene? = null` |
 | `@export_tool_button("Rebuild")` | `@ExportToolButton("Rebuild")` on a zero-argument function |
 | `@tool` | `@Tool` on the class |
 | `class_name Player` | `@GlobalClass` on the class |
 
-`@Export` is the one property annotation, on `@ScriptClass` scripts and on
-`@RegisterClass` types alike. See [Exports and Resources](properties-resources.md).
+`@Export` is the plain export, on `@ScriptClass` scripts and on `@RegisterClass`
+types alike; every GDScript `@export_*` hint annotation has a typed twin that
+exports by itself. See [Exports and Resources](properties-resources.md#export-hints).
 
 ## Functions Godot Can Call
 
@@ -532,6 +537,124 @@ See [Kotlin Style → Coroutines](style-guide.md#coroutines).
 `asScript` and the tree accessors; the `node`/`script`/`preload` delegates,
 `castOrNull`/`cast`, `requireAs<T>`/`getNodeAs<T>` and the `instantiate*` helpers
 are desktop, Android and iOS only for now.
+
+## Autoloads
+
+GDScript reaches an autoload by its global name (`Audio.play(...)`); Kanama
+generates the same names as properties of `net.multigesture.kanama.generated.Autoloads`,
+one per enabled (`*`) entry of the `project.godot` `[autoload]` section:
+
+| Autoload | `Autoloads.<Name>` is typed |
+|---|---|
+| a Kotlin script (`Settings="*res://kotlin-src/Settings.kt"`) | to the script class: `Autoloads.Settings.loadSettings()` |
+| a scene (`MusicPlayer="*res://MusicPlayer.tscn"`) | to the root node's script class when it has a Kotlin script, else to its class (`AudioStreamPlayer`) |
+| a GDScript (`Audio="*res://scripts/audio.gd"`) | to the class it `extends` (`Node`): call into it with `call("play", ...)` |
+
+```kotlin
+import net.multigesture.kanama.generated.Autoloads
+
+Autoloads.Audio.call("play", "res://sounds/coin.ogg")   // GDScript: Audio.play("res://sounds/coin.ogg")
+val settings = Autoloads.Settings                       // the Kotlin script on /root/Settings
+```
+
+The first read finds the node at `/root/<Name>`, as GDScript's global does, and
+throws an `IllegalStateException` naming the autoload when the node is missing
+or of another class; later reads reuse that node while it is alive (a freed one
+is looked up again). A worker thread can read an autoload once the main thread
+has read it; before that the read throws, because only the main thread may
+query the scene tree. The
+processor reads `project.godot` above the script sources (the build declares it
+as an input, so editing the autoload list re-runs it); a project laid out
+differently sets the `kanamaGodotProjectDir` KSP option. A class Kanama has no
+wrapper for on the target falls back to its nearest wrapped ancestor. On Web the
+lookup goes through the running script's node, so read an autoload from a script
+callback (a lifecycle handler, a signal, a coroutine), which is where Web code runs.
+
+**`@Tool` scripts in the editor.** The editor adds an autoload to its own tree
+only when the autoload's script is a tool script (`@Tool`), as Godot does for
+GDScript. Editor code of a `@Tool` script can read `Autoloads.<Name>` of such an
+autoload; any other autoload is not in the editor's tree, so the read throws
+there (check `Engine.isEditorHint()` first). In the running game every autoload
+is there.
+
+**Keys and paths.** A feature-tag override in `project.godot`
+(`Music.android="*res://music_mobile.gd"`) is not an autoload of its own and is
+skipped with a build warning; `Autoloads.Music` is typed from the base entry. An
+autoload saved by uid (`"*uid://…"`) is typed from the file that declares the
+uid (a script's `.uid` file, a scene's header).
+
+**Hot reload.** A desktop hot reload resets each Kotlin autoload in place, so the
+autoload stays the same node: `Autoloads.<Name>`, GDScript's global name and any
+reference other code holds keep working. What survives and what does not:
+
+| Survives the reload | Does not survive |
+|---|---|
+| the node itself (identity, name, place under `/root`, its GDScript global) | the old script object: each Kotlin node of the autoload gets a new one, from the new build |
+| a stored (exported) property whose type did not change: its value is set back | a stored property whose type changed: it takes the new build's default (or the autoload scene's value) |
+| the nodes of the autoload's scene (`.tscn` children) | children created at run time (in `_ready` or later): they are freed |
+| connections other objects made **to** the autoload | lambda connections the autoload made (`signal.connect(self) { ... }`): they are disconnected |
+| | every other Kotlin field: it starts from its initializer |
+
+Then `_ready` runs again on the reset nodes, children before parents as Godot
+readies a tree, so whatever `_ready` sets up (runtime children, connections)
+exists once, from the new code. This is a scene reload for the autoload, minus
+the new node. Hot reload runs in the editor process too (Build Scripts while
+the editor is open), so a `@Tool` autoload in the editor's tree is reset the
+same way there.
+
+## Script Inheritance
+
+A script class can extend another script class of the project, as a GDScript
+script `extends` another one. The subclass has every member of the chain: the
+exported properties, signals, lifecycle handlers, `@OverrideVirtual`s, tool
+buttons and registered public functions of its superclasses, with no forwarding
+code:
+
+```kotlin
+@ScriptClass(attachTo = "Node3D")
+@GlobalClass
+open class Vehicle(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+    @Export var maxSpeed = 20.0
+    @OnReady open fun ready() { /* ... */ }
+    @OnPhysicsProcess fun physicsProcess(delta: Double) { effectBody(delta) }
+    @GodotName("_on_sphere_body_entered") fun onSphereBodyEntered(body: GodotObject) { /* ... */ }
+    protected open fun effectBody(delta: Double) {}
+}
+
+@ScriptClass(attachTo = "Node3D")
+@GlobalClass
+class VehicleMotorcycle(godotObject: GodotHandle) : Vehicle(godotObject) {
+    override fun ready() {             // still the _ready handler: the annotation is inherited
+        super.ready()
+        /* ... */
+    }
+    override fun effectBody(delta: Double) { /* ... */ }
+}
+```
+
+The rules:
+
+- **The most derived declaration is the member.** Godot calls the override (Kotlin
+  dispatch is virtual); a superclass's `private` member is not inherited.
+- **Annotations follow the override.** An override without Kanama annotations
+  keeps the overridden declaration's (`override fun ready()` stays `_ready`; the
+  override of an `@Export open var` stays exported). An override with its own
+  annotations uses those: the subclass wins.
+- **Conflicts are build errors.** Two different functions of the chain that land on
+  one Godot name (a base `@OnReady fun ready()` and a subclass `@OnReady fun setup()`)
+  or two exported properties with one Godot name fail the build naming both:
+  override the base member instead of adding a second one.
+
+- **Generic bases are typed for the subclass.** On `class Sub : Base<Long>()`, a
+  base's `@Export var amount: T` is a `Long` export and its `open fun f(x: T)` takes
+  a `Long`; `override fun f(x: Long)` overrides it (one Godot method, not two).
+
+The superclass may be a `@ScriptClass` itself or a plain (abstract) class in the
+same build. A class from a library contributes nothing, because annotations are
+read from source; the build warns, naming the library class. Interfaces
+contribute nothing either: only the class chain is collected, so a default
+member of an interface the script implements is not registered (declare it on
+the class, or override it there).
 
 ## Cross-Script References
 

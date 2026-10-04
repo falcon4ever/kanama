@@ -12,6 +12,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.FileLocation
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
@@ -137,11 +138,11 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       for (message in WebScriptCodeEmitter.undispatchedMemberErrors(model, env.options)) {
         env.logger.error("[kanama:web-dispatch] $message", symbol)
       }
-      symbol.containingFile?.let {
-        aggregatorSources += it
-        scriptAggregatorSources += it
-      }
-      emitScriptRegistrar(model, symbol.containingFile!!)
+      // A subclass's registrar is built from its superclasses' sources too (task 133 C).
+      val sources = hierarchyFiles(symbol)
+      aggregatorSources += sources
+      scriptAggregatorSources += sources
+      emitScriptRegistrar(model, sources)
       if (emitIosCode) {
         iosScripts += IosScriptInput(model, scriptResourcePath(symbol.containingFile!!))
       }
@@ -150,8 +151,203 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       }
     }
 
+    if (!autoloadsEmitted) {
+      autoloadsEmitted = true
+      emitAutoloads(resolver)
+    }
     return emptyList()
   }
+
+  // ---------- Autoloads (task 133 C) ----------
+
+  private var autoloadsEmitted = false
+
+  /**
+   * Generates `net.multigesture.kanama.generated.Autoloads` from the Godot project's
+   * `project.godot` `[autoload]` section ([AutoloadSource] says why here and how each is typed).
+   * The project is the `kanamaGodotProjectDir` KSP option, else the directory holding
+   * `project.godot` above the script sources. No project, or no enabled autoload: no object.
+   */
+  private fun emitAutoloads(resolver: Resolver) {
+    val files = resolver.getAllFiles().toList()
+    val scriptFiles =
+      files.filter { file ->
+        file.declarations.any { d ->
+          d is KSClassDeclaration && d.annotations.any { it.shortName.asString() == "ScriptClass" }
+        }
+      }
+    val projectDir = godotProjectDir(scriptFiles) ?: return
+    val projectFile = File(projectDir, "project.godot")
+    val entries =
+      runCatching { AutoloadSource.parseProjectGodot(projectFile.readText()) }
+        .getOrElse {
+          env.logger.error("[kanama:ksp] cannot read $projectFile for the Autoloads object: $it")
+          return
+        }
+        .filter { it.global }
+        .filter { entry ->
+          // Task 133 C2: `Name.android=...` overrides an autoload for one feature tag.
+          val override = AutoloadSource.isFeatureOverride(entry)
+          if (override) {
+            env.logger.warn(
+              "[kanama:ksp] autoload key ${entry.name} is a feature-tag override, not an " +
+                "autoload; Autoloads keeps the base entry"
+            )
+          }
+          !override
+        }
+        .map { entry ->
+          if (!entry.path.startsWith("uid://")) return@map entry
+          // Task 133 C2: an autoload saved by uid; the path is the file declaring that uid.
+          val path = resourcePathForUid(projectDir, entry.path)
+          if (path == null) {
+            env.logger.warn(
+              "[kanama:ksp] autoload ${entry.name}: no file of $projectDir declares " +
+                "${entry.path}; Autoloads.${entry.name} is typed Node"
+            )
+          }
+          entry.copy(path = path ?: entry.path)
+        }
+    if (entries.isEmpty()) return
+    val scriptsByPath = HashMap<String, String>()
+    for (file in scriptFiles) {
+      val path = projectResourcePath(file, projectDir)
+      for (d in file.declarations) {
+        if (d !is KSClassDeclaration) continue
+        if (d.annotations.none { it.shortName.asString() == "ScriptClass" }) continue
+        d.qualifiedName?.asString()?.let { scriptsByPath[path] = it }
+      }
+    }
+    fun wrapper(godotClass: String): AutoloadSource.Kind.Node {
+      for (cls in EngineMethodTable.lineage(godotClass)) {
+        if (!EngineMethodTable.inheritsFrom(cls, "Node")) break
+        val fq = "net.multigesture.kanama.api.$cls"
+        if (resolver.getClassDeclarationByName(resolver.getKSNameFromString(fq)) != null) {
+          return AutoloadSource.Kind.Node(cls, fq)
+        }
+      }
+      return AutoloadSource.Kind.Node("Node", "net.multigesture.kanama.api.Node")
+    }
+    fun script(path: String, entry: AutoloadSource.Entry): AutoloadSource.Kind? {
+      val fq = scriptsByPath[path]
+      if (fq == null) {
+        env.logger.warn(
+          "[kanama:ksp] autoload ${entry.name}: $path is not a @ScriptClass of this build; " +
+            "Autoloads.${entry.name} is typed Node"
+        )
+      }
+      return fq?.let { AutoloadSource.Kind.Script(it) }
+    }
+    val resolved =
+      entries.map { entry ->
+        val path = entry.path
+        val local = projectLocalFile(projectDir, path)
+        val kind: AutoloadSource.Kind =
+          when {
+            path.endsWith(".kt") -> script(path, entry)
+            path.endsWith(".tscn") ->
+              local
+                ?.let { runCatching { AutoloadSource.parseSceneRoot(it.readText()) }.getOrNull() }
+                ?.let { root ->
+                  root.scriptPath?.takeIf { it.endsWith(".kt") }?.let { script(it, entry) }
+                    ?: root.type?.takeIf { !root.inherited }?.let(::wrapper)
+                }
+            path.endsWith(".gd") ->
+              local
+                ?.let { runCatching { AutoloadSource.gdscriptExtends(it.readText()) }.getOrNull() }
+                ?.let(::wrapper)
+            else -> null
+          } ?: wrapper("Node")
+        AutoloadSource.Resolved(entry, kind, path)
+      }
+    val source = AutoloadSource.emit(resolved, GENERATED_PACKAGE, web = emitWebCode)
+    val iosAsResource =
+      emitIosCode && (env.options["kanamaIosRegistryAsResource"]?.toBoolean() ?: true)
+    env.codeGenerator
+      .createNewFile(
+        dependencies = Dependencies(aggregating = true, *scriptFiles.toTypedArray()),
+        packageName = GENERATED_PACKAGE,
+        fileName = "Autoloads",
+        extensionName = if (iosAsResource) "kt.txt" else "kt",
+      )
+      .use { it.write(source.toByteArray(Charsets.UTF_8)) }
+    env.logger.warn(
+      "[kanama:ksp] generated $GENERATED_PACKAGE.Autoloads with ${resolved.size} autoload(s) " +
+        "from $projectFile"
+    )
+  }
+
+  /**
+   * The Godot project of this build: the `kanamaGodotProjectDir` option, else the one directory
+   * with a `project.godot` at or above the script sources (none, or several: null, with a warning
+   * for several).
+   */
+  private fun godotProjectDir(scriptFiles: List<KSFile>): File? {
+    env.options[GODOT_PROJECT_DIR_OPTION]
+      ?.takeIf { it.isNotBlank() }
+      ?.let { File(it) }
+      ?.let { dir ->
+        if (File(dir, "project.godot").isFile) return dir.canonicalFile
+        env.logger.warn("[kanama:ksp] $GODOT_PROJECT_DIR_OPTION=$dir has no project.godot")
+        return null
+      }
+    val found =
+      scriptFiles
+        .mapNotNull { file ->
+          generateSequence(File(file.filePath).parentFile) { it.parentFile }
+            .firstOrNull { File(it, "project.godot").isFile }
+            ?.canonicalFile
+        }
+        .distinct()
+    if (found.size > 1) {
+      env.logger.warn(
+        "[kanama:ksp] the script sources belong to ${found.size} Godot projects ($found); set the " +
+          "$GODOT_PROJECT_DIR_OPTION KSP option to generate Autoloads"
+      )
+      return null
+    }
+    return found.singleOrNull()
+  }
+
+  /** `res://<path>` of [file] inside [projectDir], else the script-root derived path. */
+  private fun projectResourcePath(file: KSFile, projectDir: File): String {
+    val canonical = runCatching { File(file.filePath).canonicalFile }.getOrNull()
+    val root = projectDir.path + File.separator
+    if (canonical != null && canonical.path.startsWith(root)) {
+      return "res://" + canonical.path.removePrefix(root).replace(File.separatorChar, '/')
+    }
+    return scriptResourcePath(file)
+  }
+
+  /**
+   * Task 133 C2: the `res://` path of the file declaring [uid] (a `.uid` sidecar's script, or a
+   * scene/resource header), found by walking [projectDir] (skipping `.godot`, `addons` and build
+   * output). Null when none does.
+   */
+  private fun resourcePathForUid(projectDir: File, uid: String): String? {
+    val skip = setOf(".godot", ".git", "addons", "build", ".gradle")
+    return projectDir
+      .walkTopDown()
+      .onEnter { it == projectDir || it.name !in skip }
+      .filter { it.isFile && (it.name.endsWith(".uid") || it.name.endsWith(".tscn")) }
+      .firstOrNull { file ->
+        // A scene declares its uid on the first line; read no further.
+        val text =
+          runCatching { file.bufferedReader().use { it.readLine() } }.getOrNull()
+            ?: return@firstOrNull false
+        AutoloadSource.declaredUid(file.name, text) == uid
+      }
+      ?.let { file ->
+        val target = if (file.name.endsWith(".uid")) File(file.path.removeSuffix(".uid")) else file
+        "res://" + target.relativeTo(projectDir).path.replace(File.separatorChar, '/')
+      }
+  }
+
+  private fun projectLocalFile(projectDir: File, resPath: String): File? =
+    resPath
+      .takeIf { it.startsWith("res://") }
+      ?.let { File(projectDir, it.removePrefix("res://")) }
+      ?.takeIf { it.isFile }
 
   /** The `res://…` path Godot reports for [file], relative to the configured script roots. */
   private fun scriptResourcePath(file: KSFile): String {
@@ -326,7 +522,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       }
     }
     for (prop in cls.getDeclaredProperties()) {
-      if (prop.annotations.none { it.shortName.asString() == "Export" }) continue
+      if (prop.annotations.none { it.shortName.asString() in ExportHints.EXPORT_ANNOTATIONS }) {
+        continue
+      }
       errors.capture(prop) { properties += buildPropertyModel(prop, simpleName) }
     }
     // A @RegisterClass property is registered through generated `get_<name>` / `set_<name>`
@@ -362,14 +560,16 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     fn: KSFunctionDeclaration,
     ann: com.google.devtools.ksp.symbol.KSAnnotation,
     ownerSimpleName: String,
+    scriptType: KSType? = null,
   ): SignalModel {
+    val parameterTypes = memberSignature(fn, scriptType).parameters
     val kotlinName = fn.simpleName.asString()
     val nameOverride = ann.arguments.firstOrNull { it.name?.asString() == "name" }?.value as? String
     val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
     val args =
-      fn.parameters.map { p ->
+      fn.parameters.mapIndexed { index, p ->
         val name = p.name?.asString() ?: "arg"
-        val type = p.type.resolve()
+        val type = parameterTypes[index]
         val arg =
           fqToArgModel(name, type, "$ownerSimpleName.$kotlinName")
             ?: throw IllegalArgumentException(
@@ -483,11 +683,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     fn: KSFunctionDeclaration,
     godotName: String,
     ownerSimpleName: String,
+    annotated: KSFunctionDeclaration = fn,
+    scriptType: KSType? = null,
   ): MethodModel {
     val kotlinName = fn.simpleName.asString()
     val where = "$ownerSimpleName.$kotlinName"
+    val signature = memberSignature(fn, scriptType)
 
-    val resolvedReturn = fn.returnType?.resolve()
+    val resolvedReturn = signature.returnType
     val returnEnum = resolvedReturn?.let { godotEnumOf(it, where, "return") }
     val returnType =
       resolvedReturn?.let { type ->
@@ -502,9 +705,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       }
 
     val args =
-      fn.parameters.map { p ->
+      fn.parameters.mapIndexed { index, p ->
         val name = p.name?.asString() ?: "arg"
-        val type = p.type.resolve()
+        val type = signature.parameters[index]
         val arg =
           fqToArgModel(name, type, where)
             ?: throw IllegalArgumentException(
@@ -530,7 +733,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       returnType = returnType,
       args = args,
       kind = MethodKind.REGULAR,
-      rpc = buildRpcModel(fn),
+      rpc = buildRpcModel(annotated),
       returnGodotEnum = returnEnum?.ref,
     )
   }
@@ -587,6 +790,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     fn: KSFunctionDeclaration,
     ownerSimpleName: String,
     attachTo: String,
+    annotated: KSFunctionDeclaration = fn,
+    hierarchyNames: Set<String> = emptySet(),
   ): FunctionRegistration.Facts {
     val kotlinName = fn.simpleName.asString()
     // getVisibility() follows an `override` without its own modifier to the member it overrides
@@ -601,14 +806,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           FunctionRegistration.Visibility.PUBLIC
         else -> FunctionRegistration.Visibility.INTERNAL
       }
-    val annotationNames = fn.annotations.map { it.shortName.asString() }.toSet()
+    val annotationNames = annotated.annotations.map { it.shortName.asString() }.toSet()
     val godotName =
-      fn.annotations
+      annotated.annotations
         .firstOrNull { it.shortName.asString() == "GodotName" }
         ?.let { ann ->
           (ann.arguments.firstOrNull { it.name?.asString() == "name" }?.value as? String)
             ?: (ann.arguments.firstOrNull()?.value as? String)
-            ?: annotationStringArgFromSource(fn, "GodotName")
+            ?: annotationStringArgFromSource(annotated, "GodotName")
             ?: throw IllegalArgumentException(
               "$ownerSimpleName.$kotlinName: @GodotName needs the Godot name as a string literal"
             )
@@ -618,10 +823,11 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         run {
           val overridden = runCatching { fn.findOverridee() }.getOrNull() ?: return@run false
           val owner = overridden.parentDeclaration as? KSClassDeclaration ?: return@run true
-          owner.annotations.none {
-            val n = it.shortName.asString()
-            n == "ScriptClass" || n == "RegisterClass"
-          }
+          owner.qualifiedName?.asString() !in hierarchyNames &&
+            owner.annotations.none {
+              val n = it.shortName.asString()
+              n == "ScriptClass" || n == "RegisterClass"
+            }
         }
     // `_process` and the camelCase `_getConfigurationWarnings` both spell an engine virtual.
     val engineVirtual =
@@ -726,19 +932,269 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         ?: throw IllegalArgumentException(
           "$ownerSimpleName.$kotlinName: unsupported property type '$fq'"
         )
-    val hint = ann?.arguments?.firstOrNull { it.name?.asString() == "hint" }?.value as? Int ?: 0
-    val hintString =
-      ann?.arguments?.firstOrNull { it.name?.asString() == "hintString" }?.value as? String ?: ""
-    val usage = ann?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int ?: 6
+    val export =
+      resolveExport(
+        prop.annotations.toList(),
+        "$ownerSimpleName.$kotlinName",
+        0,
+        "",
+        exportSlot(ScriptPropertyTypeModel(type)),
+        fq ?: "?",
+      )
     return PropertyModel(
       kotlinName = kotlinName,
       godotName = godotName,
       type = type,
       isMutable = prop.isMutable,
-      hint = hint,
-      hintString = hintString,
-      usage = usage,
+      hint = export.hint,
+      hintString = export.hintString,
+      usage = export.usage,
     )
+  }
+
+  // ---------- Script inheritance (task 133 C) ----------
+
+  /**
+   * [cls] and its superclasses declared in this compilation, nearest first: a `@ScriptClass` base
+   * (`class VehicleMotorcycle : Vehicle`) or a plain (abstract) one. The walk stops at the first
+   * class from a library or from the Kanama runtime (`KanamaScript`), whose members are not script
+   * members.
+   */
+  /** Script classes already warned about a library superclass (the walk runs more than once). */
+  private val libraryBaseWarned = HashSet<String>()
+
+  private fun scriptHierarchy(cls: KSClassDeclaration): List<KSClassDeclaration> {
+    val chain = mutableListOf(cls)
+    var current = cls
+    while (true) {
+      val superClass =
+        current.superTypes
+          .mapNotNull {
+            runCatching { it.resolve().declaration }.getOrNull() as? KSClassDeclaration
+          }
+          .firstOrNull { it.classKind == ClassKind.CLASS } ?: break
+      val fq = superClass.qualifiedName?.asString() ?: break
+      if (RUNTIME_PACKAGES.any { fq.startsWith(it) }) break
+      if (superClass.containingFile == null) {
+        // Task 133 C2: a library base's Kanama annotations (SOURCE retention) are invisible here.
+        ScriptInheritance.libraryBaseWarning(cls.simpleName.asString(), fq)?.let { message ->
+          if (libraryBaseWarned.add(cls.qualifiedName?.asString() ?: fq)) {
+            env.logger.warn("[kanama:ksp] $message", cls)
+          }
+        }
+        break
+      }
+      if (chain.any { it.qualifiedName?.asString() == fq }) break
+      chain += superClass
+      current = superClass
+    }
+    return chain
+  }
+
+  /**
+   * Task 133 C2: [fn]'s parameter and return types as a member of [scriptType], so a generic base's
+   * `open fun f(x: T)` reads `f(x: Long)` on `class Sub : Base<Long>()`; as declared when there is
+   * no script type or KSP cannot place the function in it.
+   */
+  private class MemberSignature(val parameters: List<KSType>, val returnType: KSType?)
+
+  private fun memberSignature(fn: KSFunctionDeclaration, scriptType: KSType?): MemberSignature {
+    val member = scriptType?.let { runCatching { fn.asMemberOf(it) }.getOrNull() }
+    val parameters = member?.parameterTypes
+    if (member != null && parameters != null && parameters.all { it != null }) {
+      return MemberSignature(parameters.map { it!! }, member.returnType)
+    }
+    return MemberSignature(fn.parameters.map { it.type.resolve() }, fn.returnType?.resolve())
+  }
+
+  /** Task 133 C2: [prop]'s type as a member of [scriptType] (a generic base's `T` substituted). */
+  private fun memberPropertyType(prop: KSPropertyDeclaration, scriptType: KSType?): KSType =
+    scriptType?.let { runCatching { prop.asMemberOf(it) }.getOrNull() } ?: prop.type.resolve()
+
+  /** A function of a script class and the declaration its Kanama annotations come from. */
+  private class ScriptFunction(
+    val fn: KSFunctionDeclaration,
+    val annotated: KSFunctionDeclaration,
+    val owner: KSClassDeclaration,
+  )
+
+  /** Every function a script class has, own and inherited ([ScriptInheritance.members]). */
+  private fun scriptFunctions(hierarchy: List<KSClassDeclaration>): List<ScriptFunction> {
+    val scriptType = hierarchy.firstOrNull()?.asType(emptyList())
+    val levels =
+      hierarchy.map { owner ->
+        owner
+          .getDeclaredFunctions()
+          .filterNot { it.isConstructor() }
+          .map { fn ->
+            ScriptInheritance.Declaration(
+              key = signatureKey(fn, scriptType),
+              isPrivate = Modifier.PRIVATE in fn.modifiers,
+              annotated =
+                fn.annotations.any {
+                  it.shortName.asString() in FunctionRegistration.FUNCTION_ANNOTATIONS
+                },
+              ref = fn to owner,
+            )
+          }
+          .toList()
+      }
+    return ScriptInheritance.members(levels).map { member ->
+      ScriptFunction(
+        member.declaration.first,
+        member.annotationSource.first,
+        member.declaration.second,
+      )
+    }
+  }
+
+  // Task 133 C2: keyed by the types as members of the script class, so `override fun f(x: Long)`
+  // and a generic base's `open fun f(x: T)` (T = Long) are one member.
+  private fun signatureKey(fn: KSFunctionDeclaration, scriptType: KSType?): String =
+    fn.simpleName.asString() +
+      memberSignature(fn, scriptType).parameters.joinToString(",", "(", ")") {
+        runCatching { it.declaration.qualifiedName?.asString() }.getOrNull() ?: "?"
+      }
+
+  /** A property of a script class and the declaration its export annotations come from. */
+  private class ScriptProperty(
+    val prop: KSPropertyDeclaration,
+    val annotated: KSPropertyDeclaration,
+    val exported: Boolean,
+    val owner: KSClassDeclaration,
+  )
+
+  /** Every property a script class has, own and inherited ([ScriptInheritance.members]). */
+  private fun scriptProperties(hierarchy: List<KSClassDeclaration>): List<ScriptProperty> {
+    val levels =
+      hierarchy.map { owner ->
+        owner
+          .getDeclaredProperties()
+          .map { prop ->
+            ScriptInheritance.Declaration(
+              key = prop.simpleName.asString(),
+              isPrivate = Modifier.PRIVATE in prop.modifiers,
+              annotated =
+                prop.annotations.any { it.shortName.asString() in ExportHints.EXPORT_ANNOTATIONS },
+              ref = prop to owner,
+            )
+          }
+          .toList()
+      }
+    return ScriptInheritance.members(levels).map { member ->
+      ScriptProperty(
+        member.declaration.first,
+        member.annotationSource.first,
+        member.annotated,
+        member.declaration.second,
+      )
+    }
+  }
+
+  /** The source files a script's registrar is built from: its own and its superclasses'. */
+  private fun hierarchyFiles(cls: KSClassDeclaration): List<KSFile> =
+    scriptHierarchy(cls).mapNotNull { it.containingFile }.distinct()
+
+  /** Task 133 C: the hint, hint string and usage an exported property reports. */
+  private data class ResolvedExport(
+    val hint: Int,
+    val hintString: String,
+    val usage: Int,
+    /** From a typed hint annotation rather than from the property type. */
+    val explicit: Boolean,
+  )
+
+  /**
+   * The hint of an exported property: the type's own ([typeHint], [typeHintString]: a resource
+   * class, a typed array, an enum) unless a typed hint annotation (`@ExportRange`, `@ExportFile`,
+   * ...) gives one, built by [ExportHints.build]. `@Export` contributes the usage; a second hint
+   * annotation, or a usage set both on `@Export` and on `@ExportCustom` / `@ExportStorage`, is a
+   * build error.
+   */
+  private fun resolveExport(
+    annotations: List<KSAnnotation>,
+    where: String,
+    typeHint: Int,
+    typeHintString: String,
+    slot: ExportHints.Slot,
+    typeName: String,
+  ): ResolvedExport {
+    val export = annotations.firstOrNull { it.shortName.asString() == "Export" }
+    val exportUsage =
+      (export?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int)
+        ?: ExportHints.PROPERTY_USAGE_DEFAULT
+    val hints = annotations.filter { it.shortName.asString() in ExportHints.HINT_ANNOTATIONS }
+    if (hints.size > 1) {
+      throw IllegalArgumentException(
+        "$where: ${hints.joinToString(" and ") { "@" + it.shortName.asString() }} on one " +
+          "property; a property has one inspector hint (GDScript rejects a second @export_* too)."
+      )
+    }
+    val ann =
+      hints.singleOrNull() ?: return ResolvedExport(typeHint, typeHintString, exportUsage, false)
+    val name = ann.shortName.asString()
+    val args = ann.arguments.associate { (it.name?.asString() ?: "") to it.value }
+    fun usageConflict(): Nothing =
+      throw IllegalArgumentException(
+        "$where: the usage is set on both @Export and @$name; set it in one place."
+      )
+    return when (
+      val result =
+        ExportHints.build(where, ExportHints.Use(name, args), slot, typeName, ::nodePathClassError)
+    ) {
+      is ExportHints.Result.Error -> throw IllegalArgumentException(result.message)
+      ExportHints.Result.Storage -> {
+        if (exportUsage != ExportHints.PROPERTY_USAGE_DEFAULT) usageConflict()
+        ResolvedExport(typeHint, typeHintString, ExportHints.PROPERTY_USAGE_STORAGE, false)
+      }
+      is ExportHints.Result.Hint -> {
+        if (
+          result.usage != null &&
+            result.usage != ExportHints.PROPERTY_USAGE_DEFAULT &&
+            exportUsage != ExportHints.PROPERTY_USAGE_DEFAULT
+        ) {
+          usageConflict()
+        }
+        val usage =
+          if (result.usage != null && result.usage != ExportHints.PROPERTY_USAGE_DEFAULT) {
+            result.usage
+          } else {
+            exportUsage
+          }
+        ResolvedExport(result.hint, result.hintString, usage, true)
+      }
+    }
+  }
+
+  /** The property shape [ExportHints] checks a hint annotation against. */
+  private fun exportSlot(type: ScriptPropertyTypeModel): ExportHints.Slot =
+    when {
+      type.godotEnum != null || type.enumFqName != null -> ExportHints.Slot.OTHER
+      type.type == TypeMapping.INT -> ExportHints.Slot.INT
+      type.type == TypeMapping.FLOAT -> ExportHints.Slot.FLOAT
+      type.type == TypeMapping.STRING -> ExportHints.Slot.STRING
+      type.type == TypeMapping.NODE_PATH -> ExportHints.Slot.NODE_PATH
+      type.type == TypeMapping.COLOR -> ExportHints.Slot.COLOR
+      type.type == TypeMapping.ARRAY && type.arrayElementString -> ExportHints.Slot.STRING_LIST
+      else -> ExportHints.Slot.OTHER
+    }
+
+  /**
+   * Null when [name] is a class `@ExportNodePath` may name (GDScript's rule: an engine class or a
+   * global script class, inheriting `Node`), else why not.
+   */
+  private fun nodePathClassError(name: String): String? {
+    val script = scriptClassTypes.values.firstOrNull { it.isGlobalClass && it.simpleName == name }
+    val native =
+      when {
+        EngineMethodTable.isClass(name) -> name
+        script != null -> script.attachTo
+        else ->
+          return "no engine class or @GlobalClass script named \"$name\" (GDScript: \"not " +
+            "found in the global scope\")."
+      }
+    return if (EngineMethodTable.inheritsFrom(native, "Node")) null
+    else "\"$name\" does not inherit Node."
   }
 
   // ---------- Emission ----------
@@ -801,16 +1257,31 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
     val errors = ErrorCollector()
     errors.removedAnnotations(cls, simpleName)
-    for (fn in cls.getDeclaredFunctions()) {
-      if (fn.isConstructor()) continue
+    // Task 133 C: the members of the script's superclasses in this compilation are the script's
+    // members too (GDScript `extends`), so a subclass needs no forwarding overrides.
+    val hierarchy = scriptHierarchy(cls)
+    val hierarchyNames = hierarchy.mapNotNull { it.qualifiedName?.asString() }.toSet()
+    // Task 133 C2: inherited members are typed as members of this class (generic bases).
+    val scriptType = cls.asType(emptyList())
+    // Kotlin name as errors show it: `Base.ready` for an inherited function.
+    val shownNames = HashMap<String, String>()
+    for (member in scriptFunctions(hierarchy)) {
+      val fn = member.fn
+      val annotated = member.annotated
       val kotlinName = fn.simpleName.asString()
-      when (val decision = FunctionRegistration.decide(functionFacts(fn, simpleName, attachTo))) {
+      shownNames[kotlinName] =
+        if (member.owner === cls) kotlinName
+        else "${member.owner.simpleName.asString()}.$kotlinName"
+      val facts = functionFacts(fn, simpleName, attachTo, annotated, hierarchyNames)
+      when (val decision = FunctionRegistration.decide(facts)) {
         is FunctionRegistration.Decision.Error -> errors.add(decision.message, fn)
         is FunctionRegistration.Decision.KotlinOnly -> Unit
         is FunctionRegistration.Decision.Register ->
-          errors.capture(fn) { methods += buildMethodModel(fn, decision.godotName, simpleName) }
+          errors.capture(fn) {
+            methods += buildMethodModel(fn, decision.godotName, simpleName, annotated, scriptType)
+          }
         FunctionRegistration.Decision.Role ->
-          for (ann in fn.annotations) {
+          for (ann in annotated.annotations) {
             val annName = ann.shortName.asString()
             val virtualName = FunctionRegistration.LIFECYCLE_VIRTUALS[annName]
             when {
@@ -829,7 +1300,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
                   virtuals += buildVirtualOverrideModel(fn, attachTo, simpleName)
                 }
               annName == "Signal" ->
-                errors.capture(fn) { signals += buildSignalModel(fn, ann, simpleName) }
+                errors.capture(fn) { signals += buildSignalModel(fn, ann, simpleName, scriptType) }
               annName == "ExportToolButton" ->
                 errors.capture(fn) {
                   if (!isTool) {
@@ -837,7 +1308,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
                       "$simpleName.$kotlinName: @ExportToolButton requires @Tool on the script class"
                     )
                   }
-                  val button = buildToolButtonModel(fn, ann, simpleName)
+                  val button = buildToolButtonModel(annotated, ann, simpleName)
                   toolButtons += button
                   methods += button.method
                 }
@@ -847,14 +1318,21 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     }
     errors.duplicateNames(
       simpleName,
-      methods.map { it.godotName to it.kotlinName } +
-        virtuals.map { it.virtualName to it.kotlinMethodName },
+      methods.map { it.godotName to (shownNames[it.kotlinName] ?: it.kotlinName) } +
+        virtuals.map { it.virtualName to (shownNames[it.kotlinMethodName] ?: it.kotlinMethodName) },
       cls,
     )
 
-    for (prop in cls.getDeclaredProperties()) {
-      if (prop.annotations.none { it.shortName.asString() == "Export" }) continue
+    val exportedNames = mutableListOf<Pair<String, String>>()
+    for (member in scriptProperties(hierarchy)) {
+      // An override without its own export annotation keeps the overridden property's (task 133 C).
+      if (!member.exported) continue
+      val prop = member.prop
+      val annotatedProp = member.annotated
+      val owner = member.owner
       val kotlinName = prop.simpleName.asString()
+      val shownName =
+        if (owner === cls) kotlinName else "${owner.simpleName.asString()}.$kotlinName"
       if (Modifier.LATEINIT in prop.modifiers) {
         // A lateinit export has no inspector default, and a get before the field
         // is assigned throws UninitializedPropertyAccessException into the engine.
@@ -864,11 +1342,11 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           prop,
         )
       }
-      val ann = prop.annotations.firstOrNull { it.shortName.asString() == "Export" }
+      val ann = annotatedProp.annotations.firstOrNull { it.shortName.asString() == "Export" }
       val nameOverride =
         ann?.arguments?.firstOrNull { it.name?.asString() == "name" }?.value as? String
       val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
-      val resolvedType = prop.type.resolve()
+      val resolvedType = memberPropertyType(prop, scriptType)
       val fq = resolvedType.declaration.qualifiedName?.asString()
       // On the iOS (Kotlin/Native) target a @Export may reference an API wrapper
       // that exists only in the desktop source set (the hand-curated iosMain api/ subset is
@@ -901,16 +1379,25 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           }
           continue
         }
-      val hint = ann?.arguments?.firstOrNull { it.name?.asString() == "hint" }?.value as? Int ?: 0
-      val hintString =
-        ann?.arguments?.firstOrNull { it.name?.asString() == "hintString" }?.value as? String ?: ""
+      val export =
+        try {
+          resolveExport(
+            annotatedProp.annotations.toList(),
+            "$simpleName.$kotlinName",
+            scriptType.hint,
+            scriptType.hintString,
+            exportSlot(scriptType),
+            returnTypeName(resolvedType),
+          )
+        } catch (e: IllegalArgumentException) {
+          errors.add(e.message ?: e.toString(), prop)
+          continue
+        }
       // Task 128 B: a Godot enum property carries GDScript's class marker too
       // (PROPERTY_USAGE_CLASS_IS_ENUM / _CLASS_IS_BITFIELD, with class_name = the Godot enum).
-      val usage =
-        (ann?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int ?: 6) or
-          (scriptType.godotEnum?.classUsageFlag ?: 0)
+      val usage = export.usage or (scriptType.godotEnum?.classUsageFlag ?: 0)
       val exportCategory =
-        prop.annotations
+        annotatedProp.annotations
           .firstOrNull { it.shortName.asString() == "ExportCategory" }
           ?.let { category ->
             ScriptPropertyGroupModel(
@@ -931,7 +1418,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           scriptType.godotEnum?.let { GodotEnumTable.forKotlin(it.kotlinFqName) },
         )
       val exportGroup =
-        prop.annotations
+        annotatedProp.annotations
           .firstOrNull { it.shortName.asString() == "ExportGroup" }
           ?.let { group ->
             ScriptPropertyGroupModel(
@@ -945,7 +1432,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             )
           }
       val exportSubgroup =
-        prop.annotations
+        annotatedProp.annotations
           .firstOrNull { it.shortName.asString() == "ExportSubgroup" }
           ?.let { group ->
             ScriptPropertyGroupModel(
@@ -964,8 +1451,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           godotName,
           scriptType.type,
           prop.isMutable,
-          if (hint == 0) scriptType.hint else hint,
-          if (hintString.isEmpty()) scriptType.hintString else hintString,
+          export.hint,
+          export.hintString,
           defaultLiteral,
           exportCategory,
           exportGroup,
@@ -998,8 +1485,16 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           scriptType.isMutableList,
           godotEnum = scriptType.godotEnum,
           arrayElementGodotEnum = scriptType.arrayElementGodotEnum,
+          explicitHint = export.explicit,
         )
+      exportedNames += godotName to shownName
     }
+    ScriptInheritance.duplicatePropertyErrors(
+        simpleName,
+        exportedNames +
+          toolButtons.map { it.propertyName to "the tool button of ${it.method.kotlinName}" },
+      )
+      .forEach { errors.add(it, cls) }
 
     errors.throwIfAny()
     return ScriptModel(
@@ -1133,14 +1628,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     }
   }
 
-  private fun emitScriptRegistrar(model: ScriptModel, sourceFile: KSFile) {
+  private fun emitScriptRegistrar(model: ScriptModel, sources: List<KSFile>) {
     // Phase 3.1: always emit the platform-neutral serialized model. The iOS build
     // (Option B) consumes these instead of regex-parsing the source; on the JVM target
     // it is an additive artifact alongside the registrar. See
     // script-model-unification-design.md.
     env.codeGenerator
       .createNewFile(
-        dependencies = Dependencies(aggregating = false, sourceFile),
+        dependencies = Dependencies(aggregating = false, *sources.toTypedArray()),
         packageName = GENERATED_PACKAGE,
         fileName = "${model.simpleName}ScriptModel",
         extensionName = "script-model.json",
@@ -1154,7 +1649,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
     env.codeGenerator
       .createNewFile(
-        dependencies = Dependencies(aggregating = false, sourceFile),
+        dependencies = Dependencies(aggregating = false, *sources.toTypedArray()),
         packageName = GENERATED_PACKAGE,
         fileName = registrarName,
       )
@@ -1284,9 +1779,21 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
   companion object {
     private const val GENERATED_PACKAGE = "net.multigesture.kanama.generated"
+    /** KSP option: the Godot project directory whose `project.godot` lists the autoloads. */
+    private const val GODOT_PROJECT_DIR_OPTION = "kanamaGodotProjectDir"
     private const val REGISTER_CLASS_FQN = "net.multigesture.kanama.annotations.RegisterClass"
     private const val SCRIPT_CLASS_FQN = "net.multigesture.kanama.annotations.ScriptClass"
     private const val KANAMA_API_SCRIPT_FQN = "net.multigesture.kanama.api.KanamaScript"
+
+    /** Kanama runtime packages: a script's superclass walk stops at a class from one of them. */
+    private val RUNTIME_PACKAGES =
+      listOf(
+        "net.multigesture.kanama.api.",
+        "net.multigesture.kanama.binding.",
+        "net.multigesture.kanama.web.",
+        "net.multigesture.kanama.ios.",
+        "net.multigesture.kanama.types.",
+      )
 
     fun camelToSnake(name: String): String = buildString {
       for ((i, ch) in name.withIndex()) {
@@ -1422,6 +1929,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         "net.multigesture.kanama.types.Vector3i" -> TypeMapping.VECTOR3I
         "net.multigesture.kanama.types.Quaternion" -> TypeMapping.QUATERNION
         "net.multigesture.kanama.types.Basis" -> TypeMapping.BASIS
+        "net.multigesture.kanama.types.Color" -> TypeMapping.COLOR
         "net.multigesture.kanama.types.NodePath" -> TypeMapping.NODE_PATH
         "net.multigesture.kanama.api.GodotObject" -> TypeMapping.OBJECT
         else -> null
@@ -2352,11 +2860,14 @@ private fun normalizeEnumDefaultLiteral(
  */
 private fun normalizeNarrowDefaultLiteral(initializer: String, narrow: NarrowScalar): String? =
   when (narrow) {
+    // Task 133 C2: a constant expression folds with Kotlin's Float / Int arithmetic.
     NarrowScalar.FLOAT32 ->
       initializer.takeIf {
         Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?[fF]""").matches(it)
-      }
-    NarrowScalar.INT32 -> initializer.takeIf { Regex("""[-+]?\d+""").matches(it) }
+      } ?: ConstantFolding.foldFloatLiteral(initializer)
+    NarrowScalar.INT32 ->
+      initializer.takeIf { Regex("""[-+]?\d+""").matches(it) }
+        ?: ConstantFolding.foldIntLiteral(initializer)
   }
 
 private fun findPropertyDeclarationLine(
@@ -2443,20 +2954,21 @@ internal fun normalizeScriptPropertyDefaultLiteral(
   val doubleLiteral = Regex("""[-+]?(?:\d+\.\d*|\.\d+)(?:[eE][-+]?\d+)?[dD]?""")
   val numberLiteral = Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?[fFdDlL]?""")
   val boolLiteral = Regex("""true|false""")
+  val colorNamedConstant =
+    Regex("""(?:net\.multigesture\.kanama\.types\.)?Color\.([A-Z][A-Z0-9_]*)""")
   val stringLiteral = Regex(kotlinStringLiteralPattern)
   val nodePathLiteral =
     Regex(
       """(?:net\.multigesture\.kanama\.types\.)?NodePath\(\s*($kotlinStringLiteralPattern)\s*\)"""
     )
-  val mathToRadiansLiteral = Regex("""(?:java\.lang\.)?Math\.toRadians\(\s*($numberLiteral)\s*\)""")
 
   return when (type) {
-    TypeMapping.INT -> initializer.takeIf { intLiteral.matches(it) }
+    // Task 133 C: a constant expression (`Mathf.PI / 3.0`, `60 * 5`) folds to its literal.
+    TypeMapping.INT ->
+      initializer.takeIf { intLiteral.matches(it) } ?: ConstantFolding.foldLongLiteral(initializer)
     TypeMapping.FLOAT ->
       initializer.takeIf { doubleLiteral.matches(it) }
-        ?: mathToRadiansLiteral.matchEntire(initializer)?.groupValues?.get(1)?.let {
-          "Math.toRadians($it)"
-        }
+        ?: ConstantFolding.foldDoubleLiteral(initializer)
     TypeMapping.BOOL -> initializer.takeIf { boolLiteral.matches(it) }
     TypeMapping.STRING -> initializer.takeIf { stringLiteral.matches(it) }
     TypeMapping.OBJECT -> initializer.takeIf { it == "null" }
@@ -2519,6 +3031,26 @@ internal fun normalizeScriptPropertyDefaultLiteral(
         components = 3,
         componentPattern = intLiteral,
       )
+    // Task 133 C2: `Color.RED` (Kotlin's named colors are Godot's) and `Color(r, g, b)` /
+    // `Color(r, g, b, a)` literals; anything else is read at runtime.
+    TypeMapping.COLOR ->
+      colorNamedConstant.matchEntire(initializer)?.let {
+        "net.multigesture.kanama.types.Color.${it.groupValues[1]}"
+      }
+        ?: normalizeVectorDefaultLiteral(
+          initializer = initializer,
+          packageClass = "net.multigesture.kanama.types.Color",
+          simpleClass = "Color",
+          components = 3,
+          componentPattern = numberLiteral,
+        )
+        ?: normalizeVectorDefaultLiteral(
+          initializer = initializer,
+          packageClass = "net.multigesture.kanama.types.Color",
+          simpleClass = "Color",
+          components = 4,
+          componentPattern = numberLiteral,
+        )
     TypeMapping.QUATERNION,
     TypeMapping.BASIS -> null
   }
@@ -2629,6 +3161,19 @@ internal enum class TypeMapping(
     scratchAllocationExpr =
       "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 9L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
     ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 9L",
+  ),
+  /**
+   * Godot's Color: four float32 channels (16 B) in every build, independent of `real_t` (task 133
+   * C2). The Kotlin type stores Float since task 134 A, so `r.toFloat()` round-trips exactly.
+   */
+  COLOR(
+    "COLOR",
+    "JAVA_FLOAT",
+    16,
+    "net.multigesture.kanama.types.Color.BLACK",
+    "net.multigesture.kanama.types.Color",
+    scratchAllocationExpr = "16L, 4L",
+    ptrcallSizeBytesExpr = "16L",
   ),
   NODE_PATH(
     "STRING",
@@ -2753,6 +3298,8 @@ internal enum class TypeMapping(
         "net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 3))"
       BASIS ->
         "net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 3), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 4), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 5), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 8)))"
+      COLOR ->
+        "net.multigesture.kanama.types.Color($s.get(JAVA_FLOAT, 0).toDouble(), $s.get(JAVA_FLOAT, 4).toDouble(), $s.get(JAVA_FLOAT, 8).toDouble(), $s.get(JAVA_FLOAT, 12).toDouble())"
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($s))"
       OBJECT -> "net.multigesture.kanama.api.GodotObject($s.get(ADDRESS, 0))"
       in VARIANT_ONLY_RETURN_SHAPES -> kotlinLiteralZero
@@ -2775,6 +3322,8 @@ internal enum class TypeMapping(
         "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.w) }"
       BASIS ->
         "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 8, $v.z.z) }"
+      COLOR ->
+        "{ $s.set(JAVA_FLOAT, 0, $v.r.toFloat()); $s.set(JAVA_FLOAT, 4, $v.g.toFloat()); $s.set(JAVA_FLOAT, 8, $v.b.toFloat()); $s.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
       NODE_PATH -> "GodotStrings.initString($s, $v.path)"
       // Task 131 item 2: a freed wrapper is written as NULL (nil), never as its dangling pointer.
       OBJECT ->
@@ -2804,6 +3353,8 @@ internal enum class TypeMapping(
         "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 3)) }"
       BASIS ->
         "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 3), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 4), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 5), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 8))) }"
+      COLOR ->
+        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Color(p.get(JAVA_FLOAT, 0).toDouble(), p.get(JAVA_FLOAT, 4).toDouble(), p.get(JAVA_FLOAT, 8).toDouble(), p.get(JAVA_FLOAT, 12).toDouble()) }"
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($ptr))"
       OBJECT ->
         "net.multigesture.kanama.api.GodotObject($ptr.reinterpret($ptrcallSizeBytesExpr).get(ADDRESS, 0))"
@@ -2832,6 +3383,8 @@ internal enum class TypeMapping(
         "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.w) }"
       BASIS ->
         "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 8, $v.z.z) }"
+      COLOR ->
+        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); p.set(JAVA_FLOAT, 0, $v.r.toFloat()); p.set(JAVA_FLOAT, 4, $v.g.toFloat()); p.set(JAVA_FLOAT, 8, $v.b.toFloat()); p.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
       NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
       // Task 131 item 2: a freed wrapper returns NULL (nil), never its dangling pointer.
       OBJECT ->
@@ -4334,6 +4887,8 @@ internal class ScriptCodeEmitter(
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); VariantConverters.variantToType(VariantType.VECTOR3).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 2)) }"
       TypeMapping.VECTOR3I ->
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(12L, 4L); VariantConverters.variantToType(VariantType.VECTOR3I).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3i(d.get(JAVA_INT, 0), d.get(JAVA_INT, 4), d.get(JAVA_INT, 8)) }"
+      TypeMapping.COLOR ->
+        "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(16L, 4L); VariantConverters.variantToType(VariantType.COLOR).invoke(d, $variantPtr); net.multigesture.kanama.types.Color(d.get(JAVA_FLOAT, 0).toDouble(), d.get(JAVA_FLOAT, 4).toDouble(), d.get(JAVA_FLOAT, 8).toDouble(), d.get(JAVA_FLOAT, 12).toDouble()) }"
       TypeMapping.QUATERNION ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Quaternion ?: net.multigesture.kanama.types.Quaternion.IDENTITY }"
       TypeMapping.BASIS ->
@@ -4629,6 +5184,7 @@ internal class ScriptCodeEmitter(
         "Arena.ofConfined().use { a -> val s = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 0, $valueExpr.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 1, $valueExpr.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 2, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3).invoke(ret, s) }"
       TypeMapping.VECTOR3I ->
         "Arena.ofConfined().use { a -> val s = a.allocate(12L, 4L); s.set(JAVA_INT, 0, $valueExpr.x); s.set(JAVA_INT, 4, $valueExpr.y); s.set(JAVA_INT, 8, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3I).invoke(ret, s) }"
+      TypeMapping.COLOR,
       TypeMapping.QUATERNION ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       TypeMapping.BASIS ->

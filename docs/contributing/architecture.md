@@ -525,11 +525,12 @@ registered script language to broadcast autoload and singleton names. GDScript
 stores them in its name-resolution table so user scripts can write an autoload
 as a free identifier.
 
-Kanama scripts are compiled Kotlin, so there is no Kanama-side free-identifier
-resolution layer today. Autoloads are reached through the scene tree, generated
-wrappers, or explicit project code. The callbacks are still implemented so
-Godot sees a complete script-language surface, but they are intentionally
-no-ops unless Kanama later adds generated autoload bindings.
+Kanama scripts are compiled Kotlin, so names are resolved at compile time
+instead: the KSP processor generates an `Autoloads` object from `project.godot`
+(task 133 C; one typed property per autoload, looked up at `/root/<Name>` on each
+read). The callbacks are still implemented so Godot sees a complete
+script-language surface, but they are intentionally no-ops: the generated object
+does not need the runtime broadcast.
 
 ## Why no engine module, no JNI glue, no mirrored object graph
 

@@ -359,6 +359,30 @@ fun kanamaWebSetVector3Property(
   }
 }
 
+/** Task 133 C2: a `Color` export's push arm; float32 channels widen to Double exactly. */
+@JsExport
+fun kanamaWebSetColorProperty(
+  objectId: Int,
+  propertyId: Int,
+  r: Double,
+  g: Double,
+  b: Double,
+  a: Double,
+): Int {
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setColorProperty(
+      record.scriptId,
+      propertyId,
+      record.script,
+      r,
+      g,
+      b,
+      a,
+    )
+    1
+  }
+}
+
 @JsExport
 fun kanamaWebSetLongProperty(objectId: Int, propertyId: Int, value: Double): Int {
   require(value.isFinite() && value % 1.0 == 0.0) { "Web integer property must be integral" }

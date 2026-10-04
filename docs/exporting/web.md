@@ -2,7 +2,7 @@
 
 The Web backend compiles Kanama project scripts to **Kotlin/Wasm** and runs
 them against a Godot Web export through a generated per-call proxy and a
-versioned JavaScript bridge (protocol 29). <!-- kanama-claim: protocol --> This page is the reproducible export
+versioned JavaScript bridge (protocol 30). <!-- kanama-claim: protocol --> This page is the reproducible export
 workflow: prerequisites, the build/export/serve/smoke/publish commands, the
 browser matrix and budgets you run, and the limitations you meet while
 shipping. The tier, the twelve-demo corpus evidence, the browser floors and
@@ -64,13 +64,16 @@ intended. Files under the merged root resolve to `res://kotlin-src/*.kt` and
 match the scene script attachments on both platforms.
 
 `@Export` declarations are portable including `NodePath`
-properties and hint metadata (a `PropertyHint.RANGE` hint reaches the generated
-proxy as `@export_range(...)`). Two Web-specific rules fail the build loudly
-instead of silently mis-hydrating: a property default must be spelled as a
-plain literal (`1.0471975511965976`, not `Mathf.PI / 3.0` — the proxy re-emits
-the default into GDScript and pushes it back into Kotlin at hydration), and a
-property type or hint outside the supported Web set is rejected with an error
-naming the property.
+properties and hint metadata (a typed hint annotation such as `@ExportRange`
+reaches the generated proxy verbatim as `@export_custom(hint, "hint string")`,
+and `@ExportStorage` as `@export_storage`). The generated `Autoloads` object works
+on Web too (the processor is pointed at the demo's `project.godot`); read an
+autoload from a script callback. Two Web-specific rules fail the build loudly
+instead of silently mis-hydrating: a property default must be a literal or a
+constant expression the processor folds (`Mathf.PI / 3.0` is fine; a reference to
+another property is not — the proxy re-emits the default into GDScript and pushes
+it back into Kotlin at hydration), and a property type outside the supported Web
+set is rejected with an error naming the property.
 
 **Physics loops should derive movement from velocity, not from re-reading a
 spatial value they just wrote.** On Web, spatial reads (`self.position`,

@@ -101,6 +101,7 @@ internal enum class WebPropertyArm(val dispatch: WebDispatch) {
   VECTOR2(WebDispatch(WebDispatchStatus.TYPED)),
   VECTOR3(WebDispatch(WebDispatchStatus.TYPED)),
   VECTOR2I(WebDispatch(WebDispatchStatus.TYPED)),
+  COLOR(WebDispatch(WebDispatchStatus.TYPED)),
   OBJECT(WebDispatch(WebDispatchStatus.TYPED)),
   STRING_ARRAY(WebDispatch(WebDispatchStatus.TYPED)),
   OBJECT_ARRAY(WebDispatch(WebDispatchStatus.TYPED)),
@@ -146,9 +147,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `RenderingServer.get_current_rendering_driver_name` / `OS.get_name`,
      * `Viewport.set_input_as_handled` and the Control window family `Control.set_position` /
      * `set_size` (331-332). The LONG_OBJECT_ARG slot also became nullable in 28, so
-     * `Mesh.surface_set_material(i, null)` clears the slot (handle id 0).
+     * `Mesh.surface_set_material(i, null)` clears the slot (handle id 0). 30 (task 133 C2) adds the
+     * `kanamaWebSetColorProperty` entry point: a `Color` export's push arm.
      */
-    const val PROTOCOL_VERSION = 29
+    const val PROTOCOL_VERSION = 30
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -186,6 +188,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     internal const val SIGNAL_DISPATCH_OBJECT = "_kanama_web_signal_dispatch_object"
     /** Packs one emitted scalar payload for [SIGNAL_DISPATCH_ONE] (task 80 slice 2). */
     internal const val SIGNAL_PACK_ARG = "_kanama_web_pack_signal_arg"
+    /** Task 133 C3: the proxy's parser of one text-channel decimal (`nan`/`inf`/`-inf` too). */
+    internal const val WEB_FLOAT = "_kanama_web_float"
+    /** Task 133 C3: [WEB_FLOAT] over a comma-separated list (replaces `split_floats`). */
+    internal const val WEB_FLOATS = "_kanama_web_floats"
 
     /**
      * The dispatch arm the proxy emits for a registered `@ScriptFunction`. The emitter's method
@@ -247,6 +253,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.VECTOR2,
         TypeMapping.VECTOR2I -> 2
         TypeMapping.VECTOR3 -> 3
+        TypeMapping.COLOR -> 4
         else -> null
       }
 
@@ -277,7 +284,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.VECTOR2I,
         TypeMapping.VECTOR3,
         TypeMapping.QUATERNION,
-        TypeMapping.BASIS -> true
+        TypeMapping.BASIS,
+        TypeMapping.COLOR -> true
         else -> false
       }
 
@@ -301,6 +309,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             add(arg.name + ".y")
             add(arg.name + ".z")
           }
+          // Float32 channels widen to double exactly, so the crossing is lossless.
+          TypeMapping.COLOR -> {
+            add(arg.name + ".r")
+            add(arg.name + ".g")
+            add(arg.name + ".b")
+            add(arg.name + ".a")
+          }
           else -> error("no numeric slot layout for ${arg.type.name}")
         }
       }
@@ -323,6 +338,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           TypeMapping.VECTOR2I -> add("Vector2i(${next()}.toInt(), ${next()}.toInt())")
           TypeMapping.VECTOR3 ->
             add("net.multigesture.kanama.types.Vector3(${next()}, ${next()}, ${next()})")
+          TypeMapping.COLOR ->
+            add("net.multigesture.kanama.types.Color(${next()}, ${next()}, ${next()}, ${next()})")
           else -> error("no numeric slot layout for ${arg.type.name}")
         }
       }
@@ -343,21 +360,28 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * encoding as `getPackedProperty`; QUATERNION adds `w` and BASIS packs its three COLUMNS in
      * x/y/z order, which is exactly the argument order of GDScript's `Basis(x, y, z)`.
      */
+    /** The runtime encoder of one decimal on the text channels (task 133 C3). */
+    internal const val PACKED_FLOAT = "net.multigesture.kanama.web.WebPackedFloats.encode"
+
+    /** `access.let { "<c1>,<c2>,..." }` with each component through [PACKED_FLOAT]. */
+    fun packedFloats(access: String, vararg components: String): String =
+      "$access.let { \"" + components.joinToString(",") { "\${$PACKED_FLOAT(it.$it)}" } + "\" }"
+
     fun packedReturnExpression(access: String, type: TypeMapping): String =
       when (type) {
         TypeMapping.STRING -> access
         TypeMapping.NODE_PATH -> "$access.path"
-        TypeMapping.INT,
-        TypeMapping.FLOAT -> "$access.toString()"
+        TypeMapping.INT -> "$access.toString()"
+        // Task 133 C3: decimals as GDScript spells NaN/±INF (WebPackedFloats, `_kanama_web_float`).
+        TypeMapping.FLOAT -> "$PACKED_FLOAT($access)"
         TypeMapping.BOOL -> "if ($access) \"1\" else \"0\""
-        TypeMapping.VECTOR2,
         TypeMapping.VECTOR2I -> "$access.let { \"\${it.x},\${it.y}\" }"
-        TypeMapping.VECTOR3 -> "$access.let { \"\${it.x},\${it.y},\${it.z}\" }"
-        TypeMapping.QUATERNION -> "$access.let { \"\${it.x},\${it.y},\${it.z},\${it.w}\" }"
+        TypeMapping.VECTOR2 -> packedFloats(access, "x", "y")
+        TypeMapping.VECTOR3 -> packedFloats(access, "x", "y", "z")
+        TypeMapping.QUATERNION -> packedFloats(access, "x", "y", "z", "w")
+        TypeMapping.COLOR -> packedFloats(access, "r", "g", "b", "a")
         TypeMapping.BASIS ->
-          "$access.let { " +
-            "\"\${it.x.x},\${it.x.y},\${it.x.z},\${it.y.x},\${it.y.y},\${it.y.z}," +
-            "\${it.z.x},\${it.z.y},\${it.z.z}\" }"
+          packedFloats(access, "x.x", "x.y", "x.z", "y.x", "y.y", "y.z", "z.x", "z.y", "z.z")
         else -> error("no packed return encoding for ${type.name}")
       }
 
@@ -470,7 +494,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.BOOL,
         TypeMapping.VECTOR2,
         TypeMapping.VECTOR2I,
-        TypeMapping.VECTOR3 -> true
+        TypeMapping.VECTOR3,
+        TypeMapping.COLOR -> true
         else -> false
       }
 
@@ -530,6 +555,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.VECTOR2 -> WebPropertyArm.VECTOR2
         TypeMapping.VECTOR3 -> WebPropertyArm.VECTOR3
         TypeMapping.VECTOR2I -> WebPropertyArm.VECTOR2I
+        TypeMapping.COLOR -> WebPropertyArm.COLOR
         TypeMapping.OBJECT -> WebPropertyArm.OBJECT
         TypeMapping.ARRAY ->
           if (property.arrayElementString) WebPropertyArm.STRING_ARRAY
@@ -586,12 +612,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
     // Godot PropertyHint ids the Web emitter reasons about (mirrors annotations/PropertyHint).
-    private const val PROPERTY_HINT_RANGE = 1
     private const val PROPERTY_HINT_RESOURCE_TYPE = 17
+    private const val PROPERTY_USAGE_STORAGE = 2
+    private const val PROPERTY_USAGE_DEFAULT = 6
     private const val PROPERTY_HINT_TYPE_STRING = 23
     private const val PROPERTY_HINT_NODE_TYPE = 34
-
-    private val RANGE_HINT_NUMBER = Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?""")
 
     /** A folded Godot enum default literal (`<fq>(3L)`, task 128 B); group 1 is the number. */
     private val GODOT_ENUM_DEFAULT = Regex("""\((-?\d+)L\)$""")
@@ -599,21 +624,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     /** The normalized NodePath default literal shape produced by the processor. */
     private val NODE_PATH_DEFAULT =
       Regex("""net\.multigesture\.kanama\.types\.NodePath\((".*")\)""")
-
-    /**
-     * Parses a Godot RANGE hint string (`"min,max[,step][,option...]"`) into `@export_range`
-     * argument spellings — leading numeric parts stay bare, trailing option flags (`or_greater`,
-     * `suffix:m`, ...) are quoted — or null when the string has no `min,max` numeric prefix. Shared
-     * by the emitter and [unsupportedWebPropertyErrors] so the accepted grammar cannot drift from
-     * what actually reaches the proxy.
-     */
-    internal fun rangeExportArguments(hintString: String): List<String>? {
-      val parts = hintString.split(',').map { it.trim() }
-      if (parts.size < 2 || parts.any { it.isEmpty() }) return null
-      val bounds = parts.takeWhile { RANGE_HINT_NUMBER.matches(it) }
-      if (bounds.size < 2) return null
-      return bounds + parts.drop(bounds.size).map { "\"$it\"" }
-    }
 
     /**
      * Errors for every declared member a Web build would degrade (task 80 slice 3).
@@ -707,6 +717,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
                 TypeMapping.VECTOR2,
                 TypeMapping.VECTOR2I,
                 TypeMapping.VECTOR3,
+                TypeMapping.COLOR,
                 TypeMapping.NODE_PATH -> true
                 TypeMapping.OBJECT ->
                   property.objectWrapperFqName != null || property.customScriptFqName != null
@@ -730,7 +741,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "$where: @Export type '$declared' has no full Kanama Web property arm set " +
               "(declaration/push/pull/registry); a Web build would emit broken or silently " +
               "dropped property code. Use a Web-supported property type " +
-              "(String, Long, Double, Boolean, Vector2, Vector2i, Vector3, NodePath, a wrapped " +
+              "(String, Long, Double, Boolean, Vector2, Vector2i, Vector3, Color, NodePath, a wrapped " +
               "object/script type, or a supported List) or keep the property off the Web target."
           continue
         }
@@ -743,15 +754,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             TypeMapping.VECTOR2,
             TypeMapping.VECTOR2I,
             TypeMapping.VECTOR3,
+            TypeMapping.COLOR,
             TypeMapping.NODE_PATH -> true
             else -> false
           }
         if (defaultDrivesProxy && property.defaultLiteral == null) {
           errors +=
-            "$where: the property initializer is not a plain literal, so the Web proxy would " +
-              "declare (and hydrate) the type default instead of the Kotlin value. Spell the " +
-              "default as a literal (e.g. `1.0471975511965976` instead of `Mathf.PI / 3.0`)."
+            "$where: the property initializer is neither a literal nor a constant expression, " +
+              "so the Web proxy would declare (and hydrate) the type default instead of the " +
+              "Kotlin value. Spell the default as a literal or a constant expression the " +
+              "processor folds (numbers, `PI`, `TAU`, `+ - * /`, `degToRad(...)`)."
         }
+        // Task 133 C: a typed hint annotation (`@ExportRange`, `@ExportFile`, ...) reaches the
+        // proxy verbatim through `@export_custom`, so every hint it can build is expressible.
+        if (property.explicitHint) continue
         when (property.hint) {
           0 -> Unit
           // Task 128 B: a Godot enum's own enum/flags hint is emitted verbatim (`@export_custom`).
@@ -764,19 +780,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
                   "(`var mode: Node.ProcessMode`); it would be silently dropped from the " +
                   "generated .gd."
             }
-          PROPERTY_HINT_RANGE -> {
-            val rangeType = property.type == TypeMapping.INT || property.type == TypeMapping.FLOAT
-            if (!rangeType) {
-              errors +=
-                "$where: PropertyHint.RANGE is only expressible for int/float exports on the " +
-                  "Web target (GDScript @export_range); this property is ${property.type}."
-            } else if (rangeExportArguments(property.hintString) == null) {
-              errors +=
-                "$where: RANGE hintString '${property.hintString}' is not 'min,max[,step]" +
-                  "[,option...]' with numeric bounds, so it cannot be emitted as " +
-                  "@export_range; fix the hintString."
-            }
-          }
           // Structural hints are already carried by the typed GDScript declaration the proxy
           // emits (e.g. `@export var scene: PackedScene`, `@export var list: Array[Texture2D]`):
           // Godot re-derives the same resource/node/typed-array hint from the type, so nothing
@@ -798,8 +801,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             errors +=
               "$where: property hint ${property.hint} (hintString '${property.hintString}') " +
                 "has no Kanama Web proxy emission; it would be silently dropped from the " +
-                "generated .gd. Use a supported hint (RANGE, or the structural resource/node/" +
-                "typed-array hints) or remove it for the Web target."
+                "generated .gd. Use a typed hint annotation (@ExportRange, @ExportCustom, ...) " +
+                "or remove it for the Web target."
         }
       }
       return errors
@@ -1242,6 +1245,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendVector2PropertySetter()
     appendVector2iPropertySetter()
     appendVector3PropertySetter()
+    appendColorPropertySetter()
     appendObjectPropertySetter()
     appendPackedPropertyGetter()
     appendObjectArrayPropertySetter()
@@ -1846,11 +1850,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             property.type == TypeMapping.NODE_PATH -> "$access.path"
             property.type == TypeMapping.INT ->
               "${webLongValue(access, property.godotEnum)}.toString()"
-            property.type == TypeMapping.FLOAT -> "$access.toString()"
+            property.type == TypeMapping.FLOAT -> "$PACKED_FLOAT($access)"
             property.type == TypeMapping.BOOL -> "if ($access) \"1\" else \"0\""
-            property.type == TypeMapping.VECTOR2 -> "$access.let { \"\${it.x},\${it.y}\" }"
+            property.type == TypeMapping.VECTOR2 -> packedFloats(access, "x", "y")
             property.type == TypeMapping.VECTOR2I -> "$access.let { \"\${it.x},\${it.y}\" }"
-            property.type == TypeMapping.VECTOR3 -> "$access.let { \"\${it.x},\${it.y},\${it.z}\" }"
+            property.type == TypeMapping.VECTOR3 -> packedFloats(access, "x", "y", "z")
+            property.type == TypeMapping.COLOR -> packedFloats(access, "r", "g", "b", "a")
             property.type == TypeMapping.OBJECT && property.customScriptFqName != null ->
               if (property.nullable) "($access?.objectId?.value ?: 0).toString()"
               else "$access.objectId.value.toString()"
@@ -1888,6 +1893,30 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         if (property.type == TypeMapping.VECTOR3 && property.isMutable) {
           appendLine(
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = net.multigesture.kanama.types.Vector3(x, y, z)"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"property\", propertyId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  /** Task 133 C2: a Color export's push arm (four float32 channels, widened to Double exactly). */
+  private fun StringBuilder.appendColorPropertySetter() {
+    appendLine(
+      "  fun setColorProperty(scriptId: Int, propertyId: Int, script: KanamaWebScript, r: Double, g: Double, b: Double, a: Double) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
+      input.model.properties.forEachIndexed { propertyIndex, property ->
+        if (property.type == TypeMapping.COLOR && property.isMutable) {
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = net.multigesture.kanama.types.Color(r, g, b, a)"
           )
         }
       }
@@ -2211,6 +2240,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         WebPropertyArm.VECTOR2I ->
           appendLine(
             "\t_kanama_bridge.setVector2iProperty(_kanama_handle, ${index + 1}, ${property.godotName}.x, ${property.godotName}.y)"
+          )
+        WebPropertyArm.COLOR ->
+          appendLine(
+            "\t_kanama_bridge.setColorProperty(_kanama_handle, ${index + 1}, ${property.godotName}.r, ${property.godotName}.g, ${property.godotName}.b, ${property.godotName}.a)"
           )
         WebPropertyArm.OBJECT -> {
           appendLine("\tvar property_handle_${index + 1}: int = 0")
@@ -3921,6 +3954,24 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t_kanama_bridge.dispatchSignal1(_kanama_handle, callback_id, $SIGNAL_PACK_ARG(arg))"
     )
     appendLine()
+    // Task 133 C3: the text channels' decimals, NaN and the infinities included (Kotlin sends
+    // `nan`/`inf`/`-inf`, see WebPackedFloats; `split_floats` alone reads them as 0.0).
+    appendLine("func $WEB_FLOAT(text: String) -> float:")
+    appendLine("\tmatch text:")
+    appendLine("\t\t\"nan\", \"-nan\":")
+    appendLine("\t\t\treturn NAN")
+    appendLine("\t\t\"inf\":")
+    appendLine("\t\t\treturn INF")
+    appendLine("\t\t\"-inf\":")
+    appendLine("\t\t\treturn -INF")
+    appendLine("\treturn text.to_float()")
+    appendLine()
+    appendLine("func $WEB_FLOATS(packed: String) -> PackedFloat64Array:")
+    appendLine("\tvar values := PackedFloat64Array()")
+    appendLine("\tfor part in packed.split(\",\"):")
+    appendLine("\t\tvalues.append($WEB_FLOAT(part))")
+    appendLine("\treturn values")
+    appendLine()
     appendLine("func $SIGNAL_PACK_ARG(arg: Variant) -> String:")
     appendLine("\tmatch typeof(arg):")
     appendLine("\t\tTYPE_NIL:")
@@ -3931,6 +3982,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\treturn \"%s,%s\" % [arg.x, arg.y]")
     appendLine("\t\tTYPE_VECTOR3, TYPE_VECTOR3I:")
     appendLine("\t\t\treturn \"%s,%s,%s\" % [arg.x, arg.y, arg.z]")
+    appendLine("\t\tTYPE_COLOR:")
+    appendLine("\t\t\treturn \"%s,%s,%s,%s\" % [arg.r, arg.g, arg.b, arg.a]")
     appendLine("\t\t_:")
     appendLine("\t\t\treturn str(arg)")
     appendLine()
@@ -4998,10 +5051,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.STRING -> appendLine("\treturn _kanama_packed")
       TypeMapping.NODE_PATH -> appendLine("\treturn NodePath(_kanama_packed)")
       TypeMapping.INT -> appendLine("\treturn int(_kanama_packed)")
-      TypeMapping.FLOAT -> appendLine("\treturn float(_kanama_packed)")
+      TypeMapping.FLOAT -> appendLine("\treturn $WEB_FLOAT(_kanama_packed)")
       TypeMapping.BOOL -> appendLine("\treturn _kanama_packed == \"1\"")
       TypeMapping.VECTOR2 -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine("\treturn Vector2(_kanama_parts[0], _kanama_parts[1])")
       }
       TypeMapping.VECTOR2I -> {
@@ -5009,17 +5062,23 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         appendLine("\treturn Vector2i(int(_kanama_parts[0]), int(_kanama_parts[1]))")
       }
       TypeMapping.VECTOR3 -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine("\treturn Vector3(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2])")
       }
+      TypeMapping.COLOR -> {
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
+        appendLine(
+          "\treturn Color(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2], _kanama_parts[3])"
+        )
+      }
       TypeMapping.QUATERNION -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine(
           "\treturn Quaternion(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2], _kanama_parts[3])"
         )
       }
       TypeMapping.BASIS -> {
-        appendLine("\tvar _kanama_parts := _kanama_packed.split_floats(\",\")")
+        appendLine("\tvar _kanama_parts := $WEB_FLOATS(_kanama_packed)")
         appendLine("\t# Packed as the three basis COLUMNS, which is Basis(x_axis, y_axis, z_axis).")
         appendLine(
           "\treturn Basis(Vector3(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2]), " +
@@ -5079,13 +5138,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
   /**
-   * The export annotation for a property declaration. A RANGE hint becomes GDScript's dedicated
-   * `@export_range(...)` form (that is how hint metadata reaches the proxy — task 64); structural
-   * resource/node/typed-array hints are already carried by the typed declaration and keep the plain
+   * The export annotation for a property declaration. A hint from a typed hint annotation
+   * (`@ExportRange`, `@ExportFile`, ..., task 133 C) and a Godot enum's own hint (task 128 B) are
+   * declared verbatim with `@export_custom`, so the proxy reports exactly the hint, hint string and
+   * usage the desktop and iOS registrars do; `@ExportStorage` is `@export_storage`. Structural
+   * resource/node/typed-array hints are carried by the typed declaration and keep the plain
    * `@export`. Any other nonzero hint was rejected loudly by [unsupportedWebPropertyErrors] before
    * emission, so nothing is ever silently dropped here.
    */
   private fun exportAnnotation(property: ScriptPropertyModel): String {
+    if (property.explicitHint) {
+      val usage = if (property.usage == PROPERTY_USAGE_DEFAULT) "" else ", ${property.usage}"
+      return "@export_custom(${property.hint}, ${quote(property.hintString)}$usage)"
+    }
     // Task 128 B: a Godot enum property keeps the exact hint + hint string the desktop and iOS
     // registrars report. `@export_custom` sets both verbatim; `@export_flags` would reject a
     // Godot bitfield's zero-valued entry (`NONE:0`), which the inspector simply skips.
@@ -5096,13 +5161,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     ) {
       return "@export_custom(${property.hint}, ${quote(property.hintString)})"
     }
-    if (property.hint != PROPERTY_HINT_RANGE) return "@export"
-    val arguments =
-      rangeExportArguments(property.hintString)
-        ?: error(
-          "unreachable: RANGE hintString '${property.hintString}' passed the Web property guard"
-        )
-    return "@export_range(${arguments.joinToString(", ")})"
+    if (property.usage == PROPERTY_USAGE_STORAGE) return "@export_storage"
+    return "@export"
   }
 
   private fun StringBuilder.appendPropertyGroup(property: ScriptPropertyModel) {
@@ -5143,6 +5203,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           TypeMapping.VECTOR2,
           TypeMapping.VECTOR2I,
           TypeMapping.VECTOR3,
+          TypeMapping.COLOR,
           TypeMapping.NODE_PATH -> true
           TypeMapping.OBJECT ->
             property.customScriptFqName != null || property.objectWrapperFqName != null
@@ -5161,10 +5222,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         property.type == TypeMapping.STRING -> appendLine("\t$name = $packed")
         property.type == TypeMapping.NODE_PATH -> appendLine("\t$name = NodePath($packed)")
         property.type == TypeMapping.INT -> appendLine("\t$name = int($packed)")
-        property.type == TypeMapping.FLOAT -> appendLine("\t$name = float($packed)")
+        property.type == TypeMapping.FLOAT -> appendLine("\t$name = $WEB_FLOAT($packed)")
         property.type == TypeMapping.BOOL -> appendLine("\t$name = $packed == \"1\"")
         property.type == TypeMapping.VECTOR2 -> {
-          appendLine("\tvar _kanama_parts_$id := $packed.split_floats(\",\")")
+          appendLine("\tvar _kanama_parts_$id := $WEB_FLOATS($packed)")
           appendLine("\t$name = Vector2(_kanama_parts_$id[0], _kanama_parts_$id[1])")
         }
         property.type == TypeMapping.VECTOR2I -> {
@@ -5172,9 +5233,15 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine("\t$name = Vector2i(int(_kanama_parts_$id[0]), int(_kanama_parts_$id[1]))")
         }
         property.type == TypeMapping.VECTOR3 -> {
-          appendLine("\tvar _kanama_parts_$id := $packed.split_floats(\",\")")
+          appendLine("\tvar _kanama_parts_$id := $WEB_FLOATS($packed)")
           appendLine(
             "\t$name = Vector3(_kanama_parts_$id[0], _kanama_parts_$id[1], _kanama_parts_$id[2])"
+          )
+        }
+        property.type == TypeMapping.COLOR -> {
+          appendLine("\tvar _kanama_parts_$id := $WEB_FLOATS($packed)")
+          appendLine(
+            "\t$name = Color(_kanama_parts_$id[0], _kanama_parts_$id[1], _kanama_parts_$id[2], _kanama_parts_$id[3])"
           )
         }
         property.type == TypeMapping.OBJECT -> {
@@ -5230,6 +5297,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       // (their unsupported-method fallback bodies `return null`, which a typed Vector3/NodePath
       // return would turn into a GDScript compile error).
       property.type == TypeMapping.VECTOR3 -> "Vector3"
+      property.type == TypeMapping.COLOR -> "Color"
       property.type == TypeMapping.NODE_PATH -> "NodePath"
       else -> gdType(property.type)
     }
@@ -5263,6 +5331,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.VECTOR2 -> vectorGdDefault(property.defaultLiteral, "Vector2")
       TypeMapping.VECTOR2I -> vectorGdDefault(property.defaultLiteral, "Vector2i")
       TypeMapping.VECTOR3 -> vectorGdDefault(property.defaultLiteral, "Vector3")
+      TypeMapping.COLOR -> colorGdDefault(property.defaultLiteral)
       TypeMapping.ARRAY -> "[]"
       else -> "null"
     }
@@ -5290,6 +5359,18 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
    * the literal entirely — honoring it keeps the pushed hydration value in sync with the Kotlin
    * initializer).
    */
+  /**
+   * The GDScript spelling of a normalized Color default: `<fq>.RED` -> `Color.RED` (the named
+   * constants are Godot's), `<fq>(r, g, b[, a])` -> `Color(r, g, b[, a])`; none -> `Color()`
+   * (black).
+   */
+  private fun colorGdDefault(defaultLiteral: String?): String =
+    when {
+      defaultLiteral == null -> "Color()"
+      !defaultLiteral.endsWith(")") -> "Color.${defaultLiteral.substringAfterLast('.')}"
+      else -> vectorGdDefault(defaultLiteral, "Color")
+    }
+
   private fun vectorGdDefault(defaultLiteral: String?, simpleClass: String): String {
     if (defaultLiteral == null) return "$simpleClass.ZERO"
     if (defaultLiteral.endsWith(".ZERO")) return "$simpleClass.ZERO"

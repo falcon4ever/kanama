@@ -15,7 +15,21 @@ import java.util.concurrent.atomic.AtomicLong
  * and everything it captured for the life of the process.
  */
 object SignalCallbackRegistry {
-  class Entry(val argumentCount: Int, val callback: (List<Any?>) -> Unit)
+  class Entry(val argumentCount: Int, val callback: (List<Any?>) -> Unit) {
+    /**
+     * Where the connection lives (task 133 C2): the emitter's address and instance id, the signal
+     * and the receiver's instance id, recorded once the connect call returned; null before.
+     */
+    @Volatile var connection: Connection? = null
+  }
+
+  /** A lambda connection's emitter, signal and receiver ([Entry.connection]). */
+  class Connection(
+    val emitterAddress: Long,
+    val emitterInstanceId: Long,
+    val signal: String,
+    val receiverInstanceId: Long,
+  )
 
   private val nextId = AtomicLong(1)
   private val callbacks = ConcurrentHashMap<Long, Entry>()
@@ -26,6 +40,19 @@ object SignalCallbackRegistry {
     callbacks[id] = Entry(argumentCount, callback)
     return id
   }
+
+  /** Records where [id]'s connection lives (see [Entry.connection]). */
+  fun noteConnection(id: Long, connection: Connection) {
+    callbacks[id]?.connection = connection
+  }
+
+  /** The live entries whose connection's receiver is one of [receiverInstanceIds], by id. */
+  fun connectionsTo(receiverInstanceIds: Set<Long>): Map<Long, Connection> =
+    callbacks.entries
+      .mapNotNull { (id, entry) ->
+        entry.connection?.takeIf { it.receiverInstanceId in receiverInstanceIds }?.let { id to it }
+      }
+      .toMap()
 
   fun unregister(id: Long) {
     callbacks.remove(id)

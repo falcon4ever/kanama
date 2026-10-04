@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 29"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 30"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -772,7 +772,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 29"))
+    assertTrue(protocol.contains("\"protocolVersion\": 30"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -783,7 +783,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=29\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=30\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -950,6 +950,8 @@ class WebScriptCodeEmitterTest {
     defaultLiteral: String? = null,
     enumFqName: String? = null,
     narrow: NarrowScalar? = null,
+    explicitHint: Boolean = false,
+    usage: Int = 6,
   ) =
     ScriptPropertyModel(
       kotlinName = kotlinName,
@@ -962,6 +964,8 @@ class WebScriptCodeEmitterTest {
       enumFqName = enumFqName,
       enumEntries = if (enumFqName != null) listOf("A", "B") else emptyList(),
       narrow = narrow,
+      explicitHint = explicitHint,
+      usage = usage,
     )
 
   private fun task64Model(properties: List<ScriptPropertyModel>) =
@@ -994,8 +998,9 @@ class WebScriptCodeEmitterTest {
             "number_of_jumps",
             TypeMapping.INT,
             hint = 1,
-            hintString = "0,100,1",
+            hintString = "0.0,100.0,1.0",
             defaultLiteral = "2",
+            explicitHint = true,
           ),
           task64Property(
             "sensitivity",
@@ -1004,6 +1009,7 @@ class WebScriptCodeEmitterTest {
             hint = 1,
             hintString = "0.0,1.0,0.01,or_greater",
             defaultLiteral = "0.25",
+            explicitHint = true,
           ),
           task64Property(
             "spawnOffset",
@@ -1017,6 +1023,25 @@ class WebScriptCodeEmitterTest {
             TypeMapping.VECTOR3,
             defaultLiteral = "net.multigesture.kanama.types.Vector3.ZERO",
           ),
+          task64Property(
+            "notes",
+            "notes",
+            TypeMapping.STRING,
+            hint = 18,
+            hintString = "monospace",
+            defaultLiteral = "\"\"",
+            explicitHint = true,
+          ),
+          task64Property(
+            "secret",
+            "secret",
+            TypeMapping.STRING,
+            hint = 36,
+            defaultLiteral = "\"\"",
+            explicitHint = true,
+            usage = 8198,
+          ),
+          task64Property("saved", "saved", TypeMapping.INT, defaultLiteral = "3", usage = 2),
         )
       )
     assertTrue(
@@ -1027,13 +1052,17 @@ class WebScriptCodeEmitterTest {
     val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(model, "res://Task64Script.kt")))
     val proxy = emitter.proxySources().single { it.sourceResourcePath.isNotEmpty() }.source
 
-    // Declarations: NodePath with its literal default, RANGE hints as @export_range (numeric
-    // parts bare, option flags quoted), Vector3 typed with the Kotlin literal honored.
+    // Declarations: NodePath with its literal default, a typed hint annotation's hint verbatim
+    // through @export_custom (task 133 C; usage only when it is not the default),
+    // @ExportStorage as @export_storage, Vector3 typed with the Kotlin literal honored.
     assertTrue(proxy.contains("@export var view: NodePath = NodePath(\"../View\")"))
-    assertTrue(proxy.contains("@export_range(0, 100, 1) var number_of_jumps: int = 2"))
+    assertTrue(proxy.contains("@export_custom(1, \"0.0,100.0,1.0\") var number_of_jumps: int = 2"))
     assertTrue(
-      proxy.contains("@export_range(0.0, 1.0, 0.01, \"or_greater\") var sensitivity: float = 0.25")
+      proxy.contains("@export_custom(1, \"0.0,1.0,0.01,or_greater\") var sensitivity: float = 0.25")
     )
+    assertTrue(proxy.contains("@export_custom(18, \"monospace\") var notes: String = \"\""))
+    assertTrue(proxy.contains("@export_custom(36, \"\", 8198) var secret: String = \"\""))
+    assertTrue(proxy.contains("@export_storage var saved: int = 3"))
     assertTrue(proxy.contains("@export var spawn_offset: Vector3 = Vector3(1.0, 2.0, 3.0)"))
     assertTrue(proxy.contains("@export var rest_point: Vector3 = Vector3.ZERO"))
 
@@ -1104,45 +1133,22 @@ class WebScriptCodeEmitterTest {
 
   @Test
   fun rejectsInexpressibleHintsLoudly() {
-    // RANGE on a non-numeric export.
-    val rangeOnString =
+    // Task 133 C: a typed hint annotation's hint is always expressible (`@export_custom`).
+    val explicit =
       task64Model(
         listOf(
           task64Property(
             "label",
             "label",
             TypeMapping.STRING,
-            hint = 1,
-            hintString = "0,1",
+            hint = 13,
+            hintString = "*.png",
             defaultLiteral = "\"x\"",
+            explicitHint = true,
           )
         )
       )
-    assertTrue(
-      WebScriptCodeEmitter.unsupportedWebPropertyErrors(rangeOnString, webOptions)
-        .single()
-        .contains("only expressible for int/float")
-    )
-
-    // RANGE without a numeric min,max prefix.
-    val badRange =
-      task64Model(
-        listOf(
-          task64Property(
-            "jumps",
-            "jumps",
-            TypeMapping.INT,
-            hint = 1,
-            hintString = "lots",
-            defaultLiteral = "1",
-          )
-        )
-      )
-    assertTrue(
-      WebScriptCodeEmitter.unsupportedWebPropertyErrors(badRange, webOptions)
-        .single()
-        .contains("cannot be emitted as")
-    )
+    assertTrue(WebScriptCodeEmitter.unsupportedWebPropertyErrors(explicit, webOptions).isEmpty())
 
     // A hint with no Web emission at all (e.g. MULTILINE_TEXT = 4) must never be dropped
     // silently.
@@ -1459,7 +1465,16 @@ class WebScriptCodeEmitterTest {
       proxy.contains("var _kanama_packed := String(_kanama_bridge.callPacked(_kanama_handle, 6))"),
       proxy,
     )
-    assertTrue(proxy.contains("return float(_kanama_packed)"), proxy)
+    // Task 133 C3: decimals parse through the proxy's NaN/INF-aware helper.
+    assertTrue(proxy.contains("return _kanama_web_float(_kanama_packed)"), proxy)
+    assertTrue(proxy.contains("var _kanama_parts := _kanama_web_floats(_kanama_packed)"), proxy)
+    assertTrue(proxy.contains("\t\t\"inf\":\n\t\t\treturn INF"), proxy)
+    // An integer return stays an integer; only decimals go through the NaN/INF encoder.
+    assertEquals("x.toString()", WebScriptCodeEmitter.packedReturnExpression("x", TypeMapping.INT))
+    assertEquals(
+      "net.multigesture.kanama.web.WebPackedFloats.encode(x)",
+      WebScriptCodeEmitter.packedReturnExpression("x", TypeMapping.FLOAT),
+    )
 
     val registry =
       WebScriptCodeEmitter(listOf(WebScriptInput(task80Model(), "res://Enemy.kt"))).registrySource()
@@ -1471,11 +1486,16 @@ class WebScriptCodeEmitterTest {
     )
     assertTrue(
       registry.contains(
-        "5 -> (script as Enemy).aimTarget().let { \"\${it.x},\${it.y},\${it.z}\" }"
+        "5 -> (script as Enemy).aimTarget().let { \"\${net.multigesture.kanama.web.WebPackedFloats.encode(it.x)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.y)},\${net.multigesture.kanama.web.WebPackedFloats.encode(it.z)}\" }"
       ),
       registry,
     )
-    assertTrue(registry.contains("6 -> (script as Enemy).currentHealth().toString()"), registry)
+    assertTrue(
+      registry.contains(
+        "6 -> net.multigesture.kanama.web.WebPackedFloats.encode((script as Enemy).currentHealth())"
+      ),
+      registry,
+    )
   }
 
   @Test
@@ -1793,7 +1813,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 29"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 30"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(
@@ -1938,18 +1958,5 @@ class WebScriptCodeEmitterTest {
     assertEquals(emptyList(), emitter.degradations())
     assertEquals(1, emitter.degradationReport().size, "a clean script reports only the summary")
     assertFalse(emitter.protocolManifest().contains("dispatchReason"))
-  }
-
-  @Test
-  fun parsesRangeHintStrings() {
-    assertEquals(listOf("0", "100", "1"), WebScriptCodeEmitter.rangeExportArguments("0,100,1"))
-    assertEquals(
-      listOf("0.0", "1.0", "0.01", "\"or_greater\""),
-      WebScriptCodeEmitter.rangeExportArguments("0.0,1.0,0.01,or_greater"),
-    )
-    assertEquals(listOf("-4", "4"), WebScriptCodeEmitter.rangeExportArguments("-4,4"))
-    assertEquals(null, WebScriptCodeEmitter.rangeExportArguments("lots"))
-    assertEquals(null, WebScriptCodeEmitter.rangeExportArguments("1"))
-    assertEquals(null, WebScriptCodeEmitter.rangeExportArguments("1,,2"))
   }
 }

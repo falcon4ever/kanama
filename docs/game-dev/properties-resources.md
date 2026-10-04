@@ -7,9 +7,9 @@ Godot resources to Kotlin wrapper types.
 
 Use `@Export` (GDScript `@export`) on `@ScriptClass` scripts and on
 `@RegisterClass` types alike. (Before Kanama 0.5 the names were `@ScriptProperty`
-and `@RegisterProperty`, with the same parameters.) Use
-`PropertyHint` and `PropertyUsage` constants instead of raw Godot integers when
-you need inspector metadata.
+and `@RegisterProperty`.) Inspector hints are their own annotations, one per
+GDScript `@export_*` annotation, and export the property by themselves, as in
+GDScript:
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
@@ -17,7 +17,7 @@ class Player(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
     @ExportCategory("Tuning")
     @ExportGroup("Movement")
-    @Export(hint = PropertyHint.RANGE, hintString = "0,20,0.1")
+    @ExportRange(0.0, 20.0, 0.1)
     var speed: Double = 5.0
 
     @ExportSubgroup("Jump")
@@ -26,64 +26,90 @@ class Player(godotObject: GodotHandle) :
 }
 ```
 
-`@Export(name = "...")` overrides the
-Godot-facing `snake_case` property name. `usage = PropertyUsage.READ_ONLY or
-PropertyUsage.EDITOR` and other usage flags are available for advanced
-inspector behavior, but ordinary exported gameplay data should keep the
-default usage.
+`@Export(name = "...")` overrides the Godot-facing `snake_case` property name.
+`usage = PropertyUsage.READ_ONLY or PropertyUsage.EDITOR` and other usage flags
+are available for advanced inspector behavior, but ordinary exported gameplay
+data should keep the default usage. Keep `@Export` next to a hint annotation
+only to set `name` or `usage`: `@Export(name = "hp") @ExportRange(0.0, 100.0) var health = 100L`.
 
-Simple source-literal defaults are preserved in generated script registrars:
-numeric, boolean, string, enum entry (a Kotlin `enum class` entry or a Godot
-enum value such as `Node.ProcessMode.ALWAYS`), `NodePath("...")`, and
-`Math.toRadians(<number>)` initializers show up as inspector defaults.
+Defaults are reported to the inspector (and declared by the Web proxy) when the
+initializer is a literal or a constant expression: numeric, boolean, string,
+enum entry (a Kotlin `enum class` entry or a Godot enum value such as
+`Node.ProcessMode.ALWAYS`), `NodePath("...")`, and constant arithmetic the
+processor folds the way GDScript does: numbers, `+ - * /`, parentheses, `PI` /
+`TAU` / `E` (bare or on `Mathf`, `GD`, `Math`), `degToRad(...)`, `radToDeg(...)`,
+`Math.toRadians(...)`. `@ExportRange(0.0, 360.0, 0.1, radiansAsDegrees = true) var fov = Mathf.PI / 3.0`
+reports `1.0471975511965976`, as GDScript's `var fov := PI / 3.0`.
 
 ## Export Hints
 
-Inspector hints are set with a `PropertyHint` constant plus a hint string.
-This is the same shape Godot C# uses — Kanama's
-`@Export(hint = PropertyHint.RANGE, hintString = "0,100,1")` is the direct
-equivalent of C#'s `[Export(PropertyHint.Range, "0,100,1")]`. Prefer the
-`PropertyHint` constants over raw `PROPERTY_HINT_*` integers.
+Each GDScript `@export_*` annotation of Godot 4.7 has a typed Kotlin twin. The
+processor builds the hint string exactly as GDScript's parser does, so
+`get_property_list()` reports the same hint and hint string for a Kotlin script
+and its GDScript twin (`scripts/runtime_smoke.sh` compares the two row by row):
 
-If you are porting from GDScript, its dedicated `@export_*` annotations map to
-the hint form as follows:
-
-| GDScript | Kanama |
-|---|---|
-| `@export_range(0, 100, 1)` | `@Export(hint = PropertyHint.RANGE, hintString = "0,100,1")` |
-| `@export_range(0, 100, 1, "or_greater")` | `@Export(hint = PropertyHint.RANGE, hintString = "0,100,1,or_greater")` |
-| `@export_file("*.png", "*.jpg")` | `@Export(hint = PropertyHint.FILE, hintString = "*.png,*.jpg")` |
-| `@export_dir` | `@Export(hint = PropertyHint.DIR)` |
-| `@export_global_file("*.txt")` | `@Export(hint = PropertyHint.GLOBAL_FILE, hintString = "*.txt")` |
-| `@export_global_dir` | `@Export(hint = PropertyHint.GLOBAL_DIR)` |
-| `@export_multiline` | `@Export(hint = PropertyHint.MULTILINE_TEXT)` |
-| `@export_placeholder("name")` | `@Export(hint = PropertyHint.PLACEHOLDER_TEXT, hintString = "name")` |
-| `@export_color_no_alpha` | `@Export(hint = PropertyHint.COLOR_NO_ALPHA)` |
-| `@export_exp_easing` | `@Export(hint = PropertyHint.EXP_EASING)` |
-| `@export_flags("Fire", "Water", "Earth")` | `@Export(hint = PropertyHint.FLAGS, hintString = "Fire,Water,Earth")` on an `Int` |
+| GDScript | Kanama | Property types |
+|---|---|---|
+| `@export_range(0, 100, 1)` | `@ExportRange(0.0, 100.0, 1.0)` | `Long`, `Int`, `Double`, `Float` |
+| `@export_range(0, 100, 1, "or_greater", "suffix:m")` | `@ExportRange(0.0, 100.0, 1.0, orGreater = true, suffix = "m")` | as above |
+| `@export_enum("Warrior", "Magician:5")` | `@ExportEnum("Warrior", "Magician:5")` | `Long`, `Int`, `String`, `List<String>` |
+| `@export_flags("Fire", "Water:4")` | `@ExportFlags("Fire", "Water:4")` | `Long`, `Int` |
+| `@export_flags_2d_render` / `_2d_physics` / `_2d_navigation` | `@ExportFlags2DRender` / `@ExportFlags2DPhysics` / `@ExportFlags2DNavigation` | `Long`, `Int` |
+| `@export_flags_3d_render` / `_3d_physics` / `_3d_navigation` | `@ExportFlags3DRender` / `@ExportFlags3DPhysics` / `@ExportFlags3DNavigation` | `Long`, `Int` |
+| `@export_flags_avoidance` | `@ExportFlagsAvoidance` | `Long`, `Int` |
+| `@export_file("*.png", "*.jpg")` | `@ExportFile("*.png", "*.jpg")` | `String`, `List<String>` |
+| `@export_file_path("*.txt")` | `@ExportFilePath("*.txt")` | `String`, `List<String>` |
+| `@export_dir` | `@ExportDir` | `String`, `List<String>` |
+| `@export_global_file("*.cfg")` / `@export_global_dir` | `@ExportGlobalFile("*.cfg")` / `@ExportGlobalDir` | `String`, `List<String>` |
+| `@export_multiline("monospace", "no_wrap")` | `@ExportMultiline(monospace = true, noWrap = true)` | `String`, `List<String>` |
+| `@export_placeholder("Name")` | `@ExportPlaceholder("Name")` | `String`, `List<String>` |
+| `@export_exp_easing("attenuation", "positive_only")` | `@ExportExpEasing(attenuation = true, positiveOnly = true)` | `Double`, `Float` |
+| `@export_color_no_alpha` | `@ExportColorNoAlpha` | `Color` |
+| `@export_node_path("Button", "TouchScreenButton")` | `@ExportNodePath("Button", "TouchScreenButton")` | `NodePath` |
+| `@export_storage` | `@ExportStorage` | any exportable type |
+| `@export_custom(PROPERTY_HINT_PASSWORD, "")` | `@ExportCustom(PropertyHint.PASSWORD)` | any exportable type |
+| `@export_tool_button("Text", "Icon")` | `@ExportToolButton("Text", "Icon")` on a function | see [Scripts](scripts.md) |
 
 ```kotlin
 @ScriptClass(attachTo = "Node")
 class Tuning(godotObject: GodotHandle) :
     KanamaScript<Node>(godotObject, ::Node) {
-    @Export(hint = PropertyHint.RANGE, hintString = "0,100,1,or_greater")
+    @ExportRange(0.0, 100.0, 1.0, orGreater = true)
     var health: Long = 100
 
-    @Export(hint = PropertyHint.FILE, hintString = "*.png,*.jpg")
+    @ExportFile("*.png", "*.jpg")
     var icon: String = ""
 
-    @Export(hint = PropertyHint.MULTILINE_TEXT)
+    @ExportMultiline
     var description: String = ""
+
+    @ExportFlags3DPhysics
+    var hitLayers: Long = 1
 }
 ```
 
-The `RANGE` hint string accepts Godot's suffix flags after `min,max[,step]`:
-`or_greater`, `or_less`, `exp`, `hide_slider`, `radians_as_degrees`,
-`degrees`, and `suffix:<unit>`. The hint-string grammar is Godot's own, so a
-malformed string is accepted as-is and simply renders no special editor — the
-hint form is an escape hatch, not a validated builder. Enum-typed properties
-do not need a hint: a Kotlin `enum class` or a Godot enum exports as a dropdown
-(a bitfield as flag checkboxes) automatically (see below).
+`@ExportRange` leaves the step out when you do (the editor then uses 1 for
+integers and its default float step otherwise); the flags are GDScript's extra
+hints, written in this order: `or_greater`, `or_less`, `exp`,
+`radians_as_degrees`, `degrees`, `prefer_slider`, `hide_control`,
+`suffix:<unit>`. GDScript's argument rules are build errors here too: an empty
+argument or one with a comma (except the placeholder text), a malformed
+`@ExportFlags` value, an `@ExportNodePath` class that is not a `Node` (an engine
+class or a `@GlobalClass` script), a hint on a property type it does not take,
+and two hint annotations on one property. On a `List<String>` the hint applies to
+each element, as on a GDScript `Array[String]`.
+
+`PropertyHint` lists every Godot 4.7 `PROPERTY_HINT_*` value for
+`@ExportCustom`, the escape hatch for a hint no typed annotation covers. A
+`Color` is a script type like the vectors: an exported property
+(`@Export var tint = Color(1.0, 0.5, 0.0)`, or `Color.RED`), a function's
+parameter or return, a signal argument. Enum-typed properties need no hint: a Kotlin
+`enum class` or a Godot enum exports as a dropdown (a bitfield as flag
+checkboxes) automatically (see below).
+
+Kanama 0.5 removed the raw `@Export(hint = ..., hintString = ...)` parameters;
+`scripts/migrate_export_hints.py` rewrites a source tree to the typed
+annotations.
 
 ## Exporting Enums
 

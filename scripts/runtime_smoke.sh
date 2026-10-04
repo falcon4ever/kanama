@@ -57,6 +57,8 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 A2 -- value types store Godot's width: Kotlin and GDScript print the same three lines.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_storage_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 133 C2 -- Color as a script type, beside its GDScript twin (color_script_smoke.tscn).
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://color_script_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
 # task 134 B -- every value-type operator and method against GDScript (builtin_parity_ref.gd).
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://builtin_parity_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 B -- builtin calls re-entered from an engine error print (a GDScript logger calling Kotlin).
@@ -188,6 +190,13 @@ check "kt script enum list export type=true hint=true hint_string=true tscn=true
 check "GodotEnumExportSmoke typed mode=true flags=true list=true default=true signal=true"
 check "godot enum export mode_meta=true flags_meta=true class_meta=true list_meta=true default=true tscn=true roundtrip=true function=true"
 check "godot enum virtuals enum_arg=true enum_return=true required_object_return=true register_class_object_return=true"
+# task 133 C -- typed hint annotations match a GDScript twin's get_property_list() row by row (and
+# the folded `Mathf.PI / 3.0` default), the generated Autoloads object, and script inheritance.
+check "export hint twin rows=38 mismatches=0 folded_default=true"
+check "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wrong_script=true thread=same=true unresolved=true"
+check "inheritance exports=true values=true methods=true override_wins=true ready_once=true signal=true"
+# task 133 C2 -- a generic base's members typed as members of the script class (asMemberOf).
+check "generic inheritance export=true value=true override=true echo=true"
 # task 50 — a throwing user @Export accessor must be contained by ScriptBridge's
 # siSet/siGet rather than escaping the FFM upcall and aborting the process. A failed set is
 # rejected (previous value survives), a failed get yields null, and the property recovers.
@@ -397,6 +406,23 @@ for vts_row in roundtrip_eq str bits parity; do
     smoke_fail "Kotlin/GDScript value-type mismatch (${vts_row})" "kotlin: ${vts_kotlin:-<missing>} gdscript: ${vts_gdscript:-<missing>}"
   fi
 done
+# task 133 C2 -- a Color export stored in a .tscn, read back, set/get through Object, passed to and
+# returned from a function and carried by a signal (to a GDScript lambda and Kotlin's typed
+# connection), plus its property row and @ExportColorNoAlpha's hint 21: the Kotlin line must equal
+# the GDScript twin's line from the same run.
+check "ColorScript kotlin scene=0\\.25,0\\.5,0\\.123456[0-9]*,0\\.75 type=20 rows=20/0//20/21/ default=0\\.1[0-9]*,0\\.2[0-9]*,0\\.3[0-9]*,0\\.4[0-9]* "
+color_kotlin="$(grep -o "ColorScript kotlin scene=.*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript kotlin //')"
+color_gdscript="$(grep -o "ColorScript gdscript scene=.*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript gdscript //')"
+if [[ -z "$color_kotlin" || "$color_kotlin" != "$color_gdscript" ]]; then
+  smoke_fail "Kotlin/GDScript Color script type mismatch" "kotlin: ${color_kotlin:-<missing>} gdscript: ${color_gdscript:-<missing>}"
+fi
+# task 133 C3 -- HDR and NaN channels (set/get, function, return, signal) match GDScript too.
+check "ColorScript kotlin hdr=2\\.5,nan,-0\\.5,1\\.0\\|"
+color_hdr_kotlin="$(grep -o "ColorScript kotlin hdr=.*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript kotlin //')"
+color_hdr_gdscript="$(grep -o "ColorScript gdscript hdr=.*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript gdscript //')"
+if [[ -z "$color_hdr_kotlin" || "$color_hdr_kotlin" != "$color_hdr_gdscript" ]]; then
+  smoke_fail "Kotlin/GDScript HDR/NaN Color mismatch" "kotlin: ${color_hdr_kotlin:-<missing>} gdscript: ${color_hdr_gdscript:-<missing>}"
+fi
 # task 134 B -- the generated probe pair (scripts/generate_builtin_ops.py): `pure=` hashes every
 # value-type operator and every Kotlin-implemented method over 256 fixed-seed random inputs,
 # `edge=` the same members over ±0, NaN, ±INF, .5 ties and 1e-30 (where Godot's result is
