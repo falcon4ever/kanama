@@ -53,6 +53,13 @@ Value-type helpers mirror Godot behavior where possible, including transform
 and physics math. Gameplay code can treat these helpers as normal Kotlin value
 APIs and assign the updated value back to the Godot property.
 
+Their components are `Double`, like every other decimal in the API (`Vector3.x`,
+`Color.r`, `delta`, scalar arguments), so no `.toFloat()`/`.toDouble()` is
+needed between them. The engine stores components at its own width (float32 in
+normal Godot builds) and Kanama converts at the boundary, so a value read back
+from Godot is float32-quantized: compare engine results with `isEqualApprox`
+rather than `==`. See [Decimals](../reference/wrapper-conventions.md#4-decimals).
+
 Node lookup helpers: `getNodeOrNull`, `getAsOrNull(path, ::Class)`,
 `getNodeAsOrNull(path, "ClassName", ::Class)`, `requireAs(path, ::Class)`.
 String and `NodePath` overloads available for all lookup helpers.

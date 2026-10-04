@@ -48,7 +48,7 @@ data class Rect2(
   val end: Vector2
     get() = position + size
 
-  fun area(): Double = (size.x * size.y).toDouble()
+  fun area(): Double = size.x * size.y
 
   /**
    * Returns `true` if the rectangle contains the given `point`. By convention, points on the right

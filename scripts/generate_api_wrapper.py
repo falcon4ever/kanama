@@ -1856,7 +1856,7 @@ def kotlin_default_expression(default_value: str | None, logical_kind: str) -> s
     if logical_kind == "Dictionary" and default_value == "{}":
         return "emptyMap()"
     if logical_kind == "Vector2" and default_value in {"Vector2(0, 0)", "Vector2(0.0, 0.0)"}:
-        return "Vector2(0f, 0f)"
+        return "Vector2(0.0, 0.0)"
     return None
 
 
@@ -5162,11 +5162,12 @@ def ios_arg_layout(kind: str, index: int) -> tuple[str, str, list[str], str]:
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "Color":
-        # 4x float32 = 16 bytes. Color components are always float32 (never real_t).
+        # 4x float32 = 16 bytes. Color components are always float32 in the engine (never real_t);
+        # the Kotlin Color holds Double (task 134), narrowed here.
         return (
             "Color",
             "PT_COLOR",
-            [f"val {c} = allocArray<FloatVar>(4); {c}[0] = {a}.r; {c}[1] = {a}.g; {c}[2] = {a}.b; {c}[3] = {a}.a"],
+            [f"val {c} = allocArray<FloatVar>(4); {c}[0] = {a}.r.toFloat(); {c}[1] = {a}.g.toFloat(); {c}[2] = {a}.b.toFloat(); {c}[3] = {a}.a.toFloat()"],
             f"{c}.reinterpret<CPointed>()",
         )
     if kind == "Rect2":
@@ -5294,8 +5295,15 @@ def ios_ret_layout(kotlin_return: str) -> tuple[str | None, str, list[str], str,
     if kotlin_return == "Vector3i":
         return ("Vector3i", "PT_VECTOR3I", ["val ret = allocArray<IntVar>(3)"], "ret", "Vector3i(ret[0], ret[1], ret[2])")
     if kotlin_return == "Color":
-        # 4x float32 = 16 bytes. Color components are always float32 (never real_t).
-        return ("Color", "PT_COLOR", ["val ret = allocArray<FloatVar>(4)"], "ret", "Color(ret[0], ret[1], ret[2], ret[3])")
+        # 4x float32 = 16 bytes. Color components are always float32 in the engine (never real_t);
+        # widened to the Kotlin Color's Double (task 134).
+        return (
+            "Color",
+            "PT_COLOR",
+            ["val ret = allocArray<FloatVar>(4)"],
+            "ret",
+            "Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())",
+        )
     if kotlin_return == "Rect2":
         # 4x float32 = 16 bytes (position.x, position.y, size.x, size.y).
         return (

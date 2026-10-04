@@ -119,10 +119,10 @@ data class Projection(
      */
     val IDENTITY =
       Projection(
-        Vector4(1f, 0f, 0f, 0f),
-        Vector4(0f, 1f, 0f, 0f),
-        Vector4(0f, 0f, 1f, 0f),
-        Vector4(0f, 0f, 0f, 1f),
+        Vector4(1.0, 0.0, 0.0, 0.0),
+        Vector4(0.0, 1.0, 0.0, 0.0),
+        Vector4(0.0, 0.0, 1.0, 0.0),
+        Vector4(0.0, 0.0, 0.0, 1.0),
       )
 
     /**

@@ -737,10 +737,10 @@ object BuiltinTypes {
       val colorArg = arena.allocate(16L, 4L)
       val boolRet = arena.allocate(JAVA_BYTE)
       for (value in values) {
-        colorArg.set(JAVA_FLOAT, 0, value.r)
-        colorArg.set(JAVA_FLOAT, 4, value.g)
-        colorArg.set(JAVA_FLOAT, 8, value.b)
-        colorArg.set(JAVA_FLOAT, 12, value.a)
+        colorArg.set(JAVA_FLOAT, 0, value.r.toFloat())
+        colorArg.set(JAVA_FLOAT, 4, value.g.toFloat())
+        colorArg.set(JAVA_FLOAT, 8, value.b.toFloat())
+        colorArg.set(JAVA_FLOAT, 12, value.a.toFloat())
         call(
           type = VariantType.PACKED_COLOR_ARRAY,
           method = "push_back",
@@ -1192,10 +1192,10 @@ object BuiltinTypes {
         )
         values +=
           Color(
-            r = valueRet.get(JAVA_FLOAT, 0),
-            g = valueRet.get(JAVA_FLOAT, 4),
-            b = valueRet.get(JAVA_FLOAT, 8),
-            a = valueRet.get(JAVA_FLOAT, 12),
+            r = valueRet.get(JAVA_FLOAT, 0).toDouble(),
+            g = valueRet.get(JAVA_FLOAT, 4).toDouble(),
+            b = valueRet.get(JAVA_FLOAT, 8).toDouble(),
+            a = valueRet.get(JAVA_FLOAT, 12).toDouble(),
           )
       }
       return values
@@ -2152,10 +2152,10 @@ object BuiltinTypes {
         val scratch = arena.allocate(16L, 4L)
         VariantConverters.variantToType(VariantType.COLOR).invoke(scratch, variant)
         Color(
-          r = scratch.get(JAVA_FLOAT, 0),
-          g = scratch.get(JAVA_FLOAT, 4),
-          b = scratch.get(JAVA_FLOAT, 8),
-          a = scratch.get(JAVA_FLOAT, 12),
+          r = scratch.get(JAVA_FLOAT, 0).toDouble(),
+          g = scratch.get(JAVA_FLOAT, 4).toDouble(),
+          b = scratch.get(JAVA_FLOAT, 8).toDouble(),
+          a = scratch.get(JAVA_FLOAT, 12).toDouble(),
         )
       }
 
@@ -2595,10 +2595,10 @@ object BuiltinTypes {
 
   private fun variantFromColorInto(value: Color, variantOut: MemorySegment, arena: Arena) {
     val scratch = arena.allocate(16L, 4L)
-    scratch.set(JAVA_FLOAT, 0, value.r)
-    scratch.set(JAVA_FLOAT, 4, value.g)
-    scratch.set(JAVA_FLOAT, 8, value.b)
-    scratch.set(JAVA_FLOAT, 12, value.a)
+    scratch.set(JAVA_FLOAT, 0, value.r.toFloat())
+    scratch.set(JAVA_FLOAT, 4, value.g.toFloat())
+    scratch.set(JAVA_FLOAT, 8, value.b.toFloat())
+    scratch.set(JAVA_FLOAT, 12, value.a.toFloat())
     VariantConverters.variantFromType(VariantType.COLOR).invoke(variantOut, scratch)
   }
 

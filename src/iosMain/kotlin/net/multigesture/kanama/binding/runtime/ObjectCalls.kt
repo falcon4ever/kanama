@@ -952,7 +952,7 @@ actual object ObjectCalls {
     memScoped {
       val ret = allocArray<FloatVar>(4)
       ptrcallDispatch(methodBind.address(), instance.address(), null, null, 0, PT_COLOR, ret)
-      Color(ret[0], ret[1], ret[2], ret[3])
+      Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
     }
 
   // Rect2 (4x float32, 16 bytes): position.x, position.y, size.x, size.y.
@@ -1326,7 +1326,14 @@ actual object ObjectCalls {
         16,
       )
     val p = buf.reinterpret<FloatVar>()
-    List(n) { Color(p[it * 4], p[it * 4 + 1], p[it * 4 + 2], p[it * 4 + 3]) }
+    List(n) {
+      Color(
+        p[it * 4].toDouble(),
+        p[it * 4 + 1].toDouble(),
+        p[it * 4 + 2].toDouble(),
+        p[it * 4 + 3].toDouble(),
+      )
+    }
   }
 
   // task 100 (parcel 6) — Dictionary / Array returns on any audited arg shape. Same arg cells as
@@ -1378,21 +1385,25 @@ actual object ObjectCalls {
           VT_OBJECT ->
             if (len >= 8) GodotObject.wrap(MemorySegment.ofAddress(i64At(start))) else null
           VT_VECTOR2 ->
-            if (len >= 8)
-              Vector2(GodotReal.fromFloat(f32At(start)), GodotReal.fromFloat(f32At(start + 4)))
+            if (len >= 8) Vector2(GodotReal.fromC(f32At(start)), GodotReal.fromC(f32At(start + 4)))
             else null
           VT_VECTOR2I -> if (len >= 8) Vector2i(i32LE(b, start), i32LE(b, start + 4)) else null
           VT_VECTOR3 ->
             if (len >= 12)
               Vector3(
-                GodotReal.fromFloat(f32At(start)),
-                GodotReal.fromFloat(f32At(start + 4)),
-                GodotReal.fromFloat(f32At(start + 8)),
+                GodotReal.fromC(f32At(start)),
+                GodotReal.fromC(f32At(start + 4)),
+                GodotReal.fromC(f32At(start + 8)),
               )
             else null
           VT_COLOR ->
             if (len >= 16)
-              Color(f32At(start), f32At(start + 4), f32At(start + 8), f32At(start + 12))
+              Color(
+                f32At(start).toDouble(),
+                f32At(start + 4).toDouble(),
+                f32At(start + 8).toDouble(),
+                f32At(start + 12).toDouble(),
+              )
             else null
           VT_ARRAY -> if (len >= 4) ContainerBlob(b, start).array() else null
           VT_DICTIONARY -> if (len >= 4) ContainerBlob(b, start).dictionary() else null
@@ -1414,30 +1425,35 @@ actual object ObjectCalls {
           VT_PACKED_VECTOR2_ARRAY ->
             List(len / 8) {
               val o = start + it * 8
-              Vector2(GodotReal.fromFloat(f32At(o)), GodotReal.fromFloat(f32At(o + 4)))
+              Vector2(GodotReal.fromC(f32At(o)), GodotReal.fromC(f32At(o + 4)))
             }
           VT_PACKED_VECTOR3_ARRAY ->
             List(len / 12) {
               val o = start + it * 12
               Vector3(
-                GodotReal.fromFloat(f32At(o)),
-                GodotReal.fromFloat(f32At(o + 4)),
-                GodotReal.fromFloat(f32At(o + 8)),
+                GodotReal.fromC(f32At(o)),
+                GodotReal.fromC(f32At(o + 4)),
+                GodotReal.fromC(f32At(o + 8)),
               )
             }
           VT_PACKED_COLOR_ARRAY ->
             List(len / 16) {
               val o = start + it * 16
-              Color(f32At(o), f32At(o + 4), f32At(o + 8), f32At(o + 12))
+              Color(
+                f32At(o).toDouble(),
+                f32At(o + 4).toDouble(),
+                f32At(o + 8).toDouble(),
+                f32At(o + 12).toDouble(),
+              )
             }
           VT_PACKED_VECTOR4_ARRAY ->
             List(len / 16) {
               val o = start + it * 16
               Vector4(
-                GodotReal.fromFloat(f32At(o)),
-                GodotReal.fromFloat(f32At(o + 4)),
-                GodotReal.fromFloat(f32At(o + 8)),
-                GodotReal.fromFloat(f32At(o + 12)),
+                GodotReal.fromC(f32At(o)),
+                GodotReal.fromC(f32At(o + 4)),
+                GodotReal.fromC(f32At(o + 8)),
+                GodotReal.fromC(f32At(o + 12)),
               )
             }
           // task 100 parcel 10: a PackedByteArray element carries its raw bytes.
@@ -2056,10 +2072,10 @@ actual object ObjectCalls {
       }
       is Color -> {
         val c = allocArray<FloatVar>(4)
-        c[0] = value.r
-        c[1] = value.g
-        c[2] = value.b
-        c[3] = value.a
+        c[0] = value.r.toFloat()
+        c[1] = value.g.toFloat()
+        c[2] = value.b.toFloat()
+        c[3] = value.a.toFloat()
         desc.tag = PT_COLOR
         desc.ptr = c
       }
@@ -2385,7 +2401,7 @@ actual object ObjectCalls {
       ((b[o + 2].toInt() and 0xFF) shl 16) or
       ((b[o + 3].toInt() and 0xFF) shl 24)
 
-  private fun realLE(b: ByteArray, o: Int) = GodotReal.fromFloat(Float.fromBits(i32LE(b, o)))
+  private fun realLE(b: ByteArray, o: Int) = GodotReal.fromC(Float.fromBits(i32LE(b, o)))
 
   // Array[Plane] -> List<Plane> (e.g. Camera3D.get_frustum). Each record is 4 float32 LE
   // (normal.x, normal.y, normal.z, d). Phase 2.7i.
@@ -2487,10 +2503,10 @@ actual object ObjectCalls {
     val n = values.size
     val floats = allocArray<FloatVar>(if (n > 0) n * 4 else 1)
     for (i in 0 until n) {
-      floats[i * 4] = values[i].r
-      floats[i * 4 + 1] = values[i].g
-      floats[i * 4 + 2] = values[i].b
-      floats[i * 4 + 3] = values[i].a
+      floats[i * 4] = values[i].r.toFloat()
+      floats[i * 4 + 1] = values[i].g.toFloat()
+      floats[i * 4 + 2] = values[i].b.toFloat()
+      floats[i * 4 + 3] = values[i].a.toFloat()
     }
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
@@ -2522,10 +2538,10 @@ actual object ObjectCalls {
     val n = values.size
     val floats = allocArray<FloatVar>(if (n > 0) n * 4 else 1)
     for (i in 0 until n) {
-      floats[i * 4] = values[i].r
-      floats[i * 4 + 1] = values[i].g
-      floats[i * 4 + 2] = values[i].b
-      floats[i * 4 + 3] = values[i].a
+      floats[i * 4] = values[i].r.toFloat()
+      floats[i * 4 + 1] = values[i].g.toFloat()
+      floats[i * 4 + 2] = values[i].b.toFloat()
+      floats[i * 4 + 3] = values[i].a.toFloat()
     }
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
@@ -2583,9 +2599,9 @@ actual object ObjectCalls {
     val n = values.size
     val floats = allocArray<FloatVar>(if (n > 0) n * 3 else 1)
     for (i in 0 until n) {
-      floats[i * 3] = values[i].x
-      floats[i * 3 + 1] = values[i].y
-      floats[i * 3 + 2] = values[i].z
+      floats[i * 3] = values[i].x.toFloat()
+      floats[i * 3 + 1] = values[i].y.toFloat()
+      floats[i * 3 + 2] = values[i].z.toFloat()
     }
     val desc = alloc<KanamaIosPackedArgDesc>()
     desc.count = n.toLong()
@@ -2863,10 +2879,10 @@ actual object ObjectCalls {
 
   private fun MemScope.colorCell(c: Color): CPointer<FloatVar> {
     val cell = allocArray<FloatVar>(4)
-    cell[0] = c.r
-    cell[1] = c.g
-    cell[2] = c.b
-    cell[3] = c.a
+    cell[0] = c.r.toFloat()
+    cell[1] = c.g.toFloat()
+    cell[2] = c.b.toFloat()
+    cell[3] = c.a.toFloat()
     return cell
   }
 
@@ -3025,7 +3041,14 @@ actual object ObjectCalls {
     } else {
       val buf = allocArray<FloatVar>(count * 4)
       ptrcallNoArgsRetPackedColorArrayDispatch(methodBind.address(), instance.address(), buf, count)
-      List(count.toInt()) { Color(buf[it * 4], buf[it * 4 + 1], buf[it * 4 + 2], buf[it * 4 + 3]) }
+      List(count.toInt()) {
+        Color(
+          buf[it * 4].toDouble(),
+          buf[it * 4 + 1].toDouble(),
+          buf[it * 4 + 2].toDouble(),
+          buf[it * 4 + 3].toDouble(),
+        )
+      }
     }
   }
 
@@ -3335,10 +3358,10 @@ actual object ObjectCalls {
   actual fun ptrcallWithColorArg(methodBind: MemorySegment, instance: MemorySegment, color: Color) =
     memScoped {
       val cell = allocArray<FloatVar>(4)
-      cell[0] = color.r
-      cell[1] = color.g
-      cell[2] = color.b
-      cell[3] = color.a
+      cell[0] = color.r.toFloat()
+      cell[1] = color.g.toFloat()
+      cell[2] = color.b.toFloat()
+      cell[3] = color.a.toFloat()
       val types = allocArray<IntVar>(1)
       types[0] = PT_COLOR
       val ptrs = allocArray<COpaquePointerVar>(1)
@@ -3586,10 +3609,10 @@ actual object ObjectCalls {
         if (outStrLen.value >= 16L) {
           val b = outStr.readBytes(16)
           Color(
-            Float.fromBits(i32LE(b, 0)),
-            Float.fromBits(i32LE(b, 4)),
-            Float.fromBits(i32LE(b, 8)),
-            Float.fromBits(i32LE(b, 12)),
+            Float.fromBits(i32LE(b, 0)).toDouble(),
+            Float.fromBits(i32LE(b, 4)).toDouble(),
+            Float.fromBits(i32LE(b, 8)).toDouble(),
+            Float.fromBits(i32LE(b, 12)).toDouble(),
           )
         } else null
       else -> null
@@ -3684,10 +3707,10 @@ actual object ObjectCalls {
         }
         is Color -> {
           val c = allocArray<FloatVar>(4)
-          c[0] = a.r
-          c[1] = a.g
-          c[2] = a.b
-          c[3] = a.a
+          c[0] = a.r.toFloat()
+          c[1] = a.g.toFloat()
+          c[2] = a.b.toFloat()
+          c[3] = a.a.toFloat()
           tags[i] = PT_COLOR
           ptrs[i] = c.reinterpret<CPointed>()
         }
@@ -5758,10 +5781,10 @@ actual object ObjectCalls {
     val c0 = alloc<DoubleVar>()
     c0.value = value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_FLOAT64
     types[1] = PT_COLOR
@@ -5915,7 +5938,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
+    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
   }
 
   actual fun ptrcallWithDoubleArgRetInt(
@@ -6844,10 +6867,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value.toLong()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_COLOR
@@ -7983,7 +8006,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
+    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
   }
 
   actual fun ptrcallWithIntArgRetDictionary(
@@ -8510,19 +8533,19 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = leftType.toLong()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = leftColor.r
-    c3[1] = leftColor.g
-    c3[2] = leftColor.b
-    c3[3] = leftColor.a
+    c3[0] = leftColor.r.toFloat()
+    c3[1] = leftColor.g.toFloat()
+    c3[2] = leftColor.b.toFloat()
+    c3[3] = leftColor.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (rightEnabled) 1 else 0
     val c5 = alloc<LongVar>()
     c5.value = rightType.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = rightColor.r
-    c6[1] = rightColor.g
-    c6[2] = rightColor.b
-    c6[3] = rightColor.a
+    c6[0] = rightColor.r.toFloat()
+    c6[1] = rightColor.g.toFloat()
+    c6[2] = rightColor.b.toFloat()
+    c6[3] = rightColor.a.toFloat()
     val c7 = alloc<LongVar>()
     c7.value = leftIcon.address()
     val c8 = alloc<LongVar>()
@@ -8694,10 +8717,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value.toLong()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_COLOR
@@ -8718,10 +8741,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = index.toLong()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val c2 = alloc<ByteVar>()
     c2.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(3)
@@ -10479,10 +10502,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_INT64
     types[1] = PT_COLOR
@@ -12312,10 +12335,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = longValue
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<LongVar>()
     c4.value = objectArg.address()
     val c5 = packVariantDesc(variantValue)
@@ -13823,10 +13846,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val c2 = alloc<LongVar>()
     c2.value = longValue
     val c3 = alloc<ByteVar>()
@@ -13856,10 +13879,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = objectArg.address()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val c2 = alloc<ByteVar>()
     c2.value = if (firstBool) 1 else 0
     val c3 = alloc<ByteVar>()
@@ -13890,10 +13913,10 @@ actual object ObjectCalls {
     val c1 = alloc<DoubleVar>()
     c1.value = value
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val types = allocArray<IntVar>(3)
     types[0] = PT_OBJECT
     types[1] = PT_FLOAT64
@@ -14555,10 +14578,10 @@ actual object ObjectCalls {
     val c2 = alloc<ByteVar>()
     c2.value = if (tile) 1 else 0
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (transpose) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -15016,10 +15039,10 @@ actual object ObjectCalls {
     val c2 = alloc<DoubleVar>()
     c2.value = height
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<LongVar>()
     c4.value = inlineAlign
     val c5 = allocArray<GodotRealVar>(4)
@@ -15141,10 +15164,10 @@ actual object ObjectCalls {
     c2[2] = GodotReal.toC(second.size.x)
     c2[3] = GodotReal.toC(second.size.y)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val types = allocArray<IntVar>(4)
     types[0] = PT_OBJECT
     types[1] = PT_RECT2
@@ -15183,10 +15206,10 @@ actual object ObjectCalls {
     c2[2] = GodotReal.toC(second.size.x)
     c2[3] = GodotReal.toC(second.size.y)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<DoubleVar>()
     c4.value = firstDouble
     val c5 = alloc<DoubleVar>()
@@ -15236,10 +15259,10 @@ actual object ObjectCalls {
     c2[2] = GodotReal.toC(second.size.x)
     c2[3] = GodotReal.toC(second.size.y)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (tile) 1 else 0
     val c5 = alloc<ByteVar>()
@@ -15275,10 +15298,10 @@ actual object ObjectCalls {
     c1[0] = GodotReal.toC(vector.x)
     c1[1] = GodotReal.toC(vector.y)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val types = allocArray<IntVar>(3)
     types[0] = PT_OBJECT
     types[1] = PT_VECTOR2
@@ -15338,10 +15361,10 @@ actual object ObjectCalls {
     val c3 = alloc<LongVar>()
     c3.value = index.toLong()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val c5 = alloc<DoubleVar>()
     c5.value = size
     val types = allocArray<IntVar>(6)
@@ -15389,10 +15412,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = fontSize.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r
-    c6[1] = color.g
-    c6[2] = color.b
-    c6[3] = color.a
+    c6[0] = color.r.toFloat()
+    c6[1] = color.g.toFloat()
+    c6[2] = color.b.toFloat()
+    c6[3] = color.a.toFloat()
     val c7 = alloc<LongVar>()
     c7.value = justification
     val c8 = alloc<LongVar>()
@@ -15463,10 +15486,10 @@ actual object ObjectCalls {
     val c7 = alloc<LongVar>()
     c7.value = outlineSize.toLong()
     val c8 = allocArray<FloatVar>(4)
-    c8[0] = color.r
-    c8[1] = color.g
-    c8[2] = color.b
-    c8[3] = color.a
+    c8[0] = color.r.toFloat()
+    c8[1] = color.g.toFloat()
+    c8[2] = color.b.toFloat()
+    c8[3] = color.a.toFloat()
     val c9 = alloc<LongVar>()
     c9.value = breakFlags
     val c10 = alloc<LongVar>()
@@ -15542,10 +15565,10 @@ actual object ObjectCalls {
     val c6 = alloc<LongVar>()
     c6.value = maxLines.toLong()
     val c7 = allocArray<FloatVar>(4)
-    c7[0] = color.r
-    c7[1] = color.g
-    c7[2] = color.b
-    c7[3] = color.a
+    c7[0] = color.r.toFloat()
+    c7[1] = color.g.toFloat()
+    c7[2] = color.b.toFloat()
+    c7[3] = color.a.toFloat()
     val c8 = alloc<LongVar>()
     c8.value = breakFlags
     val c9 = alloc<LongVar>()
@@ -15618,10 +15641,10 @@ actual object ObjectCalls {
     val c6 = alloc<LongVar>()
     c6.value = outlineSize.toLong()
     val c7 = allocArray<FloatVar>(4)
-    c7[0] = color.r
-    c7[1] = color.g
-    c7[2] = color.b
-    c7[3] = color.a
+    c7[0] = color.r.toFloat()
+    c7[1] = color.g.toFloat()
+    c7[2] = color.b.toFloat()
+    c7[3] = color.a.toFloat()
     val c8 = alloc<LongVar>()
     c8.value = justification
     val c9 = alloc<LongVar>()
@@ -15681,10 +15704,10 @@ actual object ObjectCalls {
     val c4 = alloc<LongVar>()
     c4.value = secondIndex.toLong()
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r
-    c5[1] = color.g
-    c5[2] = color.b
-    c5[3] = color.a
+    c5[0] = color.r.toFloat()
+    c5[1] = color.g.toFloat()
+    c5[2] = color.b.toFloat()
+    c5[3] = color.a.toFloat()
     val c6 = alloc<DoubleVar>()
     c6.value = size
     val types = allocArray<IntVar>(7)
@@ -16276,10 +16299,10 @@ actual object ObjectCalls {
     val c2 = alloc<ByteVar>()
     c2.value = if (enabled) 1 else 0
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val types = allocArray<IntVar>(4)
     types[0] = PT_PACKED_VECTOR3_ARRAY
     types[1] = PT_OBJECT
@@ -16617,10 +16640,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_RID
     types[1] = PT_COLOR
@@ -16788,7 +16811,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
+    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
   }
 
   actual fun ptrcallWithRIDAndIntArgRetDictionary(
@@ -19345,10 +19368,10 @@ actual object ObjectCalls {
     val c1 = alloc<ByteVar>()
     c1.value = if (enabled) 1 else 0
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<DoubleVar>()
     c3.value = first
     val c4 = alloc<DoubleVar>()
@@ -19503,15 +19526,15 @@ actual object ObjectCalls {
     val c2 = alloc<DoubleVar>()
     c2.value = firstDouble
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = firstColor.r
-    c3[1] = firstColor.g
-    c3[2] = firstColor.b
-    c3[3] = firstColor.a
+    c3[0] = firstColor.r.toFloat()
+    c3[1] = firstColor.g.toFloat()
+    c3[2] = firstColor.b.toFloat()
+    c3[3] = firstColor.a.toFloat()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = secondColor.r
-    c4[1] = secondColor.g
-    c4[2] = secondColor.b
-    c4[3] = secondColor.a
+    c4[0] = secondColor.r.toFloat()
+    c4[1] = secondColor.g.toFloat()
+    c4[2] = secondColor.b.toFloat()
+    c4[3] = secondColor.a.toFloat()
     val c5 = alloc<DoubleVar>()
     c5.value = secondDouble
     val c6 = alloc<DoubleVar>()
@@ -20132,10 +20155,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val c2 = alloc<DoubleVar>()
     c2.value = energy
     val types = allocArray<IntVar>(3)
@@ -20164,10 +20187,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val c2 = alloc<LongVar>()
     c2.value = first
     val c3 = alloc<LongVar>()
@@ -20207,10 +20230,10 @@ actual object ObjectCalls {
     val c0 = alloc<LongVar>()
     c0.value = rid.value
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val c2 = alloc<LongVar>()
     c2.value = firstLong
     val c3 = alloc<DoubleVar>()
@@ -20523,10 +20546,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = value.toLong()
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val types = allocArray<IntVar>(3)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -21030,10 +21053,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = rid.value
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = packTypedRIDArrayDesc(secondRids)
     val c5 = alloc<LongVar>()
     c5.value = intValue.toLong()
@@ -21445,10 +21468,10 @@ actual object ObjectCalls {
     val c3 = alloc<LongVar>()
     c3.value = secondLong
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_INT64
@@ -22163,10 +22186,10 @@ actual object ObjectCalls {
     val c2 = alloc<ByteVar>()
     c2.value = if (tile) 1 else 0
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (transpose) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -22201,10 +22224,10 @@ actual object ObjectCalls {
     c1[2] = GodotReal.toC(rect.size.x)
     c1[3] = GodotReal.toC(rect.size.y)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<ByteVar>()
     c3.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -22271,10 +22294,10 @@ actual object ObjectCalls {
     val c3 = alloc<ByteVar>()
     c3.value = if (tile) 1 else 0
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val c5 = alloc<ByteVar>()
     c5.value = if (transpose) 1 else 0
     val types = allocArray<IntVar>(6)
@@ -22319,10 +22342,10 @@ actual object ObjectCalls {
     c3[2] = GodotReal.toC(srcRect.size.x)
     c3[3] = GodotReal.toC(srcRect.size.y)
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_RECT2
@@ -22366,10 +22389,10 @@ actual object ObjectCalls {
     c3[2] = GodotReal.toC(srcRect.size.x)
     c3[3] = GodotReal.toC(srcRect.size.y)
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val c5 = alloc<LongVar>()
     c5.value = intValue.toLong()
     val c6 = alloc<DoubleVar>()
@@ -22424,10 +22447,10 @@ actual object ObjectCalls {
     c3[2] = GodotReal.toC(srcRect.size.x)
     c3[3] = GodotReal.toC(srcRect.size.y)
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val c5 = alloc<ByteVar>()
     c5.value = if (tile) 1 else 0
     val c6 = alloc<ByteVar>()
@@ -22816,10 +22839,10 @@ actual object ObjectCalls {
     val c3 = alloc<ByteVar>()
     c3.value = if (third) 1 else 0
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val types = allocArray<IntVar>(5)
     types[0] = PT_RID
     types[1] = PT_BOOL
@@ -23039,15 +23062,15 @@ actual object ObjectCalls {
     c2[1] = GodotReal.toC(vectorValue.y)
     c2[2] = GodotReal.toC(vectorValue.z)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = firstColor.r
-    c3[1] = firstColor.g
-    c3[2] = firstColor.b
-    c3[3] = firstColor.a
+    c3[0] = firstColor.r.toFloat()
+    c3[1] = firstColor.g.toFloat()
+    c3[2] = firstColor.b.toFloat()
+    c3[3] = firstColor.a.toFloat()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = secondColor.r
-    c4[1] = secondColor.g
-    c4[2] = secondColor.b
-    c4[3] = secondColor.a
+    c4[0] = secondColor.r.toFloat()
+    c4[1] = secondColor.g.toFloat()
+    c4[2] = secondColor.b.toFloat()
+    c4[3] = secondColor.a.toFloat()
     val c5 = alloc<LongVar>()
     c5.value = flags
     val types = allocArray<IntVar>(6)
@@ -23263,10 +23286,10 @@ actual object ObjectCalls {
     c2[2] = GodotReal.toC(second.size.x)
     c2[3] = GodotReal.toC(second.size.y)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (tile) 1 else 0
     val c5 = alloc<ByteVar>()
@@ -23330,10 +23353,10 @@ actual object ObjectCalls {
     val c8 = alloc<ByteVar>()
     c8.value = if (enabled) 1 else 0
     val c9 = allocArray<FloatVar>(4)
-    c9[0] = color.r
-    c9[1] = color.g
-    c9[2] = color.b
-    c9[3] = color.a
+    c9[0] = color.r.toFloat()
+    c9[1] = color.g.toFloat()
+    c9[2] = color.b.toFloat()
+    c9[3] = color.a.toFloat()
     val types = allocArray<IntVar>(10)
     types[0] = PT_RID
     types[1] = PT_RECT2
@@ -23445,10 +23468,10 @@ actual object ObjectCalls {
     c2[0] = GodotReal.toC(second.x)
     c2[1] = GodotReal.toC(second.y)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<DoubleVar>()
     c4.value = width
     val c5 = alloc<ByteVar>()
@@ -23868,10 +23891,10 @@ actual object ObjectCalls {
     c1[0] = GodotReal.toC(vector.x)
     c1[1] = GodotReal.toC(vector.y)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<ByteVar>()
     c3.value = if (transpose) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -23902,10 +23925,10 @@ actual object ObjectCalls {
     c1[0] = GodotReal.toC(vector.x)
     c1[1] = GodotReal.toC(vector.y)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<DoubleVar>()
     c3.value = doubleValue
     val types = allocArray<IntVar>(4)
@@ -23939,10 +23962,10 @@ actual object ObjectCalls {
     val c2 = alloc<DoubleVar>()
     c2.value = firstDouble
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -24004,10 +24027,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = intValue.toLong()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<DoubleVar>()
     c4.value = doubleValue
     val types = allocArray<IntVar>(5)
@@ -24044,15 +24067,15 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = intValue.toLong()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = firstColor.r
-    c3[1] = firstColor.g
-    c3[2] = firstColor.b
-    c3[3] = firstColor.a
+    c3[0] = firstColor.r.toFloat()
+    c3[1] = firstColor.g.toFloat()
+    c3[2] = firstColor.b.toFloat()
+    c3[3] = firstColor.a.toFloat()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = secondColor.r
-    c4[1] = secondColor.g
-    c4[2] = secondColor.b
-    c4[3] = secondColor.a
+    c4[0] = secondColor.r.toFloat()
+    c4[1] = secondColor.g.toFloat()
+    c4[2] = secondColor.b.toFloat()
+    c4[3] = secondColor.a.toFloat()
     val c5 = alloc<DoubleVar>()
     c5.value = doubleValue
     val types = allocArray<IntVar>(6)
@@ -24100,10 +24123,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = fontSize.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r
-    c6[1] = color.g
-    c6[2] = color.b
-    c6[3] = color.a
+    c6[0] = color.r.toFloat()
+    c6[1] = color.g.toFloat()
+    c6[2] = color.b.toFloat()
+    c6[3] = color.a.toFloat()
     val c7 = alloc<LongVar>()
     c7.value = justification
     val c8 = alloc<LongVar>()
@@ -24174,10 +24197,10 @@ actual object ObjectCalls {
     val c7 = alloc<LongVar>()
     c7.value = outlineSize.toLong()
     val c8 = allocArray<FloatVar>(4)
-    c8[0] = color.r
-    c8[1] = color.g
-    c8[2] = color.b
-    c8[3] = color.a
+    c8[0] = color.r.toFloat()
+    c8[1] = color.g.toFloat()
+    c8[2] = color.b.toFloat()
+    c8[3] = color.a.toFloat()
     val c9 = alloc<LongVar>()
     c9.value = breakFlags
     val c10 = alloc<LongVar>()
@@ -24253,10 +24276,10 @@ actual object ObjectCalls {
     val c6 = alloc<LongVar>()
     c6.value = maxLines.toLong()
     val c7 = allocArray<FloatVar>(4)
-    c7[0] = color.r
-    c7[1] = color.g
-    c7[2] = color.b
-    c7[3] = color.a
+    c7[0] = color.r.toFloat()
+    c7[1] = color.g.toFloat()
+    c7[2] = color.b.toFloat()
+    c7[3] = color.a.toFloat()
     val c8 = alloc<LongVar>()
     c8.value = breakFlags
     val c9 = alloc<LongVar>()
@@ -24329,10 +24352,10 @@ actual object ObjectCalls {
     val c6 = alloc<LongVar>()
     c6.value = outlineSize.toLong()
     val c7 = allocArray<FloatVar>(4)
-    c7[0] = color.r
-    c7[1] = color.g
-    c7[2] = color.b
-    c7[3] = color.a
+    c7[0] = color.r.toFloat()
+    c7[1] = color.g.toFloat()
+    c7[2] = color.b.toFloat()
+    c7[3] = color.a.toFloat()
     val c8 = alloc<LongVar>()
     c8.value = justification
     val c9 = alloc<LongVar>()
@@ -24395,10 +24418,10 @@ actual object ObjectCalls {
     val c4 = alloc<LongVar>()
     c4.value = outlineSize.toLong()
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r
-    c5[1] = color.g
-    c5[2] = color.b
-    c5[3] = color.a
+    c5[0] = color.r.toFloat()
+    c5[1] = color.g.toFloat()
+    c5[2] = color.b.toFloat()
+    c5[3] = color.a.toFloat()
     val c6 = alloc<DoubleVar>()
     c6.value = oversampling
     val types = allocArray<IntVar>(7)
@@ -24436,15 +24459,15 @@ actual object ObjectCalls {
     c1[0] = GodotReal.toC(vector.x)
     c1[1] = GodotReal.toC(vector.y)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = firstColor.r
-    c2[1] = firstColor.g
-    c2[2] = firstColor.b
-    c2[3] = firstColor.a
+    c2[0] = firstColor.r.toFloat()
+    c2[1] = firstColor.g.toFloat()
+    c2[2] = firstColor.b.toFloat()
+    c2[3] = firstColor.a.toFloat()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = secondColor.r
-    c3[1] = secondColor.g
-    c3[2] = secondColor.b
-    c3[3] = secondColor.a
+    c3[0] = secondColor.r.toFloat()
+    c3[1] = secondColor.g.toFloat()
+    c3[2] = secondColor.b.toFloat()
+    c3[3] = secondColor.a.toFloat()
     val c4 = alloc<DoubleVar>()
     c4.value = doubleValue
     val types = allocArray<IntVar>(5)
@@ -24483,10 +24506,10 @@ actual object ObjectCalls {
     val c3 = alloc<DoubleVar>()
     c3.value = secondDouble
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val c5 = alloc<ByteVar>()
     c5.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(6)
@@ -24527,10 +24550,10 @@ actual object ObjectCalls {
     val c3 = alloc<LongVar>()
     c3.value = secondInt.toLong()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val c5 = alloc<DoubleVar>()
     c5.value = doubleValue
     val types = allocArray<IntVar>(6)
@@ -24572,10 +24595,10 @@ actual object ObjectCalls {
     val c3 = alloc<LongVar>()
     c3.value = fontSize.toLong()
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = color.r
-    c4[1] = color.g
-    c4[2] = color.b
-    c4[3] = color.a
+    c4[0] = color.r.toFloat()
+    c4[1] = color.g.toFloat()
+    c4[2] = color.b.toFloat()
+    c4[3] = color.a.toFloat()
     val c5 = alloc<DoubleVar>()
     c5.value = oversampling
     val types = allocArray<IntVar>(6)
@@ -25027,10 +25050,10 @@ actual object ObjectCalls {
     c0[2] = GodotReal.toC(rect.size.x)
     c0[3] = GodotReal.toC(rect.size.y)
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val c2 = alloc<ByteVar>()
     c2.value = if (filled) 1 else 0
     val c3 = alloc<DoubleVar>()
@@ -25088,10 +25111,10 @@ actual object ObjectCalls {
     c0[2] = rectValue.size.x
     c0[3] = rectValue.size.y
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_RECT2I
     types[1] = PT_COLOR
@@ -25219,10 +25242,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = firstObject.address()
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<LongVar>()
     c3.value = intValue.toLong()
     val c4 = alloc<LongVar>()
@@ -25261,10 +25284,10 @@ actual object ObjectCalls {
     val c1 = packTypedObjectArrayDesc(firstValues)
     val c2 = packTypedObjectArrayDesc(secondValues)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<LongVar>()
     c4.value = intValue.toLong()
     val c5 = alloc<LongVar>()
@@ -25511,10 +25534,10 @@ actual object ObjectCalls {
     color: Color,
   ) = memScoped {
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_STRING
     types[1] = PT_COLOR
@@ -26206,7 +26229,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
+    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
   }
 
   actual fun ptrcallWithStringArgRetDictionary(
@@ -26502,10 +26525,10 @@ actual object ObjectCalls {
     third: Boolean,
   ) = memScoped {
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val c2 = alloc<ByteVar>()
     c2.value = if (first) 1 else 0
     val c3 = alloc<ByteVar>()
@@ -27169,10 +27192,10 @@ actual object ObjectCalls {
     color: Color,
   ) = memScoped {
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_STRING_NAME
     types[1] = PT_COLOR
@@ -27508,7 +27531,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
+    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
   }
 
   actual fun ptrcallWithStringNameArgRetDictionaryList(
@@ -28479,10 +28502,10 @@ actual object ObjectCalls {
     val c2 = alloc<ByteVar>()
     c2.value = if (enabled) 1 else 0
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val types = allocArray<IntVar>(4)
     types[0] = PT_STRING
     types[1] = PT_OBJECT
@@ -28567,17 +28590,17 @@ actual object ObjectCalls {
     c3[2] = GodotReal.toC(rect.size.x)
     c3[3] = GodotReal.toC(rect.size.y)
     val c4 = allocArray<FloatVar>(4)
-    c4[0] = firstColor.r
-    c4[1] = firstColor.g
-    c4[2] = firstColor.b
-    c4[3] = firstColor.a
+    c4[0] = firstColor.r.toFloat()
+    c4[1] = firstColor.g.toFloat()
+    c4[2] = firstColor.b.toFloat()
+    c4[3] = firstColor.a.toFloat()
     val c5 = alloc<LongVar>()
     c5.value = secondSize.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = secondColor.r
-    c6[1] = secondColor.g
-    c6[2] = secondColor.b
-    c6[3] = secondColor.a
+    c6[0] = secondColor.r.toFloat()
+    c6[1] = secondColor.g.toFloat()
+    c6[2] = secondColor.b.toFloat()
+    c6[3] = secondColor.a.toFloat()
     val types = allocArray<IntVar>(7)
     types[0] = PT_STRING
     types[1] = PT_OBJECT
@@ -30734,15 +30757,15 @@ actual object ObjectCalls {
     c1[0] = GodotReal.toC(vectorValue.x)
     c1[1] = GodotReal.toC(vectorValue.y)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = firstColor.r
-    c2[1] = firstColor.g
-    c2[2] = firstColor.b
-    c2[3] = firstColor.a
+    c2[0] = firstColor.r.toFloat()
+    c2[1] = firstColor.g.toFloat()
+    c2[2] = firstColor.b.toFloat()
+    c2[3] = firstColor.a.toFloat()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = secondColor.r
-    c3[1] = secondColor.g
-    c3[2] = secondColor.b
-    c3[3] = secondColor.a
+    c3[0] = secondColor.r.toFloat()
+    c3[1] = secondColor.g.toFloat()
+    c3[2] = secondColor.b.toFloat()
+    c3[3] = secondColor.a.toFloat()
     val c4 = alloc<LongVar>()
     c4.value = flags
     val types = allocArray<IntVar>(5)
@@ -31084,15 +31107,15 @@ actual object ObjectCalls {
     c1[1] = GodotReal.toC(vectorValue.y)
     c1[2] = GodotReal.toC(vectorValue.z)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = firstColor.r
-    c2[1] = firstColor.g
-    c2[2] = firstColor.b
-    c2[3] = firstColor.a
+    c2[0] = firstColor.r.toFloat()
+    c2[1] = firstColor.g.toFloat()
+    c2[2] = firstColor.b.toFloat()
+    c2[3] = firstColor.a.toFloat()
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = secondColor.r
-    c3[1] = secondColor.g
-    c3[2] = secondColor.b
-    c3[3] = secondColor.a
+    c3[0] = secondColor.r.toFloat()
+    c3[1] = secondColor.g.toFloat()
+    c3[2] = secondColor.b.toFloat()
+    c3[3] = secondColor.a.toFloat()
     val c4 = alloc<LongVar>()
     c4.value = flags
     val types = allocArray<IntVar>(5)
@@ -31265,15 +31288,15 @@ actual object ObjectCalls {
     second: Color,
   ) = memScoped {
     val c0 = allocArray<FloatVar>(4)
-    c0[0] = first.r
-    c0[1] = first.g
-    c0[2] = first.b
-    c0[3] = first.a
+    c0[0] = first.r.toFloat()
+    c0[1] = first.g.toFloat()
+    c0[2] = first.b.toFloat()
+    c0[3] = first.a.toFloat()
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = second.r
-    c1[1] = second.g
-    c1[2] = second.b
-    c1[3] = second.a
+    c1[0] = second.r.toFloat()
+    c1[1] = second.g.toFloat()
+    c1[2] = second.b.toFloat()
+    c1[3] = second.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_COLOR
     types[1] = PT_COLOR
@@ -31524,10 +31547,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = second.toLong()
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val types = allocArray<IntVar>(3)
     types[0] = PT_INT64
     types[1] = PT_INT64
@@ -31928,7 +31951,7 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
+    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
   }
 
   actual fun ptrcallWithTwoIntArgsRetDouble(
@@ -32376,10 +32399,10 @@ actual object ObjectCalls {
     val c1 = alloc<LongVar>()
     c1.value = secondInt.toLong()
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<LongVar>()
     c3.value = longValue
     val c4 = alloc<ByteVar>()
@@ -32447,10 +32470,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = longArg
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -32487,10 +32510,10 @@ actual object ObjectCalls {
     val c2 = alloc<LongVar>()
     c2.value = longArg
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (boolArg) 1 else 0
     val types = allocArray<IntVar>(5)
@@ -33520,10 +33543,10 @@ actual object ObjectCalls {
     c2[4] = GodotReal.toC(transform.origin.x)
     c2[5] = GodotReal.toC(transform.origin.y)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val types = allocArray<IntVar>(4)
     types[0] = PT_OBJECT
     types[1] = PT_OBJECT
@@ -33900,10 +33923,10 @@ actual object ObjectCalls {
     val c4 = alloc<LongVar>()
     c4.value = secondLong
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r
-    c5[1] = color.g
-    c5[2] = color.b
-    c5[3] = color.a
+    c5[0] = color.r.toFloat()
+    c5[1] = color.g.toFloat()
+    c5[2] = color.b.toFloat()
+    c5[3] = color.a.toFloat()
     val c6 = alloc<DoubleVar>()
     c6.value = doubleValue
     val types = allocArray<IntVar>(7)
@@ -34113,10 +34136,10 @@ actual object ObjectCalls {
     c2[4] = GodotReal.toC(transform.origin.x)
     c2[5] = GodotReal.toC(transform.origin.y)
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<LongVar>()
     c4.value = thirdRid.value
     val types = allocArray<IntVar>(5)
@@ -34232,10 +34255,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = thirdLong
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r
-    c6[1] = color.g
-    c6[2] = color.b
-    c6[3] = color.a
+    c6[0] = color.r.toFloat()
+    c6[1] = color.g.toFloat()
+    c6[2] = color.b.toFloat()
+    c6[3] = color.a.toFloat()
     val c7 = alloc<DoubleVar>()
     c7.value = doubleValue
     val types = allocArray<IntVar>(8)
@@ -34283,10 +34306,10 @@ actual object ObjectCalls {
     val c4 = alloc<DoubleVar>()
     c4.value = secondDouble
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r
-    c5[1] = color.g
-    c5[2] = color.b
-    c5[3] = color.a
+    c5[0] = color.r.toFloat()
+    c5[1] = color.g.toFloat()
+    c5[2] = color.b.toFloat()
+    c5[3] = color.a.toFloat()
     val c6 = alloc<DoubleVar>()
     c6.value = thirdDouble
     val types = allocArray<IntVar>(7)
@@ -34335,10 +34358,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = longValue
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r
-    c6[1] = color.g
-    c6[2] = color.b
-    c6[3] = color.a
+    c6[0] = color.r.toFloat()
+    c6[1] = color.g.toFloat()
+    c6[2] = color.b.toFloat()
+    c6[3] = color.a.toFloat()
     val c7 = alloc<DoubleVar>()
     c7.value = thirdDouble
     val types = allocArray<IntVar>(8)
@@ -34728,10 +34751,10 @@ actual object ObjectCalls {
     enabled: Boolean,
   ) = memScoped {
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<ByteVar>()
     c3.value = if (enabled) 1 else 0
     val types = allocArray<IntVar>(4)
@@ -34902,10 +34925,10 @@ actual object ObjectCalls {
     color: Color,
   ) = memScoped {
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val types = allocArray<IntVar>(3)
     types[0] = PT_STRING_NAME
     types[1] = PT_STRING_NAME
@@ -35028,7 +35051,7 @@ actual object ObjectCalls {
     ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
+    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
   }
 
   actual fun ptrcallWithTwoStringNameArgsRetDictionary(
@@ -35763,10 +35786,10 @@ actual object ObjectCalls {
     c1[0] = GodotReal.toC(second.x)
     c1[1] = GodotReal.toC(second.y)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<DoubleVar>()
     c3.value = width
     val c4 = alloc<ByteVar>()
@@ -35805,10 +35828,10 @@ actual object ObjectCalls {
     c1[0] = GodotReal.toC(second.x)
     c1[1] = GodotReal.toC(second.y)
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<DoubleVar>()
     c3.value = firstDouble
     val c4 = alloc<DoubleVar>()
@@ -37355,10 +37378,10 @@ actual object ObjectCalls {
     val c4 = alloc<DoubleVar>()
     c4.value = height
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r
-    c5[1] = color.g
-    c5[2] = color.b
-    c5[3] = color.a
+    c5[0] = color.r.toFloat()
+    c5[1] = color.g.toFloat()
+    c5[2] = color.b.toFloat()
+    c5[3] = color.a.toFloat()
     val c6 = alloc<LongVar>()
     c6.value = inlineAlign
     val c7 = allocArray<GodotRealVar>(4)
@@ -37831,10 +37854,10 @@ actual object ObjectCalls {
     val c1 = alloc<DoubleVar>()
     c1.value = radius
     val c2 = allocArray<FloatVar>(4)
-    c2[0] = color.r
-    c2[1] = color.g
-    c2[2] = color.b
-    c2[3] = color.a
+    c2[0] = color.r.toFloat()
+    c2[1] = color.g.toFloat()
+    c2[2] = color.b.toFloat()
+    c2[3] = color.a.toFloat()
     val c3 = alloc<ByteVar>()
     c3.value = if (filled) 1 else 0
     val c4 = alloc<DoubleVar>()
@@ -37913,10 +37936,10 @@ actual object ObjectCalls {
     val c5 = alloc<LongVar>()
     c5.value = intValue.toLong()
     val c6 = allocArray<FloatVar>(4)
-    c6[0] = color.r
-    c6[1] = color.g
-    c6[2] = color.b
-    c6[3] = color.a
+    c6[0] = color.r.toFloat()
+    c6[1] = color.g.toFloat()
+    c6[2] = color.b.toFloat()
+    c6[3] = color.a.toFloat()
     val c7 = alloc<DoubleVar>()
     c7.value = fifthDouble
     val c8 = alloc<ByteVar>()
@@ -38037,10 +38060,10 @@ actual object ObjectCalls {
     val c4 = alloc<LongVar>()
     c4.value = intValue.toLong()
     val c5 = allocArray<FloatVar>(4)
-    c5[0] = color.r
-    c5[1] = color.g
-    c5[2] = color.b
-    c5[3] = color.a
+    c5[0] = color.r.toFloat()
+    c5[1] = color.g.toFloat()
+    c5[2] = color.b.toFloat()
+    c5[3] = color.a.toFloat()
     val c6 = alloc<DoubleVar>()
     c6.value = fourthDouble
     val c7 = alloc<ByteVar>()
@@ -38086,10 +38109,10 @@ actual object ObjectCalls {
     val c2 = alloc<DoubleVar>()
     c2.value = height
     val c3 = allocArray<FloatVar>(4)
-    c3[0] = color.r
-    c3[1] = color.g
-    c3[2] = color.b
-    c3[3] = color.a
+    c3[0] = color.r.toFloat()
+    c3[1] = color.g.toFloat()
+    c3[2] = color.b.toFloat()
+    c3[3] = color.a.toFloat()
     val c4 = alloc<ByteVar>()
     c4.value = if (filled) 1 else 0
     val c5 = alloc<DoubleVar>()
@@ -38184,10 +38207,10 @@ actual object ObjectCalls {
     c0[0] = vector.x
     c0[1] = vector.y
     val c1 = allocArray<FloatVar>(4)
-    c1[0] = color.r
-    c1[1] = color.g
-    c1[2] = color.b
-    c1[3] = color.a
+    c1[0] = color.r.toFloat()
+    c1[1] = color.g.toFloat()
+    c1[2] = color.b.toFloat()
+    c1[3] = color.a.toFloat()
     val types = allocArray<IntVar>(2)
     types[0] = PT_VECTOR2I
     types[1] = PT_COLOR
@@ -38499,7 +38522,7 @@ actual object ObjectCalls {
     val ptrs = allocArray<COpaquePointerVar>(1)
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_COLOR, ret)
-    Color(ret[0], ret[1], ret[2], ret[3])
+    Color(ret[0].toDouble(), ret[1].toDouble(), ret[2].toDouble(), ret[3].toDouble())
   }
 
   actual fun ptrcallWithVector2iArgRetDouble(
@@ -39533,14 +39556,14 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.ptrcallWithColorArg(
     ObjectCalls.getMethodBind("CanvasItem", "set_modulate", 2920490490L),
     n2c,
-    Color(0.125f, 0.25f, 0.5f, 0.75f),
+    Color(0.125, 0.25, 0.5, 0.75),
   )
   val col =
     ObjectCalls.ptrcallNoArgsRetColor(
       ObjectCalls.getMethodBind("CanvasItem", "get_modulate", 3444240500L),
       n2c,
     )
-  check("color", col.r == 0.125f && col.g == 0.25f && col.b == 0.5f && col.a == 0.75f)
+  check("color", col.r == 0.125 && col.g == 0.25 && col.b == 0.5 && col.a == 0.75)
 
   // Rect2 (4x float32, 16B): GPUParticles2D.set_visibility_rect -> get_visibility_rect()
   // Validation-free: visibility_rect is a stored Rect2 with no engine clamping.
@@ -40160,12 +40183,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.callWithVariantArgs(
     ObjectCalls.getMethodBind("AStar2D", "add_point", 4074201818L),
     packedAstar,
-    listOf(1L, Vector2(0f, 0f), 1.0),
+    listOf(1L, Vector2(0.0, 0.0), 1.0),
   )
   ObjectCalls.callWithVariantArgs(
     ObjectCalls.getMethodBind("AStar2D", "add_point", 4074201818L),
     packedAstar,
-    listOf(2L, Vector2(3f, 4f), 1.0),
+    listOf(2L, Vector2(3.0, 4.0), 1.0),
   )
   ObjectCalls.callWithVariantArgs(
     ObjectCalls.getMethodBind("AStar2D", "connect_points", 3710494224L),
@@ -40195,7 +40218,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   check(
     "packed-ret(AStar2D.get_point_path(1,2)==[(0,0),(3,4)])",
-    packedPath == listOf(Vector2(0f, 0f), Vector2(3f, 4f)),
+    packedPath == listOf(Vector2(0.0, 0.0), Vector2(3.0, 4.0)),
   )
   ObjectCalls.destroyObject(packedAstar)
 
@@ -40219,12 +40242,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.callWithVariantArgs(
     ObjectCalls.getMethodBind("Curve3D", "add_point", 2931053748L),
     packedCurve,
-    listOf(Vector3(0f, 0f, 0f), Vector3(0f, 0f, 0f), Vector3(0f, 0f, 0f), -1),
+    listOf(Vector3(0.0, 0.0, 0.0), Vector3(0.0, 0.0, 0.0), Vector3(0.0, 0.0, 0.0), -1),
   )
   ObjectCalls.callWithVariantArgs(
     ObjectCalls.getMethodBind("Curve3D", "add_point", 2931053748L),
     packedCurve,
-    listOf(Vector3(1f, 2f, 3f), Vector3(0f, 0f, 0f), Vector3(0f, 0f, 0f), -1),
+    listOf(Vector3(1.0, 2.0, 3.0), Vector3(0.0, 0.0, 0.0), Vector3(0.0, 0.0, 0.0), -1),
   )
   val packedBaked =
     ObjectCalls.ptrcallNoArgsRetPackedVector3List(
@@ -40238,8 +40261,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check(
     "packed-ret(Curve3D.get_baked_points first==(0,0,0), last==(1,2,3))",
     packedBaked.size >= 2 &&
-      near(packedBaked.first(), Vector3(0f, 0f, 0f)) &&
-      near(packedBaked.last(), Vector3(1f, 2f, 3f)),
+      near(packedBaked.first(), Vector3(0.0, 0.0, 0.0)) &&
+      near(packedBaked.last(), Vector3(1.0, 2.0, 3.0)),
   )
   ObjectCalls.destroyObject(packedCurve)
 
@@ -40347,7 +40370,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // cross the 256-element inline read-back capacity; the string row carries a non-ASCII and an
   // empty element to pin the blob's byte-length framing.
   val argPoly = ObjectCalls.constructObject("Polygon2D")
-  val argPoints = List(300) { Vector2(it.toFloat(), (it * 2).toFloat()) }
+  val argPoints = List(300) { Vector2(it.toDouble(), (it * 2).toDouble()) }
   ObjectCalls.ptrcallWithPackedVector2ListArg(
     ObjectCalls.getMethodBind("Polygon2D", "set_polygon", 1509147220L),
     argPoly,
@@ -40403,7 +40426,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // (2026-09-10). NavigationMesh is a plain data resource with the same PackedVector3Array shape.
   val argNavMesh = ObjectCalls.constructObject("NavigationMesh")
   val argVerts =
-    listOf(Vector3(0f, 0f, 0f), Vector3(1f, 0f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f))
+    listOf(
+      Vector3(0.0, 0.0, 0.0),
+      Vector3(1.0, 0.0, 0.0),
+      Vector3(0.0, 1.0, 0.0),
+      Vector3(0.0, 0.0, 1.0),
+    )
   ObjectCalls.ptrcallWithPackedVector3ListArg(
     ObjectCalls.getMethodBind("NavigationMesh", "set_vertices", 334873810L),
     argNavMesh,
@@ -40418,7 +40446,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.destroyObject(argNavMesh)
 
   val argParticles = ObjectCalls.constructObject("CPUParticles2D")
-  val argColors = listOf(Color(1f, 0f, 0f, 1f), Color(0f, 0.5f, 0f, 0.25f))
+  val argColors = listOf(Color(1.0, 0.0, 0.0, 1.0), Color(0.0, 0.5, 0.0, 0.25))
   ObjectCalls.ptrcallWithPackedColorListArg(
     ObjectCalls.getMethodBind("CPUParticles2D", "set_emission_colors", 3546319833L),
     argParticles,
@@ -40573,7 +40601,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       ObjectCalls.ptrcallWithVector3ArgRetPlaneList(
         ObjectCalls.getMethodBind("Geometry3D", "build_box_planes", 3622277145L),
         arrayGeo,
-        Vector3(1f, 2f, 3f),
+        Vector3(1.0, 2.0, 3.0),
       )
     check("array-ret(Geometry3D.build_box_planes has 6 planes)", arrayPlanes.size == 6)
   } else check("array-ret(Geometry3D.build_box_planes) (singleton absent)", false)
@@ -40641,8 +40669,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   check("arg-variant(ConfigFile string round-trips utf8)", cfgGet("str", null) == "Kanama \u00e9")
   cfgSet("b", true)
   check("arg-variant(ConfigFile bool==true)", cfgGet("b", null) == true)
-  cfgSet("v", Vector2(1f, 2f))
-  check("arg-variant(ConfigFile Vector2 round-trip)", cfgGet("v", null) == Vector2(1f, 2f))
+  cfgSet("v", Vector2(1.0, 2.0))
+  check("arg-variant(ConfigFile Vector2 round-trip)", cfgGet("v", null) == Vector2(1.0, 2.0))
   // A null Variant must arrive as nil: ConfigFile.set_value(null) erases the key.
   cfgSet("i", null)
   check(
@@ -40826,12 +40854,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   if (typedGeo.address() != 0L) {
     val typedCube =
       listOf(
-        Plane(Vector3(1f, 0f, 0f), 1f),
-        Plane(Vector3(-1f, 0f, 0f), 1f),
-        Plane(Vector3(0f, 1f, 0f), 1f),
-        Plane(Vector3(0f, -1f, 0f), 1f),
-        Plane(Vector3(0f, 0f, 1f), 1f),
-        Plane(Vector3(0f, 0f, -1f), 1f),
+        Plane(Vector3(1.0, 0.0, 0.0), 1.0),
+        Plane(Vector3(-1.0, 0.0, 0.0), 1.0),
+        Plane(Vector3(0.0, 1.0, 0.0), 1.0),
+        Plane(Vector3(0.0, -1.0, 0.0), 1.0),
+        Plane(Vector3(0.0, 0.0, 1.0), 1.0),
+        Plane(Vector3(0.0, 0.0, -1.0), 1.0),
       )
     val typedCorners =
       ObjectCalls.ptrcallWithPlaneListArgRetPackedVector3List(
@@ -40850,8 +40878,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   val typedNav = ObjectCalls.constructObject("NavigationMeshSourceGeometryData2D")
   val typedOutlines =
     listOf(
-      listOf(Vector2(0f, 0f), Vector2(1f, 0f), Vector2(1f, 1f)),
-      listOf(Vector2(2f, 2f), Vector2(3f, 2f)),
+      listOf(Vector2(0.0, 0.0), Vector2(1.0, 0.0), Vector2(1.0, 1.0)),
+      listOf(Vector2(2.0, 2.0), Vector2(3.0, 2.0)),
     )
   ObjectCalls.ptrcallWithPackedVector2ListListArg(
     ObjectCalls.getMethodBind(
@@ -40900,7 +40928,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.ptrcallWithVector4Arg(
     ObjectCalls.getMethodBind("VisualShaderNodeVec4Parameter", "set_default_value", 643568085L),
     typedVec4,
-    Vector4(1f, 2f, 3f, 4f),
+    Vector4(1.0, 2.0, 3.0, 4.0),
   )
   val typedVec4Back =
     ObjectCalls.ptrcallNoArgsRetVector4(
@@ -40909,7 +40937,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   check(
     "arg-vector4(VisualShaderNodeVec4Parameter.set_default_value round-trip)",
-    typedVec4Back == Vector4(1f, 2f, 3f, 4f),
+    typedVec4Back == Vector4(1.0, 2.0, 3.0, 4.0),
   )
   ObjectCalls.destroyObject(typedVec4)
 
@@ -41895,7 +41923,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   check(
     "packed-color-ret(get_colors==[black,white])",
-    colors == listOf(Color(0.0f, 0.0f, 0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)),
+    colors == listOf(Color(0.0, 0.0, 0.0, 1.0), Color(1.0, 1.0, 1.0, 1.0)),
   )
 
   // PackedStringArray-return (Translation.get_message_list): add two messages via the Variant
@@ -41948,7 +41976,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   ObjectCalls.ptrcallWithPackedColorListArg(
     ObjectCalls.getMethodBind("Gradient", "set_colors", 3546319833L),
     gradientArg,
-    listOf(Color(1.0f, 0.0f, 0.0f, 1.0f), Color(0.0f, 1.0f, 0.0f, 1.0f)),
+    listOf(Color(1.0, 0.0, 0.0, 1.0), Color(0.0, 1.0, 0.0, 1.0)),
   )
   val colorsArg =
     ObjectCalls.ptrcallNoArgsRetPackedColorList(
@@ -41957,7 +41985,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     )
   check(
     "packed-color-arg(set/get_colors)",
-    colorsArg == listOf(Color(1.0f, 0.0f, 0.0f, 1.0f), Color(0.0f, 1.0f, 0.0f, 1.0f)),
+    colorsArg == listOf(Color(1.0, 0.0, 0.0, 1.0), Color(0.0, 1.0, 0.0, 1.0)),
   )
 
   // Transform3D arg+return (Node3D.set_transform -> get_transform): 12x float32

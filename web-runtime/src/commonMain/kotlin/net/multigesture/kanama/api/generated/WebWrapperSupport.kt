@@ -56,9 +56,11 @@ internal fun Vector3i.toBackend(): GodotVector3i = GodotVector3i(x, y, z)
 
 internal fun GodotVector3i.toApi(): Vector3i = Vector3i(x, y, z)
 
-internal fun Color.toBackend(): GodotColor = GodotColor(r, g, b, a)
+internal fun Color.toBackend(): GodotColor =
+  GodotColor(r.toFloat(), g.toFloat(), b.toFloat(), a.toFloat())
 
-internal fun GodotColor.toApi(): Color = Color(r, g, b, a)
+internal fun GodotColor.toApi(): Color =
+  Color(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
 
 internal fun GodotRect2.toApi(): Rect2 = Rect2(position.toApi(), size.toApi())
 

@@ -193,12 +193,12 @@ object Mathf {
     // Float overloads
     //
     // Mirror the C# binding's Mathf, which exposes both `float` and `double`
-    // signatures for every scalar method. This lets user code feed Vector
-    // components (Float, matching real_t) into Mathf without a `.toFloat()`
-    // call, and feed `delta` (Double, engine timing precision) without a
-    // `.toDouble()` call. The Float forms delegate to the Double impls and
-    // narrow on return — `kotlin.math` and Godot's GD utility surface only
-    // expose Double, so we don't avoid any work, only call-site noise.
+    // signatures for every scalar method. Every decimal Kanama hands out is
+    // Double (vector/color components included since task 134), so these only
+    // serve user code that keeps its own Float values. The Float forms
+    // delegate to the Double impls and narrow on return — `kotlin.math` and
+    // Godot's GD utility surface only expose Double, so we don't avoid any
+    // work, only call-site noise.
     // -------------------------------------------------------------------------
 
     @JvmStatic fun degToRad(value: Float): Float = GD.degToRad(value.toDouble()).toFloat()

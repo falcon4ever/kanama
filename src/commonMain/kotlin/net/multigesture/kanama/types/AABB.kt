@@ -50,7 +50,7 @@ data class AABB(
   val end: Vector3
     get() = position + size
 
-  fun volume(): Double = (size.x * size.y * size.z).toDouble()
+  fun volume(): Double = size.x * size.y * size.z
 
   /**
    * Returns `true` if the bounding box contains the given `point`. By convention, points exactly on

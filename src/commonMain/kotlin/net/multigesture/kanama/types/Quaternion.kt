@@ -27,40 +27,35 @@ data class Quaternion(
    *
    * Generated from Godot docs: Quaternion.x
    */
-  val x: real_t,
+  val x: Double,
   /**
    * Y component of the quaternion. This is the value along the "imaginary" `j` axis. Note:
    * Quaternion components should usually not be manipulated directly.
    *
    * Generated from Godot docs: Quaternion.y
    */
-  val y: real_t,
+  val y: Double,
   /**
    * Z component of the quaternion. This is the value along the "imaginary" `k` axis. Note:
    * Quaternion components should usually not be manipulated directly.
    *
    * Generated from Godot docs: Quaternion.z
    */
-  val z: real_t,
+  val z: Double,
   /**
    * W component of the quaternion. This is the "real" part. Note: Quaternion components should
    * usually not be manipulated directly.
    *
    * Generated from Godot docs: Quaternion.w
    */
-  val w: real_t,
+  val w: Double,
 ) {
   constructor(
     x: Number,
     y: Number,
     z: Number,
     w: Number,
-  ) : this(
-    GodotReal.fromNumber(x),
-    GodotReal.fromNumber(y),
-    GodotReal.fromNumber(z),
-    GodotReal.fromNumber(w),
-  )
+  ) : this(x.toDouble(), y.toDouble(), z.toDouble(), w.toDouble())
 
   // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
   // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal quaternions hash
@@ -75,10 +70,10 @@ data class Quaternion(
   }
 
   override fun hashCode(): Int {
-    var result = (x + 0.0f).hashCode()
-    result = 31 * result + (y + 0.0f).hashCode()
-    result = 31 * result + (z + 0.0f).hashCode()
-    result = 31 * result + (w + 0.0f).hashCode()
+    var result = (x + 0.0).hashCode()
+    result = 31 * result + (y + 0.0).hashCode()
+    result = 31 * result + (z + 0.0).hashCode()
+    result = 31 * result + (w + 0.0).hashCode()
     return result
   }
 
@@ -101,7 +96,7 @@ data class Quaternion(
    *
    * Generated from Godot docs: Quaternion.length_squared
    */
-  fun lengthSquared(): Double = (x * x + y * y + z * z + w * w).toDouble()
+  fun lengthSquared(): Double = x * x + y * y + z * z + w * w
 
   /**
    * Returns this quaternion's length, also called magnitude.
@@ -118,8 +113,7 @@ data class Quaternion(
    */
   fun normalized(): Quaternion {
     val len = length()
-    return if (len == 0.0) IDENTITY
-    else Quaternion(x.toDouble() / len, y.toDouble() / len, z.toDouble() / len, w.toDouble() / len)
+    return if (len == 0.0) IDENTITY else Quaternion(x / len, y / len, z / len, w / len)
   }
 
   operator fun times(other: Quaternion): Quaternion =
@@ -147,8 +141,7 @@ data class Quaternion(
    *
    * Generated from Godot docs: Quaternion.dot
    */
-  fun dot(other: Quaternion): Double =
-    (x * other.x + y * other.y + z * other.z + w * other.w).toDouble()
+  fun dot(other: Quaternion): Double = x * other.x + y * other.y + z * other.z + w * other.w
 
   /**
    * Performs a spherical-linear interpolation with the `to` quaternion, given a `weight` and
@@ -183,7 +176,7 @@ data class Quaternion(
      *
      * Generated from Godot docs: Quaternion.IDENTITY
      */
-    val IDENTITY = Quaternion(0f, 0f, 0f, 1f)
+    val IDENTITY = Quaternion(0.0, 0.0, 0.0, 1.0)
 
     private val inverseBind by lazy {
       BuiltinCalls.getBuiltinMethod(VT_QUATERNION, "inverse", INVERSE_HASH)

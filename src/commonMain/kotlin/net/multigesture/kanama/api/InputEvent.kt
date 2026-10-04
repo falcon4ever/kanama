@@ -208,7 +208,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: InputEvent.xformed_by
      */
-    fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0f, 0f)): InputEvent {
+    fun xformedBy(xform: Transform2D, localOfs: Vector2 = Vector2(0.0, 0.0)): InputEvent {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithTransform2DVector2ArgsRetObject(xformedByBind, segment, xform, localOfs)
         if (ret.address() == segment.address()) {

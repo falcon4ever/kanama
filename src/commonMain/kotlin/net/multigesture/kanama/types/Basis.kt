@@ -217,7 +217,7 @@ data class Basis(
      *
      * Generated from Godot docs: Basis.IDENTITY
      */
-    val IDENTITY = Basis(Vector3(1f, 0f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f))
+    val IDENTITY = Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0))
 
     // The hash keys the signature SHAPE, the name selects the method: inverse, transposed and
     // orthonormalized are all no-arg -> Self and share one hash.

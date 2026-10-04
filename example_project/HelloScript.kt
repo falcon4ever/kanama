@@ -515,13 +515,13 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     issue81Node.queueFree()
     issue81Scene.close()
     DirAccess.removeAbsolute(ProjectSettings.globalizePath(issue81SavePath))
-    if (body3d != null) body3d.position = Vector3(1f, 2f, 3f)
+    if (body3d != null) body3d.position = Vector3(1.0, 2.0, 3.0)
     val bodyPosition = body3d?.position ?: Vector3.ZERO
-    body3d?.translate(Vector3(0.5f, 0f, -0.5f))
+    body3d?.translate(Vector3(0.5, 0.0, -0.5))
     val bodyTranslated = body3d?.position ?: Vector3.ZERO
-    if (body3d != null) body3d.globalPosition = Vector3(2f, 3f, 4f)
+    if (body3d != null) body3d.globalPosition = Vector3(2.0, 3.0, 4.0)
     val bodyGlobalPosition = body3d?.globalPosition ?: Vector3.ZERO
-    if (body3d != null) body3d.rotationDegrees = Vector3(0f, 45f, 0f)
+    if (body3d != null) body3d.rotationDegrees = Vector3(0.0, 45.0, 0.0)
     val bodyRotationDegrees = body3d?.rotationDegrees ?: Vector3.ZERO
     if (body3d != null) body3d.scale = Vector3.ONE
     val bodyScale = body3d?.scale ?: Vector3.ZERO
@@ -533,7 +533,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val bodyCollisionMask = body3d?.getCollisionMask() ?: 0L
     val bodyRayPickable = body3d?.isRayPickable() ?: false
     val bodyCollisionPriority = body3d?.getCollisionPriority() ?: 0.0
-    if (body3d != null) body3d.velocity = Vector3(4f, 5f, 6f)
+    if (body3d != null) body3d.velocity = Vector3(4.0, 5.0, 6.0)
     val bodyVelocity = body3d?.velocity ?: Vector3.ZERO
     val bodyMoveAndSlide = body3d?.moveAndSlide() ?: false
     val bodyRealVelocity = body3d?.getRealVelocity() ?: Vector3.ZERO
@@ -548,7 +548,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
         collisionShapeNode?.isClass("CollisionShape3D") == true
     val collisionShape3d = collisionShapeNode?.let { CollisionShape3D(it.handle) }
     val assignedBoxShape = BoxShape3D.create()
-    assignedBoxShape.setSize(Vector3(2f, 3f, 4f))
+    assignedBoxShape.setSize(Vector3(2.0, 3.0, 4.0))
     assignedBoxShape.setMargin(0.08)
     assignedBoxShape.setCustomSolverBias(0.2)
     collisionShape3d?.setShape(assignedBoxShape)
@@ -560,10 +560,10 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     assignedShape?.close()
     assignedBoxShape.close()
     collisionShape3d?.setDisabled(true)
-    collisionShape3d?.setDebugColor(Color(0.25f, 0.5f, 0.75f, 1.0f))
+    collisionShape3d?.setDebugColor(Color(0.25, 0.5, 0.75, 1.0))
     collisionShape3d?.setEnableDebugFill(false)
     val collisionShapeDisabled = collisionShape3d?.isDisabled() ?: false
-    val collisionShapeDebugColor = collisionShape3d?.getDebugColor() ?: Color(0f, 0f, 0f, 0f)
+    val collisionShapeDebugColor = collisionShape3d?.getDebugColor() ?: Color(0.0, 0.0, 0.0, 0.0)
     val collisionShapeDebugFill = collisionShape3d?.getEnableDebugFill() ?: true
     collisionShape3d?.setDisabled(false)
     val collisionShapeEnabled = collisionShape3d?.isDisabled() == false
@@ -588,7 +588,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val ray3d = selfNode.getNodeAsOrNull("../RayCast3D", "RayCast3D", ::RayCast3D)
     val rayFound = selfNode.hasNode("../RayCast3D") && ray3d != null
     ray3d?.setEnabled(true)
-    ray3d?.setTargetPosition(Vector3(0f, -2f, 0f))
+    ray3d?.setTargetPosition(Vector3(0.0, -2.0, 0.0))
     ray3d?.setCollisionMask(1)
     ray3d?.setCollideWithBodies(true)
     ray3d?.setCollideWithAreas(false)
@@ -620,8 +620,8 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val areaDeferredSet = area3d != null
     val staticBody = selfNode.getNodeAsOrNull("../StaticBody3D", "StaticBody3D", ::StaticBody3D)
     val staticBodyFound = staticBody != null
-    staticBody?.setConstantLinearVelocity(Vector3(1f, 2f, 3f))
-    staticBody?.setConstantAngularVelocity(Vector3(4f, 5f, 6f))
+    staticBody?.setConstantLinearVelocity(Vector3(1.0, 2.0, 3.0))
+    staticBody?.setConstantAngularVelocity(Vector3(4.0, 5.0, 6.0))
     val staticLinear = staticBody?.getConstantLinearVelocity() ?: Vector3.ZERO
     val staticAngular = staticBody?.getConstantAngularVelocity() ?: Vector3.ZERO
     val audio3d =
@@ -741,7 +741,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     meshInstance3d?.setLightmapTexelScale(1.5)
     meshInstance3d?.setIgnoreOcclusionCulling(true)
     val assignedBoxMesh = BoxMesh.create()
-    assignedBoxMesh.setSize(Vector3(1.5f, 2.5f, 3.5f))
+    assignedBoxMesh.setSize(Vector3(1.5, 2.5, 3.5))
     assignedBoxMesh.setSubdivideWidth(1)
     assignedBoxMesh.setSubdivideHeight(2)
     assignedBoxMesh.setSubdivideDepth(3)
@@ -751,7 +751,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     assignedBoxMesh.requestUpdate()
     meshInstance3d?.setMesh(assignedBoxMesh)
     val assignedMaterial = StandardMaterial3D.create()
-    assignedMaterial.setAlbedo(Color(0.1f, 0.2f, 0.3f, 0.75f))
+    assignedMaterial.setAlbedo(Color(0.1, 0.2, 0.3, 0.75))
     assignedMaterial.setMetallic(0.4)
     assignedMaterial.setRoughness(0.6)
     assignedMaterial.setShadingMode(BaseMaterial3D.ShadingMode.UNSHADED)
@@ -1032,7 +1032,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
           "valid_live=$probeValidLive valid_freed=$probeValidFreed " +
           "id_valid_live=$probeIdValidLive id_valid_freed=$probeIdValidFreed " +
           "valid_null=${GD.isInstanceValid(null)} type_of_string=${GD.typeOf("kanama")} " +
-          "type_of_int=${GD.typeOf(7L)} type_of_vector3=${GD.typeOf(Vector3(1f, 2f, 3f))}"
+          "type_of_int=${GD.typeOf(7L)} type_of_vector3=${GD.typeOf(Vector3(1.0, 2.0, 3.0))}"
       )
     }
     val tweenAwaitTweener = tween?.tweenAwait(selfNode.signal("renamed"))?.setTimeout(30.0)
@@ -1246,50 +1246,51 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val autoloadObjectClass = autoload?.call("object_class_name", selfNode).toString()
     val autoloadReturnedObject = autoload?.call("return_object", selfNode) as? GodotObject
     val autoloadReturnedObjectClass = autoloadReturnedObject?.getClassName().orEmpty()
-    val autoloadVector2 = autoload?.call("vector2_sum", Vector2(2f, 3f)) as? Vector2 ?: Vector2.ZERO
+    val autoloadVector2 =
+      autoload?.call("vector2_sum", Vector2(2.0, 3.0)) as? Vector2 ?: Vector2.ZERO
     val autoloadVector3 =
-      autoload?.call("vector3_sum", Vector3(2f, 3f, 4f)) as? Vector3 ?: Vector3.ZERO
+      autoload?.call("vector3_sum", Vector3(2.0, 3.0, 4.0)) as? Vector3 ?: Vector3.ZERO
     val autoloadColor =
-      autoload?.call("color_mix", Color(0.1f, 0.2f, 0.3f, 0.4f)) as? Color ?: Color(0f, 0f, 0f, 0f)
+      autoload?.call("color_mix", Color(0.1, 0.2, 0.3, 0.4)) as? Color ?: Color(0.0, 0.0, 0.0, 0.0)
     val autoloadQuaternion =
-      autoload?.call("quaternion_negate", Quaternion(0.1f, 0.2f, 0.3f, 0.4f)) as? Quaternion
-        ?: Quaternion(0f, 0f, 0f, 0f)
+      autoload?.call("quaternion_negate", Quaternion(0.1, 0.2, 0.3, 0.4)) as? Quaternion
+        ?: Quaternion(0.0, 0.0, 0.0, 0.0)
     val autoloadVector4 =
-      autoload?.call("vector4_negate", Vector4(1f, 2f, 3f, 4f)) as? Vector4 ?: Vector4.ZERO
+      autoload?.call("vector4_negate", Vector4(1.0, 2.0, 3.0, 4.0)) as? Vector4 ?: Vector4.ZERO
     val autoloadRect2 =
-      autoload?.call("rect2_grow", Rect2(Vector2(0f, 0f), Vector2(10f, 20f))) as? Rect2
+      autoload?.call("rect2_grow", Rect2(Vector2(0.0, 0.0), Vector2(10.0, 20.0))) as? Rect2
         ?: Rect2.ZERO
     val autoloadAABB =
-      autoload?.call("aabb_grow", AABB(Vector3(0f, 0f, 0f), Vector3(10f, 20f, 30f))) as? AABB
+      autoload?.call("aabb_grow", AABB(Vector3(0.0, 0.0, 0.0), Vector3(10.0, 20.0, 30.0))) as? AABB
         ?: AABB.ZERO
     val autoloadPlane =
-      autoload?.call("plane_negate", Plane(Vector3(1f, 0f, 0f), 5f)) as? Plane ?: Plane.ZERO
+      autoload?.call("plane_negate", Plane(Vector3(1.0, 0.0, 0.0), 5.0)) as? Plane ?: Plane.ZERO
     val autoloadBasis =
       autoload?.call(
         "basis_translate",
-        Basis(Vector3(1f, 0f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f)),
+        Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0)),
       ) as? Basis ?: Basis.IDENTITY
     val autoloadTransform3D =
       autoload?.call(
         "transform3d_translate",
         Transform3D(
-          Basis(Vector3(1f, 0f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f)),
-          Vector3(1f, 2f, 3f),
+          Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0)),
+          Vector3(1.0, 2.0, 3.0),
         ),
       ) as? Transform3D ?: Transform3D.IDENTITY
     val autoloadTransform2D =
       autoload?.call(
         "transform2d_translate",
-        Transform2D(Vector2(1f, 0f), Vector2(0f, 1f), Vector2(5f, 6f)),
+        Transform2D(Vector2(1.0, 0.0), Vector2(0.0, 1.0), Vector2(5.0, 6.0)),
       ) as? Transform2D ?: Transform2D.IDENTITY
     val autoloadProjection =
       autoload?.call(
         "projection_negate_w",
         Projection(
-          Vector4(1f, 2f, 3f, 4f),
-          Vector4(5f, 6f, 7f, 8f),
-          Vector4(9f, 10f, 11f, 12f),
-          Vector4(13f, 14f, 15f, 16f),
+          Vector4(1.0, 2.0, 3.0, 4.0),
+          Vector4(5.0, 6.0, 7.0, 8.0),
+          Vector4(9.0, 10.0, 11.0, 12.0),
+          Vector4(13.0, 14.0, 15.0, 16.0),
         ),
       ) as? Projection ?: Projection.IDENTITY
     val autoloadVector2i =
@@ -1305,9 +1306,9 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
       autoload?.call("nodepath_describe", NodePath("foo/bar/baz"))?.toString() ?: ""
     val uiRoot = selfNode.getNodeAsOrNull("../UiRoot", "Control", ::Control)
     if (uiRoot != null) {
-      uiRoot.position = Vector2(8f, 12f)
-      uiRoot.size = Vector2(260f, 120f)
-      uiRoot.customMinimumSize = Vector2(180f, 80f)
+      uiRoot.position = Vector2(8.0, 12.0)
+      uiRoot.size = Vector2(260.0, 120.0)
+      uiRoot.customMinimumSize = Vector2(180.0, 80.0)
     }
     uiRoot?.setMouseFilter(Control.MouseFilter.PASS)
     val uiPosition = uiRoot?.position ?: Vector2.ZERO
@@ -1340,7 +1341,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
       uiRoot?.let {
         Label(GodotHandle(ObjectCalls.constructObject("Label"))).also { label ->
           label.text = "dynamic label"
-          label.position = Vector2(12f, 32f)
+          label.position = Vector2(12.0, 32.0)
           it.addChild(label)
         }
       }
@@ -1348,8 +1349,8 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
       uiRoot?.let {
         Button(GodotHandle(ObjectCalls.constructObject("Button"))).also { button ->
           button.text = "dynamic button"
-          button.position = Vector2(12f, 56f)
-          button.size = Vector2(96f, 28f)
+          button.position = Vector2(12.0, 56.0)
+          button.size = Vector2(96.0, 28.0)
           it.addChild(button)
         }
       }
@@ -1389,21 +1390,21 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val smokeLineEdit = selfNode.getNodeAsOrNull("../UiRoot/SmokeLineEdit", "LineEdit", ::LineEdit)
     smokeLineEdit?.setStructuredTextBidiOverrideOptions(emptyList())
     val lineEditBidiOptionsSize = smokeLineEdit?.getStructuredTextBidiOverrideOptions()?.size ?: -1
-    val vector3Length = Vector3(3f, 4f, 0f).length()
-    val vector3Normalized = Vector3(0f, 3f, 4f).normalized()
-    val vector3Dot = Vector3(1f, 2f, 3f).dot(Vector3(4f, 5f, 6f))
-    val vector3Cross = Vector3(1f, 0f, 0f).cross(Vector3(0f, 1f, 0f))
-    val vector3Lerp = Vector3.ZERO.lerp(Vector3(2f, 4f, 6f), 0.5)
-    val vector3Limited = Vector3(10f, 0f, 0f).limitLength(2.0)
-    val vector3Distance = Vector3.ZERO.distanceTo(Vector3(0f, 0f, 2f))
-    val vector2Length = Vector2(3f, 4f).length()
+    val vector3Length = Vector3(3.0, 4.0, 0.0).length()
+    val vector3Normalized = Vector3(0.0, 3.0, 4.0).normalized()
+    val vector3Dot = Vector3(1.0, 2.0, 3.0).dot(Vector3(4.0, 5.0, 6.0))
+    val vector3Cross = Vector3(1.0, 0.0, 0.0).cross(Vector3(0.0, 1.0, 0.0))
+    val vector3Lerp = Vector3.ZERO.lerp(Vector3(2.0, 4.0, 6.0), 0.5)
+    val vector3Limited = Vector3(10.0, 0.0, 0.0).limitLength(2.0)
+    val vector3Distance = Vector3.ZERO.distanceTo(Vector3(0.0, 0.0, 2.0))
+    val vector2Length = Vector2(3.0, 4.0).length()
     val vector2Angle = Vector2.RIGHT.angle()
-    val vector2Lerp = Vector2.ZERO.lerp(Vector2(4f, 6f), 0.25)
-    val vector3WithX = Vector3(1f, 2f, 3f).withX(9f)
-    val vector3WithY = Vector3(1f, 2f, 3f).withY(9.0)
-    val vector3WithZ = Vector3(1f, 2f, 3f).withZ(9f)
-    val vector2WithX = Vector2(1f, 2f).withX(9f)
-    val vector2WithY = Vector2(1f, 2f).withY(9.0)
+    val vector2Lerp = Vector2.ZERO.lerp(Vector2(4.0, 6.0), 0.25)
+    val vector3WithX = Vector3(1.0, 2.0, 3.0).withX(9.0)
+    val vector3WithY = Vector3(1.0, 2.0, 3.0).withY(9.0)
+    val vector3WithZ = Vector3(1.0, 2.0, 3.0).withZ(9.0)
+    val vector2WithX = Vector2(1.0, 2.0).withX(9.0)
+    val vector2WithY = Vector2(1.0, 2.0).withY(9.0)
     val grantedPermissions = OS.getGrantedPermissions()
     val memoryInfo = OS.getMemoryInfo()
     val singletonList = Engine.getSingletonList()

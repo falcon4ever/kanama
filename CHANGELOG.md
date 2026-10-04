@@ -138,6 +138,48 @@ accessors now and the rest in a follow-up (see "Web" below).
   (`src/commonMain/.../api/KanamaScript.kt`); its members are unchanged, so a script does not
   notice, but the per-platform snapshots record the move as a removal.
 
+### Changed — every decimal value is `Double` (task 134 A)
+
+- **Vector, transform and color components are `Double`** on every platform (desktop, Android,
+  iOS, Web), like every other decimal value Kanama hands out and like GDScript's 64-bit `float`:
+  `Vector2/3/4.x/y/z/w`, `Quaternion.x/y/z/w`, `Plane.d` (and through them `Basis`,
+  `Transform2D/3D`, `Rect2`, `AABB`, `Projection`), and `Color.r/g/b/a`. They were `real_t`
+  (`Float` in the single-precision builds Kanama ships), and `Color` was `Float`. Kotlin-side
+  value-type math now runs in `Double`; `ApproxMath` keeps Godot's `CMP_EPSILON` (`0.00001`, the
+  same in both precisions).
+- **The engine's storage width is unchanged.** Godot still stores `real_t` (float32 in normal
+  builds) and `Color` as float32; the marshalling layer narrows a component on the way in and
+  widens it on the way out (the generated `GodotReal.toC`/`fromC` and `GodotRealSegment` on
+  desktop/Android, the iOS `ObjectCalls` packing, the Web bridge), the same conversion GDScript
+  does. `-PkanamaPrecision=double` still selects a `precision=double` engine's storage (desktop);
+  the Kotlin types are the same in both. Packed bulk data keeps 32-bit storage:
+  `PackedFloat32Array` stays `List<Float>`; the elements of `PackedVector2/3/4Array` and
+  `PackedColorArray` are the ordinary value types, so their components read as `Double`.
+- **Behaviour change: values read back from the engine are float32-quantized.** `node.position =
+  Vector2(0.1, 0.2)` reads back as `(0.10000000149011612, 0.20000000298023224)`, and a component
+  prints that way (scalar float properties already did, e.g. `metallic=0.4000000059604645`).
+  Compare engine results with `isEqualApprox`, not `==`; values exact in float32 (`0.5`, `1.25`)
+  still compare equal. Kotlin computes in `Double` while Godot's C++ computes in `real_t`, so a
+  result can differ from the engine's in the last bits. See
+  [API conventions — Decimals](docs/reference/wrapper-conventions.md#4-decimals).
+- The `Number` constructor overloads stay (`Vector3(0, 1, 0)`, and new on `Color`:
+  `Color(1, 1, 1)`); `Vector2/3/4.times`/`div` keep their `Float` overloads. A `@ScriptProperty`
+  vector default written with `f` literals (`Vector2(0.001f, 0.001f)`) is emitted as Double
+  literals, so the registrar and the Web proxy's GDScript get `Vector2(0.001, 0.001)`.
+- **Migration:** drop the `f` suffixes on vector and color literals (`Vector3(0f, 1f, 0f)` →
+  `Vector3(0.0, 1.0, 0.0)`; the `f` forms still compile through the `Number` overload), drop the
+  `.toDouble()` calls on components (the compiler flags them as redundant), replace
+  `.toFloat()` feeding a component with nothing, and change your own `Float` fields that hold
+  components or color channels to `Double`. `Color.copy(a = alpha.toFloat())` becomes
+  `copy(a = alpha)`. The public `real_t` typealias is gone (it was `Float`; use `Double`), and so
+  are `GodotReal.fromNumber`/`fromDouble`/`fromFloat` (components need no conversion now);
+  `GodotReal.toC`/`fromC` and `GodotRealArray` remain the storage-width marshalling helpers.
+  The companion demos went from 159 to 49 `.toDouble()` calls (the 49 left convert `Long`/`Int`
+  values), from 14 to 0 `.toFloat()` and from 135 to 0 `f` literals.
+- **Source break:** `Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane` and `Color` (native),
+  and `Color` (Web): constructors and component properties change from `real_t`/`Float` to
+  `Double`.
+
 ### Changed — one annotation set, public functions registered automatically, typed input handlers (task 133 B) — BREAKING
 
 - **One GDScript-shaped annotation per concept.** The aliases are removed in this release (no

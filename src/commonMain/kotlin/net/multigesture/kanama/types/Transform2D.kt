@@ -55,6 +55,6 @@ data class Transform2D(
      *
      * Generated from Godot docs: Transform2D.IDENTITY
      */
-    val IDENTITY = Transform2D(Vector2(1f, 0f), Vector2(0f, 1f), Vector2.ZERO)
+    val IDENTITY = Transform2D(Vector2(1.0, 0.0), Vector2(0.0, 1.0), Vector2.ZERO)
   }
 }

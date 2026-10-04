@@ -286,14 +286,18 @@ not the path Kanama is taking.
 Godot uses two related but different floating-point layouts at the FFM
 boundary:
 
-- **Value-type components** use `real_t`. `Vector2`, `Vector3`, `Basis`,
-  `Transform3D`, and similar built-ins use the generated `GodotReal` layout:
-  `Float` for normal single-precision Godot builds, and `Double` for future
-  `precision=double` builds.
+- **Value-type components** are stored as `real_t` in engine buffers.
+  `Vector2`, `Vector3`, `Basis`, `Transform3D`, and similar built-ins hold
+  `Double` in Kotlin in every build (task 134); the generated `GodotReal` layout
+  is the storage width only — `Float` for normal single-precision Godot builds,
+  `Double` for `precision=double` builds — and `GodotReal.toC`/`fromC` and
+  `GodotRealSegment` narrow on the way in and widen on the way out.
 - **Scalar `float` method parameters and return values** use the Variant float
   ABI slot, which is 64-bit. In `ObjectCalls`, helpers for scalar method
   arguments named `float` must allocate/read `JAVA_DOUBLE`, not `JAVA_FLOAT`.
-- **`Color` components** remain fixed 32-bit floats. Color is not `real_t`.
+- **`Color` components** are fixed 32-bit floats in the engine (Color is not
+  `real_t`) and `Double` in Kotlin; marshalling narrows with `.toFloat()` and
+  widens with `.toDouble()`.
 
 This distinction matters because Godot API docs and `extension_api.json` call
 both scalar method values and value-type components "float". Wrapper work must
@@ -303,7 +307,7 @@ check the ABI shape, not only the display name. `JAVA_FLOAT` in
 
 The same split runs through the value types themselves, and it is the reason
 they can be shared: a value type marshals as a `GodotRealArray` — a flat buffer
-of `real_t` components, aliased once per platform in `Real.kt` — while a scalar
+of components at the `real_t` storage width, aliased once per build in `Real.kt` — while a scalar
 `float` argument travels as `BArg.Real`, the 8-byte double.
 
 ## The object handle and the raw pointer
@@ -339,7 +343,7 @@ build script on Android. The Web backend keeps its
 own `WebValueTypes.kt`; it could adopt the shared bodies later behind a
 pure-Kotlin `BuiltinCalls`.
 
-A value type is a Kotlin `data class` of `real_t` components, immutable, with
+A value type is a Kotlin `data class` of `Double` components, immutable, with
 `equals`/`hashCode` following GDScript's `==` (signed zero equal, NaN reflexive,
 signed zero canonicalized in the hash). Methods split by who computes them:
 

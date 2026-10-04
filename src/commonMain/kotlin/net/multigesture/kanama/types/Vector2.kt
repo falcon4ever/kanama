@@ -1,5 +1,3 @@
-@file:Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-
 package net.multigesture.kanama.types
 
 import kotlin.jvm.JvmInline
@@ -30,13 +28,13 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.x
    */
-  val x: real_t,
+  val x: Double,
   /**
    * The vector's Y component. Also accessible by using the index position `[1]`.
    *
    * Generated from Godot docs: Vector2.y
    */
-  val y: real_t,
+  val y: Double,
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector2 (scripts/generate_api_wrapper.py — do not edit) =====
   /**
@@ -68,7 +66,7 @@ data class Vector2(
 
   // ===== END GENERATED ENUMS: Vector2 =====
 
-  constructor(x: Number, y: Number) : this(GodotReal.fromNumber(x), GodotReal.fromNumber(y))
+  constructor(x: Number, y: Number) : this(x.toDouble(), y.toDouble())
 
   // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
   // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal vectors hash equal.
@@ -80,8 +78,8 @@ data class Vector2(
   }
 
   override fun hashCode(): Int {
-    var result = (x + 0.0f).hashCode()
-    result = 31 * result + (y + 0.0f).hashCode()
+    var result = (x + 0.0).hashCode()
+    result = 31 * result + (y + 0.0).hashCode()
     return result
   }
 
@@ -109,29 +107,17 @@ data class Vector2(
 
   operator fun minus(other: Vector2): Vector2 = Vector2(x - other.x, y - other.y)
 
-  operator fun times(scale: Number): Vector2 =
-    Vector2(x.toDouble() * scale.toDouble(), y.toDouble() * scale.toDouble())
+  operator fun times(scale: Number): Vector2 = Vector2(x * scale.toDouble(), y * scale.toDouble())
 
-  operator fun times(scale: Double): Vector2 =
-    Vector2(GodotReal.fromDouble(x.toDouble() * scale), GodotReal.fromDouble(y.toDouble() * scale))
+  operator fun times(scale: Double): Vector2 = Vector2(x * scale, y * scale)
 
-  operator fun times(scale: Float): Vector2 =
-    Vector2(
-      GodotReal.fromDouble(x.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() * scale.toDouble()),
-    )
+  operator fun times(scale: Float): Vector2 = Vector2(x * scale.toDouble(), y * scale.toDouble())
 
-  operator fun div(scale: Number): Vector2 =
-    Vector2(x.toDouble() / scale.toDouble(), y.toDouble() / scale.toDouble())
+  operator fun div(scale: Number): Vector2 = Vector2(x / scale.toDouble(), y / scale.toDouble())
 
-  operator fun div(scale: Double): Vector2 =
-    Vector2(GodotReal.fromDouble(x.toDouble() / scale), GodotReal.fromDouble(y.toDouble() / scale))
+  operator fun div(scale: Double): Vector2 = Vector2(x / scale, y / scale)
 
-  operator fun div(scale: Float): Vector2 =
-    Vector2(
-      GodotReal.fromDouble(x.toDouble() / scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() / scale.toDouble()),
-    )
+  operator fun div(scale: Float): Vector2 = Vector2(x / scale.toDouble(), y / scale.toDouble())
 
   operator fun unaryMinus(): Vector2 = Vector2(-x, -y)
 
@@ -142,7 +128,7 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.length_squared
    */
-  fun lengthSquared(): Double = (x * x + y * y).toDouble()
+  fun lengthSquared(): Double = x * x + y * y
 
   /**
    * Returns the length (magnitude) of this vector.
@@ -174,7 +160,7 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.dot
    */
-  fun dot(other: Vector2): Double = (x * other.x + y * other.y).toDouble()
+  fun dot(other: Vector2): Double = x * other.x + y * other.y
 
   /**
    * Returns the Euclidean distance (https://en.wikipedia.org/wiki/Euclidean_distance) between this
@@ -203,7 +189,7 @@ data class Vector2(
    *
    * Generated from Godot docs: Vector2.angle
    */
-  fun angle(): Double = atan2(y.toDouble(), x.toDouble())
+  fun angle(): Double = atan2(y, x)
 
   /**
    * Returns the result of the linear interpolation between this vector and `to` by amount `weight`.
@@ -262,9 +248,9 @@ data class Vector2(
       )
     )
 
-  fun withX(value: Number): Vector2 = Vector2(value, y)
+  fun withX(value: Number): Vector2 = Vector2(value.toDouble(), y)
 
-  fun withY(value: Number): Vector2 = Vector2(x, value)
+  fun withY(value: Number): Vector2 = Vector2(x, value.toDouble())
 
   private fun toGodotRealArray(): GodotRealArray =
     GodotRealArray(2).also {
@@ -290,36 +276,36 @@ data class Vector2(
      *
      * Generated from Godot docs: Vector2.ZERO
      */
-    val ZERO = Vector2(0f, 0f)
+    val ZERO = Vector2(0.0, 0.0)
     /**
      * One vector, a vector with all components set to `1`.
      *
      * Generated from Godot docs: Vector2.ONE
      */
-    val ONE = Vector2(1f, 1f)
+    val ONE = Vector2(1.0, 1.0)
     /**
      * Up unit vector. Y is down in 2D, so this vector points -Y.
      *
      * Generated from Godot docs: Vector2.UP
      */
-    val UP = Vector2(0f, -1f)
+    val UP = Vector2(0.0, -1.0)
     /**
      * Down unit vector. Y is down in 2D, so this vector points +Y.
      *
      * Generated from Godot docs: Vector2.DOWN
      */
-    val DOWN = Vector2(0f, 1f)
+    val DOWN = Vector2(0.0, 1.0)
     /**
      * Left unit vector. Represents the direction of left.
      *
      * Generated from Godot docs: Vector2.LEFT
      */
-    val LEFT = Vector2(-1f, 0f)
+    val LEFT = Vector2(-1.0, 0.0)
     /**
      * Right unit vector. Represents the direction of right.
      *
      * Generated from Godot docs: Vector2.RIGHT
      */
-    val RIGHT = Vector2(1f, 0f)
+    val RIGHT = Vector2(1.0, 0.0)
   }
 }

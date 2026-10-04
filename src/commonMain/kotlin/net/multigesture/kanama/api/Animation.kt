@@ -506,7 +506,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Animation.bezier_track_insert_key
      */
-    fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2 = Vector2(0f, 0f), outHandle: Vector2 = Vector2(0f, 0f)): Int {
+    fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2 = Vector2(0.0, 0.0), outHandle: Vector2 = Vector2(0.0, 0.0)): Int {
         checkOpen()
         return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(bezierTrackInsertKeyBind, segment, trackIdx, time, value, inHandle, outHandle)
     }

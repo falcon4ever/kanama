@@ -1,5 +1,3 @@
-@file:Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-
 package net.multigesture.kanama.types
 
 import kotlin.jvm.JvmInline
@@ -17,25 +15,25 @@ data class Vector4(
    *
    * Generated from Godot docs: Vector4.x
    */
-  val x: real_t,
+  val x: Double,
   /**
    * The vector's Y component. Also accessible by using the index position `[1]`.
    *
    * Generated from Godot docs: Vector4.y
    */
-  val y: real_t,
+  val y: Double,
   /**
    * The vector's Z component. Also accessible by using the index position `[2]`.
    *
    * Generated from Godot docs: Vector4.z
    */
-  val z: real_t,
+  val z: Double,
   /**
    * The vector's W component. Also accessible by using the index position `[3]`.
    *
    * Generated from Godot docs: Vector4.w
    */
-  val w: real_t,
+  val w: Double,
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector4 (scripts/generate_api_wrapper.py — do not edit) =====
   /**
@@ -88,12 +86,7 @@ data class Vector4(
     y: Number,
     z: Number,
     w: Number,
-  ) : this(
-    GodotReal.fromNumber(x),
-    GodotReal.fromNumber(y),
-    GodotReal.fromNumber(z),
-    GodotReal.fromNumber(w),
-  )
+  ) : this(x.toDouble(), y.toDouble(), z.toDouble(), w.toDouble())
 
   // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
   // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal vectors hash equal.
@@ -107,10 +100,10 @@ data class Vector4(
   }
 
   override fun hashCode(): Int {
-    var result = (x + 0.0f).hashCode()
-    result = 31 * result + (y + 0.0f).hashCode()
-    result = 31 * result + (z + 0.0f).hashCode()
-    result = 31 * result + (w + 0.0f).hashCode()
+    var result = (x + 0.0).hashCode()
+    result = 31 * result + (y + 0.0).hashCode()
+    result = 31 * result + (z + 0.0).hashCode()
+    result = 31 * result + (w + 0.0).hashCode()
     return result
   }
 
@@ -145,28 +138,12 @@ data class Vector4(
     Vector4(x - other.x, y - other.y, z - other.z, w - other.w)
 
   operator fun times(scale: Number): Vector4 =
-    Vector4(
-      x.toDouble() * scale.toDouble(),
-      y.toDouble() * scale.toDouble(),
-      z.toDouble() * scale.toDouble(),
-      w.toDouble() * scale.toDouble(),
-    )
+    Vector4(x * scale.toDouble(), y * scale.toDouble(), z * scale.toDouble(), w * scale.toDouble())
 
-  operator fun times(scale: Double): Vector4 =
-    Vector4(
-      GodotReal.fromDouble(x.toDouble() * scale),
-      GodotReal.fromDouble(y.toDouble() * scale),
-      GodotReal.fromDouble(z.toDouble() * scale),
-      GodotReal.fromDouble(w.toDouble() * scale),
-    )
+  operator fun times(scale: Double): Vector4 = Vector4(x * scale, y * scale, z * scale, w * scale)
 
   operator fun times(scale: Float): Vector4 =
-    Vector4(
-      GodotReal.fromDouble(x.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(z.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(w.toDouble() * scale.toDouble()),
-    )
+    Vector4(x * scale.toDouble(), y * scale.toDouble(), z * scale.toDouble(), w * scale.toDouble())
 
   operator fun unaryMinus(): Vector4 = Vector4(-x, -y, -z, -w)
 
@@ -177,7 +154,7 @@ data class Vector4(
    *
    * Generated from Godot docs: Vector4.length_squared
    */
-  fun lengthSquared(): Double = (x * x + y * y + z * z + w * w).toDouble()
+  fun lengthSquared(): Double = x * x + y * y + z * z + w * w
 
   /**
    * Returns the length (magnitude) of this vector.
@@ -191,8 +168,7 @@ data class Vector4(
    *
    * Generated from Godot docs: Vector4.dot
    */
-  fun dot(other: Vector4): Double =
-    (x * other.x + y * other.y + z * other.z + w * other.w).toDouble()
+  fun dot(other: Vector4): Double = x * other.x + y * other.y + z * other.z + w * other.w
 
   companion object {
     /**
@@ -200,12 +176,12 @@ data class Vector4(
      *
      * Generated from Godot docs: Vector4.ZERO
      */
-    val ZERO = Vector4(0f, 0f, 0f, 0f)
+    val ZERO = Vector4(0.0, 0.0, 0.0, 0.0)
     /**
      * One vector, a vector with all components set to `1`.
      *
      * Generated from Godot docs: Vector4.ONE
      */
-    val ONE = Vector4(1f, 1f, 1f, 1f)
+    val ONE = Vector4(1.0, 1.0, 1.0, 1.0)
   }
 }

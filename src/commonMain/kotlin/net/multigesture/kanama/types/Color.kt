@@ -12,19 +12,19 @@ data class Color(
    *
    * Generated from Godot docs: Color.r
    */
-  val r: Float,
+  val r: Double,
   /**
    * The color's green component, typically on the range of 0 to 1.
    *
    * Generated from Godot docs: Color.g
    */
-  val g: Float,
+  val g: Double,
   /**
    * The color's blue component, typically on the range of 0 to 1.
    *
    * Generated from Godot docs: Color.b
    */
-  val b: Float,
+  val b: Double,
   /**
    * The color's alpha component, typically on the range of 0 to 1. A value of 0 means that the
    * color is fully transparent. A value of 1 means that the color is fully opaque. Note: The alpha
@@ -33,8 +33,15 @@ data class Color(
    *
    * Generated from Godot docs: Color.a
    */
-  val a: Float = 1.0f,
+  val a: Double = 1.0,
 ) {
+  constructor(
+    r: Number,
+    g: Number,
+    b: Number,
+    a: Number = 1.0,
+  ) : this(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
+
   // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
   // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal colors hash equal.
   override fun equals(other: Any?): Boolean {
@@ -47,10 +54,10 @@ data class Color(
   }
 
   override fun hashCode(): Int {
-    var result = (r + 0.0f).hashCode()
-    result = 31 * result + (g + 0.0f).hashCode()
-    result = 31 * result + (b + 0.0f).hashCode()
-    result = 31 * result + (a + 0.0f).hashCode()
+    var result = (r + 0.0).hashCode()
+    result = 31 * result + (g + 0.0).hashCode()
+    result = 31 * result + (b + 0.0).hashCode()
+    result = 31 * result + (a + 0.0).hashCode()
     return result
   }
 }

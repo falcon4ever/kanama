@@ -919,7 +919,7 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_apply_impulse
      */
     @JvmStatic
-    fun bodyApplyImpulse(body: RID, impulse: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun bodyApplyImpulse(body: RID, impulse: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithRIDAndTwoVector2Args(bodyApplyImpulseBind, singleton, body, impulse, position)
     }
 
@@ -943,7 +943,7 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_apply_force
      */
     @JvmStatic
-    fun bodyApplyForce(body: RID, force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun bodyApplyForce(body: RID, force: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithRIDAndTwoVector2Args(bodyApplyForceBind, singleton, body, force, position)
     }
 
@@ -980,7 +980,7 @@ object PhysicsServer2D {
      * Generated from Godot docs: PhysicsServer2D.body_add_constant_force
      */
     @JvmStatic
-    fun bodyAddConstantForce(body: RID, force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun bodyAddConstantForce(body: RID, force: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithRIDAndTwoVector2Args(bodyAddConstantForceBind, singleton, body, force, position)
     }
 

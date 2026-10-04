@@ -1584,7 +1584,7 @@ internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
     }
     IOS_PT_COLOR -> {
       val f = ptr.reinterpret<FloatVar>()
-      Color(f[0], f[1], f[2], f[3])
+      Color(f[0].toDouble(), f[1].toDouble(), f[2].toDouble(), f[3].toDouble())
     }
     IOS_PT_STRING -> ptr.toKString()
     IOS_PT_NODE_PATH -> NodePath(ptr.toKString())
@@ -1609,7 +1609,7 @@ internal fun decodeIosPropertyValue(ptTag: Int, bytes: CPointer<ByteVar>?, lengt
     }
     IOS_PT_COLOR -> {
       val f = bytes.reinterpret<FloatVar>()
-      Color(f[0], f[1], f[2], f[3])
+      Color(f[0].toDouble(), f[1].toDouble(), f[2].toDouble(), f[3].toDouble())
     }
     else -> null
   }
@@ -2065,10 +2065,10 @@ private object IosReturnPackedDescScratch {
   fun encodeColors(values: List<Color>): CPointer<ByteVar> {
     val b = header(values.size, 16)
     for (i in values.indices) {
-      putInt32LE(b, 16 + i * 16, values[i].r.toRawBits())
-      putInt32LE(b, 16 + i * 16 + 4, values[i].g.toRawBits())
-      putInt32LE(b, 16 + i * 16 + 8, values[i].b.toRawBits())
-      putInt32LE(b, 16 + i * 16 + 12, values[i].a.toRawBits())
+      putInt32LE(b, 16 + i * 16, values[i].r.toFloat().toRawBits())
+      putInt32LE(b, 16 + i * 16 + 4, values[i].g.toFloat().toRawBits())
+      putInt32LE(b, 16 + i * 16 + 8, values[i].b.toFloat().toRawBits())
+      putInt32LE(b, 16 + i * 16 + 12, values[i].a.toFloat().toRawBits())
     }
     return b
   }
@@ -2171,7 +2171,11 @@ internal object IosReturnContainerScratch {
           IOS_PT_VECTOR3,
           float32Bytes(GodotReal.toC(value.x), GodotReal.toC(value.y), GodotReal.toC(value.z)),
         )
-      is Color -> Pair(IOS_PT_COLOR, float32Bytes(value.r, value.g, value.b, value.a))
+      is Color ->
+        Pair(
+          IOS_PT_COLOR,
+          float32Bytes(value.r.toFloat(), value.g.toFloat(), value.b.toFloat(), value.a.toFloat()),
+        )
       is RID -> Pair(IOS_PT_RID, int64Bytes(value.value))
       // Wrapper / @ScriptClass elements ship their owner handle; the C array/dictionary builders
       // box PT_OBJECT elements as Object Variants (task 115; `List<Node>` returns were nil before).

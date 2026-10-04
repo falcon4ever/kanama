@@ -245,7 +245,7 @@ open class PhysicsDirectBodyState2D(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: PhysicsDirectBodyState2D.apply_impulse
      */
-    fun applyImpulse(impulse: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun applyImpulse(impulse: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyImpulseBind, segment, impulse, position)
     }
 
@@ -256,7 +256,7 @@ open class PhysicsDirectBodyState2D(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: PhysicsDirectBodyState2D.apply_central_force
      */
-    fun applyCentralForce(force: Vector2 = Vector2(0f, 0f)) {
+    fun applyCentralForce(force: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithVector2Arg(applyCentralForceBind, segment, force)
     }
 
@@ -266,7 +266,7 @@ open class PhysicsDirectBodyState2D(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: PhysicsDirectBodyState2D.apply_force
      */
-    fun applyForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun applyForce(force: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithTwoVector2Args(applyForceBind, segment, force, position)
     }
 
@@ -289,7 +289,7 @@ open class PhysicsDirectBodyState2D(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: PhysicsDirectBodyState2D.add_constant_central_force
      */
-    fun addConstantCentralForce(force: Vector2 = Vector2(0f, 0f)) {
+    fun addConstantCentralForce(force: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithVector2Arg(addConstantCentralForceBind, segment, force)
     }
 
@@ -300,7 +300,7 @@ open class PhysicsDirectBodyState2D(handle: GodotHandle) : GodotObject(handle) {
      *
      * Generated from Godot docs: PhysicsDirectBodyState2D.add_constant_force
      */
-    fun addConstantForce(force: Vector2, position: Vector2 = Vector2(0f, 0f)) {
+    fun addConstantForce(force: Vector2, position: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithTwoVector2Args(addConstantForceBind, segment, force, position)
     }
 

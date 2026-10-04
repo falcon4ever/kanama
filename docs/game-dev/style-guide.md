@@ -168,8 +168,11 @@ assigned yet. Unconditional `!!` will crash the editor.
 
 ## Float / Double
 
-- Vector component literals: use `Float` — `Vector3(0f, 1f, 0f)`
-- `delta` and scalar method arguments: `Double`, no conversion needed
+- Decimal literals: use `Double` — `Vector3(0.0, 1.0, 0.0)`, `Color(1.0, 0.5, 0.0)`; no `f`
+  suffixes and no `.toFloat()` / `.toDouble()` between components, `delta` and scalar arguments
+  (all `Double`)
+- Compare vectors read back from the engine with `isEqualApprox`: the engine stores them as
+  float32
 - Use `withX()` / `withY()` / `withZ()` to change one component without constructing a full new vector
 
 ```kotlin

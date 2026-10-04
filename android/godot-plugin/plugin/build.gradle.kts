@@ -38,9 +38,10 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
     }
 
     doLast {
-        // The root module generates real_t into commonMain (`generateKanamaReal`) and the Panama
-        // accessors into jvmMain (`generateKanamaRealSegment`); neither is a tracked source file,
-        // so the Android tree writes both here, single precision, with the remapped FFM package.
+        // The root module generates the real_t storage width into commonMain (`generateKanamaReal`)
+        // and the Panama accessors into jvmMain (`generateKanamaRealSegment`); neither is a tracked
+        // source file, so the Android tree writes both here, single precision, with the remapped
+        // FFM package. Components are Double (task 134); only the engine buffers are float32.
         val realFile = androidKanamaSources.get().file(
             "net/multigesture/kanama/types/Real.kt",
         ).asFile
@@ -52,30 +53,24 @@ val prepareAndroidKanamaSources by tasks.registering(Sync::class) {
             |import com.v7878.foreign.MemorySegment
             |import com.v7878.foreign.ValueLayout.JAVA_FLOAT
             |
-            |typealias real_t = Float
-            |
             |typealias GodotRealArray = FloatArray
             |
             |object GodotReal {
             |    const val SIZE_BYTES: Long = 4L
             |    const val ALIGN_BYTES: Long = 4L
             |
-            |    fun fromNumber(value: Number): real_t = value.toFloat()
-            |    fun fromDouble(value: Double): real_t = value.toFloat()
-            |    fun fromFloat(value: Float): real_t = value
-            |
-            |    fun toC(value: real_t): Float = value
-            |    fun fromC(value: Float): real_t = value
+            |    fun toC(value: Double): Float = value.toFloat()
+            |    fun fromC(value: Float): Double = value.toDouble()
             |
             |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
             |}
             |
             |object GodotRealSegment {
-            |    fun readIndex(segment: MemorySegment, index: Long): real_t =
-            |        segment.get(JAVA_FLOAT, GodotReal.byteOffset(index))
+            |    fun readIndex(segment: MemorySegment, index: Long): Double =
+            |        segment.get(JAVA_FLOAT, index * GodotReal.SIZE_BYTES).toDouble()
             |
-            |    fun writeIndex(segment: MemorySegment, index: Long, value: real_t) {
-            |        segment.set(JAVA_FLOAT, GodotReal.byteOffset(index), value)
+            |    fun writeIndex(segment: MemorySegment, index: Long, value: Double) {
+            |        segment.set(JAVA_FLOAT, index * GodotReal.SIZE_BYTES, value.toFloat())
             |    }
             |}
             |""".trimMargin(),

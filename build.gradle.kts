@@ -81,7 +81,7 @@ subprojects {
 // `:ios-runtime` was this module's second half until step 3 and no longer exists.
 //
 // One shared source directory, src/commonMain/kotlin: the KMP COMMON fragment. It holds the value
-// types, the generated real_t, the `expect` seams (RawSegment/NULL_SEGMENT, BuiltinCalls,
+// types, the generated real_t storage width (Real.kt), the `expect` seams (RawSegment/NULL_SEGMENT, BuiltinCalls,
 // ObjectCalls, ObjectRuntime) AND, since task 117 P4', the whole Godot API wrapper tree under
 // net/multigesture/kanama/api: the generated classes, the hand roots (GodotObject, RefCounted,
 // GodotCallable) and the `expect` classes the tree names (GodotSignal/SignalConnection,
@@ -120,9 +120,12 @@ fun kanamaRealIsDouble(selected: String): Boolean =
     else -> throw GradleException("kanamaPrecision must be 'single' or 'double', got '$selected'")
   }
 
-// real_t, its marshal array and the pure conversions are ONE generated common file: the value
-// types and the generated wrappers name them on every target. -PkanamaPrecision=double is a
-// desktop build; the iOS compile guard further down rejects it.
+// The engine's `real_t` STORAGE width, as ONE generated common file. Every decimal component
+// Kanama exposes is `Double` in every build (task 134, D1): `real_t` is not a public type. What
+// depends on the engine build's precision is only the width a component has in an engine buffer —
+// `GodotRealArray` and the `GodotReal.toC`/`fromC` pair that narrows on the way in and widens on
+// the way out, like GDScript (whose `float` is 64-bit) does at the same boundary.
+// -PkanamaPrecision=double is a desktop build; the iOS compile guard further down rejects it.
 val generateKanamaReal by
   tasks.registering {
     val precision = kanamaRealPrecision
@@ -132,6 +135,7 @@ val generateKanamaReal by
 
     doLast {
       val isDouble = kanamaRealIsDouble(precision.get())
+      val storage = if (isDouble) "Double" else "Float"
       val outputFile =
         outputDir.get().file("net/multigesture/kanama/types/Real.kt").asFile.apply {
           parentFile.mkdirs()
@@ -141,34 +145,29 @@ val generateKanamaReal by
                 |package net.multigesture.kanama.types
                 |
                 |/**
-                | * Godot's `real_t` scalar.
-                | *
-                | * Kanama builds default to single precision (`Float`), matching normal Godot desktop
-                | * builds. Compile with `-PkanamaPrecision=double` for Godot builds made with
-                | * `precision=double`; iOS supports single precision only.
+                | * A flat buffer of components at the engine's `real_t` storage width (`Float` for a
+                | * normal `precision=single` Godot build, `Double` for `precision=double`) — the marshal
+                | * form the [net.multigesture.kanama.binding.runtime.BuiltinCalls] facade moves value
+                | * types in and out with. Kanama's value types themselves hold `Double` in every build.
                 | */
-                |typealias real_t = ${if (isDouble) "Double" else "Float"}
+                |typealias GodotRealArray = ${storage}Array
                 |
                 |/**
-                | * A flat buffer of `real_t` components — the marshal form the [net.multigesture
-                | * .kanama.binding.runtime.BuiltinCalls] facade moves value types in and out with.
-                | * One alias per precision so the shared value-type bodies never name Float/Double.
+                | * The engine's `real_t` storage width and the conversions at the marshalling boundary.
+                | * Value-type components are `Double`; [toC] narrows one to the engine's width on the way
+                | * in and [fromC] widens it on the way out. Kanama builds default to single precision,
+                | * matching normal Godot builds; compile with `-PkanamaPrecision=double` for Godot builds
+                | * made with `precision=double` (desktop only; iOS supports single precision only).
                 | */
-                |typealias GodotRealArray = ${if (isDouble) "DoubleArray" else "FloatArray"}
-                |
                 |object GodotReal {
                 |    const val SIZE_BYTES: Long = ${if (isDouble) "8L" else "4L"}
                 |    const val ALIGN_BYTES: Long = ${if (isDouble) "8L" else "4L"}
                 |
-                |    fun fromNumber(value: Number): real_t = value.${if (isDouble) "toDouble()" else "toFloat()"}
-                |    fun fromDouble(value: Double): real_t = ${if (isDouble) "value" else "value.toFloat()"}
-                |    fun fromFloat(value: Float): real_t = ${if (isDouble) "value.toDouble()" else "value"}
+                |    /** A component into a [GodotRealArray] cell: narrowed to the engine's width. */
+                |    fun toC(value: Double): $storage = ${if (isDouble) "value" else "value.toFloat()"}
                 |
-                |    // The two halves of the BuiltinCalls marshal form: a component in and out of a
-                |    // GodotRealArray cell. Identity in both precisions today; the seam exists so a
-                |    // future real_t/C-ABI width split changes Real.kt only.
-                |    fun toC(value: real_t): ${if (isDouble) "Double" else "Float"} = value
-                |    fun fromC(value: ${if (isDouble) "Double" else "Float"}): real_t = value
+                |    /** A [GodotRealArray] cell out to a component: widened to `Double`. */
+                |    fun fromC(value: $storage): Double = ${if (isDouble) "value" else "value.toDouble()"}
                 |
                 |    fun byteOffset(index: Long): Long = index * SIZE_BYTES
                 |}
@@ -178,7 +177,7 @@ val generateKanamaReal by
     }
   }
 
-// The other half of `real_t`: reading and writing a component inside a raw engine buffer. It is
+// The other half of the storage width: reading and writing a component inside a raw engine buffer. It is
 // `java.lang.foreign` work (`MemorySegment.get(JAVA_FLOAT, …)`) with no common spelling — the
 // expect `RawSegment` deliberately carries only `address()` — so the JVM target generates it as
 // `GodotRealSegment` beside the common object. iOS reads its buffers through cinterop
@@ -194,6 +193,10 @@ val generateKanamaRealSegment by
     doLast {
       val isDouble = kanamaRealIsDouble(precision.get())
       val layoutName = if (isDouble) "JAVA_DOUBLE" else "JAVA_FLOAT"
+      // Spelled inline rather than through GodotReal.fromC/toC: this pair sits on every vector
+      // ptrcall, so it keeps the FFM access chain as short as it was before task 134.
+      val widen = if (isDouble) "" else ".toDouble()"
+      val narrow = if (isDouble) "" else ".toFloat()"
       val outputFile =
         outputDir.get().file("net/multigesture/kanama/types/RealSegment.kt").asFile.apply {
           parentFile.mkdirs()
@@ -206,16 +209,17 @@ val generateKanamaRealSegment by
                 |import java.lang.foreign.ValueLayout.$layoutName
                 |
                 |/**
-                | * The Panama half of [GodotReal]: a `real_t` component in and out of a raw engine
-                | * buffer. Desktop and Android only — `java.lang.foreign` has no common name, so
-                | * these two functions cannot live on the common [GodotReal] object.
+                | * The Panama half of [GodotReal]: a `Double` component in and out of a raw engine
+                | * buffer at the engine's `real_t` storage width (narrowed on write, widened on read).
+                | * Desktop and Android only — `java.lang.foreign` has no common name, so these two
+                | * functions cannot live on the common [GodotReal] object.
                 | */
                 |object GodotRealSegment {
-                |    fun readIndex(segment: MemorySegment, index: Long): real_t =
-                |        segment.get($layoutName, GodotReal.byteOffset(index))
+                |    fun readIndex(segment: MemorySegment, index: Long): Double =
+                |        segment.get($layoutName, index * GodotReal.SIZE_BYTES)$widen
                 |
-                |    fun writeIndex(segment: MemorySegment, index: Long, value: real_t) {
-                |        segment.set($layoutName, GodotReal.byteOffset(index), value)
+                |    fun writeIndex(segment: MemorySegment, index: Long, value: Double) {
+                |        segment.set($layoutName, index * GodotReal.SIZE_BYTES, value$narrow)
                 |    }
                 |}
                 |"""
@@ -256,7 +260,7 @@ configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
     val commonMain by getting {
       // The REAL common fragment (task 104 step 3 parcel C'): src/commonMain/kotlin holds the
       // value types, GodotHandle and the expect seams (RawSegment / NULL_SEGMENT, BuiltinCalls,
-      // ObjectCalls, ObjectRuntime), the generated real_t, and since task 117 P4' the whole API
+      // ObjectCalls, ObjectRuntime), the generated real_t storage width, and since task 117 P4' the whole API
       // wrapper tree (net/multigesture/kanama/api). Everything here type-checks with no platform
       // declaration in sight — K2 resolves a common source file against common code only, even
       // inside a platform compilation — which is what makes the compiler the proof that both
@@ -318,7 +322,7 @@ tasks.configureEach {
       val selected = kanamaRealPrecision.get()
       if (selected != "single") {
         throw GradleException(
-          "iOS currently supports only single-precision Godot real_t; " +
+          "iOS currently supports only single-precision Godot real_t storage; " +
             "-PkanamaPrecision=$selected is unsupported for the iOS targets"
         )
       }

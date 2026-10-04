@@ -1,5 +1,3 @@
-@file:Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-
 package net.multigesture.kanama.types
 
 import kotlin.jvm.JvmInline
@@ -32,19 +30,19 @@ data class Vector3(
    *
    * Generated from Godot docs: Vector3.x
    */
-  val x: real_t,
+  val x: Double,
   /**
    * The vector's Y component. Also accessible by using the index position `[1]`.
    *
    * Generated from Godot docs: Vector3.y
    */
-  val y: real_t,
+  val y: Double,
   /**
    * The vector's Z component. Also accessible by using the index position `[2]`.
    *
    * Generated from Godot docs: Vector3.z
    */
-  val z: real_t,
+  val z: Double,
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector3 (scripts/generate_api_wrapper.py — do not edit) =====
   /**
@@ -84,15 +82,11 @@ data class Vector3(
 
   // ===== END GENERATED ENUMS: Vector3 =====
 
-  constructor(
-    x: Number,
-    y: Number,
-    z: Number,
-  ) : this(GodotReal.fromNumber(x), GodotReal.fromNumber(y), GodotReal.fromNumber(z))
+  constructor(x: Number, y: Number, z: Number) : this(x.toDouble(), y.toDouble(), z.toDouble())
 
   // Match GDScript/C# `==`: signed zero compares equal (-0.0 == 0.0), while NaN stays reflexive
   // (NaN == NaN) to satisfy the JVM equals contract. The default data-class `equals` uses
-  // `real_t.equals`, which gives the opposite of both. See wrapper-coverage-roadmap.md.
+  // `Double.equals`, which gives the opposite of both. See wrapper-coverage-roadmap.md.
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other !is Vector3) return false
@@ -102,10 +96,10 @@ data class Vector3(
   }
 
   override fun hashCode(): Int {
-    // Canonicalize signed zero (-0.0 -> +0.0 via `+ 0.0f`) so equal vectors hash equal.
-    var result = (x + 0.0f).hashCode()
-    result = 31 * result + (y + 0.0f).hashCode()
-    result = 31 * result + (z + 0.0f).hashCode()
+    // Canonicalize signed zero (-0.0 -> +0.0 via `+ 0.0`) so equal vectors hash equal.
+    var result = (x + 0.0).hashCode()
+    result = 31 * result + (y + 0.0).hashCode()
+    result = 31 * result + (z + 0.0).hashCode()
     return result
   }
 
@@ -134,46 +128,20 @@ data class Vector3(
   operator fun minus(other: Vector3): Vector3 = Vector3(x - other.x, y - other.y, z - other.z)
 
   operator fun times(scale: Number): Vector3 =
-    Vector3(
-      x.toDouble() * scale.toDouble(),
-      y.toDouble() * scale.toDouble(),
-      z.toDouble() * scale.toDouble(),
-    )
+    Vector3(x * scale.toDouble(), y * scale.toDouble(), z * scale.toDouble())
 
-  operator fun times(scale: Double): Vector3 =
-    Vector3(
-      GodotReal.fromDouble(x.toDouble() * scale),
-      GodotReal.fromDouble(y.toDouble() * scale),
-      GodotReal.fromDouble(z.toDouble() * scale),
-    )
+  operator fun times(scale: Double): Vector3 = Vector3(x * scale, y * scale, z * scale)
 
   operator fun times(scale: Float): Vector3 =
-    Vector3(
-      GodotReal.fromDouble(x.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(z.toDouble() * scale.toDouble()),
-    )
+    Vector3(x * scale.toDouble(), y * scale.toDouble(), z * scale.toDouble())
 
   operator fun div(scale: Number): Vector3 =
-    Vector3(
-      x.toDouble() / scale.toDouble(),
-      y.toDouble() / scale.toDouble(),
-      z.toDouble() / scale.toDouble(),
-    )
+    Vector3(x / scale.toDouble(), y / scale.toDouble(), z / scale.toDouble())
 
-  operator fun div(scale: Double): Vector3 =
-    Vector3(
-      GodotReal.fromDouble(x.toDouble() / scale),
-      GodotReal.fromDouble(y.toDouble() / scale),
-      GodotReal.fromDouble(z.toDouble() / scale),
-    )
+  operator fun div(scale: Double): Vector3 = Vector3(x / scale, y / scale, z / scale)
 
   operator fun div(scale: Float): Vector3 =
-    Vector3(
-      GodotReal.fromDouble(x.toDouble() / scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() / scale.toDouble()),
-      GodotReal.fromDouble(z.toDouble() / scale.toDouble()),
-    )
+    Vector3(x / scale.toDouble(), y / scale.toDouble(), z / scale.toDouble())
 
   operator fun unaryMinus(): Vector3 = Vector3(-x, -y, -z)
 
@@ -184,7 +152,7 @@ data class Vector3(
    *
    * Generated from Godot docs: Vector3.length_squared
    */
-  fun lengthSquared(): Double = (x * x + y * y + z * z).toDouble()
+  fun lengthSquared(): Double = x * x + y * y + z * z
 
   /**
    * Returns the length (magnitude) of this vector.
@@ -238,7 +206,7 @@ data class Vector3(
    *
    * Generated from Godot docs: Vector3.dot
    */
-  fun dot(other: Vector3): Double = (x * other.x + y * other.y + z * other.z).toDouble()
+  fun dot(other: Vector3): Double = x * other.x + y * other.y + z * other.z
 
   /**
    * Returns the cross product of this vector and `with`. This returns a vector perpendicular to
@@ -304,11 +272,11 @@ data class Vector3(
       )
     )
 
-  fun withX(value: Number): Vector3 = Vector3(value, y, z)
+  fun withX(value: Number): Vector3 = Vector3(value.toDouble(), y, z)
 
-  fun withY(value: Number): Vector3 = Vector3(x, value, z)
+  fun withY(value: Number): Vector3 = Vector3(x, value.toDouble(), z)
 
-  fun withZ(value: Number): Vector3 = Vector3(x, y, value)
+  fun withZ(value: Number): Vector3 = Vector3(x, y, value.toDouble())
 
   /**
    * Returns the result of rotating this vector around a given axis by `angle` (in radians). The
@@ -399,25 +367,25 @@ data class Vector3(
      *
      * Generated from Godot docs: Vector3.ZERO
      */
-    val ZERO = Vector3(0f, 0f, 0f)
+    val ZERO = Vector3(0.0, 0.0, 0.0)
     /**
      * One vector, a vector with all components set to `1`.
      *
      * Generated from Godot docs: Vector3.ONE
      */
-    val ONE = Vector3(1f, 1f, 1f)
+    val ONE = Vector3(1.0, 1.0, 1.0)
     /**
      * Up unit vector.
      *
      * Generated from Godot docs: Vector3.UP
      */
-    val UP = Vector3(0f, 1f, 0f)
+    val UP = Vector3(0.0, 1.0, 0.0)
     /**
      * Down unit vector.
      *
      * Generated from Godot docs: Vector3.DOWN
      */
-    val DOWN = Vector3(0f, -1f, 0f)
+    val DOWN = Vector3(0.0, -1.0, 0.0)
     /**
      * Forward unit vector. Represents the local direction of forward, and the global direction of
      * north. Keep in mind that the forward direction for lights, cameras, etc is different from 3D
@@ -426,24 +394,24 @@ data class Vector3(
      *
      * Generated from Godot docs: Vector3.FORWARD
      */
-    val FORWARD = Vector3(0f, 0f, -1f)
+    val FORWARD = Vector3(0.0, 0.0, -1.0)
     /**
      * Back unit vector. Represents the local direction of back, and the global direction of south.
      *
      * Generated from Godot docs: Vector3.BACK
      */
-    val BACK = Vector3(0f, 0f, 1f)
+    val BACK = Vector3(0.0, 0.0, 1.0)
     /**
      * Right unit vector. Represents the local direction of right, and the global direction of east.
      *
      * Generated from Godot docs: Vector3.RIGHT
      */
-    val RIGHT = Vector3(1f, 0f, 0f)
+    val RIGHT = Vector3(1.0, 0.0, 0.0)
     /**
      * Left unit vector. Represents the local direction of left, and the global direction of west.
      *
      * Generated from Godot docs: Vector3.LEFT
      */
-    val LEFT = Vector3(-1f, 0f, 0f)
+    val LEFT = Vector3(-1.0, 0.0, 0.0)
   }
 }

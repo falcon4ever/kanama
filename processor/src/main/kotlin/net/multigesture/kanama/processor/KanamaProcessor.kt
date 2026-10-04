@@ -2435,7 +2435,10 @@ internal fun extractPropertyInitializer(declaration: String, propertyName: Strin
   return declaration.substring(eq + 1).trim().removeSuffix(";").trim().takeIf { it.isNotEmpty() }
 }
 
-private fun normalizeScriptPropertyDefaultLiteral(initializer: String, type: TypeMapping): String? {
+internal fun normalizeScriptPropertyDefaultLiteral(
+  initializer: String,
+  type: TypeMapping,
+): String? {
   val intLiteral = Regex("""[-+]?\d+[lL]?""")
   val doubleLiteral = Regex("""[-+]?(?:\d+\.\d*|\.\d+)(?:[eE][-+]?\d+)?[dD]?""")
   val numberLiteral = Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?[fFdDlL]?""")
@@ -2538,7 +2541,19 @@ private fun normalizeVectorDefaultLiteral(
     constructor.matchEntire(initializer)?.groupValues?.get(1)?.split(",")?.map { it.trim() }
       ?: return null
   if (args.size != components || args.any { !componentPattern.matches(it) }) return null
-  return "$packageClass(${args.joinToString(", ")})"
+  // Decimal vector components are Double (task 134): a `1f`/`0.5f` literal in the script's default
+  // is emitted as the Double literal `1.0`/`0.5`, so the registrar calls the Double constructor.
+  val rendered = if (simpleClass.endsWith("i")) args else args.map(::doubleComponentLiteral)
+  return "$packageClass(${rendered.joinToString(", ")})"
+}
+
+private fun doubleComponentLiteral(literal: String): String {
+  val bare = literal.trimEnd('f', 'F', 'd', 'D', 'l', 'L')
+  return if (bare.contains('.') || bare.contains('e') || bare.contains('E')) {
+    if (bare.endsWith('.')) "${bare}0" else bare
+  } else {
+    "$bare.0"
+  }
 }
 
 internal enum class TypeMapping(
@@ -2565,7 +2580,7 @@ internal enum class TypeMapping(
     "VECTOR2",
     "JAVA_FLOAT",
     8,
-    "net.multigesture.kanama.types.Vector2(0f, 0f)",
+    "net.multigesture.kanama.types.Vector2(0.0, 0.0)",
     "net.multigesture.kanama.types.Vector2",
     scratchAllocationExpr =
       "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 2L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
@@ -2582,7 +2597,7 @@ internal enum class TypeMapping(
     "VECTOR3",
     "JAVA_FLOAT",
     12,
-    "net.multigesture.kanama.types.Vector3(0f, 0f, 0f)",
+    "net.multigesture.kanama.types.Vector3(0.0, 0.0, 0.0)",
     "net.multigesture.kanama.types.Vector3",
     scratchAllocationExpr =
       "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",

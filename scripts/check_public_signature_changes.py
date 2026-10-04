@@ -751,7 +751,7 @@ class Parser:
             if text.startswith("=", k):
                 nl = text.find("\n", k)
                 prop_type = infer_literal(text[k + 1 : nl if nl >= 0 else end])
-                # `val ZERO = Vector3(0f, 0f, 0f)` on Vector3's companion: a constructor call of the
+                # `val ZERO = Vector3(0.0, 0.0, 0.0)` on Vector3's companion: a constructor call of the
                 # owning class has exactly that type.
                 owner = [part for part in scope.split(".") if part != "Companion"][-1:] if scope else []
                 call = re.compile(r"\s*(\w+)\s*\(").match(text, k + 1)

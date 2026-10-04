@@ -45,10 +45,10 @@ class GateFixtureScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObj
     var view: NodePath = NodePath.EMPTY
 
     @Export
-    var offset: Vector2 = Vector2(0f, 0f)
+    var offset: Vector2 = Vector2(0.0, 0.0)
 
     @Export
-    var aim: Vector3 = Vector3(0f, 0f, 0f)
+    var aim: Vector3 = Vector3(0.0, 0.0, 0.0)
 
     @OnReady
     fun ready() {

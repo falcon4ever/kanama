@@ -55,7 +55,7 @@ class Curve2D(handle: GodotHandle) : Resource(handle) {
      *
      * Generated from Godot docs: Curve2D.add_point
      */
-    fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0f, 0f), out: Vector2 = Vector2(0f, 0f), index: Int = -1) {
+    fun addPoint(position: Vector2, inValue: Vector2 = Vector2(0.0, 0.0), out: Vector2 = Vector2(0.0, 0.0), index: Int = -1) {
         checkOpen()
         ObjectCalls.ptrcallWithThreeVector2AndIntArg(addPointBind, segment, position, inValue, out, index)
     }

@@ -26,9 +26,9 @@ data class Plane(
    *
    * Generated from Godot docs: Plane.d
    */
-  val d: real_t,
+  val d: Double,
 ) {
-  constructor(normal: Vector3, d: Number) : this(normal, GodotReal.fromNumber(d))
+  constructor(normal: Vector3, d: Number) : this(normal, d.toDouble())
 
   /** Builds the plane `ax + by + cz = d` from its scalar-equation coefficients. */
   constructor(
@@ -36,7 +36,7 @@ data class Plane(
     y: Number,
     z: Number,
     d: Number,
-  ) : this(Vector3(x, y, z), GodotReal.fromNumber(d))
+  ) : this(Vector3(x.toDouble(), y.toDouble(), z.toDouble()), d.toDouble())
 
   // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. `normal` delegates to
   // Vector3.equals (also fixed); `d` is compared/hashed the same way. See
@@ -47,7 +47,7 @@ data class Plane(
     return normal == other.normal && (d == other.d || (d.isNaN() && other.d.isNaN()))
   }
 
-  override fun hashCode(): Int = 31 * normal.hashCode() + (d + 0.0f).hashCode()
+  override fun hashCode(): Int = 31 * normal.hashCode() + (d + 0.0).hashCode()
 
   /**
    * Returns the shortest distance from the plane to the position `point`. If the point is above the
@@ -56,7 +56,7 @@ data class Plane(
    * Generated from Godot docs: Plane.distance_to
    */
   fun distanceTo(point: Vector3): Double =
-    (normal.x * point.x + normal.y * point.y + normal.z * point.z - d).toDouble()
+    normal.x * point.x + normal.y * point.y + normal.z * point.z - d
 
   /**
    * Returns the intersection point of a ray consisting of the position `from` and the direction
@@ -67,12 +67,12 @@ data class Plane(
   fun intersectsRay(from: Vector3, dir: Vector3): Vector3? {
     val denominator = normal.dot(dir)
     if (abs(denominator) <= 0.00001) return null
-    val signedDistance = (normal.dot(from) - d.toDouble()) / denominator
+    val signedDistance = (normal.dot(from) - d) / denominator
     if (signedDistance > 0.00001) return null
     return from + dir * -signedDistance
   }
 
   companion object {
-    val ZERO = Plane(Vector3.ZERO, GodotReal.fromNumber(0.0))
+    val ZERO = Plane(Vector3.ZERO, 0.0)
   }
 }

@@ -148,7 +148,18 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
 
 data class Rect2(val position: Vector2, val size: Vector2)
 
-data class Color(val r: Float, val g: Float, val b: Float, val a: Float = 1.0f)
+/**
+ * Godot's Color. Components are `Double` like every decimal value Kanama exposes (task 134); the
+ * engine stores them as float32 and the Web backend narrows at the bridge.
+ */
+data class Color(val r: Double, val g: Double, val b: Double, val a: Double = 1.0) {
+  constructor(
+    r: Number,
+    g: Number,
+    b: Number,
+    a: Number = 1.0,
+  ) : this(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
+}
 
 data class Vector3i(val x: Int, val y: Int, val z: Int) {
   companion object {
