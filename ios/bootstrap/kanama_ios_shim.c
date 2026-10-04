@@ -44,7 +44,7 @@ extern void kanama_ios_runtime_script_resource_property_name(
     int32_t buffer_size
 );
 // Godot Variant::Type of property [property_index] (so the script instance can advertise its
-// @ScriptProperty list to the engine — needed for scene-stored values to be applied).
+// @Export list to the engine — needed for scene-stored values to be applied).
 extern int32_t kanama_ios_runtime_script_resource_property_type(
     int64_t script_handle,
     int32_t property_index
@@ -150,7 +150,7 @@ extern int32_t kanama_ios_runtime_script_instance_set_property_string(
     int32_t property_index,
     const char *value
 );
-// `List<String>` (Godot PackedStringArray) @ScriptProperty delivery. The C dispatch extracts
+// `List<String>` (Godot PackedStringArray) @Export delivery. The C dispatch extracts
 // each packed-array element to a utf8 C string and passes them here; the Kotlin runtime hands
 // a List<String> to the generated setPropertyStringArray bridge branch.
 extern int32_t kanama_ios_runtime_script_instance_set_property_string_array(
@@ -159,7 +159,7 @@ extern int32_t kanama_ios_runtime_script_instance_set_property_string_array(
     const char *const *strings,
     int32_t count
 );
-// Value-type (NodePath/Vector2/Vector3/Color) @ScriptProperty delivery: the C side extracts
+// Value-type (NodePath/Vector2/Vector3/Color) @Export delivery: the C side extracts
 // the Variant into a PT-tagged raw byte buffer and hands it across. NODE_PATH ships its utf8
 // path bytes (PT_NODE_PATH); Vector2/3/Color ship their float32 components (PT_VECTOR2/
 // PT_VECTOR3/PT_COLOR). Mirrors the value-type method-call marshalling.
@@ -495,7 +495,7 @@ static GDExtensionTypeFromVariantConstructorFunc g_variant_to_object = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_int = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_vector2i = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_array = NULL;
-// Value-type @ScriptProperty extraction (set-property value path).
+// Value-type @Export extraction (set-property value path).
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_vector2 = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_vector3 = NULL;
 static GDExtensionTypeFromVariantConstructorFunc g_variant_to_color = NULL;
@@ -7973,7 +7973,7 @@ static int32_t kanama_ios_decode_variant_scalar(
         case KANAMA_IOS_VARIANT_TYPE_PACKED_COLOR_ARRAY:
         case KANAMA_IOS_VARIANT_TYPE_PACKED_VECTOR4_ARRAY:
         case KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY: {
-            // task 121 — container returns (Object.get of a List<String> @ScriptProperty, call()
+            // task 121 — container returns (Object.get of a List<String> @Export, call()
             // of a method returning Array/Dictionary/Packed*Array): one self-describing record
             // ([vt][byteLen][payload], the parcel-6 blob), inline through out_str when it fits,
             // otherwise parked in the pending container slot and drained whole by
@@ -10952,7 +10952,7 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
             } else if (elem_type == KANAMA_IOS_VARIANT_TYPE_STRING && g_variant_to_string != NULL) {
                 // task 122 — `Object.set("tags", ["a", "b"])` arrives as a Godot Array of Strings
                 // (that is how desktop and now iOS box a Kotlin List<String>); a List<String>
-                // @ScriptProperty takes it through the same bridge the PackedStringArray branch uses.
+                // @Export takes it through the same bridge the PackedStringArray branch uses.
                 uint64_t raw_str = 0;
                 g_variant_to_string(&raw_str, (GDExtensionVariantPtr)ret_variant);
                 strings[i] = kanama_ios_string_to_utf8_dup((GDExtensionConstStringPtr)&raw_str);
@@ -11038,7 +11038,7 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_PACKED_STRING_ARRAY
                && g_variant_to_packed_string_array != NULL) {
-        // List<String> @ScriptProperty delivery. Extract the PackedStringArray from the Variant
+        // List<String> @Export delivery. Extract the PackedStringArray from the Variant
         // into its opaque storage, then iterate via the cached size/operator_index_const builtins
         // (same trio the no-arg ptrcall return helper uses), dup each element to utf8, and hand
         // the C string array to the Kotlin runtime entrypoint.
@@ -12916,7 +12916,7 @@ static void kanama_ios_ptrcall_selftest(void) {
         KANAMA_IOS_ST_CHECK("builtin Vector3.max_axis_index int", ok);
     }
 
-    // Value-type @ScriptProperty delivery (Phase 3.2 Step 5 / 2.6): exercise the set-property
+    // Value-type @Export delivery (Phase 3.2 Step 5 / 2.6): exercise the set-property
     // extraction primitives — the exact converters kanama_ios_script_instance_set_property uses
     // to turn an incoming Variant into the PT-tagged bytes the Kotlin runtime decodes. NodePath
     // goes through variant->NodePath->String(idx3)->utf8; Vector2/Vector3 through variant->float32.
@@ -12970,7 +12970,7 @@ static void kanama_ios_ptrcall_selftest(void) {
         KANAMA_IOS_ST_CHECK("setprop-vector3", 0);
     }
     // PackedStringArray round-trip: build the same Variant shape Godot delivers for
-    // List<String> @ScriptProperty values, extract it through the set-property primitive, and
+    // List<String> @Export values, extract it through the set-property primitive, and
     // verify the utf8 element path used by kanama_ios_script_instance_set_property.
     if (g_variant_from_packed_string_array != NULL && g_variant_to_packed_string_array != NULL) {
         kanama_ios_cache_packed_string_methods();

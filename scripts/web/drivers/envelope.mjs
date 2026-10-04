@@ -132,7 +132,7 @@ export async function collectExercisedMembers(evaluate, exportDir) {
  * Task 80 slice 6: resolve a registered method's NAME to the id the bridge dispatches on.
  *
  * The reverse of the census resolution above. Method ids are positional, so a driver must
- * never hardcode one -- adding a @RegisterFunction above another silently renumbers it,
+ * never hardcode one -- adding a registered function above another silently renumbers it,
  * and the call would then dispatch a DIFFERENT method while still "working".
  *
  * Returns null when the manifest or the method is missing, so the caller can report the

@@ -228,7 +228,7 @@ ensure_gdextension_header "${godot_bins[0]}"
 # (also KMP) -- which is how GodotBackendContractTest (1,100 lines) and the
 # checkPlatformBackendContract descriptor check had never run in CI (task 99, review R16). `test`
 # stays in the list for the JVM modules (:processor, :annotations, :project-scripts). The iOS
-# @ScriptProperty get/set parity contract (task 46) lives in src/jvmTest with the type tests.
+# @Export get/set parity contract (task 46) lives in src/jvmTest with the type tests.
 stage "JVM unit tests + kanama-common-api contract"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" jvmTest test \
   :kanama-common-api:jvmTest :kanama-common-api:checkPlatformBackendContract
@@ -398,6 +398,13 @@ stage "virtual-method signature table drift (task 128 B)"
 # Godot types, the `required` return marker); the processor validates @OverrideVirtual against it,
 # including the typed enum slots. A hand edit or an un-regenerated API bump fails here.
 python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
+
+stage "engine method-name table drift (task 133 B)"
+# processor/.../engine-methods.tsv lists every class's own non-virtual method names from
+# extension_api.json; the processor refuses a public script function whose Godot name would
+# shadow one of the attached class's engine methods (`fun queueFree()` -> queue_free). A hand edit
+# or an un-regenerated API bump fails here.
+python3 "$ROOT_DIR/scripts/generate_engine_method_table.py" --check
 
 stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, task 117 P2')"
 # A zero instance is the generator's static-method marker (NULL_SEGMENT for an `is_static`

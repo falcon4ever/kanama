@@ -414,7 +414,7 @@ export async function runSquash({ url, evaluate, navigate, deadline }) {
   const atPeak = state.last ?? ready;
   trace(`gameplay: mobs=${peak.mobInstantiations} physics=${peak.physicsCalls} frees=${state.mobFrees} live=${atPeak.liveHandles}`);
 
-  // Full teardown: SmokeQuit.smoke_teardown (its only @RegisterFunction, method#1) frees
+  // Full teardown: SmokeQuit.smoke_teardown (its only registered function, method#1) frees
   // the scene root; every node exits the tree and releases its handles. SmokeQuit
   // survives the player's death-path free, so this works in every phase outcome.
   trace("smoke_teardown");

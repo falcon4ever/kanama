@@ -337,7 +337,7 @@ excluded — see the Formatting section in `CONTRIBUTING.md`.
 script-model changes: it runs the static registrar/count/generated-code checks
 that the in-editor runtime smoke does not exercise, so a passing runtime smoke
 alone is not sufficient. It also compiles the generated code for every exported
-property shape, so run it after widening any accepted `@ScriptProperty` type.
+property shape, so run it after widening any accepted `@Export` type.
 
 CI coverage is **build-time + desktop runtime only**. The PR gate compiles
 desktop and runs the desktop/Linux runtime smokes — which also exercise the

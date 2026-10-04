@@ -14,7 +14,9 @@ gate fails the build when one is not (see [Source breaks](#source-breaks)).
 **Scope.** The rules cover the API tree that desktop, Android and iOS compile from the same
 source (`src/commonMain/kotlin/net/multigesture/kanama/api`). The Web backend has its own generated
 surface; [Platform parity](#13-platform-parity) lists where it follows the same rules and where
-it differs. Not covered here: the [annotations](../game-dev/scripts.md) you write scripts with,
+it differs. Not covered here: the [annotations](../game-dev/scripts.md) you write scripts with
+(the reverse of rule 1 for your own scripts, a public `fun showMessage()` registered as Godot's
+`show_message`, is in [Functions Godot Can Call](../game-dev/scripts.md#functions-godot-can-call)),
 the builtin value types' own methods (`Vector3.lerp`, `Basis.inverse`), and `@Tool` /
 editor-only APIs. The signature gate reaches further than these rules: it also holds the value
 types, each platform's own classes and the Web facades to a snapshot (see
@@ -156,8 +158,8 @@ property Godot types as `enum::X` or `bitfield::X` uses it.
   accept the typed values: every enum implements `GodotEnumValue`, which the Variant encoders pass
   as the integer it stands for. What a dynamic path returns (`get`, `call`, Variant returns) is a
   `Long`; wrap it with `Node.ProcessMode(raw as Long)` when you need the type.
-- **Script members** typed with a Godot enum (`@ScriptProperty`, `@RegisterFunction`, `@Signal`,
-  `@Rpc`, engine virtuals) are covered in [Exports and Resources](../game-dev/properties-resources.md#godot-enums-and-bitfields).
+- **Script members** typed with a Godot enum (`@Export` properties, registered functions,
+  `@Signal`, `@Rpc`, engine virtuals) are covered in [Exports and Resources](../game-dev/properties-resources.md#godot-enums-and-bitfields).
 
 ```kotlin
 self.setProcessMode(Node.ProcessMode.ALWAYS)

@@ -4,13 +4,12 @@ import kotlin.math.PI
 import kotlin.math.abs
 import kotlinx.coroutines.launch
 import net.multigesture.kanama.annotations.Export
+import net.multigesture.kanama.annotations.GodotName
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.PropertyHint
-import net.multigesture.kanama.annotations.RegisterFunction
 import net.multigesture.kanama.annotations.ScriptClass
-import net.multigesture.kanama.annotations.ScriptProperty
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.AudioStreamPlayer
 import net.multigesture.kanama.api.Camera3D
@@ -59,7 +58,7 @@ import net.multigesture.kanama.web.WebExperimentalGenericCall
  *
  * Task 66b addition: the enter-tree ordering proof. [enterTree] runs from `@OnEnterTree` (the
  * protocol-16 crossing) and records (a) that it ran at all, (b) that the scene-exported
- * `@ScriptProperty` value was already pushed when it ran — `_enter_tree` calls
+ * `@Export` value was already pushed when it ran — `_enter_tree` calls
  * `_kanama_ensure_created()`, which constructs the Kotlin instance and applies every export
  * before dispatching — and (c) via [ready], that it ran BEFORE `_ready`. The driver reads the
  * combined mask through [enterTreeProbe] and fails the smoke unless it is exactly 7.
@@ -75,14 +74,14 @@ class Main(godotObject: GodotHandle) :
   override val kanamaScope = KanamaScope()
 
   /** Overridden in main.tscn to [ENTER_TREE_EXPORTED] — never the default — for the 66b proof. */
-  @ScriptProperty var enterTreeGreeting: String = "unset"
+  @Export var enterTreeGreeting: String = "unset"
 
   /**
    * Task-64 NodePath push proof: overridden in main.tscn to `NodePath("Spinner")` — never the
    * default — and [propertyProbe] both compares the pushed path and resolves a live node
    * through the NodePath [net.multigesture.kanama.api.Node] accessor overloads.
    */
-  @ScriptProperty var spinnerPath: NodePath = NodePath("")
+  @Export var spinnerPath: NodePath = NodePath("")
 
   /**
    * Task-64 hint-metadata + one-line-annotation proof: the proxy must declare this as
@@ -105,23 +104,23 @@ class Main(godotObject: GodotHandle) :
   // exported NodePath into a node REFERENCE only for properties named in that attribute;
   // without it the property stays null and this looks exactly like a backend gap. It is not
   // one -- and the same trap is waiting for anyone hand-authoring a scene.
-  @ScriptProperty var probeString: String = "wrong"
+  @Export var probeString: String = "wrong"
 
-  @ScriptProperty var probeInt: Long = -1
+  @Export var probeInt: Long = -1
 
-  @ScriptProperty var probeFloat: Double = -1.0
+  @Export var probeFloat: Double = -1.0
 
-  @ScriptProperty var probeBool: Boolean = false
+  @Export var probeBool: Boolean = false
 
-  @ScriptProperty var probeVector2: Vector2 = Vector2.ZERO
+  @Export var probeVector2: Vector2 = Vector2.ZERO
 
-  @ScriptProperty var probeVector3: Vector3 = Vector3.ZERO
+  @Export var probeVector3: Vector3 = Vector3.ZERO
 
-  @ScriptProperty var probeVector2i: Vector2i = Vector2i.ZERO
+  @Export var probeVector2i: Vector2i = Vector2i.ZERO
 
-  @ScriptProperty var probeObject: Node3D? = null
+  @Export var probeObject: Node3D? = null
 
-  @ScriptProperty var probeStringArray: List<String> = emptyList()
+  @Export var probeStringArray: List<String> = emptyList()
 
   /**
    * Task-64 Curve + Resource-typed hydration proof (thirdperson Bullet's `scaleDecay: Curve?`).
@@ -129,7 +128,7 @@ class Main(godotObject: GodotHandle) :
    * the default null — so [curveSampleProbe] can compare [Curve.sample] against a value the
    * Kotlin default could never produce by accident.
    */
-  @ScriptProperty var probeCurve: Curve? = null
+  @Export var probeCurve: Curve? = null
 
   private lateinit var spinner: Node3D
   private var angle = 0.0
@@ -169,12 +168,12 @@ class Main(godotObject: GodotHandle) :
     spinner.rotation = Vector3(0.0, angle, 0.0)
   }
 
-  @RegisterFunction("_on_jump_button_button_down")
+  @GodotName("_on_jump_button_button_down")
   fun onJumpButtonButtonDown() {
     Input.actionPress("jump")
   }
 
-  @RegisterFunction("_on_jump_button_button_up")
+  @GodotName("_on_jump_button_button_up")
   fun onJumpButtonButtonUp() {
     Input.actionRelease("jump")
   }
@@ -189,7 +188,6 @@ class Main(godotObject: GodotHandle) :
    * global-rotation channel; a failed check throws before the aim, so the read-back only matches
    * when everything above it passed (and the throw itself surfaces as a callback fault).
    */
-  @RegisterFunction("parity_probe")
   fun parityProbe() {
     // Item 1: Resource.fromHandle round-trips an already-held handle to the same instance.
     val stream =
@@ -223,7 +221,6 @@ class Main(godotObject: GodotHandle) :
    * flips the aim to +Z-forward (global yaw +PI/2) — the fps Enemy's 180-degree gap. The driver
    * asserts the PI flip against method #3's read-back.
    */
-  @RegisterFunction("parity_model_front_look")
   fun parityModelFrontLook() {
     self.lookAt(self.globalPosition + Vector3(1.0, 0.0, 0.0), useModelFront = true)
     check(abs(self.globalRotation.y - PI / 2) < 1e-3) {
@@ -233,11 +230,10 @@ class Main(godotObject: GodotHandle) :
 
   /**
    * Harness probe (method#5): bit 1 = `@OnEnterTree` dispatched, bit 2 = the exported (non-default)
-   * `@ScriptProperty` value was visible inside it, bit 4 = it ran before `@OnReady`. A healthy run
+   * `@Export` value was visible inside it, bit 4 = it ran before `@OnReady`. A healthy run
    * returns 7. The argument is unused (the Int->Int shape is what the callInt transport carries;
    * the proxy's ready-path immediate call passes 47 and records the same mask).
    */
-  @RegisterFunction("enter_tree_probe")
   fun enterTreeProbe(value: Long): Long {
     var mask = 0L
     if (enterTreeRan) mask = mask or 1L
@@ -255,7 +251,6 @@ class Main(godotObject: GodotHandle) :
    * `is_in_group`/`get_parent` have typed twins, which makes them the cost comparator and the
    * tracked-object-return probe.
    */
-  @RegisterFunction("generic_probe")
   fun genericProbe() {
     val generic = WebExperimentalGenericCall
     genericWebGameplayFallback("Node.set_meta")
@@ -406,7 +401,6 @@ class Main(godotObject: GodotHandle) :
    * so a shape audit saw a full set and third-person's coin spill died on a component path
    * (`"position:y"`). Returns 1 when the tweener came back live.
    */
-  @RegisterFunction("scalar_tween_probe")
   fun scalarTweenProbe(value: Long): Long {
     val tween = self.createTween() ?: return 0L
     val tweener = tween.tweenProperty(self, "position:y", 0.0, 0.05)
@@ -422,7 +416,6 @@ class Main(godotObject: GodotHandle) :
    * returned tweener is the SAME object the tween produced (identity), which is what the
    * fluent contract promises and what a dropped call would break by returning null.
    */
-  @RegisterFunction("tweener_from_probe")
   fun tweenerFromProbe(value: Long): Long {
     // A COLOR property, because from() must agree with the tween's value type -- Godot
     // rejects "float and Color" outright, which is exactly what the first draft of this
@@ -463,7 +456,6 @@ class Main(godotObject: GodotHandle) :
    * the typed get_root path, and the generic probe's minting check needs that same window still
    * untracked when it asks `get_window` -- see the driver comment.
    */
-  @RegisterFunction("input_map_probe")
   fun inputMapProbe(value: Long): Long {
     var mask = 0L
     val action = "kanama_probe_action"
@@ -524,7 +516,6 @@ class Main(godotObject: GodotHandle) :
     return mask
   }
 
-  @RegisterFunction("signal_probe")
   fun signalProbe(value: Long): Long {
     var mask = 0L
     if (confZeroFired) mask = mask or 1L
@@ -532,7 +523,6 @@ class Main(godotObject: GodotHandle) :
     return mask
   }
 
-  @RegisterFunction("property_probe")
   fun propertyProbe(value: Long): Long {
     var mask = 0L
     if (spinnerPath.path == "Spinner") mask = mask or 1L
@@ -554,11 +544,10 @@ class Main(godotObject: GodotHandle) :
 
   /**
    * Task-64 Curve + Resource-typed hydration probe (driver method after `property_probe`): bit 1
-   * = the `Curve?` `@ScriptProperty` hydrated a non-null resource over the generic OBJECT
+   * = the `Curve?` `@Export` hydrated a non-null resource over the generic OBJECT
    * property arm, bit 2 = [Curve.sample] (opcode 306) reads back the VALUE a linear two-point
    * curve predicts at its midpoint, not merely a successful call. A healthy run returns 3.
    */
-  @RegisterFunction("curve_sample_probe")
   fun curveSampleProbe(value: Long): Long {
     var mask = 0L
     val curve = probeCurve
@@ -577,7 +566,6 @@ class Main(godotObject: GodotHandle) :
    * `MainThread.postAfterFrames(3)` hop chain was scheduled (its arrival is read back through
    * [demoPageProbeAfter]). A healthy run returns 31 and [demoPageProbeAfter] returns 1 later.
    */
-  @RegisterFunction("demo_page_probe")
   fun demoPageProbe(value: Long): Long {
     var mask = 0L
     val tree = self.getTree()
@@ -606,7 +594,6 @@ class Main(godotObject: GodotHandle) :
   private var demoPageAfterFrames = false
 
   /** Task-64 DemoPage-set readback: 1 once the `postAfterFrames(3)` hop chain has run. */
-  @RegisterFunction("demo_page_probe_after")
   fun demoPageProbeAfter(value: Long): Long = if (demoPageAfterFrames) 1L else 0L
 
   /**
@@ -626,7 +613,6 @@ class Main(godotObject: GodotHandle) :
    * `is_inside_tree` (319); bit 2 = a fresh `Camera3D.create()` is NOT in the tree; bit 4 = after
    * `add_child` it is; bit 8 = it is not `is_queued_for_deletion` (320). A healthy run returns 15.
    */
-  @RegisterFunction("node_lifecycle_probe")
   fun nodeLifecycleProbe(value: Long): Long {
     var mask = 0L
     if (self.isInsideTree()) mask = mask or 1L
@@ -643,7 +629,6 @@ class Main(godotObject: GodotHandle) :
     return mask
   }
 
-  @RegisterFunction("camera_mode_probe")
   fun cameraModeProbe(value: Long): Long {
     var mask = 0L
     val previousCamera = self.getViewport()?.getCamera3D()
@@ -694,7 +679,6 @@ class Main(godotObject: GodotHandle) :
    * Runs AFTER `generic_probe` (it wraps the viewport, which TRACKS the root window -- the same
    * coupling `input_map_probe` and `camera_mode_probe` state).
    */
-  @RegisterFunction("render_settings_probe")
   fun renderSettingsProbe(value: Long): Long {
     var mask = 0L
     if (RenderingServer.getCurrentRenderingDriverName().isNotEmpty()) mask = mask or 1L
@@ -751,7 +735,6 @@ class Main(godotObject: GodotHandle) :
    *
    * Runs AFTER `generic_probe`, like the other viewport-wrapping probes.
    */
-  @RegisterFunction("window_family_probe")
   fun windowFamilyProbe(value: Long): Long {
     var mask = 0L
     if (self.getWindow() != null) mask = mask or 1L
@@ -835,31 +818,28 @@ class Main(godotObject: GodotHandle) :
   private var coroutineMask = 0L
   private var timerMask = 0L
 
-  @RegisterFunction("dispatch_probe_float")
   fun dispatchProbeFloat(amount: Double) {
     probeFloatArgument = amount
   }
 
-  @RegisterFunction("dispatch_probe_bool")
   fun dispatchProbeBool(flag: Boolean) {
     probeBoolArgument = flag
   }
 
   /** The third-person `damage(impactPoint, force)` shape: six numeric slots, the widest one. */
-  @RegisterFunction("dispatch_probe_impact")
   fun dispatchProbeImpact(impactPoint: Vector3, force: Vector3) {
     probeImpactSum = impactPoint + force
   }
 
-  @RegisterFunction("dispatch_probe_vector") fun dispatchProbeVector(): Vector3 = PROBE_VECTOR
+  fun dispatchProbeVector(): Vector3 = PROBE_VECTOR
 
-  @RegisterFunction("dispatch_probe_number") fun dispatchProbeNumber(): Double = PROBE_NUMBER
+  fun dispatchProbeNumber(): Double = PROBE_NUMBER
 
-  @RegisterFunction("dispatch_probe_text") fun dispatchProbeText(): String = PROBE_TEXT
+  fun dispatchProbeText(): String = PROBE_TEXT
 
-  @RegisterFunction("dispatch_probe_flag") fun dispatchProbeFlag(): Boolean = true
+  fun dispatchProbeFlag(): Boolean = true
 
-  @RegisterFunction("dispatch_probe_count") fun dispatchProbeCount(): Long = PROBE_COUNT
+  fun dispatchProbeCount(): Long = PROBE_COUNT
 
   /**
    * Task-80 dispatch probe (driver method #16). Bits, all of which a healthy run sets (mask 127):
@@ -876,7 +856,6 @@ class Main(godotObject: GodotHandle) :
    * Everything except the signal bit rides `callv` through the generic tier, so the values make a
    * full Kotlin -> GDScript proxy -> Kotlin round trip and the proxy's own parse is under test.
    */
-  @RegisterFunction("dispatch_probe")
   fun dispatchProbe(value: Long): Long {
     val generic = WebExperimentalGenericCall
     var mask = 0L
@@ -946,7 +925,6 @@ class Main(godotObject: GodotHandle) :
    * transport's own separator and percent-escape look-alikes — so the escaping is under test, not
    * just the arity.
    */
-  @RegisterFunction("dispatch_probe_tag")
   fun dispatchProbeTag(label: String, node: Node3D) {
     probeTagArgument = label
     probeTagNodeMatched = node.handle == self.handle
@@ -956,7 +934,6 @@ class Main(godotObject: GodotHandle) :
    * The tps `Level.add_player(id, spawnPoint: Marker3D?)` shape: a whole number plus a NULLABLE
    * object, so the 0 handle must arrive as Kotlin `null` rather than as a wrapper around nothing.
    */
-  @RegisterFunction("dispatch_probe_join")
   fun dispatchProbeJoin(id: Long, spawnPoint: Node3D?) {
     probeJoinId = id
     probeJoinNodeWasNull = spawnPoint == null
@@ -982,7 +959,6 @@ class Main(godotObject: GodotHandle) :
    * engine fired the one-shot timer and the connection delivered it). Read back through
    * [timerProbeMask] after the driver's coroutine section has pumped frames; a healthy run reads 7.
    */
-  @RegisterFunction("timer_probe")
   fun timerProbe() {
     timerMask = 1L
     kanamaScope.launch {
@@ -993,10 +969,8 @@ class Main(godotObject: GodotHandle) :
     }
   }
 
-  @RegisterFunction("timer_probe_mask")
   fun timerProbeMask(value: Long): Long = timerMask
 
-  @RegisterFunction("coroutine_probe")
   fun coroutineProbe() {
     coroutineMask = 1L
     kanamaScope.launch {
@@ -1017,7 +991,6 @@ class Main(godotObject: GodotHandle) :
    * FIRST continuation through this same scheduler, so the body does not merely stall mid-way —
    * it never starts, and still throws nothing.
    */
-  @RegisterFunction("coroutine_probe_mask")
   fun coroutineProbeMask(value: Long): Long = coroutineMask
 
   /**

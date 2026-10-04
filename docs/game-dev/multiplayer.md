@@ -28,11 +28,10 @@ old connection state behind when switching between menu and gameplay scenes.
 
 ## RPC Methods
 
-Declare network-callable methods with `@Rpc` and register them as Godot
-methods:
+Declare network-callable methods with `@Rpc` on a public function (every public
+function of a script is registered with Godot):
 
 ```kotlin
-@RegisterFunction
 @Rpc(callLocal = true)
 fun jump() {
     queuedJump = true
@@ -83,11 +82,11 @@ If a scene's `SceneReplicationConfig` synchronizes `.:motion`, the attached
 Kotlin script must expose that exact property name:
 
 ```kotlin
-@ScriptProperty
+@Export
 var motion: Vector2 = Vector2.ZERO
 ```
 
-Use `@ScriptProperty(name = "...")` when the Kotlin property name differs from
+Use `@Export(name = "...")` when the Kotlin property name differs from
 the serialized scene name. Built-in node properties such as `position`,
 `rotation`, and `transform` are handled by Godot; custom script properties must
 be exposed by Kanama.
@@ -128,7 +127,7 @@ usually drift during GDScript-to-Kotlin ports:
   especially for nested `MultiplayerSynchronizer` nodes;
 - spawned player node names are stable across peers, usually matching peer ids;
 - every custom `.:property` in a `SceneReplicationConfig` is exposed with
-  `@ScriptProperty` or `@ScriptProperty(name = "...")`;
+  `@Export` or `@Export(name = "...")`;
 - known Kotlin script targets use generated `*Rpcs` helpers or direct typed
   calls instead of raw string dispatch; and
 - remaining dynamic `call`, `rpc`, or animation-tree property strings are real

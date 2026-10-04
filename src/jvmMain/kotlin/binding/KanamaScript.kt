@@ -1473,11 +1473,11 @@ class KanamaScript(
       val si =
         if (allowPlaceholder) {
           // Carry the script's property list onto the placeholder so the
-          // editor inspector renders @ScriptProperty fields even when
+          // editor inspector renders @Export fields even when
           // the script isn't @Tool. Dispatch lambdas stay as defaults
           // (no-ops returning false) so user code can't run; ScriptBridge
           // falls back to the script-level get/set/property-default
-          // path for inspector reads of @ScriptProperty values.
+          // path for inspector reads of @Export values.
           KanamaScriptInstance(
             kotlinObject = KanamaPlaceholderScriptInstanceData,
             ownerObject = forObject,

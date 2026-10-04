@@ -74,7 +74,7 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
 
 export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir }) {
   // Task 80 slice 4: resolve probe ids from the export manifest, never hardcode them.
-  // Adding ONE @RegisterFunction renumbers the rest -- `signal_probe` took id 7 and pushed
+  // Adding ONE registered function renumbers the rest -- `signal_probe` took id 7 and pushed
   // `property_probe` to 8 and `dispatch_probe` to 17. A hardcoded id then dispatches a
   // DIFFERENT method and still returns a number, so the check keeps "passing" while testing
   // something else entirely. Same trap slice 6 hit on match3.
@@ -109,7 +109,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   trace(`ready: readyCount=${ready.readyCount} mainHandle=${ready.mainHandle} protocol=${ready.protocol}`);
 
   // Task 66b enter-tree proof: Main.enter_tree_probe (method#5, Int->Int) returns a mask —
-  // bit 1 = @OnEnterTree dispatched, bit 2 = the scene-exported @ScriptProperty value
+  // bit 1 = @OnEnterTree dispatched, bit 2 = the scene-exported @Export value
   // ("web3d-enter-tree", never the default) was visible inside it, bit 4 = it ran before
   // @OnReady. A healthy protocol-16 run returns exactly 7.
   const enterTreeProbe = Number(

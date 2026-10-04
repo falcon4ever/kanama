@@ -1,46 +1,40 @@
 package net.multigesture.kanama.annotations
 
+// The iOS (Kotlin/Native) copy of the script annotations: the `annotations` module is JVM-only, so
+// the K/N runtime carries the same canonical set itself (everything but the JVM-only
+// `@RegisterClass`). Keep the names and parameters equal to
+// annotations/src/main/kotlin/net/multigesture/kanama/annotations/Annotations.kt.
+
 annotation class ScriptClass(val attachTo: String = "Node")
 
-annotation class RegisterFunction(val name: String = "")
+@Target(AnnotationTarget.CLASS) @Retention(AnnotationRetention.SOURCE) annotation class Tool
 
-annotation class Method(val name: String = "")
+// Godot-side name for a registered function (public functions are registered automatically).
+// Declared like the former iOS `RegisterFunction` (default retention), whose `name` argument the
+// iOS KSP pass reads.
+annotation class GodotName(val name: String)
+
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ExportToolButton(val text: String, val icon: String = "", val name: String = "")
 
 annotation class OnReady
 
-annotation class Ready
-
 annotation class OnEnterTree
-
-annotation class EnterTree
 
 annotation class OnExitTree
 
-annotation class ExitTree
-
 annotation class OnProcess
-
-annotation class Process
 
 annotation class OnPhysicsProcess
 
-annotation class PhysicsProcess
-
 annotation class OnInput
-
-annotation class Input
 
 annotation class OnUnhandledInput
 
-annotation class UnhandledInput
-
 annotation class OnShortcutInput
 
-annotation class ShortcutInput
-
 annotation class OnUnhandledKeyInput
-
-annotation class UnhandledKeyInput
 
 /**
  * Override an arbitrary engine virtual; the function name is the virtual name (e.g. `fun _draw()`).
@@ -69,18 +63,11 @@ object RpcTransferMode {
   const val RELIABLE = 2
 }
 
-annotation class ScriptProperty(
-  val name: String = "",
-  val hint: Int = 0,
-  val hintString: String = "",
-  val usage: Int = 6,
-)
-
 annotation class Export(
   val name: String = "",
   val hint: Int = 0,
   val hintString: String = "",
-  val usage: Int = 6,
+  val usage: Int = PropertyUsage.DEFAULT,
 )
 
 annotation class ExportGroup(val name: String, val prefix: String = "")
@@ -109,8 +96,166 @@ object PropertyHint {
   const val COLOR_NO_ALPHA = 21
   const val TYPE_STRING = 23
   const val NODE_TYPE = 34
+  const val DICTIONARY_TYPE = 38
   const val TOOL_BUTTON = 39
+}
+
+// iOS shadow of the desktop PropertyUsage flags (used in @Export usage=...).
+object PropertyUsage {
+  const val NONE = 0
+  const val STORAGE = 2
+  const val EDITOR = 4
+  const val DEFAULT = STORAGE or EDITOR
+  const val GROUP = 64
+  const val CATEGORY = 128
+  const val SUBGROUP = 256
+  const val SCRIPT_VARIABLE = 4096
+  const val STORE_IF_NULL = 8192
+  const val UPDATE_ALL_IF_MODIFIED = 16384
+  const val SCRIPT_DEFAULT_VALUE = 32768
+  const val READ_ONLY = 268435456
+  const val SECRET = 536870912
+  const val NO_EDITOR = STORAGE
 }
 
 // iOS shadow of @GlobalClass (GDScript class_name intent). SOURCE-retained; consumed by KSP.
 @Target(AnnotationTarget.CLASS) @Retention(AnnotationRetention.SOURCE) annotation class GlobalClass
+
+// ---------- Removed in Kanama 0.5 (task 133 B) ----------
+//
+// Tombstones, not aliases: each removed name still resolves, so a leftover use is a compile error
+// whose message names the replacement (without the class, `@Process` would quietly resolve to
+// `java.lang.Process` and `@ScriptProperty` would say only "Unresolved reference").
+// `DeprecationLevel.ERROR` makes every use fail to compile; nothing reads them. The KSP processor
+// reports the same leftovers at their declarations. scripts/migrate_script_annotations.py rewrites
+// a source tree.
+
+@Deprecated(
+  "removed in Kanama 0.5: public functions are registered automatically; delete it, or use @GodotName(\"...\") for another Godot name. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class RegisterFunction(val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: public functions are registered automatically; delete it, or use @GodotName(\"...\") for another Godot name. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Method(val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: use @Export (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ScriptProperty(
+  val name: String = "",
+  val hint: Int = 0,
+  val hintString: String = "",
+  val usage: Int = 6,
+)
+
+@Deprecated(
+  "removed in Kanama 0.5: use @Export (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
+annotation class RegisterProperty(
+  val name: String = "",
+  val hint: Int = 0,
+  val hintString: String = "",
+  val usage: Int = 6,
+)
+
+@Deprecated(
+  "removed in Kanama 0.5: use @GlobalClass. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ClassName()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @ExportToolButton (same parameters). scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ToolButton(val text: String = "", val icon: String = "", val name: String = "")
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnReady. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Ready()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnEnterTree. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class EnterTree()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnExitTree. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ExitTree()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnProcess. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Process()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnPhysicsProcess. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class PhysicsProcess()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Input()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnUnhandledInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class UnhandledInput()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnShortcutInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ShortcutInput()
+
+@Deprecated(
+  "removed in Kanama 0.5: use @OnUnhandledKeyInput. scripts/migrate_script_annotations.py rewrites a source tree.",
+  level = DeprecationLevel.ERROR,
+)
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class UnhandledKeyInput()

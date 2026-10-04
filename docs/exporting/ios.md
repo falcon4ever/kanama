@@ -129,7 +129,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
 That one property registers the scripts for **both** targets: the iOS runtime
 gets its registrars, and the same sources are compiled into the desktop
 `kanama-scripts.jar` the export-time editor loads. The editor needs that jar to
-know the scripts' `@ScriptProperty` names — Godot's export instantiates and
+know the scripts' `@Export` names — Godot's export instantiates and
 re-packs every scene when it converts text resources to binary and keeps only
 the properties the script instance reports, so an unknown script loses every
 scene-stored value without any error. `-PkanamaProjectScriptsDir` may still be
@@ -141,12 +141,12 @@ project's `.godot/exported/` directory before exporting again — Godot caches
 each converted scene there keyed by the source file's md5 and mtime and reuses
 a stripped conversion until the `.tscn` itself changes.
 
-An exported property (`@ScriptProperty`) that the iOS backend cannot deliver —
+An exported property (`@Export`) that the iOS backend cannot deliver —
 a typed `Map`, or a value type without an iOS path such as `Vector2i` — fails
 this build and names the property:
 
 ```text
-e: [ksp] [kanama:ksp] [kanama-ios] DataStructure.position (VECTOR2I) — no iOS @ScriptProperty
+e: [ksp] [kanama:ksp] [kanama-ios] DataStructure.position (VECTOR2I) — no iOS @Export
 path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
 this property would be dropped. ...
 ```
@@ -243,7 +243,7 @@ Common failures:
 | Xcode reports no signing team | Set the Apple Development team in the export preset or Xcode project. |
 | Xcode cannot create a provisioning profile | Sign in to Xcode with an Apple Developer account and allow provisioning updates, or create the profile in the Apple Developer portal. |
 | Device is not a valid destination | Connect and trust the iPhone, enable Developer Mode, and use `xcrun devicectl list devices` to confirm the device identifier. |
-| Kanama scripts load without scene property values (a `PackedScene`/`Texture2D` `@ScriptProperty` is null in `_ready`) | The export-time editor did not know the scripts: check the export log for `WARNING: no Kotlin class bound`, re-run `installIosAddon` with `-PkanamaIosProjectScriptsDir` (or both script-dir properties), delete `.godot/exported/` and export again. |
+| Kanama scripts load without scene property values (a `PackedScene`/`Texture2D` `@Export` is null in `_ready`) | The export-time editor did not know the scripts: check the export log for `WARNING: no Kotlin class bound`, re-run `installIosAddon` with `-PkanamaIosProjectScriptsDir` (or both script-dir properties), delete `.godot/exported/` and export again. |
 | Godot warns about a missing iOS GDExtension library | Re-run `installIosAddon` and confirm the `ios.debug.arm64` and `ios.release.arm64` entries exist. |
 
 ## Export An iOS App

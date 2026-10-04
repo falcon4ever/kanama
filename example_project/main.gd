@@ -104,7 +104,7 @@ func _ready() -> void:
 
 	#get_tree().quit()
 
-# task 32 — custom enum exports. A Kotlin `enum class` @ScriptProperty must register
+# task 32 — custom enum exports. A Kotlin `enum class` @Export must register
 # as an INT property with PROPERTY_HINT_ENUM and the entry names as hint_string
 # (C# export parity), round-trip ordinals through set/get, and clamp out-of-range
 # stored ints to a valid entry instead of crashing.
@@ -318,7 +318,7 @@ func _kanama_dictionary_export_smoke(properties: Array) -> void:
 # Reverting the fail-soft decode (scalarReadCast* -> throwing `as`) reproduces the abort.
 func _kanama_malformed_property_matrix_smoke() -> void:
 	# task 50 — the standing malformed-input gate. Feed a wrong-typed value to a representative
-	# @ScriptProperty of EVERY exported shape and prove the process SURVIVES: an uncontained cast
+	# @Export of EVERY exported shape and prove the process SURVIVES: an uncontained cast
 	# in a generated setter/getter unwinds through the FFM upcall and aborts the JVM (exit 134)
 	# *before* the summary line prints, so reaching the print at all is the load-bearing
 	# assertion — removing the siSet/siGet Throwable containment reproduces the abort and this
@@ -543,7 +543,7 @@ func _kanama_virtual_return_families_smoke() -> void:
 	lifetime_host.run_lifetime_smoke()
 	lifetime_host.free()
 
-	# task 98 — a throwing @RegisterFunction on a @RegisterClass escapes into the generated FFM
+	# task 98 — a throwing registered function on a @RegisterClass escapes into the generated FFM
 	# upcall stub (no bespoke catch there). Upcalls.stub's structural containment must log it and
 	# hand the engine the zero default (a NIL return) instead of aborting the process.
 	var thrown_result = $HelloKanama.smoke_throw()
@@ -552,7 +552,7 @@ func _kanama_virtual_return_families_smoke() -> void:
 # task 128 B — Godot enum value classes as script members. `var mode: Node.ProcessMode` exports as
 # INT with PROPERTY_HINT_ENUM and Godot's names-with-values hint string, a bitfield with
 # PROPERTY_HINT_FLAGS, and `List<Node.ProcessMode>` as a typed int Array; the stored scene values
-# arrive as the Godot values (not ordinals), a @RegisterFunction takes and returns the enum as an
+# arrive as the Godot values (not ordinals), a registered function takes and returns the enum as an
 # int, and engine virtuals with an enum parameter / return / required object return answer through
 # the script instance dispatch.
 func _kanama_godot_enum_export_smoke() -> void:
@@ -597,7 +597,7 @@ func _kanama_godot_enum_export_smoke() -> void:
 		" class_meta=", class_meta, " list_meta=", list_meta, " default=", default_meta, " tscn=", tscn,
 		" roundtrip=", roundtrip, " function=", function)
 	if not (mode_meta and flags_meta and class_meta and list_meta and default_meta and tscn and roundtrip and function):
-		push_error("Kanama Godot enum @ScriptProperty / @RegisterFunction smoke failed")
+		push_error("Kanama Godot enum @Export / registered-function smoke failed")
 
 	var ts_host = ClassDB.instantiate("TextServerExtension")
 	ts_host.set_script(load("res://EnumVirtualProbe.kt"))
