@@ -84,6 +84,9 @@ object NativeCallSurface {
       // object_get_instance_from_id -- the freed-object check before a wrapper call (task 131);
       // the pointer is returned as a long so the check allocates nothing (task 131 item 16)
       "instance_from_id_probe" to FunctionDescriptor.of(JAVA_LONG, JAVA_LONG),
+      // variant_get_type on a Variant address held as a long: a typed signal reads its emitted
+      // arguments without a MemorySegment per argument (task 134 D4)
+      "variant_type_by_address" to FunctionDescriptor.of(JAVA_INT, JAVA_LONG),
       // object_get_instance_binding -- the liveness flag a wrapper captures at construction
       // (task 132 D7)
       "instance_binding_lookup" to FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, ADDRESS),
@@ -95,6 +98,8 @@ object NativeCallSurface {
       // variant_new_copy, string[_name]_new_with_utf8_chars, classdb_unregister_extension_class,
       // every variant from/to-type constructor and every builtin ptr constructor
       "two_pointer_void" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS),
+      // variant-to-type constructors on addresses held as longs (the typed signal reader, task 134)
+      "two_address_void" to FunctionDescriptor.ofVoid(JAVA_LONG, JAVA_LONG),
       // object_set_instance, classdb_register_extension_class_method, builtin keyed setters,
       // and the engine-supplied add-callback in get_property_state_func
       "three_pointer_void" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS),

@@ -4,6 +4,7 @@ import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout.ADDRESS
 import java.lang.foreign.ValueLayout.JAVA_INT
+import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
 import java.util.concurrent.ConcurrentHashMap
 import net.multigesture.kanama.ffi.GodotFFI
@@ -60,6 +61,28 @@ object VariantConverters {
         "variant_to_type_constructor",
       )
     }
+
+  private val toTypeByAddress = ConcurrentHashMap<Int, MethodHandle>()
+
+  /**
+   * `variant_to_type` for [type] taking both pointers as `long` addresses, `(long typed_out, long
+   * variant)` -> void, so a caller holding raw addresses allocates no segment (task 134 D4).
+   */
+  fun variantToTypeByAddress(type: VariantType): MethodHandle =
+    toTypeByAddress.getOrPut(type.id) {
+      val addr = getToTypeCtor.invoke(type.id) as MemorySegment
+      check(addr.address() != 0L) { "get_variant_to_type_constructor(${type.name}) returned NULL" }
+      GodotFFI.downcallHandle(
+        addr,
+        FunctionDescriptor.ofVoid(JAVA_LONG, JAVA_LONG),
+        "variant_to_type_constructor_by_address",
+      )
+    }
+
+  /** `variant_get_type` on a Variant address held as a `long` (task 134 D4). */
+  val variantTypeByAddress: MethodHandle by lazy {
+    GodotFFI.lookup("variant_get_type", FunctionDescriptor.of(JAVA_INT, JAVA_LONG))
+  }
 
   fun variantTypeOf(variant: MemorySegment): VariantType? {
     val id = variantTypeId(variant)

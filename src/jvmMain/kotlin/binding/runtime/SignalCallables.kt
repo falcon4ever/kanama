@@ -166,18 +166,20 @@ object SignalCallables {
     rReturn: MemorySegment,
     rError: MemorySegment,
   ) {
-    val error = rError.reinterpret(12L)
-    error.set(JAVA_INT, 0, CALL_OK)
-    error.set(JAVA_INT, 4, 0)
-    error.set(JAVA_INT, 8, 0)
+    // Written through the whole-address-space segment: no segment per call (task 134 D4).
+    val memory = JvmSignalArgReader.ADDRESS_SPACE
+    val error = rError.address()
+    memory.set(JAVA_INT, error, CALL_OK)
+    memory.set(JAVA_INT, error + 4, 0)
+    memory.set(JAVA_INT, error + 8, 0)
     val entry = SignalCallbackRegistry.entry(userdata.address()) ?: return
     if (argCount < entry.argumentCount) {
-      error.set(JAVA_INT, 0, CALL_ERROR_TOO_FEW_ARGUMENTS)
-      error.set(JAVA_INT, 8, entry.argumentCount)
+      memory.set(JAVA_INT, error, CALL_ERROR_TOO_FEW_ARGUMENTS)
+      memory.set(JAVA_INT, error + 8, entry.argumentCount)
       return
     }
     try {
-      JvmSignalArgReader.current().dispatch(args, argCount.toInt(), entry.dispatch)
+      JvmSignalArgReader.current().dispatch(args.address(), argCount.toInt(), entry.dispatch)
     } catch (t: Throwable) {
       ScriptErrors.report(t, "signal lambda")
       runCatching {
