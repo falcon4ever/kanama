@@ -563,7 +563,7 @@ fi
 # Task 132: a setter's references belong to the owner's property (the runtime registry), not to the
 # Kotlin object, so free releases them after the GC collected it. The Kotlin object releases none.
 for retained_property in smoke_scene smoke_resource smoke_resources; do
-  if ! rg -Fq "ScriptBridge.retainScriptProperty(godotObject, \"$retained_property\")" "$hello_script_registrar"; then
+  if ! rg -Fq "ScriptBridge.retainScriptProperty(godotObject, \"$retained_property\"," "$hello_script_registrar"; then
     echo "[local_ci] generated setter of $retained_property does not register its references (ScriptBridge.retainScriptProperty)" >&2
     exit 1
   fi
