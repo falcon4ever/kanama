@@ -54,6 +54,9 @@ only `--write`.
   | `@Process`, `@PhysicsProcess` | `@OnProcess`, `@OnPhysicsProcess` |
   | `@Input`, `@UnhandledInput`, `@ShortcutInput`, `@UnhandledKeyInput` | `@OnInput`, `@OnUnhandledInput`, `@OnShortcutInput`, `@OnUnhandledKeyInput` |
 
+  Each removed name is kept as a tombstone annotation marked `@Deprecated(level = ERROR)`, so a
+  leftover use fails to compile with a message naming its replacement on desktop, iOS and Web
+  (without it, `@Process` would resolve to `java.lang.Process`).
   The set is now `@ScriptClass`, `@RegisterClass` (a new ClassDB class, as opposed to a script
   attached to a node), `@Tool`, `@GlobalClass`, `@Export`, `@ExportCategory` / `@ExportGroup` /
   `@ExportSubgroup`, `@ExportToolButton`, `@Signal`, `@Rpc`, `@GodotName`, `@OverrideVirtual` and
@@ -64,10 +67,16 @@ only `--write`.
   `suspend`, extension and generic functions and an `override` of a non-script member
   (`toString()`). `@GodotName("_on_start_button_pressed")` keeps a name a `.tscn` connection saved.
   New build errors, each naming the fix: a public function whose parameter or return type Godot
-  cannot carry (make it `internal` or `private`), two functions on one Godot name, a Kanama
+  cannot carry (make it `internal` or `private`), a public function whose snake_case name is an
+  engine method of the attached class (`fun queueFree()` would shadow `queue_free`; rename it, make
+  it Kotlin-only, or confirm with `@GodotName("queue_free")`; the names come from the new
+  drift-gated `engine-methods.tsv`, `scripts/generate_engine_method_table.py`), a `vararg` public
+  function, an empty `@GodotName("")`, two functions on one Godot name (on a `@RegisterClass`
+  including the `get_x`/`set_x` accessors of `@Export var x`), a Kanama
   annotation on a non-public function (it used to be ignored silently), and a function named like
-  an engine virtual without an annotation (`fun _process(delta: Double)` never ran; the error
-  names `@OnProcess`, or `@OverrideVirtual` for other virtuals). The KSP warning about
+  an engine virtual without an annotation (`fun _process(delta: Double)` never ran, and the
+  camelCase `_getConfigurationWarnings` likewise; the error names `@OnProcess`, or
+  `@OverrideVirtual` for other virtuals). The KSP warning about
   unregistered `onXxx` functions is gone with the cause.
 - **Input handlers take `InputEvent`.** `@OnInput` / `@OnUnhandledInput` / `@OnShortcutInput` /
   `@OnUnhandledKeyInput` functions are `fun input(event: InputEvent)` on desktop, Android, iOS and
@@ -76,7 +85,8 @@ only `--write`.
 - **Migration:** `python3 scripts/migrate_script_annotations.py <kotlin-src>...` renames the removed
   annotations and their imports, deletes `@RegisterFunction` / `@Method` (turning a custom name
   into `@GodotName`), retypes input handlers and drops their rewraps, then lists what needs a human
-  (each public function that was not registered before and now is). `scene_connection_lint.py`,
+  (with `--report-registered`, also each public function that was not registered before and now
+  is). Running it again on migrated sources changes nothing. `scene_connection_lint.py`,
   `check_unapplied_annotations.py` and `audit_replicated_script_properties.py` follow the new names.
   - **Source break:** script annotations (`net.multigesture.kanama.annotations`: the removed names
     above) and lifecycle input handlers (`GodotObject` → `InputEvent`). No generated API signature

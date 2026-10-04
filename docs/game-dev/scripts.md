@@ -228,15 +228,38 @@ class Hud(godotObject: GodotHandle) : KanamaScript<CanvasLayer>(godotObject, ::C
   supported node and resource wrappers, `GodotObject`). Any other type in a public
   function is a build error that names it: make the function `internal` or
   `private` if Godot never calls it.
+  `InputEvent` is not one of them: a helper that takes the event from an input
+  handler (`fun handleKey(event: InputEvent)`) must be `private` or `internal`.
+- A public function whose snake_case name is already an engine method of the
+  attached class (`fun queueFree()` is `queue_free`, `fun getName()` is
+  `get_name`) is a build error: it would replace the engine's method for scene
+  connections, `call()` and `Callable`s on that node. Rename it, make it `internal`
+  or `private`, or confirm the override with `@GodotName("queue_free")`. A function
+  spelled like an engine virtual (`_process`, or the camelCase
+  `_getConfigurationWarnings`) needs its lifecycle annotation or
+  `@OverrideVirtual` instead.
+- A public function with a `vararg` parameter is a build error (Godot calls with a
+  fixed argument list); make it `internal` or `private`.
 - `suspend` functions, extension functions, generic functions, and an `override`
   of a member that is not a script's (`toString()`, an interface method) are
   Kotlin-only even when public.
+- **Web only:** the Web backend dispatches a registered function only for the
+  argument shapes it has an arm for (no arguments, numeric lists, a single String
+  or object, mixed String/NodePath/Long/Boolean/object lists, a zero-argument
+  value return). Any other public function fails only the Web build, naming the
+  shape; make it `internal` if Godot never calls it.
 - Functions with a lifecycle annotation, `@OverrideVirtual`, `@Signal` or
   `@ExportToolButton` are wired by that annotation and not registered twice.
 - Two functions on one Godot name (Kotlin overloads, for one) are a build error:
   Godot has no overloads.
 
-`@RegisterClass` types follow the same rule.
+`@RegisterClass` types follow the same rule; there, `@Export var x` also registers
+`get_x`/`set_x`, so a public `fun getX()` beside it is a build error naming both.
+
+The annotations Kanama 0.5 removed (`@RegisterFunction`, `@ScriptProperty`,
+`@Process`, … — see the table in [Porting GDScript](porting-gdscript.md)) still
+exist only so that a leftover fails to compile with a message naming the
+replacement; `scripts/migrate_script_annotations.py` rewrites a source tree.
 
 ## Printing and Errors
 

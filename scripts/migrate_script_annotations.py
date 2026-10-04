@@ -24,13 +24,15 @@ script rewrites a tree of `.kt` files to match:
   * fixes the imports it touched (adds `GodotName` / `InputEvent`, drops imports nothing uses).
 
 It prints every change per file, then what needs a human: a removed annotation it could not
-place, an input handler whose parameter is neither `GodotObject` nor `InputEvent`, and each
-public function that was NOT registered before and now is (the compiler rejects one whose
-parameter or return type Godot cannot carry; mark it `internal` or `private` to keep it
-Kotlin-only).
+place and an input handler whose parameter is neither `GodotObject` nor `InputEvent`. With
+`--report-registered` it also lists each public function that was NOT registered before and now
+is (the compiler rejects one whose parameter or return type Godot cannot carry, or whose name is
+an engine method of the attached class; mark it `internal` or `private` to keep it Kotlin-only).
+Running it again on migrated sources changes nothing.
 
     python3 scripts/migrate_script_annotations.py path/to/kotlin-src [more paths...]
     python3 scripts/migrate_script_annotations.py --check path/...   # exit 1 if anything would change
+    python3 scripts/migrate_script_annotations.py --report-registered path/...
 """
 
 from __future__ import annotations
@@ -389,7 +391,8 @@ def migrate_text(text: str, report: FileReport) -> str:
         line_end = len(text) if line_end < 0 else line_end
         alone = text[line_start:start].strip() == "" and text[end:line_end].strip() == ""
         non_public = any(x in mods for x in ("private", "internal", "protected"))
-        if godot is not None and godot != camel_to_snake(fname) and not non_public:
+        # An empty name (`@RegisterFunction("")`) meant the default snake_case name.
+        if godot and godot != camel_to_snake(fname) and not non_public:
             edits.append((start, end, f'@GodotName("{godot}")'))
             report.changes.append(f'  line {line}: @{m.group(1)}("{godot}") on {fname} -> @GodotName("{godot}")')
             report.count("@RegisterFunction -> @GodotName")
@@ -465,7 +468,9 @@ def migrate_text(text: str, report: FileReport) -> str:
             report.count("InputEvent rewrap removed")
     text = apply_edits(text, edits)
 
-    # ---- 4. newly registered public functions (information for a human) -------------------
+    # ---- 4. newly registered public functions (information for a human, on request) ---------
+    if not REPORT_REGISTERED:
+        return fix_imports_if_needed(text, report)
     mask = code_mask(text)
     spans = class_spans(text, mask)
     blocks = brace_blocks(text, mask)
@@ -493,7 +498,11 @@ def migrate_text(text: str, report: FileReport) -> str:
         )
         report.count("newly registered public function")
 
-    # ---- 5. imports (not in import-less snippets) -------------------------------------------
+    return fix_imports_if_needed(text, report)
+
+
+def fix_imports_if_needed(text: str, report: FileReport) -> str:
+    """Step 5: imports (not in import-less snippets)."""
     if not ASSUME_KANAMA or re.search(r"^\s*import\s+", text, re.M):
         text = fix_imports(text, report)
     return text
@@ -511,6 +520,9 @@ def declaration_start(text: str, mask: list[bool], fun_index: int) -> int:
         break
     return start
 
+
+# Set by --report-registered: list each public function the migration newly exposes to Godot.
+REPORT_REGISTERED = False
 
 # Set for snippets without imports (documentation code blocks): every name is Kanama's.
 ASSUME_KANAMA = False
@@ -635,7 +647,14 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("paths", nargs="+", type=Path, help="files or directories to migrate (recursively, *.kt)")
     parser.add_argument("--check", action="store_true", help="change nothing; exit 1 if a file would change")
+    parser.add_argument(
+        "--report-registered",
+        action="store_true",
+        help="also list each public function that was not registered before and now is",
+    )
     args = parser.parse_args(argv)
+    global REPORT_REGISTERED
+    REPORT_REGISTERED = args.report_registered
 
     files: list[Path] = []
     for p in args.paths:
