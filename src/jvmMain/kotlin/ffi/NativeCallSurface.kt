@@ -81,11 +81,12 @@ object NativeCallSurface {
       "variant_type_probe" to FunctionDescriptor.of(JAVA_INT, ADDRESS),
       // object_get_instance_id -- captured once per wrapper construction (task 98)
       "instance_id_probe" to FunctionDescriptor.of(JAVA_LONG, ADDRESS),
-      // object_get_instance_from_id -- the freed-object check before a wrapper call (task 131)
-      "instance_from_id_probe" to FunctionDescriptor.of(ADDRESS, JAVA_LONG),
+      // object_get_instance_from_id -- the freed-object check before a wrapper call (task 131);
+      // the pointer is returned as a long so the check allocates nothing (task 131 item 16)
+      "instance_from_id_probe" to FunctionDescriptor.of(JAVA_LONG, JAVA_LONG),
       // object_get_instance_binding -- the liveness flag a wrapper captures at construction
       // (task 132 D7)
-      "instance_binding_lookup" to FunctionDescriptor.of(ADDRESS, ADDRESS, ADDRESS, ADDRESS),
+      "instance_binding_lookup" to FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, ADDRESS),
       // string_to_utf8_chars
       "string_to_utf8" to FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, JAVA_LONG),
       // get_godot_version2, object_destroy, variant_destroy, variant_new_nil, and every

@@ -61,6 +61,27 @@ class ScriptErrorsTest {
   }
 
   @Test
+  fun aFailedClassInitializerIsReportedByItsCause() {
+    // A runtime downcall holder whose entry point did not resolve (task 131 item 16) fails as an
+    // ExceptionInInitializerError, which has no message of its own.
+    val cause =
+      throwable(
+        "GDExtension function 'object_method_bind_ptrcall' not found",
+        frame("net.multigesture.kanama.ffi.GodotFFI", "lookup", "GodotFFI.kt", 131),
+        frame("com.example.game.Player", "ready", "Player.kt", 12),
+      )
+
+    val report = ScriptErrors.reportFor(ExceptionInInitializerError(cause), "Player._ready")
+
+    assertEquals(
+      "java.lang.IllegalStateException: GDExtension function 'object_method_bind_ptrcall' not found",
+      report.message,
+    )
+    assertEquals("Player.kt", report.file)
+    assertEquals(12, report.line)
+  }
+
+  @Test
   fun gameScriptsUnderTheKanamaRootPackageAreGameCode() {
     // The example project's scripts live in net.multigesture.kanama.example.
     val t =

@@ -192,7 +192,11 @@ The current Android path is intentionally narrow:
   source-set design.
 - Some JVM APIs used on desktop have Android-compatible replacements.
 - `MethodHandle.invoke(...)` uses Android-compatible handling through
-  `invokeWithArguments(...)`.
+  `invokeWithArguments(...)`, and so does `MethodHandle.invokeExact(...)` (task
+  131 item 16): compiled against android.jar, Kotlin emits both as plain
+  varargs calls (`invokeExact(Object[])`), which ART rejects at run time. The
+  hot handles still become `static final` constants on Android; only desktop
+  gets the exact, JIT-folded call.
 - Demo Kotlin sources are audited before remap for nullable callback invocation
   such as `callback?.invoke()`, which would otherwise be rewritten like a
   low-level method-handle call.

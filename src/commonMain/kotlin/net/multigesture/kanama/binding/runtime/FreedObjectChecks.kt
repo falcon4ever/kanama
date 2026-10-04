@@ -32,7 +32,11 @@ import net.multigesture.kanama.api.RefCounted
  * wrapper construction: measured on the editor binary (Apple M1 Max, task 132), a wrapper costs ~30
  * ns to build instead of ~11 ns while a checked call costs ~17.5 ns instead of ~30 ns, and the
  * Bunnymark-style loop (two wrappers and two calls per bunny per frame) ran slower with it than
- * with the lookup. iOS has no instance binding yet and keeps the lookup.
+ * with the lookup. Re-measured after the lookup became a constant, allocation-free downcall (task
+ * 131 item 16): the lookup costs ~4 ns per wrapper and ~8 ns per checked call (a call ~21 ns, ~13
+ * ns unchecked), the binding ~18.5 ns per wrapper and under 1 ns per call -- the Bunnymark-style
+ * loop is even between them, so the lookup stays the default. iOS has no instance binding yet and
+ * keeps the lookup.
  */
 internal object FreedObjectChecks {
   /** Read on every wrapper call; a plain static field on the JVM. */
