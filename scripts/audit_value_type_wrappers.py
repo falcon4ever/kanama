@@ -69,7 +69,6 @@ REVIEWED_LOCAL_MATH = {
     "Quaternion.normalized",
     "Rect2.hasPoint",
     "RID.isValid",
-    "Vector2.angle",
     "Vector2.distanceSquaredTo",
     "Vector2.distanceTo",
     "Vector2.dot",
@@ -97,6 +96,16 @@ REVIEWED_LOCAL_MATH = {
 }
 
 
+# Task 134 B: the generator's pure-Kotlin methods (scripts/generate_builtin_ops.py PURE_METHODS)
+# are Godot's formulas ported term for term, and the runtime smoke's builtin parity row compares
+# every one of them -- and every hand-written one above -- with GDScript over fixed-seed random
+# inputs, so they count as reviewed.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from generate_builtin_ops import PURE_METHODS, kotlin_name  # noqa: E402
+
+REVIEWED_LOCAL_MATH |= {f"{cls}.{kotlin_name(cls, name)}" for cls, names in PURE_METHODS.items() for name in names}
+
+
 FUN_RE = re.compile(
     r"(?P<indent>^[ \t]*)"
     r"(?:(?:public|private|internal)\s+)?"
@@ -109,13 +118,15 @@ FUN_RE = re.compile(
 # A call that reaches the engine: the BuiltinCalls facade (every shared value-type
 # body) or the older BuiltinTypes helpers (still used by the desktop runtime).
 BUILTIN_CALL_RE = re.compile(
-    r"\bBuiltinCalls\.(?:call|callNoArgsFloat32|callScalar|callBool|callInt)\s*\("
-    r"|\bBuiltinTypes\.(?:call|construct)\s*\(",
+    r"\bBuiltinCalls\.(?:call|callNoArgsFloat32|callScalar|callBool|callInt|invoke\w+)\s*\("
+    r"|\bBuiltinTypes\.(?:call|construct)\s*\("
+    # The task 134 B generated members reach the facade through BuiltinMarshalling.kt's shims.
+    r"|\bbuiltin(?:Reals|Ints|Float32s|Double|Long|Bool|VariantReals)\s*\(",
 )
 # The two BArg encodings a scalar argument can take. Godot's ptr-ABI passes a
 # Variant FLOAT argument as an 8-byte double (BArg.Real) regardless of real_t
 # precision; BArg.Floats is a buffer of real_t *components* and is wrong for one.
-SCALAR_ARG_RE = re.compile(r"\bBArg\.Real\s*\(")
+SCALAR_ARG_RE = re.compile(r"\bBArg\.Real\s*\(|\bargReal\s*\(")
 COMPONENT_ARG_RE = re.compile(r"\bBArg\.Floats\s*\(")
 
 

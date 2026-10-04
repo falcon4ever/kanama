@@ -193,6 +193,114 @@ data class Transform3D(
       it[11] = origin.rawZ
     }
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Transform3D (generate_builtin_ops.py) =====
+  operator fun times(scalar: Int): Transform3D = times(scalar.toDouble())
+
+  operator fun times(scalar: Long): Transform3D = times(scalar.toDouble())
+
+  operator fun div(scalar: Int): Transform3D = div(scalar.toDouble())
+
+  operator fun div(scalar: Long): Transform3D = div(scalar.toDouble())
+
+  operator fun times(scalar: Double): Transform3D {
+    val s = narrowReal(scalar)
+    return Transform3D(basisMap(basis) { it * s }, origin * scalar)
+  }
+
+  operator fun div(scalar: Double): Transform3D {
+    val s = narrowReal(scalar)
+    return Transform3D(basisMap(basis) { it / s }, origin / scalar)
+  }
+
+  operator fun times(other: Plane): Plane = transform3DXformPlane(this, other)
+
+  operator fun times(other: AABB): AABB = transform3DXformAabb(this, other)
+
+  operator fun times(other: Transform3D): Transform3D = transform3DMultiply(this, other)
+
+  operator fun times(other: List<Vector3>): List<Vector3> = other.map { transform3DXform(this, it) }
+
+  /**
+   * Returns a copy of this transform rotated around the given `axis` by the given `angle` (in
+   * radians). The `axis` must be a normalized vector (see `Vector3.normalized`). If `angle` is
+   * positive, the basis is rotated counter-clockwise around the axis. This method is an optimized
+   * version of multiplying the given transform `X` with a corresponding rotation transform `R` from
+   * the left, i.e., `R * X`. This can be seen as transforming with respect to the global/parent
+   * frame.
+   *
+   * Generated from Godot docs: Transform3D.rotated
+   */
+  fun rotated(axis: Vector3, angle: Double): Transform3D =
+    builtinTransform3D(
+      builtinReals(
+        Transform3DMethods.rotated,
+        builtinArg(),
+        12,
+        listOf(axis.builtinArg(), argReal(angle)),
+      )
+    )
+
+  /**
+   * Returns a copy of this transform rotated around the given `axis` by the given `angle` (in
+   * radians). The `axis` must be a normalized vector in the transform's local coordinate system.
+   * For example, to rotate around the local X-axis, use `Vector3.RIGHT`. This method is an
+   * optimized version of multiplying the given transform `X` with a corresponding rotation
+   * transform `R` from the right, i.e., `X * R`. This can be seen as transforming with respect to
+   * the local frame.
+   *
+   * Generated from Godot docs: Transform3D.rotated_local
+   */
+  fun rotatedLocal(axis: Vector3, angle: Double): Transform3D =
+    builtinTransform3D(
+      builtinReals(
+        Transform3DMethods.rotatedLocal,
+        builtinArg(),
+        12,
+        listOf(axis.builtinArg(), argReal(angle)),
+      )
+    )
+
+  /**
+   * Returns a copy of this transform scaled by the given `scale` factor. This method is an
+   * optimized version of multiplying the given transform `X` with a corresponding scaling transform
+   * `S` from the left, i.e., `S * X`. This can be seen as transforming with respect to the
+   * global/parent frame.
+   *
+   * Generated from Godot docs: Transform3D.scaled
+   */
+  fun scaled(scale: Vector3): Transform3D =
+    builtinTransform3D(
+      builtinReals(Transform3DMethods.scaled, builtinArg(), 12, listOf(scale.builtinArg()))
+    )
+
+  /**
+   * Returns a copy of this transform translated by the given `offset`. This method is an optimized
+   * version of multiplying the given transform `X` with a corresponding translation transform `T`
+   * from the right, i.e., `X * T`. This can be seen as transforming with respect to the local
+   * frame.
+   *
+   * Generated from Godot docs: Transform3D.translated_local
+   */
+  fun translatedLocal(offset: Vector3): Transform3D =
+    builtinTransform3D(
+      builtinReals(
+        Transform3DMethods.translatedLocal,
+        builtinArg(),
+        12,
+        listOf(offset.builtinArg()),
+      )
+    )
+
+  /**
+   * Returns `true` if this transform is finite, by calling `@GlobalScope.is_finite` on each
+   * component.
+   *
+   * Generated from Godot docs: Transform3D.is_finite
+   */
+  fun isFinite(): Boolean = builtinBool(Transform3DMethods.isFinite, builtinArg(), emptyList())
+
+  // ===== END GENERATED BUILTIN MEMBERS: Transform3D =====
+
   companion object {
     /**
      * The identity `Transform3D`. This is a transform with no translation, no rotation, and a scale

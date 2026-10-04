@@ -70,6 +70,226 @@ data class AABB(
       point.z >= position.z &&
       point.z <= position.z + size.z
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: AABB (generate_builtin_ops.py) =====
+  operator fun times(other: Transform3D): AABB = transform3DXformInvAabb(other, this)
+
+  /**
+   * Returns an `AABB` equivalent to this bounding box, with its width, height, and depth modified
+   * to be non-negative values.
+   *
+   * Generated from Godot docs: AABB.abs
+   */
+  fun abs(): AABB = builtinAABB(builtinReals(AABBMethods.abs, builtinArg(), 6, emptyList()))
+
+  /**
+   * Returns the center point of the bounding box. This is the same as `position + (size / 2.0)`.
+   *
+   * Generated from Godot docs: AABB.get_center
+   */
+  fun getCenter(): Vector3 {
+    val half = narrowReal(0.5)
+    return Vector3.raw(
+      position.rawX + size.rawX * half,
+      position.rawY + size.rawY * half,
+      position.rawZ + size.rawZ * half,
+    )
+  }
+
+  /**
+   * Returns `true` if this bounding box's width, height, and depth are all positive. See also
+   * `get_volume`.
+   *
+   * Generated from Godot docs: AABB.has_volume
+   */
+  fun hasVolume(): Boolean = size.x > 0.0 && size.y > 0.0 && size.z > 0.0
+
+  /**
+   * Returns `true` if this bounding box has a surface or a length, that is, at least one component
+   * of `size` is greater than `0`. Otherwise, returns `false`.
+   *
+   * Generated from Godot docs: AABB.has_surface
+   */
+  fun hasSurface(): Boolean = size.x > 0.0 || size.y > 0.0 || size.z > 0.0
+
+  /**
+   * Returns `true` if this bounding box's values are finite, by calling `Vector3.is_finite` on the
+   * `position` and the `size`.
+   *
+   * Generated from Godot docs: AABB.is_finite
+   */
+  fun isFinite(): Boolean = builtinBool(AABBMethods.isFinite, builtinArg(), emptyList())
+
+  /**
+   * Returns `true` if this bounding box overlaps with the box `with`. The edges of both boxes are
+   * always excluded.
+   *
+   * Generated from Godot docs: AABB.intersects
+   */
+  fun intersects(with: AABB): Boolean =
+    builtinBool(AABBMethods.intersects, builtinArg(), listOf(with.builtinArg()))
+
+  /**
+   * Returns `true` if this bounding box completely encloses the `with` box. The edges of both boxes
+   * are included.
+   *
+   * Generated from Godot docs: AABB.encloses
+   */
+  fun encloses(with: AABB): Boolean =
+    builtinBool(AABBMethods.encloses, builtinArg(), listOf(with.builtinArg()))
+
+  /**
+   * Returns `true` if this bounding box is on both sides of the given `plane`.
+   *
+   * Generated from Godot docs: AABB.intersects_plane
+   */
+  fun intersectsPlane(plane: Plane): Boolean =
+    builtinBool(AABBMethods.intersectsPlane, builtinArg(), listOf(plane.builtinArg()))
+
+  /**
+   * Returns the intersection between this bounding box and `with`. If the boxes do not intersect,
+   * returns an empty `AABB`. If the boxes intersect at the edge, returns a flat `AABB` with no
+   * volume (see `has_surface` and `has_volume`).
+   *
+   * Generated from Godot docs: AABB.intersection
+   */
+  fun intersection(with: AABB): AABB =
+    builtinAABB(builtinReals(AABBMethods.intersection, builtinArg(), 6, listOf(with.builtinArg())))
+
+  /**
+   * Returns an `AABB` that encloses both this bounding box and `with` around the edges. See also
+   * `encloses`.
+   *
+   * Generated from Godot docs: AABB.merge
+   */
+  fun merge(with: AABB): AABB =
+    builtinAABB(builtinReals(AABBMethods.merge, builtinArg(), 6, listOf(with.builtinArg())))
+
+  /**
+   * Returns a copy of this bounding box expanded to align the edges with the given `to_point`, if
+   * necessary.
+   *
+   * Generated from Godot docs: AABB.expand
+   */
+  fun expand(toPoint: Vector3): AABB =
+    builtinAABB(builtinReals(AABBMethods.expand, builtinArg(), 6, listOf(toPoint.builtinArg())))
+
+  /**
+   * Returns a copy of this bounding box extended on all sides by the given amount `by`. A negative
+   * amount shrinks the box instead.
+   *
+   * Generated from Godot docs: AABB.grow
+   */
+  fun grow(by: Double): AABB =
+    builtinAABB(builtinReals(AABBMethods.grow, builtinArg(), 6, listOf(argReal(by))))
+
+  /**
+   * Returns the vertex's position of this bounding box that's the farthest in the given direction.
+   * This point is commonly known as the support point in collision detection algorithms.
+   *
+   * Generated from Godot docs: AABB.get_support
+   */
+  fun getSupport(direction: Vector3): Vector3 =
+    builtinVector3(
+      builtinReals(AABBMethods.getSupport, builtinArg(), 3, listOf(direction.builtinArg()))
+    )
+
+  /**
+   * Returns the longest normalized axis of this bounding box's `size`, as a `Vector3`
+   * (`Vector3.RIGHT`, `Vector3.UP`, or `Vector3.BACK`).
+   *
+   * Generated from Godot docs: AABB.get_longest_axis
+   */
+  fun getLongestAxis(): Vector3 =
+    builtinVector3(builtinReals(AABBMethods.getLongestAxis, builtinArg(), 3, emptyList()))
+
+  /**
+   * Returns the index to the longest axis of this bounding box's `size` (see `Vector3.Axis.X`,
+   * `Vector3.Axis.Y`, and `Vector3.Axis.Z`). For an example, see `get_longest_axis`.
+   *
+   * Generated from Godot docs: AABB.get_longest_axis_index
+   */
+  fun getLongestAxisIndex(): Long =
+    builtinLong(AABBMethods.getLongestAxisIndex, builtinArg(), emptyList())
+
+  /**
+   * Returns the longest dimension of this bounding box's `size`. For an example, see
+   * `get_longest_axis`.
+   *
+   * Generated from Godot docs: AABB.get_longest_axis_size
+   */
+  fun getLongestAxisSize(): Double =
+    builtinDouble(AABBMethods.getLongestAxisSize, builtinArg(), emptyList())
+
+  /**
+   * Returns the shortest normalized axis of this bounding box's `size`, as a `Vector3`
+   * (`Vector3.RIGHT`, `Vector3.UP`, or `Vector3.BACK`).
+   *
+   * Generated from Godot docs: AABB.get_shortest_axis
+   */
+  fun getShortestAxis(): Vector3 =
+    builtinVector3(builtinReals(AABBMethods.getShortestAxis, builtinArg(), 3, emptyList()))
+
+  /**
+   * Returns the index to the shortest axis of this bounding box's `size` (see `Vector3.Axis.X`,
+   * `Vector3.Axis.Y`, and `Vector3.Axis.Z`). For an example, see `get_shortest_axis`.
+   *
+   * Generated from Godot docs: AABB.get_shortest_axis_index
+   */
+  fun getShortestAxisIndex(): Long =
+    builtinLong(AABBMethods.getShortestAxisIndex, builtinArg(), emptyList())
+
+  /**
+   * Returns the shortest dimension of this bounding box's `size`. For an example, see
+   * `get_shortest_axis`.
+   *
+   * Generated from Godot docs: AABB.get_shortest_axis_size
+   */
+  fun getShortestAxisSize(): Double =
+    builtinDouble(AABBMethods.getShortestAxisSize, builtinArg(), emptyList())
+
+  /**
+   * Returns the position of one of the 8 vertices that compose this bounding box. With an `idx` of
+   * `0` this is the same as `position`, and an `idx` of `7` is the same as `end`.
+   *
+   * Generated from Godot docs: AABB.get_endpoint
+   */
+  fun getEndpoint(idx: Long): Vector3 =
+    builtinVector3(builtinReals(AABBMethods.getEndpoint, builtinArg(), 3, listOf(argLong(idx))))
+
+  /**
+   * Returns the first point where this bounding box and the given segment intersect, as a
+   * `Vector3`. If no intersection occurs, returns `null`. The segment begins at `from` and ends at
+   * `to`.
+   *
+   * Generated from Godot docs: AABB.intersects_segment
+   */
+  fun intersectsSegment(from: Vector3, to: Vector3): Vector3? =
+    builtinVariantReals(
+        AABBMethods.intersectsSegment,
+        builtinArg(),
+        3,
+        listOf(from.builtinArg(), to.builtinArg()),
+      )
+      ?.let { c -> Vector3.raw(c[0], c[1], c[2]) }
+
+  /**
+   * Returns the first point where this bounding box and the given ray intersect, as a `Vector3`. If
+   * no intersection occurs, returns `null`. The ray begin at `from`, faces `dir` and extends
+   * towards infinity.
+   *
+   * Generated from Godot docs: AABB.intersects_ray
+   */
+  fun intersectsRay(from: Vector3, dir: Vector3): Vector3? =
+    builtinVariantReals(
+        AABBMethods.intersectsRay,
+        builtinArg(),
+        3,
+        listOf(from.builtinArg(), dir.builtinArg()),
+      )
+      ?.let { c -> Vector3.raw(c[0], c[1], c[2]) }
+
+  // ===== END GENERATED BUILTIN MEMBERS: AABB =====
+
   companion object {
     val ZERO = AABB(Vector3.ZERO, Vector3.ZERO)
   }

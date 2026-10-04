@@ -57,6 +57,8 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 A2 -- value types store Godot's width: Kotlin and GDScript print the same three lines.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_storage_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 134 B -- every value-type operator and method against GDScript (builtin_parity_ref.gd).
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://builtin_parity_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 133 -- node/script delegates, checked casts, preload, tree accessors and the script coroutine
 # scope; the scene quits itself once its async rows (wait, nextFrame, cancel on free) have printed.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_access_smoke.tscn --quit-after 5000 --verbose >>"$LOG_FILE" 2>&1
@@ -393,6 +395,25 @@ for vts_row in roundtrip_eq str bits parity; do
     smoke_fail "Kotlin/GDScript value-type mismatch (${vts_row})" "kotlin: ${vts_kotlin:-<missing>} gdscript: ${vts_gdscript:-<missing>}"
   fi
 done
+# task 134 B -- the generated probe pair (scripts/generate_builtin_ops.py): `pure=` hashes every
+# value-type operator and every Kotlin-implemented method over 256 fixed-seed random inputs,
+# `facade=` every engine-backed method over 8; each Kotlin line must equal the GDScript line, and a
+# mismatch names the members whose hashes differ.
+check "BuiltinParity kotlin pure=n=256 [^ ]+=[0-9a-f]+ "
+check "BuiltinParity kotlin facade=n=8 [^ ]+=[0-9a-f]+ "
+for bp_row in pure facade; do
+  bp_kotlin="$(grep -o "BuiltinParity kotlin ${bp_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinParity kotlin //')"
+  bp_gdscript="$(grep -o "BuiltinParity gdscript ${bp_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinParity gdscript //')"
+  if [[ -z "$bp_kotlin" || "$bp_kotlin" != "$bp_gdscript" ]]; then
+    bp_diff="$(comm -3 <(tr ' ' '\n' <<<"$bp_kotlin" | sort) <(tr ' ' '\n' <<<"$bp_gdscript" | sort) | head -n 20 | tr '\n' ' ')"
+    smoke_fail "Kotlin/GDScript builtin parity mismatch (${bp_row})" "differing entries (kotlin | gdscript): ${bp_diff:-<missing line>}"
+  fi
+done
+# The Web value types' parity test (WebBuiltinParityTest) asserts the GDScript hashes recorded in
+# scripts/fixtures/builtin_parity_expected.json; they must still be what GDScript prints here.
+if ! python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --verify-recorded "$LOG_FILE" >&2; then
+  smoke_fail "recorded Web builtin parity hashes" "stale: python3 scripts/generate_builtin_ops.py --record-parity $LOG_FILE"
+fi
 check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true"
 # A call through the freed wrapper throws IllegalStateException instead of dereferencing the dead
 # pointer (before task 131: a use-after-free, typically a native crash and no line below at all).

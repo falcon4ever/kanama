@@ -66,6 +66,141 @@ data class Rect2(
       point.y >= position.y &&
       point.y < position.y + size.y
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Rect2 (generate_builtin_ops.py) =====
+  operator fun times(other: Transform2D): Rect2 = transform2DXformInvRect(other, this)
+
+  /**
+   * Returns the center point of the rectangle. This is the same as `position + (size / 2.0)`.
+   *
+   * Generated from Godot docs: Rect2.get_center
+   */
+  fun getCenter(): Vector2 {
+    val half = narrowReal(0.5)
+    return Vector2.raw(position.rawX + size.rawX * half, position.rawY + size.rawY * half)
+  }
+
+  /**
+   * Returns `true` if this rectangle has positive width and height. See also `get_area`.
+   *
+   * Generated from Godot docs: Rect2.has_area
+   */
+  fun hasArea(): Boolean = size.x > 0.0 && size.y > 0.0
+
+  /**
+   * Returns `true` if this rectangle's values are finite, by calling `Vector2.is_finite` on the
+   * `position` and the `size`.
+   *
+   * Generated from Godot docs: Rect2.is_finite
+   */
+  fun isFinite(): Boolean = builtinBool(Rect2Methods.isFinite, builtinArg(), emptyList())
+
+  /**
+   * Returns `true` if this rectangle overlaps with the `b` rectangle. The edges of both rectangles
+   * are excluded, unless `include_borders` is `true`.
+   *
+   * Generated from Godot docs: Rect2.intersects
+   */
+  fun intersects(b: Rect2, includeBorders: Boolean = false): Boolean =
+    builtinBool(
+      Rect2Methods.intersects,
+      builtinArg(),
+      listOf(b.builtinArg(), argBool(includeBorders)),
+    )
+
+  /**
+   * Returns `true` if this rectangle completely encloses the `b` rectangle.
+   *
+   * Generated from Godot docs: Rect2.encloses
+   */
+  fun encloses(b: Rect2): Boolean =
+    builtinBool(Rect2Methods.encloses, builtinArg(), listOf(b.builtinArg()))
+
+  /**
+   * Returns the intersection between this rectangle and `b`. If the rectangles do not intersect,
+   * returns an empty `Rect2`.
+   *
+   * Generated from Godot docs: Rect2.intersection
+   */
+  fun intersection(b: Rect2): Rect2 =
+    builtinRect2(builtinReals(Rect2Methods.intersection, builtinArg(), 4, listOf(b.builtinArg())))
+
+  /**
+   * Returns a `Rect2` that encloses both this rectangle and `b` around the edges. See also
+   * `encloses`.
+   *
+   * Generated from Godot docs: Rect2.merge
+   */
+  fun merge(b: Rect2): Rect2 =
+    builtinRect2(builtinReals(Rect2Methods.merge, builtinArg(), 4, listOf(b.builtinArg())))
+
+  /**
+   * Returns a copy of this rectangle expanded to align the edges with the given `to` point, if
+   * necessary.
+   *
+   * Generated from Godot docs: Rect2.expand
+   */
+  fun expand(to: Vector2): Rect2 =
+    builtinRect2(builtinReals(Rect2Methods.expand, builtinArg(), 4, listOf(to.builtinArg())))
+
+  /**
+   * Returns the vertex's position of this rect that's the farthest in the given direction. This
+   * point is commonly known as the support point in collision detection algorithms.
+   *
+   * Generated from Godot docs: Rect2.get_support
+   */
+  fun getSupport(direction: Vector2): Vector2 =
+    builtinVector2(
+      builtinReals(Rect2Methods.getSupport, builtinArg(), 2, listOf(direction.builtinArg()))
+    )
+
+  /**
+   * Returns a copy of this rectangle extended on all sides by the given `amount`. A negative
+   * `amount` shrinks the rectangle instead. See also `grow_individual` and `grow_side`.
+   *
+   * Generated from Godot docs: Rect2.grow
+   */
+  fun grow(amount: Double): Rect2 =
+    builtinRect2(builtinReals(Rect2Methods.grow, builtinArg(), 4, listOf(argReal(amount))))
+
+  /**
+   * Returns a copy of this rectangle with its `side` extended by the given `amount` (see `Side`
+   * constants). A negative `amount` shrinks the rectangle, instead. See also `grow` and
+   * `grow_individual`.
+   *
+   * Generated from Godot docs: Rect2.grow_side
+   */
+  fun growSide(side: Long, amount: Double): Rect2 =
+    builtinRect2(
+      builtinReals(Rect2Methods.growSide, builtinArg(), 4, listOf(argLong(side), argReal(amount)))
+    )
+
+  /**
+   * Returns a copy of this rectangle with its `left`, `top`, `right`, and `bottom` sides extended
+   * by the given amounts. Negative values shrink the sides, instead. See also `grow` and
+   * `grow_side`.
+   *
+   * Generated from Godot docs: Rect2.grow_individual
+   */
+  fun growIndividual(left: Double, top: Double, right: Double, bottom: Double): Rect2 =
+    builtinRect2(
+      builtinReals(
+        Rect2Methods.growIndividual,
+        builtinArg(),
+        4,
+        listOf(argReal(left), argReal(top), argReal(right), argReal(bottom)),
+      )
+    )
+
+  /**
+   * Returns a `Rect2` equivalent to this rectangle, with its width and height modified to be
+   * non-negative values, and with its `position` being the top-left corner of the rectangle.
+   *
+   * Generated from Godot docs: Rect2.abs
+   */
+  fun abs(): Rect2 = builtinRect2(builtinReals(Rect2Methods.abs, builtinArg(), 4, emptyList()))
+
+  // ===== END GENERATED BUILTIN MEMBERS: Rect2 =====
+
   companion object {
     val ZERO = Rect2(Vector2.ZERO, Vector2.ZERO)
   }

@@ -96,6 +96,65 @@ private constructor(
     return Vector2(x * c - y * s, x * s + y * c)
   }
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Vector2 (generate_builtin_ops.py) =====
+  operator fun unaryPlus(): Vector2 = this
+
+  operator fun compareTo(other: Vector2): Int {
+    val c0 = godotCompareStep(rawX, other.rawX)
+    if (c0 != 0) return c0
+    return godotCompareStep(rawY, other.rawY)
+  }
+
+  operator fun times(other: Vector2): Vector2 = raw(rawX * other.rawX, rawY * other.rawY)
+
+  operator fun div(other: Vector2): Vector2 = raw(rawX / other.rawX, rawY / other.rawY)
+
+  fun directionTo(to: Vector2): Vector2 = raw(to.rawX - rawX, to.rawY - rawY).normalized()
+
+  fun isFinite(): Boolean = rawX.isFinite() && rawY.isFinite()
+
+  fun maxAxisIndex(): Long = if (rawX < rawY) 1L else 0L
+
+  fun minAxisIndex(): Long = if (rawX < rawY) 0L else 1L
+
+  fun orthogonal(): Vector2 = raw(rawY, -rawX)
+
+  fun floor(): Vector2 = raw(godotFloor(rawX), godotFloor(rawY))
+
+  fun ceil(): Vector2 = raw(godotCeil(rawX), godotCeil(rawY))
+
+  fun round(): Vector2 = raw(godotRound(rawX), godotRound(rawY))
+
+  fun aspect(): Double = widenReal(rawX / rawY)
+
+  fun cross(with: Vector2): Double = widenReal(rawX * with.rawY - rawY * with.rawX)
+
+  fun abs(): Vector2 = raw(godotFabs(rawX), godotFabs(rawY))
+
+  fun sign(): Vector2 = raw(godotSign(rawX), godotSign(rawY))
+
+  fun clampf(min: Double, max: Double): Vector2 {
+    val lo = narrowReal(min)
+    val hi = narrowReal(max)
+    return raw(godotClamp(rawX, lo, hi), godotClamp(rawY, lo, hi))
+  }
+
+  fun min(with: Vector2): Vector2 = raw(godotMin(rawX, with.rawX), godotMin(rawY, with.rawY))
+
+  fun minf(with: Double): Vector2 {
+    val s = narrowReal(with)
+    return raw(godotMin(rawX, s), godotMin(rawY, s))
+  }
+
+  fun max(with: Vector2): Vector2 = raw(godotMax(rawX, with.rawX), godotMax(rawY, with.rawY))
+
+  fun maxf(with: Double): Vector2 {
+    val s = narrowReal(with)
+    return raw(godotMax(rawX, s), godotMax(rawY, s))
+  }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Vector2 =====
+
   companion object {
     internal fun raw(x: Float, y: Float): Vector2 = Vector2(x, y, RawStorage)
 
@@ -265,6 +324,77 @@ private constructor(
     )
   }
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Vector3 (generate_builtin_ops.py) =====
+  operator fun unaryPlus(): Vector3 = this
+
+  operator fun compareTo(other: Vector3): Int {
+    val c0 = godotCompareStep(rawX, other.rawX)
+    if (c0 != 0) return c0
+    val c1 = godotCompareStep(rawY, other.rawY)
+    if (c1 != 0) return c1
+    return godotCompareStep(rawZ, other.rawZ)
+  }
+
+  operator fun times(other: Vector3): Vector3 =
+    raw(rawX * other.rawX, rawY * other.rawY, rawZ * other.rawZ)
+
+  operator fun div(other: Vector3): Vector3 =
+    raw(rawX / other.rawX, rawY / other.rawY, rawZ / other.rawZ)
+
+  fun minAxisIndex(): Long =
+    if (rawX < rawY) (if (rawX < rawZ) 0L else 2L) else (if (rawY < rawZ) 1L else 2L)
+
+  fun directionTo(to: Vector3): Vector3 =
+    raw(to.rawX - rawX, to.rawY - rawY, to.rawZ - rawZ).normalized()
+
+  fun isFinite(): Boolean = rawX.isFinite() && rawY.isFinite() && rawZ.isFinite()
+
+  fun inverse(): Vector3 {
+    val one = narrowReal(1.0)
+    return raw(one / rawX, one / rawY, one / rawZ)
+  }
+
+  fun clamp(min: Vector3, max: Vector3): Vector3 =
+    raw(
+      godotClamp(rawX, min.rawX, max.rawX),
+      godotClamp(rawY, min.rawY, max.rawY),
+      godotClamp(rawZ, min.rawZ, max.rawZ),
+    )
+
+  fun clampf(min: Double, max: Double): Vector3 {
+    val lo = narrowReal(min)
+    val hi = narrowReal(max)
+    return raw(godotClamp(rawX, lo, hi), godotClamp(rawY, lo, hi), godotClamp(rawZ, lo, hi))
+  }
+
+  fun abs(): Vector3 = raw(godotFabs(rawX), godotFabs(rawY), godotFabs(rawZ))
+
+  fun floor(): Vector3 = raw(godotFloor(rawX), godotFloor(rawY), godotFloor(rawZ))
+
+  fun ceil(): Vector3 = raw(godotCeil(rawX), godotCeil(rawY), godotCeil(rawZ))
+
+  fun round(): Vector3 = raw(godotRound(rawX), godotRound(rawY), godotRound(rawZ))
+
+  fun sign(): Vector3 = raw(godotSign(rawX), godotSign(rawY), godotSign(rawZ))
+
+  fun min(with: Vector3): Vector3 =
+    raw(godotMin(rawX, with.rawX), godotMin(rawY, with.rawY), godotMin(rawZ, with.rawZ))
+
+  fun minf(with: Double): Vector3 {
+    val s = narrowReal(with)
+    return raw(godotMin(rawX, s), godotMin(rawY, s), godotMin(rawZ, s))
+  }
+
+  fun max(with: Vector3): Vector3 =
+    raw(godotMax(rawX, with.rawX), godotMax(rawY, with.rawY), godotMax(rawZ, with.rawZ))
+
+  fun maxf(with: Double): Vector3 {
+    val s = narrowReal(with)
+    return raw(godotMax(rawX, s), godotMax(rawY, s), godotMax(rawZ, s))
+  }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Vector3 =====
+
   companion object {
     internal fun raw(x: Float, y: Float, z: Float): Vector3 = Vector3(x, y, z, RawStorage)
 
@@ -356,9 +486,160 @@ private constructor(
   /** Godot's `str(c)`: four decimals at most, `(1.0, 0.5, 0.0, 1.0)`. */
   override fun toString(): String =
     "(${godotNum(r, 4)}, ${godotNum(g, 4)}, ${godotNum(b, 4)}, ${godotNum(a, 4)})"
+
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Color (generate_builtin_ops.py) =====
+  operator fun unaryMinus(): Color = raw(1.0f - rawR, 1.0f - rawG, 1.0f - rawB, 1.0f - rawA)
+
+  operator fun unaryPlus(): Color = this
+
+  operator fun times(scalar: Int): Color = times(scalar.toDouble())
+
+  operator fun times(scalar: Long): Color = times(scalar.toDouble())
+
+  operator fun div(scalar: Int): Color = div(scalar.toDouble())
+
+  operator fun div(scalar: Long): Color = div(scalar.toDouble())
+
+  operator fun times(scalar: Double): Color {
+    val s = scalar.toFloat()
+    return raw(rawR * s, rawG * s, rawB * s, rawA * s)
+  }
+
+  operator fun div(scalar: Double): Color {
+    val s = scalar.toFloat()
+    return raw(rawR / s, rawG / s, rawB / s, rawA / s)
+  }
+
+  operator fun plus(other: Color): Color =
+    raw(rawR + other.rawR, rawG + other.rawG, rawB + other.rawB, rawA + other.rawA)
+
+  operator fun minus(other: Color): Color =
+    raw(rawR - other.rawR, rawG - other.rawG, rawB - other.rawB, rawA - other.rawA)
+
+  operator fun times(other: Color): Color =
+    raw(rawR * other.rawR, rawG * other.rawG, rawB * other.rawB, rawA * other.rawA)
+
+  operator fun div(other: Color): Color =
+    raw(rawR / other.rawR, rawG / other.rawG, rawB / other.rawB, rawA / other.rawA)
+
+  fun toHtml(withAlpha: Boolean = true): String {
+    val out = StringBuilder(8)
+    godotHexByte(rawR, out)
+    godotHexByte(rawG, out)
+    godotHexByte(rawB, out)
+    if (withAlpha) godotHexByte(rawA, out)
+    return out.toString()
+  }
+
+  fun inverted(): Color = raw(1.0f - rawR, 1.0f - rawG, 1.0f - rawB, rawA)
+
+  fun getLuminance(): Double = (0.2126f * rawR + 0.7152f * rawG + 0.0722f * rawB).toDouble()
+
+  // ===== END GENERATED BUILTIN MEMBERS: Color =====
+
+  companion object {
+    /** A color from float32 channels (no conversion). */
+    internal fun raw(r: Float, g: Float, b: Float, a: Float): Color = Color(r, g, b, a, RawStorage)
+  }
 }
 
 data class Vector3i(val x: Int, val y: Int, val z: Int) {
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Vector3i (generate_builtin_ops.py) =====
+  operator fun unaryMinus(): Vector3i = Vector3i(-x, -y, -z)
+
+  operator fun unaryPlus(): Vector3i = this
+
+  operator fun times(scalar: Int): Vector3i = Vector3i(x * scalar, y * scalar, z * scalar)
+
+  operator fun times(scalar: Long): Vector3i = times(scalar.toInt())
+
+  operator fun div(scalar: Int): Vector3i = Vector3i(x / scalar, y / scalar, z / scalar)
+
+  operator fun div(scalar: Long): Vector3i = div(scalar.toInt())
+
+  operator fun rem(scalar: Int): Vector3i = Vector3i(x % scalar, y % scalar, z % scalar)
+
+  operator fun rem(scalar: Long): Vector3i = rem(scalar.toInt())
+
+  operator fun times(scalar: Double): Vector3 {
+    val s = narrowReal(scalar)
+    return Vector3.raw(
+      narrowReal(x.toDouble()) * s,
+      narrowReal(y.toDouble()) * s,
+      narrowReal(z.toDouble()) * s,
+    )
+  }
+
+  operator fun div(scalar: Double): Vector3 {
+    val s = narrowReal(scalar)
+    return Vector3.raw(
+      narrowReal(x.toDouble()) / s,
+      narrowReal(y.toDouble()) / s,
+      narrowReal(z.toDouble()) / s,
+    )
+  }
+
+  operator fun compareTo(other: Vector3i): Int {
+    val c0 = godotCompareStep(x, other.x)
+    if (c0 != 0) return c0
+    val c1 = godotCompareStep(y, other.y)
+    if (c1 != 0) return c1
+    return godotCompareStep(z, other.z)
+  }
+
+  operator fun plus(other: Vector3i): Vector3i = Vector3i(x + other.x, y + other.y, z + other.z)
+
+  operator fun minus(other: Vector3i): Vector3i = Vector3i(x - other.x, y - other.y, z - other.z)
+
+  operator fun times(other: Vector3i): Vector3i = Vector3i(x * other.x, y * other.y, z * other.z)
+
+  operator fun div(other: Vector3i): Vector3i = Vector3i(x / other.x, y / other.y, z / other.z)
+
+  operator fun rem(other: Vector3i): Vector3i = Vector3i(x % other.x, y % other.y, z % other.z)
+
+  fun minAxisIndex(): Long = if (x < y) (if (x < z) 0L else 2L) else (if (y < z) 1L else 2L)
+
+  fun maxAxisIndex(): Long = if (x < y) (if (y < z) 2L else 1L) else (if (x < z) 2L else 0L)
+
+  fun distanceTo(to: Vector3i): Double = (to - this).length()
+
+  fun distanceSquaredTo(to: Vector3i): Long = (to - this).lengthSquared()
+
+  fun length(): Double = godotSqrt(lengthSquared().toDouble())
+
+  fun lengthSquared(): Long = x.toLong() * x + y.toLong() * y + z.toLong() * z
+
+  fun sign(): Vector3i = Vector3i(godotSign(x), godotSign(y), godotSign(z))
+
+  fun abs(): Vector3i = Vector3i(godotAbs(x), godotAbs(y), godotAbs(z))
+
+  fun clamp(min: Vector3i, max: Vector3i): Vector3i =
+    Vector3i(godotClamp(x, min.x, max.x), godotClamp(y, min.y, max.y), godotClamp(z, min.z, max.z))
+
+  fun clampi(min: Long, max: Long): Vector3i {
+    val lo = min.toInt()
+    val hi = max.toInt()
+    return Vector3i(godotClamp(x, lo, hi), godotClamp(y, lo, hi), godotClamp(z, lo, hi))
+  }
+
+  fun min(with: Vector3i): Vector3i =
+    Vector3i(godotMin(x, with.x), godotMin(y, with.y), godotMin(z, with.z))
+
+  fun mini(with: Long): Vector3i {
+    val s = with.toInt()
+    return Vector3i(godotMin(x, s), godotMin(y, s), godotMin(z, s))
+  }
+
+  fun max(with: Vector3i): Vector3i =
+    Vector3i(godotMax(x, with.x), godotMax(y, with.y), godotMax(z, with.z))
+
+  fun maxi(with: Long): Vector3i {
+    val s = with.toInt()
+    return Vector3i(godotMax(x, s), godotMax(y, s), godotMax(z, s))
+  }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Vector3i =====
+
   companion object {
     val ZERO = Vector3i(0, 0, 0)
   }
@@ -390,16 +671,119 @@ private constructor(
    * Godot's intersects_ray: the intersection of the ray [from] + t * [dir] with this plane, or null
    * when the ray is parallel to or points away from it.
    */
+  // Godot's `Plane::intersects_ray` exactly as the native Plane computes it (CMP_EPSILON
+  // tolerances, the distance in real_t); task 134 B's Web parity test caught the old 1e-8 / Double
+  // version answering differently from Godot.
   fun intersectsRay(from: Vector3, dir: Vector3): Vector3? {
-    val den = normal.dot(dir)
-    if (kotlin.math.abs(den) < 1e-8) return null
-    val dist = (normal.dot(from) - d) / den
-    if (dist > 1e-5) return null
-    return from + dir * -dist
+    val denominator = normal.dot(dir)
+    if (kotlin.math.abs(denominator) <= 0.00001) return null
+    val signedDistance =
+      (realDot(normal.rawX, normal.rawY, normal.rawZ, from.rawX, from.rawY, from.rawZ) - rawD) /
+        narrowReal(denominator)
+    if (widenReal(signedDistance) > 0.00001) return null
+    return from + dir * widenReal(-signedDistance)
+  }
+
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Plane (generate_builtin_ops.py) =====
+  operator fun unaryMinus(): Plane = raw(-normal, -rawD)
+
+  operator fun unaryPlus(): Plane = this
+
+  // ===== END GENERATED BUILTIN MEMBERS: Plane =====
+
+  companion object {
+    /** A plane from a distance already at the storage width (no conversion). */
+    internal fun raw(normal: Vector3, d: Float): Plane = Plane(normal, d, RawStorage)
   }
 }
 
 data class Vector2i(val x: Int, val y: Int) {
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Vector2i (generate_builtin_ops.py) =====
+  operator fun unaryMinus(): Vector2i = Vector2i(-x, -y)
+
+  operator fun unaryPlus(): Vector2i = this
+
+  operator fun times(scalar: Int): Vector2i = Vector2i(x * scalar, y * scalar)
+
+  operator fun times(scalar: Long): Vector2i = times(scalar.toInt())
+
+  operator fun div(scalar: Int): Vector2i = Vector2i(x / scalar, y / scalar)
+
+  operator fun div(scalar: Long): Vector2i = div(scalar.toInt())
+
+  operator fun rem(scalar: Int): Vector2i = Vector2i(x % scalar, y % scalar)
+
+  operator fun rem(scalar: Long): Vector2i = rem(scalar.toInt())
+
+  operator fun times(scalar: Double): Vector2 {
+    val s = narrowReal(scalar)
+    return Vector2.raw(narrowReal(x.toDouble()) * s, narrowReal(y.toDouble()) * s)
+  }
+
+  operator fun div(scalar: Double): Vector2 {
+    val s = narrowReal(scalar)
+    return Vector2.raw(narrowReal(x.toDouble()) / s, narrowReal(y.toDouble()) / s)
+  }
+
+  operator fun compareTo(other: Vector2i): Int {
+    val c0 = godotCompareStep(x, other.x)
+    if (c0 != 0) return c0
+    return godotCompareStep(y, other.y)
+  }
+
+  operator fun plus(other: Vector2i): Vector2i = Vector2i(x + other.x, y + other.y)
+
+  operator fun minus(other: Vector2i): Vector2i = Vector2i(x - other.x, y - other.y)
+
+  operator fun times(other: Vector2i): Vector2i = Vector2i(x * other.x, y * other.y)
+
+  operator fun div(other: Vector2i): Vector2i = Vector2i(x / other.x, y / other.y)
+
+  operator fun rem(other: Vector2i): Vector2i = Vector2i(x % other.x, y % other.y)
+
+  fun aspect(): Double = widenReal(narrowReal(x.toDouble()) / narrowReal(y.toDouble()))
+
+  fun maxAxisIndex(): Long = if (x < y) 1L else 0L
+
+  fun minAxisIndex(): Long = if (x < y) 0L else 1L
+
+  fun distanceTo(to: Vector2i): Double = (to - this).length()
+
+  fun distanceSquaredTo(to: Vector2i): Long = (to - this).lengthSquared()
+
+  fun length(): Double = godotSqrt(lengthSquared().toDouble())
+
+  fun lengthSquared(): Long = x.toLong() * x + y.toLong() * y
+
+  fun sign(): Vector2i = Vector2i(godotSign(x), godotSign(y))
+
+  fun abs(): Vector2i = Vector2i(godotAbs(x), godotAbs(y))
+
+  fun clamp(min: Vector2i, max: Vector2i): Vector2i =
+    Vector2i(godotClamp(x, min.x, max.x), godotClamp(y, min.y, max.y))
+
+  fun clampi(min: Long, max: Long): Vector2i {
+    val lo = min.toInt()
+    val hi = max.toInt()
+    return Vector2i(godotClamp(x, lo, hi), godotClamp(y, lo, hi))
+  }
+
+  fun min(with: Vector2i): Vector2i = Vector2i(godotMin(x, with.x), godotMin(y, with.y))
+
+  fun mini(with: Long): Vector2i {
+    val s = with.toInt()
+    return Vector2i(godotMin(x, s), godotMin(y, s))
+  }
+
+  fun max(with: Vector2i): Vector2i = Vector2i(godotMax(x, with.x), godotMax(y, with.y))
+
+  fun maxi(with: Long): Vector2i {
+    val s = with.toInt()
+    return Vector2i(godotMax(x, s), godotMax(y, s))
+  }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Vector2i =====
+
   companion object {
     val ZERO = Vector2i(0, 0)
   }
@@ -513,6 +897,37 @@ private constructor(
       scale0 * w + scale1 * target.w,
     )
   }
+
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Quaternion (generate_builtin_ops.py) =====
+  operator fun unaryPlus(): Quaternion = this
+
+  operator fun times(scalar: Int): Quaternion = times(scalar.toDouble())
+
+  operator fun times(scalar: Long): Quaternion = times(scalar.toDouble())
+
+  operator fun div(scalar: Int): Quaternion = div(scalar.toDouble())
+
+  operator fun div(scalar: Long): Quaternion = div(scalar.toDouble())
+
+  operator fun times(scalar: Double): Quaternion {
+    val s = narrowReal(scalar)
+    return raw(rawX * s, rawY * s, rawZ * s, rawW * s)
+  }
+
+  operator fun div(scalar: Double): Quaternion {
+    val s = narrowReal(1.0) / narrowReal(scalar)
+    return raw(rawX * s, rawY * s, rawZ * s, rawW * s)
+  }
+
+  operator fun plus(other: Quaternion): Quaternion =
+    raw(rawX + other.rawX, rawY + other.rawY, rawZ + other.rawZ, rawW + other.rawW)
+
+  operator fun minus(other: Quaternion): Quaternion =
+    raw(rawX - other.rawX, rawY - other.rawY, rawZ - other.rawZ, rawW - other.rawW)
+
+  fun isFinite(): Boolean = rawX.isFinite() && rawY.isFinite() && rawZ.isFinite() && rawW.isFinite()
+
+  // ===== END GENERATED BUILTIN MEMBERS: Quaternion =====
 
   companion object {
     internal fun raw(x: Float, y: Float, z: Float, w: Float): Quaternion =

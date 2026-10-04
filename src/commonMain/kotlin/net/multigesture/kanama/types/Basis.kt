@@ -202,7 +202,130 @@ data class Basis(
       it[8] = z.rawZ
     }
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Basis (generate_builtin_ops.py) =====
+  operator fun times(scalar: Int): Basis = times(scalar.toDouble())
+
+  operator fun times(scalar: Long): Basis = times(scalar.toDouble())
+
+  operator fun div(scalar: Int): Basis = div(scalar.toDouble())
+
+  operator fun div(scalar: Long): Basis = div(scalar.toDouble())
+
+  operator fun times(scalar: Double): Basis {
+    val s = narrowReal(scalar)
+    return basisMap(this) { it * s }
+  }
+
+  operator fun div(scalar: Double): Basis {
+    val s = narrowReal(scalar)
+    return basisMap(this) { it / s }
+  }
+
+  operator fun times(other: Basis): Basis = basisMultiply(this, other)
+
+  /**
+   * Returns a copy of this basis rotated around the given `axis` by the given `angle` (in radians).
+   * The `axis` must be a normalized vector (see `Vector3.normalized`). If `angle` is positive, the
+   * basis is rotated counter-clockwise around the axis.
+   *
+   * Generated from Godot docs: Basis.rotated
+   */
+  fun rotated(axis: Vector3, angle: Double): Basis =
+    builtinBasis(
+      builtinReals(BasisMethods.rotated, builtinArg(), 9, listOf(axis.builtinArg(), argReal(angle)))
+    )
+
+  /**
+   * Returns this basis with each axis scaled by the corresponding component in the given `scale`.
+   * The basis matrix's columns are multiplied by `scale`'s components. This operation is a local
+   * scale (relative to self).
+   *
+   * Generated from Godot docs: Basis.scaled_local
+   */
+  fun scaledLocal(scale: Vector3): Basis =
+    builtinBasis(
+      builtinReals(BasisMethods.scaledLocal, builtinArg(), 9, listOf(scale.builtinArg()))
+    )
+
+  /**
+   * Returns the transposed dot product between `with` and the `x` axis (see `transposed`). This is
+   * equivalent to `basis.x.dot(vector)`.
+   *
+   * Generated from Godot docs: Basis.tdotx
+   */
+  fun tdotx(with: Vector3): Double =
+    builtinDouble(BasisMethods.tdotx, builtinArg(), listOf(with.builtinArg()))
+
+  /**
+   * Returns the transposed dot product between `with` and the `y` axis (see `transposed`). This is
+   * equivalent to `basis.y.dot(vector)`.
+   *
+   * Generated from Godot docs: Basis.tdoty
+   */
+  fun tdoty(with: Vector3): Double =
+    builtinDouble(BasisMethods.tdoty, builtinArg(), listOf(with.builtinArg()))
+
+  /**
+   * Returns the transposed dot product between `with` and the `z` axis (see `transposed`). This is
+   * equivalent to `basis.z.dot(vector)`.
+   *
+   * Generated from Godot docs: Basis.tdotz
+   */
+  fun tdotz(with: Vector3): Double =
+    builtinDouble(BasisMethods.tdotz, builtinArg(), listOf(with.builtinArg()))
+
+  /**
+   * Performs a spherical-linear interpolation with the `to` basis, given a `weight`. Both this
+   * basis and `to` should represent a rotation.
+   *
+   * Generated from Godot docs: Basis.slerp
+   */
+  fun slerp(to: Basis, weight: Double): Basis =
+    builtinBasis(
+      builtinReals(BasisMethods.slerp, builtinArg(), 9, listOf(to.builtinArg(), argReal(weight)))
+    )
+
+  /**
+   * Returns `true` if this basis is conformal. A conformal basis is both orthogonal (the axes are
+   * perpendicular to each other) and uniform (the axes share the same length). This method can be
+   * especially useful during physics calculations.
+   *
+   * Generated from Godot docs: Basis.is_conformal
+   */
+  fun isConformal(): Boolean = builtinBool(BasisMethods.isConformal, builtinArg(), emptyList())
+
+  /**
+   * Returns `true` if this basis is finite, by calling `@GlobalScope.is_finite` on all vector
+   * components.
+   *
+   * Generated from Godot docs: Basis.is_finite
+   */
+  fun isFinite(): Boolean = builtinBool(BasisMethods.isFinite, builtinArg(), emptyList())
+
+  /**
+   * Returns `true` if this basis is orthonormal. An orthonormal basis is both orthogonal (the axes
+   * are perpendicular to each other) and normalized (the length of every axis is `1.0`). This
+   * method can be especially useful during physics calculations.
+   *
+   * Generated from Godot docs: Basis.is_orthonormal
+   */
+  fun isOrthonormal(): Boolean = builtinBool(BasisMethods.isOrthonormal, builtinArg(), emptyList())
+
+  // ===== END GENERATED BUILTIN MEMBERS: Basis =====
+
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Basis (generate_builtin_ops.py) =====
+    /**
+     * Constructs a new `Basis` that only represents scale, with no rotation or shear, from the
+     * given `scale` vector.
+     *
+     * Generated from Godot docs: Basis.from_scale
+     */
+    fun fromScale(scale: Vector3): Basis =
+      builtinBasis(builtinReals(BasisMethods.fromScale, null, 9, listOf(scale.builtinArg())))
+
+    // ===== END GENERATED BUILTIN STATICS: Basis =====
+
     const val EULER_ORDER_XYZ = 0L
     const val EULER_ORDER_XZY = 1L
     const val EULER_ORDER_YXZ = 2L

@@ -113,7 +113,412 @@ data class Projection(
   fun isZeroApprox(): Boolean =
     x.isZeroApprox() && y.isZeroApprox() && z.isZeroApprox() && w.isZeroApprox()
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Projection (generate_builtin_ops.py) =====
+  operator fun times(other: Vector4): Vector4 = projectionXform(this, other)
+
+  operator fun times(other: Projection): Projection = projectionMultiply(this, other)
+
+  /**
+   * Returns a scalar value that is the signed factor by which areas are scaled by this matrix. If
+   * the sign is negative, the matrix flips the orientation of the area. The determinant can be used
+   * to calculate the invertibility of a matrix or solve linear systems of equations involving the
+   * matrix, among other applications.
+   *
+   * Generated from Godot docs: Projection.determinant
+   */
+  fun determinant(): Double =
+    builtinDouble(ProjectionMethods.determinant, builtinArg(), emptyList())
+
+  /**
+   * Returns a `Projection` with the near clipping distance adjusted to be `new_znear`. Note: The
+   * original `Projection` must be a perspective projection.
+   *
+   * Generated from Godot docs: Projection.perspective_znear_adjusted
+   */
+  fun perspectiveZnearAdjusted(newZnear: Double): Projection =
+    builtinProjection(
+      builtinReals(
+        ProjectionMethods.perspectiveZnearAdjusted,
+        builtinArg(),
+        16,
+        listOf(argReal(newZnear)),
+      )
+    )
+
+  /**
+   * Returns the clipping plane of this `Projection` whose index is given by `plane`. `plane` should
+   * be equal to one of `Planes.NEAR`, `Planes.FAR`, `Planes.LEFT`, `Planes.TOP`, `Planes.RIGHT`, or
+   * `Planes.BOTTOM`.
+   *
+   * Generated from Godot docs: Projection.get_projection_plane
+   */
+  fun getProjectionPlane(plane: Long): Plane =
+    builtinPlane(
+      builtinReals(ProjectionMethods.getProjectionPlane, builtinArg(), 4, listOf(argLong(plane)))
+    )
+
+  /**
+   * Returns a copy of this `Projection` with the signs of the values of the Y column flipped.
+   *
+   * Generated from Godot docs: Projection.flipped_y
+   */
+  fun flippedY(): Projection =
+    builtinProjection(builtinReals(ProjectionMethods.flippedY, builtinArg(), 16, emptyList()))
+
+  /**
+   * Returns a `Projection` with the X and Y values from the given `Vector2` added to the first and
+   * second values of the final column respectively.
+   *
+   * Generated from Godot docs: Projection.jitter_offseted
+   */
+  fun jitterOffseted(offset: Vector2): Projection =
+    builtinProjection(
+      builtinReals(ProjectionMethods.jitterOffseted, builtinArg(), 16, listOf(offset.builtinArg()))
+    )
+
+  /**
+   * Returns the distance for this `Projection` beyond which positions are clipped.
+   *
+   * Generated from Godot docs: Projection.get_z_far
+   */
+  fun getZFar(): Double = builtinDouble(ProjectionMethods.getZFar, builtinArg(), emptyList())
+
+  /**
+   * Returns the distance for this `Projection` before which positions are clipped.
+   *
+   * Generated from Godot docs: Projection.get_z_near
+   */
+  fun getZNear(): Double = builtinDouble(ProjectionMethods.getZNear, builtinArg(), emptyList())
+
+  /**
+   * Returns the X:Y aspect ratio of this `Projection`'s viewport.
+   *
+   * Generated from Godot docs: Projection.get_aspect
+   */
+  fun getAspect(): Double = builtinDouble(ProjectionMethods.getAspect, builtinArg(), emptyList())
+
+  /**
+   * Returns the horizontal field of view of the projection (in degrees).
+   *
+   * Generated from Godot docs: Projection.get_fov
+   */
+  fun getFov(): Double = builtinDouble(ProjectionMethods.getFov, builtinArg(), emptyList())
+
+  /**
+   * Returns `true` if this `Projection` performs an orthogonal projection.
+   *
+   * Generated from Godot docs: Projection.is_orthogonal
+   */
+  fun isOrthogonal(): Boolean =
+    builtinBool(ProjectionMethods.isOrthogonal, builtinArg(), emptyList())
+
+  /**
+   * Returns the dimensions of the viewport plane that this `Projection` projects positions onto,
+   * divided by two.
+   *
+   * Generated from Godot docs: Projection.get_viewport_half_extents
+   */
+  fun getViewportHalfExtents(): Vector2 =
+    builtinVector2(
+      builtinReals(ProjectionMethods.getViewportHalfExtents, builtinArg(), 2, emptyList())
+    )
+
+  /**
+   * Returns the dimensions of the far clipping plane of the projection, divided by two.
+   *
+   * Generated from Godot docs: Projection.get_far_plane_half_extents
+   */
+  fun getFarPlaneHalfExtents(): Vector2 =
+    builtinVector2(
+      builtinReals(ProjectionMethods.getFarPlaneHalfExtents, builtinArg(), 2, emptyList())
+    )
+
+  /**
+   * Returns a `Projection` that performs the inverse of this `Projection`'s projective
+   * transformation.
+   *
+   * Generated from Godot docs: Projection.inverse
+   */
+  fun inverse(): Projection =
+    builtinProjection(builtinReals(ProjectionMethods.inverse, builtinArg(), 16, emptyList()))
+
+  /**
+   * Returns `for_pixel_width` divided by the viewport's width measured in meters on the near plane,
+   * after this `Projection` is applied.
+   *
+   * Generated from Godot docs: Projection.get_pixels_per_meter
+   */
+  fun getPixelsPerMeter(forPixelWidth: Long): Long =
+    builtinLong(ProjectionMethods.getPixelsPerMeter, builtinArg(), listOf(argLong(forPixelWidth)))
+
+  /**
+   * Returns the factor by which the visible level of detail is scaled by this `Projection`.
+   *
+   * Generated from Godot docs: Projection.get_lod_multiplier
+   */
+  fun getLodMultiplier(): Double =
+    builtinDouble(ProjectionMethods.getLodMultiplier, builtinArg(), emptyList())
+
+  // ===== END GENERATED BUILTIN MEMBERS: Projection =====
+
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Projection (generate_builtin_ops.py) =====
+    /**
+     * Creates a new `Projection` that projects positions from a depth range of `-1` to `1` to one
+     * that ranges from `0` to `1`, and flips the projected positions vertically, according to
+     * `flip_y`.
+     *
+     * Generated from Godot docs: Projection.create_depth_correction
+     */
+    fun createDepthCorrection(flipY: Boolean): Projection =
+      builtinProjection(
+        builtinReals(ProjectionMethods.createDepthCorrection, null, 16, listOf(argBool(flipY)))
+      )
+
+    /**
+     * Creates a new `Projection` that projects positions into the given `Rect2`.
+     *
+     * Generated from Godot docs: Projection.create_light_atlas_rect
+     */
+    fun createLightAtlasRect(rect: Rect2): Projection =
+      builtinProjection(
+        builtinReals(ProjectionMethods.createLightAtlasRect, null, 16, listOf(rect.builtinArg()))
+      )
+
+    /**
+     * Creates a new `Projection` that projects positions using a perspective projection with the
+     * given Y-axis field of view (in degrees), X:Y aspect ratio, and clipping planes. `flip_fov`
+     * determines whether the projection's field of view is flipped over its diagonal.
+     *
+     * Generated from Godot docs: Projection.create_perspective
+     */
+    fun createPerspective(
+      fovy: Double,
+      aspect: Double,
+      zNear: Double,
+      zFar: Double,
+      flipFov: Boolean = false,
+    ): Projection =
+      builtinProjection(
+        builtinReals(
+          ProjectionMethods.createPerspective,
+          null,
+          16,
+          listOf(argReal(fovy), argReal(aspect), argReal(zNear), argReal(zFar), argBool(flipFov)),
+        )
+      )
+
+    /**
+     * Creates a new `Projection` that projects positions using a perspective projection with the
+     * given Y-axis field of view (in degrees), X:Y aspect ratio, and clipping distances. The
+     * projection is adjusted for a head-mounted display with the given distance between eyes and
+     * distance to a point that can be focused on. `eye` creates the projection for the left eye
+     * when set to 1, or the right eye when set to 2. `flip_fov` determines whether the projection's
+     * field of view is flipped over its diagonal.
+     *
+     * Generated from Godot docs: Projection.create_perspective_hmd
+     */
+    fun createPerspectiveHmd(
+      fovy: Double,
+      aspect: Double,
+      zNear: Double,
+      zFar: Double,
+      flipFov: Boolean,
+      eye: Long,
+      intraocularDist: Double,
+      convergenceDist: Double,
+    ): Projection =
+      builtinProjection(
+        builtinReals(
+          ProjectionMethods.createPerspectiveHmd,
+          null,
+          16,
+          listOf(
+            argReal(fovy),
+            argReal(aspect),
+            argReal(zNear),
+            argReal(zFar),
+            argBool(flipFov),
+            argLong(eye),
+            argReal(intraocularDist),
+            argReal(convergenceDist),
+          ),
+        )
+      )
+
+    /**
+     * Creates a new `Projection` for projecting positions onto a head-mounted display with the
+     * given X:Y aspect ratio, distance between eyes, display width, distance to lens, oversampling
+     * factor, and depth clipping planes. `eye` creates the projection for the left eye when set to
+     * 1, or the right eye when set to 2.
+     *
+     * Generated from Godot docs: Projection.create_for_hmd
+     */
+    fun createForHmd(
+      eye: Long,
+      aspect: Double,
+      intraocularDist: Double,
+      displayWidth: Double,
+      displayToLens: Double,
+      oversample: Double,
+      zNear: Double,
+      zFar: Double,
+    ): Projection =
+      builtinProjection(
+        builtinReals(
+          ProjectionMethods.createForHmd,
+          null,
+          16,
+          listOf(
+            argLong(eye),
+            argReal(aspect),
+            argReal(intraocularDist),
+            argReal(displayWidth),
+            argReal(displayToLens),
+            argReal(oversample),
+            argReal(zNear),
+            argReal(zFar),
+          ),
+        )
+      )
+
+    /**
+     * Creates a new `Projection` that projects positions using an orthogonal projection with the
+     * given clipping planes.
+     *
+     * Generated from Godot docs: Projection.create_orthogonal
+     */
+    fun createOrthogonal(
+      left: Double,
+      right: Double,
+      bottom: Double,
+      top: Double,
+      zNear: Double,
+      zFar: Double,
+    ): Projection =
+      builtinProjection(
+        builtinReals(
+          ProjectionMethods.createOrthogonal,
+          null,
+          16,
+          listOf(
+            argReal(left),
+            argReal(right),
+            argReal(bottom),
+            argReal(top),
+            argReal(zNear),
+            argReal(zFar),
+          ),
+        )
+      )
+
+    /**
+     * Creates a new `Projection` that projects positions using an orthogonal projection with the
+     * given size, X:Y aspect ratio, and clipping planes. `flip_fov` determines whether the
+     * projection's field of view is flipped over its diagonal.
+     *
+     * Generated from Godot docs: Projection.create_orthogonal_aspect
+     */
+    fun createOrthogonalAspect(
+      size: Double,
+      aspect: Double,
+      zNear: Double,
+      zFar: Double,
+      flipFov: Boolean = false,
+    ): Projection =
+      builtinProjection(
+        builtinReals(
+          ProjectionMethods.createOrthogonalAspect,
+          null,
+          16,
+          listOf(argReal(size), argReal(aspect), argReal(zNear), argReal(zFar), argBool(flipFov)),
+        )
+      )
+
+    /**
+     * Creates a new `Projection` that projects positions in a frustum with the given clipping
+     * planes.
+     *
+     * Generated from Godot docs: Projection.create_frustum
+     */
+    fun createFrustum(
+      left: Double,
+      right: Double,
+      bottom: Double,
+      top: Double,
+      zNear: Double,
+      zFar: Double,
+    ): Projection =
+      builtinProjection(
+        builtinReals(
+          ProjectionMethods.createFrustum,
+          null,
+          16,
+          listOf(
+            argReal(left),
+            argReal(right),
+            argReal(bottom),
+            argReal(top),
+            argReal(zNear),
+            argReal(zFar),
+          ),
+        )
+      )
+
+    /**
+     * Creates a new `Projection` that projects positions in a frustum with the given size, X:Y
+     * aspect ratio, offset, and clipping planes. `flip_fov` determines whether the projection's
+     * field of view is flipped over its diagonal.
+     *
+     * Generated from Godot docs: Projection.create_frustum_aspect
+     */
+    fun createFrustumAspect(
+      size: Double,
+      aspect: Double,
+      offset: Vector2,
+      zNear: Double,
+      zFar: Double,
+      flipFov: Boolean = false,
+    ): Projection =
+      builtinProjection(
+        builtinReals(
+          ProjectionMethods.createFrustumAspect,
+          null,
+          16,
+          listOf(
+            argReal(size),
+            argReal(aspect),
+            offset.builtinArg(),
+            argReal(zNear),
+            argReal(zFar),
+            argBool(flipFov),
+          ),
+        )
+      )
+
+    /**
+     * Creates a new `Projection` that scales a given projection to fit around a given `AABB` in
+     * projection space.
+     *
+     * Generated from Godot docs: Projection.create_fit_aabb
+     */
+    fun createFitAabb(aabb: AABB): Projection =
+      builtinProjection(
+        builtinReals(ProjectionMethods.createFitAabb, null, 16, listOf(aabb.builtinArg()))
+      )
+
+    /**
+     * Returns the vertical field of view of the projection (in degrees) associated with the given
+     * horizontal field of view (in degrees) and aspect ratio. Note: Unlike most methods of
+     * `Projection`, `aspect` is expected to be 1 divided by the X:Y aspect ratio.
+     *
+     * Generated from Godot docs: Projection.get_fovy
+     */
+    fun getFovy(fovx: Double, aspect: Double): Double =
+      builtinDouble(ProjectionMethods.getFovy, null, listOf(argReal(fovx), argReal(aspect)))
+
+    // ===== END GENERATED BUILTIN STATICS: Projection =====
+
     /**
      * A `Projection` with no transformation defined. When applied to other data structures, no
      * transformation is performed.

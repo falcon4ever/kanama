@@ -225,6 +225,187 @@ private constructor(
       it[3] = rawW
     }
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Quaternion (generate_builtin_ops.py) =====
+  operator fun unaryPlus(): Quaternion = this
+
+  operator fun times(scalar: Int): Quaternion = times(scalar.toDouble())
+
+  operator fun times(scalar: Long): Quaternion = times(scalar.toDouble())
+
+  operator fun div(scalar: Int): Quaternion = div(scalar.toDouble())
+
+  operator fun div(scalar: Long): Quaternion = div(scalar.toDouble())
+
+  operator fun times(scalar: Double): Quaternion {
+    val s = narrowReal(scalar)
+    return raw(rawX * s, rawY * s, rawZ * s, rawW * s)
+  }
+
+  operator fun div(scalar: Double): Quaternion {
+    val s = narrowReal(1.0) / narrowReal(scalar)
+    return raw(rawX * s, rawY * s, rawZ * s, rawW * s)
+  }
+
+  operator fun times(other: Vector3): Vector3 = quaternionXform(this, other)
+
+  operator fun plus(other: Quaternion): Quaternion =
+    raw(rawX + other.rawX, rawY + other.rawY, rawZ + other.rawZ, rawW + other.rawW)
+
+  operator fun minus(other: Quaternion): Quaternion =
+    raw(rawX - other.rawX, rawY - other.rawY, rawZ - other.rawZ, rawW - other.rawW)
+
+  /**
+   * Returns `true` if this quaternion is normalized. See also `normalized`.
+   *
+   * Generated from Godot docs: Quaternion.is_normalized
+   */
+  fun isNormalized(): Boolean =
+    builtinBool(QuaternionMethods.isNormalized, builtinArg(), emptyList())
+
+  /**
+   * Returns `true` if this quaternion is finite, by calling `@GlobalScope.is_finite` on each
+   * component.
+   *
+   * Generated from Godot docs: Quaternion.is_finite
+   */
+  fun isFinite(): Boolean = rawX.isFinite() && rawY.isFinite() && rawZ.isFinite() && rawW.isFinite()
+
+  /**
+   * Returns the logarithm of this quaternion. Multiplies this quaternion's rotation axis by its
+   * rotation angle, and stores the result in the returned quaternion's vector part (`x`, `y`, and
+   * `z`). The returned quaternion's real part (`w`) is always `0.0`.
+   *
+   * Generated from Godot docs: Quaternion.log
+   */
+  fun log(): Quaternion =
+    builtinQuaternion(builtinReals(QuaternionMethods.log, builtinArg(), 4, emptyList()))
+
+  /**
+   * Returns the exponential of this quaternion. The rotation axis of the result is the normalized
+   * rotation axis of this quaternion, the angle of the result is the length of the vector part of
+   * this quaternion.
+   *
+   * Generated from Godot docs: Quaternion.exp
+   */
+  fun exp(): Quaternion =
+    builtinQuaternion(builtinReals(QuaternionMethods.exp, builtinArg(), 4, emptyList()))
+
+  /**
+   * Returns the angle between this quaternion and `to`. This is the magnitude of the angle you
+   * would need to rotate by to get from one to the other. Note: The magnitude of the floating-point
+   * error for this method is abnormally high, so methods such as `is_zero_approx` will not work
+   * reliably.
+   *
+   * Generated from Godot docs: Quaternion.angle_to
+   */
+  fun angleTo(to: Quaternion): Double =
+    builtinDouble(QuaternionMethods.angleTo, builtinArg(), listOf(to.builtinArg()))
+
+  /**
+   * Performs a spherical-linear interpolation with the `to` quaternion, given a `weight` and
+   * returns the result. Unlike `slerp`, this method does not check if the rotation path is smaller
+   * than 90 degrees. Both this quaternion and `to` must be normalized.
+   *
+   * Generated from Godot docs: Quaternion.slerpni
+   */
+  fun slerpni(to: Quaternion, weight: Double): Quaternion =
+    builtinQuaternion(
+      builtinReals(
+        QuaternionMethods.slerpni,
+        builtinArg(),
+        4,
+        listOf(to.builtinArg(), argReal(weight)),
+      )
+    )
+
+  /**
+   * Performs a spherical cubic interpolation between quaternions `pre_a`, this vector, `b`, and
+   * `post_b`, by the given amount `weight`.
+   *
+   * Generated from Godot docs: Quaternion.spherical_cubic_interpolate
+   */
+  fun sphericalCubicInterpolate(
+    b: Quaternion,
+    preA: Quaternion,
+    postB: Quaternion,
+    weight: Double,
+  ): Quaternion =
+    builtinQuaternion(
+      builtinReals(
+        QuaternionMethods.sphericalCubicInterpolate,
+        builtinArg(),
+        4,
+        listOf(b.builtinArg(), preA.builtinArg(), postB.builtinArg(), argReal(weight)),
+      )
+    )
+
+  /**
+   * Performs a spherical cubic interpolation between quaternions `pre_a`, this vector, `b`, and
+   * `post_b`, by the given amount `weight`. It can perform smoother interpolation than
+   * `spherical_cubic_interpolate` by the time values.
+   *
+   * Generated from Godot docs: Quaternion.spherical_cubic_interpolate_in_time
+   */
+  fun sphericalCubicInterpolateInTime(
+    b: Quaternion,
+    preA: Quaternion,
+    postB: Quaternion,
+    weight: Double,
+    bT: Double,
+    preAT: Double,
+    postBT: Double,
+  ): Quaternion =
+    builtinQuaternion(
+      builtinReals(
+        QuaternionMethods.sphericalCubicInterpolateInTime,
+        builtinArg(),
+        4,
+        listOf(
+          b.builtinArg(),
+          preA.builtinArg(),
+          postB.builtinArg(),
+          argReal(weight),
+          argReal(bT),
+          argReal(preAT),
+          argReal(postBT),
+        ),
+      )
+    )
+
+  /**
+   * Returns this quaternion's rotation as a `Vector3` of Euler angles
+   * (https://en.wikipedia.org/wiki/Euler_angles), in radians. The order of each consecutive
+   * rotation can be changed with `order` (see `EulerOrder` constants). In Godot, Euler angles
+   * always use intrinsic order. By default, the intrinsic YXZ convention is used
+   * (`EulerOrder.YXZ`): since we are decomposing, local Z (roll) is calculated first, then local X
+   * (pitch), and lastly local Y (yaw). When using the opposite method `from_euler` to compose a
+   * rotation, this order is reversed.
+   *
+   * Generated from Godot docs: Quaternion.get_euler
+   */
+  fun getEuler(order: Long = 2L): Vector3 =
+    builtinVector3(
+      builtinReals(QuaternionMethods.getEuler, builtinArg(), 3, listOf(argLong(order)))
+    )
+
+  /**
+   * Returns the rotation axis of the rotation represented by this quaternion.
+   *
+   * Generated from Godot docs: Quaternion.get_axis
+   */
+  fun getAxis(): Vector3 =
+    builtinVector3(builtinReals(QuaternionMethods.getAxis, builtinArg(), 3, emptyList()))
+
+  /**
+   * Returns the angle of the rotation represented by this quaternion. Note: The quaternion must be
+   * normalized.
+   *
+   * Generated from Godot docs: Quaternion.get_angle
+   */
+  fun getAngle(): Double = builtinDouble(QuaternionMethods.getAngle, builtinArg(), emptyList())
+
+  // ===== END GENERATED BUILTIN MEMBERS: Quaternion =====
+
   companion object {
     /**
      * The identity quaternion, representing no rotation. This has the same rotation as

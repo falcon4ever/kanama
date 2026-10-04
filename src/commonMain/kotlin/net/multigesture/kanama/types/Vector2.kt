@@ -1,7 +1,6 @@
 package net.multigesture.kanama.types
 
 import kotlin.jvm.JvmInline
-import kotlin.math.atan2
 import kotlin.math.sqrt
 import net.multigesture.kanama.binding.runtime.BArg
 import net.multigesture.kanama.binding.runtime.BuiltinCalls
@@ -217,18 +216,6 @@ private constructor(
   fun distanceSquaredTo(other: Vector2): Double = (this - other).lengthSquared()
 
   /**
-   * Returns this vector's angle with respect to the positive X axis, or `(1, 0)` vector, in
-   * radians. For example, `Vector2.RIGHT.angle()` will return zero, `Vector2.DOWN.angle()` will
-   * return `PI / 2` (a quarter turn, or 90 degrees), and `Vector2(1, -1).angle()` will return `-PI
-   * / 4` (a negative eighth turn, or -45 degrees). This is equivalent to calling
-   * `@GlobalScope.atan2` with `y` and `x`. Illustration of the returned angle.
-   * (https://raw.githubusercontent.com/godotengine/godot-docs/master/img/vector2_angle.png)
-   *
-   * Generated from Godot docs: Vector2.angle
-   */
-  fun angle(): Double = widenReal(atan2(rawY, rawX))
-
-  /**
    * Returns the result of the linear interpolation between this vector and `to` by amount `weight`.
    * `weight` is on the range of `0.0` to `1.0`, representing the amount of interpolation.
    *
@@ -299,7 +286,417 @@ private constructor(
       it[1] = rawY
     }
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Vector2 (generate_builtin_ops.py) =====
+  operator fun unaryPlus(): Vector2 = this
+
+  operator fun compareTo(other: Vector2): Int {
+    val c0 = godotCompareStep(rawX, other.rawX)
+    if (c0 != 0) return c0
+    return godotCompareStep(rawY, other.rawY)
+  }
+
+  operator fun times(other: Vector2): Vector2 = raw(rawX * other.rawX, rawY * other.rawY)
+
+  operator fun div(other: Vector2): Vector2 = raw(rawX / other.rawX, rawY / other.rawY)
+
+  operator fun times(other: Transform2D): Vector2 = transform2DXformInv(other, this)
+
+  /**
+   * Returns this vector's angle with respect to the positive X axis, or `(1, 0)` vector, in
+   * radians. For example, `Vector2.RIGHT.angle()` will return zero, `Vector2.DOWN.angle()` will
+   * return `PI / 2` (a quarter turn, or 90 degrees), and `Vector2(1, -1).angle()` will return `-PI
+   * / 4` (a negative eighth turn, or -45 degrees). This is equivalent to calling
+   * `@GlobalScope.atan2` with `y` and `x`. Illustration of the returned angle.
+   * (https://raw.githubusercontent.com/godotengine/godot-docs/master/img/vector2_angle.png)
+   *
+   * Generated from Godot docs: Vector2.angle
+   */
+  fun angle(): Double = builtinDouble(Vector2Methods.angle, builtinArg(), emptyList())
+
+  /**
+   * Returns the signed angle to the given vector, in radians. The result ranges from `-PI` to `PI`
+   * (inclusive). Illustration of the returned angle.
+   * (https://raw.githubusercontent.com/godotengine/godot-docs/master/img/vector2_angle_to.png)
+   *
+   * Generated from Godot docs: Vector2.angle_to
+   */
+  fun angleTo(to: Vector2): Double =
+    builtinDouble(Vector2Methods.angleTo, builtinArg(), listOf(to.builtinArg()))
+
+  /**
+   * Returns the signed angle between the X axis and the line from this vector to point `to`, in
+   * radians. The result ranges from `-PI` to `PI` (inclusive). `a.angle_to_point(b)` is equivalent
+   * to `(b - a).angle()`. See also `angle`. Illustration of the returned angle.
+   * (https://raw.githubusercontent.com/godotengine/godot-docs/master/img/vector2_angle_to_point.png)
+   *
+   * Generated from Godot docs: Vector2.angle_to_point
+   */
+  fun angleToPoint(to: Vector2): Double =
+    builtinDouble(Vector2Methods.angleToPoint, builtinArg(), listOf(to.builtinArg()))
+
+  /**
+   * Returns the normalized vector pointing from this vector to `to`. `a.direction_to(b)` is
+   * equivalent to `(b - a).normalized()`. See also `normalized`.
+   *
+   * Generated from Godot docs: Vector2.direction_to
+   */
+  fun directionTo(to: Vector2): Vector2 = raw(to.rawX - rawX, to.rawY - rawY).normalized()
+
+  /**
+   * Returns `true` if the vector is normalized, i.e. its length is approximately equal to 1.
+   *
+   * Generated from Godot docs: Vector2.is_normalized
+   */
+  fun isNormalized(): Boolean = builtinBool(Vector2Methods.isNormalized, builtinArg(), emptyList())
+
+  /**
+   * Returns `true` if this vector is finite, by calling `@GlobalScope.is_finite` on each component.
+   *
+   * Generated from Godot docs: Vector2.is_finite
+   */
+  fun isFinite(): Boolean = rawX.isFinite() && rawY.isFinite()
+
+  /**
+   * Returns a vector composed of the `@GlobalScope.fposmod` of this vector's components and `mod`.
+   *
+   * Generated from Godot docs: Vector2.posmod
+   */
+  fun posmod(mod: Double): Vector2 =
+    builtinVector2(builtinReals(Vector2Methods.posmod, builtinArg(), 2, listOf(argReal(mod))))
+
+  /**
+   * Returns a vector composed of the `@GlobalScope.fposmod` of this vector's components and
+   * `modv`'s components.
+   *
+   * Generated from Godot docs: Vector2.posmodv
+   */
+  fun posmodv(modv: Vector2): Vector2 =
+    builtinVector2(builtinReals(Vector2Methods.posmodv, builtinArg(), 2, listOf(modv.builtinArg())))
+
+  /**
+   * Returns a new vector resulting from projecting this vector onto the given vector `b`. The
+   * resulting new vector is parallel to `b`. See also `slide`. Note: If the vector `b` is a zero
+   * vector, the components of the resulting new vector will be `@GDScript.NAN`.
+   *
+   * Generated from Godot docs: Vector2.project
+   */
+  fun project(b: Vector2): Vector2 =
+    builtinVector2(builtinReals(Vector2Methods.project, builtinArg(), 2, listOf(b.builtinArg())))
+
+  /**
+   * Returns the result of spherical linear interpolation between this vector and `to`, by amount
+   * `weight`. `weight` is on the range of 0.0 to 1.0, representing the amount of interpolation.
+   * This method also handles interpolating the lengths if the input vectors have different lengths.
+   * For the special case of one or both input vectors having zero length, this method behaves like
+   * `lerp`.
+   *
+   * Generated from Godot docs: Vector2.slerp
+   */
+  fun slerp(to: Vector2, weight: Double): Vector2 =
+    builtinVector2(
+      builtinReals(Vector2Methods.slerp, builtinArg(), 2, listOf(to.builtinArg(), argReal(weight)))
+    )
+
+  /**
+   * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
+   * handles, and returns the result at position `weight`. `weight` is on the range of 0.0 to 1.0,
+   * representing the amount of interpolation.
+   *
+   * Generated from Godot docs: Vector2.cubic_interpolate
+   */
+  fun cubicInterpolate(b: Vector2, preA: Vector2, postB: Vector2, weight: Double): Vector2 =
+    builtinVector2(
+      builtinReals(
+        Vector2Methods.cubicInterpolate,
+        builtinArg(),
+        2,
+        listOf(b.builtinArg(), preA.builtinArg(), postB.builtinArg(), argReal(weight)),
+      )
+    )
+
+  /**
+   * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
+   * handles, and returns the result at position `weight`. `weight` is on the range of 0.0 to 1.0,
+   * representing the amount of interpolation. It can perform smoother interpolation than
+   * `cubic_interpolate` by the time values.
+   *
+   * Generated from Godot docs: Vector2.cubic_interpolate_in_time
+   */
+  fun cubicInterpolateInTime(
+    b: Vector2,
+    preA: Vector2,
+    postB: Vector2,
+    weight: Double,
+    bT: Double,
+    preAT: Double,
+    postBT: Double,
+  ): Vector2 =
+    builtinVector2(
+      builtinReals(
+        Vector2Methods.cubicInterpolateInTime,
+        builtinArg(),
+        2,
+        listOf(
+          b.builtinArg(),
+          preA.builtinArg(),
+          postB.builtinArg(),
+          argReal(weight),
+          argReal(bT),
+          argReal(preAT),
+          argReal(postBT),
+        ),
+      )
+    )
+
+  /**
+   * Returns the point at the given `t` on the Bézier curve
+   * (https://en.wikipedia.org/wiki/B%C3%A9zier_curve) defined by this vector and the given
+   * `control_1`, `control_2`, and `end` points.
+   *
+   * Generated from Godot docs: Vector2.bezier_interpolate
+   */
+  fun bezierInterpolate(control1: Vector2, control2: Vector2, end: Vector2, t: Double): Vector2 =
+    builtinVector2(
+      builtinReals(
+        Vector2Methods.bezierInterpolate,
+        builtinArg(),
+        2,
+        listOf(control1.builtinArg(), control2.builtinArg(), end.builtinArg(), argReal(t)),
+      )
+    )
+
+  /**
+   * Returns the derivative at the given `t` on the Bézier curve
+   * (https://en.wikipedia.org/wiki/B%C3%A9zier_curve) defined by this vector and the given
+   * `control_1`, `control_2`, and `end` points.
+   *
+   * Generated from Godot docs: Vector2.bezier_derivative
+   */
+  fun bezierDerivative(control1: Vector2, control2: Vector2, end: Vector2, t: Double): Vector2 =
+    builtinVector2(
+      builtinReals(
+        Vector2Methods.bezierDerivative,
+        builtinArg(),
+        2,
+        listOf(control1.builtinArg(), control2.builtinArg(), end.builtinArg(), argReal(t)),
+      )
+    )
+
+  /**
+   * Returns the axis of the vector's highest value. See `AXIS_*` constants. If all components are
+   * equal, this method returns `Axis.X`.
+   *
+   * Generated from Godot docs: Vector2.max_axis_index
+   */
+  fun maxAxisIndex(): Long = if (rawX < rawY) 1L else 0L
+
+  /**
+   * Returns the axis of the vector's lowest value. See `AXIS_*` constants. If all components are
+   * equal, this method returns `Axis.Y`.
+   *
+   * Generated from Godot docs: Vector2.min_axis_index
+   */
+  fun minAxisIndex(): Long = if (rawX < rawY) 0L else 1L
+
+  /**
+   * Returns a new vector moved toward `to` by the fixed `delta` amount. Will not go past the final
+   * value.
+   *
+   * Generated from Godot docs: Vector2.move_toward
+   */
+  fun moveToward(to: Vector2, delta: Double): Vector2 =
+    builtinVector2(
+      builtinReals(
+        Vector2Methods.moveToward,
+        builtinArg(),
+        2,
+        listOf(to.builtinArg(), argReal(delta)),
+      )
+    )
+
+  /**
+   * Returns a perpendicular vector rotated 90 degrees counter-clockwise compared to the original,
+   * with the same length.
+   *
+   * Generated from Godot docs: Vector2.orthogonal
+   */
+  fun orthogonal(): Vector2 = raw(rawY, -rawX)
+
+  /**
+   * Returns a new vector with all components rounded down (towards negative infinity).
+   *
+   * Generated from Godot docs: Vector2.floor
+   */
+  fun floor(): Vector2 = raw(godotFloor(rawX), godotFloor(rawY))
+
+  /**
+   * Returns a new vector with all components rounded up (towards positive infinity).
+   *
+   * Generated from Godot docs: Vector2.ceil
+   */
+  fun ceil(): Vector2 = raw(godotCeil(rawX), godotCeil(rawY))
+
+  /**
+   * Returns a new vector with all components rounded to the nearest integer, with halfway cases
+   * rounded away from zero.
+   *
+   * Generated from Godot docs: Vector2.round
+   */
+  fun round(): Vector2 = raw(godotRound(rawX), godotRound(rawY))
+
+  /**
+   * Returns this vector's aspect ratio, which is `x` divided by `y`.
+   *
+   * Generated from Godot docs: Vector2.aspect
+   */
+  fun aspect(): Double = widenReal(rawX / rawY)
+
+  /**
+   * Returns a new vector resulting from sliding this vector along a line with normal `n`. The
+   * resulting new vector is perpendicular to `n`, and is equivalent to this vector minus its
+   * projection on `n`. See also `project`. Note: The vector `n` must be normalized. See also
+   * `normalized`.
+   *
+   * Generated from Godot docs: Vector2.slide
+   */
+  fun slide(n: Vector2): Vector2 =
+    builtinVector2(builtinReals(Vector2Methods.slide, builtinArg(), 2, listOf(n.builtinArg())))
+
+  /**
+   * Returns the vector "bounced off" from a line defined by the given normal `n` perpendicular to
+   * the line. Note: `bounce` performs the operation that most engines and frameworks call
+   * `reflect()`.
+   *
+   * Generated from Godot docs: Vector2.bounce
+   */
+  fun bounce(n: Vector2): Vector2 =
+    builtinVector2(builtinReals(Vector2Methods.bounce, builtinArg(), 2, listOf(n.builtinArg())))
+
+  /**
+   * Returns the result of reflecting the vector from a line defined by the given direction vector
+   * `line`. Note: `reflect` differs from what other engines and frameworks call `reflect()`. In
+   * other engines, `reflect()` takes a normal direction which is a direction perpendicular to the
+   * line. In Godot, you specify the direction of the line directly. See also `bounce` which does
+   * what most engines call `reflect()`.
+   *
+   * Generated from Godot docs: Vector2.reflect
+   */
+  fun reflect(line: Vector2): Vector2 =
+    builtinVector2(builtinReals(Vector2Methods.reflect, builtinArg(), 2, listOf(line.builtinArg())))
+
+  /**
+   * Returns the 2D analog of the cross product for this vector and `with`. This is the signed area
+   * of the parallelogram formed by the two vectors. If the second vector is clockwise from the
+   * first vector, then the cross product is the positive area. If counter-clockwise, the cross
+   * product is the negative area. If the two vectors are parallel this returns zero, making it
+   * useful for testing if two vectors are parallel. Note: Cross product is not defined in 2D
+   * mathematically. This method embeds the 2D vectors in the XY plane of 3D space and uses their
+   * cross product's Z component as the analog.
+   *
+   * Generated from Godot docs: Vector2.cross
+   */
+  fun cross(with: Vector2): Double = widenReal(rawX * with.rawY - rawY * with.rawX)
+
+  /**
+   * Returns a new vector with all components in absolute values (i.e. positive).
+   *
+   * Generated from Godot docs: Vector2.abs
+   */
+  fun abs(): Vector2 = raw(godotFabs(rawX), godotFabs(rawY))
+
+  /**
+   * Returns a new vector with each component set to `1.0` if it's positive, `-1.0` if it's
+   * negative, and `0.0` if it's zero. The result is identical to calling `@GlobalScope.sign` on
+   * each component.
+   *
+   * Generated from Godot docs: Vector2.sign
+   */
+  fun sign(): Vector2 = raw(godotSign(rawX), godotSign(rawY))
+
+  /**
+   * Returns a new vector with all components clamped between `min` and `max`, by running
+   * `@GlobalScope.clamp` on each component.
+   *
+   * Generated from Godot docs: Vector2.clampf
+   */
+  fun clampf(min: Double, max: Double): Vector2 {
+    val lo = narrowReal(min)
+    val hi = narrowReal(max)
+    return raw(godotClamp(rawX, lo, hi), godotClamp(rawY, lo, hi))
+  }
+
+  /**
+   * Returns a new vector with each component snapped to the nearest multiple of the corresponding
+   * component in `step`. This can also be used to round the components to an arbitrary number of
+   * decimals.
+   *
+   * Generated from Godot docs: Vector2.snapped
+   */
+  fun snapped(step: Vector2): Vector2 =
+    builtinVector2(builtinReals(Vector2Methods.snapped, builtinArg(), 2, listOf(step.builtinArg())))
+
+  /**
+   * Returns a new vector with each component snapped to the nearest multiple of `step`. This can
+   * also be used to round the components to an arbitrary number of decimals.
+   *
+   * Generated from Godot docs: Vector2.snappedf
+   */
+  fun snappedf(step: Double): Vector2 =
+    builtinVector2(builtinReals(Vector2Methods.snappedf, builtinArg(), 2, listOf(argReal(step))))
+
+  /**
+   * Returns the component-wise minimum of this and `with`, equivalent to `Vector2(minf(x, with.x),
+   * minf(y, with.y))`.
+   *
+   * Generated from Godot docs: Vector2.min
+   */
+  fun min(with: Vector2): Vector2 = raw(godotMin(rawX, with.rawX), godotMin(rawY, with.rawY))
+
+  /**
+   * Returns the component-wise minimum of this and `with`, equivalent to `Vector2(minf(x, with),
+   * minf(y, with))`.
+   *
+   * Generated from Godot docs: Vector2.minf
+   */
+  fun minf(with: Double): Vector2 {
+    val s = narrowReal(with)
+    return raw(godotMin(rawX, s), godotMin(rawY, s))
+  }
+
+  /**
+   * Returns the component-wise maximum of this and `with`, equivalent to `Vector2(maxf(x, with.x),
+   * maxf(y, with.y))`.
+   *
+   * Generated from Godot docs: Vector2.max
+   */
+  fun max(with: Vector2): Vector2 = raw(godotMax(rawX, with.rawX), godotMax(rawY, with.rawY))
+
+  /**
+   * Returns the component-wise maximum of this and `with`, equivalent to `Vector2(maxf(x, with),
+   * maxf(y, with))`.
+   *
+   * Generated from Godot docs: Vector2.maxf
+   */
+  fun maxf(with: Double): Vector2 {
+    val s = narrowReal(with)
+    return raw(godotMax(rawX, s), godotMax(rawY, s))
+  }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Vector2 =====
+
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Vector2 (generate_builtin_ops.py) =====
+    /**
+     * Creates a `Vector2` rotated to the given `angle` in radians. This is equivalent to doing
+     * `Vector2(cos(angle), sin(angle))` or `Vector2.RIGHT.rotated(angle)`.
+     *
+     * Generated from Godot docs: Vector2.from_angle
+     */
+    fun fromAngle(angle: Double): Vector2 =
+      builtinVector2(builtinReals(Vector2Methods.fromAngle, null, 2, listOf(argReal(angle))))
+
+    // ===== END GENERATED BUILTIN STATICS: Vector2 =====
+
     private val lerpBind by lazy { BuiltinCalls.getBuiltinMethod(VT_VECTOR2, "lerp", LERP_HASH) }
     private val limitLengthBind by lazy {
       BuiltinCalls.getBuiltinMethod(VT_VECTOR2, "limit_length", LIMIT_LENGTH_HASH)

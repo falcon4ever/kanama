@@ -86,6 +86,103 @@ private constructor(
     return from + dir * widenReal(-signedDistance)
   }
 
+  // ===== BEGIN GENERATED BUILTIN MEMBERS: Plane (generate_builtin_ops.py) =====
+  operator fun unaryMinus(): Plane = raw(-normal, -rawD)
+
+  operator fun unaryPlus(): Plane = this
+
+  operator fun times(other: Transform3D): Plane = transform3DXformInvPlane(other, this)
+
+  /**
+   * Returns a copy of the plane, with normalized `normal` (so it's a unit vector). Returns
+   * `Plane(0, 0, 0, 0)` if `normal` can't be normalized (it has zero length).
+   *
+   * Generated from Godot docs: Plane.normalized
+   */
+  fun normalized(): Plane =
+    builtinPlane(builtinReals(PlaneMethods.normalized, builtinArg(), 4, emptyList()))
+
+  /**
+   * Returns the center of the plane.
+   *
+   * Generated from Godot docs: Plane.get_center
+   */
+  fun getCenter(): Vector3 =
+    builtinVector3(builtinReals(PlaneMethods.getCenter, builtinArg(), 3, emptyList()))
+
+  /**
+   * Returns `true` if this plane and `to_plane` are approximately equal, by running
+   * `@GlobalScope.is_equal_approx` on each component.
+   *
+   * Generated from Godot docs: Plane.is_equal_approx
+   */
+  fun isEqualApprox(toPlane: Plane): Boolean =
+    builtinBool(PlaneMethods.isEqualApprox, builtinArg(), listOf(toPlane.builtinArg()))
+
+  /**
+   * Returns `true` if this plane is finite, by calling `@GlobalScope.is_finite` on each component.
+   *
+   * Generated from Godot docs: Plane.is_finite
+   */
+  fun isFinite(): Boolean = builtinBool(PlaneMethods.isFinite, builtinArg(), emptyList())
+
+  /**
+   * Returns `true` if `point` is located above the plane.
+   *
+   * Generated from Godot docs: Plane.is_point_over
+   */
+  fun isPointOver(point: Vector3): Boolean =
+    builtinBool(PlaneMethods.isPointOver, builtinArg(), listOf(point.builtinArg()))
+
+  /**
+   * Returns `true` if `point` is inside the plane. Comparison uses a custom minimum `tolerance`
+   * threshold.
+   *
+   * Generated from Godot docs: Plane.has_point
+   */
+  fun hasPoint(point: Vector3, tolerance: Double = 1e-05): Boolean =
+    builtinBool(PlaneMethods.hasPoint, builtinArg(), listOf(point.builtinArg(), argReal(tolerance)))
+
+  /**
+   * Returns the orthogonal projection of `point` into a point in the plane.
+   *
+   * Generated from Godot docs: Plane.project
+   */
+  fun project(point: Vector3): Vector3 =
+    builtinVector3(builtinReals(PlaneMethods.project, builtinArg(), 3, listOf(point.builtinArg())))
+
+  /**
+   * Returns the intersection point of the three planes `b`, `c` and this plane. If no intersection
+   * is found, `null` is returned.
+   *
+   * Generated from Godot docs: Plane.intersect_3
+   */
+  fun intersect3(b: Plane, c: Plane): Vector3? =
+    builtinVariantReals(
+        PlaneMethods.intersect3,
+        builtinArg(),
+        3,
+        listOf(b.builtinArg(), c.builtinArg()),
+      )
+      ?.let { c -> Vector3.raw(c[0], c[1], c[2]) }
+
+  /**
+   * Returns the intersection point of a segment from position `from` to position `to` with this
+   * plane. If no intersection is found, `null` is returned.
+   *
+   * Generated from Godot docs: Plane.intersects_segment
+   */
+  fun intersectsSegment(from: Vector3, to: Vector3): Vector3? =
+    builtinVariantReals(
+        PlaneMethods.intersectsSegment,
+        builtinArg(),
+        3,
+        listOf(from.builtinArg(), to.builtinArg()),
+      )
+      ?.let { c -> Vector3.raw(c[0], c[1], c[2]) }
+
+  // ===== END GENERATED BUILTIN MEMBERS: Plane =====
+
   companion object {
     /** A plane whose `d` is already at the storage width (marshalling; no conversion). */
     internal fun raw(normal: Vector3, d: GodotRealStorage): Plane = Plane(normal, d, RawStorage)

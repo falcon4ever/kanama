@@ -397,6 +397,12 @@ case("audit_value_type_wrappers.py", py("audit_value_type_wrappers.py", "--stric
      [Edit(f"{COMMON}/types/Quaternion.kt", "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight))",
            "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Floats(PT_FLOAT, doubleArrayOf(weight)))")],
      "Quaternion.slerp passes 1 Godot float arg", "a Godot `float` argument is marshalled as a real_t component array")
+case("check_builtin_coverage.py", py("check_builtin_coverage.py"),
+     [Edit(f"{COMMON}/types/Vector2.kt", "  fun orthogonal(): Vector2 = raw(rawY, -rawX)", "  fun orthogonalVector(): Vector2 = raw(rawY, -rawX)")],
+     "Vector2.orthogonal: no Kotlin member", "a value-type method loses its Kotlin member")
+case("generate_builtin_ops.py", py("generate_builtin_ops.py", "--check"),
+     [Edit(f"{COMMON}/types/Vector2.kt", "  fun orthogonal(): Vector2 = raw(rawY, -rawX)", "  fun orthogonal(): Vector2 = raw(-rawY, rawX)")],
+     "generate_builtin_ops] FAIL", "a generated value-type member is edited by hand")
 case("audit_vararg_ptrcalls.py", py("audit_vararg_ptrcalls.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt",
              'package net.multigesture.kanama.api\n\nprivate val redRunBind by lazy { ObjectCalls.getMethodBind("Object", "call", 1L) }\nfun redRun(x: RawSegment) { ObjectCalls.ptrcallNoArgs(redRunBind, x) }\n')],
