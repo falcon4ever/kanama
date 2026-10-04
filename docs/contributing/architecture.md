@@ -363,8 +363,11 @@ signed zero canonicalized in the hash). Methods split by who computes them:
   body — `angle`, `rotated`, `slerp`, `Basis.getEuler` / `orthonormalized`,
   `Transform3D.lookingAt` / `interpolateWith`, `Color.lightened`, and their kin. A
   `BuiltinMethod` constant resolves the builtin once (`variant_get_ptr_builtin_method`); a call
-  writes the base and the arguments into the calling thread's `BuiltinFrame` (fixed native slots,
-  nothing allocated), calls, and reads the return slot.
+  takes the calling thread's next free `BuiltinFrame` (fixed native slots, nothing allocated),
+  writes the base and the arguments, calls (which gives the frame back), and reads the return slot.
+  The frames of a thread are a stack because a builtin can re-enter Kotlin while it runs (an engine
+  WARN/ERR reaches a GDScript logger that calls a script); the runtime smoke's builtin re-entry row
+  proves a nested call leaves the outer one intact.
 
 Both kinds are generated (`scripts/generate_builtin_ops.py`, task 134 B). The facade is
 `internal expect class BuiltinFrame` / `BuiltinMethod` in the common fragment

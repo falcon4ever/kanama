@@ -9,12 +9,17 @@ import net.multigesture.kanama.types.GodotRealStorage
  * Panama/FFM (`variant_get_ptr_builtin_method` + one unbound builtin-method downcall), iOS over the
  * C shim (`kanama_ios_godot_builtin_call`); the compiler holds both to these declarations.
  *
- * Since task 134 B a call allocates nothing: the generated member writes its base value and its
- * arguments straight into the calling thread's [BuiltinFrame] (fixed native slots, slot 0 the base,
- * slots 1..N the arguments, each laid out as Godot stores the type), calls, and reads the return
- * slot back. No argument list, no boxed value, no per-call arena. A frame is used by one call at a
- * time on its thread: a generated member evaluates every argument before it touches the frame, and
- * a builtin method never calls back into Kotlin.
+ * Since task 134 B a call allocates nothing: the generated member takes a [BuiltinFrame] from the
+ * calling thread ([builtinFrame]), writes its base value and its arguments straight into it (fixed
+ * native slots, slot 0 the base, slots 1..N the arguments, each laid out as Godot stores the type),
+ * calls -- which returns the frame -- and reads the return slot back. No argument list, no boxed
+ * value, no per-call arena.
+ *
+ * A builtin CAN re-enter Kotlin while it runs: a WARN/ERR print reaches every registered logger
+ * synchronously, and a GDScript logger may call a Kotlin script that makes builtin calls of its
+ * own, while the engine still reads the outer call's arguments by reference. So the frames of a
+ * thread are a stack: [builtinFrame] takes the next free frame and `call` gives it back, and a
+ * nested call writes a different frame (the runtime smoke's builtin re-entry row proves it).
  *
  * The `VT_*`/`PT_*` wire numbers are top-level `const val`s in [BuiltinTags]: an `expect`
  * declaration cannot carry a value, so declaring them here would have proven presence and not
@@ -22,7 +27,10 @@ import net.multigesture.kanama.types.GodotRealStorage
  */
 internal expect class BuiltinMethod(variantType: Int, name: String, hash: Long)
 
-/** The calling thread's call frame (see [BuiltinMethod]); created on the thread's first call. */
+/**
+ * Take the calling thread's next free call frame (see [BuiltinMethod]); its [BuiltinFrame.call] or
+ * [BuiltinFrame.callStatic] returns it. Frames are created on first use and kept for the thread.
+ */
 internal expect fun builtinFrame(): BuiltinFrame
 
 internal expect class BuiltinFrame {

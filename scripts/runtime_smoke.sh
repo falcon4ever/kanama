@@ -59,6 +59,8 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_storage_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 B -- every value-type operator and method against GDScript (builtin_parity_ref.gd).
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://builtin_parity_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 134 B -- builtin calls re-entered from an engine error print (a GDScript logger calling Kotlin).
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://builtin_reentry_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 133 -- node/script delegates, checked casts, preload, tree accessors and the script coroutine
 # scope; the scene quits itself once its async rows (wait, nextFrame, cancel on free) have printed.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_access_smoke.tscn --quit-after 5000 --verbose >>"$LOG_FILE" 2>&1
@@ -410,6 +412,18 @@ for bp_row in pure edge facade const; do
   if [[ -z "$bp_kotlin" || "$bp_kotlin" != "$bp_gdscript" ]]; then
     bp_diff="$(comm -3 <(tr ' ' '\n' <<<"$bp_kotlin" | sort) <(tr ' ' '\n' <<<"$bp_gdscript" | sort) | head -n 20 | tr '\n' ' ')"
     smoke_fail "Kotlin/GDScript builtin parity mismatch (${bp_row})" "differing entries (kotlin | gdscript): ${bp_diff:-<missing line>}"
+  fi
+done
+# task 134 B -- a builtin that warns or errors can re-enter Kotlin (builtin_reentry_logger.gd calls
+# the probe from inside the print), and the nested builtin calls must not overwrite the frame the
+# engine is still reading: Basis.lookingAt with a colinear up, Color.html with a bad code, a nested
+# slerp. Each Kotlin result must equal GDScript's, and the logger must really have re-entered.
+check "BuiltinReentry kotlin hits=reentered$"
+for br_row in basis merge html nested; do
+  br_kotlin="$(grep -o "BuiltinReentry kotlin ${br_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinReentry kotlin //')"
+  br_gdscript="$(grep -o "BuiltinReentry gdscript ${br_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinReentry gdscript //')"
+  if [[ -z "$br_kotlin" || "$br_kotlin" != "$br_gdscript" ]]; then
+    smoke_fail "re-entered builtin call differs from GDScript (${br_row})" "kotlin: ${br_kotlin:-<missing>} gdscript: ${br_gdscript:-<missing>}"
   fi
 done
 # The Web value types' parity test (WebBuiltinParityTest) asserts the GDScript hashes recorded in

@@ -2,6 +2,8 @@
 
 package net.multigesture.kanama.binding.runtime
 
+import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.ref.createCleaner
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.COpaquePointerVar
@@ -11,6 +13,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.FloatVar
 import kotlinx.cinterop.IntVar
 import kotlinx.cinterop.LongVar
+import kotlinx.cinterop.NativePtr
 import kotlinx.cinterop.allocArray
 import kotlinx.cinterop.get
 import kotlinx.cinterop.nativeHeap
@@ -40,19 +43,63 @@ actual constructor(private val variantType: Int, private val name: String, priva
     val resolved = pointer
     if (resolved != 0L) return resolved
     val fn = kanama_ios_godot_get_builtin_method(variantType, name, hash)
+    // The shim reports the failed lookup; never hand a NULL method to the call shim.
+    check(fn != 0L) { "variant_get_ptr_builtin_method($variantType, $name, $hash) returned NULL" }
     pointer = fn
     return fn
   }
 }
 
-@kotlin.native.concurrent.ThreadLocal private val frame: BuiltinFrame = BuiltinFrame()
+/**
+ * The calling thread's frames, used as a stack (as on desktop): a builtin can re-enter Kotlin while
+ * it runs (an engine WARN/ERR print reaches a GDScript logger that calls a Kotlin script), so a
+ * nested builtin call takes the next frame instead of overwriting the slots the outer call is still
+ * reading.
+ */
+internal class FrameStack {
+  var depth = 0
+  private var frames: Array<BuiltinFrame?> = arrayOfNulls(4)
 
-internal actual fun builtinFrame(): BuiltinFrame = frame
+  // The common case, no builtin call in flight on this thread: one field test, no array access.
+  private val first = BuiltinFrame(this, 0)
 
-internal actual class BuiltinFrame internal constructor() {
+  fun acquire(): BuiltinFrame {
+    val index = depth
+    depth = index + 1
+    return if (index == 0) first else deeper(index)
+  }
+
+  private fun deeper(index: Int): BuiltinFrame {
+    if (index >= frames.size) frames = frames.copyOf(maxOf(index + 1, frames.size * 2))
+    return frames[index] ?: BuiltinFrame(this, index).also { frames[index] = it }
+  }
+}
+
+@kotlin.native.concurrent.ThreadLocal private val frames: FrameStack = FrameStack()
+
+internal actual fun builtinFrame(): BuiltinFrame = frames.acquire()
+
+// A frame's three native blocks, freed by the frame's Cleaner once the frame is collected (a
+// thread's @ThreadLocal frame stack becomes unreachable when the thread ends), so a thread that
+// called a builtin does not leave its ~1.3 KB behind.
+private class FrameBlocks(val memory: NativePtr, val tags: NativePtr, val pointers: NativePtr) {
+  fun free() {
+    nativeHeap.free(memory)
+    nativeHeap.free(tags)
+    nativeHeap.free(pointers)
+  }
+}
+
+@OptIn(ExperimentalNativeApi::class)
+internal actual class BuiltinFrame
+internal constructor(private val stack: FrameStack, private val index: Int) {
   private val memory: CPointer<ByteVar> = nativeHeap.allocArray(TOTAL_BYTES)
   private val tags: CPointer<IntVar> = nativeHeap.allocArray(MAX_ARGS)
   private val pointers: CPointer<COpaquePointerVar> = nativeHeap.allocArray(MAX_ARGS)
+
+  @Suppress("unused") // held for its effect: frees the blocks when this frame is collected
+  private val cleaner =
+    createCleaner(FrameBlocks(memory.rawValue, tags.rawValue, pointers.rawValue)) { it.free() }
 
   // Bit i: slot i holds a nativeHeap C string for a String argument, freed after the call.
   private var strings = 0
@@ -120,12 +167,14 @@ internal actual class BuiltinFrame internal constructor() {
   }
 
   private fun invoke(method: BuiltinMethod, base: COpaquePointer, argc: Int) {
-    // Zero the head of the return slot: a Variant return reads NIL unless the method writes one.
-    ret.reinterpret<LongVar>()[0] = 0L
-    ret.reinterpret<LongVar>()[1] = 0L
     try {
+      // Resolved inside the try: a failed resolution still frees the C strings and the frame.
+      val pointer = method.pointer()
+      // Zero the head of the return slot: a Variant return reads NIL unless the method writes one.
+      ret.reinterpret<LongVar>()[0] = 0L
+      ret.reinterpret<LongVar>()[1] = 0L
       kanama_ios_godot_builtin_call(
-        method.pointer(),
+        pointer,
         base,
         if (argc > 0) tags else null,
         if (argc > 0) pointers else null,
@@ -134,6 +183,8 @@ internal actual class BuiltinFrame internal constructor() {
       )
     } finally {
       if (strings != 0) releaseStrings()
+      // Return this frame (and any deeper one an exception left taken) to the thread's stack.
+      stack.depth = index
     }
   }
 

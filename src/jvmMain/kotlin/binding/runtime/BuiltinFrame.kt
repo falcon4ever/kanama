@@ -57,11 +57,66 @@ actual constructor(private val variantType: Int, private val name: String, priva
   }
 }
 
-private val FRAMES: ThreadLocal<BuiltinFrame> = ThreadLocal.withInitial { BuiltinFrame() }
+/**
+ * The calling thread's frames, used as a stack: [builtinFrame] takes the frame at [depth] (growing
+ * the array on demand) and the call that frame makes returns it. A builtin can re-enter Kotlin
+ * while it runs -- a WARN/ERR print reaches every registered logger synchronously, and a GDScript
+ * logger may call a Kotlin script -- so a builtin call made from inside another one must not touch
+ * the outer call's slots, which the engine is still reading by reference.
+ */
+internal class FrameStack {
+  @JvmField var depth = 0
 
-internal actual fun builtinFrame(): BuiltinFrame = FRAMES.get()
+  @JvmField var frames: Array<BuiltinFrame?> = arrayOfNulls(INITIAL_FRAMES)
 
-internal actual class BuiltinFrame internal constructor() {
+  // The common case, no builtin call in flight on this thread: one field test, no array access.
+  private val first = BuiltinFrame(this, 0)
+
+  fun acquire(): BuiltinFrame {
+    val index = depth
+    depth = index + 1
+    return if (index == 0) first else deeper(index)
+  }
+
+  private fun deeper(index: Int): BuiltinFrame {
+    if (index >= frames.size) frames = frames.copyOf(maxOf(index + 1, frames.size * 2))
+    return frames[index] ?: BuiltinFrame(this, index).also { frames[index] = it }
+  }
+
+  private companion object {
+    const val INITIAL_FRAMES = 4
+  }
+}
+
+private val FRAMES: ThreadLocal<FrameStack> = ThreadLocal.withInitial { FrameStack() }
+
+// The first thread to make a builtin call (in practice Godot's main thread) finds its stack without
+// the ThreadLocal lookup. Only that thread ever reads `fastStack`, and it wrote it itself, so the
+// fields need no volatile: another thread sees `fastThread` as not itself whatever it reads.
+private var fastThread: Thread? = null
+private var fastStack: FrameStack? = null
+
+internal actual fun builtinFrame(): BuiltinFrame {
+  val thread = Thread.currentThread()
+  if (thread === fastThread) return fastStack!!.acquire()
+  return slowFrame(thread)
+}
+
+private fun slowFrame(thread: Thread): BuiltinFrame {
+  val stack = FRAMES.get()
+  if (fastThread == null) {
+    synchronized(FRAMES) {
+      if (fastThread == null) {
+        fastStack = stack
+        fastThread = thread
+      }
+    }
+  }
+  return stack.acquire()
+}
+
+internal actual class BuiltinFrame
+internal constructor(private val stack: FrameStack, private val index: Int) {
   private val memory: MemorySegment = Arena.ofAuto().allocate(TOTAL_BYTES, 16L)
   private val slots: Array<MemorySegment> =
     Array(SLOTS) { memory.asSlice(it * SLOT_BYTES, SLOT_BYTES) }
@@ -106,21 +161,26 @@ internal actual class BuiltinFrame internal constructor() {
   }
 
   actual fun call(method: BuiltinMethod, argc: Int) {
-    invoke(method.target(), base, argc)
+    invoke(method, base, argc)
   }
 
   actual fun callStatic(method: BuiltinMethod, argc: Int) {
-    invoke(method.target(), MemorySegment.NULL, argc)
+    invoke(method, MemorySegment.NULL, argc)
   }
 
-  private fun invoke(target: MemorySegment, self: MemorySegment, argc: Int) {
-    // Zero the head of the return slot: a Variant return reads NIL unless the method writes one.
-    ret.set(JAVA_LONG, 0L, 0L)
-    ret.set(JAVA_LONG, 8L, 0L)
+  private fun invoke(method: BuiltinMethod, self: MemorySegment, argc: Int) {
     try {
+      // Resolved inside the try: a failed resolution still releases the Strings and the frame.
+      val target = method.target()
+      // Zero the head of the return slot: a Variant return reads NIL unless the method writes one.
+      ret.set(JAVA_LONG, 0L, 0L)
+      ret.set(JAVA_LONG, 8L, 0L)
       callExact(target, self, argc)
     } finally {
       if (strings != 0) releaseStrings()
+      // Return this frame (and any deeper one an exception left taken) to the thread's stack. The
+      // caller reads the return slot next, before any other builtin call on this thread.
+      stack.depth = index
     }
   }
 

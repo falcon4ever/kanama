@@ -91,6 +91,30 @@ class BuiltinFrameTest {
   }
 
   @Test
+  fun aNestedCallTakesItsOwnFrameAndEachCallReturnsItsFrame() {
+    FakeGodot.bootstrapOnce()
+    // A builtin that re-enters Kotlin (an engine error print reaching a logger) makes its nested
+    // calls while the outer frame is still taken: they must get a different frame.
+    val dot = BuiltinMethod(VT_VECTOR3, "dot", DOT_HASH)
+    val outer = builtinFrame()
+    outer.put(0, Vector3(1.0, 2.0, 3.0))
+    val inner = builtinFrame()
+    assertTrue(outer !== inner)
+    inner.put(0, Vector3(9.0, 9.0, 9.0))
+    inner.put(1, Vector3(0.0, 1.0, 0.0))
+    inner.call(dot, 1)
+    // The outer slots are untouched; its call returns it, so the next call takes it again.
+    outer.put(1, Vector3(0.0, 1.0, 0.0))
+    outer.call(dot, 1)
+    assertEquals(Vector3(1.0, 2.0, 3.0), FakeGodot.lastBase)
+    val again = builtinFrame()
+    assertTrue(again === outer)
+    again.put(0, Vector3(1.0, 0.0, 0.0))
+    again.put(1, Vector3(0.0, 1.0, 0.0))
+    again.call(dot, 1)
+  }
+
+  @Test
   fun aVariantReturnSlotIsZeroedBeforeEveryCall() {
     FakeGodot.bootstrapOnce()
     val f = builtinFrame()
@@ -125,6 +149,9 @@ private object FakeGodot {
   @Volatile var lastBoolArg: Int = -1
 
   @Volatile var lastBaseWasNull: Boolean = false
+
+  /** The first three `real_t` components of the last non-NULL base. */
+  @Volatile var lastBase: Vector3? = null
 
   // StringName storage address -> the text it was built from, so the fake
   // `variant_get_ptr_builtin_method` can tell which method is being resolved.
@@ -273,6 +300,15 @@ private object FakeGodot {
   private fun record(base: MemorySegment, args: MemorySegment, argc: Int) {
     lastArgc = argc
     lastBaseWasNull = base.address() == 0L
+    if (!lastBaseWasNull) {
+      val b = base.reinterpret(GodotReal.SIZE_BYTES * 3)
+      lastBase =
+        Vector3(
+          GodotRealSegment.readIndex(b, 0),
+          GodotRealSegment.readIndex(b, 1),
+          GodotRealSegment.readIndex(b, 2),
+        )
+    }
     lastInt64Arg = -1
     lastBoolArg = -1
     if (argc == 3) {

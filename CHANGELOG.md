@@ -59,8 +59,10 @@ only `--write`.
   `Rect2`/`Rect2i`/`AABB` tests and merges, `Plane.project`, `Transform2D.inverse`, `Color.lerp`,
   ...) run in Kotlin with Godot's own formulas at Godot's width; the rest (`angle`, `rotated`,
   `slerp`, `getEuler`, `lightened`, ...) are computed by the engine through an allocation-free call
-  (one native frame per thread, one constant downcall). Desktop, ns per call, Kotlin vs GDScript in
-  the same run: `angle` 17 vs 22, `Basis.getEuler` 41 vs 44, `Color.lightened` 19 vs 25; Kotlin
+  (one constant downcall; per thread a stack of native call frames, so a builtin that re-enters
+  Kotlin from an engine warning -- a GDScript logger calling a script -- cannot corrupt the call
+  in flight). Desktop, ns per call, Kotlin vs GDScript in
+  the same run: `angle` 13 vs 22, `Basis.getEuler` 23–34 vs 45, `Color.lightened` 14 vs 25; Kotlin
   `lerp`/`moveToward`/`Rect2i.hasPoint` are inlined by the JIT.
 - **Constants and enums:** every builtin constant (210, 182 of them new: `Vector2i.LEFT`,
   `Vector3i.FORWARD`, `Vector3.MODEL_FRONT`, `Basis.FLIP_X`, `Transform3D.FLIP_Y`,
@@ -91,7 +93,7 @@ only `--write`.
 ### Changed — value-type methods follow Godot exactly (task 134 B)
 
 - `Vector2.angle()` is computed by the engine: Kotlin's `atan2` differed from Godot's in the last
-  bit for 5.75 % of inputs. It costs ~17 ns per call on desktop (GDScript: ~22 ns).
+  bit for 5.75 % of inputs. It costs ~13 ns per call on desktop (GDScript: ~22 ns).
 - `Quaternion.normalized()` of a zero quaternion gives NaN components, as in Godot (it returned
   `IDENTITY`); `Rect2.hasPoint` and `AABB.hasPoint` add `position + size` at `real_t` width and
   treat a NaN point as Godot does; Web `Plane.intersectsRay` uses Godot's epsilon.
