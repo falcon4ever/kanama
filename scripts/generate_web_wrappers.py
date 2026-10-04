@@ -334,7 +334,7 @@ def kotlin_default(godot_default: str, kotlin_type: str, api: Api | None = None)
         "Vector3(0, 0, 0)": "Vector3.ZERO",
         "Vector3(0, 1, 0)": "Vector3.UP",
         "Vector2(0, 0)": "Vector2.ZERO",
-        "Color(1, 1, 1, 1)": "Color(1f, 1f, 1f, 1f)",
+        "Color(1, 1, 1, 1)": "Color(1.0, 1.0, 1.0, 1.0)",
     }
     if godot_default in known:
         return known[godot_default]
@@ -1462,9 +1462,11 @@ internal fun Vector3i.toBackend(): GodotVector3i = GodotVector3i(x, y, z)
 
 internal fun GodotVector3i.toApi(): Vector3i = Vector3i(x, y, z)
 
-internal fun Color.toBackend(): GodotColor = GodotColor(r, g, b, a)
+internal fun Color.toBackend(): GodotColor =
+  GodotColor(r.toFloat(), g.toFloat(), b.toFloat(), a.toFloat())
 
-internal fun GodotColor.toApi(): Color = Color(r, g, b, a)
+internal fun GodotColor.toApi(): Color =
+  Color(r.toDouble(), g.toDouble(), b.toDouble(), a.toDouble())
 
 internal fun GodotRect2.toApi(): Rect2 = Rect2(position.toApi(), size.toApi())
 

@@ -69,13 +69,19 @@ specifically, see
 | `Node.ProcessMode` (any Godot enum / bitfield) | `Node.ProcessMode` | A typed value class over the `int`; see [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields) |
 | `float` (method args/returns) | `Double` | Godot's ABI uses 64-bit slots for scalar float |
 | `bool` | `Boolean` | |
-| `Vector3.x/y/z` | `Float` (`real_t`) | Matches Godot's default single-precision storage |
+| `Vector3.x/y/z`, `Color.r/g/b/a` | `Double` | Like GDScript's 64-bit `float`; stored at Godot's width (`real_t`, float32 for `Color`), as in GDScript |
 | `delta` in `_process` | `Double` | Engine timing is always double-precision |
 
-The float/double split matches the official C# binding. Vector components are
-`Float` so you can pass them without `.toDouble()` noise; `delta` and scalar
-method arguments are `Double` for the same reason. See
-[Kotlin Style — Float / Double](style-guide.md#float-double).
+Every decimal is `Double`, as in GDScript: scalar arguments and returns, `delta`,
+and vector, transform and color components, so `pos.x * delta` or
+`Mathf.lerp(v.y, target, weight)` needs no conversion. As in GDScript, a vector
+stores its components at Godot's width (float32 in normal Godot builds), so a
+vector you write and read back compares `==` to the one you wrote and prints like
+GDScript's `str(v)`, but `Vector2(0.1, 0.2).x == 0.1` is `false`: compare
+decimals with `isEqualApprox`. Packed bulk data stays 32-bit
+(`PackedFloat32Array` is `List<Float>`). See
+[Kotlin Style — Float / Double](style-guide.md#float-double) and
+[API conventions — Decimals](../reference/wrapper-conventions.md#4-decimals).
 
 ## Value Type Mutation
 
@@ -147,7 +153,7 @@ the build instead of silently never being called:
 @ScriptClass(attachTo = "Mesh")
 class ProceduralMesh(val godotObject: GodotHandle) {
     @OverrideVirtual
-    fun _get_aabb(): AABB = AABB(Vector3.ZERO, Vector3(2.0f, 2.0f, 2.0f))
+    fun _get_aabb(): AABB = AABB(Vector3.ZERO, Vector3(2.0, 2.0, 2.0))
 }
 ```
 

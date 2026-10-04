@@ -23,7 +23,11 @@ open class CanvasItem(godotObject: GodotHandle) : Node(godotObject) {
     GodotBackendCalls.invokeNoArgsVoid(D.CANVASITEM_QUEUE_REDRAW, requireOpenHandle())
   }
 
-  fun drawTexture(texture: Texture2D, position: Vector2, modulate: Color = Color(1f, 1f, 1f, 1f)) {
+  fun drawTexture(
+    texture: Texture2D,
+    position: Vector2,
+    modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
+  ) {
     GodotBackendCalls.invokeTexture2DVector2ColorArgs(
       D.CANVASITEM_DRAW_TEXTURE,
       requireOpenHandle(),
@@ -125,7 +129,7 @@ fun CanvasItem.queueRedraw() = queueRedraw()
 fun CanvasItem.drawTexture(
   texture: Texture2D,
   position: Vector2,
-  modulate: Color = Color(1f, 1f, 1f, 1f),
+  modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
 ) = drawTexture(texture, position, modulate)
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

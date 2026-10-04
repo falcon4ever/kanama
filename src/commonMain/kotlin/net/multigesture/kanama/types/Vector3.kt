@@ -1,5 +1,3 @@
-@file:Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-
 package net.multigesture.kanama.types
 
 import kotlin.jvm.JvmInline
@@ -26,25 +24,12 @@ private const val SIGNED_ANGLE_TO_HASH = 2781412522L
  *
  * Generated from Godot docs: Vector3
  */
-data class Vector3(
-  /**
-   * The vector's X component. Also accessible by using the index position `[0]`.
-   *
-   * Generated from Godot docs: Vector3.x
-   */
-  val x: real_t,
-  /**
-   * The vector's Y component. Also accessible by using the index position `[1]`.
-   *
-   * Generated from Godot docs: Vector3.y
-   */
-  val y: real_t,
-  /**
-   * The vector's Z component. Also accessible by using the index position `[2]`.
-   *
-   * Generated from Godot docs: Vector3.z
-   */
-  val z: real_t,
+class Vector3
+private constructor(
+  internal val rawX: GodotRealStorage,
+  internal val rawY: GodotRealStorage,
+  internal val rawZ: GodotRealStorage,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector3 (scripts/generate_api_wrapper.py — do not edit) =====
   /**
@@ -84,30 +69,78 @@ data class Vector3(
 
   // ===== END GENERATED ENUMS: Vector3 =====
 
+  /** A vector stored at Godot's `real_t` width: each component is rounded to it, as in Godot. */
   constructor(
-    x: Number,
-    y: Number,
-    z: Number,
-  ) : this(GodotReal.fromNumber(x), GodotReal.fromNumber(y), GodotReal.fromNumber(z))
+    x: Double,
+    y: Double,
+    z: Double,
+  ) : this(narrowReal(x), narrowReal(y), narrowReal(z), RawStorage)
 
-  // Match GDScript/C# `==`: signed zero compares equal (-0.0 == 0.0), while NaN stays reflexive
-  // (NaN == NaN) to satisfy the JVM equals contract. The default data-class `equals` uses
-  // `real_t.equals`, which gives the opposite of both. See wrapper-coverage-roadmap.md.
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (other !is Vector3) return false
-    return (x == other.x || (x.isNaN() && other.x.isNaN())) &&
-      (y == other.y || (y.isNaN() && other.y.isNaN())) &&
-      (z == other.z || (z.isNaN() && other.z.isNaN()))
-  }
+  /** GDScript's `Vector3(0, 1, 0)`: integer components. */
+  constructor(x: Int, y: Int, z: Int) : this(x.toDouble(), y.toDouble(), z.toDouble())
 
-  override fun hashCode(): Int {
-    // Canonicalize signed zero (-0.0 -> +0.0 via `+ 0.0f`) so equal vectors hash equal.
-    var result = (x + 0.0f).hashCode()
-    result = 31 * result + (y + 0.0f).hashCode()
-    result = 31 * result + (z + 0.0f).hashCode()
-    return result
-  }
+  // GDScript's mixed `Vector3(x, 0, 0)`: every Int/Double mix, so exactly one overload matches a
+  // call and none boxes (hand-written: the value types have no generator path for constructors).
+  constructor(x: Int, y: Int, z: Double) : this(x.toDouble(), y.toDouble(), z)
+
+  constructor(x: Int, y: Double, z: Int) : this(x.toDouble(), y, z.toDouble())
+
+  constructor(x: Int, y: Double, z: Double) : this(x.toDouble(), y, z)
+
+  constructor(x: Double, y: Int, z: Int) : this(x, y.toDouble(), z.toDouble())
+
+  constructor(x: Double, y: Int, z: Double) : this(x, y.toDouble(), z)
+
+  constructor(x: Double, y: Double, z: Int) : this(x, y, z.toDouble())
+
+  /**
+   * The vector's X component. Also accessible by using the index position `[0]`.
+   *
+   * Generated from Godot docs: Vector3.x
+   */
+  val x: Double
+    get() = widenReal(rawX)
+
+  /**
+   * The vector's Y component. Also accessible by using the index position `[1]`.
+   *
+   * Generated from Godot docs: Vector3.y
+   */
+  val y: Double
+    get() = widenReal(rawY)
+
+  /**
+   * The vector's Z component. Also accessible by using the index position `[2]`.
+   *
+   * Generated from Godot docs: Vector3.z
+   */
+  val z: Double
+    get() = widenReal(rawZ)
+
+  operator fun component1(): Double = x
+
+  operator fun component2(): Double = y
+
+  operator fun component3(): Double = z
+
+  /** This vector with some components replaced. */
+  fun copy(x: Double = this.x, y: Double = this.y, z: Double = this.z): Vector3 = Vector3(x, y, z)
+
+  // Godot's `==` on the stored components (signed zero equal, -0.0 == 0.0); NaN equals NaN to keep
+  // the JVM equals contract reflexive. hashCode canonicalizes signed zero so equal vectors hash
+  // equal.
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Vector3 &&
+        storedEquals(rawX, other.rawX) &&
+        storedEquals(rawY, other.rawY) &&
+        storedEquals(rawZ, other.rawZ))
+
+  override fun hashCode(): Int = 31 * (31 * storedHash(rawX) + storedHash(rawY)) + storedHash(rawZ)
+
+  /** Godot's `str(v)`: `(0.1, 0.2, 0.3)`. */
+  override fun toString(): String =
+    "(${godotRealString(x, true)}, ${godotRealString(y, true)}, ${godotRealString(z, true)})"
 
   /** Godot `Vector3.is_equal_approx`: per-component fuzzy compare (CMP_EPSILON tolerance). */
   /**
@@ -129,53 +162,34 @@ data class Vector3(
    */
   fun isZeroApprox(): Boolean = isZeroApprox(x) && isZeroApprox(y) && isZeroApprox(z)
 
-  operator fun plus(other: Vector3): Vector3 = Vector3(x + other.x, y + other.y, z + other.z)
+  operator fun plus(other: Vector3): Vector3 =
+    raw(rawX + other.rawX, rawY + other.rawY, rawZ + other.rawZ)
 
-  operator fun minus(other: Vector3): Vector3 = Vector3(x - other.x, y - other.y, z - other.z)
+  operator fun minus(other: Vector3): Vector3 =
+    raw(rawX - other.rawX, rawY - other.rawY, rawZ - other.rawZ)
 
-  operator fun times(scale: Number): Vector3 =
-    Vector3(
-      x.toDouble() * scale.toDouble(),
-      y.toDouble() * scale.toDouble(),
-      z.toDouble() * scale.toDouble(),
-    )
+  // A scalar operand is a `real_t` in Godot (`Vector3 * float` narrows the float first).
+  operator fun times(scale: Double): Vector3 = scaled(narrowReal(scale))
 
-  operator fun times(scale: Double): Vector3 =
-    Vector3(
-      GodotReal.fromDouble(x.toDouble() * scale),
-      GodotReal.fromDouble(y.toDouble() * scale),
-      GodotReal.fromDouble(z.toDouble() * scale),
-    )
+  operator fun times(scale: Float): Vector3 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Float): Vector3 =
-    Vector3(
-      GodotReal.fromDouble(x.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(z.toDouble() * scale.toDouble()),
-    )
+  operator fun times(scale: Int): Vector3 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Number): Vector3 =
-    Vector3(
-      x.toDouble() / scale.toDouble(),
-      y.toDouble() / scale.toDouble(),
-      z.toDouble() / scale.toDouble(),
-    )
+  operator fun times(scale: Long): Vector3 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun div(scale: Double): Vector3 =
-    Vector3(
-      GodotReal.fromDouble(x.toDouble() / scale),
-      GodotReal.fromDouble(y.toDouble() / scale),
-      GodotReal.fromDouble(z.toDouble() / scale),
-    )
+  operator fun div(scale: Double): Vector3 = divided(narrowReal(scale))
 
-  operator fun div(scale: Float): Vector3 =
-    Vector3(
-      GodotReal.fromDouble(x.toDouble() / scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() / scale.toDouble()),
-      GodotReal.fromDouble(z.toDouble() / scale.toDouble()),
-    )
+  operator fun div(scale: Float): Vector3 = divided(narrowReal(scale.toDouble()))
 
-  operator fun unaryMinus(): Vector3 = Vector3(-x, -y, -z)
+  operator fun div(scale: Int): Vector3 = divided(narrowReal(scale.toDouble()))
+
+  operator fun div(scale: Long): Vector3 = divided(narrowReal(scale.toDouble()))
+
+  private fun scaled(s: GodotRealStorage): Vector3 = raw(rawX * s, rawY * s, rawZ * s)
+
+  private fun divided(s: GodotRealStorage): Vector3 = raw(rawX / s, rawY / s, rawZ / s)
+
+  operator fun unaryMinus(): Vector3 = raw(-rawX, -rawY, -rawZ)
 
   /**
    * Returns the squared length (squared magnitude) of this vector. This method runs faster than
@@ -184,14 +198,16 @@ data class Vector3(
    *
    * Generated from Godot docs: Vector3.length_squared
    */
-  fun lengthSquared(): Double = (x * x + y * y + z * z).toDouble()
+  fun lengthSquared(): Double = widenReal(rawLengthSquared())
+
+  private fun rawLengthSquared(): GodotRealStorage = realDot(rawX, rawY, rawZ, rawX, rawY, rawZ)
 
   /**
    * Returns the length (magnitude) of this vector.
    *
    * Generated from Godot docs: Vector3.length
    */
-  fun length(): Double = sqrt(lengthSquared())
+  fun length(): Double = widenReal(sqrt(rawLengthSquared()))
 
   /**
    * Returns the result of scaling the vector to unit length. Equivalent to `v / v.length()`.
@@ -201,8 +217,12 @@ data class Vector3(
    * Generated from Godot docs: Vector3.normalized
    */
   fun normalized(): Vector3 {
-    val len = length()
-    return if (len == 0.0) ZERO else this / len
+    return realNormalize(
+      rawX.isFinite() && rawY.isFinite() && rawZ.isFinite(),
+      rawLengthSquared(),
+      { ZERO },
+      { len -> raw(rawX / len, rawY / len, rawZ / len) },
+    )
   }
 
   /**
@@ -238,7 +258,8 @@ data class Vector3(
    *
    * Generated from Godot docs: Vector3.dot
    */
-  fun dot(other: Vector3): Double = (x * other.x + y * other.y + z * other.z).toDouble()
+  fun dot(other: Vector3): Double =
+    widenReal(realDot(rawX, rawY, rawZ, other.rawX, other.rawY, other.rawZ))
 
   /**
    * Returns the cross product of this vector and `with`. This returns a vector perpendicular to
@@ -250,7 +271,7 @@ data class Vector3(
    * Generated from Godot docs: Vector3.cross
    */
   fun cross(other: Vector3): Vector3 =
-    Vector3(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x)
+    realCross(rawX, rawY, rawZ, other.rawX, other.rawY, other.rawZ) { x, y, z -> raw(x, y, z) }
 
   /**
    * Returns the Euclidean distance (https://en.wikipedia.org/wiki/Euclidean_distance) between this
@@ -304,11 +325,17 @@ data class Vector3(
       )
     )
 
-  fun withX(value: Number): Vector3 = Vector3(value, y, z)
+  fun withX(value: Double): Vector3 = raw(narrowReal(value), rawY, rawZ)
 
-  fun withY(value: Number): Vector3 = Vector3(x, value, z)
+  fun withY(value: Double): Vector3 = raw(rawX, narrowReal(value), rawZ)
 
-  fun withZ(value: Number): Vector3 = Vector3(x, y, value)
+  fun withZ(value: Double): Vector3 = raw(rawX, rawY, narrowReal(value))
+
+  fun withX(value: Int): Vector3 = withX(value.toDouble())
+
+  fun withY(value: Int): Vector3 = withY(value.toDouble())
+
+  fun withZ(value: Int): Vector3 = withZ(value.toDouble())
 
   /**
    * Returns the result of rotating this vector around a given axis by `angle` (in radians). The
@@ -358,9 +385,9 @@ data class Vector3(
 
   private fun toGodotRealArray(): GodotRealArray =
     GodotRealArray(3).also {
-      it[0] = GodotReal.toC(x)
-      it[1] = GodotReal.toC(y)
-      it[2] = GodotReal.toC(z)
+      it[0] = rawX
+      it[1] = rawY
+      it[2] = rawZ
     }
 
   companion object {
@@ -391,33 +418,36 @@ data class Vector3(
       BuiltinCalls.getBuiltinMethod(VT_VECTOR3, "signed_angle_to", SIGNED_ANGLE_TO_HASH)
     }
 
-    private fun fromGodotRealArray(c: GodotRealArray): Vector3 =
-      Vector3(GodotReal.fromC(c[0]), GodotReal.fromC(c[1]), GodotReal.fromC(c[2]))
+    private fun fromGodotRealArray(c: GodotRealArray): Vector3 = raw(c[0], c[1], c[2])
+
+    /** A vector from components already at the storage width (marshalling; no conversion). */
+    internal fun raw(x: GodotRealStorage, y: GodotRealStorage, z: GodotRealStorage): Vector3 =
+      Vector3(x, y, z, RawStorage)
 
     /**
      * Zero vector, a vector with all components set to `0`.
      *
      * Generated from Godot docs: Vector3.ZERO
      */
-    val ZERO = Vector3(0f, 0f, 0f)
+    val ZERO = Vector3(0.0, 0.0, 0.0)
     /**
      * One vector, a vector with all components set to `1`.
      *
      * Generated from Godot docs: Vector3.ONE
      */
-    val ONE = Vector3(1f, 1f, 1f)
+    val ONE = Vector3(1.0, 1.0, 1.0)
     /**
      * Up unit vector.
      *
      * Generated from Godot docs: Vector3.UP
      */
-    val UP = Vector3(0f, 1f, 0f)
+    val UP = Vector3(0.0, 1.0, 0.0)
     /**
      * Down unit vector.
      *
      * Generated from Godot docs: Vector3.DOWN
      */
-    val DOWN = Vector3(0f, -1f, 0f)
+    val DOWN = Vector3(0.0, -1.0, 0.0)
     /**
      * Forward unit vector. Represents the local direction of forward, and the global direction of
      * north. Keep in mind that the forward direction for lights, cameras, etc is different from 3D
@@ -426,24 +456,24 @@ data class Vector3(
      *
      * Generated from Godot docs: Vector3.FORWARD
      */
-    val FORWARD = Vector3(0f, 0f, -1f)
+    val FORWARD = Vector3(0.0, 0.0, -1.0)
     /**
      * Back unit vector. Represents the local direction of back, and the global direction of south.
      *
      * Generated from Godot docs: Vector3.BACK
      */
-    val BACK = Vector3(0f, 0f, 1f)
+    val BACK = Vector3(0.0, 0.0, 1.0)
     /**
      * Right unit vector. Represents the local direction of right, and the global direction of east.
      *
      * Generated from Godot docs: Vector3.RIGHT
      */
-    val RIGHT = Vector3(1f, 0f, 0f)
+    val RIGHT = Vector3(1.0, 0.0, 0.0)
     /**
      * Left unit vector. Represents the local direction of left, and the global direction of west.
      *
      * Generated from Godot docs: Vector3.LEFT
      */
-    val LEFT = Vector3(-1f, 0f, 0f)
+    val LEFT = Vector3(-1.0, 0.0, 0.0)
   }
 }

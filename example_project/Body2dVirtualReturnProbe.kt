@@ -18,9 +18,9 @@ class Body2dVirtualReturnProbe(val godotObject: GodotHandle) {
   @OverrideVirtual
   fun _get_transform(): Transform2D =
     Transform2D(
-      net.multigesture.kanama.types.Vector2(1.0f, 2.0f),
-      net.multigesture.kanama.types.Vector2(3.0f, 4.0f),
-      net.multigesture.kanama.types.Vector2(5.0f, 6.0f),
+      net.multigesture.kanama.types.Vector2(1.0, 2.0),
+      net.multigesture.kanama.types.Vector2(3.0, 4.0),
+      net.multigesture.kanama.types.Vector2(5.0, 6.0),
     )
 
   // Task 128 B: Godot marks this return `meta: "required"`, so the override must be non-null

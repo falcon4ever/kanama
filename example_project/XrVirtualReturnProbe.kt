@@ -17,11 +17,11 @@ class XrVirtualReturnProbe(val godotObject: GodotHandle) {
 
   // Transform3D value-type return.
   @OverrideVirtual
-  fun _get_camera_transform(): Transform3D = Transform3D(Basis.IDENTITY, Vector3(7.0f, 8.0f, 9.0f))
+  fun _get_camera_transform(): Transform3D = Transform3D(Basis.IDENTITY, Vector3(7.0, 8.0, 9.0))
 
   // PackedVector3Array return (List<Vector3>).
   @OverrideVirtual
-  fun _get_play_area(): List<Vector3> = listOf(Vector3(1.0f, 0.0f, 0.0f), Vector3(0.0f, 0.0f, 1.0f))
+  fun _get_play_area(): List<Vector3> = listOf(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 0.0, 1.0))
 
   // PackedFloat64Array return (DoubleArray — width-sensitive: 8-byte elements;
   // 1.0e308 does not survive a float32 round-trip, so a width regression fails loudly).

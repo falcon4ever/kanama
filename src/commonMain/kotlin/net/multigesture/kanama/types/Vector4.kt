@@ -1,5 +1,3 @@
-@file:Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
-
 package net.multigesture.kanama.types
 
 import kotlin.jvm.JvmInline
@@ -11,31 +9,13 @@ import kotlin.math.sqrt
  *
  * Generated from Godot docs: Vector4
  */
-data class Vector4(
-  /**
-   * The vector's X component. Also accessible by using the index position `[0]`.
-   *
-   * Generated from Godot docs: Vector4.x
-   */
-  val x: real_t,
-  /**
-   * The vector's Y component. Also accessible by using the index position `[1]`.
-   *
-   * Generated from Godot docs: Vector4.y
-   */
-  val y: real_t,
-  /**
-   * The vector's Z component. Also accessible by using the index position `[2]`.
-   *
-   * Generated from Godot docs: Vector4.z
-   */
-  val z: real_t,
-  /**
-   * The vector's W component. Also accessible by using the index position `[3]`.
-   *
-   * Generated from Godot docs: Vector4.w
-   */
-  val w: real_t,
+class Vector4
+private constructor(
+  internal val rawX: GodotRealStorage,
+  internal val rawY: GodotRealStorage,
+  internal val rawZ: GodotRealStorage,
+  internal val rawW: GodotRealStorage,
+  @Suppress("UNUSED_PARAMETER") raw: RawStorage,
 ) {
   // ===== BEGIN GENERATED ENUMS: Vector4 (scripts/generate_api_wrapper.py — do not edit) =====
   /**
@@ -83,36 +63,93 @@ data class Vector4(
 
   // ===== END GENERATED ENUMS: Vector4 =====
 
+  /** A vector stored at Godot's `real_t` width: each component is rounded to it, as in Godot. */
   constructor(
-    x: Number,
-    y: Number,
-    z: Number,
-    w: Number,
-  ) : this(
-    GodotReal.fromNumber(x),
-    GodotReal.fromNumber(y),
-    GodotReal.fromNumber(z),
-    GodotReal.fromNumber(w),
-  )
+    x: Double,
+    y: Double,
+    z: Double,
+    w: Double,
+  ) : this(narrowReal(x), narrowReal(y), narrowReal(z), narrowReal(w), RawStorage)
 
-  // Match GDScript/C# `==`: signed zero equal (-0.0 == 0.0), NaN reflexive. See
-  // wrapper-coverage-roadmap.md. hashCode canonicalizes signed zero so equal vectors hash equal.
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (other !is Vector4) return false
-    return (x == other.x || (x.isNaN() && other.x.isNaN())) &&
-      (y == other.y || (y.isNaN() && other.y.isNaN())) &&
-      (z == other.z || (z.isNaN() && other.z.isNaN())) &&
-      (w == other.w || (w.isNaN() && other.w.isNaN()))
-  }
+  /** GDScript's `Vector4(0, 0, 0, 1)`: integer components. */
+  constructor(
+    x: Int,
+    y: Int,
+    z: Int,
+    w: Int,
+  ) : this(x.toDouble(), y.toDouble(), z.toDouble(), w.toDouble())
+
+  /**
+   * The vector's X component. Also accessible by using the index position `[0]`.
+   *
+   * Generated from Godot docs: Vector4.x
+   */
+  val x: Double
+    get() = widenReal(rawX)
+
+  /**
+   * The vector's Y component. Also accessible by using the index position `[1]`.
+   *
+   * Generated from Godot docs: Vector4.y
+   */
+  val y: Double
+    get() = widenReal(rawY)
+
+  /**
+   * The vector's Z component. Also accessible by using the index position `[2]`.
+   *
+   * Generated from Godot docs: Vector4.z
+   */
+  val z: Double
+    get() = widenReal(rawZ)
+
+  /**
+   * The vector's W component. Also accessible by using the index position `[3]`.
+   *
+   * Generated from Godot docs: Vector4.w
+   */
+  val w: Double
+    get() = widenReal(rawW)
+
+  operator fun component1(): Double = x
+
+  operator fun component2(): Double = y
+
+  operator fun component3(): Double = z
+
+  operator fun component4(): Double = w
+
+  /** This vector with some components replaced. */
+  fun copy(
+    x: Double = this.x,
+    y: Double = this.y,
+    z: Double = this.z,
+    w: Double = this.w,
+  ): Vector4 = Vector4(x, y, z, w)
+
+  // Godot's `==` on the stored components (signed zero equal, -0.0 == 0.0); NaN equals NaN to keep
+  // the JVM equals contract reflexive. hashCode canonicalizes signed zero so equal vectors hash
+  // equal.
+  override fun equals(other: Any?): Boolean =
+    this === other ||
+      (other is Vector4 &&
+        storedEquals(rawX, other.rawX) &&
+        storedEquals(rawY, other.rawY) &&
+        storedEquals(rawZ, other.rawZ) &&
+        storedEquals(rawW, other.rawW))
 
   override fun hashCode(): Int {
-    var result = (x + 0.0f).hashCode()
-    result = 31 * result + (y + 0.0f).hashCode()
-    result = 31 * result + (z + 0.0f).hashCode()
-    result = 31 * result + (w + 0.0f).hashCode()
+    var result = storedHash(rawX)
+    result = 31 * result + storedHash(rawY)
+    result = 31 * result + storedHash(rawZ)
+    result = 31 * result + storedHash(rawW)
     return result
   }
+
+  /** Godot's `str(v)`: `(0.1, 0.2, 0.3, 0.4)`. */
+  override fun toString(): String =
+    "(${godotRealString(x, true)}, ${godotRealString(y, true)}, " +
+      "${godotRealString(z, true)}, ${godotRealString(w, true)})"
 
   /** Godot `Vector4.is_equal_approx`: per-component fuzzy compare (CMP_EPSILON tolerance). */
   /**
@@ -139,36 +176,23 @@ data class Vector4(
     isZeroApprox(x) && isZeroApprox(y) && isZeroApprox(z) && isZeroApprox(w)
 
   operator fun plus(other: Vector4): Vector4 =
-    Vector4(x + other.x, y + other.y, z + other.z, w + other.w)
+    raw(rawX + other.rawX, rawY + other.rawY, rawZ + other.rawZ, rawW + other.rawW)
 
   operator fun minus(other: Vector4): Vector4 =
-    Vector4(x - other.x, y - other.y, z - other.z, w - other.w)
+    raw(rawX - other.rawX, rawY - other.rawY, rawZ - other.rawZ, rawW - other.rawW)
 
-  operator fun times(scale: Number): Vector4 =
-    Vector4(
-      x.toDouble() * scale.toDouble(),
-      y.toDouble() * scale.toDouble(),
-      z.toDouble() * scale.toDouble(),
-      w.toDouble() * scale.toDouble(),
-    )
+  // A scalar operand is a `real_t` in Godot (`Vector4 * float` narrows the float first).
+  operator fun times(scale: Double): Vector4 = scaled(narrowReal(scale))
 
-  operator fun times(scale: Double): Vector4 =
-    Vector4(
-      GodotReal.fromDouble(x.toDouble() * scale),
-      GodotReal.fromDouble(y.toDouble() * scale),
-      GodotReal.fromDouble(z.toDouble() * scale),
-      GodotReal.fromDouble(w.toDouble() * scale),
-    )
+  operator fun times(scale: Float): Vector4 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun times(scale: Float): Vector4 =
-    Vector4(
-      GodotReal.fromDouble(x.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(y.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(z.toDouble() * scale.toDouble()),
-      GodotReal.fromDouble(w.toDouble() * scale.toDouble()),
-    )
+  operator fun times(scale: Int): Vector4 = scaled(narrowReal(scale.toDouble()))
 
-  operator fun unaryMinus(): Vector4 = Vector4(-x, -y, -z, -w)
+  operator fun times(scale: Long): Vector4 = scaled(narrowReal(scale.toDouble()))
+
+  private fun scaled(s: GodotRealStorage): Vector4 = raw(rawX * s, rawY * s, rawZ * s, rawW * s)
+
+  operator fun unaryMinus(): Vector4 = raw(-rawX, -rawY, -rawZ, -rawW)
 
   /**
    * Returns the squared length (squared magnitude) of this vector. This method runs faster than
@@ -177,14 +201,17 @@ data class Vector4(
    *
    * Generated from Godot docs: Vector4.length_squared
    */
-  fun lengthSquared(): Double = (x * x + y * y + z * z + w * w).toDouble()
+  fun lengthSquared(): Double = widenReal(rawLengthSquared())
+
+  private fun rawLengthSquared(): GodotRealStorage =
+    realDot(rawX, rawY, rawZ, rawW, rawX, rawY, rawZ, rawW)
 
   /**
    * Returns the length (magnitude) of this vector.
    *
    * Generated from Godot docs: Vector4.length
    */
-  fun length(): Double = sqrt(lengthSquared())
+  fun length(): Double = widenReal(sqrt(rawLengthSquared()))
 
   /**
    * Returns the dot product of this vector and `with`.
@@ -192,20 +219,28 @@ data class Vector4(
    * Generated from Godot docs: Vector4.dot
    */
   fun dot(other: Vector4): Double =
-    (x * other.x + y * other.y + z * other.z + w * other.w).toDouble()
+    widenReal(realDot(rawX, rawY, rawZ, rawW, other.rawX, other.rawY, other.rawZ, other.rawW))
 
   companion object {
+    /** A vector from components already at the storage width (marshalling; no conversion). */
+    internal fun raw(
+      x: GodotRealStorage,
+      y: GodotRealStorage,
+      z: GodotRealStorage,
+      w: GodotRealStorage,
+    ): Vector4 = Vector4(x, y, z, w, RawStorage)
+
     /**
      * Zero vector, a vector with all components set to `0`.
      *
      * Generated from Godot docs: Vector4.ZERO
      */
-    val ZERO = Vector4(0f, 0f, 0f, 0f)
+    val ZERO = Vector4(0.0, 0.0, 0.0, 0.0)
     /**
      * One vector, a vector with all components set to `1`.
      *
      * Generated from Godot docs: Vector4.ONE
      */
-    val ONE = Vector4(1f, 1f, 1f, 1f)
+    val ONE = Vector4(1.0, 1.0, 1.0, 1.0)
   }
 }

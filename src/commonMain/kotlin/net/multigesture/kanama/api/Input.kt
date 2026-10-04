@@ -988,7 +988,7 @@ object Input {
      * Generated from Godot docs: Input.set_custom_mouse_cursor
      */
     @JvmStatic
-    fun setCustomMouseCursor(image: Resource?, shape: Input.CursorShape = Input.CursorShape.ARROW, hotspot: Vector2 = Vector2(0f, 0f)) {
+    fun setCustomMouseCursor(image: Resource?, shape: Input.CursorShape = Input.CursorShape.ARROW, hotspot: Vector2 = Vector2(0.0, 0.0)) {
         ObjectCalls.ptrcallWithObjectLongAndVector2Arg(setCustomMouseCursorBind, singleton, image?.requireOpenHandle() ?: NULL_SEGMENT, shape.value, hotspot)
     }
 

@@ -21,8 +21,7 @@ import net.multigesture.kanama.types.Vector3
 class MeshVirtualReturnProbe(val godotObject: GodotHandle) {
 
   // AABB value-type return, boxed via initVariantFromAny.
-  @OverrideVirtual
-  fun _get_aabb(): AABB = AABB(Vector3(1.0f, 2.0f, 3.0f), Vector3(4.0f, 5.0f, 6.0f))
+  @OverrideVirtual fun _get_aabb(): AABB = AABB(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0))
 
   // Generic Array return (List<Any?> -> Godot Array), mixed audited element types.
   @OverrideVirtual fun _surface_get_arrays(index: Long): List<Any?> = listOf(index, "kanama", true)

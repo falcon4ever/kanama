@@ -53,6 +53,15 @@ Value-type helpers mirror Godot behavior where possible, including transform
 and physics math. Gameplay code can treat these helpers as normal Kotlin value
 APIs and assign the updated value back to the Godot property.
 
+Their components are `Double`, like every other decimal in the API (`Vector3.x`,
+`Color.r`, `delta`, scalar arguments), so no `.toFloat()`/`.toDouble()` is
+needed between them. Like GDScript, a value type stores its components at
+Godot's width (float32 in normal Godot builds; `Color` is always float32), so
+`node.position = v; node.position == v` holds, `print(v)` shows `(0.1, 0.2)` as
+GDScript does, and vector arithmetic gives Godot's results. The GDScript caveat
+applies too: after `v = Vector2(0.1, 0.2)`, `v.x == 0.1` is `false`, so compare
+decimals with `isEqualApprox`. See [Decimals](../reference/wrapper-conventions.md#4-decimals).
+
 Node lookup helpers: `getNodeOrNull`, `getAsOrNull(path, ::Class)`,
 `getNodeAsOrNull(path, "ClassName", ::Class)`, `requireAs(path, ::Class)`.
 String and `NodePath` overloads available for all lookup helpers.

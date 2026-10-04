@@ -934,7 +934,9 @@ fun kanamaWebMatch3Group3Probe(tileObjectId: Int): Int {
       (originalPosition.y.toFloat() - 5.0f).toDouble(),
     )
   val testScale = Vector2(1.25, 0.75)
-  val testModulate = Color(0.8f, 0.7f, 0.6f, 0.5f)
+  // Exactly representable in float32: Color components are Double in Kotlin but float32 in the
+  // engine (task 134), so 0.8 would come back as 0.800000011920929 and fail the `==` below.
+  val testModulate = Color(0.75, 0.625, 0.5, 0.5)
   tile.position = testPosition
   sprite.scale = testScale
   sprite.modulate = testModulate
@@ -1008,7 +1010,7 @@ fun kanamaWebMatch3Group5Probe(tileObjectId: Int): Int {
   ) {
     result = result or 8
   }
-  tween.tweenProperty(sprite, "modulate", Color(0.9f, 0.8f, 0.7f, 1.0f), 0.05)
+  tween.tweenProperty(sprite, "modulate", Color(0.9, 0.8, 0.7, 1.0), 0.05)
   result = result or 16
   if (
     tween.signal(Tween.Signals.finished).connect(
@@ -1066,10 +1068,10 @@ fun kanamaWebMatch3Group5SnapshotProbe(
     result = result or 1
   }
   if (
-    kotlin.math.abs(modulate.r.toDouble() - expectedR) <= 0.01 &&
-      kotlin.math.abs(modulate.g.toDouble() - expectedG) <= 0.01 &&
-      kotlin.math.abs(modulate.b.toDouble() - expectedB) <= 0.01 &&
-      kotlin.math.abs(modulate.a.toDouble() - expectedA) <= 0.01
+    kotlin.math.abs(modulate.r - expectedR) <= 0.01 &&
+      kotlin.math.abs(modulate.g - expectedG) <= 0.01 &&
+      kotlin.math.abs(modulate.b - expectedB) <= 0.01 &&
+      kotlin.math.abs(modulate.a - expectedA) <= 0.01
   ) {
     result = result or 2
   }

@@ -138,6 +138,67 @@ accessors now and the rest in a follow-up (see "Web" below).
   (`src/commonMain/.../api/KanamaScript.kt`); its members are unchanged, so a script does not
   notice, but the per-platform snapshots record the move as a removal.
 
+### Changed — every decimal value is `Double`; value types store Godot's width (task 134 A)
+
+- **Vector, transform and color components are `Double`** in every signature on every platform
+  (desktop, Android, iOS, Web), like every other decimal value Kanama hands out and like GDScript's
+  64-bit `float`: the constructors, properties, operators and methods of `Vector2/3/4`,
+  `Quaternion`, `Plane` (and through them `Basis`, `Transform2D/3D`, `Rect2`, `AABB`,
+  `Projection`) and `Color`. They were `real_t` (`Float` in the single-precision builds Kanama
+  ships), and `Color` was `Float`.
+- **Components are stored at Godot's width, as in GDScript and C#:** Godot's `real_t` (float32 in a
+  default build, float64 with `-PkanamaPrecision=double`) for the vectors and transforms, float32
+  for `Color` in every build. A constructor or `copy` rounds each component to that width, and a
+  property widens it back to `Double`. So `node.position = v; node.position == v` is `true`, an
+  object is as small as before (a `Vector3` is 24 bytes on a 64-bit JVM, not 40), and the
+  marshalling moves the stored values with no conversion (`GodotRealSegment.readRaw`/`writeRaw`,
+  the iOS packing and decoders, `BuiltinCalls`).
+- **`==`, `hashCode` and `toString` follow Godot.** `==` compares the stored components (`-0.0 ==
+  0.0`; NaN equals itself only for the JVM `equals` contract). `toString()` prints GDScript's
+  `str(v)`: `(0.1, 0.2)`, `(1.0, 2.0, 3.0)`, Quaternion `(0, 0, 0, 1)`, Color `(1.0, 0.5, 0.0,
+  1.0)`, Plane `[N: (0.0, 1.0, 0.0), D: 0]`, Rect2/AABB `[P: …, S: …]`, Basis/Transform/Projection
+  columns `[X: …, Y: …, Z: …, O: …]`. It used to print the data-class form
+  (`Vector2(x=0.1, y=0.2)`).
+- **Basic arithmetic gives Godot's results bit for bit.** `+`, `-`, `*`, `/`, unary `-` work on
+  the stored operands and round on store (one float32 operation on float32 inputs equals the
+  Double operation rounded to float32); a scalar operand is narrowed to `real_t` first, as
+  `Vector2 * float` is in Godot; `dot`, `length`, `lengthSquared`, `distanceTo`, `cross`,
+  `normalized`, `Quaternion * Quaternion`, `Basis(quaternion)`, `Basis * Vector3`,
+  `Transform3D * Vector3`, `Plane.distanceTo`, `Rect2.area` and `AABB.volume` follow Godot's
+  `real_t` formulas in Godot's operand order, on desktop, Android, iOS and Web (the formulas are
+  one source, `types/shared/RealMath.kt`, compiled by the native and the Web types). A
+  randomized parity row of the runtime smoke checks all of them against GDScript. Transcendental
+  results (`angle`, ...) are rounded to `real_t` like Godot's but are not guaranteed to the bit.
+- **The GDScript caveat applies:** `Vector2(0.1, 0.2).x == 0.1` is `false` in a float32 build (the
+  stored float32 nearest 0.1 widens to `0.10000000149011612`), exactly as in GDScript; compare
+  decimals with `isEqualApprox`.
+- **Integer components construct without boxing.** The `Number` overloads are replaced by `Int`
+  ones, every Int/Double mix for `Vector2` and `Vector3`, `Color(Int, Int, Int, Double)`, and
+  `Long` for the `*` / `/` scalar (Kanama's GDScript `int`): `Vector3(0, 1, 0)`,
+  `Vector3(speed, 0, 0)`, `Color(1, 1, 1, 0.72)`, `Plane(Vector3.UP, 0)`, `v * 2`, `v * speed`
+  (a `Long`) and `v.withX(0)` compile, each to exactly one overload and with no boxing in a
+  per-frame loop. `Vector4`, `Quaternion` and `Plane(x, y, z, d)` take all-`Int` or all-`Double`
+  arguments; a `Float` argument needs `.toDouble()`.
+- Packed bulk data keeps 32-bit storage: `PackedFloat32Array` stays `List<Float>`; the elements of
+  `PackedVector2/3/4Array` and `PackedColorArray` are the ordinary value types.
+- **Double precision** (`-PkanamaPrecision=double`, desktop): compiles and the JVM tests pass; it
+  is not tested end to end against a `precision=double` engine (the Variant size and the `Rect2`
+  cell size in `ObjectCalls` still assume single precision).
+- **Migration:** drop the `f` suffixes on vector and color literals (`Vector3(0f, 1f, 0f)` →
+  `Vector3(0.0, 1.0, 0.0)`), drop `.toDouble()` on components and `.toFloat()` feeding one, make
+  your own `Float` fields that hold components or color channels `Double`. `Color.copy(a = alpha.toFloat())` becomes
+  `copy(a = alpha)`. Compare decimals you wrote with the value you read back through
+  `isEqualApprox`, or compare whole values with `==`. The companion demos went from 159 to 49
+  `.toDouble()` calls (the 49 left convert `Long`/`Int` values), from 14 to 0 `.toFloat()` and from
+  135 to 0 `f` literals.
+- **Source break:** `Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane` and `Color` (native and
+  Web): constructors, component properties and `copy` take and return `Double` instead of
+  `real_t`/`Float`; they are classes rather than `data` classes (`copy`, `componentN`, `equals`,
+  `hashCode` remain); the `Number` constructor, `times`/`div` and `withX`/`withY`/`withZ` overloads
+  become `Int` (and `Long`, and mixed Int/Double) overloads. The public typealias `real_t` is removed (use `Double`), and so are
+  `GodotReal.fromNumber`/`fromDouble`/`fromFloat`; `GodotRealSegment.readIndex`/`writeIndex` take
+  and return `Double` (they were `real_t`).
+
 ### Changed — one annotation set, public functions registered automatically, typed input handlers (task 133 B) — BREAKING
 
 - **One GDScript-shaped annotation per concept.** The aliases are removed in this release (no

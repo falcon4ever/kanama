@@ -27,7 +27,7 @@ types, each platform's own classes and the Web facades to a snapshot (see
 | [Names](#1-names) | Godot names, lowerCamel members, `Value` suffix on keywords | — |
 | [Properties](#2-properties) | getter + setter = `var`, getter only = `val` | — |
 | [Integers](#3-integers) | `int32` meta = `Int`, other `int` = `Long` | — |
-| [Decimals](#4-decimals) | scalars `Double`; value-type components `real_t` (`Float` in single precision) | task 134: every decimal value `Double` |
+| [Decimals](#4-decimals) | every decimal value `Double`, value-type and `Color` components included; packed bulk data keeps 32-bit storage | — |
 | [Enums and bitfields](#5-enums-and-bitfields) | typed value classes, frozen value names | — |
 | [Nullability](#6-nullability) | `meta: "required"` returns non-null, other object returns nullable | — |
 | [Ownership](#7-ownership) | `close()` / `use { }` releases a `RefCounted` early; a forgotten one is released after the GC drops it (not yet Web) | Web: the same fallback |
@@ -112,22 +112,67 @@ Kept by: `scripts/audit_wrapper_signatures.py` and `scripts/audit_wrapper_abi_po
 
 ## 4. Decimals
 
-Current rule:
+Current rule (since task 134):
 
-- A scalar `float` argument, return or property is `Double` (`SCALAR_KOTLIN_TYPES` in
-  `scripts/generate_api_wrapper.py`, `FLOAT_POLICIES` in `scripts/wrapper_model.py`): Godot passes it as a 64-bit double.
-- The components of the native value types (`Vector2`, `Vector3`, `Basis`, `Transform3D`, ...) are
-  `real_t`, Godot's build precision: `Float` in the single-precision builds Kanama ships. `Color`
-  components are `Float`.
-- Packed arrays keep their element width: `PackedFloat32Array` is `List<Float>`,
-  `PackedFloat64Array` is `List<Double>`.
-- On Web, value-type components are already `Double` (`Color` stays `Float`).
+- Every decimal value a script reads or writes is `Double` in every signature, on every platform,
+  as in GDScript, where `float` is 64-bit:
+    - a scalar `float` argument, return or property (`SCALAR_KOTLIN_TYPES` in
+      `scripts/generate_api_wrapper.py`, `FLOAT_POLICIES` in `scripts/wrapper_model.py`): Godot
+      passes it as a 64-bit double;
+    - the components of the value types (`Vector2`, `Vector3`, `Vector4`, `Quaternion`, `Plane`,
+      `Basis`, `Transform2D/3D`, `Rect2`, `AABB`, `Projection`) and of `Color`: constructors,
+      properties, operators and methods take and return `Double`.
+- **A value type stores its components at Godot's width**, exactly as Godot, GDScript and C# do:
+  Godot's `real_t` for the vectors and transforms (float32 in the default build, float64 when
+  Kanama is built with `-PkanamaPrecision=double` for a `precision=double` engine) and float32 for
+  `Color`, in every build. A constructor or `copy` rounds each component to that width; a property
+  widens the stored value back to `Double`. The storage type is the generated, internal
+  `GodotRealStorage` (`Real.kt`, from `generateKanamaReal`).
+- So Kotlin behaves like GDScript:
+    - `node.position = v; node.position == v` is `true`: the marshalling layer moves the stored
+      bits unchanged (`GodotRealSegment.readRaw`/`writeRaw` on desktop/Android, the iOS
+      `ObjectCalls` packing; the Web bridge passes the widened value, which is exact).
+    - `==` and `hashCode` compare the stored values with Godot's `==` (`-0.0 == 0.0`; `NaN`
+      equals itself only to keep the JVM `equals` contract).
+    - `toString()` prints what GDScript's `str(v)` prints: `(0.1, 0.2)`, `(1.0, 2.0, 3.0)`,
+      Quaternion `(0, 0, 0, 1)`, Color `(1.0, 0.5, 0.0, 1.0)` (at most four decimals), Plane
+      `[N: (0.0, 1.0, 0.0), D: 0]`, Basis/Transform columns `[X: …, Y: …, Z: …, O: …]`.
+    - Basic arithmetic gives Godot's result bit for bit: `+`, `-`, `*`, `/` and unary `-` are
+      computed on the stored operands and rounded to the storage width on store (one float32
+      operation on float32 inputs equals the Double operation rounded to float32), and a scalar
+      operand is narrowed to `real_t` first, as `Vector2 * float` does in Godot. `dot`,
+      `length`, `lengthSquared`, `distanceTo`, `cross`, `normalized`, `Quaternion * Quaternion`,
+      `Basis(quaternion)`, `Basis * Vector3`, `Transform3D * Vector3`, `Plane.distanceTo`,
+      `Rect2.area` and `AABB.volume` follow Godot's `real_t` formulas in Godot's operand order
+      (`types/shared/RealMath.kt`, one source for the native and the Web types). Methods computed
+      by the engine (`lerp`, `rotated`, `slerp`, ...) return the engine's stored result.
+      Transcendental results computed in Kotlin (`angle`, Web `rotated`/`slerp`, ...) are rounded
+      to `real_t` but not guaranteed to the bit.
+- **The same caveat as GDScript:** `v.x = 0.1` (or `Vector2(0.1, 0.2)`) stores the float32
+  nearest to 0.1, so `v.x == 0.1` is `false` in a float32 build, while `v == Vector2(0.1, 0.2)`
+  is `true` (both sides are stored). Compare decimals with `isEqualApprox`; values exact in
+  float32 (`0.5`, `1.25`, small integers) compare equal either way.
+- Integer components construct without boxing, as in GDScript: `Vector3(0, 1, 0)`,
+  `Vector3(speed, 0, 0)`, `Color(1, 1, 1)`, `Color(1, 1, 1, 0.72)`, `Plane(Vector3.UP, 0)`.
+  `Vector2` and `Vector3` have an overload for every Int/Double mix, `Color` adds
+  `(Int, Int, Int, Double)`, and `Vector4`, `Quaternion` and `Plane(x, y, z, d)` take all-`Int`
+  or all-`Double`; each call matches exactly one overload. The operators take `Int`, `Long`,
+  `Double` and `Float` scalars. There is no `Number` overload: it boxed every argument, a hidden
+  allocation in a per-frame loop.
+- Packed bulk data keeps compact 32-bit storage: `PackedFloat32Array` is `List<Float>`,
+  `PackedFloat64Array` is `List<Double>`. The elements of `PackedVector2/3/4Array` and
+  `PackedColorArray` (and mesh arrays) are the ordinary value types.
+- **Double precision** (`-PkanamaPrecision=double`, desktop only): compiles and the JVM tests
+  pass, but it is not tested end to end against a `precision=double` engine, and two known
+  marshalling sizes assume single precision (the hard-coded 24-byte Variant size and the `Rect2`
+  cell size in `ObjectCalls`).
 
-**Planned (task 134, decided).** Every decimal value a script reads or writes on its own becomes
-`Double`, including vector, transform and color components, on every platform, as in GDScript,
-where `float` is 64-bit; the storage width stays Godot's `real_t`, narrowed at the boundary.
-Packed bulk data (`PackedFloat32Array`, `PackedVector2/3/4Array`, mesh arrays) keeps compact
-32-bit storage. This is a source break and will be announced like any other.
+Kept by: the value types' signatures in `api-snapshots/types.txt` / `web-types.txt`, the
+`RealStorageWidthTest` unit test (storage, equality, `toString` against Godot's strings, real_t
+arithmetic) and the `value_type_storage_smoke` rows of `scripts/runtime_smoke.sh`, which compare
+an engine round trip, `str(v)`, a few operations and a 256-input randomized parity row (every
+bit-identical operation above, hashed per operation) with GDScript's in the same run, and the Web
+`WebValueTypeStorageTest` (Node).
 
 ## 5. Enums and bitfields
 
@@ -439,7 +484,7 @@ per declaration, one file per surface (every source directory is read recursivel
 | Snapshot | Sources | What |
 |---|---|---|
 | `common.txt` | `src/commonMain/.../api` | the shared native tree: generated classes, `GlobalEnums.kt`, the hand roots `GodotObject`, `RefCounted`, `GodotCallable`, `GodotHandle`, the `expect` declarations |
-| `types.txt` | `src/commonMain/.../types` | the builtin value types (`Vector3`, `Color`, `Basis`, ...), which task 134 will change |
+| `types.txt` | `src/commonMain/.../types` | the builtin value types (`Vector3`, `Color`, `Basis`, ...) |
 | `jvm.txt`, `ios.txt` | `src/jvmMain/.../api`, `src/iosMain/.../api` | what each native platform declares on its own: the per-platform classes, the `<Class>.jvm.kt` / `<Class>.ios.kt` companions, the `actual`s, `GD`, and on desktop the name constants |
 | `web.txt` | `web-runtime/.../api` | the Web wrappers, generated and hand-written |
 | `web-types.txt` | `web-runtime/.../types` | the Web value types |
