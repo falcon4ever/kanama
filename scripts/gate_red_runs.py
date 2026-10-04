@@ -188,6 +188,8 @@ JVM = "src/jvmMain/kotlin"
 IOS = "src/iosMain/kotlin/net/multigesture/kanama"
 GEN = "docs/reference/generated"
 WEBGEN = "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated"
+# Built by concatenation: a literal marker in this file would be a live marker for audit_stale_blockers.py.
+BLOCKED_MARKER = "KANAMA" + "-BLOCKED(since:2026-01-01, file:CONTRIBUTING.md): red run"
 ENV_PY = {"PYTHONPATH": str(ROOT / "scripts")}
 WEB_BACKEND = "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/WebCommonGodotBackend.generated.kt"
 VIRTUAL_TABLE = "processor/src/main/resources/net/multigesture/kanama/processor/virtual-signatures.tsv"
@@ -317,8 +319,8 @@ case("audit_singleton_refcounted_policy.py", py("audit_singleton_refcounted_poli
      [Edit(f"{JVM}/net/multigesture/kanama/api/Engine.kt", "fun registerSingleton(name: String, objectArg: GodotHandle)", "fun registerSingletonRedRun(name: String, objectArg: GodotHandle)")],
      "Engine.registerSingleton wrapper not found", "the Engine wrapper loses registerSingleton")
 case("audit_stale_blockers.py", py("audit_stale_blockers.py"),
-     [Edit("CONTRIBUTING.md", "# Contributing to Kanama", "# Contributing to Kanama\n<!-- KANAMA-BLOCKED(since:2026-01-01, file:CONTRIBUTING.md): red run -->")],
-     "stale_blockers] FAIL", "a KANAMA-BLOCKED marker whose blocker no longer holds")
+     [Edit("CONTRIBUTING.md", "# Contributing to Kanama", "# Contributing to Kanama\n<!-- " + BLOCKED_MARKER + " -->")],
+     "stale_blockers] FAIL", "a stale-blocker marker whose blocker no longer holds")
 case("audit_value_type_wrappers.py", py("audit_value_type_wrappers.py", "--strict"),
      [Edit(f"{COMMON}/types/Quaternion.kt", "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight))",
            "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Floats(PT_FLOAT, doubleArrayOf(weight)))")],
