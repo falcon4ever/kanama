@@ -1,5 +1,6 @@
 package net.multigesture.kanama.example
 
+import kotlin.concurrent.thread
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.AutoloadAccess
 import net.multigesture.kanama.api.GodotHandle
@@ -12,6 +13,10 @@ import net.multigesture.kanama.generated.Autoloads
  * Task 133 C: the generated `Autoloads` object. `KanamaKotlinAutoload` is typed to its Kotlin
  * script class, `KanamaSmokeAutoload` (a GDScript `extends Node`) to `Node`; a missing autoload and
  * a node of another class throw an `IllegalStateException` that names the autoload.
+ *
+ * Task 133 C2: a worker thread reads the autoloads the main thread resolved (no scene-tree query
+ * off the main thread), and one the main thread never resolved fails naming the thread rule. The
+ * Kotlin autoload is no longer freed here: hot reload re-creates its script object.
  */
 @ScriptClass(attachTo = "Node")
 class AutoloadSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::Node) {
@@ -40,12 +45,33 @@ class AutoloadSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, 
         e.message?.contains("has the script KanamaKotlinAutoload, not AutoloadSmoke") == true
       }
     val greeting = kotlin.greeting()
-    // Free the Kotlin autoload (at the end of this frame): an autoload outlives a desktop hot
-    // reload (only the scene's script objects are re-created), and hot_reload_in_process_smoke.sh
-    // checks that the previous build's class loader is collected.
-    kotlin.self.queueFree()
     return "kotlin=$greeting gd=${gd.getName()}:${addCount(gd)} " +
-      "missing=$missing wrong_class=$wrongClass wrong_script=$wrongScript"
+      "missing=$missing wrong_class=$wrongClass wrong_script=$wrongScript " +
+      "thread=${threadReads(kotlin, gd)}"
+  }
+
+  /** The two autoloads read on a worker thread after the main thread resolved them above. */
+  private fun threadReads(kotlin: KanamaKotlinAutoload, gd: Node): String {
+    var result = "not-run"
+    thread(name = "autoload-reader") {
+        result =
+          try {
+            val same =
+              Autoloads.KanamaKotlinAutoload === kotlin && Autoloads.KanamaSmokeAutoload == gd
+            val unresolved =
+              try {
+                AutoloadAccess.node<Node>("NeverResolvedAutoload")
+                "no-error"
+              } catch (e: IllegalStateException) {
+                e.message?.contains("read on a worker thread before the main thread") == true
+              }
+            "same=$same unresolved=$unresolved"
+          } catch (e: Throwable) {
+            "error:${e.message}"
+          }
+      }
+      .join()
+    return result
   }
 
   // The GDScript autoload's own function: a mixed-language boundary, so a dynamic call.

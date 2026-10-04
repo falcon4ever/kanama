@@ -133,4 +133,31 @@ class ScriptInheritanceTest {
       )
     assertTrue(errors.single().contains("setup and Base.ready"), errors.single())
   }
+
+  @Test
+  fun aLibraryBaseIsWarnedAbout() {
+    // Task 133 C2: the walk stops at a compiled base, whose annotations KSP cannot see.
+    val message = ScriptInheritance.libraryBaseWarning("Boss", "com.studio.shared.EnemyBase")
+    assertTrue(
+      message != null && "Boss extends com.studio.shared.EnemyBase from a library" in message
+    )
+    assertTrue("re-declare the members you need on Boss" in message)
+    assertEquals(null, ScriptInheritance.libraryBaseWarning("Boss", "kotlin.Any"))
+  }
+
+  @Test
+  fun aGenericBaseMemberAndItsOverrideAreOneMember() {
+    // Task 133 C2: keys are built from the types as members of the script class, so the base's
+    // `open fun f(x: T)` of `Sub : Base<Long>()` keys as f(kotlin.Long), like the override.
+    val members =
+      ScriptInheritance.members(
+        listOf(
+          listOf(ScriptInheritance.Declaration("f(kotlin.Long)", false, false, "Sub.f")),
+          listOf(ScriptInheritance.Declaration("f(kotlin.Long)", false, true, "Base.f")),
+        )
+      )
+    assertEquals(1, members.size)
+    assertEquals("Sub.f", members.single().declaration)
+    assertEquals("Base.f", members.single().annotationSource)
+  }
 }

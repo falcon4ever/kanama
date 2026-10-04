@@ -2,8 +2,8 @@ package net.multigesture.kanama.annotations
 
 // The iOS (Kotlin/Native) copy of the script annotations: the `annotations` module is JVM-only, so
 // the K/N runtime carries the same canonical set itself (everything but the JVM-only
-// `@RegisterClass`). Keep the names and parameters equal to
-// annotations/src/main/kotlin/net/multigesture/kanama/annotations/Annotations.kt.
+// `@RegisterClass`). The names and parameters equal those of
+// annotations/src/main/kotlin/net/multigesture/kanama/annotations/ (scripts/check_hand_copies.py).
 
 annotation class ScriptClass(val attachTo: String = "Node")
 

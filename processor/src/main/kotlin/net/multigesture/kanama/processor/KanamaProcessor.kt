@@ -560,14 +560,16 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     fn: KSFunctionDeclaration,
     ann: com.google.devtools.ksp.symbol.KSAnnotation,
     ownerSimpleName: String,
+    scriptType: KSType? = null,
   ): SignalModel {
+    val parameterTypes = memberSignature(fn, scriptType).parameters
     val kotlinName = fn.simpleName.asString()
     val nameOverride = ann.arguments.firstOrNull { it.name?.asString() == "name" }?.value as? String
     val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
     val args =
-      fn.parameters.map { p ->
+      fn.parameters.mapIndexed { index, p ->
         val name = p.name?.asString() ?: "arg"
-        val type = p.type.resolve()
+        val type = parameterTypes[index]
         val arg =
           fqToArgModel(name, type, "$ownerSimpleName.$kotlinName")
             ?: throw IllegalArgumentException(
@@ -682,11 +684,13 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     godotName: String,
     ownerSimpleName: String,
     annotated: KSFunctionDeclaration = fn,
+    scriptType: KSType? = null,
   ): MethodModel {
     val kotlinName = fn.simpleName.asString()
     val where = "$ownerSimpleName.$kotlinName"
+    val signature = memberSignature(fn, scriptType)
 
-    val resolvedReturn = fn.returnType?.resolve()
+    val resolvedReturn = signature.returnType
     val returnEnum = resolvedReturn?.let { godotEnumOf(it, where, "return") }
     val returnType =
       resolvedReturn?.let { type ->
@@ -701,9 +705,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       }
 
     val args =
-      fn.parameters.map { p ->
+      fn.parameters.mapIndexed { index, p ->
         val name = p.name?.asString() ?: "arg"
-        val type = p.type.resolve()
+        val type = signature.parameters[index]
         val arg =
           fqToArgModel(name, type, where)
             ?: throw IllegalArgumentException(
@@ -956,6 +960,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
    * class from a library or from the Kanama runtime (`KanamaScript`), whose members are not script
    * members.
    */
+  /** Script classes already warned about a library superclass (the walk runs more than once). */
+  private val libraryBaseWarned = HashSet<String>()
+
   private fun scriptHierarchy(cls: KSClassDeclaration): List<KSClassDeclaration> {
     val chain = mutableListOf(cls)
     var current = cls
@@ -967,14 +974,42 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           }
           .firstOrNull { it.classKind == ClassKind.CLASS } ?: break
       val fq = superClass.qualifiedName?.asString() ?: break
-      if (superClass.containingFile == null) break
       if (RUNTIME_PACKAGES.any { fq.startsWith(it) }) break
+      if (superClass.containingFile == null) {
+        // Task 133 C2: a library base's Kanama annotations (SOURCE retention) are invisible here.
+        ScriptInheritance.libraryBaseWarning(cls.simpleName.asString(), fq)?.let { message ->
+          if (libraryBaseWarned.add(cls.qualifiedName?.asString() ?: fq)) {
+            env.logger.warn("[kanama:ksp] $message", cls)
+          }
+        }
+        break
+      }
       if (chain.any { it.qualifiedName?.asString() == fq }) break
       chain += superClass
       current = superClass
     }
     return chain
   }
+
+  /**
+   * Task 133 C2: [fn]'s parameter and return types as a member of [scriptType], so a generic base's
+   * `open fun f(x: T)` reads `f(x: Long)` on `class Sub : Base<Long>()`; as declared when there is
+   * no script type or KSP cannot place the function in it.
+   */
+  private class MemberSignature(val parameters: List<KSType>, val returnType: KSType?)
+
+  private fun memberSignature(fn: KSFunctionDeclaration, scriptType: KSType?): MemberSignature {
+    val member = scriptType?.let { runCatching { fn.asMemberOf(it) }.getOrNull() }
+    val parameters = member?.parameterTypes
+    if (member != null && parameters != null && parameters.all { it != null }) {
+      return MemberSignature(parameters.map { it!! }, member.returnType)
+    }
+    return MemberSignature(fn.parameters.map { it.type.resolve() }, fn.returnType?.resolve())
+  }
+
+  /** Task 133 C2: [prop]'s type as a member of [scriptType] (a generic base's `T` substituted). */
+  private fun memberPropertyType(prop: KSPropertyDeclaration, scriptType: KSType?): KSType =
+    scriptType?.let { runCatching { prop.asMemberOf(it) }.getOrNull() } ?: prop.type.resolve()
 
   /** A function of a script class and the declaration its Kanama annotations come from. */
   private class ScriptFunction(
@@ -985,6 +1020,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
   /** Every function a script class has, own and inherited ([ScriptInheritance.members]). */
   private fun scriptFunctions(hierarchy: List<KSClassDeclaration>): List<ScriptFunction> {
+    val scriptType = hierarchy.firstOrNull()?.asType(emptyList())
     val levels =
       hierarchy.map { owner ->
         owner
@@ -992,7 +1028,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           .filterNot { it.isConstructor() }
           .map { fn ->
             ScriptInheritance.Declaration(
-              key = signatureKey(fn),
+              key = signatureKey(fn, scriptType),
               isPrivate = Modifier.PRIVATE in fn.modifiers,
               annotated =
                 fn.annotations.any {
@@ -1012,10 +1048,12 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     }
   }
 
-  private fun signatureKey(fn: KSFunctionDeclaration): String =
+  // Task 133 C2: keyed by the types as members of the script class, so `override fun f(x: Long)`
+  // and a generic base's `open fun f(x: T)` (T = Long) are one member.
+  private fun signatureKey(fn: KSFunctionDeclaration, scriptType: KSType?): String =
     fn.simpleName.asString() +
-      fn.parameters.joinToString(",", "(", ")") {
-        runCatching { it.type.resolve().declaration.qualifiedName?.asString() }.getOrNull() ?: "?"
+      memberSignature(fn, scriptType).parameters.joinToString(",", "(", ")") {
+        runCatching { it.declaration.qualifiedName?.asString() }.getOrNull() ?: "?"
       }
 
   /** A property of a script class and the declaration its export annotations come from. */
@@ -1223,6 +1261,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     // members too (GDScript `extends`), so a subclass needs no forwarding overrides.
     val hierarchy = scriptHierarchy(cls)
     val hierarchyNames = hierarchy.mapNotNull { it.qualifiedName?.asString() }.toSet()
+    // Task 133 C2: inherited members are typed as members of this class (generic bases).
+    val scriptType = cls.asType(emptyList())
     // Kotlin name as errors show it: `Base.ready` for an inherited function.
     val shownNames = HashMap<String, String>()
     for (member in scriptFunctions(hierarchy)) {
@@ -1238,7 +1278,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         is FunctionRegistration.Decision.KotlinOnly -> Unit
         is FunctionRegistration.Decision.Register ->
           errors.capture(fn) {
-            methods += buildMethodModel(fn, decision.godotName, simpleName, annotated)
+            methods += buildMethodModel(fn, decision.godotName, simpleName, annotated, scriptType)
           }
         FunctionRegistration.Decision.Role ->
           for (ann in annotated.annotations) {
@@ -1260,7 +1300,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
                   virtuals += buildVirtualOverrideModel(fn, attachTo, simpleName)
                 }
               annName == "Signal" ->
-                errors.capture(fn) { signals += buildSignalModel(fn, ann, simpleName) }
+                errors.capture(fn) { signals += buildSignalModel(fn, ann, simpleName, scriptType) }
               annName == "ExportToolButton" ->
                 errors.capture(fn) {
                   if (!isTool) {
@@ -1306,7 +1346,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       val nameOverride =
         ann?.arguments?.firstOrNull { it.name?.asString() == "name" }?.value as? String
       val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
-      val resolvedType = prop.type.resolve()
+      val resolvedType = memberPropertyType(prop, scriptType)
       val fq = resolvedType.declaration.qualifiedName?.asString()
       // On the iOS (Kotlin/Native) target a @Export may reference an API wrapper
       // that exists only in the desktop source set (the hand-curated iosMain api/ subset is

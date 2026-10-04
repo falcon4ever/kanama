@@ -557,9 +557,12 @@ Autoloads.Audio.call("play", "res://sounds/coin.ogg")   // GDScript: Audio.play(
 val settings = Autoloads.Settings                       // the Kotlin script on /root/Settings
 ```
 
-Each read looks up `/root/<Name>`, as GDScript's global does, and throws an
-`IllegalStateException` naming the autoload when the node is missing or of
-another class (a read in a hot loop can keep the result in a local). The
+The first read finds the node at `/root/<Name>`, as GDScript's global does, and
+throws an `IllegalStateException` naming the autoload when the node is missing
+or of another class; later reads reuse that node while it is alive (a freed one
+is looked up again). A worker thread can read an autoload once the main thread
+has read it; before that the read throws, because only the main thread may
+query the scene tree. The
 processor reads `project.godot` above the script sources (the build declares it
 as an input, so editing the autoload list re-runs it); a project laid out
 differently sets the `kanamaGodotProjectDir` KSP option. A class Kanama has no
@@ -567,11 +570,24 @@ wrapper for on the target falls back to its nearest wrapped ancestor. On Web the
 lookup goes through the running script's node, so read an autoload from a script
 callback (a lifecycle handler, a signal, a coroutine), which is where Web code runs.
 
-**Hot reload.** A desktop hot reload re-creates the script objects of the reloaded
-scene, not those of autoloads, which outlive it: a Kotlin script autoload keeps the
-object (and code) of the build it started with until the game restarts, and
-`Autoloads.<Name>` then throws, saying the object is from before a hot reload.
-GDScript and scene-class autoloads are unaffected.
+**`@Tool` scripts in the editor.** The editor adds an autoload to its own tree
+only when the autoload's script is a tool script (`@Tool`), as Godot does for
+GDScript. Editor code of a `@Tool` script can read `Autoloads.<Name>` of such an
+autoload; any other autoload is not in the editor's tree, so the read throws
+there (check `Engine.isEditorHint()` first). In the running game every autoload
+is there.
+
+**Keys and paths.** A feature-tag override in `project.godot`
+(`Music.android="*res://music_mobile.gd"`) is not an autoload of its own and is
+skipped with a build warning; `Autoloads.Music` is typed from the base entry. An
+autoload saved by uid (`"*uid://…"`) is typed from the file that declares the
+uid (a script's `.uid` file, a scene's header).
+
+**Hot reload.** A desktop hot reload also re-creates the Kotlin script objects of
+the autoloads (and of the nodes in an autoload scene), from the new build, and runs
+their `_ready` again. Exported property values are kept; every other field starts
+from its initializer, as after a scene reload, so keep state that must survive a
+reload in exported properties or outside the script object.
 
 ## Script Inheritance
 
@@ -616,9 +632,16 @@ The rules:
   or two exported properties with one Godot name fail the build naming both:
   override the base member instead of adding a second one.
 
+- **Generic bases are typed for the subclass.** On `class Sub : Base<Long>()`, a
+  base's `@Export var amount: T` is a `Long` export and its `open fun f(x: T)` takes
+  a `Long`; `override fun f(x: Long)` overrides it (one Godot method, not two).
+
 The superclass may be a `@ScriptClass` itself or a plain (abstract) class in the
-same build; a class from a library contributes nothing, because annotations are
-read from source.
+same build. A class from a library contributes nothing, because annotations are
+read from source; the build warns, naming the library class. Interfaces
+contribute nothing either: only the class chain is collected, so a default
+member of an interface the script implements is not registered (declare it on
+the class, or override it there).
 
 ## Cross-Script References
 

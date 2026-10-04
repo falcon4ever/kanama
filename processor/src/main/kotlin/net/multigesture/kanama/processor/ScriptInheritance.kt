@@ -20,6 +20,12 @@ package net.multigesture.kanama.processor
  *    name (a base `@OnReady fun ready()` and a subclass `@OnReady fun setup()`, both `_ready`) or
  *    two exported properties with one Godot name fail with a message naming both, instead of one
  *    silently shadowing the other: override the base member instead.
+ * 4. **Generic bases** (task 133 C2): an inherited member is typed as a member of the script class,
+ *    so `class Sub : Base<Long>()` exports a base's `var value: T` as a `Long`, and its `override
+ *    fun f(x: Long)` and the base's `open fun f(x: T)` are one member.
+ * 5. **Library bases** (task 133 C2): the walk stops at a class compiled in another module (KSP
+ *    sees its declarations but not Kanama's SOURCE-retention annotations) and warns, naming it.
+ *    Interface default members are not collected either: only the class chain is walked.
  *
  * Pure: the processor hands over each class's declarations as [Declaration]s (nearest class first)
  * and builds the models from the [Member]s, so the rules are unit-tested without a compilation.
@@ -65,6 +71,22 @@ internal object ScriptInheritance {
       Member(top.ref, (source ?: top).ref, source != null, level)
     }
   }
+
+  /** Library superclasses that carry no script members: the walk stops there silently. */
+  private val NON_SCRIPT_BASES = setOf("kotlin.Any", "java.lang.Object")
+
+  /**
+   * Task 133 C2: the warning for a script class [script] whose superclass walk stops at the library
+   * class [baseFq] (not `Any`, not a Kanama runtime class, which the caller stops at first).
+   * Kanama's annotations have SOURCE retention, so a compiled base's annotated members cannot be
+   * seen.
+   */
+  fun libraryBaseWarning(script: String, baseFq: String): String? =
+    if (baseFq in NON_SCRIPT_BASES) null
+    else
+      "$script extends $baseFq from a library: its exported properties, signals, lifecycle " +
+        "handlers and functions are not collected (KSP sees only this module's sources). Declare " +
+        "the base in this module, or re-declare the members you need on $script."
 
   /**
    * Exported properties sharing one Godot property name: [entries] are `godotName to shownName`

@@ -307,6 +307,10 @@ case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
 case("check_ios_no_silent_stubs.py", py("check_ios_no_silent_stubs.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n    fun redRun(): Boolean = false\n}\n")],
      "un-annotated silent stub", "a shared wrapper function whose whole body is a bare default, without a marker")
+case("check_hand_copies.py", py("check_hand_copies.py"),
+     [Edit(f"{IOS}/annotations/Annotations.kt", "annotation class ExportPlaceholder(val placeholder: String)",
+           "annotation class ExportPlaceholder(val text: String)")],
+     "@ExportPlaceholder parameters differ", "the iOS copy of an annotation renames a parameter")
 case("check_ios_shim_faults.py", py("check_ios_shim_faults.py"),
      [Edit("ios/bootstrap/kanama_ios_shim.c", '        kanama_ios_fault(__func__, "api-unresolved", NULL);', "        /* red run: guard returns silently */")],
      "returns without calling kanama_ios_fault", "a guarded early return in the iOS shim stops reporting its fault")

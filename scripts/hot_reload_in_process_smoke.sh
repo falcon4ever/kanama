@@ -121,7 +121,9 @@ set_marker "B"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null
 touch "$SIGNAL_FILE"
 
-wait_for_pattern "hot-reload: reloaded scripts from .*kanama-scripts\\.jar \\(loader=2, old_loader=1, rebound=[0-9]+\\)" 30
+# task 133 C2 -- the Kotlin autoload (KanamaKotlinAutoload) gets the new build's script object
+# (and its _ready again): AutoloadSmoke, run by the reloaded scene, reads it typed to the new class.
+wait_for_pattern "hot-reload: reloaded scripts from .*kanama-scripts\\.jar \\(loader=2, old_loader=1, rebound=[0-9]+, autoloads=1\\)" 30
 wait_for_pattern "in-process hot reload smoke reload_scene" 30
 wait_for_pattern "HelloScript\\(file\\)\\._ready\\[B\\]" 30
 wait_for_pattern "hot-reload: retired-loader-check collected=1 alive=0" 30
@@ -129,6 +131,12 @@ wait_for_pattern "in-process hot reload smoke quit" 30
 
 wait "$GODOT_PID"
 GODOT_PID=""
+
+# justified: grep -c exits 1 when it counts 0 rows; the count below is the verdict.
+autoload_rows="$(grep -c "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wrong_script=true" "$LOG_FILE" || true)"
+if [[ "$autoload_rows" -lt 2 ]]; then
+  smoke_fail "the Kotlin autoload was not re-created by the hot reload (autoload rows: $autoload_rows)" "autoload kotlin=autoload:1"
+fi
 
 check_absent "hot-reload: failed"
 check_absent "placeholder=true"

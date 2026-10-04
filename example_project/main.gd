@@ -659,11 +659,9 @@ func _kanama_export_hint_twin_smoke() -> void:
 	if mismatches.size() > 0 or rows < 38 or not folded:
 		push_error("Kanama typed export hints differ from GDScript: %s (rows=%d folded=%s)" % [str(mismatches), rows, str(folded)])
 
-# task 133 C -- the generated Autoloads object (from project.godot [autoload]). AutoloadSmoke frees
-# the Kotlin autoload at the end (see there), so a reloaded main scene skips the row.
+# task 133 C -- the generated Autoloads object (from project.godot [autoload]), read on the main
+# thread and on a worker thread (task 133 C2).
 func _kanama_autoload_smoke() -> void:
-	if get_node_or_null("/root/KanamaKotlinAutoload") == null:
-		return
 	var node := Node.new()
 	node.set_script(load("res://AutoloadSmoke.kt"))
 	add_child(node)
@@ -691,6 +689,22 @@ func _kanama_inheritance_smoke() -> void:
 		" override_wins=", override_wins, " ready_once=", ready_once, " signal=", signal_ok)
 	if not (exports and values and methods and override_wins and ready_once and signal_ok):
 		push_error("Kanama script inheritance smoke failed")
+	# task 133 C2 -- a generic base: `amount: T` exports as an int, `echo(x: T)` takes a Long and
+	# the `twice` override and the base's `twice(x: T)` are one method.
+	var generic := Node.new()
+	generic.set_script(load("res://GenericInheritanceSmoke.kt"))
+	var generic_props := {}
+	for property in generic.get_property_list():
+		generic_props[property.name] = property
+	var generic_export: bool = generic_props.has("amount") and int(generic_props["amount"].type) == TYPE_INT
+	var generic_value: bool = generic.amount == 4
+	var generic_override: bool = generic.twice(5) == 10
+	var generic_echo: bool = generic.echo(3) == 3
+	generic.free()
+	print("[kanama:gd] generic inheritance export=", generic_export, " value=", generic_value,
+		" override=", generic_override, " echo=", generic_echo)
+	if not (generic_export and generic_value and generic_override and generic_echo):
+		push_error("Kanama generic script inheritance smoke failed")
 
 func _process(_delta: float) -> void:
 	if OS.get_environment("KANAMA_IN_PROCESS_HOT_RELOAD_SMOKE") != "1":

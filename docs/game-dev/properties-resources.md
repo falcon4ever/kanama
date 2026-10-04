@@ -64,6 +64,7 @@ and its GDScript twin (`scripts/runtime_smoke.sh` compares the two row by row):
 | `@export_multiline("monospace", "no_wrap")` | `@ExportMultiline(monospace = true, noWrap = true)` | `String`, `List<String>` |
 | `@export_placeholder("Name")` | `@ExportPlaceholder("Name")` | `String`, `List<String>` |
 | `@export_exp_easing("attenuation", "positive_only")` | `@ExportExpEasing(attenuation = true, positiveOnly = true)` | `Double`, `Float` |
+| `@export_color_no_alpha` | `@ExportColorNoAlpha` | `Color` |
 | `@export_node_path("Button", "TouchScreenButton")` | `@ExportNodePath("Button", "TouchScreenButton")` | `NodePath` |
 | `@export_storage` | `@ExportStorage` | any exportable type |
 | `@export_custom(PROPERTY_HINT_PASSWORD, "")` | `@ExportCustom(PropertyHint.PASSWORD)` | any exportable type |
@@ -99,10 +100,10 @@ and two hint annotations on one property. On a `List<String>` the hint applies t
 each element, as on a GDScript `Array[String]`.
 
 `PropertyHint` lists every Godot 4.7 `PROPERTY_HINT_*` value for
-`@ExportCustom`, the escape hatch for a hint no typed annotation covers. The
-GDScript annotation without a twin is `@export_color_no_alpha`: Kanama has no
-`Color` script property type yet (a `Color` travels only inside a typed `Map`
-or a `PackedColorArray`). Enum-typed properties need no hint: a Kotlin
+`@ExportCustom`, the escape hatch for a hint no typed annotation covers. A
+`Color` is a script type like the vectors: an exported property
+(`@Export var tint = Color(1.0, 0.5, 0.0)`, or `Color.RED`), a function's
+parameter or return, a signal argument. Enum-typed properties need no hint: a Kotlin
 `enum class` or a Godot enum exports as a dropdown (a bitfield as flag
 checkboxes) automatically (see below).
 

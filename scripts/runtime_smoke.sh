@@ -193,8 +193,10 @@ check "godot enum virtuals enum_arg=true enum_return=true required_object_return
 # task 133 C -- typed hint annotations match a GDScript twin's get_property_list() row by row (and
 # the folded `Mathf.PI / 3.0` default), the generated Autoloads object, and script inheritance.
 check "export hint twin rows=38 mismatches=0 folded_default=true"
-check "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wrong_script=true"
+check "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wrong_script=true thread=same=true unresolved=true"
 check "inheritance exports=true values=true methods=true override_wins=true ready_once=true signal=true"
+# task 133 C2 -- a generic base's members typed as members of the script class (asMemberOf).
+check "generic inheritance export=true value=true override=true echo=true"
 # task 50 — a throwing user @Export accessor must be contained by ScriptBridge's
 # siSet/siGet rather than escaping the FFM upcall and aborting the process. A failed set is
 # rejected (previous value survives), a failed get yields null, and the property recovers.
