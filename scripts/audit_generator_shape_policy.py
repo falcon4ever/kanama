@@ -8,11 +8,14 @@ strict runtime helpers for the shapes that are easiest to widen unsafely:
 - generic Variant values must use the strict Variant marshaller,
 - generic Array/Dictionary values must use the explicit builtin initializers,
 - Packed*Array values must use the 16-byte packed storage helpers,
-- Callable must not be exposed through the generic generator table.
+- Callable must not be exposed through the generic generator table,
+- every RefCounted wrapper site names its ownership (task 132 D1): see
+  `refcounted_ownership_problems`.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -628,6 +631,112 @@ def audit_typed_object_array_helpers(content: str) -> list[str]:
     return errors
 
 
+# ---------------------------------------------------------------------------------------------
+# Task 132 D1: ownership is a constructor fact. A RefCounted wrapper class has no `wrap`; every
+# site that mints one says whether the wrapper owns a +1 (`wrapOwned`, `RefCounted.owned(...)`,
+# which register the GC fallback release) or borrows (`wrapBorrowed`, `fromHandle`, `from*`). The
+# rule is the one `docs/game-dev/godot-api.md` "Resource Ownership" states:
+#   - OWNED: the +1 a RefCounted-typed ptrcall return hands over (`X.wrapOwned(ObjectCalls.*RetObject(...))`,
+#     the self-return collapse's `X.wrapOwned(ret)`), and the constructing +1 (`create()`,
+#     `X(GodotHandle(...constructObject(...)))`, which must sit inside `RefCounted.owned(...)`);
+#   - BORROWED: `fromHandle` (its body calls `wrapBorrowed`), and the element callback of a typed
+#     Array return (`X::wrapBorrowed`): the helper decodes through `readArrayObjectsOwned`
+#     (desktop) / `ownedListElement` (iOS), which retain each element and make its wrapper owned,
+#     so an `X::wrapOwned` callback there would register twice.
+# Checked over every wrapper source the tree compiles: the generated shared tree, the
+# per-platform generated and hand-shaped files, and the runtime helpers.
+WRAPPER_SOURCE_DIRS = (
+    ROOT / "src/commonMain/kotlin/net/multigesture/kanama/api",
+    ROOT / "src/jvmMain/kotlin/net/multigesture/kanama/api",
+    ROOT / "src/iosMain/kotlin/net/multigesture/kanama/api",
+    ROOT / "src/jvmMain/kotlin/binding",
+    ROOT / "src/iosMain/kotlin/net/multigesture/kanama/binding/runtime",
+)
+EXTENSION_API = ROOT / "extension_api.json"
+
+
+def refcounted_classes() -> set[str]:
+    api = json.loads(EXTENSION_API.read_text(encoding="utf-8"))
+    parents = {cls["name"]: cls.get("inherits") for cls in api["classes"]}
+
+    def is_refcounted(name: str | None) -> bool:
+        while name:
+            if name == "RefCounted":
+                return True
+            name = parents.get(name)
+        return False
+
+    return {name for name in parents if is_refcounted(name)}
+
+
+WRAP_CALL = re.compile(r"(?<![\w.])(\w+)\.(wrap|wrapOwned|wrapBorrowed)\(\s*")
+WRAP_REFERENCE = re.compile(r"(?<![\w.])(\w+)::(wrap|wrapOwned|wrapBorrowed)\b")
+CONSTRUCT = re.compile(
+    r"(?<![\w.])(\w+)\(GodotHandle\((?:ObjectCalls\.constructObject|MemorySegment\.ofAddress\(IosGodot\.constructObject)\("
+)
+OWNED_SOURCE = re.compile(r"(ObjectCalls\.\w*RetObject\(|ret\))")
+
+
+def refcounted_ownership_problems(roots: tuple[Path, ...] = WRAPPER_SOURCE_DIRS) -> list[str]:
+    refcounted = refcounted_classes() | {"RefCounted"}
+    problems: list[str] = []
+    for root in roots:
+        for path in sorted(root.rglob("*.kt")):
+            text = path.read_text(encoding="utf-8")
+            rel = path.relative_to(ROOT)
+
+            def where(offset: int) -> str:
+                return f"{rel}:{text.count(chr(10), 0, offset) + 1}"
+
+            for match in WRAP_CALL.finditer(text):
+                cls, helper = match.group(1), match.group(2)
+                if cls not in refcounted:
+                    continue
+                if helper == "wrap":
+                    problems.append(
+                        f"{where(match.start())}: {cls}.wrap(...) -- a RefCounted wrapper has no wrap; "
+                        "use wrapOwned (a returned +1) or wrapBorrowed (a view)"
+                    )
+                elif helper == "wrapOwned" and not OWNED_SOURCE.match(text, match.end()):
+                    problems.append(
+                        f"{where(match.start())}: {cls}.wrapOwned(...) of something other than a ptrcall "
+                        "object return or the collapse's `ret`: only a returned +1 is owned"
+                    )
+                elif helper == "wrapBorrowed":
+                    # Only fromHandle's body calls it directly.
+                    head = text[max(0, match.start() - 160) : match.start()]
+                    if "fun fromHandle(" not in head:
+                        problems.append(
+                            f"{where(match.start())}: {cls}.wrapBorrowed(...) outside fromHandle: a "
+                            "direct site that mints a wrapper must say it owns (wrapOwned) unless it "
+                            "is a fromHandle view"
+                        )
+            for match in WRAP_REFERENCE.finditer(text):
+                cls, helper = match.group(1), match.group(2)
+                if cls in refcounted and helper != "wrapBorrowed":
+                    problems.append(
+                        f"{where(match.start())}: {cls}::{helper} -- a typed Array element callback is "
+                        "wrapBorrowed: the helper retains the element and makes the wrapper owned"
+                    )
+            for match in CONSTRUCT.finditer(text):
+                cls = match.group(1)
+                if cls not in refcounted:
+                    continue
+                if not text[max(0, match.start() - len("RefCounted.owned(")) : match.start()].endswith(
+                    "RefCounted.owned("
+                ):
+                    problems.append(
+                        f"{where(match.start())}: {cls}(GodotHandle(constructObject(...))) outside "
+                        "RefCounted.owned(...): the constructing +1 is owned"
+                    )
+            if path.stem in refcounted and path.parts[-2] == "api" and "internal fun wrap(handle:" in text:
+                problems.append(
+                    f"{rel}: declares `internal fun wrap(handle: ...)` for a RefCounted class; declare "
+                    "wrapOwned and wrapBorrowed"
+                )
+    return problems
+
+
 def main() -> int:
     content = OBJECT_CALLS.read_text(encoding="utf-8")
     errors: list[str] = []
@@ -711,6 +820,7 @@ def main() -> int:
             )
 
     errors.extend(audit_typed_object_array_helpers(content))
+    errors.extend(refcounted_ownership_problems())
 
     if errors:
         print("[generator_shape_policy] FAIL", file=sys.stderr)

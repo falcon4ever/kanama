@@ -164,6 +164,30 @@ accessors now and the rest in a follow-up (see "Web" below).
   - **Source break:** script annotations (`net.multigesture.kanama.annotations`: the removed names
     above) and lifecycle input handlers (`GodotObject` → `InputEvent`). No generated API signature
     changes.
+### Changed — a forgotten `close()` is a late release, not a leak (task 132)
+
+- **Owned `RefCounted` wrappers you never close are released after the garbage collector drops
+  them**, on desktop, Android 13+ and iOS (desktop smoke-tested; the Android and iOS device runs
+  are pending). The release runs on the main thread at the next frame
+  (the collector only queues it), and at shutdown a collection runs before Godot's leak report, so
+  a dropped getter result, `Tweener` or loaded resource no longer stays alive until exit or shows
+  up as `Leaked instance`. `close()` and `use { }` are unchanged and still release at once: the
+  rule is now "close to release early", not "must close". A closed wrapper is never released a
+  second time, and borrowed views (`fromHandle`, `fromObject`, values read through `call`/`get`)
+  are never released. Measured on an Apple M1 Max: registering the fallback adds about 20-80 ns to
+  each owned wrapper (`getMesh()` + `close()`), nothing to calls or to node wrappers; a script that
+  drops 10,000 owned `Resource`s is back to its object-count baseline within a few frames
+  (`scripts/runtime_smoke.sh`, `owned_release_smoke.tscn`).
+- **`kanama/debug/log_gc_releases`** (project setting, off by default, registered by the editor
+  plugin) logs each release the collector made, once per creation site:
+  `released by GC: Mesh (created at Player.kt:42)`.
+- Android 8-12 debug installs have no `java.lang.ref.Cleaner`; there `close()` stays the only
+  release. Web keeps the explicit rule for now. `KANAMA_GC_RELEASES=0` in the game's environment
+  turns the fallback off (a measurement knob).
+- `KANAMA_FREED_OBJECT_CHECKS=binding` (desktop/Android, a measurement knob) runs the freed-object
+  check through an instance binding: one flag read per call instead of an engine lookup, in any
+  build, at the price of a slower wrapper construction (~30 ns instead of ~11 ns). It is not the
+  default: on a Bunnymark-style loop it is slower than the debug lookup it would replace.
 
 ### Added — the generated API conventions page and the public-signature gate (task 126)
 

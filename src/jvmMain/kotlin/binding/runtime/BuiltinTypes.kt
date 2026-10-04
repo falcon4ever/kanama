@@ -315,7 +315,7 @@ object BuiltinTypes {
     val value = variantToScalar(variant, arena)
     if (value is GodotObject && value.isClass("RefCounted")) {
       ObjectCalls.ptrcallNoArgsRetBool(referenceBind, value.segment)
-      return RefCounted(value.handle)
+      return RefCounted.owned(RefCounted(value.handle))
     }
     return value
   }

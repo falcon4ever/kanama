@@ -39,12 +39,12 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
 
     fun findActionSet(name: String): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findActionSetBind, segment, name))
+        return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(findActionSetBind, segment, name))
     }
 
     fun getActionSet(idx: Int): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getActionSetBind, segment, idx))
+        return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getActionSetBind, segment, idx))
     }
 
     fun addActionSet(actionSet: OpenXRActionSet?) {
@@ -74,12 +74,12 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
 
     fun findInteractionProfile(name: String): OpenXRInteractionProfile? {
         checkOpen()
-        return OpenXRInteractionProfile.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findInteractionProfileBind, segment, name))
+        return OpenXRInteractionProfile.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(findInteractionProfileBind, segment, name))
     }
 
     fun getInteractionProfile(idx: Int): OpenXRInteractionProfile? {
         checkOpen()
-        return OpenXRInteractionProfile.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInteractionProfileBind, segment, idx))
+        return OpenXRInteractionProfile.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getInteractionProfileBind, segment, idx))
     }
 
     fun addInteractionProfile(interactionProfile: OpenXRInteractionProfile?) {
@@ -100,9 +100,12 @@ class OpenXRActionMap(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRActionMap? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRActionMap? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRActionMap? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRActionMap(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRActionMap? =
             if (handle.address() == 0L) null else OpenXRActionMap(GodotHandle(handle))
 
         private const val SET_ACTION_SETS_HASH = 381264803L

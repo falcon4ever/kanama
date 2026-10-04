@@ -107,9 +107,12 @@ open class InputEventMouse(handle: GodotHandle) : InputEventWithModifiers(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventMouse? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventMouse? =
+        internal fun wrapOwned(handle: RawSegment): InputEventMouse? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventMouse(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventMouse? =
             if (handle.address() == 0L) null else InputEventMouse(GodotHandle(handle))
 
         private const val SET_BUTTON_MASK_HASH = 3950145251L

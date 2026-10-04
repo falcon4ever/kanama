@@ -15,9 +15,12 @@ class ORMMaterial3D(handle: GodotHandle) : BaseMaterial3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ORMMaterial3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ORMMaterial3D? =
+        internal fun wrapOwned(handle: RawSegment): ORMMaterial3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(ORMMaterial3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ORMMaterial3D? =
             if (handle.address() == 0L) null else ORMMaterial3D(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

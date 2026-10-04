@@ -45,7 +45,7 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.get_occluder_polygon
      */
     fun getOccluderPolygon(): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOccluderPolygonBind, segment))
+        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOccluderPolygonBind, segment))
     }
 
     /**

@@ -15,9 +15,12 @@ open class Node3DGizmo(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Node3DGizmo? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Node3DGizmo? =
+        internal fun wrapOwned(handle: RawSegment): Node3DGizmo? =
+            if (handle.address() == 0L) null else RefCounted.owned(Node3DGizmo(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Node3DGizmo? =
             if (handle.address() == 0L) null else Node3DGizmo(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -150,7 +150,7 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getXfadeCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, segment))
     }
 
     /**
@@ -178,9 +178,12 @@ class AnimationNodeTransition(handle: GodotHandle) : AnimationNodeSync(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeTransition? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeTransition? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeTransition? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeTransition(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTransition? =
             if (handle.address() == 0L) null else AnimationNodeTransition(GodotHandle(handle))
 
         private const val SET_INPUT_COUNT_HASH = 1286410249L

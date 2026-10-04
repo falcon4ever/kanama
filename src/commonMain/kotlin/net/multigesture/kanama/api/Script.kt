@@ -84,7 +84,7 @@ open class Script(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Script.wrap(ret)
+        return Script.wrapOwned(ret)
     }
 
     /**
@@ -226,9 +226,12 @@ open class Script(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Script? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Script? =
+        internal fun wrapOwned(handle: RawSegment): Script? =
+            if (handle.address() == 0L) null else RefCounted.owned(Script(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Script? =
             if (handle.address() == 0L) null else Script(GodotHandle(handle))
 
         private const val CAN_INSTANTIATE_HASH = 36873697L

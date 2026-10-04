@@ -13,9 +13,12 @@ class EditorExportPlatformWeb(handle: GodotHandle) : EditorExportPlatform(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformWeb? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformWeb? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformWeb? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformWeb(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformWeb? =
             if (handle.address() == 0L) null else EditorExportPlatformWeb(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

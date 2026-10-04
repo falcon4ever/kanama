@@ -149,9 +149,12 @@ class PortableCompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PortableCompressedTexture2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PortableCompressedTexture2D? =
+        internal fun wrapOwned(handle: RawSegment): PortableCompressedTexture2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(PortableCompressedTexture2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PortableCompressedTexture2D? =
             if (handle.address() == 0L) null else PortableCompressedTexture2D(GodotHandle(handle))
 
         private const val CREATE_FROM_IMAGE_HASH = 3679243433L

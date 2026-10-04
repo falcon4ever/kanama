@@ -149,9 +149,12 @@ open class VisualShaderNodeTextureParameter(handle: GodotHandle) : VisualShaderN
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTextureParameter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTextureParameter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTextureParameter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTextureParameter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureParameter(GodotHandle(handle))
 
         private const val SET_TEXTURE_TYPE_HASH = 2227296876L

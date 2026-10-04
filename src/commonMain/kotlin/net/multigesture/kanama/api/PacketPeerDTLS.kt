@@ -103,9 +103,12 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PacketPeerDTLS? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PacketPeerDTLS? =
+        internal fun wrapOwned(handle: RawSegment): PacketPeerDTLS? =
+            if (handle.address() == 0L) null else RefCounted.owned(PacketPeerDTLS(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PacketPeerDTLS? =
             if (handle.address() == 0L) null else PacketPeerDTLS(GodotHandle(handle))
 
         private const val POLL_HASH = 3218959716L

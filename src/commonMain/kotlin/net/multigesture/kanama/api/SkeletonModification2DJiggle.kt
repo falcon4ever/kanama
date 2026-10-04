@@ -426,9 +426,12 @@ class SkeletonModification2DJiggle(handle: GodotHandle) : SkeletonModification2D
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonModification2DJiggle? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkeletonModification2DJiggle? =
+        internal fun wrapOwned(handle: RawSegment): SkeletonModification2DJiggle? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkeletonModification2DJiggle(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DJiggle? =
             if (handle.address() == 0L) null else SkeletonModification2DJiggle(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L

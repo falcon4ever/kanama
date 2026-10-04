@@ -518,9 +518,12 @@ class StyleBoxFlat(handle: GodotHandle) : StyleBox(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StyleBoxFlat? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StyleBoxFlat? =
+        internal fun wrapOwned(handle: RawSegment): StyleBoxFlat? =
+            if (handle.address() == 0L) null else RefCounted.owned(StyleBoxFlat(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StyleBoxFlat? =
             if (handle.address() == 0L) null else StyleBoxFlat(GodotHandle(handle))
 
         private const val SET_BG_COLOR_HASH = 2920490490L

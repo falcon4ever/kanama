@@ -45,9 +45,12 @@ class VisualShaderNodeColorParameter(handle: GodotHandle) : VisualShaderNodePara
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeColorParameter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeColorParameter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeColorParameter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeColorParameter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeColorParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeColorParameter(GodotHandle(handle))
 
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L

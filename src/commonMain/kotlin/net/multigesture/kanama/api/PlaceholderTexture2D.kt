@@ -24,9 +24,12 @@ class PlaceholderTexture2D(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PlaceholderTexture2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PlaceholderTexture2D? =
+        internal fun wrapOwned(handle: RawSegment): PlaceholderTexture2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(PlaceholderTexture2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture2D? =
             if (handle.address() == 0L) null else PlaceholderTexture2D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L

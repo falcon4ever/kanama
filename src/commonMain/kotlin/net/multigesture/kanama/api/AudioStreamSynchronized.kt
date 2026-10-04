@@ -38,7 +38,7 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return AudioStream.wrap(ret)
+        return AudioStream.wrapOwned(ret)
     }
 
     fun setSyncStreamVolume(streamIndex: Int, volumeDb: Double) {
@@ -56,9 +56,12 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamSynchronized? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamSynchronized? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamSynchronized? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamSynchronized(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamSynchronized? =
             if (handle.address() == 0L) null else AudioStreamSynchronized(GodotHandle(handle))
 
         private const val SET_STREAM_COUNT_HASH = 1286410249L

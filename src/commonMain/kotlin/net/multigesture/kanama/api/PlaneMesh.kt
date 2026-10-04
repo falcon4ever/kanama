@@ -179,9 +179,12 @@ open class PlaneMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PlaneMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PlaneMesh? =
+        internal fun wrapOwned(handle: RawSegment): PlaneMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(PlaneMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PlaneMesh? =
             if (handle.address() == 0L) null else PlaneMesh(GodotHandle(handle))
 
         // Downcast a Resource to PlaneMesh (null if not).

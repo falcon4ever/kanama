@@ -53,7 +53,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun getInterface(idx: Int): TextServer? {
-        return TextServer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInterfaceBind, singleton, idx))
+        return TextServer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getInterfaceBind, singleton, idx))
     }
 
     /**
@@ -73,7 +73,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun findInterface(name: String): TextServer? {
-        return TextServer.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findInterfaceBind, singleton, name))
+        return TextServer.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(findInterfaceBind, singleton, name))
     }
 
     /**
@@ -93,7 +93,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun getPrimaryInterface(): TextServer? {
-        return TextServer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrimaryInterfaceBind, singleton))
+        return TextServer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPrimaryInterfaceBind, singleton))
     }
 
     object Signals {

@@ -204,7 +204,7 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getFont(): Font? {
         checkOpen()
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
     }
 
     /**
@@ -526,9 +526,12 @@ class TextMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextMesh? =
+        internal fun wrapOwned(handle: RawSegment): TextMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextMesh? =
             if (handle.address() == 0L) null else TextMesh(GodotHandle(handle))
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L

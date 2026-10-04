@@ -736,7 +736,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getParamTexture(param: ParticleProcessMaterial.Parameter): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, segment, param.value))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getParamTextureBind, segment, param.value))
     }
 
     fun setColor(color: Color) {
@@ -816,7 +816,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getColorRamp(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     fun setAlphaCurve(curve: Texture2D?) {
@@ -826,7 +826,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getAlphaCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAlphaCurveBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAlphaCurveBind, segment))
     }
 
     fun setEmissionCurve(curve: Texture2D?) {
@@ -836,7 +836,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getEmissionCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionCurveBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEmissionCurveBind, segment))
     }
 
     fun setColorInitialRamp(ramp: Texture2D?) {
@@ -846,7 +846,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getColorInitialRamp(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
     }
 
     fun setVelocityLimitCurve(curve: Texture2D?) {
@@ -856,7 +856,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getVelocityLimitCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVelocityLimitCurveBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getVelocityLimitCurveBind, segment))
     }
 
     fun setParticleFlag(particleFlag: ParticleProcessMaterial.ParticleFlags, enable: Boolean) {
@@ -916,7 +916,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getEmissionPointTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionPointTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEmissionPointTextureBind, segment))
     }
 
     fun setEmissionNormalTexture(texture: Texture2D?) {
@@ -926,7 +926,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getEmissionNormalTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionNormalTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEmissionNormalTextureBind, segment))
     }
 
     fun setEmissionColorTexture(texture: Texture2D?) {
@@ -936,7 +936,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getEmissionColorTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEmissionColorTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEmissionColorTextureBind, segment))
     }
 
     fun setEmissionPointCount(pointCount: Int) {
@@ -1236,7 +1236,7 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getRotationVelocity3dCurve(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRotationVelocity3dCurveBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRotationVelocity3dCurveBind, segment))
     }
 
     object Signals {
@@ -1251,9 +1251,12 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
 
 
         fun fromHandle(handle: GodotHandle): ParticleProcessMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ParticleProcessMaterial? =
+        internal fun wrapOwned(handle: MemorySegment): ParticleProcessMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(ParticleProcessMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): ParticleProcessMaterial? =
             if (handle.address() == 0L) null else ParticleProcessMaterial(GodotHandle(handle))
 
         private const val SET_DIRECTION_HASH = 3460891852L

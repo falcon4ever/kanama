@@ -29,9 +29,12 @@ open class VisualShaderNodeResizableBase(handle: GodotHandle) : VisualShaderNode
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeResizableBase? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeResizableBase? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeResizableBase? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeResizableBase(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeResizableBase? =
             if (handle.address() == 0L) null else VisualShaderNodeResizableBase(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L

@@ -97,14 +97,17 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ConfigFile? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ConfigFile? =
+        internal fun wrapOwned(handle: MemorySegment): ConfigFile? =
+            if (handle.address() == 0L) null else RefCounted.owned(ConfigFile(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): ConfigFile? =
             if (handle.address() == 0L) null else ConfigFile(GodotHandle(handle))
 
         // Instantiate a ConfigFile.
         fun create(): ConfigFile =
-            ConfigFile(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile"))))
+            RefCounted.owned(ConfigFile(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ConfigFile")))))
 
         private const val SET_VALUE_HASH = 2504492430L
         private val setValueBind by lazy {

@@ -283,7 +283,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.create_timer
      */
     fun createTimer(timeSec: Double, processAlways: Boolean = true, processInPhysics: Boolean = false, ignoreTimeScale: Boolean = false): SceneTreeTimer {
-        return requireGodotReturn(SceneTreeTimer.wrap(ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(createTimerBind, segment, timeSec, processAlways, processInPhysics, ignoreTimeScale)), "SceneTree.create_timer")
+        return requireGodotReturn(SceneTreeTimer.wrapOwned(ObjectCalls.ptrcallWithDoubleAndThreeBoolArgsRetObject(createTimerBind, segment, timeSec, processAlways, processInPhysics, ignoreTimeScale)), "SceneTree.create_timer")
     }
 
     /**
@@ -578,7 +578,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * Generated from Godot docs: SceneTree.get_multiplayer
      */
     fun getMultiplayer(forPath: NodePath): MultiplayerAPI {
-        return requireGodotReturn(MultiplayerAPI.wrap(ObjectCalls.ptrcallWithNodePathArgRetObject(getMultiplayerBind, segment, forPath)), "SceneTree.get_multiplayer")
+        return requireGodotReturn(MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallWithNodePathArgRetObject(getMultiplayerBind, segment, forPath)), "SceneTree.get_multiplayer")
     }
 
     /**

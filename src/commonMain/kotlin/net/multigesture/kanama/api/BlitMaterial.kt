@@ -83,9 +83,12 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BlitMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): BlitMaterial? =
+        internal fun wrapOwned(handle: RawSegment): BlitMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(BlitMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): BlitMaterial? =
             if (handle.address() == 0L) null else BlitMaterial(GodotHandle(handle))
 
         private const val SET_BLEND_MODE_HASH = 80206916L

@@ -15,9 +15,12 @@ class ResourceImporterImageFont(handle: GodotHandle) : ResourceImporter(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterImageFont? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterImageFont? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterImageFont? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterImageFont(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterImageFont? =
             if (handle.address() == 0L) null else ResourceImporterImageFont(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

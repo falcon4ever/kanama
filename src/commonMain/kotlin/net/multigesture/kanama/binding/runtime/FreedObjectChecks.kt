@@ -24,12 +24,31 @@ import net.multigesture.kanama.api.RefCounted
  * One extra engine call per checked use: on by default where `OS.is_debug_build()` is true (the
  * editor and debug export templates), off in release templates. `KANAMA_FREED_OBJECT_CHECKS=1` /
  * `0` in the game's environment forces it on or off (a measurement knob, not a documented setting).
+ *
+ * The O(1) alternative (task 132 D7) is built beside it on desktop/Android:
+ * `KANAMA_FREED_OBJECT_CHECKS=binding` turns the check on -- in a release template too -- with an
+ * instance binding per object ([LiveFlag], [bindings]): Godot's free callback marks the flag dead
+ * and the check before a call is one field read. It is not the default because it moves the cost to
+ * wrapper construction: measured on the editor binary (Apple M1 Max, task 132), a wrapper costs ~30
+ * ns to build instead of ~11 ns while a checked call costs ~17.5 ns instead of ~30 ns, and the
+ * Bunnymark-style loop (two wrappers and two calls per bunny per frame) ran slower with it than
+ * with the lookup. iOS has no instance binding yet and keeps the lookup.
  */
 internal object FreedObjectChecks {
   /** Read on every wrapper call; a plain static field on the JVM. */
   @JvmField var enabled: Boolean = false
 
-  /** Environment override read by [configure]: `1`/`true`/`on` or `0`/`false`/`off`. */
+  /**
+   * Whether wrappers built from now on attach an instance binding and check its [LiveFlag] (task
+   * 132 D7) instead of asking `object_get_instance_from_id` per call. Read once per wrapper
+   * construction.
+   */
+  @JvmField var bindings: Boolean = false
+
+  /**
+   * Environment override read by [configure]: `1`/`true`/`on` or `0`/`false`/`off`, or `binding`
+   * (on, with the instance-binding check where the backend has it).
+   */
   const val ENVIRONMENT_VARIABLE: String = "KANAMA_FREED_OBJECT_CHECKS"
 
   /**
@@ -40,7 +59,8 @@ internal object FreedObjectChecks {
    * turns the check off once instead of failing every call. Never throws: a detection error leaves
    * the check off and is named in the returned line, never silently.
    */
-  fun configure(lookupAvailable: Boolean = true): String {
+  fun configure(lookupAvailable: Boolean = true, bindingAvailable: Boolean = false): String {
+    bindings = false
     if (!lookupAvailable) {
       enabled = false
       return "off (object_get_instance_from_id is not available)"
@@ -51,6 +71,15 @@ internal object FreedObjectChecks {
           enabled = false
           return "off (reading $ENVIRONMENT_VARIABLE failed: ${describe(it)})"
         }
+    if (override.trim().lowercase() == BINDING) {
+      if (!bindingAvailable) {
+        enabled = true
+        return "on ($ENVIRONMENT_VARIABLE=$BINDING: no instance binding on this backend, lookup)"
+      }
+      enabled = true
+      bindings = true
+      return "on ($ENVIRONMENT_VARIABLE=$BINDING: instance binding)"
+    }
     val forced = forcedBy(override)
     if (forced != null) {
       enabled = forced
@@ -65,6 +94,8 @@ internal object FreedObjectChecks {
     enabled = debugBuild
     return if (debugBuild) "on (debug build)" else "off (release build)"
   }
+
+  private const val BINDING = "binding"
 
   /** [configure]'s decision for an environment [override] value; pure, so it is unit-testable. */
   fun decide(override: String, debugBuild: () -> Boolean): Boolean =
@@ -90,7 +121,7 @@ internal object FreedObjectChecks {
    */
   fun valueSegment(obj: GodotObject): RawSegment {
     val raw = obj.handle.segment
-    if (enabled && !ObjectRuntime.isLive(raw, obj.instanceId)) return NULL_SEGMENT
+    if (enabled && !obj.isAlive(raw)) return NULL_SEGMENT
     if (obj is RefCounted) obj.checkOpen()
     return raw
   }

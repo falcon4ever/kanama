@@ -99,9 +99,12 @@ class AudioEffectHardLimiter(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectHardLimiter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectHardLimiter? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectHardLimiter? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectHardLimiter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectHardLimiter? =
             if (handle.address() == 0L) null else AudioEffectHardLimiter(GodotHandle(handle))
 
         private const val SET_CEILING_DB_HASH = 373806689L

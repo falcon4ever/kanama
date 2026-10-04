@@ -46,5 +46,5 @@ _Hand-added inside a GENERATED wrapper file — regeneration overwrites it; re-a
 | `src/iosMain/kotlin/net/multigesture/kanama/api/BoxShape3D.kt:30` | [glue] desktop-parity constructor sugar (the desktop wrapper's |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ImageTexture.kt:28` | [runtime] create_from_image is STATIC — the instance dispatch |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ParticleProcessMaterial.kt:1247` | [glue] downcast a Resource (null if not), mirroring the desktop |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/ProceduralSkyMaterial.kt:228` | [glue] downcast a Resource (null if not), mirroring the desktop |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/ProceduralSkyMaterial.kt:231` | [glue] downcast a Resource (null if not), mirroring the desktop |
 

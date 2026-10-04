@@ -3099,16 +3099,21 @@ actual object ObjectCalls {
   }
 
   /**
-   * An untyped (`GodotObject`) wrapper of a RefCounted element the C side retained becomes a
-   * [RefCounted] wrapper, so the owned +1 can be closed (task 131 S5). Typed wrappers pass through.
+   * The wrapper of an element the C side retained owns that +1 (task 131 S5): a typed RefCounted
+   * wrapper (built by the caller's `wrapBorrowed`) is marked owned, so it gets the fallback release
+   * (task 132 D1), and an untyped (`GodotObject`) wrapper of a RefCounted element becomes an owned
+   * [RefCounted] wrapper, so the +1 can be closed. Other wrappers (Node, ...) pass through.
    */
   @Suppress("UNCHECKED_CAST")
   internal fun <T> ownedListElement(obj: T?): T? =
-    // Bit 63 of the captured instance id marks a RefCounted object (ObjectID::is_ref_counted): no
-    // engine call. Typed wrappers (Node, ...) are not exactly GodotObject and pass through.
-    if (obj is GodotObject && obj::class == GodotObject::class && obj.instanceId < 0L) {
-      RefCounted(obj.handle) as T
-    } else obj
+    when {
+      obj is RefCounted -> RefCounted.owned(obj) as T
+      // Bit 63 of the captured instance id marks a RefCounted object (ObjectID::is_ref_counted):
+      // no engine call. Typed wrappers (Node, ...) are not exactly GodotObject and pass through.
+      obj is GodotObject && obj::class == GodotObject::class && obj.instanceId < 0L ->
+        RefCounted.owned(RefCounted(obj.handle)) as T
+      else -> obj
+    }
 
   // Inline handle capacity of retTypedObjectList (longer lists drain from the C pending slot).
   internal const val TYPED_OBJECT_LIST_INLINE_CAP = 64
@@ -3526,7 +3531,8 @@ actual object ObjectCalls {
       VT_OBJECT ->
         if (outInt.value != 0L) {
           val handle = GodotHandle(MemorySegment.ofAddress(outInt.value))
-          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(handle)
+          if (outIsRefCounted != null && outIsRefCounted.value != 0)
+            RefCounted.owned(RefCounted(handle))
           else GodotObject(handle)
         } else {
           null
@@ -3986,7 +3992,8 @@ actual object ObjectCalls {
       )
     when {
       handle == 0L -> null
-      isRefCounted.value != 0 -> RefCounted(GodotHandle(MemorySegment.ofAddress(handle)))
+      isRefCounted.value != 0 ->
+        RefCounted.owned(RefCounted(GodotHandle(MemorySegment.ofAddress(handle))))
       else -> GodotObject(GodotHandle(MemorySegment.ofAddress(handle)))
     }
   }
@@ -39160,6 +39167,21 @@ private const val SELFTEST_EXPECTED_FAULTS = 7
 // only as human-readable markers in the log; nothing parses them, and nothing may rely on where the
 // FAULT-PROBE lines appear relative to them. What proves that the probes and nothing else fired is
 // the count: `faults=7 expected=7` on both summary lines.
+// Task 132 self-test helpers: each is its own function so no stack slot of the caller keeps a
+// dropped wrapper reachable.
+private fun dropOwnedResources(count: Int): LongArray =
+  LongArray(count) { net.multigesture.kanama.api.Resource.create().instanceId }
+
+// A second owned +1 on [kept], closed: refcount back to 1, its cleanup cancelled.
+private fun closeSecondOwnedReference(kept: RefCounted) {
+  RefCounted.fromHandle(kept.handle)!!.apply { retainForKotlinWrapper() }.close()
+}
+
+// A second owned +1 on [kept], dropped unclosed: refcount 2 until the GC fallback releases it.
+private fun dropSecondOwnedReference(kept: RefCounted) {
+  RefCounted.fromHandle(kept.handle)!!.retainForKotlinWrapper()
+}
+
 private fun runFaultProbes(n3: MemorySegment, check: (String, Boolean) -> Unit) {
   println(
     "[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin " +
@@ -41380,6 +41402,47 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         FreedObjectChecks.enabled = checksBefore
       }
     } else check("wrapper-equality(two objects constructed)", false)
+  }
+
+  // Task 132: a forgotten close() is a late release, not a leak. 1,000 owned Resources dropped
+  // without close() are released once a GC has collected their wrappers and the main thread has
+  // drained the releases (D2): none of their instance ids resolves any more. A second owned +1 that
+  // was closed and then collected is released once (D3: close() cancels the cleanup), and one that
+  // was dropped unclosed is released by the GC: the kept Resource ends at refcount 1.
+  run {
+    val enabledBefore = OwnedReleases.enabled
+    OwnedReleases.enabled = true
+    try {
+      val dropped = dropOwnedResources(1_000)
+      val kept = net.multigesture.kanama.api.Resource.create()
+      closeSecondOwnedReference(kept)
+      dropSecondOwnedReference(kept)
+      val refsBefore = kept.getReferenceCount()
+      var released = 0
+      repeat(5) {
+        if (dropped.all { !IosGodot.isInstanceIdValid(it) } && kept.getReferenceCount() == 1)
+          return@repeat
+        OwnedReleaseCleaner.collectGarbage(1_000)
+        released += OwnedReleases.drain()
+      }
+      val gone = dropped.count { !IosGodot.isInstanceIdValid(it) }
+      val refsAfter = kept.getReferenceCount()
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST owned-release dropped=${dropped.size} gone=$gone " +
+          "released=$released kept_refs_before=$refsBefore kept_refs_after=$refsAfter"
+      )
+      check(
+        "owned-release(1000 dropped owned Resources released by the GC fallback)",
+        gone == dropped.size,
+      )
+      check(
+        "owned-release(closed then collected: released once; dropped: released)",
+        refsBefore == 2 && refsAfter == 1,
+      )
+      kept.close()
+    } finally {
+      OwnedReleases.enabled = enabledBefore
+    }
   }
 
   // Task 108 — explicit disconnect, then free the EMITTER before the RECEIVER. Object::_disconnect

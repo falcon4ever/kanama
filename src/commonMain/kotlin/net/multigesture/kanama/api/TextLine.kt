@@ -92,7 +92,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return TextLine.wrap(ret)
+        return TextLine.wrapOwned(ret)
     }
 
     /**
@@ -477,9 +477,12 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextLine? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextLine? =
+        internal fun wrapOwned(handle: RawSegment): TextLine? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextLine(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextLine? =
             if (handle.address() == 0L) null else TextLine(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L

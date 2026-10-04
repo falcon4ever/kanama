@@ -133,9 +133,12 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): DrawableTexture2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): DrawableTexture2D? =
+        internal fun wrapOwned(handle: RawSegment): DrawableTexture2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(DrawableTexture2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): DrawableTexture2D? =
             if (handle.address() == 0L) null else DrawableTexture2D(GodotHandle(handle))
 
         private const val SET_FORMAT_HASH = 2875673594L

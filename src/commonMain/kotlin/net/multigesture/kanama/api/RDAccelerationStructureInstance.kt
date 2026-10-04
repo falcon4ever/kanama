@@ -176,9 +176,12 @@ class RDAccelerationStructureInstance(handle: GodotHandle) : RefCounted(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDAccelerationStructureInstance? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDAccelerationStructureInstance? =
+        internal fun wrapOwned(handle: RawSegment): RDAccelerationStructureInstance? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDAccelerationStructureInstance(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDAccelerationStructureInstance? =
             if (handle.address() == 0L) null else RDAccelerationStructureInstance(GodotHandle(handle))
 
         private const val SET_TRANSFORM_HASH = 2952846383L

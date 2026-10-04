@@ -110,7 +110,7 @@ class FogVolume(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: FogVolume.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {

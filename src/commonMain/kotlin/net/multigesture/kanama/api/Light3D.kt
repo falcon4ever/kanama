@@ -479,7 +479,7 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: Light3D.get_projector
      */
     fun getProjector(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProjectorBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProjectorBind, segment))
     }
 
     /**

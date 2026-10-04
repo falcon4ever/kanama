@@ -122,9 +122,12 @@ open class EditorSceneFormatImporter(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorSceneFormatImporter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorSceneFormatImporter? =
+        internal fun wrapOwned(handle: RawSegment): EditorSceneFormatImporter? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorSceneFormatImporter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporter? =
             if (handle.address() == 0L) null else EditorSceneFormatImporter(GodotHandle(handle))
 
         private const val ADD_IMPORT_OPTION_HASH = 402577236L

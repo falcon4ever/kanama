@@ -36,7 +36,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpirv(version: String = ""): RDShaderSPIRV? {
         checkOpen()
-        return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getSpirvBind, segment, version))
+        return RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getSpirvBind, segment, version))
     }
 
     /**
@@ -76,9 +76,12 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDShaderFile? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDShaderFile? =
+        internal fun wrapOwned(handle: RawSegment): RDShaderFile? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDShaderFile(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDShaderFile? =
             if (handle.address() == 0L) null else RDShaderFile(GodotHandle(handle))
 
         private const val SET_BYTECODE_HASH = 1526857008L

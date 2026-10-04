@@ -94,9 +94,12 @@ class CameraTexture(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CameraTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CameraTexture? =
+        internal fun wrapOwned(handle: RawSegment): CameraTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(CameraTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CameraTexture? =
             if (handle.address() == 0L) null else CameraTexture(GodotHandle(handle))
 
         private const val SET_CAMERA_FEED_ID_HASH = 1286410249L

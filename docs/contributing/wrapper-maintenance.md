@@ -348,6 +348,29 @@ The wrapper convention on desktop/Android:
   reference**; `close()` releases it (`unreference()` + destroy at zero).
   This matches the script-property retention path
   (`ScriptBridge.retainScriptResource`), which takes its own reference.
+- **Ownership is a constructor fact** (task 132 D1). A RefCounted wrapper class
+  has no `wrap`: its companion carries `wrapOwned` (the wrapper owns a `+1`)
+  and `wrapBorrowed` (a view), and `RefCounted.owned(wrapper)` marks a wrapper
+  built some other way (`create()`, a hand-written loader). The generator picks
+  one per site (`wrap_owned_helper` / `wrap_borrowed_helper`): RefCounted
+  returns, the self-return collapse and `create()` are owned; `fromHandle`,
+  the `from*` downcasts and typed-Array element callbacks (`X::wrapBorrowed`,
+  because `readArrayObjectsOwned` / iOS `ownedListElement` retain the element
+  and mark it owned) are borrowed. Hand-written and per-platform files follow
+  the same rule, and `refcounted_ownership_problems` in
+  `scripts/audit_generator_shape_policy.py` checks every site.
+- **Only an owned wrapper registers the GC fallback** (task 132 D2-D5,
+  `binding/runtime/OwnedReleases.kt`): a cleanup holding the raw handle and
+  instance id (never the wrapper) through `OwnedReleaseCleaner` -- one shared
+  `java.lang.ref.Cleaner` on desktop/Android (absent before Android API 33:
+  the fallback is off there), `kotlin.native.ref.createCleaner` on iOS. The
+  cleanup only enqueues on a lock-free queue; the main thread drains it once
+  per frame (`ScriptLanguage._frame` on desktop/Android,
+  `KanamaIosRuntime.frame()` on iOS) and at SCENE deinitialization after a
+  forced collection, before Godot's leak report. `close()` cancels the cleanup
+  first, so a `+1` is released once; a release whose object is already gone
+  (instance id no longer resolves) is skipped. `retainForKotlinWrapper()` makes
+  a borrowed wrapper owned, fallback included.
 - **Self-returning fluent methods collapse**: when the returned address equals
   the receiver's handle, the generated method releases the duplicate reference
   and returns `this` instead of minting a second owning wrapper (chained calls

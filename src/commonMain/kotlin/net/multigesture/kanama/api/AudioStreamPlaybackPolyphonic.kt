@@ -75,9 +75,12 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackPolyphonic? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamPlaybackPolyphonic? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamPlaybackPolyphonic? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamPlaybackPolyphonic(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackPolyphonic? =
             if (handle.address() == 0L) null else AudioStreamPlaybackPolyphonic(GodotHandle(handle))
 
         private const val PLAY_STREAM_HASH = 1846744803L

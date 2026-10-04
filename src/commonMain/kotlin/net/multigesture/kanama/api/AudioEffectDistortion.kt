@@ -198,9 +198,12 @@ class AudioEffectDistortion(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectDistortion? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectDistortion? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectDistortion? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectDistortion(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectDistortion? =
             if (handle.address() == 0L) null else AudioEffectDistortion(GodotHandle(handle))
 
         private const val SET_MODE_HASH = 1314744793L

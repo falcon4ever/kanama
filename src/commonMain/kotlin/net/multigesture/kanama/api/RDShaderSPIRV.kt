@@ -176,9 +176,12 @@ class RDShaderSPIRV(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDShaderSPIRV? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDShaderSPIRV? =
+        internal fun wrapOwned(handle: RawSegment): RDShaderSPIRV? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDShaderSPIRV(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDShaderSPIRV? =
             if (handle.address() == 0L) null else RDShaderSPIRV(GodotHandle(handle))
 
         private const val SET_STAGE_BYTECODE_HASH = 3514097977L

@@ -71,7 +71,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
      */
     fun getModification(modIdx: Int): SkeletonModification2D? {
         checkOpen()
-        return SkeletonModification2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getModificationBind, segment, modIdx))
+        return SkeletonModification2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getModificationBind, segment, modIdx))
     }
 
     /**
@@ -193,9 +193,12 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonModificationStack2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkeletonModificationStack2D? =
+        internal fun wrapOwned(handle: RawSegment): SkeletonModificationStack2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkeletonModificationStack2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkeletonModificationStack2D? =
             if (handle.address() == 0L) null else SkeletonModificationStack2D(GodotHandle(handle))
 
         private const val SETUP_HASH = 3218959716L

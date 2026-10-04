@@ -28,9 +28,12 @@ class VisualShaderNodeParticleMultiplyByAxisAngle(handle: GodotHandle) : VisualS
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleMultiplyByAxisAngle? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleMultiplyByAxisAngle? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleMultiplyByAxisAngle(GodotHandle(handle))
 
         private const val SET_DEGREES_MODE_HASH = 2586408642L

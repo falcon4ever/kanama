@@ -104,9 +104,12 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorDebuggerSession? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorDebuggerSession? =
+        internal fun wrapOwned(handle: RawSegment): EditorDebuggerSession? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorDebuggerSession(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorDebuggerSession? =
             if (handle.address() == 0L) null else EditorDebuggerSession(GodotHandle(handle))
 
         private const val SEND_MESSAGE_HASH = 85656714L

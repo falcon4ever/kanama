@@ -161,9 +161,12 @@ open class Translation(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Translation? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Translation? =
+        internal fun wrapOwned(handle: RawSegment): Translation? =
+            if (handle.address() == 0L) null else RefCounted.owned(Translation(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Translation? =
             if (handle.address() == 0L) null else Translation(GodotHandle(handle))
 
         private const val SET_LOCALE_HASH = 83702148L

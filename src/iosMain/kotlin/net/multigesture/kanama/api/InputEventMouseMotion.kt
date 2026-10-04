@@ -126,9 +126,12 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventMouseMotion? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): InputEventMouseMotion? =
+        internal fun wrapOwned(handle: MemorySegment): InputEventMouseMotion? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventMouseMotion(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): InputEventMouseMotion? =
             if (handle.address() == 0L) null else InputEventMouseMotion(GodotHandle(handle))
 
         // Downcast a GodotObject to InputEventMouseMotion (null if not).

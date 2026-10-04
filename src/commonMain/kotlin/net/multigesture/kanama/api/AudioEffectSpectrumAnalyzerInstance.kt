@@ -52,9 +52,12 @@ class AudioEffectSpectrumAnalyzerInstance(handle: GodotHandle) : AudioEffectInst
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectSpectrumAnalyzerInstance? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectSpectrumAnalyzerInstance? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectSpectrumAnalyzerInstance? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectSpectrumAnalyzerInstance(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectSpectrumAnalyzerInstance? =
             if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzerInstance(GodotHandle(handle))
 
         private const val GET_MAGNITUDE_FOR_FREQUENCY_RANGE_HASH = 797993915L

@@ -37,30 +37,33 @@ open class Noise(handle: GodotHandle) : Resource(handle) {
 
     fun getImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, normalize: Boolean = true): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getImageBind, segment, width, height, invert, in3dSpace, normalize))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getImageBind, segment, width, height, invert, in3dSpace, normalize))
     }
 
     fun getSeamlessImage(width: Int, height: Int, invert: Boolean = false, in3dSpace: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(getSeamlessImageBind, segment, width, height, invert, in3dSpace, skirt, normalize))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject(getSeamlessImageBind, segment, width, height, invert, in3dSpace, skirt, normalize))
     }
 
     fun getImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, normalize: Boolean = true): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(getImage3dBind, segment, width, height, depth, invert, normalize, Image::wrap)
+        return ObjectCalls.ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList(getImage3dBind, segment, width, height, depth, invert, normalize, Image::wrapBorrowed)
     }
 
     fun getSeamlessImage3d(width: Int, height: Int, depth: Int, invert: Boolean = false, skirt: Double = 0.1, normalize: Boolean = true): List<Image> {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(getSeamlessImage3dBind, segment, width, height, depth, invert, skirt, normalize, Image::wrap)
+        return ObjectCalls.ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList(getSeamlessImage3dBind, segment, width, height, depth, invert, skirt, normalize, Image::wrapBorrowed)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Noise? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Noise? =
+        internal fun wrapOwned(handle: RawSegment): Noise? =
+            if (handle.address() == 0L) null else RefCounted.owned(Noise(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Noise? =
             if (handle.address() == 0L) null else Noise(GodotHandle(handle))
 
         private const val GET_NOISE_1D_HASH = 3919130443L

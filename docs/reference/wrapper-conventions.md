@@ -30,7 +30,7 @@ types, each platform's own classes and the Web facades to a snapshot (see
 | [Decimals](#4-decimals) | scalars `Double`; value-type components `real_t` (`Float` in single precision) | task 134: every decimal value `Double` |
 | [Enums and bitfields](#5-enums-and-bitfields) | typed value classes, frozen value names | — |
 | [Nullability](#6-nullability) | `meta: "required"` returns non-null, other object returns nullable | — |
-| [Ownership](#7-ownership) | `close()` / `use { }` releases a `RefCounted` | task 132: forgotten `close()` released by the GC |
+| [Ownership](#7-ownership) | `close()` / `use { }` releases a `RefCounted` early; a forgotten one is released after the GC drops it (not yet Web) | Web: the same fallback |
 | [Statics and singletons](#8-statics-and-singletons) | statics on the companion, singletons are `object`s | — |
 | [Defaults and overloads](#9-defaults-and-overloads) | Godot defaults where Kotlin can express them | — |
 | [Collections](#10-collections) | `List`, `Map<String, Any?>`, `ByteArray` | — |
@@ -240,12 +240,22 @@ The full statement is [Resource Ownership](../game-dev/godot-api.md#resource-own
 - An exception thrown from a script callback is reported as a Godot script error with the Kotlin
   file and line, and the call returns `null` (task 131; desktop, Android and iOS, not yet Web).
 
-**Planned (task 132).** A forgotten `close()` becomes a late release instead of a leak: an owned
-wrapper registers a cleanup that releases its reference on the main thread after the garbage
-collector drops the wrapper. `close()` / `use { }` stay the deterministic way to release early.
+- **Close to release early.** A forgotten `close()` is a late release, not a leak (task 132;
+  desktop, Android 13+ and iOS, not yet Web; device runs pending): an owned wrapper registers a cleanup that holds only
+  its handle, and once the garbage collector drops the wrapper the reference is released on the
+  main thread at the next frame. `close()` cancels that cleanup, so a reference is released once.
+  Borrowed views register nothing. At shutdown a collection runs before Godot's leak report. The
+  project setting `kanama/debug/log_gc_releases` logs each such release once per creation site.
+- Ownership is fixed where the wrapper is built: inside the runtime a `RefCounted` wrapper class
+  has no `wrap`, only `wrapOwned` (a returned or constructing `+1`) and `wrapBorrowed` (a view),
+  so every generated and hand-written site states which one it builds.
 
-Kept by: the generator functions above, and `scripts/runtime_smoke.sh`, which asserts reference
-counts and liveness around the documented cases.
+Kept by: the generator functions above; `refcounted_ownership_problems` in
+`scripts/audit_generator_shape_policy.py`, which checks every wrapper source for the owned/borrowed
+choice (returns and `create()` owned, `fromHandle` and typed-Array element callbacks borrowed);
+and `scripts/runtime_smoke.sh`, which asserts reference counts and liveness around the documented
+cases, and that 10,000 dropped owned `Resource`s are released after a collection (with the
+fallback off, they stay).
 
 ## 8. Statics and singletons
 

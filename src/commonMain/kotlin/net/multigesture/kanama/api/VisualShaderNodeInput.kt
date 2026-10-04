@@ -37,9 +37,12 @@ class VisualShaderNodeInput(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeInput? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeInput? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeInput? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeInput(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeInput? =
             if (handle.address() == 0L) null else VisualShaderNodeInput(GodotHandle(handle))
 
         private const val SET_INPUT_NAME_HASH = 83702148L

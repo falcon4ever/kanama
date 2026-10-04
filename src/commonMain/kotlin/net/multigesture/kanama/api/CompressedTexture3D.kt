@@ -38,9 +38,12 @@ class CompressedTexture3D(handle: GodotHandle) : Texture3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CompressedTexture3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CompressedTexture3D? =
+        internal fun wrapOwned(handle: RawSegment): CompressedTexture3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(CompressedTexture3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CompressedTexture3D? =
             if (handle.address() == 0L) null else CompressedTexture3D(GodotHandle(handle))
 
         private const val LOAD_HASH = 166001499L

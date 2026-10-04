@@ -44,7 +44,7 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
 
     fun getBinding(index: Int): OpenXRIPBinding? {
         checkOpen()
-        return OpenXRIPBinding.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingBind, segment, index))
+        return OpenXRIPBinding.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getBindingBind, segment, index))
     }
 
     fun setBindings(bindings: List<Any?>) {
@@ -64,7 +64,7 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
 
     fun getBindingModifier(index: Int): OpenXRIPBindingModifier? {
         checkOpen()
-        return OpenXRIPBindingModifier.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, segment, index))
+        return OpenXRIPBindingModifier.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getBindingModifierBind, segment, index))
     }
 
     fun setBindingModifiers(bindingModifiers: List<Any?>) {
@@ -80,9 +80,12 @@ class OpenXRInteractionProfile(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRInteractionProfile? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRInteractionProfile? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRInteractionProfile? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRInteractionProfile(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRInteractionProfile? =
             if (handle.address() == 0L) null else OpenXRInteractionProfile(GodotHandle(handle))
 
         private const val SET_INTERACTION_PROFILE_PATH_HASH = 83702148L

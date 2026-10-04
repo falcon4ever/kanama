@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 open class OpenXRExtensionWrapper(handle: GodotHandle) : GodotObject(handle) {
     fun getOpenxrApi(): OpenXRAPIExtension? {
-        return OpenXRAPIExtension.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOpenxrApiBind, segment))
+        return OpenXRAPIExtension.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOpenxrApiBind, segment))
     }
 
     fun registerExtensionWrapper() {

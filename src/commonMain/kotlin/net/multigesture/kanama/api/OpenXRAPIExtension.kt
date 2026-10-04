@@ -269,9 +269,12 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRAPIExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRAPIExtension? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRAPIExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRAPIExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRAPIExtension? =
             if (handle.address() == 0L) null else OpenXRAPIExtension(GodotHandle(handle))
 
         private const val GET_OPENXR_VERSION_HASH = 2455072627L

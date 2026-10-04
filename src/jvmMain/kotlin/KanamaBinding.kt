@@ -17,7 +17,9 @@ import net.multigesture.kanama.binding.KanamaScriptLanguage
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.GodotStrings
+import net.multigesture.kanama.binding.runtime.InstanceBindings
 import net.multigesture.kanama.binding.runtime.ObjectRuntime
+import net.multigesture.kanama.binding.runtime.OwnedReleases
 import net.multigesture.kanama.binding.runtime.ScriptErrors
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.ffi.GodotFFI
@@ -176,8 +178,15 @@ object KanamaBinding {
       try {
         // The freed-object check before every wrapper call (task 131 item 2): on in debug builds.
         val freedChecks =
-          FreedObjectChecks.configure(lookupAvailable = ObjectRuntime.instanceLookupAvailable())
+          FreedObjectChecks.configure(
+            lookupAvailable = ObjectRuntime.instanceLookupAvailable(),
+            bindingAvailable = InstanceBindings.available(),
+          )
         System.err.println("[kanama:kt] freed-object checks: $freedChecks")
+        // The GC fallback release of owned RefCounted wrappers (task 132 D2/D5).
+        System.err.println(
+          "[kanama:kt] owned-reference GC releases: ${OwnedReleases.configureFromEngine()}"
+        )
         // Register Script resource class before the language (language creates scripts).
         KanamaScript.register(library)
         // Register and add the Kanama script language to the engine.
@@ -220,6 +229,14 @@ object KanamaBinding {
   fun deinitializeCallback(userdata: MemorySegment, level: Int) {
     System.err.println("[kanama:kt] deinitialize: level=$level")
     if (level == INITIALIZATION_SCENE) {
+      // Task 132 D4: release what the GC can still collect before Godot's leak report runs.
+      runCatching { OwnedReleases.shutdown() }
+        .onSuccess {
+          System.err.println(
+            "[kanama:kt] shutdown GC releases: $it (total ${OwnedReleases.releasedByGc})"
+          )
+        }
+        .onFailure { System.err.println("[kanama:kt] shutdown GC releases failed: ${it.message}") }
       KanamaHotReload.shutdown()
       // The preload cache's references (task 133) go before the engine's leak check.
       runCatching { net.multigesture.kanama.api.Preloads.releaseAll() }

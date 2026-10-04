@@ -54,7 +54,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Material.wrap(ret)
+        return Material.wrapOwned(ret)
     }
 
     /**
@@ -113,7 +113,7 @@ open class Material(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     companion object {
@@ -122,9 +122,12 @@ open class Material(handle: GodotHandle) : Resource(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Material? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Material? =
+        internal fun wrapOwned(handle: RawSegment): Material? =
+            if (handle.address() == 0L) null else RefCounted.owned(Material(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Material? =
             if (handle.address() == 0L) null else Material(GodotHandle(handle))
 
         // Downcast a Resource to Material (null if not).

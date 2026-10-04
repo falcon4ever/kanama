@@ -15,9 +15,12 @@ class ResourceImporterWAV(handle: GodotHandle) : ResourceImporter(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterWAV? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterWAV? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterWAV? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterWAV(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterWAV? =
             if (handle.address() == 0L) null else ResourceImporterWAV(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -133,7 +133,7 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     fun bakeCollisionShape(): ConcavePolygonShape3D? {
-        return ConcavePolygonShape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(bakeCollisionShapeBind, segment))
+        return ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(bakeCollisionShapeBind, segment))
     }
 
     fun setCalculateTangents(enabled: Boolean) {
@@ -149,7 +149,7 @@ open class CSGShape3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     fun bakeStaticMesh(): ArrayMesh? {
-        return ArrayMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(bakeStaticMeshBind, segment))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(bakeStaticMeshBind, segment))
     }
 
     fun setAutosmooth(autosmooth: Boolean) {

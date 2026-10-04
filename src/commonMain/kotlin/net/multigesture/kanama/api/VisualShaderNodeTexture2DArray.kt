@@ -23,15 +23,18 @@ class VisualShaderNodeTexture2DArray(handle: GodotHandle) : VisualShaderNodeSamp
 
     fun getTextureArray(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureArrayBind, segment))
+        return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureArrayBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture2DArray? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTexture2DArray? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTexture2DArray? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTexture2DArray(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture2DArray? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture2DArray(GodotHandle(handle))
 
         private const val SET_TEXTURE_ARRAY_HASH = 1278366092L

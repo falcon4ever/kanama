@@ -116,7 +116,7 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventMouseButton? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseButton? =
@@ -126,9 +126,12 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         // create() on desktop, iOS and Web, for registering mouse-button input actions portably).
         @JvmStatic
         fun create(): InputEventMouseButton =
-            InputEventMouseButton(GodotHandle(ObjectCalls.constructObject("InputEventMouseButton")))
+            RefCounted.owned(InputEventMouseButton(GodotHandle(ObjectCalls.constructObject("InputEventMouseButton"))))
 
-        internal fun wrap(handle: MemorySegment): InputEventMouseButton? =
+        internal fun wrapOwned(handle: MemorySegment): InputEventMouseButton? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventMouseButton(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): InputEventMouseButton? =
             if (handle.address() == 0L) null else InputEventMouseButton(GodotHandle(handle))
 
 

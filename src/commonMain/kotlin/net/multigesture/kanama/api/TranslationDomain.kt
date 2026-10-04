@@ -80,7 +80,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTranslationObject(locale: String): Translation? {
         checkOpen()
-        return Translation.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, segment, locale))
+        return Translation.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, segment, locale))
     }
 
     /**
@@ -120,7 +120,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTranslations(): List<Translation> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, segment, Translation::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, segment, Translation::wrapBorrowed)
     }
 
     /**
@@ -154,7 +154,7 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
      */
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, segment, locale, exact, Translation::wrap)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, segment, locale, exact, Translation::wrapBorrowed)
     }
 
     /**
@@ -482,9 +482,12 @@ class TranslationDomain(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TranslationDomain? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TranslationDomain? =
+        internal fun wrapOwned(handle: RawSegment): TranslationDomain? =
+            if (handle.address() == 0L) null else RefCounted.owned(TranslationDomain(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TranslationDomain? =
             if (handle.address() == 0L) null else TranslationDomain(GodotHandle(handle))
 
         private const val GET_TRANSLATION_OBJECT_HASH = 606768082L

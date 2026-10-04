@@ -40,9 +40,12 @@ class CircleShape2D(handle: GodotHandle) : Shape2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CircleShape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CircleShape2D? =
+        internal fun wrapOwned(handle: RawSegment): CircleShape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(CircleShape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CircleShape2D? =
             if (handle.address() == 0L) null else CircleShape2D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L

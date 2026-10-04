@@ -108,18 +108,21 @@ class AudioStreamMP3(handle: GodotHandle) : AudioStream(handle) {
 
     companion object {
         fun loadFromBuffer(streamData: ByteArray): AudioStreamMP3? {
-            return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData))
+            return AudioStreamMP3.wrapOwned(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData))
         }
 
         fun loadFromFile(path: String): AudioStreamMP3? {
-            return AudioStreamMP3.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
+            return AudioStreamMP3.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamMP3? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamMP3? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamMP3? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamMP3(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamMP3? =
             if (handle.address() == 0L) null else AudioStreamMP3(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 1674970313L

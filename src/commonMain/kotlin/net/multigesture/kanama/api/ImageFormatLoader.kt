@@ -57,9 +57,12 @@ open class ImageFormatLoader(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ImageFormatLoader? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ImageFormatLoader? =
+        internal fun wrapOwned(handle: RawSegment): ImageFormatLoader? =
+            if (handle.address() == 0L) null else RefCounted.owned(ImageFormatLoader(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ImageFormatLoader? =
             if (handle.address() == 0L) null else ImageFormatLoader(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

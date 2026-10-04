@@ -29,9 +29,12 @@ class VisualShaderNodeTransformConstant(handle: GodotHandle) : VisualShaderNodeC
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformConstant? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTransformConstant? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTransformConstant? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTransformConstant(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformConstant? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformConstant(GodotHandle(handle))
 
         private const val SET_CONSTANT_HASH = 2952846383L

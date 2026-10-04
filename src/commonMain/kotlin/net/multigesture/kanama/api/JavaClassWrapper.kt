@@ -25,7 +25,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun wrap(name: String): JavaClass? {
-        return JavaClass.wrap(ObjectCalls.ptrcallWithStringArgRetObject(wrapBind, singleton, name))
+        return JavaClass.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(wrapBind, singleton, name))
     }
 
     /**
@@ -37,7 +37,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun getException(): JavaObject? {
-        return JavaObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExceptionBind, singleton))
+        return JavaObject.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getExceptionBind, singleton))
     }
 
     /**
@@ -52,7 +52,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun createSamCallback(samInterface: String, callable: GodotCallable): JavaObject? {
-        return JavaObject.wrap(ObjectCalls.ptrcallWithStringCallableArgsRetObject(createSamCallbackBind, singleton, samInterface, callable.target.segment, callable.method))
+        return JavaObject.wrapOwned(ObjectCalls.ptrcallWithStringCallableArgsRetObject(createSamCallbackBind, singleton, samInterface, callable.target.segment, callable.method))
     }
 
     /**
@@ -65,7 +65,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun createProxy(objectValue: GodotObject, interfaces: List<String>): JavaObject? {
-        return JavaObject.wrap(ObjectCalls.ptrcallWithObjectAndPackedStringListArgsRetObject(createProxyBind, singleton, objectValue.segment, interfaces))
+        return JavaObject.wrapOwned(ObjectCalls.ptrcallWithObjectAndPackedStringListArgsRetObject(createProxyBind, singleton, objectValue.segment, interfaces))
     }
 
     @JvmStatic

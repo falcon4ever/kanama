@@ -30,6 +30,7 @@ import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.MainThread
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.IosScriptErrors
+import net.multigesture.kanama.binding.runtime.OwnedReleases
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_set_first_node_in_group_text
@@ -203,6 +204,8 @@ internal object KanamaIosRuntime {
             net.multigesture.kanama.ios.cinterop.kanama_ios_godot_instance_lookup_available() != 0
         )
       log("freed-object checks: $status")
+      // The GC fallback release of owned RefCounted wrappers (task 132 D2/D5).
+      log("owned-reference GC releases: ${OwnedReleases.configureFromEngine()}")
     }
   }
 
@@ -211,6 +214,9 @@ internal object KanamaIosRuntime {
     if (level == 2) {
       // The preload cache's references (task 133) go before the engine's leak check.
       runCatching { net.multigesture.kanama.api.Preloads.releaseAll() }
+      // Task 132 D4: release what the GC can still collect before Godot's leak report runs.
+      val released = runCatching { OwnedReleases.shutdown() }.getOrDefault(-1)
+      log("shutdown GC releases: $released (total ${OwnedReleases.releasedByGc})")
       val instances = scriptInstances.size
       val resources = scriptResources.size
       scriptInstances.clear()
@@ -224,6 +230,8 @@ internal object KanamaIosRuntime {
     // Resume any coroutines parked on MainThread.awaitNextFrame() once per engine frame.
     // Runs every frame (before the probe-label early-return) so frame-based waits keep advancing.
     MainThread.pumpNextFrame()
+    // Owned RefCounted wrappers the GC collected without close() (task 132 D2).
+    OwnedReleases.drain()
     if (probeLabelUpdated || probeLabelGivenUp) {
       return
     }

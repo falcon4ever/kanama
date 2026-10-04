@@ -220,9 +220,12 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CylinderMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CylinderMesh? =
+        internal fun wrapOwned(handle: RawSegment): CylinderMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(CylinderMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CylinderMesh? =
             if (handle.address() == 0L) null else CylinderMesh(GodotHandle(handle))
 
         private const val SET_TOP_RADIUS_HASH = 373806689L

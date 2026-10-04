@@ -23,9 +23,12 @@ class EditorScenePostImport(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorScenePostImport? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorScenePostImport? =
+        internal fun wrapOwned(handle: RawSegment): EditorScenePostImport? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorScenePostImport(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorScenePostImport? =
             if (handle.address() == 0L) null else EditorScenePostImport(GodotHandle(handle))
 
         private const val GET_SOURCE_FILE_HASH = 201670096L

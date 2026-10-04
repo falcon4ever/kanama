@@ -56,9 +56,12 @@ class ConvexPolygonShape2D(handle: GodotHandle) : Shape2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ConvexPolygonShape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ConvexPolygonShape2D? =
+        internal fun wrapOwned(handle: RawSegment): ConvexPolygonShape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(ConvexPolygonShape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ConvexPolygonShape2D? =
             if (handle.address() == 0L) null else ConvexPolygonShape2D(GodotHandle(handle))
 
         private const val SET_POINT_CLOUD_HASH = 1509147220L

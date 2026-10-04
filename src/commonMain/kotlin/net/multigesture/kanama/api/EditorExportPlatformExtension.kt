@@ -61,9 +61,12 @@ class EditorExportPlatformExtension(handle: GodotHandle) : EditorExportPlatform(
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformExtension? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformExtension? =
             if (handle.address() == 0L) null else EditorExportPlatformExtension(GodotHandle(handle))
 
         private const val SET_CONFIG_ERROR_HASH = 3089850668L

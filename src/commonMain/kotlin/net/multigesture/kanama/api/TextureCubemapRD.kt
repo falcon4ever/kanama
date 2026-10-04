@@ -15,9 +15,12 @@ class TextureCubemapRD(handle: GodotHandle) : TextureLayeredRD(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextureCubemapRD? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextureCubemapRD? =
+        internal fun wrapOwned(handle: RawSegment): TextureCubemapRD? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextureCubemapRD(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextureCubemapRD? =
             if (handle.address() == 0L) null else TextureCubemapRD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

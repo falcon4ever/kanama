@@ -317,9 +317,12 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VoxelGIData? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VoxelGIData? =
+        internal fun wrapOwned(handle: RawSegment): VoxelGIData? =
+            if (handle.address() == 0L) null else RefCounted.owned(VoxelGIData(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VoxelGIData? =
             if (handle.address() == 0L) null else VoxelGIData(GodotHandle(handle))
 
         private const val ALLOCATE_HASH = 4041601946L

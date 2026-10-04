@@ -15,9 +15,12 @@ class RichTextEffect(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RichTextEffect? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RichTextEffect? =
+        internal fun wrapOwned(handle: RawSegment): RichTextEffect? =
+            if (handle.address() == 0L) null else RefCounted.owned(RichTextEffect(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RichTextEffect? =
             if (handle.address() == 0L) null else RichTextEffect(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

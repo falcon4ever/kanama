@@ -316,9 +316,12 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDPipelineRasterizationState? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDPipelineRasterizationState? =
+        internal fun wrapOwned(handle: RawSegment): RDPipelineRasterizationState? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDPipelineRasterizationState(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDPipelineRasterizationState? =
             if (handle.address() == 0L) null else RDPipelineRasterizationState(GodotHandle(handle))
 
         private const val SET_ENABLE_DEPTH_CLAMP_HASH = 2586408642L

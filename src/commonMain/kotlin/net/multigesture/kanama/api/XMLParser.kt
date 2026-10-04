@@ -248,9 +248,12 @@ class XMLParser(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XMLParser? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XMLParser? =
+        internal fun wrapOwned(handle: RawSegment): XMLParser? =
+            if (handle.address() == 0L) null else RefCounted.owned(XMLParser(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XMLParser? =
             if (handle.address() == 0L) null else XMLParser(GodotHandle(handle))
 
         private const val READ_HASH = 166280745L

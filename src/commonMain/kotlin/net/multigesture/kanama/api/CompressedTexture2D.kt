@@ -38,9 +38,12 @@ class CompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CompressedTexture2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CompressedTexture2D? =
+        internal fun wrapOwned(handle: RawSegment): CompressedTexture2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(CompressedTexture2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CompressedTexture2D? =
             if (handle.address() == 0L) null else CompressedTexture2D(GodotHandle(handle))
 
         private const val LOAD_HASH = 166001499L

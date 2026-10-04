@@ -337,20 +337,22 @@ InputMap.ActionAddEvent(action, inputKey);
 ```
 
 GDScript's script VM drops your reference the moment the variable leaves scope,
-and C#'s garbage collector drops it when the wrapper is collected. Kanama talks
-to Godot over an FFI boundary and deliberately does **not** hook the JVM garbage
-collector to native Godot lifetimes (that would risk freeing engine objects on
-the wrong thread), so it makes that one step explicit: the `use { }` above does
-exactly what GDScript's scope-exit and C#'s GC do invisibly. A created resource
-you never close leaks its reference — and Godot prints `Leaked instance: <Class>`
-at exit in editor/debug runs, which is your signal that a `use { }`/`close()` is
-missing.
+and C#'s garbage collector drops it when the wrapper is collected. Kanama does
+both: the `use { }` above releases your reference at once, as GDScript's
+scope-exit does, and a wrapper you forget is released like C#'s, after the
+garbage collector drops it (the release itself runs on the main thread at the
+next frame, never on the collector's thread). Closing is therefore about
+*when*: `use { }` releases now, the collector releases eventually. The project
+setting `kanama/debug/log_gc_releases` names every creation site the collector
+had to clean up after. See
+[Resource Ownership](godot-api.md#a-forgotten-close-is-a-late-release).
 
 The **Web (Kotlin/Wasm)** backend reaches Godot over a JavaScript *handle bridge*
-rather than an FFI pointer boundary, but the rule is identical: `close()`/`use { }`
-emits a release-handle command that drops the engine-side reference, and the bridge
-does not GC handles for you either — so the same code, unchanged, is correct on
-Web. Only the mechanism differs; see
+rather than an FFI pointer boundary: `close()`/`use { }` emits a release-handle
+command that drops the engine-side reference, but the bridge does not GC handles
+for you yet, so on Web a forgotten `close()` still keeps the reference until the
+owning script tears down. The same code, with its `use { }`, is correct on every
+backend. Only the mechanism differs; see
 [Web internals → RefCounted resource ownership](../contributing/backends/web.md).
 
 For more detail, see [Calling Godot APIs](godot-api.md#resource-ownership).

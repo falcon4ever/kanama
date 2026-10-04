@@ -13,9 +13,12 @@ class VisualShaderNodeRotationByAxis(handle: GodotHandle) : VisualShaderNode(han
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeRotationByAxis? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeRotationByAxis? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeRotationByAxis? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeRotationByAxis(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeRotationByAxis? =
             if (handle.address() == 0L) null else VisualShaderNodeRotationByAxis(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

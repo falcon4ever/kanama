@@ -212,9 +212,12 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectChorus? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectChorus? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectChorus? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectChorus(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectChorus? =
             if (handle.address() == 0L) null else AudioEffectChorus(GodotHandle(handle))
 
         private const val SET_VOICE_COUNT_HASH = 1286410249L

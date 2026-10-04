@@ -16,9 +16,12 @@ class ResourceImporterSVG(handle: GodotHandle) : ResourceImporter(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterSVG? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterSVG? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterSVG? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterSVG(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterSVG? =
             if (handle.address() == 0L) null else ResourceImporterSVG(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

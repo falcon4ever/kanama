@@ -2487,7 +2487,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_icon
      */
     fun getLineGutterIcon(line: Int, gutter: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getLineGutterIconBind, segment, line, gutter))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getLineGutterIconBind, segment, line, gutter))
     }
 
     /**
@@ -2567,7 +2567,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_syntax_highlighter
      */
     fun getSyntaxHighlighter(): SyntaxHighlighter? {
-        return SyntaxHighlighter.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSyntaxHighlighterBind, segment))
+        return SyntaxHighlighter.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSyntaxHighlighterBind, segment))
     }
 
     /**

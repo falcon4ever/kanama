@@ -41,9 +41,12 @@ open class TextureLayeredRD(handle: GodotHandle) : TextureLayered(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextureLayeredRD? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextureLayeredRD? =
+        internal fun wrapOwned(handle: RawSegment): TextureLayeredRD? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextureLayeredRD(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextureLayeredRD? =
             if (handle.address() == 0L) null else TextureLayeredRD(GodotHandle(handle))
 
         private const val SET_TEXTURE_RD_RID_HASH = 2722037293L

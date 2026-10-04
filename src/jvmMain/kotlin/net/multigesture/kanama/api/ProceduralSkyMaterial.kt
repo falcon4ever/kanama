@@ -201,7 +201,7 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getSkyCover(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkyCoverBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkyCoverBind, segment))
     }
 
     /**
@@ -393,9 +393,12 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ProceduralSkyMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ProceduralSkyMaterial? =
+        internal fun wrapOwned(handle: MemorySegment): ProceduralSkyMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(ProceduralSkyMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): ProceduralSkyMaterial? =
             if (handle.address() == 0L) null else ProceduralSkyMaterial(GodotHandle(handle))
 
         // Downcast a Resource to ProceduralSkyMaterial (null if not).

@@ -54,9 +54,12 @@ class GLTFAnimation(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFAnimation? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFAnimation? =
+        internal fun wrapOwned(handle: RawSegment): GLTFAnimation? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFAnimation(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFAnimation? =
             if (handle.address() == 0L) null else GLTFAnimation(GodotHandle(handle))
 
         private const val GET_ORIGINAL_NAME_HASH = 2841200299L

@@ -15,9 +15,12 @@ class AudioSamplePlayback(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioSamplePlayback? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioSamplePlayback? =
+        internal fun wrapOwned(handle: RawSegment): AudioSamplePlayback? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioSamplePlayback(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioSamplePlayback? =
             if (handle.address() == 0L) null else AudioSamplePlayback(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

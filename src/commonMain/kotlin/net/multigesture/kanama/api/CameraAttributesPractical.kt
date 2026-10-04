@@ -296,9 +296,12 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CameraAttributesPractical? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CameraAttributesPractical? =
+        internal fun wrapOwned(handle: RawSegment): CameraAttributesPractical? =
+            if (handle.address() == 0L) null else RefCounted.owned(CameraAttributesPractical(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CameraAttributesPractical? =
             if (handle.address() == 0L) null else CameraAttributesPractical(GodotHandle(handle))
 
         private const val SET_DOF_BLUR_FAR_ENABLED_HASH = 2586408642L

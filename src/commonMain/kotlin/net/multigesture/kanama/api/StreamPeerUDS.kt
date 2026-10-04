@@ -45,9 +45,12 @@ class StreamPeerUDS(handle: GodotHandle) : StreamPeerSocket(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeerUDS? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StreamPeerUDS? =
+        internal fun wrapOwned(handle: RawSegment): StreamPeerUDS? =
+            if (handle.address() == 0L) null else RefCounted.owned(StreamPeerUDS(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StreamPeerUDS? =
             if (handle.address() == 0L) null else StreamPeerUDS(GodotHandle(handle))
 
         private const val BIND_HASH = 166001499L

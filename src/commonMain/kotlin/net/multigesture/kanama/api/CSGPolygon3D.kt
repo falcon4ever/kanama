@@ -240,7 +240,7 @@ class CSGPolygon3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     fun setSmoothFaces(smoothFaces: Boolean) {

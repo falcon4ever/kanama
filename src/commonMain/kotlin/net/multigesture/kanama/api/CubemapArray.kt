@@ -22,15 +22,18 @@ class CubemapArray(handle: GodotHandle) : ImageTextureLayered(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CubemapArray? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CubemapArray? =
+        internal fun wrapOwned(handle: RawSegment): CubemapArray? =
+            if (handle.address() == 0L) null else RefCounted.owned(CubemapArray(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CubemapArray? =
             if (handle.address() == 0L) null else CubemapArray(GodotHandle(handle))
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L

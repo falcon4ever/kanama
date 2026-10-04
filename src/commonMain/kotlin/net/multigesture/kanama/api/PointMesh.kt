@@ -15,9 +15,12 @@ class PointMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PointMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PointMesh? =
+        internal fun wrapOwned(handle: RawSegment): PointMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(PointMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PointMesh? =
             if (handle.address() == 0L) null else PointMesh(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -102,7 +102,7 @@ class NoiseTexture2D internal constructor(handle: GodotHandle) : Texture2D(handl
 
     fun getNoise(): Noise? {
         checkOpen()
-        return Noise.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, segment))
+        return Noise.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNoiseBind, segment))
     }
 
     fun setColorRamp(gradient: Gradient?) {
@@ -116,7 +116,7 @@ class NoiseTexture2D internal constructor(handle: GodotHandle) : Texture2D(handl
 
     fun getColorRamp(): Gradient? {
         checkOpen()
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     fun setSeamless(seamless: Boolean) {
@@ -192,7 +192,7 @@ class NoiseTexture2D internal constructor(handle: GodotHandle) : Texture2D(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NoiseTexture2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
         @JvmStatic
         fun fromObject(value: GodotObject): NoiseTexture2D? =
@@ -202,7 +202,10 @@ class NoiseTexture2D internal constructor(handle: GodotHandle) : Texture2D(handl
         fun fromResource(value: Resource): NoiseTexture2D? =
             if (value.isClass("NoiseTexture2D")) NoiseTexture2D(value.handle) else null
 
-        internal fun wrap(handle: MemorySegment): NoiseTexture2D? =
+        internal fun wrapOwned(handle: MemorySegment): NoiseTexture2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(NoiseTexture2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): NoiseTexture2D? =
             if (handle.address() == 0L) null else NoiseTexture2D(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L

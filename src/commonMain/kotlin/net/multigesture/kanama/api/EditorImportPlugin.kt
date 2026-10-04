@@ -31,9 +31,12 @@ class EditorImportPlugin(handle: GodotHandle) : ResourceImporter(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorImportPlugin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorImportPlugin? =
+        internal fun wrapOwned(handle: RawSegment): EditorImportPlugin? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorImportPlugin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorImportPlugin? =
             if (handle.address() == 0L) null else EditorImportPlugin(GodotHandle(handle))
 
         private const val APPEND_IMPORT_EXTERNAL_RESOURCE_HASH = 320493106L

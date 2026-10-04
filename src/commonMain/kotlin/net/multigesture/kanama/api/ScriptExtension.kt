@@ -13,9 +13,12 @@ class ScriptExtension(handle: GodotHandle) : Script(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ScriptExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ScriptExtension? =
+        internal fun wrapOwned(handle: RawSegment): ScriptExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(ScriptExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ScriptExtension? =
             if (handle.address() == 0L) null else ScriptExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

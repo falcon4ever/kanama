@@ -13,9 +13,12 @@ open class GLTFDocumentExtension(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFDocumentExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFDocumentExtension? =
+        internal fun wrapOwned(handle: RawSegment): GLTFDocumentExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFDocumentExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFDocumentExtension? =
             if (handle.address() == 0L) null else GLTFDocumentExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

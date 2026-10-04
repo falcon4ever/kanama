@@ -23,7 +23,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.from")
+        return requireGodotReturn(PropertyTweener.wrapOwned(ret), "PropertyTweener.from")
     }
 
     /**
@@ -40,7 +40,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.from_current")
+        return requireGodotReturn(PropertyTweener.wrapOwned(ret), "PropertyTweener.from_current")
     }
 
     /**
@@ -55,7 +55,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.as_relative")
+        return requireGodotReturn(PropertyTweener.wrapOwned(ret), "PropertyTweener.as_relative")
     }
 
     /**
@@ -71,7 +71,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.set_trans")
+        return requireGodotReturn(PropertyTweener.wrapOwned(ret), "PropertyTweener.set_trans")
     }
 
     /**
@@ -87,7 +87,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.set_ease")
+        return requireGodotReturn(PropertyTweener.wrapOwned(ret), "PropertyTweener.set_ease")
     }
 
     /**
@@ -106,7 +106,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.set_custom_interpolator")
+        return requireGodotReturn(PropertyTweener.wrapOwned(ret), "PropertyTweener.set_custom_interpolator")
     }
 
     /**
@@ -122,15 +122,18 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(PropertyTweener.wrap(ret), "PropertyTweener.set_delay")
+        return requireGodotReturn(PropertyTweener.wrapOwned(ret), "PropertyTweener.set_delay")
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PropertyTweener? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PropertyTweener? =
+        internal fun wrapOwned(handle: RawSegment): PropertyTweener? =
+            if (handle.address() == 0L) null else RefCounted.owned(PropertyTweener(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PropertyTweener? =
             if (handle.address() == 0L) null else PropertyTweener(GodotHandle(handle))
 
         private const val FROM_HASH = 4190193059L

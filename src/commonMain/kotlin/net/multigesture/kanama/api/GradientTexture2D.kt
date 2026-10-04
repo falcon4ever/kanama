@@ -67,7 +67,7 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getGradient(): Gradient? {
         checkOpen()
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGradientBind, segment))
     }
 
     /**
@@ -269,9 +269,12 @@ class GradientTexture2D(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GradientTexture2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GradientTexture2D? =
+        internal fun wrapOwned(handle: RawSegment): GradientTexture2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(GradientTexture2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GradientTexture2D? =
             if (handle.address() == 0L) null else GradientTexture2D(GodotHandle(handle))
 
         private const val SET_GRADIENT_HASH = 2756054477L

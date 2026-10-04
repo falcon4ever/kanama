@@ -79,7 +79,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.get_edited_resource
      */
     fun getEditedResource(): Resource? {
-        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedResourceBind, segment))
+        return Resource.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEditedResourceBind, segment))
     }
 
     /**

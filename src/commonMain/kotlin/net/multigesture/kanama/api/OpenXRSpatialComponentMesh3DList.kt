@@ -16,15 +16,18 @@ class OpenXRSpatialComponentMesh3DList(handle: GodotHandle) : OpenXRSpatialCompo
 
     fun getMesh(index: Long): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getMeshBind, segment, index))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getMeshBind, segment, index))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentMesh3DList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentMesh3DList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentMesh3DList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentMesh3DList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentMesh3DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentMesh3DList(GodotHandle(handle))
 
         private const val GET_TRANSFORM_HASH = 1965739696L

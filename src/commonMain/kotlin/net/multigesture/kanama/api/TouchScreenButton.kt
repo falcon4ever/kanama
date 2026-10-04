@@ -82,7 +82,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_texture_normal
      */
     fun getTextureNormal(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureNormalBind, segment))
     }
 
     /**
@@ -100,7 +100,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_texture_pressed
      */
     fun getTexturePressed(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTexturePressedBind, segment))
     }
 
     /**
@@ -118,7 +118,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_bitmask
      */
     fun getBitmask(): BitMap? {
-        return BitMap.wrap(ObjectCalls.ptrcallNoArgsRetObject(getBitmaskBind, segment))
+        return BitMap.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getBitmaskBind, segment))
     }
 
     /**
@@ -136,7 +136,7 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TouchScreenButton.get_shape
      */
     fun getShape(): Shape2D? {
-        return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
+        return Shape2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**

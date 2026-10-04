@@ -13,9 +13,12 @@ class FBXDocument(handle: GodotHandle) : GLTFDocument(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FBXDocument? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): FBXDocument? =
+        internal fun wrapOwned(handle: RawSegment): FBXDocument? =
+            if (handle.address() == 0L) null else RefCounted.owned(FBXDocument(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): FBXDocument? =
             if (handle.address() == 0L) null else FBXDocument(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

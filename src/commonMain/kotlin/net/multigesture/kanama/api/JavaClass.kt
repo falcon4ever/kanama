@@ -43,7 +43,7 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return JavaClass.wrap(ret)
+        return JavaClass.wrapOwned(ret)
     }
 
     /**
@@ -59,9 +59,12 @@ class JavaClass(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): JavaClass? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): JavaClass? =
+        internal fun wrapOwned(handle: RawSegment): JavaClass? =
+            if (handle.address() == 0L) null else RefCounted.owned(JavaClass(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): JavaClass? =
             if (handle.address() == 0L) null else JavaClass(GodotHandle(handle))
 
         private const val GET_JAVA_CLASS_NAME_HASH = 201670096L

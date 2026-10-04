@@ -46,7 +46,7 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**

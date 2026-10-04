@@ -149,9 +149,12 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StyleBoxLine? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StyleBoxLine? =
+        internal fun wrapOwned(handle: RawSegment): StyleBoxLine? =
+            if (handle.address() == 0L) null else RefCounted.owned(StyleBoxLine(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StyleBoxLine? =
             if (handle.address() == 0L) null else StyleBoxLine(GodotHandle(handle))
 
         private const val SET_COLOR_HASH = 2920490490L

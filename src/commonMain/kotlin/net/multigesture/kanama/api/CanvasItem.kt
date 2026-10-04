@@ -989,7 +989,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_world_2d
      */
     fun getWorld2d(): World2D? {
-        return World2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
+        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
     }
 
     /**
@@ -1007,7 +1007,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     /**
@@ -1124,7 +1124,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.make_input_local
      */
     fun makeInputLocal(event: InputEvent): InputEvent {
-        return requireGodotReturn(InputEvent.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, segment, event.requireOpenHandle())), "CanvasItem.make_input_local")
+        return requireGodotReturn(InputEvent.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, segment, event.requireOpenHandle())), "CanvasItem.make_input_local")
     }
 
     /**

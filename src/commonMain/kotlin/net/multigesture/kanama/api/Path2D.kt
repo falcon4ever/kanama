@@ -33,7 +33,7 @@ class Path2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Path2D.get_curve
      */
     fun getCurve(): Curve2D? {
-        return Curve2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     companion object {

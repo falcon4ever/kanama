@@ -27,9 +27,12 @@ class OpenXRSpatialContextPersistenceConfig(handle: GodotHandle) : OpenXRStructu
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialContextPersistenceConfig? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialContextPersistenceConfig? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialContextPersistenceConfig? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialContextPersistenceConfig(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialContextPersistenceConfig? =
             if (handle.address() == 0L) null else OpenXRSpatialContextPersistenceConfig(GodotHandle(handle))
 
         private const val ADD_PERSISTENCE_CONTEXT_HASH = 2722037293L

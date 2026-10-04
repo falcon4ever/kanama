@@ -126,7 +126,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getImage(): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getImageBind, segment))
+        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getImageBind, segment))
     }
 
     /**
@@ -141,15 +141,18 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Texture2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Texture2D? =
+        internal fun wrapOwned(handle: RawSegment): Texture2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(Texture2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Texture2D? =
             if (handle.address() == 0L) null else Texture2D(GodotHandle(handle))
 
         private const val GET_FORMAT_HASH = 3847873762L

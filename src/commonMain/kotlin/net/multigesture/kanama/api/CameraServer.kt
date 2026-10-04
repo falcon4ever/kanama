@@ -54,7 +54,7 @@ object CameraServer {
      */
     @JvmStatic
     fun getFeed(index: Int): CameraFeed? {
-        return CameraFeed.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getFeedBind, singleton, index))
+        return CameraFeed.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getFeedBind, singleton, index))
     }
 
     /**
@@ -74,7 +74,7 @@ object CameraServer {
      */
     @JvmStatic
     fun feeds(): List<CameraFeed> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(feedsBind, singleton, CameraFeed::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(feedsBind, singleton, CameraFeed::wrapBorrowed)
     }
 
     /**

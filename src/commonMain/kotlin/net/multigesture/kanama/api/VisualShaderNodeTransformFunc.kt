@@ -38,9 +38,12 @@ class VisualShaderNodeTransformFunc(handle: GodotHandle) : VisualShaderNode(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformFunc? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTransformFunc? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTransformFunc? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTransformFunc(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformFunc(GodotHandle(handle))
 
         private const val SET_FUNCTION_HASH = 2900990409L

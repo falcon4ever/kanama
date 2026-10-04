@@ -1618,7 +1618,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
      */
     fun getTexture(param: BaseMaterial3D.TextureParam): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, param.value))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getTextureBind, segment, param.value))
     }
 
     /**
@@ -3710,9 +3710,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BaseMaterial3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): BaseMaterial3D? =
+        internal fun wrapOwned(handle: RawSegment): BaseMaterial3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(BaseMaterial3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): BaseMaterial3D? =
             if (handle.address() == 0L) null else BaseMaterial3D(GodotHandle(handle))
 
         // Downcast a Material to BaseMaterial3D (null if not).

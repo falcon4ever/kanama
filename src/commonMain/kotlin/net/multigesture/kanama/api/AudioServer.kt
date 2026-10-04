@@ -293,7 +293,7 @@ object AudioServer {
      */
     @JvmStatic
     fun getBusEffect(busIdx: Int, effectIdx: Int): AudioEffect? {
-        return AudioEffect.wrap(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getBusEffectBind, singleton, busIdx, effectIdx))
+        return AudioEffect.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getBusEffectBind, singleton, busIdx, effectIdx))
     }
 
     /**
@@ -304,7 +304,7 @@ object AudioServer {
      */
     @JvmStatic
     fun getBusEffectInstance(busIdx: Int, effectIdx: Int, channel: Int = 0): AudioEffectInstance? {
-        return AudioEffectInstance.wrap(ObjectCalls.ptrcallWithThreeIntArgsRetObject(getBusEffectInstanceBind, singleton, busIdx, effectIdx, channel))
+        return AudioEffectInstance.wrapOwned(ObjectCalls.ptrcallWithThreeIntArgsRetObject(getBusEffectInstanceBind, singleton, busIdx, effectIdx, channel))
     }
 
     /**
@@ -621,7 +621,7 @@ object AudioServer {
      */
     @JvmStatic
     fun generateBusLayout(): AudioBusLayout? {
-        return AudioBusLayout.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateBusLayoutBind, singleton))
+        return AudioBusLayout.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateBusLayoutBind, singleton))
     }
 
     /**

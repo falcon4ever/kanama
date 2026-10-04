@@ -127,9 +127,12 @@ class AudioEffectSpectrumAnalyzer(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectSpectrumAnalyzer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectSpectrumAnalyzer? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectSpectrumAnalyzer? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectSpectrumAnalyzer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectSpectrumAnalyzer? =
             if (handle.address() == 0L) null else AudioEffectSpectrumAnalyzer(GodotHandle(handle))
 
         private const val SET_BUFFER_LENGTH_HASH = 373806689L

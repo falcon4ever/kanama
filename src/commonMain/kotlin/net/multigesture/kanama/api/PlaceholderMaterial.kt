@@ -15,9 +15,12 @@ class PlaceholderMaterial(handle: GodotHandle) : Material(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PlaceholderMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PlaceholderMaterial? =
+        internal fun wrapOwned(handle: RawSegment): PlaceholderMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(PlaceholderMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PlaceholderMaterial? =
             if (handle.address() == 0L) null else PlaceholderMaterial(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -304,7 +304,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     /**
@@ -320,7 +320,7 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     /**
@@ -386,13 +386,16 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         fun fromHandle(handle: GodotHandle): Resource =
             Resource(handle)
 
-        internal fun wrap(handle: RawSegment): Resource? =
+        internal fun wrapOwned(handle: RawSegment): Resource? =
+            if (handle.address() == 0L) null else RefCounted.owned(Resource(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Resource? =
             if (handle.address() == 0L) null else Resource(GodotHandle(handle))
 
         // Instantiate a Resource.
         @JvmStatic
         fun create(): Resource =
-            Resource(GodotHandle(ObjectCalls.constructObject("Resource")))
+            RefCounted.owned(Resource(GodotHandle(ObjectCalls.constructObject("Resource"))))
 
         // Downcast a GodotObject to Resource (null if not).
         @JvmStatic

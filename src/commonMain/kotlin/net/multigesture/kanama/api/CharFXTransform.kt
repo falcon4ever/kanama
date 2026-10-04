@@ -395,9 +395,12 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CharFXTransform? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CharFXTransform? =
+        internal fun wrapOwned(handle: RawSegment): CharFXTransform? =
+            if (handle.address() == 0L) null else RefCounted.owned(CharFXTransform(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CharFXTransform? =
             if (handle.address() == 0L) null else CharFXTransform(GodotHandle(handle))
 
         private const val GET_TRANSFORM_HASH = 3761352769L

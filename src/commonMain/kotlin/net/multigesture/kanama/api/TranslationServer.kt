@@ -211,7 +211,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun getTranslationObject(locale: String): Translation? {
-        return Translation.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, singleton, locale))
+        return Translation.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getTranslationObjectBind, singleton, locale))
     }
 
     /**
@@ -222,7 +222,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun getTranslations(): List<Translation> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, singleton, Translation::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTranslationsBind, singleton, Translation::wrapBorrowed)
     }
 
     /**
@@ -234,7 +234,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun findTranslations(locale: String, exact: Boolean): List<Translation> {
-        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, singleton, locale, exact, Translation::wrap)
+        return ObjectCalls.ptrcallWithStringAndBoolArgRetTypedObjectList(findTranslationsBind, singleton, locale, exact, Translation::wrapBorrowed)
     }
 
     /**
@@ -277,7 +277,7 @@ object TranslationServer {
      */
     @JvmStatic
     fun getOrAddDomain(domain: String): TranslationDomain? {
-        return TranslationDomain.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getOrAddDomainBind, singleton, domain))
+        return TranslationDomain.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getOrAddDomainBind, singleton, domain))
     }
 
     /**

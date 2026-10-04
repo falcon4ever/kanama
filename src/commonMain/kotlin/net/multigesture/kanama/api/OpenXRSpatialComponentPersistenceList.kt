@@ -21,9 +21,12 @@ class OpenXRSpatialComponentPersistenceList(handle: GodotHandle) : OpenXRSpatial
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPersistenceList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentPersistenceList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentPersistenceList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentPersistenceList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPersistenceList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPersistenceList(GodotHandle(handle))
 
         private const val GET_PERSISTENT_UUID_HASH = 844755477L

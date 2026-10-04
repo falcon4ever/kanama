@@ -28,9 +28,12 @@ class OpenXRSpatialComponentPlaneSemanticLabelList(handle: GodotHandle) : OpenXR
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPlaneSemanticLabelList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPlaneSemanticLabelList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneSemanticLabelList(GodotHandle(handle))
 
         private const val GET_PLANE_SEMANTIC_LABEL_HASH = 1889332427L

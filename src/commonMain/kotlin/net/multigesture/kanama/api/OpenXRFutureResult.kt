@@ -50,9 +50,12 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRFutureResult? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRFutureResult? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRFutureResult? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRFutureResult(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRFutureResult? =
             if (handle.address() == 0L) null else OpenXRFutureResult(GodotHandle(handle))
 
         private const val GET_STATUS_HASH = 2023607463L

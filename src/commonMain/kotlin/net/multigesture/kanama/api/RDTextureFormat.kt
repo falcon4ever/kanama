@@ -329,9 +329,12 @@ class RDTextureFormat(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDTextureFormat? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDTextureFormat? =
+        internal fun wrapOwned(handle: RawSegment): RDTextureFormat? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDTextureFormat(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDTextureFormat? =
             if (handle.address() == 0L) null else RDTextureFormat(GodotHandle(handle))
 
         private const val SET_FORMAT_HASH = 565531219L

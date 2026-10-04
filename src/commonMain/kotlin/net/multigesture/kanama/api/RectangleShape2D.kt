@@ -41,9 +41,12 @@ class RectangleShape2D(handle: GodotHandle) : Shape2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RectangleShape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RectangleShape2D? =
+        internal fun wrapOwned(handle: RawSegment): RectangleShape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(RectangleShape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RectangleShape2D? =
             if (handle.address() == 0L) null else RectangleShape2D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L

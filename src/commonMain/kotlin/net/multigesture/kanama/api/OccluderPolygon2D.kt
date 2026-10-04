@@ -114,9 +114,12 @@ class OccluderPolygon2D(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OccluderPolygon2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OccluderPolygon2D? =
+        internal fun wrapOwned(handle: RawSegment): OccluderPolygon2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(OccluderPolygon2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OccluderPolygon2D? =
             if (handle.address() == 0L) null else OccluderPolygon2D(GodotHandle(handle))
 
         private const val SET_CLOSED_HASH = 2586408642L

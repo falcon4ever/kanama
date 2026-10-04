@@ -189,9 +189,12 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationPathQueryResult3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): NavigationPathQueryResult3D? =
+        internal fun wrapOwned(handle: RawSegment): NavigationPathQueryResult3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(NavigationPathQueryResult3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): NavigationPathQueryResult3D? =
             if (handle.address() == 0L) null else NavigationPathQueryResult3D(GodotHandle(handle))
 
         private const val SET_PATH_HASH = 334873810L

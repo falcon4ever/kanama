@@ -72,7 +72,7 @@ class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
      * Generated from Godot docs: AreaLight3D.get_area_texture
      */
     fun getAreaTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAreaTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAreaTextureBind, segment))
     }
 
     /**

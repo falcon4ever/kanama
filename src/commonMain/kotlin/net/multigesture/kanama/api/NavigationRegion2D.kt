@@ -76,7 +76,7 @@ class NavigationRegion2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationRegion2D.get_navigation_polygon
      */
     fun getNavigationPolygon(): NavigationPolygon? {
-        return NavigationPolygon.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationPolygonBind, segment))
+        return NavigationPolygon.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNavigationPolygonBind, segment))
     }
 
     /**

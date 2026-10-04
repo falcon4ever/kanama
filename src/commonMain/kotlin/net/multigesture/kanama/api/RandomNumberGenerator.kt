@@ -164,9 +164,12 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RandomNumberGenerator? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RandomNumberGenerator? =
+        internal fun wrapOwned(handle: RawSegment): RandomNumberGenerator? =
+            if (handle.address() == 0L) null else RefCounted.owned(RandomNumberGenerator(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RandomNumberGenerator? =
             if (handle.address() == 0L) null else RandomNumberGenerator(GodotHandle(handle))
 
         private const val SET_SEED_HASH = 1286410249L

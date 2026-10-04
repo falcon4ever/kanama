@@ -76,12 +76,12 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
 
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun getShape(thickness: Double = 0.01): Shape3D? {
         checkOpen()
-        return Shape3D.wrap(ObjectCalls.ptrcallWithDoubleArgRetObject(getShapeBind, segment, thickness))
+        return Shape3D.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(getShapeBind, segment, thickness))
     }
 
     object Signals {
@@ -91,9 +91,12 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRPlaneTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRPlaneTracker? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRPlaneTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRPlaneTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRPlaneTracker? =
             if (handle.address() == 0L) null else OpenXRPlaneTracker(GodotHandle(handle))
 
         private const val SET_BOUNDS_SIZE_HASH = 743155724L

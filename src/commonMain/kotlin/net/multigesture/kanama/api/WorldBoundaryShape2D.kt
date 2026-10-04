@@ -75,9 +75,12 @@ class WorldBoundaryShape2D(handle: GodotHandle) : Shape2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WorldBoundaryShape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WorldBoundaryShape2D? =
+        internal fun wrapOwned(handle: RawSegment): WorldBoundaryShape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(WorldBoundaryShape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WorldBoundaryShape2D? =
             if (handle.address() == 0L) null else WorldBoundaryShape2D(GodotHandle(handle))
 
         private const val SET_NORMAL_HASH = 743155724L

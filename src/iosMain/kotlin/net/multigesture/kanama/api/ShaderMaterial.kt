@@ -23,7 +23,7 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
 
     fun getShader(): Shader? {
         checkOpen()
-        return Shader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, segment))
+        return Shader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShaderBind, segment))
     }
 
     fun setShaderParameter(param: String, value: Any?) {
@@ -39,9 +39,12 @@ class ShaderMaterial(handle: GodotHandle) : Material(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ShaderMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ShaderMaterial? =
+        internal fun wrapOwned(handle: MemorySegment): ShaderMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(ShaderMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): ShaderMaterial? =
             if (handle.address() == 0L) null else ShaderMaterial(GodotHandle(handle))
 
         // Downcast a Resource to ShaderMaterial (null if not).

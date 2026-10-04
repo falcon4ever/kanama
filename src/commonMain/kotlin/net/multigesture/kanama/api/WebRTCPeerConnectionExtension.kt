@@ -13,9 +13,12 @@ class WebRTCPeerConnectionExtension(handle: GodotHandle) : WebRTCPeerConnection(
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebRTCPeerConnectionExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WebRTCPeerConnectionExtension? =
+        internal fun wrapOwned(handle: RawSegment): WebRTCPeerConnectionExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(WebRTCPeerConnectionExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WebRTCPeerConnectionExtension? =
             if (handle.address() == 0L) null else WebRTCPeerConnectionExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

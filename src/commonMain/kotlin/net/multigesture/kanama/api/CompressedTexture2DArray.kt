@@ -15,9 +15,12 @@ class CompressedTexture2DArray(handle: GodotHandle) : CompressedTextureLayered(h
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CompressedTexture2DArray? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CompressedTexture2DArray? =
+        internal fun wrapOwned(handle: RawSegment): CompressedTexture2DArray? =
+            if (handle.address() == 0L) null else RefCounted.owned(CompressedTexture2DArray(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CompressedTexture2DArray? =
             if (handle.address() == 0L) null else CompressedTexture2DArray(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

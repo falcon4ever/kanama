@@ -116,9 +116,12 @@ open class VisualShaderNodeGroupBase(handle: GodotHandle) : VisualShaderNodeResi
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeGroupBase? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeGroupBase? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeGroupBase? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeGroupBase(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeGroupBase? =
             if (handle.address() == 0L) null else VisualShaderNodeGroupBase(GodotHandle(handle))
 
         private const val SET_INPUTS_HASH = 83702148L

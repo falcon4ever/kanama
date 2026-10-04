@@ -182,8 +182,9 @@ still holds. Which wrappers are yours is fixed by how you got them:
 - **Owned — close it.** `X.create()`, `ResourceLoader.load…`, and every
   `RefCounted`-typed method return, including plain getters such as
   `meshInstance.getMesh()` or `animationPlayer.getAnimation("walk")`. Not
-  closing one leaks the reference, and Godot prints `Leaked instance: <Class>`
-  at shutdown.
+  closing one keeps the reference until the garbage collector drops the
+  wrapper (task 132), so ported demos still close them: the demos are the
+  examples people copy, and Web has no collector fallback yet.
 - **Borrowed — never close it.** A view you minted around a handle you already
   had: `Resource.fromHandle(...)`, or a script-class constructor over an
   existing object.

@@ -107,7 +107,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_texture
      */
     fun getTexture(): Texture3D? {
-        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**

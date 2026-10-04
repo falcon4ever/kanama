@@ -13,9 +13,12 @@ class VisualShaderNodeDistanceFade(handle: GodotHandle) : VisualShaderNode(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeDistanceFade? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeDistanceFade? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeDistanceFade? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeDistanceFade(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDistanceFade? =
             if (handle.address() == 0L) null else VisualShaderNodeDistanceFade(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

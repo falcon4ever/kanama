@@ -176,9 +176,12 @@ class SceneMultiplayer(handle: GodotHandle) : MultiplayerAPI(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneMultiplayer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SceneMultiplayer? =
+        internal fun wrapOwned(handle: MemorySegment): SceneMultiplayer? =
+            if (handle.address() == 0L) null else RefCounted.owned(SceneMultiplayer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): SceneMultiplayer? =
             if (handle.address() == 0L) null else SceneMultiplayer(GodotHandle(handle))
 
         // Downcast a MultiplayerAPI to SceneMultiplayer (null if not).

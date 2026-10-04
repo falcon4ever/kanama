@@ -78,9 +78,12 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ZIPPacker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ZIPPacker? =
+        internal fun wrapOwned(handle: RawSegment): ZIPPacker? =
+            if (handle.address() == 0L) null else RefCounted.owned(ZIPPacker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ZIPPacker? =
             if (handle.address() == 0L) null else ZIPPacker(GodotHandle(handle))
 
         private const val OPEN_HASH = 1936816515L

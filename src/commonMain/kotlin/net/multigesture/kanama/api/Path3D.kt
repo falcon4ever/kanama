@@ -40,7 +40,7 @@ class Path3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Path3D.get_curve
      */
     fun getCurve(): Curve3D? {
-        return Curve3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     /**

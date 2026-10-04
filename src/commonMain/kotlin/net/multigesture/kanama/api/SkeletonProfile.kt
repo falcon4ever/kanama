@@ -137,7 +137,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
      */
     fun getTexture(groupIdx: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTextureBind, segment, groupIdx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getTextureBind, segment, groupIdx))
     }
 
     /**
@@ -392,9 +392,12 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonProfile? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkeletonProfile? =
+        internal fun wrapOwned(handle: RawSegment): SkeletonProfile? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkeletonProfile(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkeletonProfile? =
             if (handle.address() == 0L) null else SkeletonProfile(GodotHandle(handle))
 
         private const val SET_ROOT_BONE_HASH = 3304788590L

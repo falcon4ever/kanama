@@ -71,7 +71,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
 
     fun getActionSet(): OpenXRActionSet? {
         checkOpen()
-        return OpenXRActionSet.wrap(ObjectCalls.ptrcallNoArgsRetObject(getActionSetBind, segment))
+        return OpenXRActionSet.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getActionSetBind, segment))
     }
 
     fun setInputPath(inputPath: String) {
@@ -141,7 +141,7 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
 
     fun getOnHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, segment))
+        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, segment))
     }
 
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
@@ -151,15 +151,18 @@ class OpenXRDpadBindingModifier(handle: GodotHandle) : OpenXRIPBindingModifier(h
 
     fun getOffHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, segment))
+        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRDpadBindingModifier? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRDpadBindingModifier? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRDpadBindingModifier? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRDpadBindingModifier(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRDpadBindingModifier? =
             if (handle.address() == 0L) null else OpenXRDpadBindingModifier(GodotHandle(handle))
 
         private const val SET_ACTION_SET_HASH = 2093310581L

@@ -42,9 +42,12 @@ open class VideoStream(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VideoStream? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VideoStream? =
+        internal fun wrapOwned(handle: RawSegment): VideoStream? =
+            if (handle.address() == 0L) null else RefCounted.owned(VideoStream(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VideoStream? =
             if (handle.address() == 0L) null else VideoStream(GodotHandle(handle))
 
         private const val SET_FILE_HASH = 83702148L

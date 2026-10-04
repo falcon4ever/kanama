@@ -37,7 +37,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun getInterface(interfaceValue: String): JavaScriptObject? {
-        return JavaScriptObject.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getInterfaceBind, singleton, interfaceValue))
+        return JavaScriptObject.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getInterfaceBind, singleton, interfaceValue))
     }
 
     /**
@@ -52,7 +52,7 @@ object JavaScriptBridge {
      */
     @JvmStatic
     fun createCallback(callable: GodotCallable): JavaScriptObject? {
-        return JavaScriptObject.wrap(ObjectCalls.ptrcallWithCallableArgRetObject(createCallbackBind, singleton, callable.target.segment, callable.method))
+        return JavaScriptObject.wrapOwned(ObjectCalls.ptrcallWithCallableArgRetObject(createCallbackBind, singleton, callable.target.segment, callable.method))
     }
 
     /**

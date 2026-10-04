@@ -49,9 +49,12 @@ class Mutex(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Mutex? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Mutex? =
+        internal fun wrapOwned(handle: RawSegment): Mutex? =
+            if (handle.address() == 0L) null else RefCounted.owned(Mutex(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Mutex? =
             if (handle.address() == 0L) null else Mutex(GodotHandle(handle))
 
         private const val LOCK_HASH = 3218959716L

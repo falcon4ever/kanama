@@ -13,9 +13,12 @@ class EditorExportPlatformWindows(handle: GodotHandle) : EditorExportPlatformPC(
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformWindows? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformWindows? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformWindows? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformWindows(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformWindows? =
             if (handle.address() == 0L) null else EditorExportPlatformWindows(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

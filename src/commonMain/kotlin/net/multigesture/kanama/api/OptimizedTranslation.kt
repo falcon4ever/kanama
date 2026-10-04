@@ -27,9 +27,12 @@ class OptimizedTranslation(handle: GodotHandle) : Translation(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OptimizedTranslation? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OptimizedTranslation? =
+        internal fun wrapOwned(handle: RawSegment): OptimizedTranslation? =
+            if (handle.address() == 0L) null else RefCounted.owned(OptimizedTranslation(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OptimizedTranslation? =
             if (handle.address() == 0L) null else OptimizedTranslation(GodotHandle(handle))
 
         private const val GENERATE_HASH = 2141509306L

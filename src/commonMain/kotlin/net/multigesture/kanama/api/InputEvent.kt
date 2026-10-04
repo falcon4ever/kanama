@@ -215,7 +215,7 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(InputEvent.wrap(ret), "InputEvent.xformed_by")
+        return requireGodotReturn(InputEvent.wrapOwned(ret), "InputEvent.xformed_by")
     }
 
     companion object {
@@ -225,9 +225,12 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEvent? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEvent? =
+        internal fun wrapOwned(handle: RawSegment): InputEvent? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEvent(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEvent? =
             if (handle.address() == 0L) null else InputEvent(GodotHandle(handle))
 
         private const val SET_DEVICE_HASH = 1286410249L

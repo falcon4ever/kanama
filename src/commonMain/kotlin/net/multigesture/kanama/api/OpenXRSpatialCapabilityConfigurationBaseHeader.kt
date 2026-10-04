@@ -21,9 +21,12 @@ open class OpenXRSpatialCapabilityConfigurationBaseHeader(handle: GodotHandle) :
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationBaseHeader? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialCapabilityConfigurationBaseHeader? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialCapabilityConfigurationBaseHeader? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialCapabilityConfigurationBaseHeader(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationBaseHeader? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationBaseHeader(GodotHandle(handle))
 
         private const val HAS_VALID_CONFIGURATION_HASH = 36873697L

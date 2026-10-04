@@ -56,9 +56,12 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationAruco? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAruco? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAruco? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialCapabilityConfigurationAruco(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAruco? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAruco(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L

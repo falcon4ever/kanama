@@ -78,12 +78,15 @@ class BoxMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
         // KANAMA-IOS-SUGAR: [glue] desktop-parity constructor sugar (the desktop wrapper's
         // MemorySegment constructor is internal, so shared game code uses create()).
         fun create(): BoxMesh =
-            BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh")))
+            RefCounted.owned(BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh"))))
 
         fun fromHandle(handle: GodotHandle): BoxMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BoxMesh? =
+        internal fun wrapOwned(handle: MemorySegment): BoxMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(BoxMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): BoxMesh? =
             if (handle.address() == 0L) null else BoxMesh(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

@@ -16,9 +16,12 @@ class GDScript(handle: GodotHandle) : Script(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GDScript? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GDScript? =
+        internal fun wrapOwned(handle: RawSegment): GDScript? =
+            if (handle.address() == 0L) null else RefCounted.owned(GDScript(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GDScript? =
             if (handle.address() == 0L) null else GDScript(GodotHandle(handle))
 
         private const val NEW_HASH = 1545262638L

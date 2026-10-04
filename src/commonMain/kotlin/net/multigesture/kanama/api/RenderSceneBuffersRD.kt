@@ -74,7 +74,7 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
      */
     fun getTextureFormat(context: String, name: String): RDTextureFormat? {
         checkOpen()
-        return RDTextureFormat.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getTextureFormatBind, segment, context, name))
+        return RDTextureFormat.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getTextureFormatBind, segment, context, name))
     }
 
     /**
@@ -300,9 +300,12 @@ class RenderSceneBuffersRD(handle: GodotHandle) : RenderSceneBuffers(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RenderSceneBuffersRD? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RenderSceneBuffersRD? =
+        internal fun wrapOwned(handle: RawSegment): RenderSceneBuffersRD? =
+            if (handle.address() == 0L) null else RefCounted.owned(RenderSceneBuffersRD(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersRD? =
             if (handle.address() == 0L) null else RenderSceneBuffersRD(GodotHandle(handle))
 
         private const val HAS_TEXTURE_HASH = 471820014L

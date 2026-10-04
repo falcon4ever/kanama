@@ -223,7 +223,7 @@ open class Button(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: Button.get_button_icon
      */
     fun getButtonIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonIconBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getButtonIconBind, segment))
     }
 
     /**

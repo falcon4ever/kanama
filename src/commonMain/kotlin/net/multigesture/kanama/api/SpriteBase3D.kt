@@ -478,7 +478,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.generate_triangle_mesh
      */
     fun generateTriangleMesh(): TriangleMesh? {
-        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
+        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
     /**

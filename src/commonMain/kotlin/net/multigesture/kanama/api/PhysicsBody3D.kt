@@ -65,7 +65,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.move_and_collide
      */
     fun moveAndCollide(motion: Vector3, testOnly: Boolean = false, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): KinematicCollision3D? {
-        return KinematicCollision3D.wrap(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
+        return KinematicCollision3D.wrapOwned(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
     }
 
     /**

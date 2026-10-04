@@ -725,7 +725,11 @@ class KanamaScript(
                 "The script may have failed to attach."
             )
         success = true
-        return instance to net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(baseHandle))
+        // Owned (task 132 D1): the caller gets the constructing +1, with its fallback release.
+        return instance to
+          net.multigesture.kanama.api.RefCounted.owned(
+            net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(baseHandle))
+          )
       } finally {
         // The loaded script wrapper is our transient +1 — the base resource holds its own
         // reference via setScript, so release ours (the borrowed fallback stays untouched).

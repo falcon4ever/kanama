@@ -15,9 +15,12 @@ class StyleBoxEmpty(handle: GodotHandle) : StyleBox(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StyleBoxEmpty? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StyleBoxEmpty? =
+        internal fun wrapOwned(handle: RawSegment): StyleBoxEmpty? =
+            if (handle.address() == 0L) null else RefCounted.owned(StyleBoxEmpty(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StyleBoxEmpty? =
             if (handle.address() == 0L) null else StyleBoxEmpty(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

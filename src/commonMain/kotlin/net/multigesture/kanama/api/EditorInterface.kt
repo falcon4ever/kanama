@@ -99,7 +99,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorSettings(): EditorSettings? {
-        return EditorSettings.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorSettingsBind, singleton))
+        return EditorSettings.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEditorSettingsBind, singleton))
     }
 
     /**
@@ -129,7 +129,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun makeMeshPreviews(meshes: List<Mesh>, previewSize: Int): List<Texture2D> {
-        return ObjectCalls.ptrcallWithObjectListIntArgsRetTypedObjectList(makeMeshPreviewsBind, singleton, meshes, previewSize, Texture2D::wrap)
+        return ObjectCalls.ptrcallWithObjectListIntArgsRetTypedObjectList(makeMeshPreviewsBind, singleton, meshes, previewSize, Texture2D::wrapBorrowed)
     }
 
     /**
@@ -161,7 +161,7 @@ object EditorInterface {
      */
     @JvmStatic
     fun getEditorTheme(): Theme? {
-        return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditorThemeBind, singleton))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEditorThemeBind, singleton))
     }
 
     /**

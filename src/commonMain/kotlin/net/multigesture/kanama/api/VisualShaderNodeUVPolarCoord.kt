@@ -13,9 +13,12 @@ class VisualShaderNodeUVPolarCoord(handle: GodotHandle) : VisualShaderNode(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeUVPolarCoord? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeUVPolarCoord? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeUVPolarCoord? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeUVPolarCoord(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeUVPolarCoord? =
             if (handle.address() == 0L) null else VisualShaderNodeUVPolarCoord(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

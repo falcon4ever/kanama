@@ -73,9 +73,12 @@ class GDExtension(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GDExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GDExtension? =
+        internal fun wrapOwned(handle: RawSegment): GDExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(GDExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GDExtension? =
             if (handle.address() == 0L) null else GDExtension(GodotHandle(handle))
 
         private const val IS_LIBRARY_OPEN_HASH = 36873697L

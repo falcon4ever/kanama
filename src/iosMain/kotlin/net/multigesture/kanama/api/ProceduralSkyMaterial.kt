@@ -220,9 +220,12 @@ class ProceduralSkyMaterial(handle: GodotHandle) : Material(handle) {
 
     companion object {
         fun fromHandle(handle: GodotHandle): ProceduralSkyMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ProceduralSkyMaterial? =
+        internal fun wrapOwned(handle: MemorySegment): ProceduralSkyMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(ProceduralSkyMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): ProceduralSkyMaterial? =
             if (handle.address() == 0L) null else ProceduralSkyMaterial(GodotHandle(handle))
 
         // KANAMA-IOS-SUGAR: [glue] downcast a Resource (null if not), mirroring the desktop

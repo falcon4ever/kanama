@@ -735,9 +735,12 @@ class XRBodyTracker(handle: GodotHandle) : XRPositionalTracker(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRBodyTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XRBodyTracker? =
+        internal fun wrapOwned(handle: RawSegment): XRBodyTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(XRBodyTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XRBodyTracker? =
             if (handle.address() == 0L) null else XRBodyTracker(GodotHandle(handle))
 
         private const val SET_HAS_TRACKING_DATA_HASH = 2586408642L

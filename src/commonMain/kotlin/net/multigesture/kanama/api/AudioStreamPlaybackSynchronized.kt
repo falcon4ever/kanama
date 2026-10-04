@@ -13,9 +13,12 @@ class AudioStreamPlaybackSynchronized(handle: GodotHandle) : AudioStreamPlayback
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackSynchronized? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamPlaybackSynchronized? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamPlaybackSynchronized? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamPlaybackSynchronized(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackSynchronized? =
             if (handle.address() == 0L) null else AudioStreamPlaybackSynchronized(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

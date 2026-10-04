@@ -126,7 +126,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_under_texture
      */
     fun getUnderTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getUnderTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getUnderTextureBind, segment))
     }
 
     /**
@@ -150,7 +150,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_progress_texture
      */
     fun getProgressTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProgressTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProgressTextureBind, segment))
     }
 
     /**
@@ -170,7 +170,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_over_texture
      */
     fun getOverTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOverTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOverTextureBind, segment))
     }
 
     /**

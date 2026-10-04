@@ -31,15 +31,18 @@ class SkinReference(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSkin(): Skin? {
         checkOpen()
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkinReference? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkinReference? =
+        internal fun wrapOwned(handle: RawSegment): SkinReference? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkinReference(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkinReference? =
             if (handle.address() == 0L) null else SkinReference(GodotHandle(handle))
 
         private const val GET_SKELETON_HASH = 2944877500L

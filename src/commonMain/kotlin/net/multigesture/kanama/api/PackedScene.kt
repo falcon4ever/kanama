@@ -50,7 +50,7 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
      */
     fun getState(): SceneState? {
         checkOpen()
-        return SceneState.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, segment))
+        return SceneState.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStateBind, segment))
     }
 
     /**
@@ -95,15 +95,18 @@ class PackedScene(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PackedScene? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PackedScene? =
+        internal fun wrapOwned(handle: RawSegment): PackedScene? =
+            if (handle.address() == 0L) null else RefCounted.owned(PackedScene(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PackedScene? =
             if (handle.address() == 0L) null else PackedScene(GodotHandle(handle))
 
         // Instantiate a PackedScene.
         @JvmStatic
         fun create(): PackedScene =
-            PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene")))
+            RefCounted.owned(PackedScene(GodotHandle(ObjectCalls.constructObject("PackedScene"))))
 
         private const val PACK_HASH = 2584678054L
         private val packBind by lazy {

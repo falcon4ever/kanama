@@ -379,9 +379,12 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRInterface? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRInterface? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRInterface? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRInterface(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRInterface? =
             if (handle.address() == 0L) null else OpenXRInterface(GodotHandle(handle))
 
         private const val GET_SESSION_STATE_HASH = 896364779L

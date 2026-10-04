@@ -26,9 +26,12 @@ class AudioStreamPlaybackInteractive(handle: GodotHandle) : AudioStreamPlayback(
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackInteractive? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamPlaybackInteractive? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamPlaybackInteractive? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamPlaybackInteractive(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackInteractive? =
             if (handle.address() == 0L) null else AudioStreamPlaybackInteractive(GodotHandle(handle))
 
         private const val SWITCH_TO_CLIP_BY_NAME_HASH = 3304788590L

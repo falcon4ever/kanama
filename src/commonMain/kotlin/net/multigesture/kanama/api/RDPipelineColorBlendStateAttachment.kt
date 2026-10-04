@@ -329,9 +329,12 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDPipelineColorBlendStateAttachment? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDPipelineColorBlendStateAttachment? =
+        internal fun wrapOwned(handle: RawSegment): RDPipelineColorBlendStateAttachment? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDPipelineColorBlendStateAttachment(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDPipelineColorBlendStateAttachment? =
             if (handle.address() == 0L) null else RDPipelineColorBlendStateAttachment(GodotHandle(handle))
 
         private const val SET_AS_MIX_HASH = 3218959716L

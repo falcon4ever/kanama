@@ -13,9 +13,12 @@ class VisualShaderNodeTextureParameterTriplanar(handle: GodotHandle) : VisualSha
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTextureParameterTriplanar? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTextureParameterTriplanar? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTextureParameterTriplanar? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTextureParameterTriplanar(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureParameterTriplanar? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureParameterTriplanar(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -56,7 +56,7 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
 
     fun getNext(): OpenXRStructureBase? {
         checkOpen()
-        return OpenXRStructureBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNextBind, segment))
+        return OpenXRStructureBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNextBind, segment))
     }
 
     fun addNext(next: OpenXRStructureBase?) {
@@ -86,9 +86,12 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialEntityTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialEntityTracker? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialEntityTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialEntityTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialEntityTracker? =
             if (handle.address() == 0L) null else OpenXRSpatialEntityTracker(GodotHandle(handle))
 
         private const val SET_SPATIAL_CONTEXT_HASH = 2722037293L

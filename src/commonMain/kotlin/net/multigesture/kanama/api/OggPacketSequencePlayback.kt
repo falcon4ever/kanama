@@ -13,9 +13,12 @@ class OggPacketSequencePlayback(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OggPacketSequencePlayback? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OggPacketSequencePlayback? =
+        internal fun wrapOwned(handle: RawSegment): OggPacketSequencePlayback? =
+            if (handle.address() == 0L) null else RefCounted.owned(OggPacketSequencePlayback(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OggPacketSequencePlayback? =
             if (handle.address() == 0L) null else OggPacketSequencePlayback(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

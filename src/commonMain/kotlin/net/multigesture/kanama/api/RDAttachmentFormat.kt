@@ -92,9 +92,12 @@ class RDAttachmentFormat(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDAttachmentFormat? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDAttachmentFormat? =
+        internal fun wrapOwned(handle: RawSegment): RDAttachmentFormat? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDAttachmentFormat(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDAttachmentFormat? =
             if (handle.address() == 0L) null else RDAttachmentFormat(GodotHandle(handle))
 
         private const val SET_FORMAT_HASH = 565531219L

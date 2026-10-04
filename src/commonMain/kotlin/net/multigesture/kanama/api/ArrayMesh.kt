@@ -351,15 +351,18 @@ class ArrayMesh(handle: GodotHandle) : Mesh(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return ArrayMesh.wrap(ret)
+        return ArrayMesh.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ArrayMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ArrayMesh? =
+        internal fun wrapOwned(handle: RawSegment): ArrayMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(ArrayMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ArrayMesh? =
             if (handle.address() == 0L) null else ArrayMesh(GodotHandle(handle))
 
         // Downcast a Resource to ArrayMesh (null if not).

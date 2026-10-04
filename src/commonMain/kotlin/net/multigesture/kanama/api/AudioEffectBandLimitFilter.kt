@@ -15,9 +15,12 @@ class AudioEffectBandLimitFilter(handle: GodotHandle) : AudioEffectFilter(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectBandLimitFilter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectBandLimitFilter? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectBandLimitFilter? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectBandLimitFilter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectBandLimitFilter? =
             if (handle.address() == 0L) null else AudioEffectBandLimitFilter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

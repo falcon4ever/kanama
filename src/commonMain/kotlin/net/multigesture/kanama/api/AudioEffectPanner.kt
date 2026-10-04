@@ -42,9 +42,12 @@ class AudioEffectPanner(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectPanner? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectPanner? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectPanner? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectPanner(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectPanner? =
             if (handle.address() == 0L) null else AudioEffectPanner(GodotHandle(handle))
 
         private const val SET_PAN_HASH = 373806689L

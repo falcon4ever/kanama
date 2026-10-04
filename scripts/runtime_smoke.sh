@@ -53,6 +53,22 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 # task 133 -- node/script delegates, checked casts, preload, tree accessors and the script coroutine
 # scope; the scene quits itself once its async rows (wait, nextFrame, cancel on free) have printed.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://script_access_smoke.tscn --quit-after 5000 --verbose >>"$LOG_FILE" 2>&1
+# task 132 -- owned RefCounted wrappers dropped without close() are released by the GC fallback
+# (green), and stay leaked with the fallback off (red: KANAMA_GC_RELEASES=0, its own log, since its
+# shutdown reports the 10,000 leaked Resources on purpose). The scene quits itself once the count is
+# back; --quit-after is only the cap.
+OWNED_RELEASE_RED_LOG="${LOG_FILE}.owned_release_red"
+# task 132 D7 -- the same freed-object scene with the instance-binding check (opt-in), own log.
+FREED_BINDING_LOG="${LOG_FILE}.freed_binding"
+KANAMA_FREED_OBJECT_CHECKS=binding "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit >"$FREED_BINDING_LOG" 2>&1
+# The green run also turns kanama/debug/log_gc_releases on through a transient override.cfg (D5:
+# one "released by GC" line per creation site).
+OWNED_RELEASE_OVERRIDE="$PROJECT_DIR/override.cfg"
+printf '[kanama]\n\ndebug/log_gc_releases=true\n' >"$OWNED_RELEASE_OVERRIDE"
+trap 'rm -f "$OWNED_RELEASE_OVERRIDE"' EXIT
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://owned_release_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
+rm -f "$OWNED_RELEASE_OVERRIDE"
+KANAMA_GC_RELEASES=0 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://owned_release_smoke.tscn --quit-after 600 >"$OWNED_RELEASE_RED_LOG" 2>&1
 
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
@@ -299,6 +315,25 @@ check_absent "Invalid call\. Nonexistent function"
 # after the object is freed. Before task 131 equal=false and set_size=3.
 # task 131 item 2 (F2) -- the editor binary is a debug build, so the freed-object check is on.
 check "\[kanama:kt\] freed-object checks: on"
+# task 132 -- the GC fallback release: 10,000 dropped owned Resources are gone again after GC +
+# drain (object count back to the baseline), and a getter's +1 that was closed and then collected
+# is released once (the mesh keeps exactly its two references).
+check "\[kanama:kt\] owned-reference GC releases: on \(java\.lang\.ref\.Cleaner\)"
+check "\[kanama:kt\] owned-reference GC releases: on \(java\.lang\.ref\.Cleaner, logging GC releases\)"
+check "OwnedReleaseSmoke dropped=10000"
+# D5: the 10,000 dropped Resources share one creation site, so one line names it.
+owned_drop_line="$(grep -n 'repeat(DROPPED_RESOURCES)' "$PROJECT_DIR/OwnedReleaseSmoke.kt" | cut -d: -f1)"
+check "released by GC: Resource \(created at OwnedReleaseSmoke\.kt:${owned_drop_line}\)"
+if [[ "$(grep -c 'released by GC: Resource (created at OwnedReleaseSmoke' "$LOG_FILE")" != 1 ]]; then
+  smoke_fail "one GC-release line per creation site" "released by GC: Resource (created at OwnedReleaseSmoke.kt:${owned_drop_line})"
+fi
+check "OwnedReleaseSmoke baseline=[0-9]+ after_drop=[0-9]+ after_gc=[0-9]+ back_to_baseline=true mesh_refcount=2 "
+# The red run: with the fallback off the same drop stays leaked (and the mesh keeps the 100 +1s).
+if ! grep -Eq "OwnedReleaseSmoke baseline=[0-9]+ after_drop=[0-9]+ after_gc=[0-9]+ back_to_baseline=false mesh_refcount=102 " "$OWNED_RELEASE_RED_LOG"; then
+  echo "[runtime_smoke] FAIL -- the KANAMA_GC_RELEASES=0 red run did not leak as expected:" >&2
+  grep -E "OwnedReleaseSmoke|owned-reference GC releases" "$OWNED_RELEASE_RED_LOG" >&2 || tail -n 40 "$OWNED_RELEASE_RED_LOG" >&2
+  exit 1
+fi
 # Holding a freed wrapper is silent, as in GDScript: two exported-property reads and a script
 # method return of it give Godot null (no error; counted below).
 check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true"
@@ -323,6 +358,19 @@ check "FreedObjectSmoke backtraces valid=\[true(, true)*\] languages=\[[A-Za-z]"
 # Task 131 review: custom-script-typed exports (a KanamaScript type, a plain script type, a List
 # and a Map of them) whose nodes were freed read back as nil, without reading the freed owners.
 check "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"
+# task 132 D7 -- KANAMA_FREED_OBJECT_CHECKS=binding: the instance-binding liveness flag gives the same
+# GDScript semantics as the instance-id lookup (silent holds, an error on a call).
+for pattern in \
+  "freed-object checks: on \(KANAMA_FREED_OBJECT_CHECKS=binding: instance binding\)" \
+  "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true" \
+  "FreedObjectSmoke caught=Invalid access to previously freed instance \(Node3D, instance id [0-9]+\)$" \
+  "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"; do
+  if ! grep -Eq -- "$pattern" "$FREED_BINDING_LOG"; then
+    echo "[runtime_smoke] FAIL -- binding-mode freed-object run is missing: $pattern" >&2
+    tail -n 60 "$FREED_BINDING_LOG" >&2
+    exit 1
+  fi
+done
 # RefCounted return-slot ownership (task 31): every RefCounted-typed ptrcall return
 # transfers +1 (required-meta included); self-returning fluent calls must collapse to
 # the receiver and release the duplicate, so all wrapper-visible deltas stay 0.

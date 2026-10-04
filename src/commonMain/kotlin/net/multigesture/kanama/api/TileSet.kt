@@ -127,7 +127,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSource(sourceId: Int): TileSetSource? {
         checkOpen()
-        return TileSetSource.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSourceBind, segment, sourceId))
+        return TileSetSource.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSourceBind, segment, sourceId))
     }
 
     /**
@@ -442,7 +442,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerPhysicsMaterial(layerIndex: Int): PhysicsMaterial? {
         checkOpen()
-        return PhysicsMaterial.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPhysicsLayerPhysicsMaterialBind, segment, layerIndex))
+        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getPhysicsLayerPhysicsMaterialBind, segment, layerIndex))
     }
 
     /**
@@ -980,7 +980,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPattern(index: Int = -1): TileMapPattern? {
         checkOpen()
-        return TileMapPattern.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPatternBind, segment, index))
+        return TileMapPattern.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getPatternBind, segment, index))
     }
 
     /**
@@ -1258,9 +1258,12 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileSet? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TileSet? =
+        internal fun wrapOwned(handle: RawSegment): TileSet? =
+            if (handle.address() == 0L) null else RefCounted.owned(TileSet(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TileSet? =
             if (handle.address() == 0L) null else TileSet(GodotHandle(handle))
 
         private const val GET_NEXT_SOURCE_ID_HASH = 3905245786L

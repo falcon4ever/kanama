@@ -202,11 +202,11 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun importObjectModelProperty(state: GLTFState?, jsonPointer: String): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrap(ObjectCalls.ptrcallWithObjectStringArgRetObject(importObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, jsonPointer))
+            return GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(importObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, jsonPointer))
         }
 
         fun exportObjectModelProperty(state: GLTFState?, nodePath: NodePath, godotNode: Node, gltfNodeIndex: Int): GLTFObjectModelProperty? {
-            return GLTFObjectModelProperty.wrap(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(exportObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, nodePath, godotNode.segment, gltfNodeIndex))
+            return GLTFObjectModelProperty.wrapOwned(ObjectCalls.ptrcallWithObjectNodePathObjectIntArgsRetObject(exportObjectModelPropertyBind, NULL_SEGMENT, state?.requireOpenHandle() ?: NULL_SEGMENT, nodePath, godotNode.segment, gltfNodeIndex))
         }
 
         fun registerGltfDocumentExtension(extension: GLTFDocumentExtension?, firstPriority: Boolean = false) {
@@ -223,9 +223,12 @@ open class GLTFDocument(handle: GodotHandle) : Resource(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFDocument? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFDocument? =
+        internal fun wrapOwned(handle: RawSegment): GLTFDocument? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFDocument(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFDocument? =
             if (handle.address() == 0L) null else GLTFDocument(GodotHandle(handle))
 
         private const val SET_IMAGE_FORMAT_HASH = 83702148L

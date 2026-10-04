@@ -31,15 +31,18 @@ class DTLSServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeConnection(udpPeer: PacketPeerUDP?): PacketPeerDTLS? {
         checkOpen()
-        return PacketPeerDTLS.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(takeConnectionBind, segment, udpPeer?.requireOpenHandle() ?: NULL_SEGMENT))
+        return PacketPeerDTLS.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(takeConnectionBind, segment, udpPeer?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): DTLSServer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): DTLSServer? =
+        internal fun wrapOwned(handle: RawSegment): DTLSServer? =
+            if (handle.address() == 0L) null else RefCounted.owned(DTLSServer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): DTLSServer? =
             if (handle.address() == 0L) null else DTLSServer(GodotHandle(handle))
 
         private const val SETUP_HASH = 1262296096L

@@ -13,9 +13,12 @@ class EditorExportPlatformMacOS(handle: GodotHandle) : EditorExportPlatform(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformMacOS? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformMacOS? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformMacOS? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformMacOS(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformMacOS? =
             if (handle.address() == 0L) null else EditorExportPlatformMacOS(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

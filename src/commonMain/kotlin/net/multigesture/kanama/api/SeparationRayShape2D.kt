@@ -70,9 +70,12 @@ class SeparationRayShape2D(handle: GodotHandle) : Shape2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SeparationRayShape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SeparationRayShape2D? =
+        internal fun wrapOwned(handle: RawSegment): SeparationRayShape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(SeparationRayShape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SeparationRayShape2D? =
             if (handle.address() == 0L) null else SeparationRayShape2D(GodotHandle(handle))
 
         private const val SET_LENGTH_HASH = 373806689L
