@@ -401,7 +401,8 @@ check "RefillOnFreeProbe dead=true frames=[0-9]+ constructions_at_end=2 after_re
 check_absent "property values reset|recreated with its default property values"
 check "PropertyRetainSmoke held=2 old_released=true owner_dead=true items_dead=true frames=[0-9]+"
 check "PropertyLifetimeSmoke alias_valid=true node_paths_kept=true"
-check "PropertyLifetimeSmoke swap_items_dead=true swap_owner_alive=true swap_script_collected=true thread_owner_dead=true thread_items_dead=true frames=[0-9]+"
+check "PropertyLifetimeSmoke items reset_drop=1 held=20"
+check "PropertyLifetimeSmoke swap_items_dead=true swap_owner_alive=true swap_script_collected=true thread_owner_dead=true thread_items_dead=true old_dead=true freed_dead=true frames=[0-9]+"
 # task 132 blocker 1 -- script objects keep their owners (see the run above).
 check "ScriptOwnerSmoke saved=true loaded=true created=true"
 check "ScriptOwnerSmoke alive_after_gc=true engine_read=4242 resaved=true created_alive_after_gc=true created_read=77 plain_alive_after_gc=true"

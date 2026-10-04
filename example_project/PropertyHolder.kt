@@ -4,6 +4,7 @@ import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.PackedScene
 
@@ -16,4 +17,6 @@ class PropertyHolder(godotObject: GodotHandle) : KanamaScript<Node>(godotObject,
   @Export var node: Node? = null
 
   @Export var nodes: List<Node> = emptyList()
+
+  @Export var items: List<Material> = emptyList()
 }

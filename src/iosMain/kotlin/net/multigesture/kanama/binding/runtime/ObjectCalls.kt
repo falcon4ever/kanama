@@ -41573,28 +41573,44 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       ObjectCalls.destroyObject(nodeA.handle.segment)
       ObjectCalls.destroyObject(nodeB.handle.segment)
 
-      fun setItems(count: Int): List<Long> {
+      // (instance id, handle) of each element; the row's own wrappers are closed right after the
+      // set, so only the property can hold them. The counts are read through a borrowed view.
+      fun setItems(count: Int): List<Pair<Long, Long>> {
         val items = (1..count).map { net.multigesture.kanama.api.Resource.create() }
         target.set("items", items)
-        val ids = items.map { it.instanceId }
+        val elements = items.map { it.instanceId to it.handle.segment.address() }
         items.forEach { it.close() }
-        return ids
+        return elements
       }
+      fun refs(element: Pair<Long, Long>): Int =
+        if (!IosGodot.isInstanceIdValid(element.first)) 0
+        else
+          net.multigesture.kanama.api.Resource.fromHandle(
+              GodotHandle(MemorySegment.ofAddress(element.second))
+            )!!
+            .getReferenceCount()
       val first = setItems(20)
-      val firstAlive = first.all { IosGodot.isInstanceIdValid(it) }
+      val firstAlive = first.all { IosGodot.isInstanceIdValid(it.first) }
+      // Only the registry's reference is left (expected 2 on 0467069e: the shim's leaked
+      // Array copy of the set value held one on every element).
+      val refsAfterSet = refs(first[0])
       val second = setItems(20)
-      val firstReleased = first.none { IosGodot.isInstanceIdValid(it) }
-      val secondAlive = second.all { IosGodot.isInstanceIdValid(it) }
+      val resetDrop = refsAfterSet - refs(first[0])
+      val firstReleased = first.none { IosGodot.isInstanceIdValid(it.first) }
+      val secondAlive = second.all { IosGodot.isInstanceIdValid(it.first) }
       val held = ScriptPropertyRetains.countFor(ownerAddress)
       val ownerId = owner.instanceId
+      val refsBeforeFree = refs(second[0])
       owner.close()
       val ownerDead = !IosGodot.isInstanceIdValid(ownerId)
-      val secondReleased = second.none { IosGodot.isInstanceIdValid(it) }
+      val freeDrop = refsBeforeFree - refs(second[0])
+      val secondReleased = second.none { IosGodot.isInstanceIdValid(it.first) }
       println(
         "[kanama][ios][kn] OBJECTCALLS SELFTEST property-retain node_paths_kept=$pathsKept " +
           "node_refs=$nodeRefs paths_kept_after_clear=$pathsKeptAfterClear first_alive=$firstAlive " +
-          "reset_releases_old=$firstReleased second_alive=$secondAlive held=$held " +
-          "owner_dead=$ownerDead free_releases_all=$secondReleased"
+          "refs_after_set=$refsAfterSet reset_drop=$resetDrop reset_releases_old=$firstReleased " +
+          "second_alive=$secondAlive held=$held owner_dead=$ownerDead free_drop=$freeDrop " +
+          "free_releases_all=$secondReleased"
       )
       check(
         "property-retain(a Node property set keeps scene_file_path)",
@@ -41602,8 +41618,18 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       )
       check("property-retain(a Node property set takes no reference)", nodeRefs == 0)
       check("property-retain(20 Resources set into a List are all held)", firstAlive && held == 20)
-      check("property-retain(a new set releases the old values)", firstReleased && secondAlive)
-      check("property-retain(the owner's free releases every value)", ownerDead && secondReleased)
+      check(
+        "property-retain(the property holds exactly one reference per element)",
+        refsAfterSet == 1,
+      )
+      check(
+        "property-retain(a new set releases the old values)",
+        resetDrop == 1 && firstReleased && secondAlive,
+      )
+      check(
+        "property-retain(the owner's free releases every value)",
+        ownerDead && freeDrop == 1 && secondReleased,
+      )
       RefCounted.releaseHandle(MemorySegment.ofAddress(scriptObject))
     }
   }

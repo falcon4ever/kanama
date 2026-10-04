@@ -241,9 +241,13 @@ accessors now and the rest in a follow-up (see "Web" below).
   Godot's ptrcall casts blindly, so on a Node it wrote into the Node's own fields (its
   `scene_file_path`), and a later `unreference()` could crash. It also recorded at most 16
   references per instance (City-Builder leaked about 106 structures per Load), never released them
-  when the property was set again, and the refill of a rebuilt instance took a second set. iOS now
-  uses the registry above: only `RefCounted` objects are referenced, with no cap. iOS self-test row
-  `property-retain` (desktop guard: `PropertyLifetimeSmoke node_paths_kept`).
+  when the property was set again, and the refill of a rebuilt instance took a second set. And its
+  set path never destroyed the copy of a set `Array` it read the elements from, so every element
+  of every `Array` set into a script property kept one more reference forever. iOS now uses the
+  registry above (only `RefCounted` objects are referenced, with no cap) and destroys that copy.
+  iOS self-test row `property-retain`: one reference per element after the set, a new set or the
+  owner's free drops it and the element dies; the desktop smoke measures the same
+  (`PropertyLifetimeSmoke items reset_drop=1 ... old_dead=true freed_dead=true`).
 - **A script detached from a live resource no longer pins its script object.** `set_script(null)`
   (or a script swap) on a `RefCounted` owner that lives on left the owner link strong, and the
   script object's cleanup reached it: the detached Kotlin object, and everything its properties

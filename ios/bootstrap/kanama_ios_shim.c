@@ -11010,10 +11010,16 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         kanama_ios_cache_array_methods();
         if (g_array_size_method == NULL || g_array_get_method == NULL) { return 0; }
         uint8_t raw_array[8] = {0};
+        // A copy of the value's Array: it shares (and references) the engine's array data, so it
+        // is destroyed on every path below. Before task 132's review it never was, so every Array
+        // set into a script property on iOS leaked, and with it a reference on each element.
         g_variant_to_array(raw_array, (GDExtensionVariantPtr)(intptr_t)value);
         int64_t size = 0;
         g_array_size_method(raw_array, NULL, &size, 0);
         if (size <= 0) {
+            if (g_array_destructor != NULL) {
+                g_array_destructor((GDExtensionTypePtr)raw_array);
+            }
             // Empty arrays carry no runtime element type. Ask the integer bridge first; it returns
             // false for object-list properties, in which case the existing object bridge handles it.
             int32_t ok = kanama_ios_runtime_script_instance_set_property_int_array(
@@ -11035,6 +11041,9 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
             free(objects);
             free(integers);
             free(strings);
+            if (g_array_destructor != NULL) {
+                g_array_destructor((GDExtensionTypePtr)raw_array);
+            }
             return 0;
         }
         int integer_compatible = 1;
@@ -11102,6 +11111,11 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         free(strings);
         free(objects);
         free(integers);
+        // After the runtime took its references (retain_property_objects above): the engine's
+        // value and the registry now hold the elements, this copy no longer does.
+        if (g_array_destructor != NULL) {
+            g_array_destructor((GDExtensionTypePtr)raw_array);
+        }
         return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_NODE_PATH
                && g_variant_to_node_path != NULL
