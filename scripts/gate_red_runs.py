@@ -9,32 +9,43 @@ harness holds each listed gate to the three-step proof, with a reversible mutati
     2. red    after the mutation the gate exits non-zero AND prints the expected text,
     3. green  after the mutation is reverted the gate passes again.
 
-The mutation is applied in place (an edit, a created file or a deleted file) and ALWAYS reverted, also
-on an exception or Ctrl-C; at the end the harness compares `git status --porcelain` before and after
-and fails if they differ. Run it on a checkout nothing else is writing to.
+Every case runs in a THROWAWAY checkout (`git worktree add --detach` of HEAD, plus the uncommitted
+changes and untracked files of the dev checkout), so the checkout you work in is never mutated: a
+SIGTERM, a timeout or a crash cannot leave a half-applied mutation behind. The workspace is removed
+on exit, also on SIGTERM/SIGHUP/Ctrl-C. A timeout kills the whole process group of the case (a
+gate that spawned Gradle or Godot leaves nothing behind). Mutations are still reverted between the
+red and the final green run, and the directories a mutation created are removed again.
 
 Usage:
-    python3 scripts/gate_red_runs.py                  # every case
+    python3 scripts/gate_red_runs.py                  # every fast case
+    python3 scripts/gate_red_runs.py --strict         # a SKIPPED case (missing GODOT_DOCS, ...) is a failure
     python3 scripts/gate_red_runs.py --only parity    # cases whose gate name contains the text
     python3 scripts/gate_red_runs.py --slow           # also the Godot/Gradle smokes (needs KANAMA_GODOT_BIN)
     python3 scripts/gate_red_runs.py --list
     python3 scripts/gate_red_runs.py --markdown out.md   # also write the README-gates.md table rows
 
-Gates that need a device, a browser, a Godot binary or a long export are NOT here: they carry their own
-`--self-test` or red-run recipe, documented in scripts/README-gates.md.
+`--strict` is implied when `CI` is true/1/yes. `--allow-skip NAME[,NAME]` names the cases a runner
+may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`).
+
+Gates that need a device, a browser, a Godot binary or a long export are NOT all here: they carry
+their own `--self-test` or red-run recipe, documented in scripts/README-gates.md.
 """
 
 from __future__ import annotations
 
 import argparse
 import os
+import shutil
+import signal
 import subprocess
 import sys
+import tempfile
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+SRC = Path(__file__).resolve().parents[1]  # the dev checkout; never mutated
+WORK = SRC  # the throwaway checkout every case runs in (set by main())
 PY = sys.executable
 
 
@@ -57,6 +68,12 @@ class Delete:
 
 
 @dataclass
+class Rename:
+    path: str
+    to: str
+
+
+@dataclass
 class Append:
     path: str
     text: str
@@ -65,8 +82,8 @@ class Append:
 @dataclass
 class Case:
     gate: str  # name shown in the table
-    cmd: list[str]  # run from ROOT
-    mutations: list  # Edit | Create | Delete
+    cmd: list[str]  # run from WORK
+    mutations: list  # Edit | Create | Delete | Rename | Append
     expect: str  # substring the red run must print (stdout + stderr)
     how: str  # one line for the table: what the mutation does
     env: dict[str, str] = field(default_factory=dict)
@@ -90,17 +107,33 @@ def case(*args, **kwargs) -> None:
 
 
 class Mutator:
-    """Applies a list of mutations and reverts them, byte for byte."""
+    """Applies a list of mutations inside WORK and reverts them, byte for byte (modes, created dirs too)."""
 
     def __init__(self, mutations: list):
         self.mutations = mutations
         self.saved: list[tuple[Path, bytes | None]] = []
         self.modes: dict[Path, int | None] = {}  # a deleted-then-restored script must keep its executable bit
+        self.created_dirs: list[Path] = []
+        self.renamed: list[tuple[Path, Path]] = []
+
+    def _mkdirs(self, directory: Path) -> None:
+        missing = []
+        while not directory.exists() and directory != WORK:
+            missing.append(directory)
+            directory = directory.parent
+        for d in reversed(missing):
+            d.mkdir()
+            self.created_dirs.append(d)
 
     def __enter__(self):
         try:
             for mutation in self.mutations:
-                path = ROOT / mutation.path
+                path = WORK / mutation.path
+                if isinstance(mutation, Rename):
+                    target = WORK / mutation.to
+                    path.rename(target)
+                    self.renamed.append((target, path))
+                    continue
                 original = path.read_bytes() if path.exists() else None
                 self.modes[path] = path.stat().st_mode if path.exists() else None
                 self.saved.append((path, original))
@@ -117,7 +150,7 @@ class Mutator:
                         )
                     path.write_text(text.replace(mutation.old, mutation.new, 1), encoding="utf-8")
                 elif isinstance(mutation, Create):
-                    path.parent.mkdir(parents=True, exist_ok=True)
+                    self._mkdirs(path.parent)
                     path.write_text(mutation.content, encoding="utf-8")
                 elif isinstance(mutation, Delete):
                     path.unlink()
@@ -127,6 +160,8 @@ class Mutator:
         return self
 
     def __exit__(self, *exc):
+        for target, path in reversed(self.renamed):
+            target.rename(path)
         for path, original in reversed(self.saved):
             if original is None:
                 if path.exists():
@@ -136,30 +171,40 @@ class Mutator:
                 path.write_bytes(original)
                 if self.modes.get(path) is not None:
                     path.chmod(self.modes[path])
-        self.saved = []
+        for directory in reversed(self.created_dirs):
+            try:
+                directory.rmdir()
+            except OSError:  # justified: a directory a gate filled meanwhile is the gate's own output; it is not ours to delete
+                pass
+        self.saved, self.created_dirs, self.renamed = [], [], []
         return False
 
 
 def run(case_: Case) -> tuple[int, str, float]:
     env = dict(os.environ)
     env.update(case_.env)
-    # A gate that skips under CI would read as red here for the wrong reason; the harness is local.
+    # A gate that skips under CI would read as red here for the wrong reason; the harness decides about skips itself.
     env.pop("CI", None)
     started = time.monotonic()
+    proc = subprocess.Popen(
+        case_.cmd, cwd=WORK, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+        start_new_session=True,  # its own process group, so a timeout can kill everything the gate spawned
+    )
     try:
-        proc = subprocess.run(
-            case_.cmd, cwd=ROOT, env=env, capture_output=True, text=True, timeout=case_.timeout,
-            check=False,  # justified: the exit status IS the datum this harness reads (green must be 0, red must not be)
-        )
-        out = proc.stdout + proc.stderr
+        out, _ = proc.communicate(timeout=case_.timeout)
         return proc.returncode, out, time.monotonic() - started
-    except subprocess.TimeoutExpired as error:  # justified: reported as exit 124 with the partial output; the case then fails
-        return 124, f"timeout after {case_.timeout}s\n{error.stdout or ''}", time.monotonic() - started
+    except subprocess.TimeoutExpired:  # justified: reported as exit 124 with the partial output; the case then fails
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:  # justified: the group already exited between the timeout and the kill
+            pass
+        out, _ = proc.communicate()
+        return 124, f"timeout after {case_.timeout}s (process group killed)\n{out or ''}", time.monotonic() - started
 
 
 def red_excerpt(output: str, expect: str) -> str:
     """One to three lines of the red output: the line holding the expected text, else the last lines."""
-    output = output.replace(str(ROOT) + "/", "")  # no workstation paths in the recorded excerpt
+    output = output.replace(str(WORK) + "/", "").replace(str(SRC) + "/", "")  # no workstation paths in the excerpt
     lines = [line.strip() for line in output.splitlines() if line.strip()]
     for index, line in enumerate(lines):
         if expect in line:
@@ -167,15 +212,36 @@ def red_excerpt(output: str, expect: str) -> str:
     return " / ".join(lines[-2:])[:200]
 
 
+def git_out(*args: str, cwd: Path = SRC, data: bytes | None = None) -> bytes:
+    return subprocess.run(["git", *args], cwd=cwd, input=data, capture_output=True, check=True).stdout
+
+
 def git_status() -> str:
     """The porcelain status plus the mode changes (`git status` does not show a lost executable bit)."""
-    status = subprocess.run(
-        ["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True, check=True
-    ).stdout
-    modes = subprocess.run(
-        ["git", "diff", "--summary"], cwd=ROOT, capture_output=True, text=True, check=True
-    ).stdout
-    return status + modes
+    return git_out("status", "--porcelain").decode() + git_out("diff", "--summary").decode()
+
+
+def make_workspace() -> tuple[Path, Path]:
+    """A detached worktree of HEAD carrying the dev checkout's uncommitted state; returns (tmp dir, tree)."""
+    tmp = Path(tempfile.mkdtemp(prefix="gate_red_runs.")).resolve()  # resolved: /var is /private/var on macOS
+    tree = tmp / "tree"
+    git_out("worktree", "add", "--detach", "--quiet", str(tree), "HEAD")
+    patch = git_out("diff", "HEAD", "--binary")
+    if patch:
+        git_out("apply", "--whitespace=nowarn", cwd=tree, data=patch)
+    untracked = git_out("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")
+    for rel in filter(None, untracked):
+        dest = tree / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(SRC / rel, dest)
+    return tmp, tree
+
+
+def drop_workspace(tmp: Path, tree: Path) -> None:
+    subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)  # justified: best effort; the rmtree and prune below finish the job
+    shutil.rmtree(tmp, ignore_errors=True)
+    subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)  # justified: housekeeping of a registration that is already gone
+
 
 
 # ==================================================================================================
@@ -190,7 +256,7 @@ GEN = "docs/reference/generated"
 WEBGEN = "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/generated"
 # Built by concatenation: a literal marker in this file would be a live marker for audit_stale_blockers.py.
 BLOCKED_MARKER = "KANAMA" + "-BLOCKED(since:2026-01-01, file:CONTRIBUTING.md): red run"
-ENV_PY = {"PYTHONPATH": str(ROOT / "scripts")}
+ENV_PY = {"PYTHONPATH": "scripts"}  # relative: the case runs with its workspace as the working directory
 WEB_BACKEND = "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/WebCommonGodotBackend.generated.kt"
 VIRTUAL_TABLE = "processor/src/main/resources/net/multigesture/kanama/processor/virtual-signatures.tsv"
 
@@ -208,6 +274,9 @@ case("validate_godot_api.py", py("validate_godot_api.py"),
      [Edit(f"{COMMON}/api/Node.kt", "GET_PARENT_HASH = 3160264692L", "GET_PARENT_HASH = 3160264693L")],
      "Node.get_parent hash 3160264693 not in",
      "a MethodBind hash in the shared wrapper tree is off by one (this tree was not scanned before task 118)")
+case("validate_godot_api.py (tree moved)", py("validate_godot_api.py"),
+     [Rename("src/commonMain/kotlin", "src/commonMain/kotlin.off")],
+     "src/commonMain/kotlin: no Kotlin sources found", "the shared wrapper tree is not where the validator looks (it must fail, not pass on what is left)")
 case("audit_builtin_storage_sizes.py", py("audit_builtin_storage_sizes.py"),
      [Edit("ios/bootstrap/kanama_ios_shim.c", "#define KANAMA_IOS_PACKED_ARRAY_OPAQUE_SIZE 16", "#define KANAMA_IOS_PACKED_ARRAY_OPAQUE_SIZE 8")],
      "FAIL", "the iOS shim sizes a Packed*Array slot at 8 bytes")
@@ -324,7 +393,7 @@ case("audit_stale_blockers.py", py("audit_stale_blockers.py"),
 case("audit_value_type_wrappers.py", py("audit_value_type_wrappers.py", "--strict"),
      [Edit(f"{COMMON}/types/Quaternion.kt", "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Real(weight))",
            "listOf(BArg.Floats(PT_QUATERNION, to.toGodotRealArray()), BArg.Floats(PT_FLOAT, doubleArrayOf(weight)))")],
-     "value_type_audit]", "a Godot `float` argument is marshalled as a real_t component array")
+     "Quaternion.slerp passes 1 Godot float arg", "a Godot `float` argument is marshalled as a real_t component array")
 case("audit_vararg_ptrcalls.py", py("audit_vararg_ptrcalls.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt",
              'package net.multigesture.kanama.api\n\nprivate val redRunBind by lazy { ObjectCalls.getMethodBind("Object", "call", 1L) }\nfun redRun(x: RawSegment) { ObjectCalls.ptrcallNoArgs(redRunBind, x) }\n')],
@@ -364,6 +433,12 @@ case("sync_kdoc_from_godot_docs.py --check", py("sync_kdoc_from_godot_docs.py", 
      "changed_files=1", "a wrapper KDoc block differs from the Godot class docs", requires_env="GODOT_DOCS")
 
 # ---- shell gates ---------------------------------------------------------------------------------------------
+case("audit_swallowed_failures.py", py("audit_swallowed_failures.py"),
+     [Append("scripts/install-git-hooks.sh", "\nfalse || true\n")],
+     "no `# justified: <why>` and no known idiom", "a gate script swallows a failure (`|| true`) without saying why")
+case("audit_swallowed_failures.py (stale table)", py("audit_swallowed_failures.py"),
+     [Edit("scripts/README-gates.md", "justified: probe; the exit status is the test", "justified: probe; the exit status is NOT the test")],
+     "audit table in scripts/README-gates.md is stale", "the generated audit table no longer matches the `# justified:` comments")
 case("check_shell_lint.sh", ["bash", "scripts/check_shell_lint.sh"],
      [Create("scripts/zz_redrun.sh", '#!/usr/bin/env bash\ncd /tmp\nrm -rf $UNSET_VAR/\n')],
      "zz_redrun.sh", "a new gate script carries a shellcheck warning (unquoted variable, unchecked cd)")
@@ -378,8 +453,12 @@ case("check_no_local_paths.py --self-test", py("web/check_no_local_paths.py", "-
 GODOT = os.environ.get("KANAMA_GODOT_BIN", "/nonexistent-godot")
 HELLO = "example_project/HelloScript.kt"
 case("tool_smoke.sh", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(file)._readyX health=")],
+     "missing pattern", "the example script no longer logs its scene-delivered properties: the failure comes from the editor run's log, not the plugin-copy pre-check",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (plugin copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Append("example_project/addons/kanama_tools/plugin.gd", "\n# red run: this copy now differs from the starter template\n")],
-     "plugin copies differ", "the example project's editor plugin drifts from the starter template's copy",
+     "plugin copies differ", "the example project's editor plugin drifts from the starter template's copy (the cheap pre-check)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(HELLO, "HelloScript(file)._ready health=", "HelloScript(file)._readyX health=")],
@@ -418,14 +497,18 @@ case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selft
 
 #CASES-END
 
-
 def main() -> int:
+    global WORK
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--only", help="run only the cases whose gate name contains this text")
     parser.add_argument("--slow", action="store_true", help="also run the cases that drive Godot and Gradle (minutes each)")
+    parser.add_argument("--strict", action="store_true", help="a SKIPPED case is a failure (implied when CI is true)")
+    parser.add_argument("--allow-skip", default="", help="comma-separated case-name substrings a --strict run may skip")
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--markdown", type=Path, help="write the table rows to this file")
     args = parser.parse_args()
+    strict = args.strict or os.environ.get("CI", "").strip().lower() in ("true", "1", "yes")
+    allowed_skips = [s.strip() for s in args.allow_skip.split(",") if s.strip()]
 
     cases = [c for c in CASES if (not args.only or args.only in c.gate) and (args.slow or not c.slow or args.only)]
     if args.list:
@@ -436,22 +519,56 @@ def main() -> int:
         print("gate_red_runs: no case matches", file=sys.stderr)
         return 2
 
+    def on_signal(signum, _frame):  # the finally below then removes the workspace
+        raise SystemExit(128 + signum)
+
+    for signum in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
+        signal.signal(signum, on_signal)
+
     before = git_status()
+    tmp, WORK = make_workspace()
+    try:
+        failures, rows, skipped = run_cases(cases, strict, allowed_skips)
+    finally:
+        drop_workspace(tmp, WORK)
+        WORK = SRC
+    after = git_status()
+    if before != after:
+        failures.append("the dev checkout changed across the run (this must never happen):\n" + "\n".join(sorted(set(after.splitlines()) ^ set(before.splitlines()))))
+
+    if args.markdown:
+        header = "| gate | how to make it red | red output | green after revert |\n|---|---|---|---|\n"
+        args.markdown.write_text(header + "\n".join(rows) + "\n", encoding="utf-8")
+
+    if failures:
+        print("\ngate_red_runs: FAIL", file=sys.stderr)
+        for failure in failures:
+            print(f"- {failure}", file=sys.stderr)
+        return 1
+    done = len(cases) - len(skipped)
+    print(f"\ngate_red_runs: PASS {done} gate(s) went red on a known-bad input and green again after the revert"
+          + (f"; {len(skipped)} SKIPPED ({', '.join(skipped)})" if skipped else ""))
+    return 0
+
+
+def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tuple[list[str], list[str], list[str]]:
     failures: list[str] = []
     rows: list[str] = []
     skipped: list[str] = []
     for c in cases:
         print(f"== {c.gate}: {c.how}", flush=True)
         if c.requires_env and not Path(os.environ.get(c.requires_env, "/nonexistent")).exists():
-            print(f"SKIP: {c.gate}: needs {c.requires_env} to name a directory", flush=True)
+            print(f"SKIP: {c.gate}: needs {c.requires_env} to name an existing path", flush=True)
             skipped.append(c.gate)
             rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: needs {c.requires_env} | - |")
+            if strict and not any(a in c.gate for a in allowed_skips):
+                failures.append(f"{c.gate}: SKIPPED (needs {c.requires_env}) in a strict run; set it, or pass --allow-skip")
             continue
         for pre in c.pre:
             pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))
             if pre_rc != 0:
                 failures.append(f"{c.gate}: prerequisite {pre} failed (exit {pre_rc}):\n{pre_out[-600:]}")
-        rc, out, secs = run(c)
+        rc, out, _secs = run(c)
         if rc != 0:
             failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
             print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
@@ -479,25 +596,7 @@ def main() -> int:
             if ok
             else f"| `{c.gate}` | {c.how} | UNPROVEN | - |"
         )
-
-    after = git_status()
-    if before != after:
-        changed = sorted(set(after.splitlines()) ^ set(before.splitlines()))
-        failures.append("the working tree changed across the run (a mutation was not reverted):\n" + "\n".join(changed))
-
-    if args.markdown:
-        header = "| gate | how to make it red | red output | green after revert |\n|---|---|---|---|\n"
-        args.markdown.write_text(header + "\n".join(rows) + "\n", encoding="utf-8")
-
-    if failures:
-        print("\ngate_red_runs: FAIL", file=sys.stderr)
-        for failure in failures:
-            print(f"- {failure}", file=sys.stderr)
-        return 1
-    done = len(cases) - len(skipped)
-    print(f"\ngate_red_runs: PASS {done} gate(s) went red on a known-bad input and green again after the revert"
-          + (f"; {len(skipped)} SKIPPED ({', '.join(skipped)})" if skipped else ""))
-    return 0
+    return failures, rows, skipped
 
 
 if __name__ == "__main__":
