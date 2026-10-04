@@ -15,9 +15,12 @@ class QuadMesh(handle: GodotHandle) : PlaneMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): QuadMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): QuadMesh? =
+        internal fun wrapOwned(handle: RawSegment): QuadMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(QuadMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): QuadMesh? =
             if (handle.address() == 0L) null else QuadMesh(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

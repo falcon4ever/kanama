@@ -154,9 +154,12 @@ class SkeletonModification2DFABRIK(handle: GodotHandle) : SkeletonModification2D
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonModification2DFABRIK? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkeletonModification2DFABRIK? =
+        internal fun wrapOwned(handle: RawSegment): SkeletonModification2DFABRIK? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkeletonModification2DFABRIK(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DFABRIK? =
             if (handle.address() == 0L) null else SkeletonModification2DFABRIK(GodotHandle(handle))
 
         private const val SET_TARGET_NODE_HASH = 1348162250L

@@ -17,7 +17,7 @@ import net.multigesture.kanama.binding.runtime.requireGodotReturn
  * Generated from Godot docs: Node.create_tween
  */
 fun Node.createTween(): Tween {
-    return requireGodotReturn(Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "Node.create_tween")
+    return requireGodotReturn(Tween.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "Node.create_tween")
 }
 
 private const val CREATE_TWEEN_HASH = 3426978995L

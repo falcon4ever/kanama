@@ -39,9 +39,12 @@ class VisualShaderNodeParticleAccelerator(handle: GodotHandle) : VisualShaderNod
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleAccelerator? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleAccelerator? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleAccelerator? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleAccelerator(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleAccelerator? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleAccelerator(GodotHandle(handle))
 
         private const val SET_MODE_HASH = 3457585749L

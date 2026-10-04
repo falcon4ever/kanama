@@ -44,9 +44,12 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationAprilTag? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAprilTag? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAprilTag? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialCapabilityConfigurationAprilTag(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAprilTag? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAprilTag(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L

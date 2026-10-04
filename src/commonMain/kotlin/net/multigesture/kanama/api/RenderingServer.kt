@@ -230,7 +230,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dGet(texture: RID): Image? {
-        return Image.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(texture2dGetBind, singleton, texture))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDArgRetObject(texture2dGetBind, singleton, texture))
     }
 
     /**
@@ -240,7 +240,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture2dLayerGet(texture: RID, layer: Int): Image? {
-        return Image.wrap(ObjectCalls.ptrcallWithRIDAndIntArgRetObject(texture2dLayerGetBind, singleton, texture, layer))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDAndIntArgRetObject(texture2dLayerGetBind, singleton, texture, layer))
     }
 
     /**
@@ -250,7 +250,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun texture3dGet(texture: RID): List<Image> {
-        return ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(texture3dGetBind, singleton, texture, Image::wrap)
+        return ObjectCalls.ptrcallWithRIDArgRetTypedObjectList(texture3dGetBind, singleton, texture, Image::wrapBorrowed)
     }
 
     /**
@@ -3719,7 +3719,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun skyBakePanorama(sky: RID, energy: Double, bakeIrradiance: Boolean, size: Vector2i): Image? {
-        return Image.wrap(ObjectCalls.ptrcallWithRIDDoubleBoolVector2iArgsRetObject(skyBakePanoramaBind, singleton, sky, energy, bakeIrradiance, size))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDDoubleBoolVector2iArgsRetObject(skyBakePanoramaBind, singleton, sky, energy, bakeIrradiance, size))
     }
 
     /**
@@ -4130,7 +4130,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun environmentBakePanorama(environment: RID, bakeIrradiance: Boolean, size: Vector2i): Image? {
-        return Image.wrap(ObjectCalls.ptrcallWithRIDBoolVector2iArgsRetObject(environmentBakePanoramaBind, singleton, environment, bakeIrradiance, size))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDBoolVector2iArgsRetObject(environmentBakePanoramaBind, singleton, environment, bakeIrradiance, size))
     }
 
     /**
@@ -4684,7 +4684,7 @@ object RenderingServer {
      */
     @JvmStatic
     fun bakeRenderUv2(base: RID, materialOverrides: List<RID>, imageSize: Vector2i): List<Image> {
-        return ObjectCalls.ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(bakeRenderUv2Bind, singleton, base, materialOverrides, imageSize, Image::wrap)
+        return ObjectCalls.ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList(bakeRenderUv2Bind, singleton, base, materialOverrides, imageSize, Image::wrapBorrowed)
     }
 
     /**

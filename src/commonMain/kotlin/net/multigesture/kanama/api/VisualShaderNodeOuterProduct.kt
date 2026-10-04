@@ -13,9 +13,12 @@ class VisualShaderNodeOuterProduct(handle: GodotHandle) : VisualShaderNode(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeOuterProduct? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeOuterProduct? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeOuterProduct? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeOuterProduct(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeOuterProduct? =
             if (handle.address() == 0L) null else VisualShaderNodeOuterProduct(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

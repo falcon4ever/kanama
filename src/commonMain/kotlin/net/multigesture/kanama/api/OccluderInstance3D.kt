@@ -143,7 +143,7 @@ class OccluderInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: OccluderInstance3D.get_occluder
      */
     fun getOccluder(): Occluder3D? {
-        return Occluder3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOccluderBind, segment))
+        return Occluder3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOccluderBind, segment))
     }
 
     companion object {

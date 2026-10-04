@@ -13,15 +13,18 @@ class OfflineMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OfflineMultiplayerPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OfflineMultiplayerPeer? =
+        internal fun wrapOwned(handle: RawSegment): OfflineMultiplayerPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(OfflineMultiplayerPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OfflineMultiplayerPeer? =
             if (handle.address() == 0L) null else OfflineMultiplayerPeer(GodotHandle(handle))
 
         // Instantiate an OfflineMultiplayerPeer.
         @JvmStatic
         fun create(): OfflineMultiplayerPeer =
-            OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer")))
+            RefCounted.owned(OfflineMultiplayerPeer(GodotHandle(ObjectCalls.constructObject("OfflineMultiplayerPeer"))))
 
         // No MethodBinds emitted yet.
     }

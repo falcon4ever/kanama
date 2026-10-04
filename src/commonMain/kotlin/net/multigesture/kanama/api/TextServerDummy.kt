@@ -15,9 +15,12 @@ class TextServerDummy(handle: GodotHandle) : TextServerExtension(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextServerDummy? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextServerDummy? =
+        internal fun wrapOwned(handle: RawSegment): TextServerDummy? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextServerDummy(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextServerDummy? =
             if (handle.address() == 0L) null else TextServerDummy(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

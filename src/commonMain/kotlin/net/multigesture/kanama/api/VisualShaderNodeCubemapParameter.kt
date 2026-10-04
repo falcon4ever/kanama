@@ -13,9 +13,12 @@ class VisualShaderNodeCubemapParameter(handle: GodotHandle) : VisualShaderNodeTe
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCubemapParameter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeCubemapParameter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeCubemapParameter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeCubemapParameter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCubemapParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeCubemapParameter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

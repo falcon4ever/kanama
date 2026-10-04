@@ -725,7 +725,11 @@ class KanamaScript(
                 "The script may have failed to attach."
             )
         success = true
-        return instance to net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(baseHandle))
+        // Owned (task 132 D1): the caller gets the constructing +1, with its fallback release.
+        return instance to
+          net.multigesture.kanama.api.RefCounted.owned(
+            net.multigesture.kanama.api.Resource.fromHandle(GodotHandle(baseHandle))
+          )
       } finally {
         // The loaded script wrapper is our transient +1 — the base resource holds its own
         // reference via setScript, so release ours (the borrowed fallback stays untouched).
@@ -1504,8 +1508,14 @@ class KanamaScript(
       ScriptBridge.configureLifecycleProcessing(si)
       traceStage(script, "tracking + ScriptBridge.create")
       script.trackOwnerObject(forObject.address())
-      ScriptBridge.trackScriptInstance(forObject, si)
-      ScriptBridge.trackKotlinObject(forObject, si.kotlinObject)
+      // A RefCounted owner gets a ScriptOwnerLink in front of the instance (task 132): the
+      // instance holds a +1 on its owner and the native link goes weak when only it is left.
+      val entry: Any = if (allowPlaceholder) si else ScriptOwnerLinks.linkFor(si, forObject, script)
+      ScriptBridge.trackScriptInstance(forObject, entry)
+      ScriptBridge.trackKotlinObject(
+        forObject,
+        if (entry is ScriptOwnerLink) entry else si.kotlinObject,
+      )
       // The owner's instance id, for handing this script back to Godot as a value after the owner
       // may have been freed (task 131 item 2; BuiltinTypes.scriptValue).
       if (si.kotlinObject !== KanamaPlaceholderScriptInstanceData) {
@@ -1515,7 +1525,7 @@ class KanamaScript(
         )
       }
       ScriptBridge.retainScriptResource(script.godotObject)
-      val siHandle = ObjectRegistry.register(si)
+      val siHandle = ObjectRegistry.register(entry)
       val instancePtr = ScriptBridge.create(siHandle)
 
       retPtr.set(ADDRESS, 0, instancePtr)

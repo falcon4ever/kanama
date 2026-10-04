@@ -55,9 +55,10 @@ accessors now and the rest in a follow-up (see "Web" below).
   found.
 - **Checked casts**: `x.castOrNull<Camera3D>()` (GDScript `x as Camera3D`), `x.cast<Camera3D>()`
   (throws `ClassCastException`), `node.requireAs<Timer>(path)` and `node.getNodeAs<Timer>(path)`.
-  One `Object.is_class` call, made even when the wrapper's Kotlin class already matches; the result
-  is the same wrapper or a new non-owning view of the object, never yours to close (close the
-  original). `NodePath` overloads exist for `requireAs`, `getNodeAs`, `node` and `script`. They are backed by
+  One `Object.is_class` call, made even when the wrapper's Kotlin class already matches. A cast to a
+  `RefCounted` class returns a new wrapper with a reference of its own (task 132, like the `from*`
+  downcasts: close it or let the GC release it); any other result is the same wrapper or a new view
+  of the object. `NodePath` overloads exist for `requireAs`, `getNodeAs`, `node` and `script`. They are backed by
   generated class-token tables (`GodotClasses.kt`, `PlatformGodotClasses.kt`, from
   `scripts/generate_api_wrapper.py --write-tree`) built from class literals and constructor calls,
   so they need no reflection and survive R8. Size: the two desktop table classes are 54.6 KB of
@@ -164,6 +165,126 @@ accessors now and the rest in a follow-up (see "Web" below).
   - **Source break:** script annotations (`net.multigesture.kanama.annotations`: the removed names
     above) and lifecycle input handlers (`GodotObject` → `InputEvent`). No generated API signature
     changes.
+### Changed — a forgotten `close()` is a late release, not a leak (task 132)
+
+- **Owned `RefCounted` wrappers you never close are released after the garbage collector drops
+  them**, on desktop, Android 13+ and iOS (desktop smoke-tested; the Android and iOS device runs
+  are pending). The release runs on the main thread at the next frame
+  (the collector only queues it), and at shutdown a collection runs before Godot's leak report, so
+  a dropped getter result, `Tweener` or loaded resource no longer stays alive until exit or shows
+  up as `Leaked instance`. `close()` and `use { }` are unchanged and still release at once: the
+  rule is now "close to release early", not "must close". A closed wrapper is never released a
+  second time, and borrowed views (`fromHandle`, wrapper constructors, values read through
+  `call`/`get`) are never released. Measured on an Apple M1 Max: registering the fallback adds
+  about 20-80 ns to each owned wrapper (`getMesh()` + `close()`), nothing to calls or to node
+  wrappers. How late the release comes depends on when the collector runs: with a forced
+  collection per frame, 10,000 dropped owned `Resource`s are back to the object-count baseline in
+  2-3 frames (`scripts/runtime_smoke.sh`, `owned_release_smoke.tscn`); with no forced collection
+  (600 frames of ~7 ms), 200 owned getter results dropped a frame waited about 260 frames on
+  average (one collection), and 5 a frame were not released within the 10 s at all (no collection
+  ran). The drain spends at most about 1 ms a frame on these releases and carries the rest over
+  (10,000 dropped a frame, budget and cap together: p99 frame 9.4 ms, max 30 ms, against
+  37.8/70 ms before), and above 100,000 waiting wrappers new ones stop registering, with a one-time warning.
+  Native memory (images, meshes) is invisible to the collector, so close big resources and what
+  you make in a loop.
+- **A script object keeps its resource alive**, as in GDScript. Holding the Kotlin object of a
+  resource script that extends `KanamaScript` (`ResourceLoader.load(path)?.kotlinScriptInstance<T>()`,
+  `newScriptInstance<T>().instance`) keeps the resource alive after the wrapper it came from is
+  closed or collected; dropping the script object then releases the resource. C#'s model: the
+  script instance holds a reference on its owner, and its link to the Kotlin object is strong
+  while the engine holds the owner and weak when only the script object does (switched in the
+  instance's `refcount_incremented` / `refcount_decremented`; desktop, Android and iOS). Without
+  it, the GC fallback freed the resource under a kept script object (the City-Builder demo's
+  Load-then-Save path). A plain script class (not a `KanamaScript`) cannot hold that link; a
+  resource carrying one keeps its pre-fallback lifetime instead (a forgotten wrapper of it is
+  released only when the script is detached or at shutdown, so a kept script object stays safe).
+  Smoke:
+  `script_owner_smoke.tscn` (red with `KANAMA_SCRIPT_OWNER_LINKS=0`, a measurement knob). If the
+  collector drops a script object and the engine loads its resource from the cache again before
+  the next frame, the rebuilt script instance re-reads its property values from the resource's
+  file (what GDScript's re-parse gives); only a resource with no file, or a sub-resource stored
+  inside another file, starts from the defaults, with a warning (`cache_recreate_probe.tscn`).
+  The rebuild and the re-read happen on the script object's first use, never inside the engine's
+  reference callback (which holds the loader locks) nor while the resource is freed
+  (`refill_on_free_probe.tscn`); the re-read loads an uncached copy, so the script constructor
+  runs for it too, and a file changed on disk since the load gives script properties from the
+  file but engine properties from memory. `KANAMA_GC_RELEASES=0` turns these owner links
+  off too.
+- **The `from*` downcasts own their wrapper** (`Mesh.fromObject(...)`, `ArrayMesh.fromResource(...)`,
+  ...): each takes a reference of its own, so a downcast kept in a field keeps the object alive.
+  Closing one is now correct (it releases its own reference) and forgetting one is a late
+  release.
+- **A script property's references belong to its resource or node, not to the Kotlin object.** A
+  property set (`@Export var structures: List<DataStructure>`, a resource-typed field, a
+  `List`/`Map` of them) takes a reference on each `RefCounted` value; those were given back by
+  reading the Kotlin property values when the script instance was freed, so once the collector had
+  dropped a `KanamaScript` object (the owner link above), every element leaked (the City-Builder
+  demo: "244 resources still in use at exit" after Load). The runtime now records each set's
+  references under (owner, property), one implementation for desktop, Android and iOS: setting the
+  property again releases what it held before (once the new value was assigned), and freeing the
+  instance releases them all, whether or not the Kotlin object is still alive. Plain script classes
+  and node scripts use the same record. These references are the runtime's own: the wrapper the
+  Kotlin property holds keeps its own reference, so a Kotlin alias of an old value
+  (`cached = holder.res`) stays valid after the engine sets the property again, as in GDScript, and
+  is released by its `close()` or the GC fallback. A value the script assigned itself
+  (`smokeScene = PackedScene.create()`) is still closed when the instance is freed while the Kotlin
+  object lives, else released by the GC fallback. A value Kotlin code replaces in the property, or
+  removes from a `MutableList` property, stays referenced by the record until the engine sets the
+  property again or the instance is freed. Smokes: `property_retain_smoke.tscn` (red before: the
+  elements outlived their owner), `property_lifetime_smoke.tscn`. The shutdown collection now
+  repeats while a round releases something (at most 8 rounds, counted in its log line): freeing a
+  resource gives back its properties' references, and those objects' script objects are only
+  collectable in the next round (City-Builder after Load, 30 GC frames, Save, Load: no resource in
+  use at exit; the shutdown releases took 78 ms in that run).
+- **iOS: setting a Node into a script property no longer corrupts it.** Since the iOS backend
+  landed, the shim called `RefCounted.reference()` on every object set into a script property;
+  Godot's ptrcall casts blindly, so on a Node it wrote into the Node's own fields (its
+  `scene_file_path`), and a later `unreference()` could crash. It also recorded at most 16
+  references per instance (City-Builder leaked about 106 structures per Load), never released them
+  when the property was set again, and the refill of a rebuilt instance took a second set. And its
+  set path never destroyed the copy of a set `Array` it read the elements from, so every element
+  of every `Array` set into a script property kept one more reference forever. iOS now uses the
+  registry above (only `RefCounted` objects are referenced, with no cap) and destroys that copy.
+  iOS self-test row `property-retain`: one reference per element after the set, a new set or the
+  owner's free drops it and the element dies; the desktop smoke measures the same
+  (`PropertyLifetimeSmoke items reset_drop=1 ... old_dead=true freed_dead=true`).
+- **A script detached from a live resource no longer pins its script object.** `set_script(null)`
+  (or a script swap) on a `RefCounted` owner that lives on left the owner link strong, and the
+  script object's cleanup reached it: the detached Kotlin object, and everything its properties
+  held, stayed alive until exit. The free now lets go of the instance and drops that cleanup
+  (desktop and Android; iOS's cleanup never reached the instance).
+- **Checked casts to a `RefCounted` class own their wrapper** (`res.cast<Texture2D>()`,
+  `castOrNull`), like the `from*` downcasts: the result takes a reference of its own, so a cast kept
+  in a field keeps the object alive after the original is closed. Casts to node classes are
+  unchanged. Cost on an Apple M1 Max (desktop debug build, 10,000 casts a frame, median of 100
+  frames): a `RefCounted` cast 320 ns before, about 400 ns now (a new wrapper, `reference()` and
+  the fallback registration; about 435 ns with its `close()`); a node cast unchanged at about
+  317 ns.
+- **`close()` on a borrowed view releases nothing** (`fromHandle`, a wrapper constructor over a
+  handle): before, it released a reference the view never took, which could free an object
+  someone else held. Debug builds print a warning naming the class.
+- **Wrappers made off the engine main thread get no GC fallback.** A worker can still be inside a
+  call through a wrapper when the main thread would release it, so only main-thread wrappers
+  register the fallback; close the ones you make on a worker (`use { }`). See
+  [Threads](docs/game-dev/scripts.md#threads).
+- **`kanama/debug/log_gc_releases`** (project setting, off by default, registered by the editor
+  plugin) logs each release the collector made, once per creation site:
+  `released by GC: Mesh (created at Player.kt:42)`.
+- Android 8-12 debug installs have no `java.lang.ref.Cleaner`; there `close()` stays the only
+  release. Web keeps the explicit rule for now: the GC fallback and the owner links do not exist on
+  Web yet, and Web's `RefCounted` is not `AutoCloseable` (only a dozen classes such as
+  `PackedScene`, `Texture2D` and `AudioStream` have `close()`), so code shared with Web cannot
+  `use { }` most `RefCounted` wrappers. `KANAMA_GC_RELEASES=0` in the game's environment
+  turns the fallback off (a measurement knob). The shutdown collection runs at the editor and the
+  scene deinitialization levels and is timed in the log; on Android it uses `Runtime.gc()`, which
+  ART honours (`System.gc()` is ignored there without a finalization in between). The log
+  setting's stack walk costs about 3.6 us per owned wrapper, so leave it off in builds you ship.
+  On iOS the runtime's messages now reach Godot's output (`print` / `push_warning`) instead of
+  stdout only.
+- `KANAMA_FREED_OBJECT_CHECKS=binding` (desktop/Android, a measurement knob) runs the freed-object
+  check through an instance binding: one flag read per call instead of an engine lookup, in any
+  build, at the price of a slower wrapper construction (~30 ns instead of ~11 ns). It is not the
+  default: on a Bunnymark-style loop it is slower than the debug lookup it would replace.
 
 ### Added — the generated API conventions page and the public-signature gate (task 126)
 

@@ -51,9 +51,12 @@ open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PlaceholderTextureLayered? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PlaceholderTextureLayered? =
+        internal fun wrapOwned(handle: RawSegment): PlaceholderTextureLayered? =
+            if (handle.address() == 0L) null else RefCounted.owned(PlaceholderTextureLayered(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PlaceholderTextureLayered? =
             if (handle.address() == 0L) null else PlaceholderTextureLayered(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 1130785943L

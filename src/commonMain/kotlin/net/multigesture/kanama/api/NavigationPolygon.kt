@@ -149,7 +149,7 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationMesh(): NavigationMesh? {
         checkOpen()
-        return NavigationMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, segment))
+        return NavigationMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNavigationMeshBind, segment))
     }
 
     /**
@@ -604,9 +604,12 @@ class NavigationPolygon(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationPolygon? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): NavigationPolygon? =
+        internal fun wrapOwned(handle: RawSegment): NavigationPolygon? =
+            if (handle.address() == 0L) null else RefCounted.owned(NavigationPolygon(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): NavigationPolygon? =
             if (handle.address() == 0L) null else NavigationPolygon(GodotHandle(handle))
 
         private const val SET_VERTICES_HASH = 1509147220L

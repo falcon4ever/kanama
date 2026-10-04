@@ -198,9 +198,12 @@ class RDPipelineMultisampleState(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDPipelineMultisampleState? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDPipelineMultisampleState? =
+        internal fun wrapOwned(handle: RawSegment): RDPipelineMultisampleState? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDPipelineMultisampleState(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDPipelineMultisampleState? =
             if (handle.address() == 0L) null else RDPipelineMultisampleState(GodotHandle(handle))
 
         private const val SET_SAMPLE_COUNT_HASH = 3774171498L

@@ -16,6 +16,9 @@ internal actual object ObjectRuntime {
   actual fun isLive(segment: RawSegment, instanceId: Long): Boolean =
     IosGodot.objectIsLive(segment.address(), instanceId)
 
+  // No instance binding on iOS yet (task 132 D7): the wrapper keeps the instance-id lookup.
+  actual fun liveFlagOf(segment: RawSegment): LiveFlag? = null
+
   actual fun emitSignal(segment: RawSegment, signal: String, args: List<Any?>) {
     val instance = segment.address()
     val single = args.singleOrNull()

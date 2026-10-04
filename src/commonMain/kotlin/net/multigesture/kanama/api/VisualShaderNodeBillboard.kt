@@ -56,9 +56,12 @@ class VisualShaderNodeBillboard(handle: GodotHandle) : VisualShaderNode(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeBillboard? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeBillboard? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeBillboard? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeBillboard(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeBillboard? =
             if (handle.address() == 0L) null else VisualShaderNodeBillboard(GodotHandle(handle))
 
         private const val SET_BILLBOARD_TYPE_HASH = 1227463289L

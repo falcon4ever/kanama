@@ -579,9 +579,12 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AStarGrid2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AStarGrid2D? =
+        internal fun wrapOwned(handle: RawSegment): AStarGrid2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(AStarGrid2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AStarGrid2D? =
             if (handle.address() == 0L) null else AStarGrid2D(GodotHandle(handle))
 
         private const val SET_REGION_HASH = 1763793166L

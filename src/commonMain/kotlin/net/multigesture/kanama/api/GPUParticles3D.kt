@@ -533,7 +533,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_process_material
      */
     fun getProcessMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProcessMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProcessMaterialBind, segment))
     }
 
     /**
@@ -665,7 +665,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: GPUParticles3D.get_draw_pass_mesh
      */
     fun getDrawPassMesh(pass: Int): Mesh? {
-        return Mesh.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDrawPassMeshBind, segment, pass))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getDrawPassMeshBind, segment, pass))
     }
 
     fun setSkin(skin: Skin?) {
@@ -673,7 +673,7 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
     }
 
     fun getSkin(): Skin? {
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
     }
 
     /**

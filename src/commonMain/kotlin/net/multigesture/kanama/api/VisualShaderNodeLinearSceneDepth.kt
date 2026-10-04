@@ -13,9 +13,12 @@ class VisualShaderNodeLinearSceneDepth(handle: GodotHandle) : VisualShaderNode(h
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeLinearSceneDepth? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeLinearSceneDepth? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeLinearSceneDepth? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeLinearSceneDepth(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeLinearSceneDepth? =
             if (handle.address() == 0L) null else VisualShaderNodeLinearSceneDepth(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

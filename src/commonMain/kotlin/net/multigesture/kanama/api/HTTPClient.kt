@@ -62,7 +62,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnection(): StreamPeer? {
         checkOpen()
-        return StreamPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getConnectionBind, segment))
+        return StreamPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getConnectionBind, segment))
     }
 
     /**
@@ -902,9 +902,12 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): HTTPClient? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): HTTPClient? =
+        internal fun wrapOwned(handle: RawSegment): HTTPClient? =
+            if (handle.address() == 0L) null else RefCounted.owned(HTTPClient(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): HTTPClient? =
             if (handle.address() == 0L) null else HTTPClient(GodotHandle(handle))
 
         private const val CONNECT_TO_HOST_HASH = 504540374L

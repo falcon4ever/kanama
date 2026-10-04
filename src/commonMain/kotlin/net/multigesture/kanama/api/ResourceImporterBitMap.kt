@@ -15,9 +15,12 @@ class ResourceImporterBitMap(handle: GodotHandle) : ResourceImporter(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterBitMap? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterBitMap? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterBitMap? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterBitMap(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterBitMap? =
             if (handle.address() == 0L) null else ResourceImporterBitMap(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

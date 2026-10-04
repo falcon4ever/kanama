@@ -116,7 +116,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeinCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeinCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFadeinCurveBind, segment))
     }
 
     /**
@@ -162,7 +162,7 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
      */
     fun getFadeoutCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFadeoutCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFadeoutCurveBind, segment))
     }
 
     /**
@@ -359,9 +359,12 @@ class AnimationNodeOneShot(handle: GodotHandle) : AnimationNodeSync(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeOneShot? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeOneShot? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeOneShot? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeOneShot(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeOneShot? =
             if (handle.address() == 0L) null else AnimationNodeOneShot(GodotHandle(handle))
 
         private const val SET_FADEIN_TIME_HASH = 373806689L

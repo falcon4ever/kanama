@@ -466,7 +466,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.get_font
      */
     fun getFont(): Font? {
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
     }
 
     /**
@@ -796,7 +796,7 @@ class Label3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: Label3D.generate_triangle_mesh
      */
     fun generateTriangleMesh(): TriangleMesh? {
-        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
+        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
     /**

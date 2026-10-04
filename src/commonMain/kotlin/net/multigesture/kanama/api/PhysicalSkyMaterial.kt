@@ -322,15 +322,18 @@ class PhysicalSkyMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getNightSky(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getNightSkyBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getNightSkyBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicalSkyMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PhysicalSkyMaterial? =
+        internal fun wrapOwned(handle: RawSegment): PhysicalSkyMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(PhysicalSkyMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PhysicalSkyMaterial? =
             if (handle.address() == 0L) null else PhysicalSkyMaterial(GodotHandle(handle))
 
         private const val SET_RAYLEIGH_COEFFICIENT_HASH = 373806689L

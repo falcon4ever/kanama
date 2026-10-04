@@ -64,7 +64,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
             RefCounted.releaseHandle(ret)
             return this
         }
-        return AnimationNode.wrap(ret)
+        return AnimationNode.wrapOwned(ret)
     }
 
     /**
@@ -164,7 +164,7 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
      */
     fun getTransition(idx: Int): AnimationNodeStateMachineTransition? {
         checkOpen()
-        return AnimationNodeStateMachineTransition.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTransitionBind, segment, idx))
+        return AnimationNodeStateMachineTransition.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getTransitionBind, segment, idx))
     }
 
     /**
@@ -348,9 +348,12 @@ class AnimationNodeStateMachine(handle: GodotHandle) : AnimationRootNode(handle)
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeStateMachine? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeStateMachine? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeStateMachine? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeStateMachine(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachine? =
             if (handle.address() == 0L) null else AnimationNodeStateMachine(GodotHandle(handle))
 
         private const val ADD_NODE_HASH = 1980270704L

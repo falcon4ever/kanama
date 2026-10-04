@@ -43,6 +43,14 @@ abstract class KanamaScript<Self : Any>(
 ) {
   val self: Self = selfFactory(godotObject)
 
+  /**
+   * Keeps this script's runtime instance alive while this object is reachable, and holds the
+   * cleanup that releases the owner reference once it is not (task 132: a script object on a
+   * `RefCounted` keeps its owner alive, as in GDScript). Runtime-owned; set when the instance is
+   * created.
+   */
+  internal var kanamaInstanceAnchor: Any? = null
+
   /** Wrap this script's Godot object as another compatible Kanama wrapper type. */
   inline fun <T> selfAs(ctor: (GodotHandle) -> T): T = ctor(godotObject)
 

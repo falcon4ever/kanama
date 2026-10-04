@@ -120,7 +120,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation_library
      */
     fun getAnimationLibrary(name: String): AnimationLibrary? {
-        return AnimationLibrary.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationLibraryBind, segment, name))
+        return AnimationLibrary.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationLibraryBind, segment, name))
     }
 
     /**
@@ -148,7 +148,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation
      */
     fun getAnimation(name: String): Animation? {
-        return Animation.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, segment, name))
+        return Animation.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, segment, name))
     }
 
     /**

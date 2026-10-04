@@ -31,9 +31,12 @@ class OpenXRSpatialCapabilityConfigurationPlaneTracking(handle: GodotHandle) : O
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialCapabilityConfigurationPlaneTracking(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationPlaneTracking? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationPlaneTracking(GodotHandle(handle))
 
         private const val SUPPORTS_MESH_2D_HASH = 2240911060L

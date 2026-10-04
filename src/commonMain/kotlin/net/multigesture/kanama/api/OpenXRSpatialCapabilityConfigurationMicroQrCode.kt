@@ -16,9 +16,12 @@ class OpenXRSpatialCapabilityConfigurationMicroQrCode(handle: GodotHandle) : Ope
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationMicroQrCode? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialCapabilityConfigurationMicroQrCode? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialCapabilityConfigurationMicroQrCode? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialCapabilityConfigurationMicroQrCode(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationMicroQrCode? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationMicroQrCode(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L

@@ -58,9 +58,12 @@ class Expression(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Expression? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Expression? =
+        internal fun wrapOwned(handle: RawSegment): Expression? =
+            if (handle.address() == 0L) null else RefCounted.owned(Expression(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Expression? =
             if (handle.address() == 0L) null else Expression(GodotHandle(handle))
 
         private const val PARSE_HASH = 3069722906L

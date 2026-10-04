@@ -273,9 +273,12 @@ class AnimationNodeAnimation(handle: GodotHandle) : AnimationRootNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeAnimation? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeAnimation? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeAnimation? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeAnimation(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeAnimation? =
             if (handle.address() == 0L) null else AnimationNodeAnimation(GodotHandle(handle))
 
         private const val SET_ANIMATION_HASH = 3304788590L

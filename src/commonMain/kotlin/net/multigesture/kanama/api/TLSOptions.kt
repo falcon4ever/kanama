@@ -49,7 +49,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrustedCaChain(): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTrustedCaChainBind, segment))
+        return X509Certificate.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTrustedCaChainBind, segment))
     }
 
     /**
@@ -59,7 +59,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPrivateKey(): CryptoKey? {
         checkOpen()
-        return CryptoKey.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrivateKeyBind, segment))
+        return CryptoKey.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPrivateKeyBind, segment))
     }
 
     /**
@@ -69,7 +69,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOwnCertificate(): X509Certificate? {
         checkOpen()
-        return X509Certificate.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOwnCertificateBind, segment))
+        return X509Certificate.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOwnCertificateBind, segment))
     }
 
     companion object {
@@ -84,7 +84,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.client
          */
         fun client(trustedChain: X509Certificate?, commonNameOverride: String = ""): TLSOptions? {
-            return TLSOptions.wrap(ObjectCalls.ptrcallWithObjectStringArgRetObject(clientBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT, commonNameOverride))
+            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithObjectStringArgRetObject(clientBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT, commonNameOverride))
         }
 
         /**
@@ -97,7 +97,7 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.client_unsafe
          */
         fun clientUnsafe(trustedChain: X509Certificate?): TLSOptions? {
-            return TLSOptions.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(clientUnsafeBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT))
+            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(clientUnsafeBind, NULL_SEGMENT, trustedChain?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         /**
@@ -108,14 +108,17 @@ class TLSOptions(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: TLSOptions.server
          */
         fun server(key: CryptoKey?, certificate: X509Certificate?): TLSOptions? {
-            return TLSOptions.wrap(ObjectCalls.ptrcallWithTwoObjectArgsRetObject(serverBind, NULL_SEGMENT, key?.requireOpenHandle() ?: NULL_SEGMENT, certificate?.requireOpenHandle() ?: NULL_SEGMENT))
+            return TLSOptions.wrapOwned(ObjectCalls.ptrcallWithTwoObjectArgsRetObject(serverBind, NULL_SEGMENT, key?.requireOpenHandle() ?: NULL_SEGMENT, certificate?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TLSOptions? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TLSOptions? =
+        internal fun wrapOwned(handle: RawSegment): TLSOptions? =
+            if (handle.address() == 0L) null else RefCounted.owned(TLSOptions(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TLSOptions? =
             if (handle.address() == 0L) null else TLSOptions(GodotHandle(handle))
 
         private const val CLIENT_HASH = 3565000357L

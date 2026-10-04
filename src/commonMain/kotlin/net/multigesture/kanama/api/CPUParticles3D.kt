@@ -775,7 +775,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_mesh
      */
     fun getMesh(): Mesh? {
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -958,7 +958,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_param_curve
      */
     fun getParamCurve(param: CPUParticles3D.Parameter): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param.value))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param.value))
     }
 
     /**
@@ -1008,7 +1008,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_color_ramp
      */
     fun getColorRamp(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     /**
@@ -1034,7 +1034,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_color_initial_ramp
      */
     fun getColorInitialRamp(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
     }
 
     /**
@@ -1315,7 +1315,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_x
      */
     fun getScaleCurveX(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, segment))
     }
 
     /**
@@ -1333,7 +1333,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_y
      */
     fun getScaleCurveY(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, segment))
     }
 
     /**
@@ -1351,7 +1351,7 @@ class CPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: CPUParticles3D.get_scale_curve_z
      */
     fun getScaleCurveZ(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveZBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveZBind, segment))
     }
 
     /**

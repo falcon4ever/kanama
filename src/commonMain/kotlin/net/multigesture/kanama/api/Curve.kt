@@ -416,9 +416,12 @@ class Curve(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Curve? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Curve? =
+        internal fun wrapOwned(handle: RawSegment): Curve? =
+            if (handle.address() == 0L) null else RefCounted.owned(Curve(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Curve? =
             if (handle.address() == 0L) null else Curve(GodotHandle(handle))
 
         private const val GET_POINT_COUNT_HASH = 3905245786L

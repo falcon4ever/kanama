@@ -30,12 +30,15 @@ class BoxShape3D(handle: GodotHandle) : Shape3D(handle) {
         // KANAMA-IOS-SUGAR: [glue] desktop-parity constructor sugar (the desktop wrapper's
         // MemorySegment constructor is internal, so shared game code uses create()).
         fun create(): BoxShape3D =
-            BoxShape3D(GodotHandle(ObjectCalls.constructObject("BoxShape3D")))
+            RefCounted.owned(BoxShape3D(GodotHandle(ObjectCalls.constructObject("BoxShape3D"))))
 
         fun fromHandle(handle: GodotHandle): BoxShape3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): BoxShape3D? =
+        internal fun wrapOwned(handle: MemorySegment): BoxShape3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(BoxShape3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): BoxShape3D? =
             if (handle.address() == 0L) null else BoxShape3D(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 3460891852L

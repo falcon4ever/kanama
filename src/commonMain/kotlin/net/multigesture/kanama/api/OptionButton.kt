@@ -240,7 +240,7 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
      * Generated from Godot docs: OptionButton.get_item_icon
      */
     fun getItemIcon(idx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, idx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, idx))
     }
 
     /**

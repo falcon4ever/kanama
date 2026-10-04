@@ -47,15 +47,18 @@ open class SocketServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeSocketConnection(): StreamPeerSocket? {
         checkOpen()
-        return StreamPeerSocket.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeSocketConnectionBind, segment))
+        return StreamPeerSocket.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(takeSocketConnectionBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SocketServer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SocketServer? =
+        internal fun wrapOwned(handle: RawSegment): SocketServer? =
+            if (handle.address() == 0L) null else RefCounted.owned(SocketServer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SocketServer? =
             if (handle.address() == 0L) null else SocketServer(GodotHandle(handle))
 
         private const val IS_CONNECTION_AVAILABLE_HASH = 36873697L

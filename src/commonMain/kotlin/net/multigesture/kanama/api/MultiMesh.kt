@@ -90,7 +90,7 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getMesh(): Mesh? {
         checkOpen()
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -458,9 +458,12 @@ class MultiMesh(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MultiMesh? =
+        internal fun wrapOwned(handle: RawSegment): MultiMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(MultiMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MultiMesh? =
             if (handle.address() == 0L) null else MultiMesh(GodotHandle(handle))
 
         private const val SET_MESH_HASH = 194775623L

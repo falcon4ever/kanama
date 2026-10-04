@@ -16,9 +16,12 @@ class MultiplayerPeerExtension(handle: GodotHandle) : MultiplayerPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiplayerPeerExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MultiplayerPeerExtension? =
+        internal fun wrapOwned(handle: RawSegment): MultiplayerPeerExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(MultiplayerPeerExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MultiplayerPeerExtension? =
             if (handle.address() == 0L) null else MultiplayerPeerExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

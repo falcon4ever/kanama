@@ -72,7 +72,7 @@ class StatusIndicator(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: StatusIndicator.get_icon
      */
     fun getIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIconBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getIconBind, segment))
     }
 
     /**

@@ -282,17 +282,20 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventKey? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
         @JvmStatic
         fun from(value: GodotObject): InputEventKey? =
-            if (value.isClass("InputEventKey")) InputEventKey(value.handle) else null
+            if (value.isClass("InputEventKey")) RefCounted.retained(InputEventKey(value.handle)) else null
 
         @JvmStatic
         fun create(): InputEventKey =
-            InputEventKey(GodotHandle(ObjectCalls.constructObject("InputEventKey")))
+            RefCounted.owned(InputEventKey(GodotHandle(ObjectCalls.constructObject("InputEventKey"))))
 
-        internal fun wrap(handle: MemorySegment): InputEventKey? =
+        internal fun wrapOwned(handle: MemorySegment): InputEventKey? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventKey(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): InputEventKey? =
             if (handle.address() == 0L) null else InputEventKey(GodotHandle(handle))
 
 

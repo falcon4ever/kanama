@@ -902,7 +902,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(getTextureImageBind, segment, cacheIndex, size, textureIndex))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(getTextureImageBind, segment, cacheIndex, size, textureIndex))
     }
 
     /**
@@ -1253,9 +1253,12 @@ class FontFile(handle: GodotHandle) : Font(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FontFile? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): FontFile? =
+        internal fun wrapOwned(handle: RawSegment): FontFile? =
+            if (handle.address() == 0L) null else RefCounted.owned(FontFile(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): FontFile? =
             if (handle.address() == 0L) null else FontFile(GodotHandle(handle))
 
         private const val LOAD_BITMAP_FONT_HASH = 166001499L

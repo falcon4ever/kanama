@@ -55,7 +55,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getDefaultTheme(): Theme? {
-        return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDefaultThemeBind, singleton))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDefaultThemeBind, singleton))
     }
 
     /**
@@ -67,7 +67,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getProjectTheme(): Theme? {
-        return Theme.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProjectThemeBind, singleton))
+        return Theme.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProjectThemeBind, singleton))
     }
 
     /**
@@ -111,7 +111,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getFallbackFont(): Font? {
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackFontBind, singleton))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackFontBind, singleton))
     }
 
     /**
@@ -155,7 +155,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getFallbackIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackIconBind, singleton))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackIconBind, singleton))
     }
 
     /**
@@ -177,7 +177,7 @@ object ThemeDB {
      */
     @JvmStatic
     fun getFallbackStylebox(): StyleBox? {
-        return StyleBox.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFallbackStyleboxBind, singleton))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackStyleboxBind, singleton))
     }
 
     object Signals {

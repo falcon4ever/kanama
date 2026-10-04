@@ -23,9 +23,12 @@ class PackedDataContainerRef(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PackedDataContainerRef? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PackedDataContainerRef? =
+        internal fun wrapOwned(handle: RawSegment): PackedDataContainerRef? =
+            if (handle.address() == 0L) null else RefCounted.owned(PackedDataContainerRef(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PackedDataContainerRef? =
             if (handle.address() == 0L) null else PackedDataContainerRef(GodotHandle(handle))
 
         private const val SIZE_HASH = 3905245786L

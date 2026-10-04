@@ -74,9 +74,12 @@ class Shortcut(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Shortcut? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Shortcut? =
+        internal fun wrapOwned(handle: RawSegment): Shortcut? =
+            if (handle.address() == 0L) null else RefCounted.owned(Shortcut(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Shortcut? =
             if (handle.address() == 0L) null else Shortcut(GodotHandle(handle))
 
         private const val SET_EVENTS_HASH = 381264803L

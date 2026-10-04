@@ -60,7 +60,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     /**
@@ -182,9 +182,12 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PrimitiveMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PrimitiveMesh? =
+        internal fun wrapOwned(handle: RawSegment): PrimitiveMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(PrimitiveMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PrimitiveMesh? =
             if (handle.address() == 0L) null else PrimitiveMesh(GodotHandle(handle))
 
         private const val SET_MATERIAL_HASH = 2757459619L

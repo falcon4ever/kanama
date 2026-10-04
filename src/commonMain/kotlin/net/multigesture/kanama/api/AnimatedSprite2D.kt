@@ -90,7 +90,7 @@ class AnimatedSprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AnimatedSprite2D.get_sprite_frames
      */
     fun getSpriteFrames(): SpriteFrames? {
-        return SpriteFrames.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, segment))
+        return SpriteFrames.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSpriteFramesBind, segment))
     }
 
     /**

@@ -120,9 +120,12 @@ class AudioEffectCapture(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectCapture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectCapture? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectCapture? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectCapture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectCapture? =
             if (handle.address() == 0L) null else AudioEffectCapture(GodotHandle(handle))
 
         private const val CAN_GET_BUFFER_HASH = 1116898809L

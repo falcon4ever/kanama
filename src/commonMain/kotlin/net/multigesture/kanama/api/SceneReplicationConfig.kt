@@ -87,9 +87,12 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneReplicationConfig? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SceneReplicationConfig? =
+        internal fun wrapOwned(handle: RawSegment): SceneReplicationConfig? =
+            if (handle.address() == 0L) null else RefCounted.owned(SceneReplicationConfig(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SceneReplicationConfig? =
             if (handle.address() == 0L) null else SceneReplicationConfig(GodotHandle(handle))
 
         private const val GET_PROPERTIES_HASH = 3995934104L

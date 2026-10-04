@@ -40,9 +40,12 @@ class VisualShaderNodeParticleRandomness(handle: GodotHandle) : VisualShaderNode
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleRandomness? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleRandomness? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleRandomness? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleRandomness(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleRandomness? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleRandomness(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 2060089061L

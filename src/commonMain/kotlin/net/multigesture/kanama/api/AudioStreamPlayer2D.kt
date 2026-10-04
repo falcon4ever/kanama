@@ -111,7 +111,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_stream
      */
     fun getStream(): AudioStream? {
-        return AudioStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
+        return AudioStream.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
     }
 
     /**
@@ -406,7 +406,7 @@ class AudioStreamPlayer2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: AudioStreamPlayer2D.get_stream_playback
      */
     fun getStreamPlayback(): AudioStreamPlayback? {
-        return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, segment))
+        return AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, segment))
     }
 
     /**

@@ -97,9 +97,12 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonModification2DPhysicalBones? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkeletonModification2DPhysicalBones? =
+        internal fun wrapOwned(handle: RawSegment): SkeletonModification2DPhysicalBones? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkeletonModification2DPhysicalBones(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DPhysicalBones? =
             if (handle.address() == 0L) null else SkeletonModification2DPhysicalBones(GodotHandle(handle))
 
         private const val SET_PHYSICAL_BONE_CHAIN_LENGTH_HASH = 1286410249L

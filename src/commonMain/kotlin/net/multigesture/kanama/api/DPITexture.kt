@@ -211,14 +211,17 @@ class DPITexture(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: DPITexture.create_from_string
          */
         fun createFromString(source: String, scale: Double = 1.0, saturation: Double = 1.0, colorMap: Map<String, Any?> = emptyMap()): DPITexture? {
-            return DPITexture.wrap(ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(createFromStringBind, NULL_SEGMENT, source, scale, saturation, colorMap))
+            return DPITexture.wrapOwned(ObjectCalls.ptrcallWithStringTwoDoubleDictionaryArgsRetObject(createFromStringBind, NULL_SEGMENT, source, scale, saturation, colorMap))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): DPITexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): DPITexture? =
+        internal fun wrapOwned(handle: RawSegment): DPITexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(DPITexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): DPITexture? =
             if (handle.address() == 0L) null else DPITexture(GodotHandle(handle))
 
         private const val CREATE_FROM_STRING_HASH = 755140520L

@@ -248,7 +248,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_dock_icon
      */
     fun getDockIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDockIconBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDockIconBind, segment))
     }
 
     /**
@@ -306,7 +306,7 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      * Generated from Godot docs: EditorDock.get_dock_shortcut
      */
     fun getDockShortcut(): Shortcut? {
-        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDockShortcutBind, segment))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDockShortcutBind, segment))
     }
 
     /**

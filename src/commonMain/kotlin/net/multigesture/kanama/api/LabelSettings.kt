@@ -145,7 +145,7 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
      */
     fun getFont(): Font? {
         checkOpen()
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFontBind, segment))
     }
 
     /**
@@ -494,9 +494,12 @@ class LabelSettings(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): LabelSettings? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): LabelSettings? =
+        internal fun wrapOwned(handle: RawSegment): LabelSettings? =
+            if (handle.address() == 0L) null else RefCounted.owned(LabelSettings(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): LabelSettings? =
             if (handle.address() == 0L) null else LabelSettings(GodotHandle(handle))
 
         private const val SET_LINE_SPACING_HASH = 373806689L

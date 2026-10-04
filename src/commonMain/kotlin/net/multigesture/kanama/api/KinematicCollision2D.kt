@@ -147,9 +147,12 @@ class KinematicCollision2D(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): KinematicCollision2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): KinematicCollision2D? =
+        internal fun wrapOwned(handle: RawSegment): KinematicCollision2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(KinematicCollision2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): KinematicCollision2D? =
             if (handle.address() == 0L) null else KinematicCollision2D(GodotHandle(handle))
 
         private const val GET_POSITION_HASH = 3341600327L

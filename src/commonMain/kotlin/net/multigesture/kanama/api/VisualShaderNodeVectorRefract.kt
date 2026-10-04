@@ -13,9 +13,12 @@ class VisualShaderNodeVectorRefract(handle: GodotHandle) : VisualShaderNodeVecto
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorRefract? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVectorRefract? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVectorRefract? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVectorRefract(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorRefract? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorRefract(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

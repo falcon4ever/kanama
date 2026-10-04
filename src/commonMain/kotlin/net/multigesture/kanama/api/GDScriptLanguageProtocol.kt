@@ -14,12 +14,12 @@ object GDScriptLanguageProtocol {
 
     @JvmStatic
     fun getTextDocument(): GDScriptTextDocument? {
-        return GDScriptTextDocument.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextDocumentBind, singleton))
+        return GDScriptTextDocument.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextDocumentBind, singleton))
     }
 
     @JvmStatic
     fun getWorkspace(): GDScriptWorkspace? {
-        return GDScriptWorkspace.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorkspaceBind, singleton))
+        return GDScriptWorkspace.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorkspaceBind, singleton))
     }
 
     @JvmStatic

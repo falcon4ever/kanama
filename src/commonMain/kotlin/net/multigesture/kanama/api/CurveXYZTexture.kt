@@ -59,7 +59,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveX(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveXBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveXBind, segment))
     }
 
     /**
@@ -79,7 +79,7 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveY(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveYBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveYBind, segment))
     }
 
     /**
@@ -99,15 +99,18 @@ class CurveXYZTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurveZ(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveZBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveZBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CurveXYZTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CurveXYZTexture? =
+        internal fun wrapOwned(handle: RawSegment): CurveXYZTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(CurveXYZTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CurveXYZTexture? =
             if (handle.address() == 0L) null else CurveXYZTexture(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L

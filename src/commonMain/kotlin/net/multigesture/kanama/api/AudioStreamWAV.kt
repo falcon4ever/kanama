@@ -340,7 +340,7 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
          * Generated from Godot docs: AudioStreamWAV.load_from_buffer
          */
         fun loadFromBuffer(streamData: ByteArray, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
-            return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithByteArrayAndDictionaryArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData, options))
+            return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallWithByteArrayAndDictionaryArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData, options))
         }
 
         /**
@@ -350,14 +350,17 @@ class AudioStreamWAV(handle: GodotHandle) : AudioStream(handle) {
          * Generated from Godot docs: AudioStreamWAV.load_from_file
          */
         fun loadFromFile(path: String, options: Map<String, Any?> = emptyMap()): AudioStreamWAV? {
-            return AudioStreamWAV.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(loadFromFileBind, NULL_SEGMENT, path, options))
+            return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(loadFromFileBind, NULL_SEGMENT, path, options))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamWAV? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamWAV? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamWAV? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamWAV(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamWAV? =
             if (handle.address() == 0L) null else AudioStreamWAV(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 4266838938L

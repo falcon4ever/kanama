@@ -74,9 +74,12 @@ class AudioEffectAmplify(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectAmplify? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectAmplify? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectAmplify? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectAmplify(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectAmplify? =
             if (handle.address() == 0L) null else AudioEffectAmplify(GodotHandle(handle))
 
         private const val SET_VOLUME_DB_HASH = 373806689L

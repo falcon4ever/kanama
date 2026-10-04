@@ -186,7 +186,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
      */
     fun getXfadeCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getXfadeCurveBind, segment))
     }
 
     /**
@@ -350,9 +350,12 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeStateMachineTransition? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeStateMachineTransition? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeStateMachineTransition? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeStateMachineTransition(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachineTransition? =
             if (handle.address() == 0L) null else AnimationNodeStateMachineTransition(GodotHandle(handle))
 
         private const val SET_SWITCH_MODE_HASH = 2074906633L

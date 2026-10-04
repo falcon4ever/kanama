@@ -43,7 +43,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun instantiatePlayback(): AudioStreamPlayback? {
         checkOpen()
-        return AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(instantiatePlaybackBind, segment))
+        return AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(instantiatePlaybackBind, segment))
     }
 
     /**
@@ -64,7 +64,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun generateSample(): AudioSample? {
         checkOpen()
-        return AudioSample.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateSampleBind, segment))
+        return AudioSample.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateSampleBind, segment))
     }
 
     /**
@@ -84,9 +84,12 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStream? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStream? =
+        internal fun wrapOwned(handle: RawSegment): AudioStream? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStream(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStream? =
             if (handle.address() == 0L) null else AudioStream(GodotHandle(handle))
 
         private const val GET_LENGTH_HASH = 1740695150L

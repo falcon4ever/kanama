@@ -117,7 +117,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return TextParagraph.wrap(ret)
+        return TextParagraph.wrapOwned(ret)
     }
 
     /**
@@ -746,9 +746,12 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextParagraph? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextParagraph? =
+        internal fun wrapOwned(handle: RawSegment): TextParagraph? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextParagraph(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextParagraph? =
             if (handle.address() == 0L) null else TextParagraph(GodotHandle(handle))
 
         private const val CLEAR_HASH = 3218959716L

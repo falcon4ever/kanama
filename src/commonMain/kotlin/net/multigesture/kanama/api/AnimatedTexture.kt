@@ -179,7 +179,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Texture2D.wrap(ret)
+        return Texture2D.wrapOwned(ret)
     }
 
     /**
@@ -208,9 +208,12 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimatedTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimatedTexture? =
+        internal fun wrapOwned(handle: RawSegment): AnimatedTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimatedTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimatedTexture? =
             if (handle.address() == 0L) null else AnimatedTexture(GodotHandle(handle))
 
         private const val SET_FRAMES_HASH = 1286410249L

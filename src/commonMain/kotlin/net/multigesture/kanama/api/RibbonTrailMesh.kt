@@ -154,7 +154,7 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     /**
@@ -204,9 +204,12 @@ class RibbonTrailMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RibbonTrailMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RibbonTrailMesh? =
+        internal fun wrapOwned(handle: RawSegment): RibbonTrailMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(RibbonTrailMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RibbonTrailMesh? =
             if (handle.address() == 0L) null else RibbonTrailMesh(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 373806689L

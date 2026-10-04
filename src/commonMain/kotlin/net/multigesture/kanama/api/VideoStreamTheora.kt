@@ -13,9 +13,12 @@ class VideoStreamTheora(handle: GodotHandle) : VideoStream(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VideoStreamTheora? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VideoStreamTheora? =
+        internal fun wrapOwned(handle: RawSegment): VideoStreamTheora? =
+            if (handle.address() == 0L) null else RefCounted.owned(VideoStreamTheora(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VideoStreamTheora? =
             if (handle.address() == 0L) null else VideoStreamTheora(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

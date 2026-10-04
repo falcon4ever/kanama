@@ -47,9 +47,12 @@ class ViewportTexture(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ViewportTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ViewportTexture? =
+        internal fun wrapOwned(handle: RawSegment): ViewportTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(ViewportTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ViewportTexture? =
             if (handle.address() == 0L) null else ViewportTexture(GodotHandle(handle))
 
         private const val SET_VIEWPORT_PATH_IN_SCENE_HASH = 1348162250L

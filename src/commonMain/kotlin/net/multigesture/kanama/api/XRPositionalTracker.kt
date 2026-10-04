@@ -85,7 +85,7 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
      */
     fun getPose(name: String): XRPose? {
         checkOpen()
-        return XRPose.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getPoseBind, segment, name))
+        return XRPose.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getPoseBind, segment, name))
     }
 
     /**
@@ -181,9 +181,12 @@ open class XRPositionalTracker(handle: GodotHandle) : XRTracker(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRPositionalTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XRPositionalTracker? =
+        internal fun wrapOwned(handle: RawSegment): XRPositionalTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(XRPositionalTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XRPositionalTracker? =
             if (handle.address() == 0L) null else XRPositionalTracker(GodotHandle(handle))
 
         private const val GET_TRACKER_PROFILE_HASH = 201670096L

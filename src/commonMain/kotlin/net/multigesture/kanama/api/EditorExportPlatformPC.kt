@@ -15,9 +15,12 @@ open class EditorExportPlatformPC(handle: GodotHandle) : EditorExportPlatform(ha
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformPC? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformPC? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformPC? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformPC(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformPC? =
             if (handle.address() == 0L) null else EditorExportPlatformPC(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

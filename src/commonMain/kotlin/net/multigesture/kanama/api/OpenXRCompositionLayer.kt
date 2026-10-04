@@ -175,7 +175,7 @@ open class OpenXRCompositionLayer(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun getAndroidSurface(): JavaObject? {
-        return JavaObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAndroidSurfaceBind, segment))
+        return JavaObject.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAndroidSurfaceBind, segment))
     }
 
     fun isNativelySupported(): Boolean {

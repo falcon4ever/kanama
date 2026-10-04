@@ -224,7 +224,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun createSkinFromRestTransforms(): Skin? {
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(createSkinFromRestTransformsBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createSkinFromRestTransformsBind, segment))
     }
 
     /**
@@ -233,7 +233,7 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Skeleton3D.register_skin
      */
     fun registerSkin(skin: Skin?): SkinReference? {
-        return SkinReference.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(registerSkinBind, segment, skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        return SkinReference.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(registerSkinBind, segment, skin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**

@@ -24,9 +24,12 @@ class WeakRef(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WeakRef? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WeakRef? =
+        internal fun wrapOwned(handle: RawSegment): WeakRef? =
+            if (handle.address() == 0L) null else RefCounted.owned(WeakRef(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WeakRef? =
             if (handle.address() == 0L) null else WeakRef(GodotHandle(handle))
 
         private const val GET_REF_HASH = 1214101251L

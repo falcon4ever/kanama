@@ -104,9 +104,12 @@ class CapsuleShape2D(handle: GodotHandle) : Shape2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CapsuleShape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CapsuleShape2D? =
+        internal fun wrapOwned(handle: RawSegment): CapsuleShape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(CapsuleShape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CapsuleShape2D? =
             if (handle.address() == 0L) null else CapsuleShape2D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L

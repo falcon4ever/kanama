@@ -59,9 +59,12 @@ open class SyntaxHighlighter(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SyntaxHighlighter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SyntaxHighlighter? =
+        internal fun wrapOwned(handle: RawSegment): SyntaxHighlighter? =
+            if (handle.address() == 0L) null else RefCounted.owned(SyntaxHighlighter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SyntaxHighlighter? =
             if (handle.address() == 0L) null else SyntaxHighlighter(GodotHandle(handle))
 
         private const val GET_LINE_SYNTAX_HIGHLIGHTING_HASH = 3554694381L

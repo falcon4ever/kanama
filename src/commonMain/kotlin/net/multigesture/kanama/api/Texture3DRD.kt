@@ -41,9 +41,12 @@ class Texture3DRD(handle: GodotHandle) : Texture3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Texture3DRD? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Texture3DRD? =
+        internal fun wrapOwned(handle: RawSegment): Texture3DRD? =
+            if (handle.address() == 0L) null else RefCounted.owned(Texture3DRD(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Texture3DRD? =
             if (handle.address() == 0L) null else Texture3DRD(GodotHandle(handle))
 
         private const val SET_TEXTURE_RD_RID_HASH = 2722037293L

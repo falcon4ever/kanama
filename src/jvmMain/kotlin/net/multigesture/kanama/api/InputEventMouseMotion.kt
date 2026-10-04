@@ -246,13 +246,16 @@ class InputEventMouseMotion(handle: GodotHandle) : InputEventMouse(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventMouseMotion? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
         @JvmStatic
         fun from(value: GodotObject): InputEventMouseMotion? =
-            if (value.isClass("InputEventMouseMotion")) InputEventMouseMotion(value.handle) else null
+            if (value.isClass("InputEventMouseMotion")) RefCounted.retained(InputEventMouseMotion(value.handle)) else null
 
-        internal fun wrap(handle: MemorySegment): InputEventMouseMotion? =
+        internal fun wrapOwned(handle: MemorySegment): InputEventMouseMotion? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventMouseMotion(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): InputEventMouseMotion? =
             if (handle.address() == 0L) null else InputEventMouseMotion(GodotHandle(handle))
 
         private const val SET_TILT_HASH = 743155724L

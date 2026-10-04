@@ -15,9 +15,12 @@ open class AudioEffectInstance(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectInstance? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectInstance? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectInstance? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectInstance(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectInstance? =
             if (handle.address() == 0L) null else AudioEffectInstance(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

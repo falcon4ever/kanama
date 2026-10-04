@@ -303,9 +303,12 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiplayerPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MultiplayerPeer? =
+        internal fun wrapOwned(handle: RawSegment): MultiplayerPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(MultiplayerPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MultiplayerPeer? =
             if (handle.address() == 0L) null else MultiplayerPeer(GodotHandle(handle))
 
         private const val SET_TRANSFER_CHANNEL_HASH = 1286410249L

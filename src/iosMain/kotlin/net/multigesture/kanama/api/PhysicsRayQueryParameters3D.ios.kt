@@ -25,7 +25,7 @@ fun PhysicsRayQueryParameters3D.Companion.create(
     collisionMask: Long = 4294967295L,
     exclude: List<RID> = emptyList(),
 ): PhysicsRayQueryParameters3D {
-    val query = PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D")))
+    val query = RefCounted.owned(PhysicsRayQueryParameters3D(GodotHandle(ObjectCalls.constructObject("PhysicsRayQueryParameters3D"))))
     query.from = from
     query.to = to
     query.collisionMask = collisionMask

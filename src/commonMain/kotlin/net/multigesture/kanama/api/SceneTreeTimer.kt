@@ -44,9 +44,12 @@ class SceneTreeTimer(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneTreeTimer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SceneTreeTimer? =
+        internal fun wrapOwned(handle: RawSegment): SceneTreeTimer? =
+            if (handle.address() == 0L) null else RefCounted.owned(SceneTreeTimer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SceneTreeTimer? =
             if (handle.address() == 0L) null else SceneTreeTimer(GodotHandle(handle))
 
         private const val SET_TIME_LEFT_HASH = 373806689L

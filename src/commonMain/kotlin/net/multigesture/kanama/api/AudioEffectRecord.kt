@@ -65,15 +65,18 @@ class AudioEffectRecord(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getRecording(): AudioStreamWAV? {
         checkOpen()
-        return AudioStreamWAV.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRecordingBind, segment))
+        return AudioStreamWAV.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRecordingBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectRecord? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectRecord? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectRecord? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectRecord(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectRecord? =
             if (handle.address() == 0L) null else AudioEffectRecord(GodotHandle(handle))
 
         private const val SET_RECORDING_ACTIVE_HASH = 2586408642L

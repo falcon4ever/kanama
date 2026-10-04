@@ -13,9 +13,12 @@ class VisualShaderNodeVectorDecompose(handle: GodotHandle) : VisualShaderNodeVec
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorDecompose? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVectorDecompose? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVectorDecompose? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVectorDecompose(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorDecompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorDecompose(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

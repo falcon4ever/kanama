@@ -67,9 +67,12 @@ class CryptoKey(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CryptoKey? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CryptoKey? =
+        internal fun wrapOwned(handle: RawSegment): CryptoKey? =
+            if (handle.address() == 0L) null else RefCounted.owned(CryptoKey(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CryptoKey? =
             if (handle.address() == 0L) null else CryptoKey(GodotHandle(handle))
 
         private const val SAVE_HASH = 885841341L

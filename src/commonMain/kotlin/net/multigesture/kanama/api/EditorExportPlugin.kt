@@ -225,7 +225,7 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportPreset(): EditorExportPreset? {
         checkOpen()
-        return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPresetBind, segment))
+        return EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getExportPresetBind, segment))
     }
 
     /**
@@ -235,15 +235,18 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getExportPlatform(): EditorExportPlatform? {
         checkOpen()
-        return EditorExportPlatform.wrap(ObjectCalls.ptrcallNoArgsRetObject(getExportPlatformBind, segment))
+        return EditorExportPlatform.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getExportPlatformBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlugin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlugin? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlugin? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlugin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlugin? =
             if (handle.address() == 0L) null else EditorExportPlugin(GodotHandle(handle))
 
         private const val ADD_SHARED_OBJECT_HASH = 3098291045L

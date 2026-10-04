@@ -118,7 +118,7 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
             RefCounted.releaseHandle(ret)
             return this
         }
-        return AnimationRootNode.wrap(ret)
+        return AnimationRootNode.wrapOwned(ret)
     }
 
     /**
@@ -432,9 +432,12 @@ class AnimationNodeBlendSpace1D(handle: GodotHandle) : AnimationRootNode(handle)
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeBlendSpace1D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeBlendSpace1D? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeBlendSpace1D? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeBlendSpace1D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeBlendSpace1D? =
             if (handle.address() == 0L) null else AnimationNodeBlendSpace1D(GodotHandle(handle))
 
         private const val ADD_BLEND_POINT_HASH = 398361042L

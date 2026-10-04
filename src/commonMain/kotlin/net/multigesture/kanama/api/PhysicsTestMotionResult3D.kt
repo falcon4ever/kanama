@@ -166,9 +166,12 @@ class PhysicsTestMotionResult3D(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsTestMotionResult3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PhysicsTestMotionResult3D? =
+        internal fun wrapOwned(handle: RawSegment): PhysicsTestMotionResult3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(PhysicsTestMotionResult3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PhysicsTestMotionResult3D? =
             if (handle.address() == 0L) null else PhysicsTestMotionResult3D(GodotHandle(handle))
 
         private const val GET_TRAVEL_HASH = 3360562783L

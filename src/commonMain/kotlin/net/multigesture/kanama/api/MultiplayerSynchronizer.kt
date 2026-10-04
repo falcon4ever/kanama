@@ -77,7 +77,7 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
     }
 
     fun getReplicationConfig(): SceneReplicationConfig? {
-        return SceneReplicationConfig.wrap(ObjectCalls.ptrcallNoArgsRetObject(getReplicationConfigBind, segment))
+        return SceneReplicationConfig.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getReplicationConfigBind, segment))
     }
 
     fun setVisibilityUpdateMode(mode: MultiplayerSynchronizer.VisibilityUpdateMode) {

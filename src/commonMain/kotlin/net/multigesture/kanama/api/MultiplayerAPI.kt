@@ -41,7 +41,7 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMultiplayerPeer(): MultiplayerPeer? {
         checkOpen()
-        return MultiplayerPeer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerPeerBind, segment))
+        return MultiplayerPeer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerPeerBind, segment))
     }
 
     /**
@@ -230,14 +230,17 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: MultiplayerAPI.create_default_interface
          */
         fun createDefaultInterface(): MultiplayerAPI? {
-            return MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(createDefaultInterfaceBind, NULL_SEGMENT))
+            return MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createDefaultInterfaceBind, NULL_SEGMENT))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiplayerAPI? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MultiplayerAPI? =
+        internal fun wrapOwned(handle: RawSegment): MultiplayerAPI? =
+            if (handle.address() == 0L) null else RefCounted.owned(MultiplayerAPI(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MultiplayerAPI? =
             if (handle.address() == 0L) null else MultiplayerAPI(GodotHandle(handle))
 
         private const val HAS_MULTIPLAYER_PEER_HASH = 2240911060L

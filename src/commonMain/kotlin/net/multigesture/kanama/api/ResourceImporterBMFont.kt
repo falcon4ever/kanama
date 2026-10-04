@@ -15,9 +15,12 @@ class ResourceImporterBMFont(handle: GodotHandle) : ResourceImporter(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterBMFont? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterBMFont? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterBMFont? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterBMFont(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterBMFont? =
             if (handle.address() == 0L) null else ResourceImporterBMFont(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

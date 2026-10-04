@@ -68,9 +68,12 @@ class VisualShaderNodeFloatFunc(handle: GodotHandle) : VisualShaderNode(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeFloatFunc? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeFloatFunc? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeFloatFunc? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeFloatFunc(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFloatFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeFloatFunc(GodotHandle(handle))
 
         private const val SET_FUNCTION_HASH = 536026177L

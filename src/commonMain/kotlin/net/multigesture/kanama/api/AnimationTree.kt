@@ -47,7 +47,7 @@ class AnimationTree(handle: GodotHandle) : AnimationMixer(handle) {
      * Generated from Godot docs: AnimationTree.get_tree_root
      */
     fun getTreeRoot(): AnimationRootNode? {
-        return AnimationRootNode.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeRootBind, segment))
+        return AnimationRootNode.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTreeRootBind, segment))
     }
 
     /**

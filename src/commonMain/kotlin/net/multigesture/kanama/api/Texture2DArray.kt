@@ -23,15 +23,18 @@ class Texture2DArray(handle: GodotHandle) : ImageTextureLayered(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Texture2DArray? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Texture2DArray? =
+        internal fun wrapOwned(handle: RawSegment): Texture2DArray? =
+            if (handle.address() == 0L) null else RefCounted.owned(Texture2DArray(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Texture2DArray? =
             if (handle.address() == 0L) null else Texture2DArray(GodotHandle(handle))
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L

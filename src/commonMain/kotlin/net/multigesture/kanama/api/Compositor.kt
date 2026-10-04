@@ -36,15 +36,18 @@ class Compositor(handle: GodotHandle) : Resource(handle) {
      */
     fun getCompositorEffects(): List<CompositorEffect> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, segment, CompositorEffect::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCompositorEffectsBind, segment, CompositorEffect::wrapBorrowed)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Compositor? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Compositor? =
+        internal fun wrapOwned(handle: RawSegment): Compositor? =
+            if (handle.address() == 0L) null else RefCounted.owned(Compositor(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Compositor? =
             if (handle.address() == 0L) null else Compositor(GodotHandle(handle))
 
         private const val SET_COMPOSITOR_EFFECTS_HASH = 381264803L

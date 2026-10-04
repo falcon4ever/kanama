@@ -45,9 +45,12 @@ open class AudioEffectEQ(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectEQ? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectEQ? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectEQ? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectEQ(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectEQ? =
             if (handle.address() == 0L) null else AudioEffectEQ(GodotHandle(handle))
 
         private const val SET_BAND_GAIN_DB_HASH = 1602489585L

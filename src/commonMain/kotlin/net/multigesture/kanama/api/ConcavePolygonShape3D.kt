@@ -71,9 +71,12 @@ class ConcavePolygonShape3D(handle: GodotHandle) : Shape3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ConcavePolygonShape3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ConcavePolygonShape3D? =
+        internal fun wrapOwned(handle: RawSegment): ConcavePolygonShape3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(ConcavePolygonShape3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ConcavePolygonShape3D? =
             if (handle.address() == 0L) null else ConcavePolygonShape3D(GodotHandle(handle))
 
         private const val SET_FACES_HASH = 334873810L

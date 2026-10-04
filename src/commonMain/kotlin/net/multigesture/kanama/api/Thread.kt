@@ -138,9 +138,12 @@ class Thread(handle: GodotHandle) : RefCounted(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Thread? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Thread? =
+        internal fun wrapOwned(handle: RawSegment): Thread? =
+            if (handle.address() == 0L) null else RefCounted.owned(Thread(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Thread? =
             if (handle.address() == 0L) null else Thread(GodotHandle(handle))
 
         private const val START_HASH = 1327203254L

@@ -15,9 +15,12 @@ open class EditorExportPlatformAppleEmbedded(handle: GodotHandle) : EditorExport
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformAppleEmbedded? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformAppleEmbedded? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformAppleEmbedded? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformAppleEmbedded(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformAppleEmbedded? =
             if (handle.address() == 0L) null else EditorExportPlatformAppleEmbedded(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

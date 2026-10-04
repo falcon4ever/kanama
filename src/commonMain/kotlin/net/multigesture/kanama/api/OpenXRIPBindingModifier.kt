@@ -13,9 +13,12 @@ open class OpenXRIPBindingModifier(handle: GodotHandle) : OpenXRBindingModifier(
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRIPBindingModifier? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRIPBindingModifier? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRIPBindingModifier? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRIPBindingModifier(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRIPBindingModifier? =
             if (handle.address() == 0L) null else OpenXRIPBindingModifier(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

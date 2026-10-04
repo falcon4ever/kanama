@@ -13,9 +13,12 @@ class EditorExportPlatformIOS(handle: GodotHandle) : EditorExportPlatformAppleEm
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformIOS? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformIOS? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformIOS? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformIOS(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformIOS? =
             if (handle.address() == 0L) null else EditorExportPlatformIOS(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

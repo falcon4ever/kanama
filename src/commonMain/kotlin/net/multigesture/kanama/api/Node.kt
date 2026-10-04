@@ -1315,7 +1315,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: Node.get_multiplayer
      */
     fun getMultiplayer(): MultiplayerAPI? {
-        return MultiplayerAPI.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerBind, segment))
+        return MultiplayerAPI.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMultiplayerBind, segment))
     }
 
     /**

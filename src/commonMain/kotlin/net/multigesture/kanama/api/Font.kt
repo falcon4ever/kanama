@@ -42,7 +42,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      */
     fun getFallbacks(): List<Font> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, segment, Font::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getFallbacksBind, segment, Font::wrapBorrowed)
     }
 
     /**
@@ -458,9 +458,12 @@ open class Font(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Font? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Font? =
+        internal fun wrapOwned(handle: RawSegment): Font? =
+            if (handle.address() == 0L) null else RefCounted.owned(Font(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Font? =
             if (handle.address() == 0L) null else Font(GodotHandle(handle))
 
         private const val SET_FALLBACKS_HASH = 381264803L

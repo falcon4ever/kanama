@@ -32,7 +32,7 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
     }
 
     fun createPersistenceContext(scope: OpenXRSpatialAnchorCapability.PersistenceScope, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithLongCallableArgsRetObject(createPersistenceContextBind, segment, scope.value, userCallback.target.segment, userCallback.method))
+        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithLongCallableArgsRetObject(createPersistenceContextBind, segment, scope.value, userCallback.target.segment, userCallback.method))
     }
 
     fun getPersistenceContextHandle(persistenceContext: RID): Long {
@@ -44,7 +44,7 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
     }
 
     fun createNewAnchor(transform: Transform3D, spatialContext: RID, next: OpenXRStructureBase?): OpenXRAnchorTracker? {
-        return OpenXRAnchorTracker.wrap(ObjectCalls.ptrcallWithTransform3DRIDObjectArgsRetObject(createNewAnchorBind, segment, transform, spatialContext, next?.requireOpenHandle() ?: MemorySegment.NULL))
+        return OpenXRAnchorTracker.wrapOwned(ObjectCalls.ptrcallWithTransform3DRIDObjectArgsRetObject(createNewAnchorBind, segment, transform, spatialContext, next?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     fun removeAnchor(anchorTracker: OpenXRAnchorTracker?) {
@@ -56,11 +56,11 @@ class OpenXRSpatialAnchorCapability(handle: GodotHandle) : OpenXRExtensionWrappe
     }
 
     fun persistAnchor(anchorTracker: OpenXRAnchorTracker?, persistenceContext: RID, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(persistAnchorBind, segment, anchorTracker?.requireOpenHandle() ?: MemorySegment.NULL, persistenceContext, userCallback.target.segment, userCallback.method))
+        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(persistAnchorBind, segment, anchorTracker?.requireOpenHandle() ?: MemorySegment.NULL, persistenceContext, userCallback.target.segment, userCallback.method))
     }
 
     fun unpersistAnchor(anchorTracker: OpenXRAnchorTracker?, persistenceContext: RID, userCallback: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(unpersistAnchorBind, segment, anchorTracker?.requireOpenHandle() ?: MemorySegment.NULL, persistenceContext, userCallback.target.segment, userCallback.method))
+        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectRIDCallableArgsRetObject(unpersistAnchorBind, segment, anchorTracker?.requireOpenHandle() ?: MemorySegment.NULL, persistenceContext, userCallback.target.segment, userCallback.method))
     }
 
     companion object {

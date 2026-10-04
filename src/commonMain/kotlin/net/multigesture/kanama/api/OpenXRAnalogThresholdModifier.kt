@@ -61,7 +61,7 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
 
     fun getOnHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, segment))
+        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOnHapticBind, segment))
     }
 
     fun setOffHaptic(haptic: OpenXRHapticBase?) {
@@ -71,15 +71,18 @@ class OpenXRAnalogThresholdModifier(handle: GodotHandle) : OpenXRActionBindingMo
 
     fun getOffHaptic(): OpenXRHapticBase? {
         checkOpen()
-        return OpenXRHapticBase.wrap(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, segment))
+        return OpenXRHapticBase.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOffHapticBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRAnalogThresholdModifier? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRAnalogThresholdModifier? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRAnalogThresholdModifier? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRAnalogThresholdModifier(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRAnalogThresholdModifier? =
             if (handle.address() == 0L) null else OpenXRAnalogThresholdModifier(GodotHandle(handle))
 
         private const val SET_ON_THRESHOLD_HASH = 373806689L

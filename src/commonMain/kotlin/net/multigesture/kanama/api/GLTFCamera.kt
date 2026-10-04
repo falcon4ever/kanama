@@ -102,18 +102,21 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromNode(cameraNode: Camera3D): GLTFCamera? {
-            return GLTFCamera.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, cameraNode.segment))
+            return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, cameraNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFCamera? {
-            return GLTFCamera.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFCamera? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFCamera? =
+        internal fun wrapOwned(handle: RawSegment): GLTFCamera? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFCamera(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFCamera? =
             if (handle.address() == 0L) null else GLTFCamera(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 237784L

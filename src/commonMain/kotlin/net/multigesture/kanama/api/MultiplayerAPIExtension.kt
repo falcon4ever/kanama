@@ -15,9 +15,12 @@ class MultiplayerAPIExtension(handle: GodotHandle) : MultiplayerAPI(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MultiplayerAPIExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MultiplayerAPIExtension? =
+        internal fun wrapOwned(handle: RawSegment): MultiplayerAPIExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(MultiplayerAPIExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MultiplayerAPIExtension? =
             if (handle.address() == 0L) null else MultiplayerAPIExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

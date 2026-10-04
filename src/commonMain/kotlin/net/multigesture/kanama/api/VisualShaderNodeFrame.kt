@@ -103,9 +103,12 @@ open class VisualShaderNodeFrame(handle: GodotHandle) : VisualShaderNodeResizabl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeFrame? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeFrame? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeFrame? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeFrame(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFrame? =
             if (handle.address() == 0L) null else VisualShaderNodeFrame(GodotHandle(handle))
 
         private const val SET_TITLE_HASH = 83702148L

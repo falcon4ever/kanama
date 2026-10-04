@@ -1080,7 +1080,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: LineEdit.get_right_icon
      */
     fun getRightIcon(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRightIconBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRightIconBind, segment))
     }
 
     /**

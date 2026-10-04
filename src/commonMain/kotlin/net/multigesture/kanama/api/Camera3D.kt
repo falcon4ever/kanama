@@ -495,7 +495,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_environment
      */
     fun getEnvironment(): Environment? {
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
+        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
     }
 
     /**
@@ -513,7 +513,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_attributes
      */
     fun getAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAttributesBind, segment))
     }
 
     /**
@@ -531,7 +531,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: Camera3D.get_compositor
      */
     fun getCompositor(): Compositor? {
-        return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
+        return Compositor.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
     }
 
     /**

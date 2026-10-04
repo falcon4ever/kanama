@@ -138,7 +138,7 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
      */
     fun convertToImage(): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, segment))
+        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(convertToImageBind, segment))
     }
 
     /**
@@ -157,9 +157,12 @@ class BitMap(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): BitMap? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): BitMap? =
+        internal fun wrapOwned(handle: RawSegment): BitMap? =
+            if (handle.address() == 0L) null else RefCounted.owned(BitMap(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): BitMap? =
             if (handle.address() == 0L) null else BitMap(GodotHandle(handle))
 
         private const val CREATE_HASH = 1130785943L

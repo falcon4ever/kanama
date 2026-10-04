@@ -131,9 +131,12 @@ class HeightMapShape3D(handle: GodotHandle) : Shape3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): HeightMapShape3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): HeightMapShape3D? =
+        internal fun wrapOwned(handle: RawSegment): HeightMapShape3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(HeightMapShape3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): HeightMapShape3D? =
             if (handle.address() == 0L) null else HeightMapShape3D(GodotHandle(handle))
 
         private const val SET_MAP_WIDTH_HASH = 1286410249L

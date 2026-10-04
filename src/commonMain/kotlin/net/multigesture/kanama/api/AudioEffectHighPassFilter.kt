@@ -15,9 +15,12 @@ class AudioEffectHighPassFilter(handle: GodotHandle) : AudioEffectFilter(handle)
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectHighPassFilter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectHighPassFilter? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectHighPassFilter? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectHighPassFilter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectHighPassFilter? =
             if (handle.address() == 0L) null else AudioEffectHighPassFilter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

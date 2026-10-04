@@ -17,7 +17,7 @@ fun Node.createTween(): Tween =
     requireGodotReturn(
         ObjectCalls.ptrcallNoArgsRetObject(nodeCreateTweenBind, segment)
             .takeIf { it.address() != 0L }
-            ?.let { Tween(GodotHandle(it)) },
+            ?.let { RefCounted.owned(Tween(GodotHandle(it))) },
         "Node.create_tween",
     )
 

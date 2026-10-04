@@ -116,7 +116,7 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -325,9 +325,12 @@ class StyleBoxTexture(handle: GodotHandle) : StyleBox(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StyleBoxTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StyleBoxTexture? =
+        internal fun wrapOwned(handle: RawSegment): StyleBoxTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(StyleBoxTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StyleBoxTexture? =
             if (handle.address() == 0L) null else StyleBoxTexture(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L

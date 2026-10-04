@@ -13,9 +13,12 @@ class VisualShaderNodeParticleRingEmitter(handle: GodotHandle) : VisualShaderNod
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleRingEmitter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleRingEmitter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleRingEmitter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleRingEmitter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleRingEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleRingEmitter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

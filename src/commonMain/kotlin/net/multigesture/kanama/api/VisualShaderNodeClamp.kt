@@ -42,9 +42,12 @@ class VisualShaderNodeClamp(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeClamp? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeClamp? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeClamp? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeClamp(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeClamp? =
             if (handle.address() == 0L) null else VisualShaderNodeClamp(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 405010749L

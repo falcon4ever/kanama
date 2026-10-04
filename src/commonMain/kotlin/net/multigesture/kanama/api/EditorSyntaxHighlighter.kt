@@ -15,9 +15,12 @@ open class EditorSyntaxHighlighter(handle: GodotHandle) : SyntaxHighlighter(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorSyntaxHighlighter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorSyntaxHighlighter? =
+        internal fun wrapOwned(handle: RawSegment): EditorSyntaxHighlighter? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorSyntaxHighlighter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorSyntaxHighlighter? =
             if (handle.address() == 0L) null else EditorSyntaxHighlighter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -24,9 +24,12 @@ open class AudioStreamPlaybackResampled(handle: GodotHandle) : AudioStreamPlayba
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackResampled? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamPlaybackResampled? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamPlaybackResampled? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamPlaybackResampled(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackResampled? =
             if (handle.address() == 0L) null else AudioStreamPlaybackResampled(GodotHandle(handle))
 
         private const val BEGIN_RESAMPLE_HASH = 3218959716L

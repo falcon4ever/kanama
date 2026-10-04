@@ -47,7 +47,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getClosestHitShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getClosestHitShaderBind, segment))
+        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getClosestHitShaderBind, segment))
     }
 
     /**
@@ -67,7 +67,7 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAnyHitShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getAnyHitShaderBind, segment))
+        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getAnyHitShaderBind, segment))
     }
 
     /**
@@ -89,15 +89,18 @@ class RDHitGroup(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIntersectionShader(): RDPipelineShader? {
         checkOpen()
-        return RDPipelineShader.wrap(ObjectCalls.ptrcallNoArgsRetObject(getIntersectionShaderBind, segment))
+        return RDPipelineShader.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getIntersectionShaderBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDHitGroup? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDHitGroup? =
+        internal fun wrapOwned(handle: RawSegment): RDHitGroup? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDHitGroup(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDHitGroup? =
             if (handle.address() == 0L) null else RDHitGroup(GodotHandle(handle))
 
         private const val SET_CLOSEST_HIT_SHADER_HASH = 2556777288L

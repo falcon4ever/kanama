@@ -38,9 +38,12 @@ class VisualShaderNodeIs(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeIs? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeIs? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeIs? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeIs(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeIs? =
             if (handle.address() == 0L) null else VisualShaderNodeIs(GodotHandle(handle))
 
         private const val SET_FUNCTION_HASH = 1438374690L

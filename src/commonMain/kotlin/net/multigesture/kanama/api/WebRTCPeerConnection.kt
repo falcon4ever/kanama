@@ -17,7 +17,7 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
 
     fun createDataChannel(label: String, options: Map<String, Any?> = emptyMap()): WebRTCDataChannel? {
         checkOpen()
-        return WebRTCDataChannel.wrap(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(createDataChannelBind, segment, label, options))
+        return WebRTCDataChannel.wrapOwned(ObjectCalls.ptrcallWithStringAndDictionaryArgRetObject(createDataChannelBind, segment, label, options))
     }
 
     fun createOffer(): GodotError {
@@ -111,9 +111,12 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebRTCPeerConnection? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WebRTCPeerConnection? =
+        internal fun wrapOwned(handle: RawSegment): WebRTCPeerConnection? =
+            if (handle.address() == 0L) null else RefCounted.owned(WebRTCPeerConnection(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WebRTCPeerConnection? =
             if (handle.address() == 0L) null else WebRTCPeerConnection(GodotHandle(handle))
 
         private const val SET_DEFAULT_EXTENSION_HASH = 3304788590L

@@ -42,9 +42,12 @@ class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventMagnifyGesture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventMagnifyGesture? =
+        internal fun wrapOwned(handle: RawSegment): InputEventMagnifyGesture? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventMagnifyGesture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventMagnifyGesture? =
             if (handle.address() == 0L) null else InputEventMagnifyGesture(GodotHandle(handle))
 
         private const val SET_FACTOR_HASH = 373806689L

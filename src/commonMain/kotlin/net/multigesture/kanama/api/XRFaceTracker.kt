@@ -937,9 +937,12 @@ class XRFaceTracker(handle: GodotHandle) : XRTracker(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRFaceTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XRFaceTracker? =
+        internal fun wrapOwned(handle: RawSegment): XRFaceTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(XRFaceTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XRFaceTracker? =
             if (handle.address() == 0L) null else XRFaceTracker(GodotHandle(handle))
 
         private const val GET_BLEND_SHAPE_HASH = 330010046L

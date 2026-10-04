@@ -158,9 +158,12 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamGenerator? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamGenerator? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamGenerator? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamGenerator(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamGenerator? =
             if (handle.address() == 0L) null else AudioStreamGenerator(GodotHandle(handle))
 
         private const val SET_MIX_RATE_HASH = 373806689L

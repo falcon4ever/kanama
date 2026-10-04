@@ -13,9 +13,12 @@ class VisualShaderNodeFaceForward(handle: GodotHandle) : VisualShaderNodeVectorB
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeFaceForward? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeFaceForward? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeFaceForward? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeFaceForward(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeFaceForward? =
             if (handle.address() == 0L) null else VisualShaderNodeFaceForward(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

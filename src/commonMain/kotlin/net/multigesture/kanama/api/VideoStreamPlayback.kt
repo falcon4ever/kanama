@@ -25,9 +25,12 @@ class VideoStreamPlayback(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VideoStreamPlayback? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VideoStreamPlayback? =
+        internal fun wrapOwned(handle: RawSegment): VideoStreamPlayback? =
+            if (handle.address() == 0L) null else RefCounted.owned(VideoStreamPlayback(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VideoStreamPlayback? =
             if (handle.address() == 0L) null else VideoStreamPlayback(GodotHandle(handle))
 
         private const val MIX_AUDIO_HASH = 93876830L

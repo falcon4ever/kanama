@@ -13,9 +13,12 @@ class VisualShaderNodeScreenUVToSDF(handle: GodotHandle) : VisualShaderNode(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeScreenUVToSDF? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeScreenUVToSDF? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeScreenUVToSDF? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeScreenUVToSDF(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeScreenUVToSDF? =
             if (handle.address() == 0L) null else VisualShaderNodeScreenUVToSDF(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -73,7 +73,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_current_script
      */
     fun getCurrentScript(): Script? {
-        return Script.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentScriptBind, segment))
+        return Script.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurrentScriptBind, segment))
     }
 
     /**
@@ -82,7 +82,7 @@ class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
      * Generated from Godot docs: ScriptEditor.get_open_scripts
      */
     fun getOpenScripts(): List<Script> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenScriptsBind, segment, Script::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getOpenScriptsBind, segment, Script::wrapBorrowed)
     }
 
     /**

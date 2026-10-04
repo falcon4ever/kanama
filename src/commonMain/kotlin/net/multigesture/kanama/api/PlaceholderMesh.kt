@@ -24,9 +24,12 @@ class PlaceholderMesh(handle: GodotHandle) : Mesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PlaceholderMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PlaceholderMesh? =
+        internal fun wrapOwned(handle: RawSegment): PlaceholderMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(PlaceholderMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PlaceholderMesh? =
             if (handle.address() == 0L) null else PlaceholderMesh(GodotHandle(handle))
 
         private const val SET_AABB_HASH = 259215842L

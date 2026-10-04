@@ -135,7 +135,7 @@ object InputMap {
      */
     @JvmStatic
     fun actionGetEvents(action: String): List<InputEvent> {
-        return ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(actionGetEventsBind, singleton, action, InputEvent::wrap)
+        return ObjectCalls.ptrcallWithStringNameArgRetTypedObjectList(actionGetEventsBind, singleton, action, InputEvent::wrapBorrowed)
     }
 
     /**

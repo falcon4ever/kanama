@@ -134,9 +134,12 @@ class ENetPacketPeer(handle: GodotHandle) : PacketPeer(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ENetPacketPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ENetPacketPeer? =
+        internal fun wrapOwned(handle: RawSegment): ENetPacketPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(ENetPacketPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ENetPacketPeer? =
             if (handle.address() == 0L) null else ENetPacketPeer(GodotHandle(handle))
 
         private const val PEER_DISCONNECT_HASH = 1995695955L

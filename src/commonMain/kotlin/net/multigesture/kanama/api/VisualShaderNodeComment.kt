@@ -28,9 +28,12 @@ class VisualShaderNodeComment(handle: GodotHandle) : VisualShaderNodeFrame(handl
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeComment? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeComment? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeComment? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeComment(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeComment? =
             if (handle.address() == 0L) null else VisualShaderNodeComment(GodotHandle(handle))
 
         private const val SET_DESCRIPTION_HASH = 83702148L

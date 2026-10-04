@@ -37,15 +37,18 @@ class InputEventShortcut(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getShortcut(): Shortcut? {
         checkOpen()
-        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, segment))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventShortcut? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventShortcut? =
+        internal fun wrapOwned(handle: RawSegment): InputEventShortcut? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventShortcut(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventShortcut? =
             if (handle.address() == 0L) null else InputEventShortcut(GodotHandle(handle))
 
         private const val SET_SHORTCUT_HASH = 857163497L

@@ -65,9 +65,12 @@ class PolygonPathFinder(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PolygonPathFinder? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PolygonPathFinder? =
+        internal fun wrapOwned(handle: RawSegment): PolygonPathFinder? =
+            if (handle.address() == 0L) null else RefCounted.owned(PolygonPathFinder(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PolygonPathFinder? =
             if (handle.address() == 0L) null else PolygonPathFinder(GodotHandle(handle))
 
         private const val SETUP_HASH = 3251786936L

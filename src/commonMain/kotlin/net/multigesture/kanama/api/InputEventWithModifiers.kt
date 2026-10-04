@@ -169,9 +169,12 @@ open class InputEventWithModifiers(handle: GodotHandle) : InputEventFromWindow(h
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventWithModifiers? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventWithModifiers? =
+        internal fun wrapOwned(handle: RawSegment): InputEventWithModifiers? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventWithModifiers(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventWithModifiers? =
             if (handle.address() == 0L) null else InputEventWithModifiers(GodotHandle(handle))
 
         private const val SET_COMMAND_OR_CONTROL_AUTOREMAP_HASH = 2586408642L

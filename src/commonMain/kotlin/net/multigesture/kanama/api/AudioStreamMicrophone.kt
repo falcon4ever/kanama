@@ -15,9 +15,12 @@ class AudioStreamMicrophone(handle: GodotHandle) : AudioStream(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamMicrophone? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamMicrophone? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamMicrophone? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamMicrophone(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamMicrophone? =
             if (handle.address() == 0L) null else AudioStreamMicrophone(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

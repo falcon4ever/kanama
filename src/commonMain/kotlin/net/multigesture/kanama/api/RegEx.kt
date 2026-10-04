@@ -21,12 +21,12 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
 
     fun search(subject: String, offset: Int = 0, end: Int = -1): RegExMatch? {
         checkOpen()
-        return RegExMatch.wrap(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(searchBind, segment, subject, offset, end))
+        return RegExMatch.wrapOwned(ObjectCalls.ptrcallWithStringAndTwoIntArgsRetObject(searchBind, segment, subject, offset, end))
     }
 
     fun searchAll(subject: String, offset: Int = 0, end: Int = -1): List<RegExMatch> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(searchAllBind, segment, subject, offset, end, RegExMatch::wrap)
+        return ObjectCalls.ptrcallWithStringTwoIntArgsRetTypedObjectList(searchAllBind, segment, subject, offset, end, RegExMatch::wrapBorrowed)
     }
 
     fun sub(subject: String, replacement: String, all: Boolean = false, offset: Int = 0, end: Int = -1): String {
@@ -56,14 +56,17 @@ class RegEx(handle: GodotHandle) : RefCounted(handle) {
 
     companion object {
         fun createFromString(pattern: String, showError: Boolean = true): RegEx? {
-            return RegEx.wrap(ObjectCalls.ptrcallWithStringAndBoolArgRetObject(createFromStringBind, NULL_SEGMENT, pattern, showError))
+            return RegEx.wrapOwned(ObjectCalls.ptrcallWithStringAndBoolArgRetObject(createFromStringBind, NULL_SEGMENT, pattern, showError))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RegEx? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RegEx? =
+        internal fun wrapOwned(handle: RawSegment): RegEx? =
+            if (handle.address() == 0L) null else RefCounted.owned(RegEx(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RegEx? =
             if (handle.address() == 0L) null else RegEx(GodotHandle(handle))
 
         private const val CREATE_FROM_STRING_HASH = 4249111514L

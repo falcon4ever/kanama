@@ -141,9 +141,12 @@ open class StyleBox(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StyleBox? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StyleBox? =
+        internal fun wrapOwned(handle: RawSegment): StyleBox? =
+            if (handle.address() == 0L) null else RefCounted.owned(StyleBox(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StyleBox? =
             if (handle.address() == 0L) null else StyleBox(GodotHandle(handle))
 
         private const val GET_MINIMUM_SIZE_HASH = 3341600327L

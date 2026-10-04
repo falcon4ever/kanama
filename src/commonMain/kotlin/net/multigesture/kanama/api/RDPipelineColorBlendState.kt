@@ -113,15 +113,18 @@ class RDPipelineColorBlendState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAttachments(): List<RDPipelineColorBlendStateAttachment> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAttachmentsBind, segment, RDPipelineColorBlendStateAttachment::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAttachmentsBind, segment, RDPipelineColorBlendStateAttachment::wrapBorrowed)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDPipelineColorBlendState? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDPipelineColorBlendState? =
+        internal fun wrapOwned(handle: RawSegment): RDPipelineColorBlendState? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDPipelineColorBlendState(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDPipelineColorBlendState? =
             if (handle.address() == 0L) null else RDPipelineColorBlendState(GodotHandle(handle))
 
         private const val SET_ENABLE_LOGIC_OP_HASH = 2586408642L

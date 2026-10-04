@@ -80,9 +80,12 @@ open class StreamPeerSocket(handle: GodotHandle) : StreamPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeerSocket? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StreamPeerSocket? =
+        internal fun wrapOwned(handle: RawSegment): StreamPeerSocket? =
+            if (handle.address() == 0L) null else RefCounted.owned(StreamPeerSocket(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StreamPeerSocket? =
             if (handle.address() == 0L) null else StreamPeerSocket(GodotHandle(handle))
 
         private const val POLL_HASH = 166280745L

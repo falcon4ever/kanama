@@ -246,14 +246,17 @@ class PhysicsRayQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
          * Generated from Godot docs: PhysicsRayQueryParameters3D.create
          */
         fun create(from: Vector3, to: Vector3, collisionMask: Long = 4294967295L, exclude: List<RID>): PhysicsRayQueryParameters3D? {
-            return PhysicsRayQueryParameters3D.wrap(ObjectCalls.ptrcallWithTwoVector3UInt32RIDListArgsRetObject(createBind, NULL_SEGMENT, from, to, collisionMask, exclude))
+            return PhysicsRayQueryParameters3D.wrapOwned(ObjectCalls.ptrcallWithTwoVector3UInt32RIDListArgsRetObject(createBind, NULL_SEGMENT, from, to, collisionMask, exclude))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsRayQueryParameters3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PhysicsRayQueryParameters3D? =
+        internal fun wrapOwned(handle: RawSegment): PhysicsRayQueryParameters3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(PhysicsRayQueryParameters3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PhysicsRayQueryParameters3D? =
             if (handle.address() == 0L) null else PhysicsRayQueryParameters3D(GodotHandle(handle))
 
         private const val CREATE_HASH = 3110599579L

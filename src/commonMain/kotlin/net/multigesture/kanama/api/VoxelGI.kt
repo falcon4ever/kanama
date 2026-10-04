@@ -53,7 +53,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_probe_data
      */
     fun getProbeData(): VoxelGIData? {
-        return VoxelGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProbeDataBind, segment))
+        return VoxelGIData.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProbeDataBind, segment))
     }
 
     /**
@@ -119,7 +119,7 @@ class VoxelGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: VoxelGI.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     /**

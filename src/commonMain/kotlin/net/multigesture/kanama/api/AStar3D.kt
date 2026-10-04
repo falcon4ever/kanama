@@ -301,9 +301,12 @@ class AStar3D(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AStar3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AStar3D? =
+        internal fun wrapOwned(handle: RawSegment): AStar3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(AStar3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AStar3D? =
             if (handle.address() == 0L) null else AStar3D(GodotHandle(handle))
 
         private const val GET_AVAILABLE_POINT_ID_HASH = 3905245786L

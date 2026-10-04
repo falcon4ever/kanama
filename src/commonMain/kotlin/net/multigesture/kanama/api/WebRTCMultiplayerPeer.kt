@@ -52,9 +52,12 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebRTCMultiplayerPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WebRTCMultiplayerPeer? =
+        internal fun wrapOwned(handle: RawSegment): WebRTCMultiplayerPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(WebRTCMultiplayerPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WebRTCMultiplayerPeer? =
             if (handle.address() == 0L) null else WebRTCMultiplayerPeer(GodotHandle(handle))
 
         private const val CREATE_SERVER_HASH = 2865356025L

@@ -201,9 +201,12 @@ class SkeletonModification2DLookAt(handle: GodotHandle) : SkeletonModification2D
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SkeletonModification2DLookAt? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SkeletonModification2DLookAt? =
+        internal fun wrapOwned(handle: RawSegment): SkeletonModification2DLookAt? =
+            if (handle.address() == 0L) null else RefCounted.owned(SkeletonModification2DLookAt(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DLookAt? =
             if (handle.address() == 0L) null else SkeletonModification2DLookAt(GodotHandle(handle))
 
         private const val SET_BONE2D_NODE_HASH = 1348162250L

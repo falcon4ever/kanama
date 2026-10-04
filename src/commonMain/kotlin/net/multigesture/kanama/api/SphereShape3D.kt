@@ -40,9 +40,12 @@ class SphereShape3D(handle: GodotHandle) : Shape3D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SphereShape3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SphereShape3D? =
+        internal fun wrapOwned(handle: RawSegment): SphereShape3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(SphereShape3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SphereShape3D? =
             if (handle.address() == 0L) null else SphereShape3D(GodotHandle(handle))
 
         private const val SET_RADIUS_HASH = 373806689L

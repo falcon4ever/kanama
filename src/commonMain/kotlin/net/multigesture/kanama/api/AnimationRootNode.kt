@@ -16,9 +16,12 @@ open class AnimationRootNode(handle: GodotHandle) : AnimationNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationRootNode? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationRootNode? =
+        internal fun wrapOwned(handle: RawSegment): AnimationRootNode? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationRootNode(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationRootNode? =
             if (handle.address() == 0L) null else AnimationRootNode(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

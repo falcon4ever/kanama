@@ -23,15 +23,18 @@ class AwaitTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return AwaitTweener.wrap(ret)
+        return AwaitTweener.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AwaitTweener? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AwaitTweener? =
+        internal fun wrapOwned(handle: RawSegment): AwaitTweener? =
+            if (handle.address() == 0L) null else RefCounted.owned(AwaitTweener(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AwaitTweener? =
             if (handle.address() == 0L) null else AwaitTweener(GodotHandle(handle))
 
         private const val SET_TIMEOUT_HASH = 3123469156L

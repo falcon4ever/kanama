@@ -46,7 +46,7 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
 
     fun getCubeMap(): TextureLayered? {
         checkOpen()
-        return TextureLayered.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCubeMapBind, segment))
+        return TextureLayered.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCubeMapBind, segment))
     }
 
     fun setTextureType(value: VisualShaderNodeCubemap.TextureType) {
@@ -81,9 +81,12 @@ class VisualShaderNodeCubemap(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCubemap? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeCubemap? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeCubemap? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeCubemap(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCubemap? =
             if (handle.address() == 0L) null else VisualShaderNodeCubemap(GodotHandle(handle))
 
         private const val SET_SOURCE_HASH = 1625400621L

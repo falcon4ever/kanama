@@ -13,9 +13,12 @@ class PacketPeerExtension(handle: GodotHandle) : PacketPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PacketPeerExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PacketPeerExtension? =
+        internal fun wrapOwned(handle: RawSegment): PacketPeerExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(PacketPeerExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PacketPeerExtension? =
             if (handle.address() == 0L) null else PacketPeerExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

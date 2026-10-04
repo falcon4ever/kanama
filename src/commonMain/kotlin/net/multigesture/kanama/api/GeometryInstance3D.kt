@@ -127,7 +127,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_material_override
      */
     fun getMaterialOverride(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverrideBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverrideBind, segment))
     }
 
     /**
@@ -147,7 +147,7 @@ open class GeometryInstance3D(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: GeometryInstance3D.get_material_overlay
      */
     fun getMaterialOverlay(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverlayBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialOverlayBind, segment))
     }
 
     /**

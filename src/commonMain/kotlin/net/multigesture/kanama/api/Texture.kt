@@ -15,9 +15,12 @@ open class Texture(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Texture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Texture? =
+        internal fun wrapOwned(handle: RawSegment): Texture? =
+            if (handle.address() == 0L) null else RefCounted.owned(Texture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Texture? =
             if (handle.address() == 0L) null else Texture(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

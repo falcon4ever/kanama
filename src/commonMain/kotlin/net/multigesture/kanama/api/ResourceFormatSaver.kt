@@ -15,9 +15,12 @@ class ResourceFormatSaver(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceFormatSaver? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceFormatSaver? =
+        internal fun wrapOwned(handle: RawSegment): ResourceFormatSaver? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceFormatSaver(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceFormatSaver? =
             if (handle.address() == 0L) null else ResourceFormatSaver(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

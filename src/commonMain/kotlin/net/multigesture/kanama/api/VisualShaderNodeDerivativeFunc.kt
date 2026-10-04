@@ -92,9 +92,12 @@ class VisualShaderNodeDerivativeFunc(handle: GodotHandle) : VisualShaderNode(han
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeDerivativeFunc? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeDerivativeFunc? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeDerivativeFunc? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeDerivativeFunc(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDerivativeFunc? =
             if (handle.address() == 0L) null else VisualShaderNodeDerivativeFunc(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 377800221L

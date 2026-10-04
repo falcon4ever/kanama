@@ -37,9 +37,12 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRAnchorTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRAnchorTracker? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRAnchorTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRAnchorTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRAnchorTracker? =
             if (handle.address() == 0L) null else OpenXRAnchorTracker(GodotHandle(handle))
 
         private const val HAS_UUID_HASH = 36873697L

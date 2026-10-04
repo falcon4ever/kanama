@@ -132,9 +132,12 @@ open class Shape2D(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Shape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Shape2D? =
+        internal fun wrapOwned(handle: RawSegment): Shape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(Shape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Shape2D? =
             if (handle.address() == 0L) null else Shape2D(GodotHandle(handle))
 
         private const val SET_CUSTOM_SOLVER_BIAS_HASH = 373806689L

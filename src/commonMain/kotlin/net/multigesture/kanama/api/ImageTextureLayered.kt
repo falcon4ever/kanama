@@ -41,9 +41,12 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ImageTextureLayered? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ImageTextureLayered? =
+        internal fun wrapOwned(handle: RawSegment): ImageTextureLayered? =
+            if (handle.address() == 0L) null else RefCounted.owned(ImageTextureLayered(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ImageTextureLayered? =
             if (handle.address() == 0L) null else ImageTextureLayered(GodotHandle(handle))
 
         private const val CREATE_FROM_IMAGES_HASH = 2785773503L

@@ -67,9 +67,12 @@ class SegmentShape2D(handle: GodotHandle) : Shape2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SegmentShape2D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SegmentShape2D? =
+        internal fun wrapOwned(handle: RawSegment): SegmentShape2D? =
+            if (handle.address() == 0L) null else RefCounted.owned(SegmentShape2D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SegmentShape2D? =
             if (handle.address() == 0L) null else SegmentShape2D(GodotHandle(handle))
 
         private const val SET_A_HASH = 743155724L

@@ -13,9 +13,12 @@ class EditorExportPlatformAndroid(handle: GodotHandle) : EditorExportPlatform(ha
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatformAndroid? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatformAndroid? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatformAndroid? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatformAndroid(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformAndroid? =
             if (handle.address() == 0L) null else EditorExportPlatformAndroid(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

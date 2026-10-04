@@ -17,9 +17,12 @@ class OpenXRSpatialComponentParentList(handle: GodotHandle) : OpenXRSpatialCompo
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentParentList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentParentList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentParentList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentParentList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentParentList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentParentList(GodotHandle(handle))
 
         private const val GET_PARENT_HASH = 495598643L

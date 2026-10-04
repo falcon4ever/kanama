@@ -13,9 +13,12 @@ class StreamPeerExtension(handle: GodotHandle) : StreamPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeerExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StreamPeerExtension? =
+        internal fun wrapOwned(handle: RawSegment): StreamPeerExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(StreamPeerExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StreamPeerExtension? =
             if (handle.address() == 0L) null else StreamPeerExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

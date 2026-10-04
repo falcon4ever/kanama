@@ -13,9 +13,12 @@ class VisualShaderNodeVectorCompose(handle: GodotHandle) : VisualShaderNodeVecto
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorCompose? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVectorCompose? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVectorCompose? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVectorCompose(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorCompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorCompose(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

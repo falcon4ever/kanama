@@ -84,7 +84,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**

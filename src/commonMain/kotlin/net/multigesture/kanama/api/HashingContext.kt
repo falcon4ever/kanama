@@ -75,9 +75,12 @@ class HashingContext(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): HashingContext? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): HashingContext? =
+        internal fun wrapOwned(handle: RawSegment): HashingContext? =
+            if (handle.address() == 0L) null else RefCounted.owned(HashingContext(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): HashingContext? =
             if (handle.address() == 0L) null else HashingContext(GodotHandle(handle))
 
         private const val START_HASH = 3940338335L

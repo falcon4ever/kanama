@@ -578,9 +578,12 @@ class RDPipelineDepthStencilState(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDPipelineDepthStencilState? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDPipelineDepthStencilState? =
+        internal fun wrapOwned(handle: RawSegment): RDPipelineDepthStencilState? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDPipelineDepthStencilState(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDPipelineDepthStencilState? =
             if (handle.address() == 0L) null else RDPipelineDepthStencilState(GodotHandle(handle))
 
         private const val SET_ENABLE_DEPTH_TEST_HASH = 2586408642L

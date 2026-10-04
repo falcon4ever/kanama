@@ -68,9 +68,12 @@ class InputEventJoypadMotion(handle: GodotHandle) : InputEvent(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventJoypadMotion? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventJoypadMotion? =
+        internal fun wrapOwned(handle: RawSegment): InputEventJoypadMotion? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventJoypadMotion(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventJoypadMotion? =
             if (handle.address() == 0L) null else InputEventJoypadMotion(GodotHandle(handle))
 
         private const val SET_AXIS_HASH = 1332685170L

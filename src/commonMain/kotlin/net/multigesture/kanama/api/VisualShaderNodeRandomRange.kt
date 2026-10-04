@@ -13,9 +13,12 @@ class VisualShaderNodeRandomRange(handle: GodotHandle) : VisualShaderNode(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeRandomRange? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeRandomRange? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeRandomRange? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeRandomRange(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeRandomRange? =
             if (handle.address() == 0L) null else VisualShaderNodeRandomRange(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

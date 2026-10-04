@@ -54,7 +54,7 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurve(): Curve? {
         checkOpen()
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
     }
 
     /**
@@ -108,9 +108,12 @@ class CurveTexture(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CurveTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CurveTexture? =
+        internal fun wrapOwned(handle: RawSegment): CurveTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(CurveTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CurveTexture? =
             if (handle.address() == 0L) null else CurveTexture(GodotHandle(handle))
 
         private const val SET_WIDTH_HASH = 1286410249L

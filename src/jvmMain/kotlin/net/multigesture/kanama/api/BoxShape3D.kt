@@ -45,11 +45,11 @@ class BoxShape3D internal constructor(handle: GodotHandle) : Shape3D(handle) {
 
         @JvmStatic
         fun create(): BoxShape3D =
-            BoxShape3D(GodotHandle(ObjectCalls.constructObject("BoxShape3D")))
+            RefCounted.owned(BoxShape3D(GodotHandle(ObjectCalls.constructObject("BoxShape3D"))))
 
         @JvmStatic
         fun fromResource(value: Resource): BoxShape3D? =
-            if (value.isClass("BoxShape3D")) BoxShape3D(value.handle) else null
+            if (value.isClass("BoxShape3D")) RefCounted.retained(BoxShape3D(value.handle)) else null
 
     }
 }

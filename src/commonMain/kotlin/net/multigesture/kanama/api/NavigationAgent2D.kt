@@ -803,7 +803,7 @@ class NavigationAgent2D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: NavigationAgent2D.get_current_navigation_result
      */
     fun getCurrentNavigationResult(): NavigationPathQueryResult2D? {
-        return NavigationPathQueryResult2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCurrentNavigationResultBind, segment))
+        return NavigationPathQueryResult2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurrentNavigationResultBind, segment))
     }
 
     /**

@@ -15,9 +15,12 @@ class LightmapperRD(handle: GodotHandle) : Lightmapper(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): LightmapperRD? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): LightmapperRD? =
+        internal fun wrapOwned(handle: RawSegment): LightmapperRD? =
+            if (handle.address() == 0L) null else RefCounted.owned(LightmapperRD(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): LightmapperRD? =
             if (handle.address() == 0L) null else LightmapperRD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

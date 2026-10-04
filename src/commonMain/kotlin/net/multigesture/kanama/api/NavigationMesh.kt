@@ -921,9 +921,12 @@ class NavigationMesh(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): NavigationMesh? =
+        internal fun wrapOwned(handle: RawSegment): NavigationMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(NavigationMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): NavigationMesh? =
             if (handle.address() == 0L) null else NavigationMesh(GodotHandle(handle))
 
         private const val SET_SAMPLE_PARTITION_TYPE_HASH = 2472437533L

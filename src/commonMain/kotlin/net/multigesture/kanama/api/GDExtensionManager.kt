@@ -79,7 +79,7 @@ object GDExtensionManager {
      */
     @JvmStatic
     fun getExtension(path: String): GDExtension? {
-        return GDExtension.wrap(ObjectCalls.ptrcallWithStringArgRetObject(getExtensionBind, singleton, path))
+        return GDExtension.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(getExtensionBind, singleton, path))
     }
 
     object Signals {

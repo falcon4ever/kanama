@@ -45,9 +45,12 @@ class EditorScript(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorScript? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorScript? =
+        internal fun wrapOwned(handle: RawSegment): EditorScript? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorScript(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorScript? =
             if (handle.address() == 0L) null else EditorScript(GodotHandle(handle))
 
         private const val ADD_ROOT_NODE_HASH = 1078189570L

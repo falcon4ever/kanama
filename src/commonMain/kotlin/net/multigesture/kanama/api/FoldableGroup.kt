@@ -67,9 +67,12 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FoldableGroup? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): FoldableGroup? =
+        internal fun wrapOwned(handle: RawSegment): FoldableGroup? =
+            if (handle.address() == 0L) null else RefCounted.owned(FoldableGroup(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): FoldableGroup? =
             if (handle.address() == 0L) null else FoldableGroup(GodotHandle(handle))
 
         private const val GET_EXPANDED_CONTAINER_HASH = 1427441056L

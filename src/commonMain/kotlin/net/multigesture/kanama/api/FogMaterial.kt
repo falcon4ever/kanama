@@ -196,15 +196,18 @@ class FogMaterial(handle: GodotHandle) : Material(handle) {
      */
     fun getDensityTexture(): Texture3D? {
         checkOpen()
-        return Texture3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDensityTextureBind, segment))
+        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDensityTextureBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): FogMaterial? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): FogMaterial? =
+        internal fun wrapOwned(handle: RawSegment): FogMaterial? =
+            if (handle.address() == 0L) null else RefCounted.owned(FogMaterial(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): FogMaterial? =
             if (handle.address() == 0L) null else FogMaterial(GodotHandle(handle))
 
         private const val SET_DENSITY_HASH = 373806689L

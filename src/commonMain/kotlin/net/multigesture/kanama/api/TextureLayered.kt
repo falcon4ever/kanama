@@ -80,7 +80,7 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
      */
     fun getLayerData(layer: Int): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, segment, layer))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getLayerDataBind, segment, layer))
     }
 
     /**
@@ -116,9 +116,12 @@ open class TextureLayered(handle: GodotHandle) : Texture(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextureLayered? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextureLayered? =
+        internal fun wrapOwned(handle: RawSegment): TextureLayered? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextureLayered(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextureLayered? =
             if (handle.address() == 0L) null else TextureLayered(GodotHandle(handle))
 
         private const val GET_FORMAT_HASH = 3847873762L

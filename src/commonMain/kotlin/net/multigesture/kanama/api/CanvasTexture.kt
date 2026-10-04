@@ -77,7 +77,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Texture2D.wrap(ret)
+        return Texture2D.wrapOwned(ret)
     }
 
     /**
@@ -108,7 +108,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Texture2D.wrap(ret)
+        return Texture2D.wrapOwned(ret)
     }
 
     /**
@@ -139,7 +139,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Texture2D.wrap(ret)
+        return Texture2D.wrapOwned(ret)
     }
 
     /**
@@ -235,9 +235,12 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CanvasTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CanvasTexture? =
+        internal fun wrapOwned(handle: RawSegment): CanvasTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(CanvasTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CanvasTexture? =
             if (handle.address() == 0L) null else CanvasTexture(GodotHandle(handle))
 
         private const val SET_DIFFUSE_TEXTURE_HASH = 4051416890L

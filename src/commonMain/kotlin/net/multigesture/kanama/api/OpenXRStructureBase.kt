@@ -33,15 +33,18 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return OpenXRStructureBase.wrap(ret)
+        return OpenXRStructureBase.wrapOwned(ret)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRStructureBase? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRStructureBase? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRStructureBase? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRStructureBase(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRStructureBase? =
             if (handle.address() == 0L) null else OpenXRStructureBase(GodotHandle(handle))
 
         private const val GET_STRUCTURE_TYPE_HASH = 2455072627L

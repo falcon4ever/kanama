@@ -46,9 +46,12 @@ class ExternalTexture(handle: GodotHandle) : Texture2D(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ExternalTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ExternalTexture? =
+        internal fun wrapOwned(handle: RawSegment): ExternalTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(ExternalTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ExternalTexture? =
             if (handle.address() == 0L) null else ExternalTexture(GodotHandle(handle))
 
         private const val SET_SIZE_HASH = 743155724L

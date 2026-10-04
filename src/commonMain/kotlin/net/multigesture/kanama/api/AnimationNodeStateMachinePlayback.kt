@@ -170,9 +170,12 @@ class AnimationNodeStateMachinePlayback(handle: GodotHandle) : Resource(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeStateMachinePlayback? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeStateMachinePlayback? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeStateMachinePlayback? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeStateMachinePlayback(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeStateMachinePlayback? =
             if (handle.address() == 0L) null else AnimationNodeStateMachinePlayback(GodotHandle(handle))
 
         private const val TRAVEL_HASH = 3823612587L

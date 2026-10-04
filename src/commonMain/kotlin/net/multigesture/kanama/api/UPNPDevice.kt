@@ -145,9 +145,12 @@ class UPNPDevice(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): UPNPDevice? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): UPNPDevice? =
+        internal fun wrapOwned(handle: RawSegment): UPNPDevice? =
+            if (handle.address() == 0L) null else RefCounted.owned(UPNPDevice(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): UPNPDevice? =
             if (handle.address() == 0L) null else UPNPDevice(GodotHandle(handle))
 
         private const val IS_VALID_GATEWAY_HASH = 36873697L

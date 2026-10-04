@@ -99,9 +99,12 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectStereoEnhance? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectStereoEnhance? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectStereoEnhance? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectStereoEnhance(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectStereoEnhance? =
             if (handle.address() == 0L) null else AudioEffectStereoEnhance(GodotHandle(handle))
 
         private const val SET_PAN_PULLOUT_HASH = 373806689L

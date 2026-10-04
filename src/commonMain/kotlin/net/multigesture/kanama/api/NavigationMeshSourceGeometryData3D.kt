@@ -222,9 +222,12 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationMeshSourceGeometryData3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): NavigationMeshSourceGeometryData3D? =
+        internal fun wrapOwned(handle: RawSegment): NavigationMeshSourceGeometryData3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(NavigationMeshSourceGeometryData3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): NavigationMeshSourceGeometryData3D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData3D(GodotHandle(handle))
 
         private const val SET_VERTICES_HASH = 2899603908L

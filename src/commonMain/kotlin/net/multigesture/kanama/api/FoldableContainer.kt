@@ -114,7 +114,7 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: FoldableContainer.get_foldable_group
      */
     fun getFoldableGroup(): FoldableGroup? {
-        return FoldableGroup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getFoldableGroupBind, segment))
+        return FoldableGroup.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFoldableGroupBind, segment))
     }
 
     /**

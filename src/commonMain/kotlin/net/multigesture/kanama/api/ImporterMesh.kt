@@ -185,7 +185,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceMaterial(surfaceIdx: Int): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceMaterialBind, segment, surfaceIdx))
+        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceMaterialBind, segment, surfaceIdx))
     }
 
     /**
@@ -244,7 +244,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getMesh(baseMesh: ArrayMesh?): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, segment, baseMesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, segment, baseMesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -294,7 +294,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: ImporterMesh.merge_importer_meshes
          */
         fun mergeImporterMeshes(importerMeshes: List<ImporterMesh>, relativeTransforms: List<Transform3D>, deduplicateSurfaces: Boolean = true): ImporterMesh? {
-            return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(mergeImporterMeshesBind, NULL_SEGMENT, importerMeshes, relativeTransforms, deduplicateSurfaces))
+            return ImporterMesh.wrapOwned(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(mergeImporterMeshesBind, NULL_SEGMENT, importerMeshes, relativeTransforms, deduplicateSurfaces))
         }
 
         /**
@@ -304,14 +304,17 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: ImporterMesh.from_mesh
          */
         fun fromMesh(mesh: Mesh?): ImporterMesh? {
-            return ImporterMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromMeshBind, NULL_SEGMENT, mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+            return ImporterMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromMeshBind, NULL_SEGMENT, mesh?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ImporterMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ImporterMesh? =
+        internal fun wrapOwned(handle: RawSegment): ImporterMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(ImporterMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ImporterMesh? =
             if (handle.address() == 0L) null else ImporterMesh(GodotHandle(handle))
 
         private const val MERGE_IMPORTER_MESHES_HASH = 1030647649L

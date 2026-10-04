@@ -16,9 +16,12 @@ class EditorResourceConversionPlugin(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorResourceConversionPlugin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorResourceConversionPlugin? =
+        internal fun wrapOwned(handle: RawSegment): EditorResourceConversionPlugin? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorResourceConversionPlugin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorResourceConversionPlugin? =
             if (handle.address() == 0L) null else EditorResourceConversionPlugin(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

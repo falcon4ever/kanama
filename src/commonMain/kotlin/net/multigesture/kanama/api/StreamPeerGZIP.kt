@@ -56,9 +56,12 @@ class StreamPeerGZIP(handle: GodotHandle) : StreamPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): StreamPeerGZIP? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): StreamPeerGZIP? =
+        internal fun wrapOwned(handle: RawSegment): StreamPeerGZIP? =
+            if (handle.address() == 0L) null else RefCounted.owned(StreamPeerGZIP(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): StreamPeerGZIP? =
             if (handle.address() == 0L) null else StreamPeerGZIP(GodotHandle(handle))
 
         private const val START_COMPRESSION_HASH = 781582770L

@@ -363,9 +363,12 @@ class AudioEffectDelay(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectDelay? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectDelay? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectDelay? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectDelay(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectDelay? =
             if (handle.address() == 0L) null else AudioEffectDelay(GodotHandle(handle))
 
         private const val SET_DRY_HASH = 373806689L

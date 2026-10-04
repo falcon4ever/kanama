@@ -40,9 +40,12 @@ class VisualShaderNodeMultiplyAdd(handle: GodotHandle) : VisualShaderNode(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeMultiplyAdd? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeMultiplyAdd? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeMultiplyAdd? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeMultiplyAdd(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeMultiplyAdd? =
             if (handle.address() == 0L) null else VisualShaderNodeMultiplyAdd(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 1409862380L

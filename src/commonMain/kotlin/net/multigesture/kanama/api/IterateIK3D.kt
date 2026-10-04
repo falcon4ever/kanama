@@ -206,7 +206,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_joint_limitation
      */
     fun getJointLimitation(index: Int, joint: Int): JointLimitation3D? {
-        return JointLimitation3D.wrap(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getJointLimitationBind, segment, index, joint))
+        return JointLimitation3D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getJointLimitationBind, segment, index, joint))
     }
 
     /**

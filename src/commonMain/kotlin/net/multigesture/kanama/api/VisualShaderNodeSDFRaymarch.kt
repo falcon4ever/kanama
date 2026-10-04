@@ -13,9 +13,12 @@ class VisualShaderNodeSDFRaymarch(handle: GodotHandle) : VisualShaderNode(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeSDFRaymarch? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeSDFRaymarch? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeSDFRaymarch? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeSDFRaymarch(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSDFRaymarch? =
             if (handle.address() == 0L) null else VisualShaderNodeSDFRaymarch(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

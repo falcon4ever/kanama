@@ -46,7 +46,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
 
     fun getMesh(): ImporterMesh? {
         checkOpen()
-        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun setMesh(mesh: ImporterMesh?) {
@@ -66,7 +66,7 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
 
     fun getInstanceMaterials(): List<Material> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getInstanceMaterialsBind, segment, Material::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getInstanceMaterialsBind, segment, Material::wrapBorrowed)
     }
 
     fun setInstanceMaterials(instanceMaterials: List<Material>) {
@@ -87,9 +87,12 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFMesh? =
+        internal fun wrapOwned(handle: RawSegment): GLTFMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFMesh? =
             if (handle.address() == 0L) null else GLTFMesh(GodotHandle(handle))
 
         private const val GET_ORIGINAL_NAME_HASH = 2841200299L

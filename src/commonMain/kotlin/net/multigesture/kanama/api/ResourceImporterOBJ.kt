@@ -15,9 +15,12 @@ class ResourceImporterOBJ(handle: GodotHandle) : ResourceImporter(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterOBJ? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterOBJ? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterOBJ? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterOBJ(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterOBJ? =
             if (handle.address() == 0L) null else ResourceImporterOBJ(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

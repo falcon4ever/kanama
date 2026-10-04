@@ -304,7 +304,7 @@ class BoneTwistDisperser3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: BoneTwistDisperser3D.get_damping_curve
      */
     fun getDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDampingCurveBind, segment, index))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getDampingCurveBind, segment, index))
     }
 
     /**

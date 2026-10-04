@@ -148,9 +148,12 @@ class RDTextureView(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDTextureView? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDTextureView? =
+        internal fun wrapOwned(handle: RawSegment): RDTextureView? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDTextureView(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDTextureView? =
             if (handle.address() == 0L) null else RDTextureView(GodotHandle(handle))
 
         private const val SET_FORMAT_OVERRIDE_HASH = 565531219L

@@ -45,9 +45,12 @@ class VisualShaderNodeVec3Parameter(handle: GodotHandle) : VisualShaderNodeParam
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVec3Parameter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVec3Parameter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVec3Parameter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVec3Parameter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVec3Parameter? =
             if (handle.address() == 0L) null else VisualShaderNodeVec3Parameter(GodotHandle(handle))
 
         private const val SET_DEFAULT_VALUE_ENABLED_HASH = 2586408642L

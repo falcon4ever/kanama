@@ -76,9 +76,12 @@ class GLTFTextureSampler(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFTextureSampler? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFTextureSampler? =
+        internal fun wrapOwned(handle: RawSegment): GLTFTextureSampler? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFTextureSampler(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFTextureSampler? =
             if (handle.address() == 0L) null else GLTFTextureSampler(GodotHandle(handle))
 
         private const val GET_MAG_FILTER_HASH = 3905245786L

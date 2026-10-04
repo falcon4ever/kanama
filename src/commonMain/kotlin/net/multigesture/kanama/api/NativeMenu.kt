@@ -576,7 +576,7 @@ object NativeMenu {
      */
     @JvmStatic
     fun getItemIcon(rid: RID, idx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithRIDAndIntArgRetObject(getItemIconBind, singleton, rid, idx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithRIDAndIntArgRetObject(getItemIconBind, singleton, rid, idx))
     }
 
     /**

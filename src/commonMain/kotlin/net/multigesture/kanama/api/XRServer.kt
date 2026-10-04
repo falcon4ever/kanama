@@ -205,7 +205,7 @@ object XRServer {
      */
     @JvmStatic
     fun getInterface(idx: Int): XRInterface? {
-        return XRInterface.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getInterfaceBind, singleton, idx))
+        return XRInterface.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getInterfaceBind, singleton, idx))
     }
 
     /**
@@ -226,7 +226,7 @@ object XRServer {
      */
     @JvmStatic
     fun findInterface(name: String): XRInterface? {
-        return XRInterface.wrap(ObjectCalls.ptrcallWithStringArgRetObject(findInterfaceBind, singleton, name))
+        return XRInterface.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(findInterfaceBind, singleton, name))
     }
 
     /**
@@ -266,7 +266,7 @@ object XRServer {
      */
     @JvmStatic
     fun getTracker(trackerName: String): XRTracker? {
-        return XRTracker.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getTrackerBind, singleton, trackerName))
+        return XRTracker.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getTrackerBind, singleton, trackerName))
     }
 
     /**
@@ -276,7 +276,7 @@ object XRServer {
      */
     @JvmStatic
     fun getPrimaryInterface(): XRInterface? {
-        return XRInterface.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPrimaryInterfaceBind, singleton))
+        return XRInterface.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPrimaryInterfaceBind, singleton))
     }
 
     /**

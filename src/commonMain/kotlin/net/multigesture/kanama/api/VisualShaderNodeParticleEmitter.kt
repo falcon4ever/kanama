@@ -28,9 +28,12 @@ open class VisualShaderNodeParticleEmitter(handle: GodotHandle) : VisualShaderNo
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleEmitter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleEmitter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleEmitter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleEmitter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleEmitter(GodotHandle(handle))
 
         private const val SET_MODE_2D_HASH = 2586408642L

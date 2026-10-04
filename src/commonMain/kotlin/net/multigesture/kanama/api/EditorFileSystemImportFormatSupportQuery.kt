@@ -15,9 +15,12 @@ class EditorFileSystemImportFormatSupportQuery(handle: GodotHandle) : RefCounted
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorFileSystemImportFormatSupportQuery? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorFileSystemImportFormatSupportQuery? =
+        internal fun wrapOwned(handle: RawSegment): EditorFileSystemImportFormatSupportQuery? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorFileSystemImportFormatSupportQuery(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorFileSystemImportFormatSupportQuery? =
             if (handle.address() == 0L) null else EditorFileSystemImportFormatSupportQuery(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -17,7 +17,7 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJavaClass(): JavaClass? {
         checkOpen()
-        return JavaClass.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJavaClassBind, segment))
+        return JavaClass.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getJavaClassBind, segment))
     }
 
     /**
@@ -33,9 +33,12 @@ class JavaObject(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): JavaObject? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): JavaObject? =
+        internal fun wrapOwned(handle: RawSegment): JavaObject? =
+            if (handle.address() == 0L) null else RefCounted.owned(JavaObject(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): JavaObject? =
             if (handle.address() == 0L) null else JavaObject(GodotHandle(handle))
 
         private const val GET_JAVA_CLASS_HASH = 541536347L

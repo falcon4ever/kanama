@@ -40,9 +40,12 @@ open class InputEventFromWindow(handle: GodotHandle) : InputEvent(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventFromWindow? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventFromWindow? =
+        internal fun wrapOwned(handle: RawSegment): InputEventFromWindow? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventFromWindow(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventFromWindow? =
             if (handle.address() == 0L) null else InputEventFromWindow(GodotHandle(handle))
 
         private const val SET_WINDOW_ID_HASH = 1286410249L

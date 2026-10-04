@@ -43,7 +43,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
 
     fun getDiffuseImg(): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDiffuseImgBind, segment))
+        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDiffuseImgBind, segment))
     }
 
     fun setDiffuseImg(diffuseImg: Image?) {
@@ -83,7 +83,7 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
 
     fun getSpecGlossImg(): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpecGlossImgBind, segment))
+        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSpecGlossImgBind, segment))
     }
 
     fun setSpecGlossImg(specGlossImg: Image?) {
@@ -94,9 +94,12 @@ class GLTFSpecGloss(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFSpecGloss? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFSpecGloss? =
+        internal fun wrapOwned(handle: RawSegment): GLTFSpecGloss? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFSpecGloss(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFSpecGloss? =
             if (handle.address() == 0L) null else GLTFSpecGloss(GodotHandle(handle))
 
         private const val GET_DIFFUSE_IMG_HASH = 564927088L

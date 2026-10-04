@@ -1053,7 +1053,7 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fontGetTextureImage(fontRid: RID, size: Vector2i, textureIndex: Long): Image? {
         checkOpen()
-        return Image.wrap(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(fontGetTextureImageBind, segment, fontRid, size, textureIndex))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRIDVector2iLongArgsRetObject(fontGetTextureImageBind, segment, fontRid, size, textureIndex))
     }
 
     /**
@@ -3614,9 +3614,12 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextServer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextServer? =
+        internal fun wrapOwned(handle: RawSegment): TextServer? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextServer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextServer? =
             if (handle.address() == 0L) null else TextServer(GodotHandle(handle))
 
         private const val HAS_FEATURE_HASH = 3967367083L

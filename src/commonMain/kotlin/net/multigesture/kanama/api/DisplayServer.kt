@@ -422,7 +422,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun globalMenuGetItemIcon(menuRoot: String, idx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithStringAndIntArgRetObject(globalMenuGetItemIconBind, singleton, menuRoot, idx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithStringAndIntArgRetObject(globalMenuGetItemIconBind, singleton, menuRoot, idx))
     }
 
     /**
@@ -934,7 +934,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun clipboardGetImage(): Image? {
-        return Image.wrap(ObjectCalls.ptrcallNoArgsRetObject(clipboardGetImageBind, singleton))
+        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(clipboardGetImageBind, singleton))
     }
 
     /**
@@ -1198,7 +1198,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun screenGetImage(screen: Int = -1): Image? {
-        return Image.wrap(ObjectCalls.ptrcallWithIntArgRetObject(screenGetImageBind, singleton, screen))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(screenGetImageBind, singleton, screen))
     }
 
     /**
@@ -1213,7 +1213,7 @@ object DisplayServer {
      */
     @JvmStatic
     fun screenGetImageRect(rect: Rect2i): Image? {
-        return Image.wrap(ObjectCalls.ptrcallWithRect2iArgRetObject(screenGetImageRectBind, singleton, rect))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithRect2iArgRetObject(screenGetImageRectBind, singleton, rect))
     }
 
     /**

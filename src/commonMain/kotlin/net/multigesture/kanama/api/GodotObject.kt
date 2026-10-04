@@ -3,6 +3,7 @@ package net.multigesture.kanama.api
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
+import net.multigesture.kanama.binding.runtime.LiveFlag
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -66,15 +67,17 @@ open class GodotObject(val handle: GodotHandle) {
     /**
      * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam, read by every wrapper
      * call (receiver and typed object arguments). Internal: game code passes [handle] around and
-     * never unwraps it. While `FreedObjectChecks.enabled` (debug builds) it first checks that the
-     * object is still alive and throws `IllegalStateException` if it was freed (task 131 item 2).
+     * never unwraps it. While `FreedObjectChecks.enabled` it first checks that the object is still
+     * alive and throws `IllegalStateException` if it was freed (task 131 item 2): one read of the
+     * object's [LiveFlag] when the instance-binding check is on (task 132 D7), else an
+     * `object_get_instance_from_id` engine call.
      * Value encodings (Variant, property, return) use `FreedObjectChecks.valueSegment` instead,
      * which turns a freed object into nil without an error.
      */
     internal val segment: RawSegment
         get() {
             val raw = handle.segment
-            if (FreedObjectChecks.enabled && !ObjectRuntime.isLive(raw, instanceId)) {
+            if (FreedObjectChecks.enabled && !isAlive(raw)) {
                 throw FreedObjectChecks.freedInstance(this::class.simpleName ?: "GodotObject", instanceId)
             }
             return raw
@@ -100,7 +103,21 @@ open class GodotObject(val handle: GodotHandle) {
      * `getInstanceId()J` signature; Kotlin callers read `instanceId` as usual.
      */
     @get:JvmName("capturedInstanceId")
-    val instanceId: Long = ObjectRuntime.instanceIdOf(handle.segment)
+    val instanceId: Long
+
+    // The object's liveness flag (task 132 D7), shared by every wrapper of it; null when the
+    // instance-binding check is off, and liveness is asked of the engine by instance id instead.
+    private val liveFlag: LiveFlag? = ObjectRuntime.liveFlagOf(handle.segment)
+
+    init {
+        instanceId = liveFlag?.instanceId ?: ObjectRuntime.instanceIdOf(handle.segment)
+    }
+
+    /** Whether the object behind [raw] (this wrapper's handle) is still alive. Never dereferences it. */
+    internal fun isAlive(raw: RawSegment): Boolean {
+        val flag = liveFlag
+        return if (flag != null) !flag.dead else ObjectRuntime.isLive(raw, instanceId)
+    }
 
     /**
      * True when [other] is a wrapper of the same Godot object: the same [instanceId] (task 131
@@ -306,8 +323,9 @@ open class GodotObject(val handle: GodotHandle) {
      * as a *borrowed* `GodotObject` view: the Variant-path decode
      * (`BuiltinTypes.variantToScalar`, `VariantType.OBJECT`) takes no reference for you, so
      *
-     * - never `close()` it, and never `close()` a `Resource.fromObject(...)`/`X.fromObject(...)`
-     *   view you mint over it — that releases a reference you never took;
+     * - `close()` on it releases nothing (it took no reference). To keep the object, downcast it:
+     *   `Resource.fromObject(...)`/`X.fromObject(...)` takes a reference of its own (task 132), which
+     *   you may `close()` (or let the garbage collector release);
      * - if the call *minted* the object and the return Variant held its only reference
      *   (`call("duplicate")`, a static factory), the segment is already dead when you receive it;
      *   use the typed wrapper method instead (an owned `+1` you close), or `ClassDB.instantiate`,
@@ -383,7 +401,7 @@ open class GodotObject(val handle: GodotHandle) {
      * the freed-object check is on and the object was freed, so string templates never throw.
      */
     override fun toString(): String =
-        if (FreedObjectChecks.enabled && !ObjectRuntime.isLive(handle.segment, instanceId)) {
+        if (FreedObjectChecks.enabled && !isAlive(handle.segment)) {
             "<Freed Object>"
         } else {
             ObjectCalls.ptrcallNoArgsRetString(toStringBind, segment)

@@ -72,7 +72,7 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultTextureParameter(name: String, index: Int = 0): Texture? {
         checkOpen()
-        return Texture.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, segment, name, index))
+        return Texture.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getDefaultTextureParameterBind, segment, name, index))
     }
 
     /**
@@ -152,9 +152,12 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Shader? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Shader? =
+        internal fun wrapOwned(handle: RawSegment): Shader? =
+            if (handle.address() == 0L) null else RefCounted.owned(Shader(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Shader? =
             if (handle.address() == 0L) null else Shader(GodotHandle(handle))
 
         private const val GET_MODE_HASH = 3392948163L

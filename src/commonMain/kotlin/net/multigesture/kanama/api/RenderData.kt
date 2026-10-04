@@ -17,7 +17,7 @@ open class RenderData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderData.get_render_scene_buffers
      */
     fun getRenderSceneBuffers(): RenderSceneBuffers? {
-        return RenderSceneBuffers.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneBuffersBind, segment))
+        return RenderSceneBuffers.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRenderSceneBuffersBind, segment))
     }
 
     /**

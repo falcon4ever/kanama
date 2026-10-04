@@ -13,9 +13,12 @@ class WebRTCDataChannelExtension(handle: GodotHandle) : WebRTCDataChannel(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebRTCDataChannelExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WebRTCDataChannelExtension? =
+        internal fun wrapOwned(handle: RawSegment): WebRTCDataChannelExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(WebRTCDataChannelExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WebRTCDataChannelExtension? =
             if (handle.address() == 0L) null else WebRTCDataChannelExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

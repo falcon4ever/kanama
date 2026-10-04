@@ -42,15 +42,18 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun takeConnection(): StreamPeerTCP? {
         checkOpen()
-        return StreamPeerTCP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
+        return StreamPeerTCP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TCPServer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TCPServer? =
+        internal fun wrapOwned(handle: RawSegment): TCPServer? =
+            if (handle.address() == 0L) null else RefCounted.owned(TCPServer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TCPServer? =
             if (handle.address() == 0L) null else TCPServer(GodotHandle(handle))
 
         private const val LISTEN_HASH = 3167955072L

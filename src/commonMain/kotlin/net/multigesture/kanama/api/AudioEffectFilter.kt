@@ -175,9 +175,12 @@ open class AudioEffectFilter(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectFilter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectFilter? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectFilter? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectFilter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectFilter? =
             if (handle.address() == 0L) null else AudioEffectFilter(GodotHandle(handle))
 
         private const val SET_CUTOFF_HASH = 373806689L

@@ -237,9 +237,12 @@ class AudioEffectReverb(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectReverb? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectReverb? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectReverb? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectReverb(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectReverb? =
             if (handle.address() == 0L) null else AudioEffectReverb(GodotHandle(handle))
 
         private const val SET_PREDELAY_MSEC_HASH = 373806689L

@@ -13,9 +13,12 @@ class VisualShaderNodeParticleBoxEmitter(handle: GodotHandle) : VisualShaderNode
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeParticleBoxEmitter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeParticleBoxEmitter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeParticleBoxEmitter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeParticleBoxEmitter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeParticleBoxEmitter? =
             if (handle.address() == 0L) null else VisualShaderNodeParticleBoxEmitter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

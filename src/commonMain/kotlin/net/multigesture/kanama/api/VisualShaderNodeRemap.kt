@@ -43,9 +43,12 @@ class VisualShaderNodeRemap(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeRemap? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeRemap? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeRemap? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeRemap(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeRemap? =
             if (handle.address() == 0L) null else VisualShaderNodeRemap(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 1703697889L

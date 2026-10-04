@@ -16,9 +16,12 @@ class AudioEffectEQ21(handle: GodotHandle) : AudioEffectEQ(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectEQ21? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectEQ21? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectEQ21? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectEQ21(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectEQ21? =
             if (handle.address() == 0L) null else AudioEffectEQ21(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

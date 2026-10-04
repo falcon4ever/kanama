@@ -31,8 +31,11 @@ import net.multigesture.kanama.binding.runtime.BuiltinTypes
  *   GDExtensionVariantPtr to write into. Return true if the property was found.
  * @property dispatchHasMethod Called from `has_method_func`. Return true if the class exposes a
  *   method with the given interned name.
- * @property cleanup Called when Godot frees the script instance. Generated registrars use this to
- *   release closeable Kotlin wrappers retained for script properties.
+ * @property cleanup Called when Godot frees the script instance, if the instance (and so the Kotlin
+ *   object) still exists. Generated registrars close the wrappers the Kotlin properties hold here.
+ *   The references their property setters take are not released here: they are registered with
+ *   [ScriptBridge.retainScriptProperty] and released by the runtime in `free` (task 132), also
+ *   after the GC collected the Kotlin object.
  */
 class KanamaScriptInstance(
   val kotlinObject: Any,

@@ -13,9 +13,12 @@ class AudioStreamPlaybackOggVorbis(handle: GodotHandle) : AudioStreamPlaybackRes
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackOggVorbis? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamPlaybackOggVorbis? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamPlaybackOggVorbis? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamPlaybackOggVorbis(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackOggVorbis? =
             if (handle.address() == 0L) null else AudioStreamPlaybackOggVorbis(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

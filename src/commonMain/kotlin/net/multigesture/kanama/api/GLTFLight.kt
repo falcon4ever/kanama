@@ -129,18 +129,21 @@ class GLTFLight(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromNode(lightNode: Light3D): GLTFLight? {
-            return GLTFLight.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, lightNode.segment))
+            return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, lightNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFLight? {
-            return GLTFLight.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFLight.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFLight? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFLight? =
+        internal fun wrapOwned(handle: RawSegment): GLTFLight? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFLight(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFLight? =
             if (handle.address() == 0L) null else GLTFLight(GodotHandle(handle))
 
         private const val FROM_NODE_HASH = 3907677874L

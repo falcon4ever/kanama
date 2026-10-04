@@ -27,9 +27,12 @@ class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpat
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentPlaneAlignmentList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentPlaneAlignmentList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentPlaneAlignmentList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentPlaneAlignmentList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPlaneAlignmentList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneAlignmentList(GodotHandle(handle))
 
         private const val GET_PLANE_ALIGNMENT_HASH = 3340200270L

@@ -54,9 +54,12 @@ class XRInterfaceExtension(handle: GodotHandle) : XRInterface(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRInterfaceExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XRInterfaceExtension? =
+        internal fun wrapOwned(handle: RawSegment): XRInterfaceExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(XRInterfaceExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XRInterfaceExtension? =
             if (handle.address() == 0L) null else XRInterfaceExtension(GodotHandle(handle))
 
         private const val GET_COLOR_TEXTURE_HASH = 529393457L

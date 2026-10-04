@@ -248,9 +248,12 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNode? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNode? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNode? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNode(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNode? =
             if (handle.address() == 0L) null else AnimationNode(GodotHandle(handle))
 
         private const val ADD_INPUT_HASH = 2323990056L

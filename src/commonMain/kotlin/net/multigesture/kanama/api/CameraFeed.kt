@@ -285,9 +285,12 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CameraFeed? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CameraFeed? =
+        internal fun wrapOwned(handle: RawSegment): CameraFeed? =
+            if (handle.address() == 0L) null else RefCounted.owned(CameraFeed(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CameraFeed? =
             if (handle.address() == 0L) null else CameraFeed(GodotHandle(handle))
 
         private const val GET_ID_HASH = 3905245786L

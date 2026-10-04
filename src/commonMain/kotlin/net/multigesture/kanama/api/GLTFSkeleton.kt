@@ -91,9 +91,12 @@ class GLTFSkeleton(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFSkeleton? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFSkeleton? =
+        internal fun wrapOwned(handle: RawSegment): GLTFSkeleton? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFSkeleton(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFSkeleton? =
             if (handle.address() == 0L) null else GLTFSkeleton(GodotHandle(handle))
 
         private const val GET_JOINTS_HASH = 969006518L

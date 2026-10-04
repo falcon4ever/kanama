@@ -755,7 +755,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -857,7 +857,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_param_curve
      */
     fun getParamCurve(param: CPUParticles2D.Parameter): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param.value))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithLongArgRetObject(getParamCurveBind, segment, param.value))
     }
 
     /**
@@ -895,7 +895,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_color_ramp
      */
     fun getColorRamp(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorRampBind, segment))
     }
 
     /**
@@ -913,7 +913,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_color_initial_ramp
      */
     fun getColorInitialRamp(): Gradient? {
-        return Gradient.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
+        return Gradient.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getColorInitialRampBind, segment))
     }
 
     /**
@@ -1127,7 +1127,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_scale_curve_x
      */
     fun getScaleCurveX(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveXBind, segment))
     }
 
     /**
@@ -1147,7 +1147,7 @@ class CPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CPUParticles2D.get_scale_curve_y
      */
     fun getScaleCurveY(): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, segment))
+        return Curve.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getScaleCurveYBind, segment))
     }
 
     /**

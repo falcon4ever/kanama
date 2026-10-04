@@ -70,9 +70,12 @@ class RDPipelineSpecializationConstant(handle: GodotHandle) : RefCounted(handle)
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDPipelineSpecializationConstant? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDPipelineSpecializationConstant? =
+        internal fun wrapOwned(handle: RawSegment): RDPipelineSpecializationConstant? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDPipelineSpecializationConstant(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDPipelineSpecializationConstant? =
             if (handle.address() == 0L) null else RDPipelineSpecializationConstant(GodotHandle(handle))
 
         private const val SET_VALUE_HASH = 1114965689L

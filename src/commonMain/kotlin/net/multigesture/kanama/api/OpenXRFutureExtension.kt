@@ -13,7 +13,7 @@ class OpenXRFutureExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle
     }
 
     fun registerFuture(future: Long, onSuccess: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrap(ObjectCalls.ptrcallWithLongCallableArgsRetObject(registerFutureBind, segment, future, onSuccess.target.segment, onSuccess.method))
+        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithLongCallableArgsRetObject(registerFutureBind, segment, future, onSuccess.target.segment, onSuccess.method))
     }
 
     fun cancelFuture(future: Long) {

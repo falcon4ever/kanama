@@ -13,9 +13,12 @@ class VisualShaderNodeTexture2DArrayParameter(handle: GodotHandle) : VisualShade
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture2DArrayParameter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTexture2DArrayParameter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTexture2DArrayParameter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTexture2DArrayParameter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture2DArrayParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture2DArrayParameter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

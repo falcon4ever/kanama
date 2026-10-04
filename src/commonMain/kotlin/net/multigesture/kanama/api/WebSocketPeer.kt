@@ -208,9 +208,12 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebSocketPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WebSocketPeer? =
+        internal fun wrapOwned(handle: RawSegment): WebSocketPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(WebSocketPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WebSocketPeer? =
             if (handle.address() == 0L) null else WebSocketPeer(GodotHandle(handle))
 
         private const val CONNECT_TO_URL_HASH = 1966198364L

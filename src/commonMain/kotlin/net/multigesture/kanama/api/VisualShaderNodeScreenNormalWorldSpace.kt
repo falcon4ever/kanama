@@ -13,9 +13,12 @@ class VisualShaderNodeScreenNormalWorldSpace(handle: GodotHandle) : VisualShader
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeScreenNormalWorldSpace? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeScreenNormalWorldSpace? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeScreenNormalWorldSpace? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeScreenNormalWorldSpace(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeScreenNormalWorldSpace? =
             if (handle.address() == 0L) null else VisualShaderNodeScreenNormalWorldSpace(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

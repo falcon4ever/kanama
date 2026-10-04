@@ -15,9 +15,12 @@ class AudioEffectHighShelfFilter(handle: GodotHandle) : AudioEffectFilter(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectHighShelfFilter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectHighShelfFilter? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectHighShelfFilter? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectHighShelfFilter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectHighShelfFilter? =
             if (handle.address() == 0L) null else AudioEffectHighShelfFilter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

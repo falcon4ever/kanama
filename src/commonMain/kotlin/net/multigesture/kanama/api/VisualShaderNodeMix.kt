@@ -43,9 +43,12 @@ class VisualShaderNodeMix(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeMix? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeMix? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeMix? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeMix(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeMix? =
             if (handle.address() == 0L) null else VisualShaderNodeMix(GodotHandle(handle))
 
         private const val SET_OP_TYPE_HASH = 3397501671L

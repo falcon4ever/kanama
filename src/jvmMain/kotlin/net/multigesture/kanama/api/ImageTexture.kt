@@ -55,14 +55,17 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: ImageTexture.create_from_image
          */
         fun createFromImage(image: Image?): ImageTexture? {
-            return ImageTexture.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createFromImageBind, MemorySegment.NULL, image?.requireOpenHandle() ?: MemorySegment.NULL))
+            return ImageTexture.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(createFromImageBind, MemorySegment.NULL, image?.requireOpenHandle() ?: MemorySegment.NULL))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ImageTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ImageTexture? =
+        internal fun wrapOwned(handle: MemorySegment): ImageTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(ImageTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): ImageTexture? =
             if (handle.address() == 0L) null else ImageTexture(GodotHandle(handle))
 
         private const val CREATE_FROM_IMAGE_HASH = 2775144163L

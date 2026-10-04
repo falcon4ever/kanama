@@ -445,7 +445,7 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return AudioStream.wrap(ret)
+        return AudioStream.wrapOwned(ret)
     }
 
     fun setShuffle(shuffle: Boolean) {
@@ -483,9 +483,12 @@ class AudioStreamPlaylist(handle: GodotHandle) : AudioStream(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlaylist? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamPlaylist? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamPlaylist? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamPlaylist(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaylist? =
             if (handle.address() == 0L) null else AudioStreamPlaylist(GodotHandle(handle))
 
         private const val SET_STREAM_COUNT_HASH = 1286410249L

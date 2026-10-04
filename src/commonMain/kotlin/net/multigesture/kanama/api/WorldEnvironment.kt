@@ -46,7 +46,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_environment
      */
     fun getEnvironment(): Environment? {
-        return Environment.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
+        return Environment.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentBind, segment))
     }
 
     /**
@@ -64,7 +64,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     /**
@@ -82,7 +82,7 @@ class WorldEnvironment(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: WorldEnvironment.get_compositor
      */
     fun getCompositor(): Compositor? {
-        return Compositor.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
+        return Compositor.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCompositorBind, segment))
     }
 
     companion object {

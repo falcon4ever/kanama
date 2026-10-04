@@ -39,9 +39,12 @@ class Semaphore(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Semaphore? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Semaphore? =
+        internal fun wrapOwned(handle: RawSegment): Semaphore? =
+            if (handle.address() == 0L) null else RefCounted.owned(Semaphore(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Semaphore? =
             if (handle.address() == 0L) null else Semaphore(GodotHandle(handle))
 
         private const val WAIT_HASH = 3218959716L

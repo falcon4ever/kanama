@@ -17,7 +17,9 @@ import net.multigesture.kanama.binding.KanamaScriptLanguage
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
 import net.multigesture.kanama.binding.runtime.GodotStrings
+import net.multigesture.kanama.binding.runtime.InstanceBindings
 import net.multigesture.kanama.binding.runtime.ObjectRuntime
+import net.multigesture.kanama.binding.runtime.OwnedReleases
 import net.multigesture.kanama.binding.runtime.ScriptErrors
 import net.multigesture.kanama.binding.runtime.ThreadDiagnostics
 import net.multigesture.kanama.ffi.GodotFFI
@@ -167,6 +169,21 @@ object KanamaBinding {
   }
 
   private const val INITIALIZATION_SCENE = 2
+  private const val INITIALIZATION_EDITOR = 3
+
+  // One GC + drain, timed: the shutdown must not stall (the cleaner wait is bounded at 0.5 s).
+  private fun releaseCollectedOwners(level: String) {
+    val start = System.nanoTime()
+    runCatching { OwnedReleases.shutdown() }
+      .onSuccess {
+        val ms = (System.nanoTime() - start) / 1_000_000
+        System.err.println(
+          "[kanama:kt] shutdown GC releases ($level): $it in $ms ms " +
+            "(total ${OwnedReleases.releasedByGc}, rounds ${OwnedReleases.lastShutdownRounds})"
+        )
+      }
+      .onFailure { System.err.println("[kanama:kt] shutdown GC releases failed: ${it.message}") }
+  }
 
   @JvmStatic
   fun initializeCallback(userdata: MemorySegment, level: Int) {
@@ -176,8 +193,15 @@ object KanamaBinding {
       try {
         // The freed-object check before every wrapper call (task 131 item 2): on in debug builds.
         val freedChecks =
-          FreedObjectChecks.configure(lookupAvailable = ObjectRuntime.instanceLookupAvailable())
+          FreedObjectChecks.configure(
+            lookupAvailable = ObjectRuntime.instanceLookupAvailable(),
+            bindingAvailable = InstanceBindings.available(),
+          )
         System.err.println("[kanama:kt] freed-object checks: $freedChecks")
+        // The GC fallback release of owned RefCounted wrappers (task 132 D2/D5).
+        System.err.println(
+          "[kanama:kt] owned-reference GC releases: ${OwnedReleases.configureFromEngine()}"
+        )
         // Register Script resource class before the language (language creates scripts).
         KanamaScript.register(library)
         // Register and add the Kanama script language to the engine.
@@ -219,7 +243,11 @@ object KanamaBinding {
   @JvmStatic
   fun deinitializeCallback(userdata: MemorySegment, level: Int) {
     System.err.println("[kanama:kt] deinitialize: level=$level")
+    // Task 132 D4: release what the GC can still collect before Godot's leak report runs -- at the
+    // EDITOR level too (the editor's own objects go before the scene level's).
+    if (level == INITIALIZATION_EDITOR) releaseCollectedOwners("editor")
     if (level == INITIALIZATION_SCENE) {
+      releaseCollectedOwners("scene")
       KanamaHotReload.shutdown()
       // The preload cache's references (task 133) go before the engine's leak check.
       runCatching { net.multigesture.kanama.api.Preloads.releaseAll() }

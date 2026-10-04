@@ -82,7 +82,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeConnection(): PacketPeerUDP? {
         checkOpen()
-        return PacketPeerUDP.wrap(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
+        return PacketPeerUDP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
     }
 
     /**
@@ -123,9 +123,12 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): UDPServer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): UDPServer? =
+        internal fun wrapOwned(handle: RawSegment): UDPServer? =
+            if (handle.address() == 0L) null else RefCounted.owned(UDPServer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): UDPServer? =
             if (handle.address() == 0L) null else UDPServer(GodotHandle(handle))
 
         private const val LISTEN_HASH = 3167955072L

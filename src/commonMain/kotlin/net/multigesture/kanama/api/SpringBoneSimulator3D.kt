@@ -322,7 +322,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SpringBoneSimulator3D.get_radius_damping_curve
      */
     fun getRadiusDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getRadiusDampingCurveBind, segment, index))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getRadiusDampingCurveBind, segment, index))
     }
 
     /**
@@ -361,7 +361,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SpringBoneSimulator3D.get_stiffness_damping_curve
      */
     fun getStiffnessDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getStiffnessDampingCurveBind, segment, index))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getStiffnessDampingCurveBind, segment, index))
     }
 
     /**
@@ -399,7 +399,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SpringBoneSimulator3D.get_drag_damping_curve
      */
     fun getDragDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDragDampingCurveBind, segment, index))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getDragDampingCurveBind, segment, index))
     }
 
     /**
@@ -438,7 +438,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: SpringBoneSimulator3D.get_gravity_damping_curve
      */
     fun getGravityDampingCurve(index: Int): Curve? {
-        return Curve.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getGravityDampingCurveBind, segment, index))
+        return Curve.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getGravityDampingCurveBind, segment, index))
     }
 
     /**

@@ -195,9 +195,12 @@ class ScriptBacktrace(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ScriptBacktrace? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ScriptBacktrace? =
+        internal fun wrapOwned(handle: RawSegment): ScriptBacktrace? =
+            if (handle.address() == 0L) null else RefCounted.owned(ScriptBacktrace(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ScriptBacktrace? =
             if (handle.address() == 0L) null else ScriptBacktrace(GodotHandle(handle))
 
         private const val GET_LANGUAGE_NAME_HASH = 201670096L

@@ -178,9 +178,12 @@ class RDVertexAttribute(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDVertexAttribute? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDVertexAttribute? =
+        internal fun wrapOwned(handle: RawSegment): RDVertexAttribute? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDVertexAttribute(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDVertexAttribute? =
             if (handle.address() == 0L) null else RDVertexAttribute(GodotHandle(handle))
 
         private const val SET_BINDING_HASH = 1286410249L

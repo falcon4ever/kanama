@@ -15,9 +15,12 @@ class ResourceImporterCSVTranslation(handle: GodotHandle) : ResourceImporter(han
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterCSVTranslation? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterCSVTranslation? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterCSVTranslation? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterCSVTranslation(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterCSVTranslation? =
             if (handle.address() == 0L) null else ResourceImporterCSVTranslation(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

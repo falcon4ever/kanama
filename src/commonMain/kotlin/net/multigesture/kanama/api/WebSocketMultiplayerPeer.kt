@@ -58,7 +58,7 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
     fun getPeer(peerId: Int): WebSocketPeer? {
         checkOpen()
-        return WebSocketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, peerId))
+        return WebSocketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, peerId))
     }
 
     fun getPeerAddress(id: Int): String {
@@ -134,9 +134,12 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): WebSocketMultiplayerPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): WebSocketMultiplayerPeer? =
+        internal fun wrapOwned(handle: RawSegment): WebSocketMultiplayerPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(WebSocketMultiplayerPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): WebSocketMultiplayerPeer? =
             if (handle.address() == 0L) null else WebSocketMultiplayerPeer(GodotHandle(handle))
 
         private const val CREATE_CLIENT_HASH = 1966198364L

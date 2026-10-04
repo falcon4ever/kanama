@@ -146,15 +146,18 @@ class SphereMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SphereMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SphereMesh? =
+        internal fun wrapOwned(handle: RawSegment): SphereMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(SphereMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SphereMesh? =
             if (handle.address() == 0L) null else SphereMesh(GodotHandle(handle))
 
         // Downcast a Resource to SphereMesh (null if not).
         @JvmStatic
         fun fromResource(value: Resource): SphereMesh? =
-            if (value.isClass("SphereMesh")) SphereMesh(value.handle) else null
+            if (value.isClass("SphereMesh")) RefCounted.retained(SphereMesh(value.handle)) else null
 
         private const val SET_RADIUS_HASH = 373806689L
         private val setRadiusBind by lazy {

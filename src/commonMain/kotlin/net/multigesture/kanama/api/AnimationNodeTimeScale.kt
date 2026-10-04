@@ -15,9 +15,12 @@ class AnimationNodeTimeScale(handle: GodotHandle) : AnimationNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeTimeScale? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeTimeScale? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeTimeScale? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeTimeScale(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTimeScale? =
             if (handle.address() == 0L) null else AnimationNodeTimeScale(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

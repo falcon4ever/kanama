@@ -251,7 +251,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_pattern
      */
     fun getPattern(coordsArray: List<Vector2i>): TileMapPattern? {
-        return TileMapPattern.wrap(ObjectCalls.ptrcallWithVector2iListArgRetObject(getPatternBind, segment, coordsArray))
+        return TileMapPattern.wrapOwned(ObjectCalls.ptrcallWithVector2iListArgRetObject(getPatternBind, segment, coordsArray))
     }
 
     /**
@@ -455,7 +455,7 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: TileMapLayer.get_tile_set
      */
     fun getTileSet(): TileSet? {
-        return TileSet.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTileSetBind, segment))
+        return TileSet.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTileSetBind, segment))
     }
 
     /**

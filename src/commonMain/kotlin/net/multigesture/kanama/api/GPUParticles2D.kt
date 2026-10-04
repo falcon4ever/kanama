@@ -507,7 +507,7 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: GPUParticles2D.get_process_material
      */
     fun getProcessMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProcessMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProcessMaterialBind, segment))
     }
 
     /**
@@ -586,7 +586,7 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: GPUParticles2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**

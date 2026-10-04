@@ -32,7 +32,7 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
      */
     fun createPreset(): EditorExportPreset? {
         checkOpen()
-        return EditorExportPreset.wrap(ObjectCalls.ptrcallNoArgsRetObject(createPresetBind, segment))
+        return EditorExportPreset.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createPresetBind, segment))
     }
 
     /**
@@ -422,9 +422,12 @@ open class EditorExportPlatform(handle: GodotHandle) : RefCounted(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorExportPlatform? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorExportPlatform? =
+        internal fun wrapOwned(handle: RawSegment): EditorExportPlatform? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorExportPlatform(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatform? =
             if (handle.address() == 0L) null else EditorExportPlatform(GodotHandle(handle))
 
         private const val GET_OS_NAME_HASH = 201670096L

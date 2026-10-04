@@ -66,9 +66,12 @@ class InputEventJoypadButton(handle: GodotHandle) : InputEvent(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventJoypadButton? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventJoypadButton? =
+        internal fun wrapOwned(handle: RawSegment): InputEventJoypadButton? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventJoypadButton(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventJoypadButton? =
             if (handle.address() == 0L) null else InputEventJoypadButton(GodotHandle(handle))
 
         private const val SET_BUTTON_INDEX_HASH = 1466368136L

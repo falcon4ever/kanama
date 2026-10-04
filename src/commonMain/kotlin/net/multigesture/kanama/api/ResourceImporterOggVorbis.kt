@@ -13,18 +13,21 @@ class ResourceImporterOggVorbis(handle: GodotHandle) : ResourceImporter(handle) 
 
     companion object {
         fun loadFromBuffer(streamData: ByteArray): AudioStreamOggVorbis? {
-            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData))
+            return AudioStreamOggVorbis.wrapOwned(ObjectCalls.ptrcallWithByteArrayArgRetObject(loadFromBufferBind, NULL_SEGMENT, streamData))
         }
 
         fun loadFromFile(path: String): AudioStreamOggVorbis? {
-            return AudioStreamOggVorbis.wrap(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
+            return AudioStreamOggVorbis.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(loadFromFileBind, NULL_SEGMENT, path))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ResourceImporterOggVorbis? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ResourceImporterOggVorbis? =
+        internal fun wrapOwned(handle: RawSegment): ResourceImporterOggVorbis? =
+            if (handle.address() == 0L) null else RefCounted.owned(ResourceImporterOggVorbis(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ResourceImporterOggVorbis? =
             if (handle.address() == 0L) null else ResourceImporterOggVorbis(GodotHandle(handle))
 
         private const val LOAD_FROM_BUFFER_HASH = 354904730L

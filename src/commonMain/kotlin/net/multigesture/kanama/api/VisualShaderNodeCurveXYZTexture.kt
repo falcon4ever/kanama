@@ -23,15 +23,18 @@ class VisualShaderNodeCurveXYZTexture(handle: GodotHandle) : VisualShaderNodeRes
 
     fun getTexture(): CurveXYZTexture? {
         checkOpen()
-        return CurveXYZTexture.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return CurveXYZTexture.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeCurveXYZTexture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeCurveXYZTexture? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeCurveXYZTexture? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeCurveXYZTexture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCurveXYZTexture? =
             if (handle.address() == 0L) null else VisualShaderNodeCurveXYZTexture(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 8031783L

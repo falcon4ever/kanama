@@ -65,7 +65,7 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return AudioStream.wrap(ret)
+        return AudioStream.wrapOwned(ret)
     }
 
     fun setClipAutoAdvance(clipIndex: Int, mode: AudioStreamInteractive.AutoAdvanceMode) {
@@ -187,9 +187,12 @@ class AudioStreamInteractive(handle: GodotHandle) : AudioStream(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamInteractive? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamInteractive? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamInteractive? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamInteractive(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamInteractive? =
             if (handle.address() == 0L) null else AudioStreamInteractive(GodotHandle(handle))
 
         private const val SET_CLIP_COUNT_HASH = 1286410249L

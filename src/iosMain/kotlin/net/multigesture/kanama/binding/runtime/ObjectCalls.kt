@@ -3089,7 +3089,7 @@ actual object ObjectCalls {
         for (i in next until count.toInt()) {
           val handle = buf[i]
           if (handle != 0L && IosGodot.objectGetInstanceId(handle) < 0L) {
-            runCatching { RefCounted(GodotHandle(MemorySegment.ofAddress(handle))).close() }
+            runCatching { RefCounted.releaseHandle(MemorySegment.ofAddress(handle)) }
           }
         }
         throw t
@@ -3099,16 +3099,21 @@ actual object ObjectCalls {
   }
 
   /**
-   * An untyped (`GodotObject`) wrapper of a RefCounted element the C side retained becomes a
-   * [RefCounted] wrapper, so the owned +1 can be closed (task 131 S5). Typed wrappers pass through.
+   * The wrapper of an element the C side retained owns that +1 (task 131 S5): a typed RefCounted
+   * wrapper (built by the caller's `wrapBorrowed`) is marked owned, so it gets the fallback release
+   * (task 132 D1), and an untyped (`GodotObject`) wrapper of a RefCounted element becomes an owned
+   * [RefCounted] wrapper, so the +1 can be closed. Other wrappers (Node, ...) pass through.
    */
   @Suppress("UNCHECKED_CAST")
   internal fun <T> ownedListElement(obj: T?): T? =
-    // Bit 63 of the captured instance id marks a RefCounted object (ObjectID::is_ref_counted): no
-    // engine call. Typed wrappers (Node, ...) are not exactly GodotObject and pass through.
-    if (obj is GodotObject && obj::class == GodotObject::class && obj.instanceId < 0L) {
-      RefCounted(obj.handle) as T
-    } else obj
+    when {
+      obj is RefCounted -> RefCounted.owned(obj) as T
+      // Bit 63 of the captured instance id marks a RefCounted object (ObjectID::is_ref_counted):
+      // no engine call. Typed wrappers (Node, ...) are not exactly GodotObject and pass through.
+      obj is GodotObject && obj::class == GodotObject::class && obj.instanceId < 0L ->
+        RefCounted.owned(RefCounted(obj.handle)) as T
+      else -> obj
+    }
 
   // Inline handle capacity of retTypedObjectList (longer lists drain from the C pending slot).
   internal const val TYPED_OBJECT_LIST_INLINE_CAP = 64
@@ -3526,7 +3531,8 @@ actual object ObjectCalls {
       VT_OBJECT ->
         if (outInt.value != 0L) {
           val handle = GodotHandle(MemorySegment.ofAddress(outInt.value))
-          if (outIsRefCounted != null && outIsRefCounted.value != 0) RefCounted(handle)
+          if (outIsRefCounted != null && outIsRefCounted.value != 0)
+            RefCounted.owned(RefCounted(handle))
           else GodotObject(handle)
         } else {
           null
@@ -3986,7 +3992,8 @@ actual object ObjectCalls {
       )
     when {
       handle == 0L -> null
-      isRefCounted.value != 0 -> RefCounted(GodotHandle(MemorySegment.ofAddress(handle)))
+      isRefCounted.value != 0 ->
+        RefCounted.owned(RefCounted(GodotHandle(MemorySegment.ofAddress(handle))))
       else -> GodotObject(GodotHandle(MemorySegment.ofAddress(handle)))
     }
   }
@@ -39160,6 +39167,58 @@ private const val SELFTEST_EXPECTED_FAULTS = 7
 // only as human-readable markers in the log; nothing parses them, and nothing may rely on where the
 // FAULT-PROBE lines appear relative to them. What proves that the probes and nothing else fired is
 // the count: `faults=7 expected=7` on both summary lines.
+// The set_script row: a Resource with the probe script attached through Godot, cash set through the
+// engine, its owning wrapper closed (Godot calls refcount_decremented: the link goes weak), only
+// the script object kept. Returns (owner address, owner instance id).
+private fun ownerLinkAttachAndKeepOnlyScriptObject(scriptObject: Long): Pair<Long, Long> {
+  val owner = net.multigesture.kanama.api.Resource.create()
+  val ownerAddress = owner.handle.segment.address()
+  owner.setScript(
+    net.multigesture.kanama.api.Resource.fromHandle(
+      GodotHandle(MemorySegment.ofAddress(scriptObject))
+    )
+  )
+  OwnerLinkHolder.held = net.multigesture.kanama.ios.iosScriptInstanceForOwner(ownerAddress)
+  GodotObject(GodotHandle(MemorySegment.ofAddress(ownerAddress))).set("cash", 4242L)
+  val ownerId = owner.instanceId
+  owner.close()
+  return ownerAddress to ownerId
+}
+
+// Task 132 owner-link row: the only reference the row keeps to the script object.
+private object OwnerLinkHolder {
+  var held: Any? = null
+}
+
+// A resource with the owner-link probe script; its owning wrapper is closed and only the script
+// object is kept. Returns (instance handle, owner instance id).
+private fun ownerLinkKeepOnlyScriptObject(script: Long): Pair<Long, Long> {
+  val owner = net.multigesture.kanama.api.Resource.create()
+  val ownerAddress = owner.handle.segment.address()
+  val instance = KanamaIosRuntime.createScriptInstance(script, ownerAddress)
+  OwnerLinkHolder.held = net.multigesture.kanama.ios.iosScriptInstanceForOwner(ownerAddress)
+  val ownerId = owner.instanceId
+  owner.close()
+  if (instance != 0L)
+    net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceRefcountDecremented(instance)
+  return instance to ownerId
+}
+
+// Task 132 self-test helpers: each is its own function so no stack slot of the caller keeps a
+// dropped wrapper reachable.
+private fun dropOwnedResources(count: Int): LongArray =
+  LongArray(count) { net.multigesture.kanama.api.Resource.create().instanceId }
+
+// A second owned +1 on [kept], closed: refcount back to 1, its cleanup cancelled.
+private fun closeSecondOwnedReference(kept: RefCounted) {
+  RefCounted.fromHandle(kept.handle)!!.apply { retainForKotlinWrapper() }.close()
+}
+
+// A second owned +1 on [kept], dropped unclosed: refcount 2 until the GC fallback releases it.
+private fun dropSecondOwnedReference(kept: RefCounted) {
+  RefCounted.fromHandle(kept.handle)!!.retainForKotlinWrapper()
+}
+
 private fun runFaultProbes(n3: MemorySegment, check: (String, Boolean) -> Unit) {
   println(
     "[kanama][ios][kn] OBJECTCALLS SELFTEST fault-probes begin " +
@@ -41380,6 +41439,240 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
         FreedObjectChecks.enabled = checksBefore
       }
     } else check("wrapper-equality(two objects constructed)", false)
+  }
+
+  // Task 132 blocker 1: a KanamaScript object keeps its RefCounted owner alive. The City-Builder
+  // pattern at the runtime level: a resource with a KanamaScript instance, its owning wrapper
+  // closed (the engine would call refcount_decremented at count 1: the link goes weak), only the
+  // script object kept -- after a GC and a drain the owner is alive; once the script object is
+  // dropped too, the owner dies. (The shim's refcount callbacks are driven here through their
+  // @CName exports, as Godot calls them for an attached instance.)
+  run {
+    val enabledBefore = OwnedReleases.enabled
+    OwnedReleases.enabled = true
+    try {
+      val script =
+        KanamaIosRuntime.createScriptResource(KanamaIosRuntime.OWNER_LINK_PROBE_SCRIPT_PATH)
+      val (instance, ownerId) = ownerLinkKeepOnlyScriptObject(script)
+      repeat(3) {
+        OwnedReleaseCleaner.collectGarbage(1_000)
+        OwnedReleases.drain()
+      }
+      val aliveWhileHeld = IosGodot.isInstanceIdValid(ownerId)
+      OwnerLinkHolder.held = null
+      repeat(5) {
+        if (!IosGodot.isInstanceIdValid(ownerId)) return@repeat
+        OwnedReleaseCleaner.collectGarbage(1_000)
+        OwnedReleases.drain()
+      }
+      val diesAfterDrop = !IosGodot.isInstanceIdValid(ownerId)
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST owner-link instance=$instance " +
+          "alive_while_held=$aliveWhileHeld dies_after_drop=$diesAfterDrop"
+      )
+      check(
+        "owner-link(a held KanamaScript object keeps its resource alive across GC)",
+        aliveWhileHeld,
+      )
+      check("owner-link(the resource dies once the script object is dropped)", diesAfterDrop)
+      if (instance != 0L) KanamaIosRuntime.freeScriptInstance(instance)
+      KanamaIosRuntime.freeScriptResource(script)
+    } finally {
+      OwnedReleases.enabled = enabledBefore
+    }
+  }
+
+  // Task 132 round 2: the same through Godot. The probe script is attached with set_script, so the
+  // engine creates the instance and calls the shim's refcount callbacks itself: the resource stays
+  // alive while only its script object is held across GCs, reads its value through the engine,
+  // and dies once the script object is dropped.
+  run {
+    val enabledBefore = OwnedReleases.enabled
+    OwnedReleases.enabled = true
+    try {
+      val scriptObject =
+        net.multigesture.kanama.ios.cinterop.kanama_ios_godot_create_script_object(
+          KanamaIosRuntime.OWNER_LINK_PROBE_SCRIPT_PATH
+        )
+      if (scriptObject == 0L) {
+        check("owner-link-attached(probe script object created)", false)
+      } else {
+        val (ownerAddress, ownerId) = ownerLinkAttachAndKeepOnlyScriptObject(scriptObject)
+        repeat(3) {
+          OwnedReleaseCleaner.collectGarbage(1_000)
+          OwnedReleases.drain()
+        }
+        val alive = IosGodot.isInstanceIdValid(ownerId)
+        val engineRead =
+          if (alive) GodotObject(GodotHandle(MemorySegment.ofAddress(ownerAddress))).get("cash")
+          else null
+        OwnerLinkHolder.held = null
+        repeat(5) {
+          if (!IosGodot.isInstanceIdValid(ownerId)) return@repeat
+          OwnedReleaseCleaner.collectGarbage(1_000)
+          OwnedReleases.drain()
+        }
+        val dies = !IosGodot.isInstanceIdValid(ownerId)
+        println(
+          "[kanama][ios][kn] OBJECTCALLS SELFTEST owner-link-attached alive_while_held=$alive " +
+            "engine_read=$engineRead dies_after_drop=$dies"
+        )
+        check("owner-link-attached(alive while only the script object is held across GC)", alive)
+        check(
+          "owner-link-attached(engine reads the script property)",
+          (engineRead as? Number)?.toLong() == 4242L,
+        )
+        check("owner-link-attached(dies once the script object is dropped)", dies)
+        RefCounted.releaseHandle(MemorySegment.ofAddress(scriptObject))
+      }
+    } finally {
+      OwnedReleases.enabled = enabledBefore
+    }
+  }
+
+  // Task 132 review: the shim's property set path. A Node (or List<Node>) set into a script
+  // property takes no reference -- before, the shim called RefCounted.reference on every object,
+  // and
+  // Godot's ptrcall casts blindly, so the Node's scene_file_path was overwritten (and unreference
+  // later made it crash). More than 16 Resources set into a List property are each referenced once
+  // (the old record had 16 slots), a new set releases the old ones, and the owner's free releases
+  // the rest. The probe script is a plain class, so the owner dies as soon as it is closed.
+  run {
+    val scriptObject =
+      net.multigesture.kanama.ios.cinterop.kanama_ios_godot_create_script_object(
+        KanamaIosRuntime.PROPERTY_RETAIN_PROBE_SCRIPT_PATH
+      )
+    if (scriptObject == 0L) {
+      check("property-retain(probe script object created)", false)
+    } else {
+      val owner = net.multigesture.kanama.api.Resource.create()
+      val ownerAddress = owner.handle.segment.address()
+      owner.setScript(
+        net.multigesture.kanama.api.Resource.fromHandle(
+          GodotHandle(MemorySegment.ofAddress(scriptObject))
+        )
+      )
+      val target = GodotObject(GodotHandle(MemorySegment.ofAddress(ownerAddress)))
+      val nodeA =
+        net.multigesture.kanama.api.Node3D(GodotHandle(ObjectCalls.constructObject("Node3D")))
+      val nodeB =
+        net.multigesture.kanama.api.Node3D(GodotHandle(ObjectCalls.constructObject("Node3D")))
+      nodeA.setSceneFilePath("res://kanama_probe_a.tscn")
+      nodeB.setSceneFilePath("res://kanama_probe_b.tscn")
+      target.set("node", nodeA)
+      target.set("nodes", listOf(nodeA, nodeB))
+      val pathsKept =
+        nodeA.getSceneFilePath() == "res://kanama_probe_a.tscn" &&
+          nodeB.getSceneFilePath() == "res://kanama_probe_b.tscn"
+      val nodeRefs = ScriptPropertyRetains.countFor(ownerAddress)
+      target.set("node", null)
+      target.set("nodes", emptyList<Any?>())
+      val pathsKeptAfterClear =
+        nodeA.getSceneFilePath() == "res://kanama_probe_a.tscn" &&
+          nodeB.getSceneFilePath() == "res://kanama_probe_b.tscn"
+      ObjectCalls.destroyObject(nodeA.handle.segment)
+      ObjectCalls.destroyObject(nodeB.handle.segment)
+
+      // (instance id, handle) of each element; the row's own wrappers are closed right after the
+      // set, so only the property can hold them. The counts are read through a borrowed view.
+      fun setItems(count: Int): List<Pair<Long, Long>> {
+        val items = (1..count).map { net.multigesture.kanama.api.Resource.create() }
+        target.set("items", items)
+        val elements = items.map { it.instanceId to it.handle.segment.address() }
+        items.forEach { it.close() }
+        return elements
+      }
+      fun refs(element: Pair<Long, Long>): Int =
+        if (!IosGodot.isInstanceIdValid(element.first)) 0
+        else
+          net.multigesture.kanama.api.Resource.fromHandle(
+              GodotHandle(MemorySegment.ofAddress(element.second))
+            )!!
+            .getReferenceCount()
+      val first = setItems(20)
+      val firstAlive = first.all { IosGodot.isInstanceIdValid(it.first) }
+      // Only the registry's reference is left (expected 2 on 0467069e: the shim's leaked
+      // Array copy of the set value held one on every element).
+      val refsAfterSet = refs(first[0])
+      val second = setItems(20)
+      val resetDrop = refsAfterSet - refs(first[0])
+      val firstReleased = first.none { IosGodot.isInstanceIdValid(it.first) }
+      val secondAlive = second.all { IosGodot.isInstanceIdValid(it.first) }
+      val held = ScriptPropertyRetains.countFor(ownerAddress)
+      val ownerId = owner.instanceId
+      val refsBeforeFree = refs(second[0])
+      owner.close()
+      val ownerDead = !IosGodot.isInstanceIdValid(ownerId)
+      val freeDrop = refsBeforeFree - refs(second[0])
+      val secondReleased = second.none { IosGodot.isInstanceIdValid(it.first) }
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST property-retain node_paths_kept=$pathsKept " +
+          "node_refs=$nodeRefs paths_kept_after_clear=$pathsKeptAfterClear first_alive=$firstAlive " +
+          "refs_after_set=$refsAfterSet reset_drop=$resetDrop reset_releases_old=$firstReleased " +
+          "second_alive=$secondAlive held=$held owner_dead=$ownerDead free_drop=$freeDrop " +
+          "free_releases_all=$secondReleased"
+      )
+      check(
+        "property-retain(a Node property set keeps scene_file_path)",
+        pathsKept && pathsKeptAfterClear,
+      )
+      check("property-retain(a Node property set takes no reference)", nodeRefs == 0)
+      check("property-retain(20 Resources set into a List are all held)", firstAlive && held == 20)
+      check(
+        "property-retain(the property holds exactly one reference per element)",
+        refsAfterSet == 1,
+      )
+      check(
+        "property-retain(a new set releases the old values)",
+        resetDrop == 1 && firstReleased && secondAlive,
+      )
+      check(
+        "property-retain(the owner's free releases every value)",
+        ownerDead && freeDrop == 1 && secondReleased,
+      )
+      RefCounted.releaseHandle(MemorySegment.ofAddress(scriptObject))
+    }
+  }
+
+  // Task 132: a forgotten close() is a late release, not a leak. 1,000 owned Resources dropped
+  // without close() are released once a GC has collected their wrappers and the main thread has
+  // drained the releases (D2): none of their instance ids resolves any more. A second owned +1 that
+  // was closed and then collected is released once (D3: close() cancels the cleanup), and one that
+  // was dropped unclosed is released by the GC: the kept Resource ends at refcount 1.
+  run {
+    val enabledBefore = OwnedReleases.enabled
+    OwnedReleases.enabled = true
+    try {
+      val dropped = dropOwnedResources(1_000)
+      val kept = net.multigesture.kanama.api.Resource.create()
+      closeSecondOwnedReference(kept)
+      dropSecondOwnedReference(kept)
+      val refsBefore = kept.getReferenceCount()
+      var released = 0
+      repeat(5) {
+        if (dropped.all { !IosGodot.isInstanceIdValid(it) } && kept.getReferenceCount() == 1)
+          return@repeat
+        OwnedReleaseCleaner.collectGarbage(1_000)
+        released += OwnedReleases.drain()
+      }
+      val gone = dropped.count { !IosGodot.isInstanceIdValid(it) }
+      val refsAfter = kept.getReferenceCount()
+      println(
+        "[kanama][ios][kn] OBJECTCALLS SELFTEST owned-release dropped=${dropped.size} gone=$gone " +
+          "released=$released kept_refs_before=$refsBefore kept_refs_after=$refsAfter"
+      )
+      check(
+        "owned-release(1000 dropped owned Resources released by the GC fallback)",
+        gone == dropped.size,
+      )
+      check(
+        "owned-release(closed then collected: released once; dropped: released)",
+        refsBefore == 2 && refsAfter == 1,
+      )
+      kept.close()
+    } finally {
+      OwnedReleases.enabled = enabledBefore
+    }
   }
 
   // Task 108 — explicit disconnect, then free the EMITTER before the RECEIVER. Object::_disconnect

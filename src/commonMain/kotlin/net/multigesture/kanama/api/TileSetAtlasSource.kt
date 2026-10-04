@@ -63,7 +63,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
@@ -479,7 +479,7 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
      */
     fun getRuntimeTexture(): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getRuntimeTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRuntimeTextureBind, segment))
     }
 
     /**
@@ -532,9 +532,12 @@ class TileSetAtlasSource(handle: GodotHandle) : TileSetSource(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileSetAtlasSource? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TileSetAtlasSource? =
+        internal fun wrapOwned(handle: RawSegment): TileSetAtlasSource? =
+            if (handle.address() == 0L) null else RefCounted.owned(TileSetAtlasSource(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TileSetAtlasSource? =
             if (handle.address() == 0L) null else TileSetAtlasSource(GodotHandle(handle))
 
         private const val SET_TEXTURE_HASH = 4051416890L

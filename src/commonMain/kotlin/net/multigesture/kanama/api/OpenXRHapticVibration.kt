@@ -60,9 +60,12 @@ class OpenXRHapticVibration(handle: GodotHandle) : OpenXRHapticBase(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRHapticVibration? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRHapticVibration? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRHapticVibration? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRHapticVibration(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRHapticVibration? =
             if (handle.address() == 0L) null else OpenXRHapticVibration(GodotHandle(handle))
 
         private const val SET_DURATION_HASH = 1286410249L

@@ -112,9 +112,12 @@ class InputEventAction(handle: GodotHandle) : InputEvent(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventAction? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventAction? =
+        internal fun wrapOwned(handle: RawSegment): InputEventAction? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventAction(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventAction? =
             if (handle.address() == 0L) null else InputEventAction(GodotHandle(handle))
 
         private const val SET_ACTION_HASH = 3304788590L

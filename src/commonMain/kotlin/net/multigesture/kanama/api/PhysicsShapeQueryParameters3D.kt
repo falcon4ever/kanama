@@ -90,7 +90,7 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getShape(): Resource? {
         checkOpen()
-        return Resource.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
+        return Resource.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**
@@ -270,9 +270,12 @@ class PhysicsShapeQueryParameters3D(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsShapeQueryParameters3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PhysicsShapeQueryParameters3D? =
+        internal fun wrapOwned(handle: RawSegment): PhysicsShapeQueryParameters3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(PhysicsShapeQueryParameters3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PhysicsShapeQueryParameters3D? =
             if (handle.address() == 0L) null else PhysicsShapeQueryParameters3D(GodotHandle(handle))
 
         private const val SET_SHAPE_HASH = 968641751L

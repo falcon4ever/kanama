@@ -52,7 +52,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getIcon(name: String, themeType: String): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getIconBind, segment, name, themeType))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getIconBind, segment, name, themeType))
     }
 
     /**
@@ -131,7 +131,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getStylebox(name: String, themeType: String): StyleBox? {
         checkOpen()
-        return StyleBox.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getStyleboxBind, segment, name, themeType))
+        return StyleBox.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getStyleboxBind, segment, name, themeType))
     }
 
     /**
@@ -212,7 +212,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getFont(name: String, themeType: String): Font? {
         checkOpen()
-        return Font.wrap(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getFontBind, segment, name, themeType))
+        return Font.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(getFontBind, segment, name, themeType))
     }
 
     /**
@@ -570,7 +570,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      */
     fun getDefaultFont(): Font? {
         checkOpen()
-        return Font.wrap(ObjectCalls.ptrcallNoArgsRetObject(getDefaultFontBind, segment))
+        return Font.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDefaultFontBind, segment))
     }
 
     /**
@@ -897,9 +897,12 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Theme? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Theme? =
+        internal fun wrapOwned(handle: RawSegment): Theme? =
+            if (handle.address() == 0L) null else RefCounted.owned(Theme(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Theme? =
             if (handle.address() == 0L) null else Theme(GodotHandle(handle))
 
         private const val SET_ICON_HASH = 2188371082L

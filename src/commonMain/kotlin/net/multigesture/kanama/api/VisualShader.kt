@@ -30,7 +30,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
 
     fun getNode(type: VisualShader.Type, id: Int): VisualShaderNode? {
         checkOpen()
-        return VisualShaderNode.wrap(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(getNodeBind, segment, type.value, id))
+        return VisualShaderNode.wrapOwned(ObjectCalls.ptrcallWithLongAndIntArgsRetObject(getNodeBind, segment, type.value, id))
     }
 
     fun setNodePosition(type: VisualShader.Type, id: Int, position: Vector2) {
@@ -176,9 +176,12 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShader? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShader? =
+        internal fun wrapOwned(handle: RawSegment): VisualShader? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShader(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShader? =
             if (handle.address() == 0L) null else VisualShader(GodotHandle(handle))
 
         private const val SET_MODE_HASH = 3978014962L

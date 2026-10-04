@@ -55,7 +55,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.get_resource
      */
     fun getResource(name: String): Resource? {
-        return Resource.wrap(ObjectCalls.ptrcallWithStringNameArgRetObject(getResourceBind, segment, name))
+        return Resource.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getResourceBind, segment, name))
     }
 
     /**

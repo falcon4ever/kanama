@@ -646,7 +646,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     /**
@@ -1196,9 +1196,12 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Animation? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Animation? =
+        internal fun wrapOwned(handle: RawSegment): Animation? =
+            if (handle.address() == 0L) null else RefCounted.owned(Animation(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Animation? =
             if (handle.address() == 0L) null else Animation(GodotHandle(handle))
 
         private const val ADD_TRACK_HASH = 3843682357L

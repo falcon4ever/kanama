@@ -36,7 +36,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
 
     fun getDevice(index: Int): UPNPDevice? {
         checkOpen()
-        return UPNPDevice.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getDeviceBind, segment, index))
+        return UPNPDevice.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getDeviceBind, segment, index))
     }
 
     fun addDevice(device: UPNPDevice?) {
@@ -61,7 +61,7 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
 
     fun getGateway(): UPNPDevice? {
         checkOpen()
-        return UPNPDevice.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGatewayBind, segment))
+        return UPNPDevice.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGatewayBind, segment))
     }
 
     fun discover(timeout: Int = 2000, ttl: Int = 2, deviceFilter: String = "InternetGatewayDevice"): Int {
@@ -152,9 +152,12 @@ class UPNP(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): UPNP? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): UPNP? =
+        internal fun wrapOwned(handle: RawSegment): UPNP? =
+            if (handle.address() == 0L) null else RefCounted.owned(UPNP(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): UPNP? =
             if (handle.address() == 0L) null else UPNP(GodotHandle(handle))
 
         private const val GET_DEVICE_COUNT_HASH = 3905245786L

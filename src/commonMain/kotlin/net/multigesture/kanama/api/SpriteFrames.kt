@@ -185,7 +185,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getFrameTexture(anim: String, idx: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrap(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getFrameTextureBind, segment, anim, idx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getFrameTextureBind, segment, anim, idx))
     }
 
     /**
@@ -258,9 +258,12 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SpriteFrames? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SpriteFrames? =
+        internal fun wrapOwned(handle: RawSegment): SpriteFrames? =
+            if (handle.address() == 0L) null else RefCounted.owned(SpriteFrames(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SpriteFrames? =
             if (handle.address() == 0L) null else SpriteFrames(GodotHandle(handle))
 
         private const val ADD_ANIMATION_HASH = 3304788590L

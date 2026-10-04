@@ -15,9 +15,12 @@ class AudioEffectNotchFilter(handle: GodotHandle) : AudioEffectFilter(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectNotchFilter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectNotchFilter? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectNotchFilter? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectNotchFilter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectNotchFilter? =
             if (handle.address() == 0L) null else AudioEffectNotchFilter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

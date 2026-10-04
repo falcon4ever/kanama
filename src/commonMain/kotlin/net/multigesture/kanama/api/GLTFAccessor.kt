@@ -289,14 +289,17 @@ class GLTFAccessor(handle: GodotHandle) : Resource(handle) {
 
     companion object {
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFAccessor? {
-            return GLTFAccessor.wrap(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFAccessor.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFAccessor? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFAccessor? =
+        internal fun wrapOwned(handle: RawSegment): GLTFAccessor? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFAccessor(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFAccessor? =
             if (handle.address() == 0L) null else GLTFAccessor(GodotHandle(handle))
 
         private const val FROM_DICTIONARY_HASH = 3495091019L

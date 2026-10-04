@@ -238,7 +238,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.texture_get_format
      */
     fun textureGetFormat(texture: RID): RDTextureFormat? {
-        return RDTextureFormat.wrap(ObjectCalls.ptrcallWithRIDArgRetObject(textureGetFormatBind, segment, texture))
+        return RDTextureFormat.wrapOwned(ObjectCalls.ptrcallWithRIDArgRetObject(textureGetFormatBind, segment, texture))
     }
 
     /**
@@ -433,7 +433,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: RenderingDevice.shader_compile_spirv_from_source
      */
     fun shaderCompileSpirvFromSource(shaderSource: RDShaderSource?, allowCache: Boolean = true): RDShaderSPIRV? {
-        return RDShaderSPIRV.wrap(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: NULL_SEGMENT, allowCache))
+        return RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithObjectAndBoolArgRetObject(shaderCompileSpirvFromSourceBind, segment, shaderSource?.requireOpenHandle() ?: NULL_SEGMENT, allowCache))
     }
 
     /**

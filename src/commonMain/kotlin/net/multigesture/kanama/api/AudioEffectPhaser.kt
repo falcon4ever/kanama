@@ -155,9 +155,12 @@ class AudioEffectPhaser(handle: GodotHandle) : AudioEffect(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioEffectPhaser? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioEffectPhaser? =
+        internal fun wrapOwned(handle: RawSegment): AudioEffectPhaser? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioEffectPhaser(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioEffectPhaser? =
             if (handle.address() == 0L) null else AudioEffectPhaser(GodotHandle(handle))
 
         private const val SET_RANGE_MIN_HZ_HASH = 373806689L

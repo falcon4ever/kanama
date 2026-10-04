@@ -15,9 +15,12 @@ class PlaceholderTexture2DArray(handle: GodotHandle) : PlaceholderTextureLayered
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PlaceholderTexture2DArray? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PlaceholderTexture2DArray? =
+        internal fun wrapOwned(handle: RawSegment): PlaceholderTexture2DArray? =
+            if (handle.address() == 0L) null else RefCounted.owned(PlaceholderTexture2DArray(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture2DArray? =
             if (handle.address() == 0L) null else PlaceholderTexture2DArray(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

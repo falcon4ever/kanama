@@ -35,7 +35,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return SceneState.wrap(ret)
+        return SceneState.wrapOwned(ret)
     }
 
     /**
@@ -118,7 +118,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeInstance(idx: Int): PackedScene? {
         checkOpen()
-        return PackedScene.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getNodeInstanceBind, segment, idx))
+        return PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getNodeInstanceBind, segment, idx))
     }
 
     /**
@@ -302,9 +302,12 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SceneState? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): SceneState? =
+        internal fun wrapOwned(handle: RawSegment): SceneState? =
+            if (handle.address() == 0L) null else RefCounted.owned(SceneState(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): SceneState? =
             if (handle.address() == 0L) null else SceneState(GodotHandle(handle))
 
         private const val GET_PATH_HASH = 201670096L

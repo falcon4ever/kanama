@@ -65,7 +65,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
 
     fun getGltfToGodotExpression(): Expression? {
         checkOpen()
-        return Expression.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGltfToGodotExpressionBind, segment))
+        return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGltfToGodotExpressionBind, segment))
     }
 
     fun setGltfToGodotExpression(gltfToGodotExpr: Expression?) {
@@ -75,7 +75,7 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
 
     fun getGodotToGltfExpression(): Expression? {
         checkOpen()
-        return Expression.wrap(ObjectCalls.ptrcallNoArgsRetObject(getGodotToGltfExpressionBind, segment))
+        return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGodotToGltfExpressionBind, segment))
     }
 
     fun setGodotToGltfExpression(godotToGltfExpr: Expression?) {
@@ -158,9 +158,12 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFObjectModelProperty? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFObjectModelProperty? =
+        internal fun wrapOwned(handle: RawSegment): GLTFObjectModelProperty? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFObjectModelProperty(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFObjectModelProperty? =
             if (handle.address() == 0L) null else GLTFObjectModelProperty(GodotHandle(handle))
 
         private const val APPEND_NODE_PATH_HASH = 1348162250L

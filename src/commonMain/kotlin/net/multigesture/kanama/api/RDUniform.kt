@@ -98,9 +98,12 @@ class RDUniform(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDUniform? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDUniform? =
+        internal fun wrapOwned(handle: RawSegment): RDUniform? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDUniform(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDUniform? =
             if (handle.address() == 0L) null else RDUniform(GodotHandle(handle))
 
         private const val SET_UNIFORM_TYPE_HASH = 1664894931L

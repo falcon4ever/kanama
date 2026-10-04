@@ -42,9 +42,12 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeSync? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeSync? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeSync? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeSync(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeSync? =
             if (handle.address() == 0L) null else AnimationNodeSync(GodotHandle(handle))
 
         private const val SET_USE_SYNC_HASH = 2586408642L

@@ -218,7 +218,7 @@ class Label(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: Label.get_label_settings
      */
     fun getLabelSettings(): LabelSettings? {
-        return LabelSettings.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLabelSettingsBind, segment))
+        return LabelSettings.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getLabelSettingsBind, segment))
     }
 
     /**

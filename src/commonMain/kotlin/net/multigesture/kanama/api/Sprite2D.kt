@@ -102,7 +102,7 @@ class Sprite2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Sprite2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**

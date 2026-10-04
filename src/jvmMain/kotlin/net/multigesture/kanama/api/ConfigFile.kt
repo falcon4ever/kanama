@@ -206,7 +206,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun create(): ConfigFile =
-            ConfigFile(GodotHandle(ObjectCalls.constructObject("ConfigFile")))
+            RefCounted.owned(ConfigFile(GodotHandle(ObjectCalls.constructObject("ConfigFile"))))
 
         private const val SET_VALUE_HASH = 2504492430L
         private val setValueBind by lazy {

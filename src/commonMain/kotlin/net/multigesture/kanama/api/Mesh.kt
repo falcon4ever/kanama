@@ -121,7 +121,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun surfaceGetMaterial(surfIdx: Int): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(surfaceGetMaterialBind, segment, surfIdx))
+        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(surfaceGetMaterialBind, segment, surfIdx))
     }
 
     /**
@@ -136,7 +136,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Resource.wrap(ret)
+        return Resource.wrapOwned(ret)
     }
 
     /**
@@ -146,7 +146,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createTrimeshShape(): ConcavePolygonShape3D? {
         checkOpen()
-        return ConcavePolygonShape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTrimeshShapeBind, segment))
+        return ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createTrimeshShapeBind, segment))
     }
 
     /**
@@ -159,7 +159,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun createConvexShape(clean: Boolean = true, simplify: Boolean = false): ConvexPolygonShape3D? {
         checkOpen()
-        return ConvexPolygonShape3D.wrap(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(createConvexShapeBind, segment, clean, simplify))
+        return ConvexPolygonShape3D.wrapOwned(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(createConvexShapeBind, segment, clean, simplify))
     }
 
     /**
@@ -175,7 +175,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return Mesh.wrap(ret)
+        return Mesh.wrapOwned(ret)
     }
 
     /**
@@ -186,7 +186,7 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
      */
     fun generateTriangleMesh(): TriangleMesh? {
         checkOpen()
-        return TriangleMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
+        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
     }
 
     /**
@@ -646,15 +646,18 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Mesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Mesh? =
+        internal fun wrapOwned(handle: RawSegment): Mesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(Mesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Mesh? =
             if (handle.address() == 0L) null else Mesh(GodotHandle(handle))
 
         // Downcast a GodotObject to Mesh (null if not).
         @JvmStatic
         fun fromObject(value: GodotObject): Mesh? =
-            if (value.isClass("Mesh")) Mesh(value.handle) else null
+            if (value.isClass("Mesh")) RefCounted.retained(Mesh(value.handle)) else null
 
         private const val SET_LIGHTMAP_SIZE_HINT_HASH = 1130785943L
         private val setLightmapSizeHintBind by lazy {

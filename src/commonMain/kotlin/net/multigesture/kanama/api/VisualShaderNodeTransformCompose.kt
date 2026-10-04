@@ -13,9 +13,12 @@ class VisualShaderNodeTransformCompose(handle: GodotHandle) : VisualShaderNode(h
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformCompose? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTransformCompose? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTransformCompose? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTransformCompose(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformCompose? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformCompose(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

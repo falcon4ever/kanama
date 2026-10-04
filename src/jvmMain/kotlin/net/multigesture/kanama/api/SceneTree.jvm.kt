@@ -21,7 +21,7 @@ import net.multigesture.kanama.binding.runtime.requireGodotReturn
  * Generated from Godot docs: SceneTree.create_tween
  */
 fun SceneTree.createTween(): Tween {
-    return requireGodotReturn(Tween.wrap(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "SceneTree.create_tween")
+    return requireGodotReturn(Tween.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "SceneTree.create_tween")
 }
 
 /**
@@ -30,7 +30,7 @@ fun SceneTree.createTween(): Tween {
  * Generated from Godot docs: SceneTree.get_processed_tweens
  */
 fun SceneTree.getProcessedTweens(): List<Tween> {
-    return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getProcessedTweensBind, segment, Tween::wrap)
+    return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getProcessedTweensBind, segment, Tween::wrapBorrowed)
 }
 
 private const val CREATE_TWEEN_HASH = 3426978995L

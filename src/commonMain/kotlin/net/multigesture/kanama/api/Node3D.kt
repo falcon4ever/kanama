@@ -533,7 +533,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_world_3d
      */
     fun getWorld3d(): World3D? {
-        return World3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
+        return World3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorld3dBind, segment))
     }
 
     /**
@@ -603,7 +603,7 @@ open class Node3D(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: Node3D.get_gizmos
      */
     fun getGizmos(): List<Node3DGizmo> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getGizmosBind, segment, Node3DGizmo::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getGizmosBind, segment, Node3DGizmo::wrapBorrowed)
     }
 
     /**

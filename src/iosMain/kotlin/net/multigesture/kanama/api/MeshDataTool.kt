@@ -200,20 +200,23 @@ class MeshDataTool(handle: GodotHandle) : RefCounted(handle) {
 
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MeshDataTool? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): MeshDataTool? =
+        internal fun wrapOwned(handle: MemorySegment): MeshDataTool? =
+            if (handle.address() == 0L) null else RefCounted.owned(MeshDataTool(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): MeshDataTool? =
             if (handle.address() == 0L) null else MeshDataTool(GodotHandle(handle))
 
         // Instantiate a MeshDataTool.
         fun create(): MeshDataTool =
-            MeshDataTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool"))))
+            RefCounted.owned(MeshDataTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("MeshDataTool")))))
 
         private const val CLEAR_HASH = 3218959716L
         private val clearBind by lazy {

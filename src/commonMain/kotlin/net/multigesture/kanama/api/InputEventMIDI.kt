@@ -262,9 +262,12 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventMIDI? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventMIDI? =
+        internal fun wrapOwned(handle: RawSegment): InputEventMIDI? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventMIDI(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventMIDI? =
             if (handle.address() == 0L) null else InputEventMIDI(GodotHandle(handle))
 
         private const val SET_CHANNEL_HASH = 1286410249L

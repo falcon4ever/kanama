@@ -377,7 +377,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_light_data
      */
     fun getLightData(): LightmapGIData? {
-        return LightmapGIData.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, segment))
+        return LightmapGIData.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getLightDataBind, segment))
     }
 
     /**
@@ -539,7 +539,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_environment_custom_sky
      */
     fun getEnvironmentCustomSky(): Sky? {
-        return Sky.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentCustomSkyBind, segment))
+        return Sky.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEnvironmentCustomSkyBind, segment))
     }
 
     /**
@@ -887,7 +887,7 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: LightmapGI.get_camera_attributes
      */
     fun getCameraAttributes(): CameraAttributes? {
-        return CameraAttributes.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
+        return CameraAttributes.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCameraAttributesBind, segment))
     }
 
     companion object {

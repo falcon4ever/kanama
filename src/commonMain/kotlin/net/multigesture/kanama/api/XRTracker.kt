@@ -108,9 +108,12 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XRTracker? =
+        internal fun wrapOwned(handle: RawSegment): XRTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(XRTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XRTracker? =
             if (handle.address() == 0L) null else XRTracker(GodotHandle(handle))
 
         private const val GET_TRACKER_TYPE_HASH = 2784508102L

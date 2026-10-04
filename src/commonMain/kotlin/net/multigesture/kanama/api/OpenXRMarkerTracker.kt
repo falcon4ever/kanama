@@ -71,9 +71,12 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRMarkerTracker? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRMarkerTracker? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRMarkerTracker? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRMarkerTracker(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRMarkerTracker? =
             if (handle.address() == 0L) null else OpenXRMarkerTracker(GodotHandle(handle))
 
         private const val SET_BOUNDS_SIZE_HASH = 743155724L

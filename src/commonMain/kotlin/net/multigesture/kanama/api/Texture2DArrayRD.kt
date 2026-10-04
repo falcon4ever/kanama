@@ -15,9 +15,12 @@ class Texture2DArrayRD(handle: GodotHandle) : TextureLayeredRD(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Texture2DArrayRD? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Texture2DArrayRD? =
+        internal fun wrapOwned(handle: RawSegment): Texture2DArrayRD? =
+            if (handle.address() == 0L) null else RefCounted.owned(Texture2DArrayRD(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Texture2DArrayRD? =
             if (handle.address() == 0L) null else Texture2DArrayRD(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

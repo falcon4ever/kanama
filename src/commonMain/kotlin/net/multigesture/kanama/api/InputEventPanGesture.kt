@@ -41,9 +41,12 @@ class InputEventPanGesture(handle: GodotHandle) : InputEventGesture(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventPanGesture? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): InputEventPanGesture? =
+        internal fun wrapOwned(handle: RawSegment): InputEventPanGesture? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventPanGesture(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): InputEventPanGesture? =
             if (handle.address() == 0L) null else InputEventPanGesture(GodotHandle(handle))
 
         private const val SET_DELTA_HASH = 743155724L

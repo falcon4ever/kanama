@@ -15,9 +15,12 @@ class RenderSceneBuffersExtension(handle: GodotHandle) : RenderSceneBuffers(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RenderSceneBuffersExtension? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RenderSceneBuffersExtension? =
+        internal fun wrapOwned(handle: RawSegment): RenderSceneBuffersExtension? =
+            if (handle.address() == 0L) null else RefCounted.owned(RenderSceneBuffersExtension(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RenderSceneBuffersExtension? =
             if (handle.address() == 0L) null else RenderSceneBuffersExtension(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

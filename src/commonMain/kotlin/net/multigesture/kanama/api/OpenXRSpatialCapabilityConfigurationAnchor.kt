@@ -16,9 +16,12 @@ class OpenXRSpatialCapabilityConfigurationAnchor(handle: GodotHandle) : OpenXRSp
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialCapabilityConfigurationAnchor? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAnchor? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAnchor? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialCapabilityConfigurationAnchor(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAnchor? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAnchor(GodotHandle(handle))
 
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L

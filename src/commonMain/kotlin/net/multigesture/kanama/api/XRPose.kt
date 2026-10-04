@@ -231,9 +231,12 @@ class XRPose(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): XRPose? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): XRPose? =
+        internal fun wrapOwned(handle: RawSegment): XRPose? =
+            if (handle.address() == 0L) null else RefCounted.owned(XRPose(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): XRPose? =
             if (handle.address() == 0L) null else XRPose(GodotHandle(handle))
 
         private const val SET_HAS_TRACKING_DATA_HASH = 2586408642L

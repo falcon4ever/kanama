@@ -16,9 +16,12 @@ class EditorTranslationParserPlugin(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorTranslationParserPlugin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorTranslationParserPlugin? =
+        internal fun wrapOwned(handle: RawSegment): EditorTranslationParserPlugin? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorTranslationParserPlugin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorTranslationParserPlugin? =
             if (handle.address() == 0L) null else EditorTranslationParserPlugin(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

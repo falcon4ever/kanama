@@ -131,7 +131,7 @@ class BoxMesh internal constructor(handle: GodotHandle) : PrimitiveMesh(handle) 
 
         @JvmStatic
         fun create(): BoxMesh =
-            BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh")))
+            RefCounted.owned(BoxMesh(GodotHandle(ObjectCalls.constructObject("BoxMesh"))))
 
     }
 }

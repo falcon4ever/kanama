@@ -13,9 +13,12 @@ class VisualShaderNodeTextureSDFNormal(handle: GodotHandle) : VisualShaderNode(h
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTextureSDFNormal? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTextureSDFNormal? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTextureSDFNormal? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTextureSDFNormal(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureSDFNormal? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureSDFNormal(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

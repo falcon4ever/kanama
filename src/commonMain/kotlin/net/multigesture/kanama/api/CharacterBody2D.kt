@@ -629,7 +629,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_slide_collision
      */
     fun getSlideCollision(slideIdx: Int): KinematicCollision2D? {
-        return KinematicCollision2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSlideCollisionBind, segment, slideIdx))
+        return KinematicCollision2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSlideCollisionBind, segment, slideIdx))
     }
 
     /**
@@ -640,7 +640,7 @@ class CharacterBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
      * Generated from Godot docs: CharacterBody2D.get_last_slide_collision
      */
     fun getLastSlideCollision(): KinematicCollision2D? {
-        return KinematicCollision2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, segment))
+        return KinematicCollision2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getLastSlideCollisionBind, segment))
     }
 
     /**

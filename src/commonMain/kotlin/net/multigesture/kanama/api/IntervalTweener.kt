@@ -15,9 +15,12 @@ class IntervalTweener(handle: GodotHandle) : Tweener(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): IntervalTweener? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): IntervalTweener? =
+        internal fun wrapOwned(handle: RawSegment): IntervalTweener? =
+            if (handle.address() == 0L) null else RefCounted.owned(IntervalTweener(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): IntervalTweener? =
             if (handle.address() == 0L) null else IntervalTweener(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

@@ -4,11 +4,15 @@ import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.Camera3D
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
+import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.Node
 import net.multigesture.kanama.api.Node2D
 import net.multigesture.kanama.api.PackedScene
+import net.multigesture.kanama.api.StandardMaterial3D
 import net.multigesture.kanama.api.Texture2D
 import net.multigesture.kanama.api.Time
 import net.multigesture.kanama.api.Timer
@@ -104,6 +108,18 @@ class ScriptAccessSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObje
         } catch (e: ClassCastException) {
           e.message!!.contains("is not a Node2D")
         })
+    // Task 132: a cast to a RefCounted class takes a reference of its own (like the from*
+    // downcasts), so the cast result keeps the object alive after the original is closed.
+    val castOwnsRow = run {
+      val material = StandardMaterial3D.create()
+      val id = material.instanceId
+      val asMaterial = GodotObject(material.handle).cast<Material>()
+      material.close()
+      val aliveThroughCast =
+        GD.isInstanceIdValid(id) && asMaterial.getClassName() == "StandardMaterial3D"
+      asMaterial.close()
+      aliveThroughCast && !GD.isInstanceIdValid(id)
+    }
     val requireAsRow =
       self.requireAs<Timer>("ScoreTimer").isSameInstance(timerNode) &&
         self.getNodeAs<Camera3D>("ScoreTimer") == null &&
@@ -146,6 +162,7 @@ class ScriptAccessSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObje
         "as_script=$asScriptRow cast=$castRow require_as=$requireAsRow preload=$preloadRow " +
         "preload_wrong=$preloadWrongRow instantiate=$instantiateRow tree=$treeRow orphan_tree=$orphanRow"
     )
+    System.err.println("[kanama:kt] ScriptAccessSmoke cast_owns=$castOwnsRow")
 
     // The spawned script's coroutines must end when its node is freed (the free path).
     self.addChild(spawned.self)

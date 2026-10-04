@@ -320,7 +320,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_icon
      */
     fun getTabIcon(tabIdx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, segment, tabIdx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getTabIconBind, segment, tabIdx))
     }
 
     /**
@@ -414,7 +414,7 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: TabContainer.get_tab_button_icon
      */
     fun getTabButtonIcon(tabIdx: Int): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, segment, tabIdx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getTabButtonIconBind, segment, tabIdx))
     }
 
     /**

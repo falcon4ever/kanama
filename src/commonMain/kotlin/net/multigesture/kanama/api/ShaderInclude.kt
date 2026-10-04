@@ -42,9 +42,12 @@ class ShaderInclude(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ShaderInclude? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ShaderInclude? =
+        internal fun wrapOwned(handle: RawSegment): ShaderInclude? =
+            if (handle.address() == 0L) null else RefCounted.owned(ShaderInclude(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ShaderInclude? =
             if (handle.address() == 0L) null else ShaderInclude(GodotHandle(handle))
 
         private const val SET_CODE_HASH = 83702148L

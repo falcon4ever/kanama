@@ -46,7 +46,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_mesh
      */
     fun getMesh(): Mesh? {
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     /**
@@ -88,7 +88,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_skin
      */
     fun getSkin(): Skin? {
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
     }
 
     /**
@@ -99,7 +99,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_skin_reference
      */
     fun getSkinReference(): SkinReference? {
-        return SkinReference.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinReferenceBind, segment))
+        return SkinReference.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinReferenceBind, segment))
     }
 
     /**
@@ -135,7 +135,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_surface_override_material
      */
     fun getSurfaceOverrideMaterial(surface: Int): Material? {
-        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceOverrideMaterialBind, segment, surface))
+        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceOverrideMaterialBind, segment, surface))
     }
 
     /**
@@ -148,7 +148,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.get_active_material
      */
     fun getActiveMaterial(surface: Int): Material? {
-        return Material.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getActiveMaterialBind, segment, surface))
+        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getActiveMaterialBind, segment, surface))
     }
 
     /**
@@ -244,7 +244,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_blend_shape_mix
      */
     fun bakeMeshFromCurrentBlendShapeMix(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentBlendShapeMixBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -257,7 +257,7 @@ open class MeshInstance3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: MeshInstance3D.bake_mesh_from_current_skeleton_pose
      */
     fun bakeMeshFromCurrentSkeletonPose(existing: ArrayMesh?): ArrayMesh? {
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(bakeMeshFromCurrentSkeletonPoseBind, segment, existing?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {

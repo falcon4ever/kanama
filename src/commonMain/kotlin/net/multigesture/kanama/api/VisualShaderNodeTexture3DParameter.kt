@@ -13,9 +13,12 @@ class VisualShaderNodeTexture3DParameter(handle: GodotHandle) : VisualShaderNode
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTexture3DParameter? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTexture3DParameter? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTexture3DParameter? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTexture3DParameter(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture3DParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture3DParameter(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

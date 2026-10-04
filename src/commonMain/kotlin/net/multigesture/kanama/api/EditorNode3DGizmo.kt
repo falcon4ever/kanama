@@ -114,7 +114,7 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
      */
     fun getPlugin(): EditorNode3DGizmoPlugin? {
         checkOpen()
-        return EditorNode3DGizmoPlugin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPluginBind, segment))
+        return EditorNode3DGizmoPlugin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPluginBind, segment))
     }
 
     /**
@@ -163,9 +163,12 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorNode3DGizmo? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorNode3DGizmo? =
+        internal fun wrapOwned(handle: RawSegment): EditorNode3DGizmo? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorNode3DGizmo(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorNode3DGizmo? =
             if (handle.address() == 0L) null else EditorNode3DGizmo(GodotHandle(handle))
 
         private const val ADD_LINES_HASH = 2910971437L

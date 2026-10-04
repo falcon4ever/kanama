@@ -21,9 +21,12 @@ class VisualShaderNodeReroute(handle: GodotHandle) : VisualShaderNode(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeReroute? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeReroute? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeReroute? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeReroute(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeReroute? =
             if (handle.address() == 0L) null else VisualShaderNodeReroute(GodotHandle(handle))
 
         private const val GET_PORT_TYPE_HASH = 1287173294L

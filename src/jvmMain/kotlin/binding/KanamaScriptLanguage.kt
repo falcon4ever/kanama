@@ -12,6 +12,7 @@ import net.multigesture.kanama.binding.runtime.BuiltinTypes
 import net.multigesture.kanama.binding.runtime.ClassDB
 import net.multigesture.kanama.binding.runtime.GodotStrings
 import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.OwnedReleases
 import net.multigesture.kanama.binding.runtime.Upcalls
 import net.multigesture.kanama.ffi.GodotFFI
 
@@ -842,6 +843,8 @@ object KanamaScriptLanguage {
   @JvmStatic
   fun callFrame(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
     MainThread.pump()
+    // Owned RefCounted wrappers the GC collected without close() (task 132 D2).
+    OwnedReleases.drain()
     KanamaHotReload.frameTick()
   }
 

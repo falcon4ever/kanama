@@ -24,7 +24,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(MethodTweener.wrap(ret), "MethodTweener.set_delay")
+        return requireGodotReturn(MethodTweener.wrapOwned(ret), "MethodTweener.set_delay")
     }
 
     /**
@@ -40,7 +40,7 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(MethodTweener.wrap(ret), "MethodTweener.set_trans")
+        return requireGodotReturn(MethodTweener.wrapOwned(ret), "MethodTweener.set_trans")
     }
 
     /**
@@ -56,15 +56,18 @@ class MethodTweener(handle: GodotHandle) : Tweener(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return requireGodotReturn(MethodTweener.wrap(ret), "MethodTweener.set_ease")
+        return requireGodotReturn(MethodTweener.wrapOwned(ret), "MethodTweener.set_ease")
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MethodTweener? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MethodTweener? =
+        internal fun wrapOwned(handle: RawSegment): MethodTweener? =
+            if (handle.address() == 0L) null else RefCounted.owned(MethodTweener(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MethodTweener? =
             if (handle.address() == 0L) null else MethodTweener(GodotHandle(handle))
 
         private const val SET_DELAY_HASH = 266477812L

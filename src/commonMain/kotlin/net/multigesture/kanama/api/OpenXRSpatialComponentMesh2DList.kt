@@ -29,9 +29,12 @@ class OpenXRSpatialComponentMesh2DList(handle: GodotHandle) : OpenXRSpatialCompo
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentMesh2DList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentMesh2DList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentMesh2DList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentMesh2DList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentMesh2DList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentMesh2DList(GodotHandle(handle))
 
         private const val GET_TRANSFORM_HASH = 1965739696L

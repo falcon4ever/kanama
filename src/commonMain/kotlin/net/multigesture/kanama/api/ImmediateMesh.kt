@@ -122,9 +122,12 @@ class ImmediateMesh(handle: GodotHandle) : Mesh(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ImmediateMesh? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): ImmediateMesh? =
+        internal fun wrapOwned(handle: RawSegment): ImmediateMesh? =
+            if (handle.address() == 0L) null else RefCounted.owned(ImmediateMesh(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ImmediateMesh? =
             if (handle.address() == 0L) null else ImmediateMesh(GodotHandle(handle))
 
         private const val SURFACE_BEGIN_HASH = 2794442543L

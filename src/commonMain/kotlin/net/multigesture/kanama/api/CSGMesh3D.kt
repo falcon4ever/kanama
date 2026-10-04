@@ -27,7 +27,7 @@ class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     fun getMesh(): Mesh? {
-        return Mesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return Mesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun setMaterial(material: Material?) {
@@ -35,7 +35,7 @@ class CSGMesh3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
     }
 
     fun getMaterial(): Material? {
-        return Material.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
     }
 
     companion object {

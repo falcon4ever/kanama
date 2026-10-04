@@ -65,7 +65,7 @@ class CollisionShape2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionShape2D.get_shape
      */
     fun getShape(): Shape2D? {
-        return Shape2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
+        return Shape2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**

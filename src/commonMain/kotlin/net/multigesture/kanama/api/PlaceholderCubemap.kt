@@ -15,9 +15,12 @@ class PlaceholderCubemap(handle: GodotHandle) : PlaceholderTextureLayered(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PlaceholderCubemap? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): PlaceholderCubemap? =
+        internal fun wrapOwned(handle: RawSegment): PlaceholderCubemap? =
+            if (handle.address() == 0L) null else RefCounted.owned(PlaceholderCubemap(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): PlaceholderCubemap? =
             if (handle.address() == 0L) null else PlaceholderCubemap(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

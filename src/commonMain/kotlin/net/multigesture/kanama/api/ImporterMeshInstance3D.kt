@@ -76,7 +76,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun getMesh(): ImporterMesh? {
-        return ImporterMesh.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
     }
 
     fun setSkin(skin: Skin?) {
@@ -84,7 +84,7 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     fun getSkin(): Skin? {
-        return Skin.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
     }
 
     fun setSkeletonPath(skeletonPath: NodePath) {

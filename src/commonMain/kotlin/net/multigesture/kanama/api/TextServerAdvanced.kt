@@ -13,9 +13,12 @@ class TextServerAdvanced(handle: GodotHandle) : TextServerExtension(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TextServerAdvanced? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TextServerAdvanced? =
+        internal fun wrapOwned(handle: RawSegment): TextServerAdvanced? =
+            if (handle.address() == 0L) null else RefCounted.owned(TextServerAdvanced(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TextServerAdvanced? =
             if (handle.address() == 0L) null else TextServerAdvanced(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

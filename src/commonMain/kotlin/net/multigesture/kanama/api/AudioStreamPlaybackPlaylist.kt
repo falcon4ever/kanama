@@ -13,9 +13,12 @@ class AudioStreamPlaybackPlaylist(handle: GodotHandle) : AudioStreamPlayback(han
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AudioStreamPlaybackPlaylist? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AudioStreamPlaybackPlaylist? =
+        internal fun wrapOwned(handle: RawSegment): AudioStreamPlaybackPlaylist? =
+            if (handle.address() == 0L) null else RefCounted.owned(AudioStreamPlaybackPlaylist(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackPlaylist? =
             if (handle.address() == 0L) null else AudioStreamPlaybackPlaylist(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

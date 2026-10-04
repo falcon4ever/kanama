@@ -38,9 +38,12 @@ open class VisualShaderNodeSample3D(handle: GodotHandle) : VisualShaderNode(hand
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeSample3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeSample3D? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeSample3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeSample3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSample3D? =
             if (handle.address() == 0L) null else VisualShaderNodeSample3D(GodotHandle(handle))
 
         private const val SET_SOURCE_HASH = 3315130991L

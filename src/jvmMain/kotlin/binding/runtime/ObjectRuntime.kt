@@ -50,6 +50,12 @@ internal actual object ObjectRuntime {
     return live.address() == segment.address()
   }
 
+  // Task 132 D7: the instance-binding liveness flag ([InstanceBindings]); null while the binding
+  // check is off, and in JVM unit tests (the instance-id seam answers there).
+  actual fun liveFlagOf(segment: RawSegment): LiveFlag? =
+    if (!FreedObjectChecks.bindings || instanceIdOverride != null) null
+    else InstanceBindings.liveFlagOf(segment)
+
   actual fun emitSignal(segment: RawSegment, signal: String, args: List<Any?>) {
     Signals.emitAny(segment, signal, args)
   }

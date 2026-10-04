@@ -34,9 +34,12 @@ open class Occluder3D(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): Occluder3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): Occluder3D? =
+        internal fun wrapOwned(handle: RawSegment): Occluder3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(Occluder3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): Occluder3D? =
             if (handle.address() == 0L) null else Occluder3D(GodotHandle(handle))
 
         private const val GET_VERTICES_HASH = 497664490L

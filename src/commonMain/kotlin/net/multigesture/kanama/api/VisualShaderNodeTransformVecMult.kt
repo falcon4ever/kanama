@@ -40,9 +40,12 @@ class VisualShaderNodeTransformVecMult(handle: GodotHandle) : VisualShaderNode(h
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeTransformVecMult? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeTransformVecMult? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeTransformVecMult? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeTransformVecMult(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTransformVecMult? =
             if (handle.address() == 0L) null else VisualShaderNodeTransformVecMult(GodotHandle(handle))
 
         private const val SET_OPERATOR_HASH = 1785665912L

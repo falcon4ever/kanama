@@ -137,7 +137,7 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_stream
      */
     fun getStream(): AudioStream? =
-        AudioStream.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
+        AudioStream.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
 
     /**
      * Volume of sound, in decibels. This is an offset of the `stream`'s volume. Note: To convert
@@ -307,7 +307,7 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AudioStreamPlayer.get_stream_playback
      */
     fun getStreamPlayback(): AudioStreamPlayback? =
-        AudioStreamPlayback.wrap(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, segment))
+        AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamPlaybackBind, segment))
 
     /**
      * The playback type of the stream player. If set other than to the default value, it will force

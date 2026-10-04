@@ -38,6 +38,14 @@ internal expect object ObjectRuntime {
    */
   fun isLive(segment: RawSegment, instanceId: Long): Boolean
 
+  /**
+   * The liveness flag of the object behind [segment] (task 132 D7): an instance binding whose free
+   * callback marks it dead, shared by every wrapper of that object, carrying the instance id. Null
+   * when the binding check is off ([FreedObjectChecks.bindings] false), and the wrapper falls back
+   * to [instanceIdOf] and [isLive].
+   */
+  fun liveFlagOf(segment: RawSegment): LiveFlag?
+
   /** `Object.emit_signal([signal], *[args])` on the object behind [segment]. */
   fun emitSignal(segment: RawSegment, signal: String, args: List<Any?>)
 

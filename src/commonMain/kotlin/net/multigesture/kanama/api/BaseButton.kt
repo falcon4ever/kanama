@@ -288,7 +288,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_shortcut
      */
     fun getShortcut(): Shortcut? {
-        return Shortcut.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, segment))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, segment))
     }
 
     /**
@@ -308,7 +308,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_button_group
      */
     fun getButtonGroup(): ButtonGroup? {
-        return ButtonGroup.wrap(ObjectCalls.ptrcallNoArgsRetObject(getButtonGroupBind, segment))
+        return ButtonGroup.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getButtonGroupBind, segment))
     }
 
     object Signals {

@@ -68,15 +68,18 @@ class EditorNode3DGizmoPlugin(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaterial(name: String, gizmo: EditorNode3DGizmo?): StandardMaterial3D? {
         checkOpen()
-        return StandardMaterial3D.wrap(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
+        return StandardMaterial3D.wrapOwned(ObjectCalls.ptrcallWithStringAndObjectArgRetObject(getMaterialBind, segment, name, gizmo?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorNode3DGizmoPlugin? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): EditorNode3DGizmoPlugin? =
+        internal fun wrapOwned(handle: RawSegment): EditorNode3DGizmoPlugin? =
+            if (handle.address() == 0L) null else RefCounted.owned(EditorNode3DGizmoPlugin(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): EditorNode3DGizmoPlugin? =
             if (handle.address() == 0L) null else EditorNode3DGizmoPlugin(GodotHandle(handle))
 
         private const val CREATE_MATERIAL_HASH = 3486012546L

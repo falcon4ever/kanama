@@ -42,7 +42,7 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
             RefCounted.releaseHandle(ret)
             return this
         }
-        return AnimationNode.wrap(ret)
+        return AnimationNode.wrapOwned(ret)
     }
 
     /**
@@ -160,9 +160,12 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): AnimationNodeBlendTree? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): AnimationNodeBlendTree? =
+        internal fun wrapOwned(handle: RawSegment): AnimationNodeBlendTree? =
+            if (handle.address() == 0L) null else RefCounted.owned(AnimationNodeBlendTree(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): AnimationNodeBlendTree? =
             if (handle.address() == 0L) null else AnimationNodeBlendTree(GodotHandle(handle))
 
         private const val ADD_NODE_HASH = 1980270704L

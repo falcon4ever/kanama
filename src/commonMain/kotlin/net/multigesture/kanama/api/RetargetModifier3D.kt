@@ -47,7 +47,7 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: RetargetModifier3D.get_profile
      */
     fun getProfile(): SkeletonProfile? {
-        return SkeletonProfile.wrap(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, segment))
+        return SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProfileBind, segment))
     }
 
     /**

@@ -13,9 +13,12 @@ open class OpenXRHapticBase(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRHapticBase? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRHapticBase? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRHapticBase? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRHapticBase(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRHapticBase? =
             if (handle.address() == 0L) null else OpenXRHapticBase(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

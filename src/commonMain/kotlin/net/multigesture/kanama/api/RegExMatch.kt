@@ -59,9 +59,12 @@ class RegExMatch(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RegExMatch? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RegExMatch? =
+        internal fun wrapOwned(handle: RawSegment): RegExMatch? =
+            if (handle.address() == 0L) null else RefCounted.owned(RegExMatch(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RegExMatch? =
             if (handle.address() == 0L) null else RegExMatch(GodotHandle(handle))
 
         private const val GET_SUBJECT_HASH = 201670096L

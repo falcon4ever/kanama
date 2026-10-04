@@ -264,9 +264,12 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): CompositorEffect? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): CompositorEffect? =
+        internal fun wrapOwned(handle: RawSegment): CompositorEffect? =
+            if (handle.address() == 0L) null else RefCounted.owned(CompositorEffect(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): CompositorEffect? =
             if (handle.address() == 0L) null else CompositorEffect(GodotHandle(handle))
 
         private const val SET_ENABLED_HASH = 2586408642L

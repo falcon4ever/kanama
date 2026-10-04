@@ -173,9 +173,12 @@ class MobileVRInterface(handle: GodotHandle) : XRInterface(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): MobileVRInterface? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): MobileVRInterface? =
+        internal fun wrapOwned(handle: RawSegment): MobileVRInterface? =
+            if (handle.address() == 0L) null else RefCounted.owned(MobileVRInterface(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): MobileVRInterface? =
             if (handle.address() == 0L) null else MobileVRInterface(GodotHandle(handle))
 
         private const val SET_EYE_HEIGHT_HASH = 373806689L

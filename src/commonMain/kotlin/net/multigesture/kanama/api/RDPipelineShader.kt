@@ -61,15 +61,18 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSpecializationConstants(): List<RDPipelineSpecializationConstant> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSpecializationConstantsBind, segment, RDPipelineSpecializationConstant::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSpecializationConstantsBind, segment, RDPipelineSpecializationConstant::wrapBorrowed)
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): RDPipelineShader? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): RDPipelineShader? =
+        internal fun wrapOwned(handle: RawSegment): RDPipelineShader? =
+            if (handle.address() == 0L) null else RefCounted.owned(RDPipelineShader(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): RDPipelineShader? =
             if (handle.address() == 0L) null else RDPipelineShader(GodotHandle(handle))
 
         private const val SET_SHADER_HASH = 2722037293L

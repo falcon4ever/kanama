@@ -575,9 +575,12 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): NavigationPathQueryParameters3D? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): NavigationPathQueryParameters3D? =
+        internal fun wrapOwned(handle: RawSegment): NavigationPathQueryParameters3D? =
+            if (handle.address() == 0L) null else RefCounted.owned(NavigationPathQueryParameters3D(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): NavigationPathQueryParameters3D? =
             if (handle.address() == 0L) null else NavigationPathQueryParameters3D(GodotHandle(handle))
 
         private const val SET_PATHFINDING_ALGORITHM_HASH = 394560454L

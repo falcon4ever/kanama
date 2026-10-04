@@ -172,7 +172,7 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
 
     fun commit(existing: ArrayMesh?, flags: Long = 0L): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrap(ObjectCalls.ptrcallWithObjectAndLongArgsRetObject(commitBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL, flags))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectAndLongArgsRetObject(commitBind, segment, existing?.requireOpenHandle() ?: MemorySegment.NULL, flags))
     }
 
     fun commitToArrays(): List<Any?> {
@@ -283,14 +283,17 @@ class SurfaceTool(handle: GodotHandle) : RefCounted(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): SurfaceTool? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): SurfaceTool? =
+        internal fun wrapOwned(handle: MemorySegment): SurfaceTool? =
+            if (handle.address() == 0L) null else RefCounted.owned(SurfaceTool(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): SurfaceTool? =
             if (handle.address() == 0L) null else SurfaceTool(GodotHandle(handle))
 
         // Instantiate a SurfaceTool.
         fun create(): SurfaceTool =
-            SurfaceTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool"))))
+            RefCounted.owned(SurfaceTool(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("SurfaceTool")))))
 
         private const val SET_SKIN_WEIGHT_COUNT_HASH = 618679515L
         private val setSkinWeightCountBind by lazy {

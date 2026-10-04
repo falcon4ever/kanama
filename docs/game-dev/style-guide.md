@@ -339,9 +339,12 @@ Everything else — generated meshes, materials, audio streams, and every other
 `Resource`/`RefCounted` value you create or read back, plain getters included —
 follows the one rule in
 [Godot API → Resource Ownership](godot-api.md#resource-ownership): the wrapper
-is yours, so `close()` it (or `use { }`) once you are done. Handing it to a
-node first does not change that: after `meshInstance.setMesh(mesh)` the node
-holds its own reference and `mesh.close()` releases only yours (tasks 61/62).
+is yours, so `close()` it (or `use { }`) to release it as soon as you are done.
+A wrapper you forget is released later, after the garbage collector drops it,
+so closing is about *when*, not about leaking; prefer `use { }` for big
+resources and anything made in a loop. Handing it to a node first does not
+change that: after `meshInstance.setMesh(mesh)` the node holds its own reference
+and `mesh.close()` releases only yours (tasks 61/62).
 
 `RefCounted.close()` carries no opt-in annotation. `@ManualGodotLifetimeApi`
 is deprecated and no longer applied anywhere; an `@OptIn` for it in a script

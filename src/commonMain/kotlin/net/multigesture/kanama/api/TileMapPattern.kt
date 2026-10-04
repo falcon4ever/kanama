@@ -114,9 +114,12 @@ class TileMapPattern(handle: GodotHandle) : Resource(handle) {
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): TileMapPattern? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): TileMapPattern? =
+        internal fun wrapOwned(handle: RawSegment): TileMapPattern? =
+            if (handle.address() == 0L) null else RefCounted.owned(TileMapPattern(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): TileMapPattern? =
             if (handle.address() == 0L) null else TileMapPattern(GodotHandle(handle))
 
         private const val SET_CELL_HASH = 2224802556L

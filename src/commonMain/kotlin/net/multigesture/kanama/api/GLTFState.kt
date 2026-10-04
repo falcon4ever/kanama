@@ -274,7 +274,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getNodes(): List<GLTFNode> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getNodesBind, segment, GLTFNode::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getNodesBind, segment, GLTFNode::wrapBorrowed)
     }
 
     fun setNodes(nodes: List<GLTFNode>) {
@@ -294,7 +294,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getBufferViews(): List<GLTFBufferView> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getBufferViewsBind, segment, GLTFBufferView::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getBufferViewsBind, segment, GLTFBufferView::wrapBorrowed)
     }
 
     fun setBufferViews(bufferViews: List<GLTFBufferView>) {
@@ -304,7 +304,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getAccessors(): List<GLTFAccessor> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAccessorsBind, segment, GLTFAccessor::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAccessorsBind, segment, GLTFAccessor::wrapBorrowed)
     }
 
     fun setAccessors(accessors: List<GLTFAccessor>) {
@@ -314,7 +314,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getMeshes(): List<GLTFMesh> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMeshesBind, segment, GLTFMesh::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMeshesBind, segment, GLTFMesh::wrapBorrowed)
     }
 
     fun setMeshes(meshes: List<GLTFMesh>) {
@@ -334,7 +334,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getMaterials(): List<Material> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMaterialsBind, segment, Material::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMaterialsBind, segment, Material::wrapBorrowed)
     }
 
     fun setMaterials(materials: List<Material>) {
@@ -384,7 +384,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getTextures(): List<GLTFTexture> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTexturesBind, segment, GLTFTexture::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTexturesBind, segment, GLTFTexture::wrapBorrowed)
     }
 
     fun setTextures(textures: List<GLTFTexture>) {
@@ -394,7 +394,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getTextureSamplers(): List<GLTFTextureSampler> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTextureSamplersBind, segment, GLTFTextureSampler::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTextureSamplersBind, segment, GLTFTextureSampler::wrapBorrowed)
     }
 
     fun setTextureSamplers(textureSamplers: List<GLTFTextureSampler>) {
@@ -404,7 +404,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getImages(): List<Texture2D> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getImagesBind, segment, Texture2D::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getImagesBind, segment, Texture2D::wrapBorrowed)
     }
 
     fun setImages(images: List<Texture2D>) {
@@ -414,7 +414,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getSkins(): List<GLTFSkin> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkinsBind, segment, GLTFSkin::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkinsBind, segment, GLTFSkin::wrapBorrowed)
     }
 
     fun setSkins(skins: List<GLTFSkin>) {
@@ -424,7 +424,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getCameras(): List<GLTFCamera> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCamerasBind, segment, GLTFCamera::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCamerasBind, segment, GLTFCamera::wrapBorrowed)
     }
 
     fun setCameras(cameras: List<GLTFCamera>) {
@@ -434,7 +434,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getLights(): List<GLTFLight> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightsBind, segment, GLTFLight::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightsBind, segment, GLTFLight::wrapBorrowed)
     }
 
     fun setLights(lights: List<GLTFLight>) {
@@ -464,7 +464,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getSkeletons(): List<GLTFSkeleton> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkeletonsBind, segment, GLTFSkeleton::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkeletonsBind, segment, GLTFSkeleton::wrapBorrowed)
     }
 
     fun setSkeletons(skeletons: List<GLTFSkeleton>) {
@@ -494,7 +494,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun getAnimations(): List<GLTFAnimation> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAnimationsBind, segment, GLTFAnimation::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAnimationsBind, segment, GLTFAnimation::wrapBorrowed)
     }
 
     fun setAnimations(animations: List<GLTFAnimation>) {
@@ -570,9 +570,12 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
         @JvmStatic
         fun fromHandle(handle: GodotHandle): GLTFState? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): GLTFState? =
+        internal fun wrapOwned(handle: RawSegment): GLTFState? =
+            if (handle.address() == 0L) null else RefCounted.owned(GLTFState(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): GLTFState? =
             if (handle.address() == 0L) null else GLTFState(GodotHandle(handle))
 
         private const val ADD_USED_EXTENSION_HASH = 2678287736L

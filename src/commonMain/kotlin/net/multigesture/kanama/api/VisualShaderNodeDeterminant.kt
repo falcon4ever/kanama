@@ -13,9 +13,12 @@ class VisualShaderNodeDeterminant(handle: GodotHandle) : VisualShaderNode(handle
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeDeterminant? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeDeterminant? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeDeterminant? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeDeterminant(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeDeterminant? =
             if (handle.address() == 0L) null else VisualShaderNodeDeterminant(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

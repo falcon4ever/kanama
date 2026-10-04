@@ -87,7 +87,7 @@ class SpringArm3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SpringArm3D.get_shape
      */
     fun getShape(): Shape3D? {
-        return Shape3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
+        return Shape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
     }
 
     /**

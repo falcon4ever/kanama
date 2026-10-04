@@ -41,25 +41,28 @@ class ENetMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
     fun getHost(): ENetConnection? {
         checkOpen()
-        return ENetConnection.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHostBind, segment))
+        return ENetConnection.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getHostBind, segment))
     }
 
     fun getPeer(id: Int): ENetPacketPeer? {
         checkOpen()
-        return ENetPacketPeer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, id))
+        return ENetPacketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, id))
     }
 
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): ENetMultiplayerPeer? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: MemorySegment): ENetMultiplayerPeer? =
+        internal fun wrapOwned(handle: MemorySegment): ENetMultiplayerPeer? =
+            if (handle.address() == 0L) null else RefCounted.owned(ENetMultiplayerPeer(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: MemorySegment): ENetMultiplayerPeer? =
             if (handle.address() == 0L) null else ENetMultiplayerPeer(GodotHandle(handle))
 
         // Instantiate an ENetMultiplayerPeer.
         fun create(): ENetMultiplayerPeer =
-            ENetMultiplayerPeer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer"))))
+            RefCounted.owned(ENetMultiplayerPeer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("ENetMultiplayerPeer")))))
 
         private const val CREATE_SERVER_HASH = 2917761309L
         private val createServerBind by lazy {

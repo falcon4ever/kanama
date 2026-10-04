@@ -57,7 +57,7 @@ class Skeleton2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Skeleton2D.get_modification_stack
      */
     fun getModificationStack(): SkeletonModificationStack2D? {
-        return SkeletonModificationStack2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, segment))
+        return SkeletonModificationStack2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getModificationStackBind, segment))
     }
 
     /**

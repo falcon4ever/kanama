@@ -17,9 +17,12 @@ class OpenXRSpatialComponentAnchorList(handle: GodotHandle) : OpenXRSpatialCompo
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialComponentAnchorList? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): OpenXRSpatialComponentAnchorList? =
+        internal fun wrapOwned(handle: RawSegment): OpenXRSpatialComponentAnchorList? =
+            if (handle.address() == 0L) null else RefCounted.owned(OpenXRSpatialComponentAnchorList(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentAnchorList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentAnchorList(GodotHandle(handle))
 
         private const val GET_ENTITY_POSE_HASH = 1965739696L

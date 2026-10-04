@@ -13,9 +13,12 @@ class VisualShaderNodeVectorDistance(handle: GodotHandle) : VisualShaderNodeVect
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): VisualShaderNodeVectorDistance? =
-            wrap(handle.segment)
+            wrapBorrowed(handle.segment)
 
-        internal fun wrap(handle: RawSegment): VisualShaderNodeVectorDistance? =
+        internal fun wrapOwned(handle: RawSegment): VisualShaderNodeVectorDistance? =
+            if (handle.address() == 0L) null else RefCounted.owned(VisualShaderNodeVectorDistance(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorDistance? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorDistance(GodotHandle(handle))
 
         // No MethodBinds emitted yet.

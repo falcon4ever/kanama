@@ -73,7 +73,7 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
      * Generated from Godot docs: Sprite3D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
     /**
