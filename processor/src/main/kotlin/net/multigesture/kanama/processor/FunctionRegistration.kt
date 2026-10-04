@@ -271,6 +271,11 @@ internal object FunctionRegistration {
           if (kotlinNames.distinct().size == 1)
             "the ${kotlinNames.size} overloads of ${kotlinNames[0]}"
           else kotlinNames.joinToString(" and ")
+        if (godotName in LIFECYCLE_VIRTUALS.values && kotlinNames.distinct().size > 1) {
+          // Task 133 C: an engine virtual handled twice, often once in a superclass.
+          return@map "$owner: $who both handle the engine virtual '$godotName'. Keep one " +
+            "handler: override the superclass's function (call super) instead of adding another."
+        }
         "$owner: $who all register as the Godot " +
           "method '$godotName' (Godot has no overloads). Make all but one internal or private, " +
           "or give one @GodotName(\"...\")."

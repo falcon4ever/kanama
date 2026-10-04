@@ -186,6 +186,15 @@ ksp {
             .joinToString(System.getProperty("path.separator")) { it.absolutePath }
     arg("kanamaScriptRoots", scriptRoots)
     arg("kanamaRuntimeTarget", "web")
+    // Task 133 C: the merged gameplay sources live under build/, away from the demo's
+    // project.godot, so the processor is told where the project (and its [autoload]) is.
+    webDemoProjectDir?.let { arg("kanamaGodotProjectDir", it.absolutePath) }
+}
+
+tasks.matching { it.name == "kspKotlinWasmJs" }.configureEach {
+    inputs
+        .files(listOfNotNull(webDemoProjectDir?.resolve("project.godot")))
+        .withPropertyName("kanamaGodotProjectFiles")
 }
 
 // Both consumers of the merged gameplay sources need the explicit dependency:

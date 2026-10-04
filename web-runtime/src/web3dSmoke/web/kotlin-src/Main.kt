@@ -3,11 +3,11 @@ package web3d
 import kotlin.math.PI
 import kotlin.math.abs
 import net.multigesture.kanama.annotations.Export
+import net.multigesture.kanama.annotations.ExportRange
 import net.multigesture.kanama.annotations.GodotName
 import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
-import net.multigesture.kanama.annotations.PropertyHint
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.Signal
 import net.multigesture.kanama.api.AudioStreamPlayer
@@ -81,12 +81,12 @@ class Main(godotObject: GodotHandle) :
   @Export var spinnerPath: NodePath = NodePath("")
 
   /**
-   * Task-64 hint-metadata + one-line-annotation proof: the proxy must declare this as
-   * `@export_range(0, 100, 1)`, and the deliberately one-line annotated declaration exercises
-   * the initializer parser (the annotation arguments contain `=` before the real initializer).
-   * Overridden in main.tscn to 47 — never the default 5.
+   * Task-64 hint-metadata + one-line-annotation proof: the proxy must declare this with the
+   * hint verbatim (`@export_custom(1, "0.0,100.0,1.0")`, task 133 C), and the deliberately one-line
+   * annotated declaration exercises the initializer parser (the annotation arguments come before
+   * the real initializer). Overridden in main.tscn to 47 — never the default 5.
    */
-  @Export(hint = PropertyHint.RANGE, hintString = "0,100,1") var probeRangeValue: Long = 5
+  @ExportRange(0.0, 100.0, 1.0) var probeRangeValue: Long = 5
 
   // ---------- Task 80 slice 4: property-shape conformance ----------
   //

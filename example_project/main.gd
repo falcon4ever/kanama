@@ -101,6 +101,9 @@ func _ready() -> void:
 
 	_kanama_virtual_return_families_smoke()
 	_kanama_godot_enum_export_smoke()
+	_kanama_export_hint_twin_smoke()
+	_kanama_autoload_smoke()
+	_kanama_inheritance_smoke()
 
 	#get_tree().quit()
 
@@ -620,6 +623,71 @@ func _kanama_godot_enum_export_smoke() -> void:
 		" register_class_object_return=", register_class_return)
 	if not (enum_arg and enum_return and required_return and register_class_return):
 		push_error("Kanama Godot enum virtual override smoke failed")
+
+# task 133 C -- every typed hint annotation of ExportHintSmoke.kt must report exactly what Godot
+# reports for the GDScript twin's @export_* annotation: same type, hint and hint_string (usage
+# compared without PROPERTY_USAGE_SCRIPT_VARIABLE, which GDScript adds to its own variables), and
+# the same folded default for r_rad (`Mathf.PI / 3.0`, GDScript `PI / 3.0`).
+func _kanama_export_hint_twin_smoke() -> void:
+	var kotlin_node := Node.new()
+	kotlin_node.set_script(load("res://ExportHintSmoke.kt"))
+	var twin_node := Node.new()
+	twin_node.set_script(load("res://export_hint_twin.gd"))
+	var kotlin_props := {}
+	for property in kotlin_node.get_property_list():
+		kotlin_props[property.name] = property
+	var rows := 0
+	var mismatches: Array[String] = []
+	for property in twin_node.get_property_list():
+		if not (int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE):
+			continue
+		rows += 1
+		var name: String = property.name
+		if not kotlin_props.has(name):
+			mismatches.append("%s:missing" % name)
+			continue
+		var k = kotlin_props[name]
+		var usage_mask := ~PROPERTY_USAGE_SCRIPT_VARIABLE
+		if int(k.type) != int(property.type) or int(k.hint) != int(property.hint) or str(k.hint_string) != str(property.hint_string) or (int(k.usage) & usage_mask) != (int(property.usage) & usage_mask):
+			mismatches.append("%s:kotlin(%d,%d,%s,%d)!=gd(%d,%d,%s,%d)" % [name, k.type, k.hint, k.hint_string, k.usage, property.type, property.hint, property.hint_string, property.usage])
+	var kotlin_default = kotlin_node.get_script().get_property_default_value("r_rad")
+	var twin_default = twin_node.get_script().get_property_default_value("r_rad")
+	var folded: bool = typeof(kotlin_default) == TYPE_FLOAT and kotlin_default == twin_default
+	kotlin_node.free()
+	twin_node.free()
+	print("[kanama:gd] export hint twin rows=", rows, " mismatches=", mismatches.size(), " folded_default=", folded)
+	if mismatches.size() > 0 or rows < 36 or not folded:
+		push_error("Kanama typed export hints differ from GDScript: %s (rows=%d folded=%s)" % [str(mismatches), rows, str(folded)])
+
+# task 133 C -- the generated Autoloads object (from project.godot [autoload]).
+func _kanama_autoload_smoke() -> void:
+	var node := Node.new()
+	node.set_script(load("res://AutoloadSmoke.kt"))
+	add_child(node)
+	var result: String = node.run()
+	node.queue_free()
+	print("[kanama:gd] autoload ", result)
+
+# task 133 C -- a script class that extends another one inherits its exports, signal, _ready
+# handler, @GodotName function and public functions; its override wins.
+func _kanama_inheritance_smoke() -> void:
+	var node := Node.new()
+	node.set_script(load("res://InheritanceSmokeChild.kt"))
+	add_child(node)
+	var names := {}
+	for property in node.get_property_list():
+		names[property.name] = property
+	var exports: bool = names.has("base_speed") and names.has("child_only") and names.has("base_level") and int(names["base_level"].hint) == PROPERTY_HINT_RANGE and str(names["base_level"].hint_string) == "0.0,10.0,1.0"
+	var values: bool = node.base_speed == 2.5 and node.child_only == "child"
+	var methods: bool = node.has_method("describe") and node.has_method("base_only") and node.has_method("_on_base_pressed")
+	var override_wins: bool = node.describe() == "child:7" and node._on_base_pressed() == "base-pressed"
+	var ready_once: bool = node.ready_state() == "calls=1 child=true"
+	var signal_ok: bool = node.has_signal("base_pinged")
+	node.queue_free()
+	print("[kanama:gd] inheritance exports=", exports, " values=", values, " methods=", methods,
+		" override_wins=", override_wins, " ready_once=", ready_once, " signal=", signal_ok)
+	if not (exports and values and methods and override_wins and ready_once and signal_ok):
+		push_error("Kanama script inheritance smoke failed")
 
 func _process(_delta: float) -> void:
 	if OS.get_environment("KANAMA_IN_PROCESS_HOT_RELOAD_SMOKE") != "1":

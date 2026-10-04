@@ -12,6 +12,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.ClassKind
 import com.google.devtools.ksp.symbol.FileLocation
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
@@ -137,11 +138,11 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       for (message in WebScriptCodeEmitter.undispatchedMemberErrors(model, env.options)) {
         env.logger.error("[kanama:web-dispatch] $message", symbol)
       }
-      symbol.containingFile?.let {
-        aggregatorSources += it
-        scriptAggregatorSources += it
-      }
-      emitScriptRegistrar(model, symbol.containingFile!!)
+      // A subclass's registrar is built from its superclasses' sources too (task 133 C).
+      val sources = hierarchyFiles(symbol)
+      aggregatorSources += sources
+      scriptAggregatorSources += sources
+      emitScriptRegistrar(model, sources)
       if (emitIosCode) {
         iosScripts += IosScriptInput(model, scriptResourcePath(symbol.containingFile!!))
       }
@@ -150,8 +151,156 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       }
     }
 
+    if (!autoloadsEmitted) {
+      autoloadsEmitted = true
+      emitAutoloads(resolver)
+    }
     return emptyList()
   }
+
+  // ---------- Autoloads (task 133 C) ----------
+
+  private var autoloadsEmitted = false
+
+  /**
+   * Generates `net.multigesture.kanama.generated.Autoloads` from the Godot project's
+   * `project.godot` `[autoload]` section ([AutoloadSource] says why here and how each is typed).
+   * The project is the `kanamaGodotProjectDir` KSP option, else the directory holding
+   * `project.godot` above the script sources. No project, or no enabled autoload: no object.
+   */
+  private fun emitAutoloads(resolver: Resolver) {
+    val files = resolver.getAllFiles().toList()
+    val scriptFiles =
+      files.filter { file ->
+        file.declarations.any { d ->
+          d is KSClassDeclaration && d.annotations.any { it.shortName.asString() == "ScriptClass" }
+        }
+      }
+    val projectDir = godotProjectDir(scriptFiles) ?: return
+    val projectFile = File(projectDir, "project.godot")
+    val entries =
+      runCatching { AutoloadSource.parseProjectGodot(projectFile.readText()) }
+        .getOrElse {
+          env.logger.error("[kanama:ksp] cannot read $projectFile for the Autoloads object: $it")
+          return
+        }
+        .filter { it.global }
+    if (entries.isEmpty()) return
+    val scriptsByPath = HashMap<String, String>()
+    for (file in scriptFiles) {
+      val path = projectResourcePath(file, projectDir)
+      for (d in file.declarations) {
+        if (d !is KSClassDeclaration) continue
+        if (d.annotations.none { it.shortName.asString() == "ScriptClass" }) continue
+        d.qualifiedName?.asString()?.let { scriptsByPath[path] = it }
+      }
+    }
+    fun wrapper(godotClass: String): AutoloadSource.Kind.Node {
+      for (cls in EngineMethodTable.lineage(godotClass)) {
+        if (!EngineMethodTable.inheritsFrom(cls, "Node")) break
+        val fq = "net.multigesture.kanama.api.$cls"
+        if (resolver.getClassDeclarationByName(resolver.getKSNameFromString(fq)) != null) {
+          return AutoloadSource.Kind.Node(cls, fq)
+        }
+      }
+      return AutoloadSource.Kind.Node("Node", "net.multigesture.kanama.api.Node")
+    }
+    fun script(path: String, entry: AutoloadSource.Entry): AutoloadSource.Kind? {
+      val fq = scriptsByPath[path]
+      if (fq == null) {
+        env.logger.warn(
+          "[kanama:ksp] autoload ${entry.name}: $path is not a @ScriptClass of this build; " +
+            "Autoloads.${entry.name} is typed Node"
+        )
+      }
+      return fq?.let { AutoloadSource.Kind.Script(it) }
+    }
+    val resolved =
+      entries.map { entry ->
+        val path = entry.path
+        val local = projectLocalFile(projectDir, path)
+        val kind: AutoloadSource.Kind =
+          when {
+            path.endsWith(".kt") -> script(path, entry)
+            path.endsWith(".tscn") ->
+              local
+                ?.let { runCatching { AutoloadSource.parseSceneRoot(it.readText()) }.getOrNull() }
+                ?.let { root ->
+                  root.scriptPath?.takeIf { it.endsWith(".kt") }?.let { script(it, entry) }
+                    ?: root.type?.takeIf { !root.inherited }?.let(::wrapper)
+                }
+            path.endsWith(".gd") ->
+              local
+                ?.let { runCatching { AutoloadSource.gdscriptExtends(it.readText()) }.getOrNull() }
+                ?.let(::wrapper)
+            else -> null
+          } ?: wrapper("Node")
+        AutoloadSource.Resolved(entry, kind, path)
+      }
+    val source = AutoloadSource.emit(resolved, GENERATED_PACKAGE, web = emitWebCode)
+    val iosAsResource =
+      emitIosCode && (env.options["kanamaIosRegistryAsResource"]?.toBoolean() ?: true)
+    env.codeGenerator
+      .createNewFile(
+        dependencies = Dependencies(aggregating = true, *scriptFiles.toTypedArray()),
+        packageName = GENERATED_PACKAGE,
+        fileName = "Autoloads",
+        extensionName = if (iosAsResource) "kt.txt" else "kt",
+      )
+      .use { it.write(source.toByteArray(Charsets.UTF_8)) }
+    env.logger.warn(
+      "[kanama:ksp] generated $GENERATED_PACKAGE.Autoloads with ${resolved.size} autoload(s) " +
+        "from $projectFile"
+    )
+  }
+
+  /**
+   * The Godot project of this build: the `kanamaGodotProjectDir` option, else the one directory
+   * with a `project.godot` at or above the script sources (none, or several: null, with a warning
+   * for several).
+   */
+  private fun godotProjectDir(scriptFiles: List<KSFile>): File? {
+    env.options[GODOT_PROJECT_DIR_OPTION]
+      ?.takeIf { it.isNotBlank() }
+      ?.let { File(it) }
+      ?.let { dir ->
+        if (File(dir, "project.godot").isFile) return dir.canonicalFile
+        env.logger.warn("[kanama:ksp] $GODOT_PROJECT_DIR_OPTION=$dir has no project.godot")
+        return null
+      }
+    val found =
+      scriptFiles
+        .mapNotNull { file ->
+          generateSequence(File(file.filePath).parentFile) { it.parentFile }
+            .firstOrNull { File(it, "project.godot").isFile }
+            ?.canonicalFile
+        }
+        .distinct()
+    if (found.size > 1) {
+      env.logger.warn(
+        "[kanama:ksp] the script sources belong to ${found.size} Godot projects ($found); set the " +
+          "$GODOT_PROJECT_DIR_OPTION KSP option to generate Autoloads"
+      )
+      return null
+    }
+    return found.singleOrNull()
+  }
+
+  /** `res://<path>` of [file] inside [projectDir], else the script-root derived path. */
+  private fun projectResourcePath(file: KSFile, projectDir: File): String {
+    val canonical = runCatching { File(file.filePath).canonicalFile }.getOrNull()
+    val root = projectDir.path + File.separator
+    if (canonical != null && canonical.path.startsWith(root)) {
+      return "res://" + canonical.path.removePrefix(root).replace(File.separatorChar, '/')
+    }
+    return scriptResourcePath(file)
+  }
+
+  private fun projectLocalFile(projectDir: File, resPath: String): File? =
+    resPath
+      .takeIf { it.startsWith("res://") }
+      ?.let { File(projectDir, it.removePrefix("res://")) }
+      ?.takeIf { it.isFile }
 
   /** The `res://…` path Godot reports for [file], relative to the configured script roots. */
   private fun scriptResourcePath(file: KSFile): String {
@@ -326,7 +475,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       }
     }
     for (prop in cls.getDeclaredProperties()) {
-      if (prop.annotations.none { it.shortName.asString() == "Export" }) continue
+      if (prop.annotations.none { it.shortName.asString() in ExportHints.EXPORT_ANNOTATIONS }) {
+        continue
+      }
       errors.capture(prop) { properties += buildPropertyModel(prop, simpleName) }
     }
     // A @RegisterClass property is registered through generated `get_<name>` / `set_<name>`
@@ -483,6 +634,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     fn: KSFunctionDeclaration,
     godotName: String,
     ownerSimpleName: String,
+    annotated: KSFunctionDeclaration = fn,
   ): MethodModel {
     val kotlinName = fn.simpleName.asString()
     val where = "$ownerSimpleName.$kotlinName"
@@ -530,7 +682,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       returnType = returnType,
       args = args,
       kind = MethodKind.REGULAR,
-      rpc = buildRpcModel(fn),
+      rpc = buildRpcModel(annotated),
       returnGodotEnum = returnEnum?.ref,
     )
   }
@@ -587,6 +739,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     fn: KSFunctionDeclaration,
     ownerSimpleName: String,
     attachTo: String,
+    annotated: KSFunctionDeclaration = fn,
+    hierarchyNames: Set<String> = emptySet(),
   ): FunctionRegistration.Facts {
     val kotlinName = fn.simpleName.asString()
     // getVisibility() follows an `override` without its own modifier to the member it overrides
@@ -601,14 +755,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           FunctionRegistration.Visibility.PUBLIC
         else -> FunctionRegistration.Visibility.INTERNAL
       }
-    val annotationNames = fn.annotations.map { it.shortName.asString() }.toSet()
+    val annotationNames = annotated.annotations.map { it.shortName.asString() }.toSet()
     val godotName =
-      fn.annotations
+      annotated.annotations
         .firstOrNull { it.shortName.asString() == "GodotName" }
         ?.let { ann ->
           (ann.arguments.firstOrNull { it.name?.asString() == "name" }?.value as? String)
             ?: (ann.arguments.firstOrNull()?.value as? String)
-            ?: annotationStringArgFromSource(fn, "GodotName")
+            ?: annotationStringArgFromSource(annotated, "GodotName")
             ?: throw IllegalArgumentException(
               "$ownerSimpleName.$kotlinName: @GodotName needs the Godot name as a string literal"
             )
@@ -618,10 +772,11 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         run {
           val overridden = runCatching { fn.findOverridee() }.getOrNull() ?: return@run false
           val owner = overridden.parentDeclaration as? KSClassDeclaration ?: return@run true
-          owner.annotations.none {
-            val n = it.shortName.asString()
-            n == "ScriptClass" || n == "RegisterClass"
-          }
+          owner.qualifiedName?.asString() !in hierarchyNames &&
+            owner.annotations.none {
+              val n = it.shortName.asString()
+              n == "ScriptClass" || n == "RegisterClass"
+            }
         }
     // `_process` and the camelCase `_getConfigurationWarnings` both spell an engine virtual.
     val engineVirtual =
@@ -726,19 +881,234 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         ?: throw IllegalArgumentException(
           "$ownerSimpleName.$kotlinName: unsupported property type '$fq'"
         )
-    val hint = ann?.arguments?.firstOrNull { it.name?.asString() == "hint" }?.value as? Int ?: 0
-    val hintString =
-      ann?.arguments?.firstOrNull { it.name?.asString() == "hintString" }?.value as? String ?: ""
-    val usage = ann?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int ?: 6
+    val export =
+      resolveExport(
+        prop.annotations.toList(),
+        "$ownerSimpleName.$kotlinName",
+        0,
+        "",
+        exportSlot(ScriptPropertyTypeModel(type)),
+        fq ?: "?",
+      )
     return PropertyModel(
       kotlinName = kotlinName,
       godotName = godotName,
       type = type,
       isMutable = prop.isMutable,
-      hint = hint,
-      hintString = hintString,
-      usage = usage,
+      hint = export.hint,
+      hintString = export.hintString,
+      usage = export.usage,
     )
+  }
+
+  // ---------- Script inheritance (task 133 C) ----------
+
+  /**
+   * [cls] and its superclasses declared in this compilation, nearest first: a `@ScriptClass` base
+   * (`class VehicleMotorcycle : Vehicle`) or a plain (abstract) one. The walk stops at the first
+   * class from a library or from the Kanama runtime (`KanamaScript`), whose members are not script
+   * members.
+   */
+  private fun scriptHierarchy(cls: KSClassDeclaration): List<KSClassDeclaration> {
+    val chain = mutableListOf(cls)
+    var current = cls
+    while (true) {
+      val superClass =
+        current.superTypes
+          .mapNotNull {
+            runCatching { it.resolve().declaration }.getOrNull() as? KSClassDeclaration
+          }
+          .firstOrNull { it.classKind == ClassKind.CLASS } ?: break
+      val fq = superClass.qualifiedName?.asString() ?: break
+      if (superClass.containingFile == null) break
+      if (RUNTIME_PACKAGES.any { fq.startsWith(it) }) break
+      if (chain.any { it.qualifiedName?.asString() == fq }) break
+      chain += superClass
+      current = superClass
+    }
+    return chain
+  }
+
+  /** A function of a script class and the declaration its Kanama annotations come from. */
+  private class ScriptFunction(
+    val fn: KSFunctionDeclaration,
+    val annotated: KSFunctionDeclaration,
+    val owner: KSClassDeclaration,
+  )
+
+  /** Every function a script class has, own and inherited ([ScriptInheritance.members]). */
+  private fun scriptFunctions(hierarchy: List<KSClassDeclaration>): List<ScriptFunction> {
+    val levels =
+      hierarchy.map { owner ->
+        owner
+          .getDeclaredFunctions()
+          .filterNot { it.isConstructor() }
+          .map { fn ->
+            ScriptInheritance.Declaration(
+              key = signatureKey(fn),
+              isPrivate = Modifier.PRIVATE in fn.modifiers,
+              annotated =
+                fn.annotations.any {
+                  it.shortName.asString() in FunctionRegistration.FUNCTION_ANNOTATIONS
+                },
+              ref = fn to owner,
+            )
+          }
+          .toList()
+      }
+    return ScriptInheritance.members(levels).map { member ->
+      ScriptFunction(
+        member.declaration.first,
+        member.annotationSource.first,
+        member.declaration.second,
+      )
+    }
+  }
+
+  private fun signatureKey(fn: KSFunctionDeclaration): String =
+    fn.simpleName.asString() +
+      fn.parameters.joinToString(",", "(", ")") {
+        runCatching { it.type.resolve().declaration.qualifiedName?.asString() }.getOrNull() ?: "?"
+      }
+
+  /** A property of a script class and the declaration its export annotations come from. */
+  private class ScriptProperty(
+    val prop: KSPropertyDeclaration,
+    val annotated: KSPropertyDeclaration,
+    val exported: Boolean,
+    val owner: KSClassDeclaration,
+  )
+
+  /** Every property a script class has, own and inherited ([ScriptInheritance.members]). */
+  private fun scriptProperties(hierarchy: List<KSClassDeclaration>): List<ScriptProperty> {
+    val levels =
+      hierarchy.map { owner ->
+        owner
+          .getDeclaredProperties()
+          .map { prop ->
+            ScriptInheritance.Declaration(
+              key = prop.simpleName.asString(),
+              isPrivate = Modifier.PRIVATE in prop.modifiers,
+              annotated =
+                prop.annotations.any { it.shortName.asString() in ExportHints.EXPORT_ANNOTATIONS },
+              ref = prop to owner,
+            )
+          }
+          .toList()
+      }
+    return ScriptInheritance.members(levels).map { member ->
+      ScriptProperty(
+        member.declaration.first,
+        member.annotationSource.first,
+        member.annotated,
+        member.declaration.second,
+      )
+    }
+  }
+
+  /** The source files a script's registrar is built from: its own and its superclasses'. */
+  private fun hierarchyFiles(cls: KSClassDeclaration): List<KSFile> =
+    scriptHierarchy(cls).mapNotNull { it.containingFile }.distinct()
+
+  /** Task 133 C: the hint, hint string and usage an exported property reports. */
+  private data class ResolvedExport(
+    val hint: Int,
+    val hintString: String,
+    val usage: Int,
+    /** From a typed hint annotation rather than from the property type. */
+    val explicit: Boolean,
+  )
+
+  /**
+   * The hint of an exported property: the type's own ([typeHint], [typeHintString]: a resource
+   * class, a typed array, an enum) unless a typed hint annotation (`@ExportRange`, `@ExportFile`,
+   * ...) gives one, built by [ExportHints.build]. `@Export` contributes the usage; a second hint
+   * annotation, or a usage set both on `@Export` and on `@ExportCustom` / `@ExportStorage`, is a
+   * build error.
+   */
+  private fun resolveExport(
+    annotations: List<KSAnnotation>,
+    where: String,
+    typeHint: Int,
+    typeHintString: String,
+    slot: ExportHints.Slot,
+    typeName: String,
+  ): ResolvedExport {
+    val export = annotations.firstOrNull { it.shortName.asString() == "Export" }
+    val exportUsage =
+      (export?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int)
+        ?: ExportHints.PROPERTY_USAGE_DEFAULT
+    val hints = annotations.filter { it.shortName.asString() in ExportHints.HINT_ANNOTATIONS }
+    if (hints.size > 1) {
+      throw IllegalArgumentException(
+        "$where: ${hints.joinToString(" and ") { "@" + it.shortName.asString() }} on one " +
+          "property; a property has one inspector hint (GDScript rejects a second @export_* too)."
+      )
+    }
+    val ann =
+      hints.singleOrNull() ?: return ResolvedExport(typeHint, typeHintString, exportUsage, false)
+    val name = ann.shortName.asString()
+    val args = ann.arguments.associate { (it.name?.asString() ?: "") to it.value }
+    fun usageConflict(): Nothing =
+      throw IllegalArgumentException(
+        "$where: the usage is set on both @Export and @$name; set it in one place."
+      )
+    return when (
+      val result =
+        ExportHints.build(where, ExportHints.Use(name, args), slot, typeName, ::nodePathClassError)
+    ) {
+      is ExportHints.Result.Error -> throw IllegalArgumentException(result.message)
+      ExportHints.Result.Storage -> {
+        if (exportUsage != ExportHints.PROPERTY_USAGE_DEFAULT) usageConflict()
+        ResolvedExport(typeHint, typeHintString, ExportHints.PROPERTY_USAGE_STORAGE, false)
+      }
+      is ExportHints.Result.Hint -> {
+        if (
+          result.usage != null &&
+            result.usage != ExportHints.PROPERTY_USAGE_DEFAULT &&
+            exportUsage != ExportHints.PROPERTY_USAGE_DEFAULT
+        ) {
+          usageConflict()
+        }
+        val usage =
+          if (result.usage != null && result.usage != ExportHints.PROPERTY_USAGE_DEFAULT) {
+            result.usage
+          } else {
+            exportUsage
+          }
+        ResolvedExport(result.hint, result.hintString, usage, true)
+      }
+    }
+  }
+
+  /** The property shape [ExportHints] checks a hint annotation against. */
+  private fun exportSlot(type: ScriptPropertyTypeModel): ExportHints.Slot =
+    when {
+      type.godotEnum != null || type.enumFqName != null -> ExportHints.Slot.OTHER
+      type.type == TypeMapping.INT -> ExportHints.Slot.INT
+      type.type == TypeMapping.FLOAT -> ExportHints.Slot.FLOAT
+      type.type == TypeMapping.STRING -> ExportHints.Slot.STRING
+      type.type == TypeMapping.NODE_PATH -> ExportHints.Slot.NODE_PATH
+      type.type == TypeMapping.ARRAY && type.arrayElementString -> ExportHints.Slot.STRING_LIST
+      else -> ExportHints.Slot.OTHER
+    }
+
+  /**
+   * Null when [name] is a class `@ExportNodePath` may name (GDScript's rule: an engine class or a
+   * global script class, inheriting `Node`), else why not.
+   */
+  private fun nodePathClassError(name: String): String? {
+    val script = scriptClassTypes.values.firstOrNull { it.isGlobalClass && it.simpleName == name }
+    val native =
+      when {
+        EngineMethodTable.isClass(name) -> name
+        script != null -> script.attachTo
+        else ->
+          return "no engine class or @GlobalClass script named \"$name\" (GDScript: \"not " +
+            "found in the global scope\")."
+      }
+    return if (EngineMethodTable.inheritsFrom(native, "Node")) null
+    else "\"$name\" does not inherit Node."
   }
 
   // ---------- Emission ----------
@@ -801,16 +1171,29 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
     val errors = ErrorCollector()
     errors.removedAnnotations(cls, simpleName)
-    for (fn in cls.getDeclaredFunctions()) {
-      if (fn.isConstructor()) continue
+    // Task 133 C: the members of the script's superclasses in this compilation are the script's
+    // members too (GDScript `extends`), so a subclass needs no forwarding overrides.
+    val hierarchy = scriptHierarchy(cls)
+    val hierarchyNames = hierarchy.mapNotNull { it.qualifiedName?.asString() }.toSet()
+    // Kotlin name as errors show it: `Base.ready` for an inherited function.
+    val shownNames = HashMap<String, String>()
+    for (member in scriptFunctions(hierarchy)) {
+      val fn = member.fn
+      val annotated = member.annotated
       val kotlinName = fn.simpleName.asString()
-      when (val decision = FunctionRegistration.decide(functionFacts(fn, simpleName, attachTo))) {
+      shownNames[kotlinName] =
+        if (member.owner === cls) kotlinName
+        else "${member.owner.simpleName.asString()}.$kotlinName"
+      val facts = functionFacts(fn, simpleName, attachTo, annotated, hierarchyNames)
+      when (val decision = FunctionRegistration.decide(facts)) {
         is FunctionRegistration.Decision.Error -> errors.add(decision.message, fn)
         is FunctionRegistration.Decision.KotlinOnly -> Unit
         is FunctionRegistration.Decision.Register ->
-          errors.capture(fn) { methods += buildMethodModel(fn, decision.godotName, simpleName) }
+          errors.capture(fn) {
+            methods += buildMethodModel(fn, decision.godotName, simpleName, annotated)
+          }
         FunctionRegistration.Decision.Role ->
-          for (ann in fn.annotations) {
+          for (ann in annotated.annotations) {
             val annName = ann.shortName.asString()
             val virtualName = FunctionRegistration.LIFECYCLE_VIRTUALS[annName]
             when {
@@ -837,7 +1220,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
                       "$simpleName.$kotlinName: @ExportToolButton requires @Tool on the script class"
                     )
                   }
-                  val button = buildToolButtonModel(fn, ann, simpleName)
+                  val button = buildToolButtonModel(annotated, ann, simpleName)
                   toolButtons += button
                   methods += button.method
                 }
@@ -847,14 +1230,21 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     }
     errors.duplicateNames(
       simpleName,
-      methods.map { it.godotName to it.kotlinName } +
-        virtuals.map { it.virtualName to it.kotlinMethodName },
+      methods.map { it.godotName to (shownNames[it.kotlinName] ?: it.kotlinName) } +
+        virtuals.map { it.virtualName to (shownNames[it.kotlinMethodName] ?: it.kotlinMethodName) },
       cls,
     )
 
-    for (prop in cls.getDeclaredProperties()) {
-      if (prop.annotations.none { it.shortName.asString() == "Export" }) continue
+    val exportedNames = mutableListOf<Pair<String, String>>()
+    for (member in scriptProperties(hierarchy)) {
+      // An override without its own export annotation keeps the overridden property's (task 133 C).
+      if (!member.exported) continue
+      val prop = member.prop
+      val annotatedProp = member.annotated
+      val owner = member.owner
       val kotlinName = prop.simpleName.asString()
+      val shownName =
+        if (owner === cls) kotlinName else "${owner.simpleName.asString()}.$kotlinName"
       if (Modifier.LATEINIT in prop.modifiers) {
         // A lateinit export has no inspector default, and a get before the field
         // is assigned throws UninitializedPropertyAccessException into the engine.
@@ -864,7 +1254,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           prop,
         )
       }
-      val ann = prop.annotations.firstOrNull { it.shortName.asString() == "Export" }
+      val ann = annotatedProp.annotations.firstOrNull { it.shortName.asString() == "Export" }
       val nameOverride =
         ann?.arguments?.firstOrNull { it.name?.asString() == "name" }?.value as? String
       val godotName = if (nameOverride.isNullOrEmpty()) camelToSnake(kotlinName) else nameOverride
@@ -901,16 +1291,25 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           }
           continue
         }
-      val hint = ann?.arguments?.firstOrNull { it.name?.asString() == "hint" }?.value as? Int ?: 0
-      val hintString =
-        ann?.arguments?.firstOrNull { it.name?.asString() == "hintString" }?.value as? String ?: ""
+      val export =
+        try {
+          resolveExport(
+            annotatedProp.annotations.toList(),
+            "$simpleName.$kotlinName",
+            scriptType.hint,
+            scriptType.hintString,
+            exportSlot(scriptType),
+            returnTypeName(resolvedType),
+          )
+        } catch (e: IllegalArgumentException) {
+          errors.add(e.message ?: e.toString(), prop)
+          continue
+        }
       // Task 128 B: a Godot enum property carries GDScript's class marker too
       // (PROPERTY_USAGE_CLASS_IS_ENUM / _CLASS_IS_BITFIELD, with class_name = the Godot enum).
-      val usage =
-        (ann?.arguments?.firstOrNull { it.name?.asString() == "usage" }?.value as? Int ?: 6) or
-          (scriptType.godotEnum?.classUsageFlag ?: 0)
+      val usage = export.usage or (scriptType.godotEnum?.classUsageFlag ?: 0)
       val exportCategory =
-        prop.annotations
+        annotatedProp.annotations
           .firstOrNull { it.shortName.asString() == "ExportCategory" }
           ?.let { category ->
             ScriptPropertyGroupModel(
@@ -931,7 +1330,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           scriptType.godotEnum?.let { GodotEnumTable.forKotlin(it.kotlinFqName) },
         )
       val exportGroup =
-        prop.annotations
+        annotatedProp.annotations
           .firstOrNull { it.shortName.asString() == "ExportGroup" }
           ?.let { group ->
             ScriptPropertyGroupModel(
@@ -945,7 +1344,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
             )
           }
       val exportSubgroup =
-        prop.annotations
+        annotatedProp.annotations
           .firstOrNull { it.shortName.asString() == "ExportSubgroup" }
           ?.let { group ->
             ScriptPropertyGroupModel(
@@ -964,8 +1363,8 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           godotName,
           scriptType.type,
           prop.isMutable,
-          if (hint == 0) scriptType.hint else hint,
-          if (hintString.isEmpty()) scriptType.hintString else hintString,
+          export.hint,
+          export.hintString,
           defaultLiteral,
           exportCategory,
           exportGroup,
@@ -998,8 +1397,16 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           scriptType.isMutableList,
           godotEnum = scriptType.godotEnum,
           arrayElementGodotEnum = scriptType.arrayElementGodotEnum,
+          explicitHint = export.explicit,
         )
+      exportedNames += godotName to shownName
     }
+    ScriptInheritance.duplicatePropertyErrors(
+        simpleName,
+        exportedNames +
+          toolButtons.map { it.propertyName to "the tool button of ${it.method.kotlinName}" },
+      )
+      .forEach { errors.add(it, cls) }
 
     errors.throwIfAny()
     return ScriptModel(
@@ -1133,14 +1540,14 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
     }
   }
 
-  private fun emitScriptRegistrar(model: ScriptModel, sourceFile: KSFile) {
+  private fun emitScriptRegistrar(model: ScriptModel, sources: List<KSFile>) {
     // Phase 3.1: always emit the platform-neutral serialized model. The iOS build
     // (Option B) consumes these instead of regex-parsing the source; on the JVM target
     // it is an additive artifact alongside the registrar. See
     // script-model-unification-design.md.
     env.codeGenerator
       .createNewFile(
-        dependencies = Dependencies(aggregating = false, sourceFile),
+        dependencies = Dependencies(aggregating = false, *sources.toTypedArray()),
         packageName = GENERATED_PACKAGE,
         fileName = "${model.simpleName}ScriptModel",
         extensionName = "script-model.json",
@@ -1154,7 +1561,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
     env.codeGenerator
       .createNewFile(
-        dependencies = Dependencies(aggregating = false, sourceFile),
+        dependencies = Dependencies(aggregating = false, *sources.toTypedArray()),
         packageName = GENERATED_PACKAGE,
         fileName = registrarName,
       )
@@ -1284,9 +1691,21 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
 
   companion object {
     private const val GENERATED_PACKAGE = "net.multigesture.kanama.generated"
+    /** KSP option: the Godot project directory whose `project.godot` lists the autoloads. */
+    private const val GODOT_PROJECT_DIR_OPTION = "kanamaGodotProjectDir"
     private const val REGISTER_CLASS_FQN = "net.multigesture.kanama.annotations.RegisterClass"
     private const val SCRIPT_CLASS_FQN = "net.multigesture.kanama.annotations.ScriptClass"
     private const val KANAMA_API_SCRIPT_FQN = "net.multigesture.kanama.api.KanamaScript"
+
+    /** Kanama runtime packages: a script's superclass walk stops at a class from one of them. */
+    private val RUNTIME_PACKAGES =
+      listOf(
+        "net.multigesture.kanama.api.",
+        "net.multigesture.kanama.binding.",
+        "net.multigesture.kanama.web.",
+        "net.multigesture.kanama.ios.",
+        "net.multigesture.kanama.types.",
+      )
 
     fun camelToSnake(name: String): String = buildString {
       for ((i, ch) in name.withIndex()) {
@@ -2448,15 +2867,14 @@ internal fun normalizeScriptPropertyDefaultLiteral(
     Regex(
       """(?:net\.multigesture\.kanama\.types\.)?NodePath\(\s*($kotlinStringLiteralPattern)\s*\)"""
     )
-  val mathToRadiansLiteral = Regex("""(?:java\.lang\.)?Math\.toRadians\(\s*($numberLiteral)\s*\)""")
 
   return when (type) {
-    TypeMapping.INT -> initializer.takeIf { intLiteral.matches(it) }
+    // Task 133 C: a constant expression (`Mathf.PI / 3.0`, `60 * 5`) folds to its literal.
+    TypeMapping.INT ->
+      initializer.takeIf { intLiteral.matches(it) } ?: ConstantFolding.foldLongLiteral(initializer)
     TypeMapping.FLOAT ->
       initializer.takeIf { doubleLiteral.matches(it) }
-        ?: mathToRadiansLiteral.matchEntire(initializer)?.groupValues?.get(1)?.let {
-          "Math.toRadians($it)"
-        }
+        ?: ConstantFolding.foldDoubleLiteral(initializer)
     TypeMapping.BOOL -> initializer.takeIf { boolLiteral.matches(it) }
     TypeMapping.STRING -> initializer.takeIf { stringLiteral.matches(it) }
     TypeMapping.OBJECT -> initializer.takeIf { it == "null" }

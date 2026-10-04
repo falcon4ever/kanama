@@ -586,12 +586,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
     // Godot PropertyHint ids the Web emitter reasons about (mirrors annotations/PropertyHint).
-    private const val PROPERTY_HINT_RANGE = 1
     private const val PROPERTY_HINT_RESOURCE_TYPE = 17
+    private const val PROPERTY_USAGE_STORAGE = 2
+    private const val PROPERTY_USAGE_DEFAULT = 6
     private const val PROPERTY_HINT_TYPE_STRING = 23
     private const val PROPERTY_HINT_NODE_TYPE = 34
-
-    private val RANGE_HINT_NUMBER = Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?""")
 
     /** A folded Godot enum default literal (`<fq>(3L)`, task 128 B); group 1 is the number. */
     private val GODOT_ENUM_DEFAULT = Regex("""\((-?\d+)L\)$""")
@@ -599,21 +598,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     /** The normalized NodePath default literal shape produced by the processor. */
     private val NODE_PATH_DEFAULT =
       Regex("""net\.multigesture\.kanama\.types\.NodePath\((".*")\)""")
-
-    /**
-     * Parses a Godot RANGE hint string (`"min,max[,step][,option...]"`) into `@export_range`
-     * argument spellings — leading numeric parts stay bare, trailing option flags (`or_greater`,
-     * `suffix:m`, ...) are quoted — or null when the string has no `min,max` numeric prefix. Shared
-     * by the emitter and [unsupportedWebPropertyErrors] so the accepted grammar cannot drift from
-     * what actually reaches the proxy.
-     */
-    internal fun rangeExportArguments(hintString: String): List<String>? {
-      val parts = hintString.split(',').map { it.trim() }
-      if (parts.size < 2 || parts.any { it.isEmpty() }) return null
-      val bounds = parts.takeWhile { RANGE_HINT_NUMBER.matches(it) }
-      if (bounds.size < 2) return null
-      return bounds + parts.drop(bounds.size).map { "\"$it\"" }
-    }
 
     /**
      * Errors for every declared member a Web build would degrade (task 80 slice 3).
@@ -748,10 +732,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           }
         if (defaultDrivesProxy && property.defaultLiteral == null) {
           errors +=
-            "$where: the property initializer is not a plain literal, so the Web proxy would " +
-              "declare (and hydrate) the type default instead of the Kotlin value. Spell the " +
-              "default as a literal (e.g. `1.0471975511965976` instead of `Mathf.PI / 3.0`)."
+            "$where: the property initializer is neither a literal nor a constant expression, " +
+              "so the Web proxy would declare (and hydrate) the type default instead of the " +
+              "Kotlin value. Spell the default as a literal or a constant expression the " +
+              "processor folds (numbers, `PI`, `TAU`, `+ - * /`, `degToRad(...)`)."
         }
+        // Task 133 C: a typed hint annotation (`@ExportRange`, `@ExportFile`, ...) reaches the
+        // proxy verbatim through `@export_custom`, so every hint it can build is expressible.
+        if (property.explicitHint) continue
         when (property.hint) {
           0 -> Unit
           // Task 128 B: a Godot enum's own enum/flags hint is emitted verbatim (`@export_custom`).
@@ -764,19 +752,6 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
                   "(`var mode: Node.ProcessMode`); it would be silently dropped from the " +
                   "generated .gd."
             }
-          PROPERTY_HINT_RANGE -> {
-            val rangeType = property.type == TypeMapping.INT || property.type == TypeMapping.FLOAT
-            if (!rangeType) {
-              errors +=
-                "$where: PropertyHint.RANGE is only expressible for int/float exports on the " +
-                  "Web target (GDScript @export_range); this property is ${property.type}."
-            } else if (rangeExportArguments(property.hintString) == null) {
-              errors +=
-                "$where: RANGE hintString '${property.hintString}' is not 'min,max[,step]" +
-                  "[,option...]' with numeric bounds, so it cannot be emitted as " +
-                  "@export_range; fix the hintString."
-            }
-          }
           // Structural hints are already carried by the typed GDScript declaration the proxy
           // emits (e.g. `@export var scene: PackedScene`, `@export var list: Array[Texture2D]`):
           // Godot re-derives the same resource/node/typed-array hint from the type, so nothing
@@ -798,8 +773,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             errors +=
               "$where: property hint ${property.hint} (hintString '${property.hintString}') " +
                 "has no Kanama Web proxy emission; it would be silently dropped from the " +
-                "generated .gd. Use a supported hint (RANGE, or the structural resource/node/" +
-                "typed-array hints) or remove it for the Web target."
+                "generated .gd. Use a typed hint annotation (@ExportRange, @ExportCustom, ...) " +
+                "or remove it for the Web target."
         }
       }
       return errors
@@ -5079,13 +5054,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
   /**
-   * The export annotation for a property declaration. A RANGE hint becomes GDScript's dedicated
-   * `@export_range(...)` form (that is how hint metadata reaches the proxy — task 64); structural
-   * resource/node/typed-array hints are already carried by the typed declaration and keep the plain
+   * The export annotation for a property declaration. A hint from a typed hint annotation
+   * (`@ExportRange`, `@ExportFile`, ..., task 133 C) and a Godot enum's own hint (task 128 B) are
+   * declared verbatim with `@export_custom`, so the proxy reports exactly the hint, hint string and
+   * usage the desktop and iOS registrars do; `@ExportStorage` is `@export_storage`. Structural
+   * resource/node/typed-array hints are carried by the typed declaration and keep the plain
    * `@export`. Any other nonzero hint was rejected loudly by [unsupportedWebPropertyErrors] before
    * emission, so nothing is ever silently dropped here.
    */
   private fun exportAnnotation(property: ScriptPropertyModel): String {
+    if (property.explicitHint) {
+      val usage = if (property.usage == PROPERTY_USAGE_DEFAULT) "" else ", ${property.usage}"
+      return "@export_custom(${property.hint}, ${quote(property.hintString)}$usage)"
+    }
     // Task 128 B: a Godot enum property keeps the exact hint + hint string the desktop and iOS
     // registrars report. `@export_custom` sets both verbatim; `@export_flags` would reject a
     // Godot bitfield's zero-valued entry (`NONE:0`), which the inspector simply skips.
@@ -5096,13 +5077,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     ) {
       return "@export_custom(${property.hint}, ${quote(property.hintString)})"
     }
-    if (property.hint != PROPERTY_HINT_RANGE) return "@export"
-    val arguments =
-      rangeExportArguments(property.hintString)
-        ?: error(
-          "unreachable: RANGE hintString '${property.hintString}' passed the Web property guard"
-        )
-    return "@export_range(${arguments.joinToString(", ")})"
+    if (property.usage == PROPERTY_USAGE_STORAGE) return "@export_storage"
+    return "@export"
   }
 
   private fun StringBuilder.appendPropertyGroup(property: ScriptPropertyModel) {

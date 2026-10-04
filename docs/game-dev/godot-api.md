@@ -147,15 +147,14 @@ This is intended for cases such as calling a GDScript autoload while porting a
 project incrementally:
 
 ```kotlin
-val audio = self.getNodeOrNull("/root/Audio")
-audio?.call("play", "res://sounds/jump.ogg")
+Autoloads.Audio.call("play", "res://sounds/jump.ogg")   // GDScript: Audio.play("res://sounds/jump.ogg")
 ```
 
 For built-in Godot names used at dynamic boundaries, Kanama generates
 engine-wide constants from `extension_api.json`:
 
 ```kotlin
-audio?.call(MethodName.play, "res://sounds/jump.ogg")
+Autoloads.Audio.call(MethodName.play, "res://sounds/jump.ogg")
 player.signal(SignalName.treeExited)
 self.getTree()?.setGroup("enemies", PropertyName.visible, false)
 ```
@@ -165,10 +164,11 @@ the right choice when Godot APIs need a method, property, or signal name. When
 Kotlin code is invoking another Kanama script method directly, prefer the
 generated `PlayerMethods.damage(...)`-style helpers instead of string dispatch.
 
-For now, project autoloads should be resolved through the scene tree root
-(`/root/<Name>`). `Engine.getSingleton()` remains useful for engine singletons,
-but project autoloads are not treated as engine singletons in the current smoke
-path.
+Project autoloads are the generated `Autoloads.<Name>` properties, typed to the
+autoload's Kotlin script, scene root class or `extends` class and resolved at
+`/root/<Name>` like GDScript's global names (see [Scripts → Autoloads](scripts.md#autoloads)).
+`Engine.getSingleton()` is for engine singletons; project autoloads are nodes, not
+engine singletons.
 
 ## Godot Enums and Bitfields
 

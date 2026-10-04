@@ -194,14 +194,19 @@ number with `Shader.Mode(raw)` and read one with `.value`. The two
 | GDScript | Kanama |
 |---|---|
 | `@export var speed = 5.0` | `@Export var speed: Double = 5.0` |
+| `@export_range(0, 10, 0.5) var speed = 5.0` | `@ExportRange(0.0, 10.0, 0.5) var speed: Double = 5.0` |
+| `@export_file("*.png") var icon: String` | `@ExportFile("*.png") var icon: String = ""` |
+| `@export_flags_3d_physics var mask: int` | `@ExportFlags3DPhysics var mask: Long = 0` |
+| `@export var fov := PI / 3.0` | `@Export var fov: Double = Mathf.PI / 3.0` (the default folds to `1.0471975511965976`) |
 | `@export_group("Movement")` | `@ExportGroup("Movement")` on first property in group |
 | `@export var scene: PackedScene` | `@Export var scene: PackedScene? = null` |
 | `@export_tool_button("Rebuild")` | `@ExportToolButton("Rebuild")` on a zero-argument function |
 | `@tool` | `@Tool` on the class |
 | `class_name Player` | `@GlobalClass` on the class |
 
-`@Export` is the one property annotation, on `@ScriptClass` scripts and on
-`@RegisterClass` types alike. See [Exports and Resources](properties-resources.md).
+`@Export` is the plain export, on `@ScriptClass` scripts and on `@RegisterClass`
+types alike; every GDScript `@export_*` hint annotation has a typed twin that
+exports by itself. See [Exports and Resources](properties-resources.md#export-hints).
 
 ## Functions Godot Can Call
 
@@ -532,6 +537,82 @@ See [Kotlin Style → Coroutines](style-guide.md#coroutines).
 `asScript` and the tree accessors; the `node`/`script`/`preload` delegates,
 `castOrNull`/`cast`, `requireAs<T>`/`getNodeAs<T>` and the `instantiate*` helpers
 are desktop, Android and iOS only for now.
+
+## Autoloads
+
+GDScript reaches an autoload by its global name (`Audio.play(...)`); Kanama
+generates the same names as properties of `net.multigesture.kanama.generated.Autoloads`,
+one per enabled (`*`) entry of the `project.godot` `[autoload]` section:
+
+| Autoload | `Autoloads.<Name>` is typed |
+|---|---|
+| a Kotlin script (`Settings="*res://kotlin-src/Settings.kt"`) | to the script class: `Autoloads.Settings.loadSettings()` |
+| a scene (`MusicPlayer="*res://MusicPlayer.tscn"`) | to the root node's script class when it has a Kotlin script, else to its class (`AudioStreamPlayer`) |
+| a GDScript (`Audio="*res://scripts/audio.gd"`) | to the class it `extends` (`Node`): call into it with `call("play", ...)` |
+
+```kotlin
+import net.multigesture.kanama.generated.Autoloads
+
+Autoloads.Audio.call("play", "res://sounds/coin.ogg")   // GDScript: Audio.play("res://sounds/coin.ogg")
+val settings = Autoloads.Settings                       // the Kotlin script on /root/Settings
+```
+
+Each read looks up `/root/<Name>`, as GDScript's global does, and throws an
+`IllegalStateException` naming the autoload when the node is missing or of
+another class (a read in a hot loop can keep the result in a local). The
+processor reads `project.godot` above the script sources (the build declares it
+as an input, so editing the autoload list re-runs it); a project laid out
+differently sets the `kanamaGodotProjectDir` KSP option. A class Kanama has no
+wrapper for on the target falls back to its nearest wrapped ancestor. On Web the
+lookup goes through the running script's node, so read an autoload from a script
+callback (a lifecycle handler, a signal, a coroutine), which is where Web code runs.
+
+## Script Inheritance
+
+A script class can extend another script class of the project, as a GDScript
+script `extends` another one. The subclass has every member of the chain: the
+exported properties, signals, lifecycle handlers, `@OverrideVirtual`s, tool
+buttons and registered public functions of its superclasses, with no forwarding
+code:
+
+```kotlin
+@ScriptClass(attachTo = "Node3D")
+@GlobalClass
+open class Vehicle(godotObject: GodotHandle) : KanamaScript<Node3D>(godotObject, ::Node3D) {
+    @Export var maxSpeed = 20.0
+    @OnReady open fun ready() { /* ... */ }
+    @OnPhysicsProcess fun physicsProcess(delta: Double) { effectBody(delta) }
+    @GodotName("_on_sphere_body_entered") fun onSphereBodyEntered(body: GodotObject) { /* ... */ }
+    protected open fun effectBody(delta: Double) {}
+}
+
+@ScriptClass(attachTo = "Node3D")
+@GlobalClass
+class VehicleMotorcycle(godotObject: GodotHandle) : Vehicle(godotObject) {
+    override fun ready() {             // still the _ready handler: the annotation is inherited
+        super.ready()
+        /* ... */
+    }
+    override fun effectBody(delta: Double) { /* ... */ }
+}
+```
+
+The rules:
+
+- **The most derived declaration is the member.** Godot calls the override (Kotlin
+  dispatch is virtual); a superclass's `private` member is not inherited.
+- **Annotations follow the override.** An override without Kanama annotations
+  keeps the overridden declaration's (`override fun ready()` stays `_ready`; the
+  override of an `@Export open var` stays exported). An override with its own
+  annotations uses those: the subclass wins.
+- **Conflicts are build errors.** Two different functions of the chain that land on
+  one Godot name (a base `@OnReady fun ready()` and a subclass `@OnReady fun setup()`)
+  or two exported properties with one Godot name fail the build naming both:
+  override the base member instead of adding a second one.
+
+The superclass may be a `@ScriptClass` itself or a plain (abstract) class in the
+same build; a class from a library contributes nothing, because annotations are
+read from source.
 
 ## Cross-Script References
 

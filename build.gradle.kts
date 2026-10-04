@@ -421,6 +421,21 @@ configure<com.google.devtools.ksp.gradle.KspExtension> {
   )
 }
 
+// Task 133 C: the processor generates `Autoloads` from the project's `project.godot` (found above
+// the script sources), which is not a Kotlin source, so it is declared as an input of the KSP tasks:
+// an edit to `[autoload]` re-runs them.
+tasks
+  .matching { it.name.startsWith("kspKotlinIos") }
+  .configureEach {
+    inputs
+      .files(
+        iosScriptDirs(configuredIosScriptDirs.orNull).flatMap {
+          listOf(file(it).resolve("project.godot"), file(it).resolve("../project.godot"))
+        }
+      )
+      .withPropertyName("kanamaGodotProjectFiles")
+  }
+
 tasks.withType<Test>().configureEach { useJUnitPlatform() }
 
 fun hostNativeBootstrapArtifactName(): String {

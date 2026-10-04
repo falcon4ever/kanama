@@ -79,6 +79,22 @@ tasks.matching { it.name == "kspKotlin" || it.name == "compileKotlin" }.configur
     inputs.property("kanamaProjectScriptsDirs", activeScriptDirs)
 }
 
+// Task 133 C: the processor generates `Autoloads` from the project's `project.godot` (the one above
+// the script sources), which is not a Kotlin source: declare it as a KSP input so an edit to the
+// `[autoload]` section re-runs KSP. `files()` tolerates the candidates that do not exist.
+tasks.matching { it.name == "kspKotlin" }.configureEach {
+    val dirs =
+        configuredScriptDirs.orNull
+            ?.split(File.pathSeparator, ",")
+            ?.map { it.trim() }
+            ?.filter { it.isNotEmpty() }
+            ?.map { file(it) }
+            ?: listOf(layout.projectDirectory.dir("../example_project").asFile)
+    inputs
+        .files(dirs.flatMap { listOf(it.resolve("project.godot"), it.resolve("../project.godot")) })
+        .withPropertyName("kanamaGodotProjectFiles")
+}
+
 tasks.withType<KspAATask>().configureEach {
     kspConfig.outputBaseDir.set(layout.buildDirectory.dir("generated/ksp"))
     kspConfig.kotlinOutputDir.set(kspKotlinOutputDir)

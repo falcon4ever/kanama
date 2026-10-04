@@ -6,7 +6,9 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.launch
 import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.ExportCategory
+import net.multigesture.kanama.annotations.ExportEnum
 import net.multigesture.kanama.annotations.ExportGroup
+import net.multigesture.kanama.annotations.ExportRange
 import net.multigesture.kanama.annotations.ExportSubgroup
 import net.multigesture.kanama.annotations.ExportToolButton
 import net.multigesture.kanama.annotations.GlobalClass
@@ -14,7 +16,6 @@ import net.multigesture.kanama.annotations.OnEnterTree
 import net.multigesture.kanama.annotations.OnExitTree
 import net.multigesture.kanama.annotations.OnProcess
 import net.multigesture.kanama.annotations.OnReady
-import net.multigesture.kanama.annotations.PropertyHint
 import net.multigesture.kanama.annotations.Rpc
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.annotations.Signal
@@ -108,13 +109,12 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
 
   @ExportCategory("Inspector Metadata")
   @ExportGroup("Smoke Properties")
-  @Export(hint = PropertyHint.RANGE, hintString = "0,100,1")
+  @ExportRange(0.0, 100.0, 1.0)
   var health: Long = 99
 
   @ExportSubgroup("Runtime") @Export var speed: Double = 5.1
 
-  @Export(hint = PropertyHint.ENUM, hintString = "Easy,Normal,Hard")
-  var metadataMode: String = "Normal"
+  @ExportEnum("Easy", "Normal", "Hard") var metadataMode: String = "Normal"
 
   // task 32 — custom enum export: registers as INT + PROPERTY_HINT_ENUM
   // ("EASY,NORMAL,HARD"), stored as the ordinal; main.tscn overrides it to 2 (HARD).

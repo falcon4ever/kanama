@@ -188,6 +188,11 @@ check "kt script enum list export type=true hint=true hint_string=true tscn=true
 check "GodotEnumExportSmoke typed mode=true flags=true list=true default=true signal=true"
 check "godot enum export mode_meta=true flags_meta=true class_meta=true list_meta=true default=true tscn=true roundtrip=true function=true"
 check "godot enum virtuals enum_arg=true enum_return=true required_object_return=true register_class_object_return=true"
+# task 133 C -- typed hint annotations match a GDScript twin's get_property_list() row by row (and
+# the folded `Mathf.PI / 3.0` default), the generated Autoloads object, and script inheritance.
+check "export hint twin rows=36 mismatches=0 folded_default=true"
+check "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wrong_script=true"
+check "inheritance exports=true values=true methods=true override_wins=true ready_once=true signal=true"
 # task 50 — a throwing user @Export accessor must be contained by ScriptBridge's
 # siSet/siGet rather than escaping the FFM upcall and aborting the process. A failed set is
 # rejected (previous value survives), a failed get yields null, and the property recovers.
