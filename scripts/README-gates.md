@@ -194,18 +194,19 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:2622` | `wait "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
 | `scripts/ios_visual_smoke.sh:2670` | `kill "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
 | `scripts/ios_visual_smoke.sh:2672` | `wait "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2743` | `rg 'SELFTEST FAIL:\|SELFTEST( MATRIX)?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 \|\| true` | justified: printing the evidence; the exit 1 on the next line is the verdict. |
-| `scripts/ios_visual_smoke.sh:2827` | `rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" \|\| true` | justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict. |
-| `scripts/ios_visual_smoke.sh:2965` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl terminate "$device_udid" "$bundle_id" >/dev/null 2>&1 \|\| tru` | justified: closing the app after the verdict; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2967` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/ios_visual_smoke.sh:2708` | `rg 'SELFTEST FAIL:\|SELFTEST( MATRIX)?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 \|\| true` | justified: printing the evidence; the exit 1 on the next line is the verdict. |
+| `scripts/ios_visual_smoke.sh:2755` | `rg 'SELFTEST FAIL:\|SELFTEST( MATRIX)?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 \|\| true` | justified: printing the evidence; the exit 1 on the next line is the verdict. |
+| `scripts/ios_visual_smoke.sh:2839` | `rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" \|\| true` | justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict. |
+| `scripts/ios_visual_smoke.sh:2977` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl terminate "$device_udid" "$bundle_id" >/dev/null 2>&1 \|\| tru` | justified: closing the app after the verdict; it may already have exited. |
+| `scripts/ios_visual_smoke.sh:2979` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:48` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:207` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:654` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:657` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:659` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:697` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:713` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:726` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:659` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:662` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:664` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:702` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:718` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:731` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:114` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/package_install_smoke.sh:130` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:132` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |
@@ -284,25 +285,30 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `demos:scripts/desktop_smoke_all.sh:147` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `demos:scripts/desktop_smoke_all.sh:164` | `if command -v timeout >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `demos:scripts/desktop_smoke_all.sh:181` | `if command -v timeout >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `demos:scripts/ios_device_run.sh:114` | `first="$(awk -v m="$FAULT_LINE_MARKER" 'index($0, m) { print; exit }' "$log" 2>/dev/null \|\| true)"` | justified: awk exits non-zero only when the log is unreadable, and the callers have just written or checked it. |
-| `demos:scripts/ios_device_run.sh:124` | `ran="$(grep -c -F "$SELFTEST_RAN_MARKER" "$log" 2>/dev/null \|\| true)"` | justified: grep -c prints 0 and exits 1 when nothing matches, which is the answer, not an error. |
-| `demos:scripts/ios_device_run.sh:126` | `summaries="$(grep -c -E 'OBJECTCALLS SELFTEST.*faults=' "$log" 2>/dev/null \|\| true)"` | justified: grep -c prints 0 and exits 1 when nothing matches, which is the answer, not an error. |
-| `demos:scripts/ios_device_run.sh:146` | `done < <(grep -E 'OBJECTCALLS SELFTEST.*faults=' "$log" 2>/dev/null \|\| true)` | justified: no summary line is the empty loop; the "ran but printed no summary" case was already failed above. |
-| `demos:scripts/ios_device_run.sh:209` | `--timeout 30 --json-output "$list_file" >/dev/null 2>&1 && [[ -s "$list_file" ]]; then` | justified: cleanup after the verdict; falls back to the table listing below |
-| `demos:scripts/ios_device_run.sh:213` | `--timeout 30 2>/dev/null \|\| true` | justified: cleanup after the verdict; an empty listing means nothing to terminate |
-| `demos:scripts/ios_device_run.sh:217` | `pids="$(printf '%s\n' "$listing" \| parse_app_pids "$APP_NAME" \|\| true)"` | justified: cleanup after the verdict; an empty result means nothing to terminate |
-| `demos:scripts/ios_device_run.sh:224` | `--pid "$pid" --timeout 30 >/dev/null 2>&1; then` | justified: cleanup after the verdict; failure prints a WARNING in the else branch |
-| `demos:scripts/ios_device_run.sh:233` | `pids="$(printf '%s\n' "$listing" \| parse_app_pids "$APP_NAME" \|\| true)"` | justified: cleanup after the verdict; an empty result means nothing to terminate |
-| `demos:scripts/ios_device_run.sh:236` | `--pid "$pid" --kill --timeout 30 >/dev/null 2>&1; then` | justified: cleanup after the verdict; failure prints a WARNING in the else branch |
-| `demos:scripts/ios_device_run.sh:418` | `grep -B1 'ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG" \| grep '_load path=' >&2 \|\| true` | justified: diagnostics; the exit 1 on the next lines is the verdict. |
-| `demos:scripts/ios_device_run.sh:593` | `if grep -q -E "$CONSOLE_FAIL_PATTERN" "$CONSOLE_LOG" 2>/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
-| `demos:scripts/ios_device_run.sh:596` | `if ! kill -0 "$console_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `demos:scripts/ios_device_run.sh:599` | `if [[ -z "$launched_at" ]] && grep -q '\[kanama\]\[ios\]' "$CONSOLE_LOG" 2>/dev/null; then` | justified: poll of the log being written; the verdict is read from the window copy afterwards |
-| `demos:scripts/ios_device_run.sh:609` | `if [[ "$smoke_active" -eq 1 ]] && grep -q -E "$SMOKE_COMPLETE_PATTERN" "$CONSOLE_LOG" 2>/dev/null; then` | justified: only decides whether to wait 3 s more before the verdict is taken from the window copy |
-| `demos:scripts/ios_device_run.sh:620` | `kill "$console_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the window; the verdict was copied to $VERDICT_LOG above. |
-| `demos:scripts/ios_device_run.sh:622` | `wait "$console_pid" >/dev/null 2>&1 \|\| true` | justified: reaping our own console stream; its exit status says nothing about the app. |
-| `demos:scripts/ios_device_run.sh:626` | `terminate_demo_app \|\| true` | justified: terminate_demo_app is documented never to fail the run (it only closes the app after the verdict). |
-| `demos:scripts/ios_device_run.sh:666` | `cp "$OUTPUT_DIR/crashes.after/$ips" "$OUTPUT_DIR/crashes/" 2>/dev/null \|\| true` | justified: keeping a copy of the report for humans; the step exits 1 below because of the NEW report either way. |
+| `demos:scripts/ios_device_run.sh:131` | `fail_lines="$(grep -E 'SELFTEST FAIL:' "$log" 2>/dev/null \|\| true)"` | justified: grep exits 1 when nothing matches, which is the clean case; the checks below read the captured text. |
+| `demos:scripts/ios_device_run.sh:138` | `bad_summaries="$(grep -E 'SELFTEST( MATRIX)?: [0-9]+ passed, [1-9][0-9]* failed' "$log" 2>/dev/null \|\| true)"` | justified: grep exits 1 when no summary has a failed count, which is the clean case. |
+| `demos:scripts/ios_device_run.sh:145` | `any="$(grep -c -E "$SELFTEST_ANY_RE" "$log" 2>/dev/null \|\| true)"` | justified: grep -c prints 0 and exits 1 when nothing matches, which is the answer, not an error. |
+| `demos:scripts/ios_device_run.sh:148` | `if ! grep -q -E 'PTRCALL SELFTEST MATRIX: [0-9]+ passed, 0 failed' "$log" 2>/dev/null; then` | justified: the grep status is the test |
+| `demos:scripts/ios_device_run.sh:152` | `if ! grep -q -E 'OBJECTCALLS SELFTEST: [0-9]+ passed, 0 failed' "$log" 2>/dev/null; then` | justified: the grep status is the test |
+| `demos:scripts/ios_device_run.sh:167` | `first="$(awk -v m="$FAULT_LINE_MARKER" 'index($0, m) { print; exit }' "$log" 2>/dev/null \|\| true)"` | justified: awk exits non-zero only when the log is unreadable, and the callers have just written or checked it. |
+| `demos:scripts/ios_device_run.sh:177` | `ran="$(grep -c -F "$SELFTEST_RAN_MARKER" "$log" 2>/dev/null \|\| true)"` | justified: grep -c prints 0 and exits 1 when nothing matches, which is the answer, not an error. |
+| `demos:scripts/ios_device_run.sh:179` | `summaries="$(grep -c -E 'OBJECTCALLS SELFTEST.*faults=' "$log" 2>/dev/null \|\| true)"` | justified: grep -c prints 0 and exits 1 when nothing matches, which is the answer, not an error. |
+| `demos:scripts/ios_device_run.sh:199` | `done < <(grep -E 'OBJECTCALLS SELFTEST.*faults=' "$log" 2>/dev/null \|\| true)` | justified: no summary line is the empty loop; the "ran but printed no summary" case was already failed above. |
+| `demos:scripts/ios_device_run.sh:262` | `--timeout 30 --json-output "$list_file" >/dev/null 2>&1 && [[ -s "$list_file" ]]; then` | justified: cleanup after the verdict; falls back to the table listing below |
+| `demos:scripts/ios_device_run.sh:266` | `--timeout 30 2>/dev/null \|\| true` | justified: cleanup after the verdict; an empty listing means nothing to terminate |
+| `demos:scripts/ios_device_run.sh:270` | `pids="$(printf '%s\n' "$listing" \| parse_app_pids "$APP_NAME" \|\| true)"` | justified: cleanup after the verdict; an empty result means nothing to terminate |
+| `demos:scripts/ios_device_run.sh:277` | `--pid "$pid" --timeout 30 >/dev/null 2>&1; then` | justified: cleanup after the verdict; failure prints a WARNING in the else branch |
+| `demos:scripts/ios_device_run.sh:286` | `pids="$(printf '%s\n' "$listing" \| parse_app_pids "$APP_NAME" \|\| true)"` | justified: cleanup after the verdict; an empty result means nothing to terminate |
+| `demos:scripts/ios_device_run.sh:289` | `--pid "$pid" --kill --timeout 30 >/dev/null 2>&1; then` | justified: cleanup after the verdict; failure prints a WARNING in the else branch |
+| `demos:scripts/ios_device_run.sh:529` | `grep -B1 'ResourceFormatLoader\._load bound kotlinClass= ' "$EXPORT_LOG" \| grep '_load path=' >&2 \|\| true` | justified: diagnostics; the exit 1 on the next lines is the verdict. |
+| `demos:scripts/ios_device_run.sh:704` | `if grep -q -E "$CONSOLE_FAIL_PATTERN" "$CONSOLE_LOG" 2>/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
+| `demos:scripts/ios_device_run.sh:707` | `if ! kill -0 "$console_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `demos:scripts/ios_device_run.sh:710` | `if [[ -z "$launched_at" ]] && grep -q '\[kanama\]\[ios\]' "$CONSOLE_LOG" 2>/dev/null; then` | justified: poll of the log being written; the verdict is read from the window copy afterwards |
+| `demos:scripts/ios_device_run.sh:720` | `if [[ "$smoke_active" -eq 1 ]] && grep -q -E "$SMOKE_COMPLETE_PATTERN" "$CONSOLE_LOG" 2>/dev/null; then` | justified: only decides whether to wait 3 s more before the verdict is taken from the window copy |
+| `demos:scripts/ios_device_run.sh:731` | `kill "$console_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the window; the verdict was copied to $VERDICT_LOG above. |
+| `demos:scripts/ios_device_run.sh:733` | `wait "$console_pid" >/dev/null 2>&1 \|\| true` | justified: reaping our own console stream; its exit status says nothing about the app. |
+| `demos:scripts/ios_device_run.sh:737` | `terminate_demo_app \|\| true` | justified: terminate_demo_app is documented never to fail the run (it only closes the app after the verdict). |
+| `demos:scripts/ios_device_run.sh:777` | `cp "$OUTPUT_DIR/crashes.after/$ips" "$OUTPUT_DIR/crashes/" 2>/dev/null \|\| true` | justified: keeping a copy of the report for humans; the step exits 1 below because of the NEW report either way. |
 
 ### 1a''. The sites this task fixed (before-state locations on origin/main; the code no longer has them)
 
@@ -445,7 +451,7 @@ every pull request that touches `scripts/` or `.github/workflows/` (gated by the
 | `gate_skip.sh` / `gate_skip.py` | `CI=true` and a skip not in `KANAMA_ALLOW_SKIP` | `FAIL: android-apk-package-id was skipped in CI. Fix the runner, or list ... in KANAMA_ALLOW_SKIP` (shell); `FAIL: stale-blocker-task-tokens was skipped in CI` (Python), exit 1 | allowed id: exit 0 |
 | `android_apk_id.sh` (used by `android_smoke.sh`, `android_export_minified.sh`) | ask for a package the APK is not (a real APK, `net.multigesture.kanama.dodge`, asked as `...match3`) | `the exported APK's application id is '...dodge' but this run was asked to install and launch '...match3'`, exit 1 | `APK application id verified: net.multigesture.kanama.dodge` |
 | `ios_visual_smoke.sh` `assert_built_bundle_id` | a `.app` whose `Info.plist` names another bundle id (fake `.app`) | `the built app's bundle id is '...thirdperson' but this run launches '...iosvisualsmoke'`, exit 1 | `built app bundle id verified` |
-| demos `ios_device_run.sh --check-console-faults` (the task-124 fault check) | a console log with one `[kanama][ios][c] FAULT ` line, or `faults=8 expected=7`, or the summary lines deleted | `console: the iOS bridge reported a FAULT`, `self-test fault count disagrees`, `the self-test did not finish`; each ends `FAIL` | `console fault check: PASS` on the clean log; `--self-test-app-pids`: `PASS` |
+| demos `ios_device_run.sh --check-console-faults` / `--self-test-console-checks` (the task-124 fault check and the runtime self-test verdict) | `--self-test-console-checks` feeds fixture console logs and needs 11 verdicts: clean passes; `OBJECTCALLS SELFTEST FAIL:` + `306 passed, 2 failed` (the logged device run, which the old runner passed with exit 0: verified against the pre-fix script), a failed count in the ObjectCalls or the PTRCALL summary, a clean early summary with a failed final one, a missing summary, a FAULT line, `faults=8 expected=7` all fail; no self-test text at all passes unless `KANAMA_IOS_REQUIRE_SELFTEST=1` | `console: a runtime self-test reported a FAILURE`, `a runtime self-test summary has failures`, `no 'OBJECTCALLS SELFTEST: N passed, 0 failed' summary line; the self-test did not finish`, `the iOS bridge reported a FAULT`; each ends `FAIL` | `console checks self-test: PASS`; `--check-console-faults` on a clean log: `PASS`; `--self-test-app-pids`: `PASS` |
 | demos `desktop_smoke_all.sh` | `GODOT` is a fake that exits 0 without writing `--log-file` (exercised) | `expected log is missing, so the hard-error check cannot run (import): ...import.log`, exit 1 | a fake that writes its log: `[desktop_smoke_all] PASS` (9 demos) |
 | demos `demo_parity_audit.py` | a `kotlin-src/ZzRedRun.kt` with `n.call("do_thing")` (exercised, removed); or a root without any `kotlin-src` (exit 2, was `PASS checked 0`) | `Bunnymark/kotlin-src/ZzRedRun.kt:3: raw call("do_thing") should use typed/generated API or be allowlisted` | `PASS checked 126 Kotlin demo script(s)` |
 | `android_smoke.sh`, `android_export_minified.sh` | **device run pending.** Export an APK whose preset `package/unique_name` differs from the package argument; or a build whose app dies after init (`kill -9` the pid during `KANAMA_ANDROID_LAUNCH_WAIT`) | `the exported APK's application id is ...` (before any install); `is not running ...s after launch (crashed or never started)` | green on the four devices of the version-support table |
@@ -456,6 +462,25 @@ every pull request that touches `scripts/` or `.github/workflows/` (gated by the
 | `upgrade_godot.sh` | **not exercised** (release tool, runs every gate): its preflight exits 1 on a binary whose version is not the pin, a non-stable pin, an unverifiable docs tree and a dirty tree | `FAIL: binary reports ... but kanamaGodotVersion=...` | n/a |
 | `local_ci.sh` | umbrella: any stage red; the ERR trap prints `[local_ci] FAILED (exit N)`, the stage and the command | n/a (not run by this task) | `ci.yml` |
 | `audit_embedded_processes.sh`, `refresh_godot_api.sh`, `jextract.sh`, `install-git-hooks.sh`, `web/serve_export.py`, `web/browser_version.py`, `web/differential_diff.py`, `web/visibility_probe.py`, `generate_*` writers | not gates (maintainer aids, a dev server, experiments, generators whose `--check` mode is in 2a) | n/a | n/a |
+
+### 2c. Runtime self-test verdicts and smoke completion: the silent-pass sweep (task 118 follow-up)
+
+A device run showed the demos' `ios_device_run.sh` exiting 0 over `OBJECTCALLS SELFTEST FAIL: ...` / `2 failed`. How the
+runner knows an app prints self-tests: it does not assume it. The self-test is *expected* when the console shows any
+self-test text (the `PTRCALL SELFTEST MATRIX` marker, a `SELFTEST FAIL:` line or a summary), and then both summaries must
+read `0 failed`; `KANAMA_IOS_REQUIRE_SELFTEST=1` requires it even when the console shows none. The default stays
+marker-based so a runtime that predates the self-tests is not failed for lacking them.
+
+| runner | verdict source | gap found | state |
+|---|---|---|---|
+| demos `ios_device_run.sh` | console window | FAIL lines and failed counts ignored; only `faults=` compared | **fixed** (above) |
+| `ios_visual_smoke.sh` | launch logs | FAIL line / failed count / both summaries were checked only under `--kanama-user-script-probe`; other probe modes (the demos' probes) ignored them | **fixed**: FAIL line and failed count now fail every Kanama launch; the "both summaries present" rule stays in the starter probe |
+| `ios_device_gate.sh`, demos `ios_smoke_all.sh` | their children above | none of their own | covered by the two fixes |
+| demos `desktop_smoke_all.sh` | console log | the six `KANAMA_DEMO_SMOKE_QUIT=1` demos' completion line `[kanama:smoke] SmokeQuit complete` was never required (only a `timeout` would catch a run that did not finish, and `timeout` is optional there) | **fixed**: required; exercised with a fake Godot with and without the line |
+| demos `desktop_smoke_all.sh` (FPS, Racing, City-Builder) | console log | their smokes quit from `ready()` and print no completion line; a failing `check()` is a Kotlin exception that keeps the game running until the timeout; the hard-error patterns do not include `SCRIPT ERROR` | **listed, not fixed**: needs a completion line in those three `Smoke.kt` files, a demos change outside this task |
+| `android_smoke.sh`, `android_export_minified.sh`, demos `android_smoke_all.sh` | logcat | no runtime self-test exists on Android; the demos' SmokeQuit does not run there (no `KANAMA_DEMO_SMOKE_QUIT`); crash markers and the positive startup checks are the verdict | none to fix; listed |
+| `runtime_smoke.sh`, `tool_smoke.sh`, `hot_reload*_smoke.sh` | Godot log | positive `check` patterns plus `check_absent`; the example project has no self-test summary to ignore | none |
+| Web drivers (`scripts/web/drivers/**`) | result envelope | assertion counts are in the envelope, which `result_schema.py` validates and `web_export_smoke.sh` turns into the exit status (scaffold cases `failed-assertion`, `malformed-result`, `schema-violation`) | none |
 
 ## 3. A gate proves the artifact it ran is the one it built
 

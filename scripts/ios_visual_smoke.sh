@@ -2697,6 +2697,18 @@ if rg -q 'SCRIPT ERROR|Parse Error|Failed to load script' "$stderr_log" "$stdout
   exit 1
 fi
 
+# Task 118: the runtime self-tests' own verdict counts on EVERY Kanama launch, not only under
+# --kanama-user-script-probe (where the stricter "both summaries present" check below lives): a FAIL line or a
+# summary with a non-zero failed count fails whichever probe the run was started with (the demos' device runner
+# once reported exit 0 over `OBJECTCALLS SELFTEST FAIL:` and `2 failed`).
+if [[ -z "$godot_project_baseline_dir" ]] &&
+   rg -q 'SELFTEST FAIL:|SELFTEST( MATRIX)?: [0-9]+ passed, [1-9][0-9]* failed' "$stderr_log" "$stdout_log"; then
+  echo "[ios_visual_smoke] runtime self-test reported failures:" >&2
+  # justified: printing the evidence; the exit 1 on the next line is the verdict.
+  rg 'SELFTEST FAIL:|SELFTEST( MATRIX)?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 || true
+  exit 1
+fi
+
 if [[ "$physical_device" -eq 0 && -n "$godot_project_baseline_dir" ]]; then
   echo "[ios_visual_smoke] Godot-only baseline screenshot captured"
 fi
