@@ -348,20 +348,27 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 ## 2. Red run per gate
 
 Method. `python3 scripts/gate_red_runs.py` holds each listed gate to green, red, green: the gate passes on the tree as
-it is, a reversible mutation (an edit, a created file or a deleted file) makes it exit non-zero **and** print the
-expected text, and it passes again after the revert; the working tree is compared before and after. The rows below were
-produced by that command on this branch (`--markdown`) and pasted here. Gates that need a Godot binary or Gradle run
-with `--slow` (`KANAMA_GODOT_BIN` set). Gates that drive a browser, a device or a long export are in the second
-table.
+it is, a reversible mutation (an edit, a created, deleted or renamed file) makes it exit non-zero **and** print the
+expected text, and it passes again after the revert. Every case runs in a **throwaway `git worktree`** of HEAD carrying
+the dev checkout's uncommitted changes, so a killed run (SIGTERM, a timeout, a crash) cannot leave a mutation in the
+checkout you work in; a timeout kills the case's whole process group; `--strict` (implied under `CI`) makes a SKIPPED
+case (a missing `GODOT_DOCS`, ...) a failure unless named by `--allow-skip`. The rows below were produced by that command
+on the committed branch (`--markdown`): the fast set (57 cases) took about 6 minutes; the Godot and Gradle smokes run
+with `--slow` (`KANAMA_GODOT_BIN` set). Gates that drive a browser, a device or a long export are in the second table.
+
+**CI.** `ci.yml` job `gate-red-runs` runs the fast set with `--strict --allow-skip sync_kdoc` on every push to main and on
+every pull request that touches `scripts/` or `.github/workflows/` (gated by the `changes` job).
+`gate-red-runs-nightly.yml` runs `--slow` nightly. It is not part of `local_ci.sh` (it takes minutes).
 
 ### 2a. `scripts/gate_red_runs.py` (exercised on this branch)
 
 | gate | how to make it red | red output | green after revert |
 |---|---|---|---|
 | `check_gdextension_modernization.py` | a desktop source binds a deprecated GDExtension function (this leg checked nothing before task 118: it scanned the deleted src/main) | `[deprecated] desktop/Android (JVM) binds deprecated 'classdb_construct_object2' (src/jvmMain/kotlin/net/multigesture/kanama/ZzRedRun.kt) — migrate to the newest variant / [divergence] family 'classdb_` | green |
-| `validate_godot_api.py` | a MethodBind hash in the shared wrapper tree is off by one (this tree was not scanned before task 118) | `- src/commonMain/kotlin/net/multigesture/kanama/api/Node.kt: Node.get_parent hash 3160264693 not in {3160264692}` | green |
+| `validate_godot_api.py` | a MethodBind hash in the shared wrapper tree is off by one (this tree was not scanned before task 118) | `- src/commonMain/kotlin/net/multigesture/kanama/api/Node.kt: Node.get_parent hash 3160264693 not in {3160264692} / [validate_godot_api] hashes checked: jvmMain=664, commonMain=14737, iosMain=621` | green |
+| `validate_godot_api.py (tree moved)` | the shared wrapper tree is not where the validator looks (it must fail, not pass on what is left) | `- src/commonMain/kotlin: no Kotlin sources found; this tree carries MethodBind hashes and was not checked` | green |
 | `audit_builtin_storage_sizes.py` | the iOS shim sizes a Packed*Array slot at 8 bytes | `[builtin_storage_size_audit] FAIL / - ios/bootstrap/kanama_ios_shim.c: KANAMA_IOS_PACKED_ARRAY_OPAQUE_SIZE is 8, expected 16 (float_64 builtin_class_sizes — all Packed*Array are 16 on 64-bit)` | green |
-| `check_actual_public_surface.py` | an `actual object` gains a public member its `expect` lacks | `src/jvmMain/kotlin/net/multigesture/kanama/api/MainThread.kt:17: desktop 'actual object MainThread' declares public 'fun redRunExtraMember/0', which the expect does not` | green |
+| `check_actual_public_surface.py` | an `actual object` gains a public member its `expect` lacks | `src/jvmMain/kotlin/net/multigesture/kanama/api/MainThread.kt:17: desktop 'actual object MainThread' declares public 'fun redRunExtraMember/0', which the expect does not / [actual_public_surface] exclu` | green |
 | `check_android_remap_sources.py` | a runtime source uses a fragment the Android remap cannot compile | `[android-remap-sources] FAIL src/jvmMain/kotlin/net/multigesture/kanama/ZzRedRun.kt:2: forbidden after the Android remap: 'Files.readString' (call a function value as f(args) / f?.let { it(args) }, ne` | green |
 | `check_doc_claims.py` | a marked doc line states the wrong Web protocol | `check_doc_claims: FAIL — 1 stale or malformed claim(s): / docs/exporting/web.md:5: claims protocol 21, but WebScriptCodeEmitter declares 29` | green |
 | `check_expect_no_defaults.py` | an `expect fun` declares a default argument | `[expect_defaults] FAIL 1 default argument(s) on an 'expect' declaration. The Android lane skips *.expect.kt, so the default would not exist there; declare an overload per omitted argument instead (tas` | green |
@@ -376,7 +383,7 @@ table.
 | `check_property_coverage.py` | a generated wrapper property disappears | `[property_coverage] FAIL 1 generated property(ies) are silently dropped (no wrapper member, not private, not allow-listed): / CanvasItem.visible (getter=is_visible)` | green |
 | `check_protocol_pins.py` | the bridge pins protocol 28 while the emitter says 29 | `[protocol_pins] FAIL the protocol version disagrees across its pins: / 28  bridge constant  (web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js)` | green |
 | `check_pt_tag_tables.py` | one copy of the iOS ptrcall tag table is renumbered | `[pt_tags] FAIL value-mismatch VOID: C enum=0 (ios/bootstrap/kanama_ios_shim.c), generator=99 (scripts/generate_api_wrapper.py), ObjectCalls=0 (src/iosMain/kotlin/net/multigesture/kanama/binding/runtim` | green |
-| `check_public_signature_changes.py` | a public signature changes without a CHANGELOG `Source break` line | `[public_signatures] FAIL unannounced source break (2.5s): 1 public signature(s) removed or changed and not announced: no '- **Source break:**' line in CHANGELOG.md '## Unreleased' names Node (marker l` | green |
+| `check_public_signature_changes.py` | a public signature changes without a CHANGELOG `Source break` line | `[public_signatures] FAIL unannounced source break (2.4s): 1 public signature(s) removed or changed and not announced: no '- **Source break:**' line in CHANGELOG.md '## Unreleased' names Node (marker l` | green |
 | `check_typed_enums.py` | an enum parameter goes back to a raw Long | `[typed_enums] FAIL 1 problem(s): / src/commonMain/kotlin/net/multigesture/kanama/api/Node.kt:796: setProcessMode(mode: Long) -- Godot Node.set_process_mode types 'mode' enum::Node.ProcessMode; expecte` | green |
 | `check_unapplied_annotations.py` | a lifecycle annotation is imported and never applied | `[unapplied_annotations] src/jvmMain/kotlin/net/multigesture/kanama/ZzRedRun.kt: imports @OnReady but never applies it -- the annotated behaviour is silently disabled / [unapplied_annotations] FAIL 1 f` | green |
 | `check_web_callback_flush.py` | a Web callback boundary stops flushing the command buffer | `check_web_callback_flush: FAIL — 1 boundary/boundaries run user Kotlin without flushing the command buffer: / web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/Main.kt:168  kanamaWebEnterT` | green |
@@ -391,11 +398,11 @@ table.
 | `audit_replicated_script_properties.py` | a scene replicates a property its Kotlin script does not export | `example_project/zz_redrun.tscn:.: zz_redrun.kt does not expose replicated property 'health'` | green |
 | `audit_runtime_node_lookups.py` | a per-frame callback resolves a node path | `[runtime_node_lookup] FAIL / example_project/zz_redrun.kt:5: function tick contains runtime required node lookup: self.requireAs("Child", ::Node)` | green |
 | `audit_singleton_refcounted_policy.py` | the Engine wrapper loses registerSingleton | `[singleton_refcounted] Engine.registerSingleton wrapper not found` | green |
-| `audit_stale_blockers.py` | a KANAMA-BLOCKED marker whose blocker no longer holds | `[stale_blockers] FAIL / - CONTRIBUTING.md:2: BLOCKER LIFTED -- CONTRIBUTING.md now matches CONTRIBUTING.md. Claim: red run` | green |
-| `audit_value_type_wrappers.py` | a Godot `float` argument is marshalled as a real_t component array | `[value_type_audit] checked 70 Kotlin methods that map to Godot builtins / [value_type_audit] accepted 40 reviewed local math helper(s)` | green |
+| `audit_stale_blockers.py` | a stale-blocker marker whose blocker no longer holds | `[stale_blockers] FAIL / - CONTRIBUTING.md:2: BLOCKER LIFTED -- CONTRIBUTING.md now matches CONTRIBUTING.md. Claim: red run` | green |
+| `audit_value_type_wrappers.py` | a Godot `float` argument is marshalled as a real_t component array | `- src/commonMain/kotlin/net/multigesture/kanama/types/Quaternion.kt:159: Quaternion.slerp passes 1 Godot float arg(s) (weight) but only 0 BArg.Real; a scalar float is an 8-byte double at ptrcall, not ` | green |
 | `audit_vararg_ptrcalls.py` | a vararg Godot method is wrapped through ptrcall | `src/commonMain/kotlin/net/multigesture/kanama/api/ZzRedRun.kt:4: Object.call is vararg and must use dynamic Object.call, not ptrcall` | green |
 | `audit_variant_marshalling_policy.py` | the Variant marshaller coerces an unknown value instead of failing | `[variant_marshalling_policy_audit] FAIL / - initVariantFromAny must throw for unsupported values` | green |
-| `audit_wrapper_abi_policy.py` | a wrapper selects a bool return helper for an object return | `- src/commonMain/kotlin/net/multigesture/kanama/api/Node.kt:263: Node.get_parent: return helper slot is bool, exact policy expects object for Node[] / [wrapper_abi_policy_audit] FAIL strict mode` | green |
+| `audit_wrapper_abi_policy.py` | a wrapper selects a bool return helper for an object return | `- src/commonMain/kotlin/net/multigesture/kanama/api/Node.kt:263: Node.get_parent: return helper slot is bool, exact policy expects object for Node[]` | green |
 | `audit_wrapper_signatures.py` | a wrapper's return helper disagrees with extension_api.json | `[wrapper_signature_audit] FAIL / - src/commonMain/kotlin/net/multigesture/kanama/api/Node.kt:263: Node.get_parent return uses bool, API expects object: Node get_parent()` | green |
 | `type_coverage_audit.py` | a value type loses its Variant write branch | `[type_coverage_audit] 1 type(s) appear in ObjectCalls but lack Variant marshal coverage (potential symmetric-gap bug).` | green |
 | `api_wrapper_coverage.py --check` | the committed coverage page is hand-edited | `[api_wrapper_coverage] FAIL stale markdown: docs/reference/generated/api-coverage.md / [api_wrapper_coverage] run: python3 scripts/api_wrapper_coverage.py --markdown docs/reference/generated/api-cover` | green |
@@ -408,18 +415,21 @@ table.
 | `generate_web_wrappers.py --check` | a generated Web wrapper is hand-edited | `[web_wrappers] FAIL drift in Node.kt / [web_wrappers] run scripts/generate_web_wrappers.py to regenerate` | green |
 | `generate_api_shell_wrappers.py --fail-if-candidates` | a wrapper file is gone while the skip report names it (the shell generator then has a candidate to write) | `[generate_api_shell_wrappers] candidates=1` | green |
 | `sync_kdoc_from_godot_docs.py --check` | a wrapper KDoc block differs from the Godot class docs | `[sync_kdoc] classes=1081 classes_with_docs=795 documented_items=13692 missing_or_unmatched_docs=690 changed_files=1 / [sync_kdoc] changed src/commonMain/kotlin/net/multigesture/kanama/api/Node.kt` | green |
+| `audit_swallowed_failures.py` | a gate script swallows a failure (`|| true`) without saying why | `[audit_swallowed_failures] FAIL 1 swallowed-failure site(s) with no '# justified: <why>' and no known idiom: / scripts/install-git-hooks.sh:9: false \|\| true` | green |
+| `audit_swallowed_failures.py (stale table)` | the generated audit table no longer matches the `# justified:` comments | `[audit_swallowed_failures] FAIL the audit table in scripts/README-gates.md is stale (a site or its '# justified:' text changed); run 'python3 scripts/audit_swallowed_failures.py --write'` | green |
 | `check_shell_lint.sh` | a new gate script carries a shellcheck warning (unquoted variable, unchecked cd) | `In scripts/zz_redrun.sh line 2: / cd /tmp` | green |
 | `check_no_local_paths.py --self-test` | the scan stops finding leaks (the gate is broken; its self-test must say so) | `check_no_local_paths --self-test FAIL: expected the text and the binary leak, got []` | green |
-| `web/scaffold_selftest.sh` | web_export_smoke.sh stops running the budget gate (the self-test's own `over-budget` case must catch that) | `FAIL: over-budget expected exit 1, got 0` | green |
-| `web_export_smoke.sh (browser-floor)` | web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that) | `FAIL: below-floor expected exit 1, got 0` | green |
-| `tool_smoke.sh` | the example project's editor plugin drifts from the starter template's copy | `[tool_smoke] plugin copies differ: templates/starter/addons/kanama_tools/plugin.gd vs example_project/addons/kanama_tools/plugin.gd / [tool_smoke] log tail:` | green |
+| `web/scaffold_selftest.sh` | web_export_smoke.sh stops running the budget gate (the self-test's own `over-budget` case must catch that) | `FAIL: over-budget expected exit 1, got 0 / stderr: coverage_report: FAIL — $TMPDIR/kanama-web-scaffold.jkB5pO/over-budget/result.json carries no exercisedMembe` | green |
+| `web_export_smoke.sh (browser-floor)` | web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that) | `FAIL: below-floor expected exit 1, got 0 / stderr: coverage_report: FAIL — $TMPDIR/kanama-web-scaffold.8JbYG8/below-floor/result.json carries no exercisedMembe` | green |
+| `tool_smoke.sh` | the example script no longer logs its scene-delivered properties: the failure comes from the editor run's log, not the plugin-copy pre-check | `[tool_smoke] missing pattern: HelloScript\(file\)\._ready health=99 speed=5\.1 label=from_tscn / [tool_smoke] log tail:` | green |
+| `tool_smoke.sh (plugin copies)` | the example project's editor plugin drifts from the starter template's copy (the cheap pre-check) | `[tool_smoke] plugin copies differ: templates/starter/addons/kanama_tools/plugin.gd vs example_project/addons/kanama_tools/plugin.gd / [tool_smoke] log tail:` | green |
 | `runtime_smoke.sh` | the example script no longer logs its scene-delivered properties (script unchanged: in-flight task 132; red run only) | `[runtime_smoke] missing pattern: HelloScript\(file\)\._ready health=99 speed=5\.1 label=from_tscn difficulty=HARD / [runtime_smoke] log tail:` | green |
 | `hot_reload_smoke.sh` | the reloadable script line the smoke rewrites is gone, so no marker can reach the log | `[hot_reload_smoke] missing marker: A / [kanama:kt] FileAccess numeric_fixture write8=true read8=127 write16=true be16=18-52 write32=true read32=16909060 write64=true read64=72623859790382856 write_dou` | green |
-| `hot_reload_in_process_smoke.sh` | the reloadable script line the smoke rewrites is gone, so no marker can reach the log | `[hot_reload_in_process_smoke] FAIL -- timeout waiting for pattern: HelloScript\(file\)\._ready\[A\] / [hot_reload_in_process_smoke] full log: /tmp/kanama_hot_reload_in_process.log` | green |
 | `check_exported_scene_properties_selftest.sh` | the scene check stops saying `lost script property` (its own red run is inside the self-test) | `[scene_check_selftest] FAIL: the missing override property was not reported` | green |
-| `check_jdk_lookup_parity.sh` | the editor plugin's JDK location table drifts from bootstrap.c's (a `~/.jdks` row renamed) | `[check_jdk_lookup_parity] FAIL table_home_dot_jdks: expected $TMPDIR/kanama_jdk_lookup.qONtau/s12/home/.jdks/jdk-25-fake/lib/server/libjvm.dylib / [check_jdk_l` | green |
 | `check_bootstrap_jdk_resolution.sh` | the bootstrap's stale-JDK diagnostic changes text (its fail cases then match nothing) | `[check_bootstrap_jdk_resolution] FAIL env_stale_header -- output does not match: predates JDK 21 \(no JNI_VERSION_21\)` | green |
 | `check_gradle_templates_configure.sh` | the release-kit settings file puts `plugins {}` before `pluginManagement {}` | `[check_gradle_templates_configure] FAIL -- the release-kit Gradle template does not configure:` | green |
+| `hot_reload_in_process_smoke.sh` | the reloadable script line the smoke rewrites is gone, so no marker can reach the log | `[hot_reload_in_process_smoke] FAIL -- timeout waiting for pattern: HelloScript\(file\)\._ready\[A\] / [hot_reload_in_process_smoke] full log: /tmp/kanama_hot_reload_in_process.log` | green |
+| `check_jdk_lookup_parity.sh` | the editor plugin's JDK location table drifts from bootstrap.c's (a `~/.jdks` row renamed) | `[check_jdk_lookup_parity] FAIL table_home_dot_jdks: expected $TMPDIR/kanama_jdk_lookup.qT9Bq2/s12/home/.jdks/jdk-25-fake/lib/server/libjvm.dylib / [check_jdk_l` | green |
 
 ### 2b. Self-tests, browser/device gates, and gates exercised another way
 
