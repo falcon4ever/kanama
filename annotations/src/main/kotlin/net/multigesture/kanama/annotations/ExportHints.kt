@@ -115,6 +115,11 @@ annotation class ExportGlobalDir
 @Retention(AnnotationRetention.SOURCE)
 annotation class ExportMultiline(val monospace: Boolean = false, val noWrap: Boolean = false)
 
+/** GDScript `@export_color_no_alpha` on a `Color`: the inspector picker hides alpha. */
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.SOURCE)
+annotation class ExportColorNoAlpha
+
 /** GDScript `@export_placeholder("...")` on a `String` or `List<String>`. */
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.SOURCE)

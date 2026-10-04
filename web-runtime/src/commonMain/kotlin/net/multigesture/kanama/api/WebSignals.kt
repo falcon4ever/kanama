@@ -2,6 +2,7 @@ package net.multigesture.kanama.api
 
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
@@ -256,6 +257,26 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
       { packed ->
         packed.split(',').let {
           Vector3(it[0].toDouble(), it[1].toDouble(), it[2].toDouble())
+        }
+      },
+      callback,
+    )
+
+  /**
+   * Connects a one-`Color` signal, delivering the emitted value (task 133 C2). The four float32
+   * channels cross as decimal text with enough digits to round back to the same float32.
+   */
+  fun connectColor(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
+    callback: (Color) -> Unit,
+  ): GodotError =
+    connectScalar(
+      target,
+      flags,
+      { packed ->
+        packed.split(',').let {
+          Color(it[0].toDouble(), it[1].toDouble(), it[2].toDouble(), it[3].toDouble())
         }
       },
       callback,

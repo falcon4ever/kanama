@@ -57,6 +57,8 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 A2 -- value types store Godot's width: Kotlin and GDScript print the same three lines.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_storage_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 133 C2 -- Color as a script type, beside its GDScript twin (color_script_smoke.tscn).
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://color_script_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
 # task 134 B -- every value-type operator and method against GDScript (builtin_parity_ref.gd).
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://builtin_parity_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 B -- builtin calls re-entered from an engine error print (a GDScript logger calling Kotlin).
@@ -190,7 +192,7 @@ check "godot enum export mode_meta=true flags_meta=true class_meta=true list_met
 check "godot enum virtuals enum_arg=true enum_return=true required_object_return=true register_class_object_return=true"
 # task 133 C -- typed hint annotations match a GDScript twin's get_property_list() row by row (and
 # the folded `Mathf.PI / 3.0` default), the generated Autoloads object, and script inheritance.
-check "export hint twin rows=36 mismatches=0 folded_default=true"
+check "export hint twin rows=38 mismatches=0 folded_default=true"
 check "autoload kotlin=autoload:1 gd=KanamaSmokeAutoload:5 missing=true wrong_class=true wrong_script=true"
 check "inheritance exports=true values=true methods=true override_wins=true ready_once=true signal=true"
 # task 50 — a throwing user @Export accessor must be contained by ScriptBridge's
@@ -402,6 +404,16 @@ for vts_row in roundtrip_eq str bits parity; do
     smoke_fail "Kotlin/GDScript value-type mismatch (${vts_row})" "kotlin: ${vts_kotlin:-<missing>} gdscript: ${vts_gdscript:-<missing>}"
   fi
 done
+# task 133 C2 -- a Color export stored in a .tscn, read back, set/get through Object, passed to and
+# returned from a function and carried by a signal (to a GDScript lambda and Kotlin's typed
+# connection), plus its property row and @ExportColorNoAlpha's hint 21: the Kotlin line must equal
+# the GDScript twin's line from the same run.
+check "ColorScript kotlin scene=0\\.25,0\\.5,0\\.123456[0-9]*,0\\.75 type=20 rows=20/0//20/21/ default=0\\.1[0-9]*,0\\.2[0-9]*,0\\.3[0-9]*,0\\.4[0-9]* "
+color_kotlin="$(grep -o "ColorScript kotlin .*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript kotlin //')"
+color_gdscript="$(grep -o "ColorScript gdscript .*" "$LOG_FILE" | head -n 1 | sed 's/^ColorScript gdscript //')"
+if [[ -z "$color_kotlin" || "$color_kotlin" != "$color_gdscript" ]]; then
+  smoke_fail "Kotlin/GDScript Color script type mismatch" "kotlin: ${color_kotlin:-<missing>} gdscript: ${color_gdscript:-<missing>}"
+fi
 # task 134 B -- the generated probe pair (scripts/generate_builtin_ops.py): `pure=` hashes every
 # value-type operator and every Kotlin-implemented method over 256 fixed-seed random inputs,
 # `edge=` the same members over ±0, NaN, ±INF, .5 ties and 1e-30 (where Godot's result is

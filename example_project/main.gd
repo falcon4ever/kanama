@@ -656,7 +656,7 @@ func _kanama_export_hint_twin_smoke() -> void:
 	kotlin_node.free()
 	twin_node.free()
 	print("[kanama:gd] export hint twin rows=", rows, " mismatches=", mismatches.size(), " folded_default=", folded)
-	if mismatches.size() > 0 or rows < 36 or not folded:
+	if mismatches.size() > 0 or rows < 38 or not folded:
 		push_error("Kanama typed export hints differ from GDScript: %s (rows=%d folded=%s)" % [str(mismatches), rows, str(folded)])
 
 # task 133 C -- the generated Autoloads object (from project.godot [autoload]). AutoloadSmoke frees

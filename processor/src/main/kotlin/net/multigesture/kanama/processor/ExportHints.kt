@@ -31,6 +31,7 @@ internal object ExportHints {
   const val PROPERTY_HINT_GLOBAL_DIR = 16
   const val PROPERTY_HINT_MULTILINE_TEXT = 18
   const val PROPERTY_HINT_PLACEHOLDER_TEXT = 20
+  const val PROPERTY_HINT_COLOR_NO_ALPHA = 21
   const val PROPERTY_HINT_TYPE_STRING = 23
   const val PROPERTY_HINT_NODE_PATH_VALID_TYPES = 26
   const val PROPERTY_HINT_FILE_PATH = 44
@@ -65,6 +66,7 @@ internal object ExportHints {
       "ExportMultiline",
       "ExportPlaceholder",
       "ExportExpEasing",
+      "ExportColorNoAlpha",
       "ExportNodePath",
       "ExportStorage",
       "ExportCustom",
@@ -79,6 +81,7 @@ internal object ExportHints {
     FLOAT("Double or Float"),
     STRING("String"),
     NODE_PATH("NodePath"),
+    COLOR("Color"),
     STRING_LIST("List<String>"),
     OTHER("other"),
   }
@@ -203,6 +206,13 @@ internal object ExportHints {
               "attenuation".takeIf { use.args["attenuation"] == true },
               "positive_only".takeIf { use.args["positiveOnly"] == true },
             )
+        }
+        // Task 133 C2: a Color is a script type now. GDScript also takes Array[Color]; Kanama has
+        // no
+        // List<Color> export, so the element form is not offered.
+        "ExportColorNoAlpha" -> {
+          if (slot != Slot.COLOR) return wrongType("Color")
+          PROPERTY_HINT_COLOR_NO_ALPHA to emptyList()
         }
         "ExportNodePath" -> {
           if (slot != Slot.NODE_PATH) return wrongType("NodePath")

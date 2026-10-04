@@ -19,7 +19,7 @@ rewrites a tree of `.kt` files:
     @Export(hint = PropertyHint.PLACEHOLDER_TEXT, hintString = "x") -> @ExportPlaceholder("x")
     @Export(hint = PropertyHint.EXP_EASING, hintString = "attenuation")
                                                                     -> @ExportExpEasing(attenuation = true)
-    any other hint (a raw number, COLOR_NO_ALPHA, ...)              -> @ExportCustom(<hint>, "<hintString>")
+    any other hint (a raw number, LINK, ...)                        -> @ExportCustom(<hint>, "<hintString>")
 
 `name` and `usage` stay on `@Export` (`@Export(name = "x") @ExportRange(...)`); a bare `@Export`
 left with no arguments next to a hint annotation is dropped (the hint annotation exports). Imports
@@ -53,6 +53,7 @@ SIMPLE = {
 NO_ARGS = {
     "DIR": "ExportDir",
     "GLOBAL_DIR": "ExportGlobalDir",
+    "COLOR_NO_ALPHA": "ExportColorNoAlpha",
     "LAYERS_2D_RENDER": "ExportFlags2DRender",
     "LAYERS_2D_PHYSICS": "ExportFlags2DPhysics",
     "LAYERS_2D_NAVIGATION": "ExportFlags2DNavigation",
@@ -65,7 +66,7 @@ HINT_VALUES = {
     "1": "RANGE", "2": "ENUM", "4": "EXP_EASING", "6": "FLAGS", "7": "LAYERS_2D_RENDER",
     "8": "LAYERS_2D_PHYSICS", "9": "LAYERS_2D_NAVIGATION", "10": "LAYERS_3D_RENDER",
     "11": "LAYERS_3D_PHYSICS", "12": "LAYERS_3D_NAVIGATION", "13": "FILE", "14": "DIR",
-    "15": "GLOBAL_FILE", "16": "GLOBAL_DIR", "18": "MULTILINE_TEXT", "20": "PLACEHOLDER_TEXT",
+    "15": "GLOBAL_FILE", "16": "GLOBAL_DIR", "18": "MULTILINE_TEXT", "20": "PLACEHOLDER_TEXT", "21": "COLOR_NO_ALPHA",
     "37": "LAYERS_AVOIDANCE", "44": "FILE_PATH",
 }
 RANGE_FLAGS = {

@@ -1,5 +1,7 @@
 package net.multigesture.kanama.example
 
+import net.multigesture.kanama.annotations.Export
+import net.multigesture.kanama.annotations.ExportColorNoAlpha
 import net.multigesture.kanama.annotations.ExportCustom
 import net.multigesture.kanama.annotations.ExportDir
 import net.multigesture.kanama.annotations.ExportEnum
@@ -27,6 +29,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
 
 /**
@@ -79,4 +82,6 @@ class ExportHintSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObject
   @ExportFile("*.png") var fArr: List<String> = emptyList()
   @ExportMultiline var mlArr: List<String> = emptyList()
   @ExportEnum("A", "B") var enArr: List<String> = emptyList()
+  @ExportColorNoAlpha var cna: Color = Color.RED
+  @Export var col: Color = Color(0.2, 0.4, 0.6, 0.8)
 }

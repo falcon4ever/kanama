@@ -114,16 +114,46 @@ internal object AutoloadSource {
 
   private val EXTENDS = Regex("""^extends\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:#.*)?$""")
 
+  /** Task 133 C2: GDScript's one-line `class_name Foo extends Node2D`. */
+  private val CLASS_NAME_EXTENDS =
+    Regex(
+      """^class_name\s+[A-Za-z_][A-Za-z0-9_]*\s+extends\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:#.*)?$"""
+    )
+
   /** The engine class a GDScript file `extends` by name (null for a path or a missing line). */
   fun gdscriptExtends(text: String): String? {
     for (raw in text.lineSequence()) {
       val line = raw.trim()
       if (line.isEmpty() || line.startsWith("#") || line.startsWith("@")) continue
+      CLASS_NAME_EXTENDS.matchEntire(line)?.let {
+        return it.groupValues[1]
+      }
       if (line.startsWith("class_name")) continue
       return EXTENDS.matchEntire(line)?.groupValues?.get(1)
     }
     return null
   }
+
+  /**
+   * Task 133 C2: a `Name.<feature>=...` key overrides the autoload for one feature tag (Godot's
+   * per-feature setting override). It is not an autoload of its own; the generated object keeps the
+   * base entry.
+   */
+  fun isFeatureOverride(entry: Entry): Boolean = '.' in entry.name
+
+  private val SCENE_UID = Regex("""^\[gd_(?:scene|resource)\b[^\]]*\buid="(uid://[^"]+)"""")
+
+  /**
+   * Task 133 C2: the `uid://…` a file declares — a `.tscn`/`.tres` in its header, any other
+   * resource (a `.gd`, a `.kt`) in its `.uid` sidecar, whose whole text is the uid.
+   */
+  fun declaredUid(fileName: String, text: String): String? =
+    when {
+      fileName.endsWith(".uid") -> text.trim().takeIf { it.startsWith("uid://") }
+      fileName.endsWith(".tscn") || fileName.endsWith(".tres") ->
+        text.lineSequence().firstOrNull()?.trim()?.let { SCENE_UID.find(it)?.groupValues?.get(1) }
+      else -> null
+    }
 
   private val KOTLIN_KEYWORDS =
     setOf(

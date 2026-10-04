@@ -28,6 +28,30 @@ class ConstantFoldingTest {
   }
 
   @Test
+  fun foldsWithKotlinsTypes() {
+    // Task 133 C2: `5 / 2` is Int division (2) before the Double addition, as in Kotlin.
+    assertEquals("2.5", ConstantFolding.foldDoubleLiteral("5 / 2 + 0.5"))
+    assertEquals("3.0", ConstantFolding.foldDoubleLiteral("5.0 / 2 + 0.5"))
+    // Float arithmetic is done in float: Kotlin's `1f / 3f`, widened exactly.
+    assertEquals((1f / 3f).toDouble().toString(), ConstantFolding.foldDoubleLiteral("1f / 3f"))
+    assertEquals("0.33333334f", ConstantFolding.foldFloatLiteral("1f / 3f"))
+    assertEquals("0.5f", ConstantFolding.foldFloatLiteral("1 / 2f"))
+    assertNull(ConstantFolding.foldFloatLiteral("1.0 / 3"), "a Double is not a Float default")
+    // Float op Double is Double.
+    assertEquals(
+      (0.1f.toDouble() + 0.2).toString(),
+      ConstantFolding.foldDoubleLiteral("0.1f + 0.2"),
+    )
+    assertEquals("1.0471975511965976", ConstantFolding.foldDoubleLiteral("PI / 3.0"))
+    // Int wraps at 32 bits like Kotlin; a Long property's literals are Longs.
+    assertEquals((Int.MAX_VALUE + 1).toString(), ConstantFolding.foldIntLiteral("2147483647 + 1"))
+    assertEquals("2147483648", ConstantFolding.foldLongLiteral("2147483647 + 1"))
+    assertEquals("2", ConstantFolding.foldIntLiteral("5 / 2"))
+    assertNull(ConstantFolding.foldIntLiteral("5 / 0"))
+    assertNull(ConstantFolding.foldLongLiteral("5 / 2 + 0.5"))
+  }
+
+  @Test
   fun integerExpressionsFold() {
     assertEquals("300", ConstantFolding.foldLongLiteral("60 * 5"))
     assertEquals("3", ConstantFolding.foldLongLiteral("7 / 2"))

@@ -94,6 +94,38 @@ class AutoloadSourceTest {
     assertNull(AutoloadSource.gdscriptExtends("var x = 1\n"))
   }
 
+  @Test
+  fun readsAOneLineClassNameExtends() {
+    // Task 133 C2: GDScript's one-line form.
+    assertEquals(
+      "Node2D",
+      AutoloadSource.gdscriptExtends("class_name Hud extends Node2D # the HUD\nvar x = 1\n"),
+    )
+  }
+
+  @Test
+  fun aFeatureTagKeyIsAnOverrideNotAnAutoload() {
+    val entries =
+      AutoloadSource.parseProjectGodot(
+        "[autoload]\n\nMusic=\"*res://music.gd\"\nMusic.android=\"*res://music_mobile.gd\"\n"
+      )
+    assertEquals(listOf(false, true), entries.map(AutoloadSource::isFeatureOverride))
+  }
+
+  @Test
+  fun readsTheUidAFileDeclares() {
+    assertEquals("uid://b6x2", AutoloadSource.declaredUid("music.gd.uid", "uid://b6x2\n"))
+    assertEquals(
+      "uid://c3sp",
+      AutoloadSource.declaredUid(
+        "settings.tscn",
+        "[gd_scene load_steps=2 format=3 uid=\"uid://c3sp\"]\n\n[node name=\"S\" type=\"Node\"]\n",
+      ),
+    )
+    assertNull(AutoloadSource.declaredUid("old.tscn", "[gd_scene load_steps=2 format=3]\n"))
+    assertNull(AutoloadSource.declaredUid("music.gd", "extends Node\n"))
+  }
+
   private val autoloads =
     listOf(
       Resolved(

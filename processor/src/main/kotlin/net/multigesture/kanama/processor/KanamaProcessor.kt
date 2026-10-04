@@ -185,6 +185,29 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           return
         }
         .filter { it.global }
+        .filter { entry ->
+          // Task 133 C2: `Name.android=...` overrides an autoload for one feature tag.
+          val override = AutoloadSource.isFeatureOverride(entry)
+          if (override) {
+            env.logger.warn(
+              "[kanama:ksp] autoload key ${entry.name} is a feature-tag override, not an " +
+                "autoload; Autoloads keeps the base entry"
+            )
+          }
+          !override
+        }
+        .map { entry ->
+          if (!entry.path.startsWith("uid://")) return@map entry
+          // Task 133 C2: an autoload saved by uid; the path is the file declaring that uid.
+          val path = resourcePathForUid(projectDir, entry.path)
+          if (path == null) {
+            env.logger.warn(
+              "[kanama:ksp] autoload ${entry.name}: no file of $projectDir declares " +
+                "${entry.path}; Autoloads.${entry.name} is typed Node"
+            )
+          }
+          entry.copy(path = path ?: entry.path)
+        }
     if (entries.isEmpty()) return
     val scriptsByPath = HashMap<String, String>()
     for (file in scriptFiles) {
@@ -294,6 +317,30 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       return "res://" + canonical.path.removePrefix(root).replace(File.separatorChar, '/')
     }
     return scriptResourcePath(file)
+  }
+
+  /**
+   * Task 133 C2: the `res://` path of the file declaring [uid] (a `.uid` sidecar's script, or a
+   * scene/resource header), found by walking [projectDir] (skipping `.godot`, `addons` and build
+   * output). Null when none does.
+   */
+  private fun resourcePathForUid(projectDir: File, uid: String): String? {
+    val skip = setOf(".godot", ".git", "addons", "build", ".gradle")
+    return projectDir
+      .walkTopDown()
+      .onEnter { it == projectDir || it.name !in skip }
+      .filter { it.isFile && (it.name.endsWith(".uid") || it.name.endsWith(".tscn")) }
+      .firstOrNull { file ->
+        // A scene declares its uid on the first line; read no further.
+        val text =
+          runCatching { file.bufferedReader().use { it.readLine() } }.getOrNull()
+            ?: return@firstOrNull false
+        AutoloadSource.declaredUid(file.name, text) == uid
+      }
+      ?.let { file ->
+        val target = if (file.name.endsWith(".uid")) File(file.path.removeSuffix(".uid")) else file
+        "res://" + target.relativeTo(projectDir).path.replace(File.separatorChar, '/')
+      }
   }
 
   private fun projectLocalFile(projectDir: File, resPath: String): File? =
@@ -1089,6 +1136,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       type.type == TypeMapping.FLOAT -> ExportHints.Slot.FLOAT
       type.type == TypeMapping.STRING -> ExportHints.Slot.STRING
       type.type == TypeMapping.NODE_PATH -> ExportHints.Slot.NODE_PATH
+      type.type == TypeMapping.COLOR -> ExportHints.Slot.COLOR
       type.type == TypeMapping.ARRAY && type.arrayElementString -> ExportHints.Slot.STRING_LIST
       else -> ExportHints.Slot.OTHER
     }
@@ -1841,6 +1889,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         "net.multigesture.kanama.types.Vector3i" -> TypeMapping.VECTOR3I
         "net.multigesture.kanama.types.Quaternion" -> TypeMapping.QUATERNION
         "net.multigesture.kanama.types.Basis" -> TypeMapping.BASIS
+        "net.multigesture.kanama.types.Color" -> TypeMapping.COLOR
         "net.multigesture.kanama.types.NodePath" -> TypeMapping.NODE_PATH
         "net.multigesture.kanama.api.GodotObject" -> TypeMapping.OBJECT
         else -> null
@@ -2771,11 +2820,14 @@ private fun normalizeEnumDefaultLiteral(
  */
 private fun normalizeNarrowDefaultLiteral(initializer: String, narrow: NarrowScalar): String? =
   when (narrow) {
+    // Task 133 C2: a constant expression folds with Kotlin's Float / Int arithmetic.
     NarrowScalar.FLOAT32 ->
       initializer.takeIf {
         Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?[fF]""").matches(it)
-      }
-    NarrowScalar.INT32 -> initializer.takeIf { Regex("""[-+]?\d+""").matches(it) }
+      } ?: ConstantFolding.foldFloatLiteral(initializer)
+    NarrowScalar.INT32 ->
+      initializer.takeIf { Regex("""[-+]?\d+""").matches(it) }
+        ?: ConstantFolding.foldIntLiteral(initializer)
   }
 
 private fun findPropertyDeclarationLine(
@@ -2862,6 +2914,8 @@ internal fun normalizeScriptPropertyDefaultLiteral(
   val doubleLiteral = Regex("""[-+]?(?:\d+\.\d*|\.\d+)(?:[eE][-+]?\d+)?[dD]?""")
   val numberLiteral = Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?[fFdDlL]?""")
   val boolLiteral = Regex("""true|false""")
+  val colorNamedConstant =
+    Regex("""(?:net\.multigesture\.kanama\.types\.)?Color\.([A-Z][A-Z0-9_]*)""")
   val stringLiteral = Regex(kotlinStringLiteralPattern)
   val nodePathLiteral =
     Regex(
@@ -2937,6 +2991,26 @@ internal fun normalizeScriptPropertyDefaultLiteral(
         components = 3,
         componentPattern = intLiteral,
       )
+    // Task 133 C2: `Color.RED` (Kotlin's named colors are Godot's) and `Color(r, g, b)` /
+    // `Color(r, g, b, a)` literals; anything else is read at runtime.
+    TypeMapping.COLOR ->
+      colorNamedConstant.matchEntire(initializer)?.let {
+        "net.multigesture.kanama.types.Color.${it.groupValues[1]}"
+      }
+        ?: normalizeVectorDefaultLiteral(
+          initializer = initializer,
+          packageClass = "net.multigesture.kanama.types.Color",
+          simpleClass = "Color",
+          components = 3,
+          componentPattern = numberLiteral,
+        )
+        ?: normalizeVectorDefaultLiteral(
+          initializer = initializer,
+          packageClass = "net.multigesture.kanama.types.Color",
+          simpleClass = "Color",
+          components = 4,
+          componentPattern = numberLiteral,
+        )
     TypeMapping.QUATERNION,
     TypeMapping.BASIS -> null
   }
@@ -3047,6 +3121,19 @@ internal enum class TypeMapping(
     scratchAllocationExpr =
       "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 9L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
     ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 9L",
+  ),
+  /**
+   * Godot's Color: four float32 channels (16 B) in every build, independent of `real_t` (task 133
+   * C2). The Kotlin type stores Float since task 134 A, so `r.toFloat()` round-trips exactly.
+   */
+  COLOR(
+    "COLOR",
+    "JAVA_FLOAT",
+    16,
+    "net.multigesture.kanama.types.Color.BLACK",
+    "net.multigesture.kanama.types.Color",
+    scratchAllocationExpr = "16L, 4L",
+    ptrcallSizeBytesExpr = "16L",
   ),
   NODE_PATH(
     "STRING",
@@ -3171,6 +3258,8 @@ internal enum class TypeMapping(
         "net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 3))"
       BASIS ->
         "net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 3), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 4), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 5), net.multigesture.kanama.types.GodotRealSegment.readIndex($s, 8)))"
+      COLOR ->
+        "net.multigesture.kanama.types.Color($s.get(JAVA_FLOAT, 0).toDouble(), $s.get(JAVA_FLOAT, 4).toDouble(), $s.get(JAVA_FLOAT, 8).toDouble(), $s.get(JAVA_FLOAT, 12).toDouble())"
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($s))"
       OBJECT -> "net.multigesture.kanama.api.GodotObject($s.get(ADDRESS, 0))"
       in VARIANT_ONLY_RETURN_SHAPES -> kotlinLiteralZero
@@ -3193,6 +3282,8 @@ internal enum class TypeMapping(
         "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.w) }"
       BASIS ->
         "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 8, $v.z.z) }"
+      COLOR ->
+        "{ $s.set(JAVA_FLOAT, 0, $v.r.toFloat()); $s.set(JAVA_FLOAT, 4, $v.g.toFloat()); $s.set(JAVA_FLOAT, 8, $v.b.toFloat()); $s.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
       NODE_PATH -> "GodotStrings.initString($s, $v.path)"
       // Task 131 item 2: a freed wrapper is written as NULL (nil), never as its dangling pointer.
       OBJECT ->
@@ -3222,6 +3313,8 @@ internal enum class TypeMapping(
         "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Quaternion(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 3)) }"
       BASIS ->
         "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Basis(net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 3), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 6)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 4), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 7)), net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 2), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 5), net.multigesture.kanama.types.GodotRealSegment.readIndex(p, 8))) }"
+      COLOR ->
+        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.Color(p.get(JAVA_FLOAT, 0).toDouble(), p.get(JAVA_FLOAT, 4).toDouble(), p.get(JAVA_FLOAT, 8).toDouble(), p.get(JAVA_FLOAT, 12).toDouble()) }"
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($ptr))"
       OBJECT ->
         "net.multigesture.kanama.api.GodotObject($ptr.reinterpret($ptrcallSizeBytesExpr).get(ADDRESS, 0))"
@@ -3250,6 +3343,8 @@ internal enum class TypeMapping(
         "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.w) }"
       BASIS ->
         "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 8, $v.z.z) }"
+      COLOR ->
+        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); p.set(JAVA_FLOAT, 0, $v.r.toFloat()); p.set(JAVA_FLOAT, 4, $v.g.toFloat()); p.set(JAVA_FLOAT, 8, $v.b.toFloat()); p.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
       NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
       // Task 131 item 2: a freed wrapper returns NULL (nil), never its dangling pointer.
       OBJECT ->
@@ -4752,6 +4847,8 @@ internal class ScriptCodeEmitter(
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); VariantConverters.variantToType(VariantType.VECTOR3).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3(net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 0), net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 1), net.multigesture.kanama.types.GodotRealSegment.readIndex(d, 2)) }"
       TypeMapping.VECTOR3I ->
         "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(12L, 4L); VariantConverters.variantToType(VariantType.VECTOR3I).invoke(d, $variantPtr); net.multigesture.kanama.types.Vector3i(d.get(JAVA_INT, 0), d.get(JAVA_INT, 4), d.get(JAVA_INT, 8)) }"
+      TypeMapping.COLOR ->
+        "val $localName = Arena.ofConfined().use { a -> val d = a.allocate(16L, 4L); VariantConverters.variantToType(VariantType.COLOR).invoke(d, $variantPtr); net.multigesture.kanama.types.Color(d.get(JAVA_FLOAT, 0).toDouble(), d.get(JAVA_FLOAT, 4).toDouble(), d.get(JAVA_FLOAT, 8).toDouble(), d.get(JAVA_FLOAT, 12).toDouble()) }"
       TypeMapping.QUATERNION ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Quaternion ?: net.multigesture.kanama.types.Quaternion.IDENTITY }"
       TypeMapping.BASIS ->
@@ -5047,6 +5144,7 @@ internal class ScriptCodeEmitter(
         "Arena.ofConfined().use { a -> val s = a.allocate(net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 3L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 0, $valueExpr.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 1, $valueExpr.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(s, 2, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3).invoke(ret, s) }"
       TypeMapping.VECTOR3I ->
         "Arena.ofConfined().use { a -> val s = a.allocate(12L, 4L); s.set(JAVA_INT, 0, $valueExpr.x); s.set(JAVA_INT, 4, $valueExpr.y); s.set(JAVA_INT, 8, $valueExpr.z); VariantConverters.variantFromType(VariantType.VECTOR3I).invoke(ret, s) }"
+      TypeMapping.COLOR,
       TypeMapping.QUATERNION ->
         "Arena.ofConfined().use { a -> BuiltinTypes.initVariantFromAny(ret, $valueExpr, a) }"
       TypeMapping.BASIS ->

@@ -56,15 +56,15 @@ class IosExportSkipTest {
 
   @Test
   fun aValueTypeWithoutAnIosPathIsABuildError() {
-    val r = emit(false, prop("cell", TypeMapping.VECTOR2I))
+    val r = emit(false, prop("cell", TypeMapping.VECTOR3I))
 
     assertEquals(1, r.errors.size, "${r.errors}")
-    assertTrue(r.errors.single().contains("SkipFixture.cell (VECTOR2I)"), r.errors.single())
+    assertTrue(r.errors.single().contains("SkipFixture.cell (VECTOR3I)"), r.errors.single())
   }
 
   @Test
   fun theOptInTurnsEachSkipBackIntoOneWarning() {
-    val r = emit(true, prop("regions", TypeMapping.DICTIONARY), prop("cell", TypeMapping.VECTOR2I))
+    val r = emit(true, prop("regions", TypeMapping.DICTIONARY), prop("cell", TypeMapping.VECTOR3I))
 
     assertEquals(emptyList(), r.errors)
     assertEquals(2, r.warnings.size, "${r.warnings}")
@@ -79,6 +79,9 @@ class IosExportSkipTest {
         prop("count", TypeMapping.INT),
         prop("motion", TypeMapping.VECTOR2),
         prop("label", TypeMapping.STRING),
+        // Task 133 C2: Vector2i (task 131 item 15) and Color are delivered on iOS now.
+        prop("cell", TypeMapping.VECTOR2I),
+        prop("tint", TypeMapping.COLOR),
       )
 
     assertEquals(emptyList(), r.errors)

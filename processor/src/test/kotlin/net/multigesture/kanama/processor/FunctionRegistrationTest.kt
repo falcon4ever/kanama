@@ -281,6 +281,9 @@ class FunctionRegistrationTest {
       )
     assertContains(message, "'kotlin.Function0<Unit>'")
     assertContains(message, "make it `internal` or `private`")
+    // Task 133 C2: the limit is Kanama's; Godot carries every Variant type.
+    assertContains(message, "Kanama does not yet pass")
+    assertContains(message, "Color")
   }
 
   // ---------- the removed annotations ----------

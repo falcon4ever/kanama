@@ -421,18 +421,62 @@ configure<com.google.devtools.ksp.gradle.KspExtension> {
   )
 }
 
+/**
+* Task 133 C2: the files KSP reads to generate `Autoloads` — `project.godot` and, per autoload, the
+* scene or GDScript whose root class / `extends` line types it (a `uid://` path is found through its
+* `.uid` sidecar or scene header). Read when the task runs, so a new autoload is tracked too.
+*/
+fun kanamaAutoloadInputs(projectGodot: File): List<File> {
+  if (!projectGodot.isFile) return listOf(projectGodot)
+  val root = projectGodot.parentFile
+  val paths = mutableListOf<String>()
+  var inAutoload = false
+  projectGodot.forEachLine { raw ->
+    val line = raw.trim()
+    if (line.startsWith("[")) {
+      inAutoload = line == "[autoload]"
+    } else if (inAutoload && '=' in line) {
+      paths += line.substringAfter('=').trim().removeSurrounding("\"").removePrefix("*")
+    }
+  }
+  val uids = paths.filter { it.startsWith("uid://") }.toSet()
+  val declaring = mutableMapOf<String, List<File>>()
+  if (uids.isNotEmpty()) {
+    val skip = setOf(".godot", ".git", "addons", "build", ".gradle")
+    root.walkTopDown()
+      .onEnter { it == root || it.name !in skip }
+      .filter { it.isFile && (it.name.endsWith(".uid") || it.name.endsWith(".tscn")) }
+      .forEach { file ->
+        val first = file.bufferedReader().use { it.readLine() }?.trim().orEmpty()
+        val uid =
+          if (file.name.endsWith(".uid")) first
+          else Regex("uid=\"(uid://[^\"]+)\"").find(first)?.groupValues?.get(1)
+        if (uid != null && uid in uids) {
+          declaring[uid] =
+            if (file.name.endsWith(".uid")) listOf(file, File(file.path.removeSuffix(".uid")))
+            else listOf(file)
+        }
+      }
+  }
+  return listOf(projectGodot) +
+    paths.flatMap { path ->
+      if (path.startsWith("res://")) listOf(root.resolve(path.removePrefix("res://")))
+      else declaring[path].orEmpty()
+    }.filter { it.name.endsWith(".tscn") || it.name.endsWith(".gd") || it.name.endsWith(".uid") }
+}
+
 // Task 133 C: the processor generates `Autoloads` from the project's `project.godot` (found above
 // the script sources), which is not a Kotlin source, so it is declared as an input of the KSP tasks:
-// an edit to `[autoload]` re-runs them.
+// an edit to `[autoload]` re-runs them. Task 133 C2: so is each autoload's scene / GDScript.
 tasks
   .matching { it.name.startsWith("kspKotlinIos") }
   .configureEach {
+    val candidates =
+      iosScriptDirs(configuredIosScriptDirs.orNull).flatMap {
+        listOf(file(it).resolve("project.godot"), file(it).resolve("../project.godot"))
+      }
     inputs
-      .files(
-        iosScriptDirs(configuredIosScriptDirs.orNull).flatMap {
-          listOf(file(it).resolve("project.godot"), file(it).resolve("../project.godot"))
-        }
-      )
+      .files(provider { candidates.flatMap { kanamaAutoloadInputs(it) } })
       .withPropertyName("kanamaGodotProjectFiles")
   }
 

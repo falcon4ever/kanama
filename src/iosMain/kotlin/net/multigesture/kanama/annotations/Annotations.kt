@@ -114,6 +114,8 @@ annotation class ExportGlobalDir
 
 annotation class ExportMultiline(val monospace: Boolean = false, val noWrap: Boolean = false)
 
+annotation class ExportColorNoAlpha
+
 annotation class ExportPlaceholder(val placeholder: String)
 
 annotation class ExportExpEasing(

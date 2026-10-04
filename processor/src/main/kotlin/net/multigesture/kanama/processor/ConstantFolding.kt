@@ -8,9 +8,16 @@ package net.multigesture.kanama.processor
  * Accepted: number literals (`1`, `0.5`, `2.5e-3`, `1f`, `3L`), `+ - * /`, unary `-`/`+`,
  * parentheses, `PI` / `TAU` / `E` (bare or on `Mathf`, `GD`, `Math`, `kotlin.math`), and the
  * functions `degToRad`, `radToDeg` (bare, `Mathf.`, `GD.`), `Math.toRadians`, `Math.toDegrees`,
- * `sqrt`. A Double expression is evaluated in IEEE double like Kotlin and GDScript; an integer
- * expression in 64-bit integers (division truncates, as in both languages). Anything else (a
- * reference to another property, a call) is not folded and the caller keeps its own rules.
+ * `sqrt`. Anything else (a reference to another property, a call) is not folded and the caller
+ * keeps its own rules.
+ *
+ * Task 133 C2: every subexpression is typed and evaluated as Kotlin evaluates it — an unsuffixed
+ * integer literal is an `Int` (a `Long` when it does not fit, or in a `Long` property's
+ * initializer, where Kotlin's integer literal type follows the expected type), `3L` a `Long`, `1f`
+ * a `Float`, a decimal a `Double`; a binary operation takes the wider operand type (Double >
+ * Float > Long > Int), so `5 / 2 + 0.5` is `2 + 0.5 = 2.5` (integer division first) and `1f / 3f`
+ * is the float `0.33333334`. Integer division truncates and `Int` wraps at 32 bits, as in Kotlin; a
+ * division by an integer zero is not folded.
  */
 internal object ConstantFolding {
 
@@ -18,32 +25,90 @@ internal object ConstantFolding {
 
   /** The folded Double default spelled as a literal both Kotlin and GDScript read back exactly. */
   fun foldDoubleLiteral(expression: String): String? {
-    val value = Parser(expression, integer = false).parseAll() ?: return null
-    if (value.isNaN() || value.isInfinite()) return null
-    return doubleLiteral(value)
+    val value = Parser(expression, longContext = false).parseAll() ?: return null
+    val double = value.toDouble()
+    if (double.isNaN() || double.isInfinite()) return null
+    return doubleLiteral(double)
   }
 
-  /** The folded integer default (`60 * 5` is `300`), or null. */
+  /** The folded `Long` default (`60 * 5` is `300`), or null for a non-integer expression. */
   fun foldLongLiteral(expression: String): String? {
-    val value = Parser(expression, integer = true).parseAll() ?: return null
-    return value.toLong().toString()
+    val value = Parser(expression, longContext = true).parseAll() ?: return null
+    return (value as? Num.Integral)?.value?.toString()
+  }
+
+  /** The folded `Float` default as a Kotlin Float literal (`1f / 3f` is `0.33333334f`), or null. */
+  fun foldFloatLiteral(expression: String): String? {
+    val value = Parser(expression, longContext = false).parseAll() as? Num.F ?: return null
+    if (value.value.isNaN() || value.value.isInfinite()) return null
+    return value.value.toString().replace("E", "e") + "f"
+  }
+
+  /** The folded `Int` default (Kotlin's 32-bit arithmetic), or null. */
+  fun foldIntLiteral(expression: String): String? {
+    val value = Parser(expression, longContext = false).parseAll() as? Num.I ?: return null
+    return value.value.toString()
   }
 
   /** Shortest round-trip spelling, lower-case exponent (GDScript reads `1.0e-5`). */
   fun doubleLiteral(value: Double): String = value.toString().replace("E", "e")
 
-  private class Parser(private val text: String, private val integer: Boolean) {
+  /** A typed constant: Kotlin's four numeric types an initializer can fold to. */
+  private sealed interface Num {
+    /** Kotlin's operand rank: the wider operand decides a binary operation's type. */
+    val rank: Int
+
+    fun toDouble(): Double
+
+    sealed interface Integral : Num {
+      val value: Long
+    }
+
+    data class I(val int: Int) : Integral {
+      override val rank = 0
+      override val value: Long
+        get() = int.toLong()
+
+      override fun toDouble() = int.toDouble()
+    }
+
+    data class L(override val value: Long) : Integral {
+      override val rank = 1
+
+      override fun toDouble() = value.toDouble()
+    }
+
+    data class F(val value: Float) : Num {
+      override val rank = 2
+
+      override fun toDouble() = value.toDouble()
+    }
+
+    data class D(val value: Double) : Num {
+      override val rank = 3
+
+      override fun toDouble() = value
+    }
+  }
+
+  private fun Num.toFloat(): Float =
+    when (this) {
+      is Num.I -> int.toFloat()
+      is Num.L -> value.toFloat()
+      is Num.F -> value
+      is Num.D -> value.toFloat()
+    }
+
+  private class Parser(private val text: String, private val longContext: Boolean) {
     private var pos = 0
 
-    fun parseAll(): Double? {
+    fun parseAll(): Num? {
       val value = runCatching { expression() }.getOrNull() ?: return null
       skipSpaces()
       return if (pos == text.length) value else null
     }
 
-    // Values travel as Double; with [integer] set every operation is done on Longs, so an integer
-    // default stays exact up to 2^53 (constant defaults never come close).
-    private fun expression(): Double {
+    private fun expression(): Num {
       var left = term()
       while (true) {
         skipSpaces()
@@ -62,7 +127,7 @@ internal object ConstantFolding {
       }
     }
 
-    private fun term(): Double {
+    private fun term(): Num {
       var left = unary()
       while (true) {
         skipSpaces()
@@ -81,34 +146,76 @@ internal object ConstantFolding {
       }
     }
 
-    private fun combine(a: Double, b: Double, op: Char): Double {
-      if (integer) {
-        val x = a.toLong()
-        val y = b.toLong()
-        return when (op) {
-          '+' -> (x + y).toDouble()
-          '-' -> (x - y).toDouble()
-          '*' -> (x * y).toDouble()
-          else -> {
-            require(y != 0L)
-            (x / y).toDouble()
-          }
+    /** One Kotlin binary operation, in the wider operand's type. */
+    private fun combine(a: Num, b: Num, op: Char): Num =
+      when (maxOf(a.rank, b.rank)) {
+        0 -> {
+          val x = (a as Num.I).int
+          val y = (b as Num.I).int
+          Num.I(
+            when (op) {
+              '+' -> x + y
+              '-' -> x - y
+              '*' -> x * y
+              else -> {
+                require(y != 0)
+                x / y
+              }
+            }
+          )
+        }
+        1 -> {
+          val x = (a as Num.Integral).value
+          val y = (b as Num.Integral).value
+          Num.L(
+            when (op) {
+              '+' -> x + y
+              '-' -> x - y
+              '*' -> x * y
+              else -> {
+                require(y != 0L)
+                x / y
+              }
+            }
+          )
+        }
+        2 -> {
+          val x = a.toFloat()
+          val y = b.toFloat()
+          Num.F(
+            when (op) {
+              '+' -> x + y
+              '-' -> x - y
+              '*' -> x * y
+              else -> x / y
+            }
+          )
+        }
+        else -> {
+          val x = a.toDouble()
+          val y = b.toDouble()
+          Num.D(
+            when (op) {
+              '+' -> x + y
+              '-' -> x - y
+              '*' -> x * y
+              else -> x / y
+            }
+          )
         }
       }
-      return when (op) {
-        '+' -> a + b
-        '-' -> a - b
-        '*' -> a * b
-        else -> a / b
-      }
-    }
 
-    private fun unary(): Double {
+    private fun unary(): Num {
       skipSpaces()
       return when (peek()) {
         '-' -> {
           pos++
-          -unary()
+          when (val value = unary()) {
+            is Num.I -> Num.I(-value.int)
+            is Num.L -> Num.L(-value.value)
+            is Num.F -> Num.F(-value.value)
+            is Num.D -> Num.D(-value.value)
+          }
         }
         '+' -> {
           pos++
@@ -118,7 +225,7 @@ internal object ConstantFolding {
       }
     }
 
-    private fun primary(): Double {
+    private fun primary(): Num {
       skipSpaces()
       val c = peek() ?: throw IllegalArgumentException("end of input")
       if (c == '(') {
@@ -134,22 +241,24 @@ internal object ConstantFolding {
         pos++
         val argument = expression()
         expect(')')
-        require(!integer)
+        requireOwner(name)
         return when (name.substringAfterLast('.')) {
           "degToRad",
-          "toRadians" -> argument * DEG_TO_RAD
+          "toRadians" -> Num.D(argument.toDouble() * DEG_TO_RAD)
           "radToDeg",
-          "toDegrees" -> argument / DEG_TO_RAD
-          "sqrt" -> kotlin.math.sqrt(argument)
+          "toDegrees" -> Num.D(argument.toDouble() / DEG_TO_RAD)
+          // kotlin.math.sqrt has a Float overload.
+          "sqrt" ->
+            if (argument is Num.F) Num.F(kotlin.math.sqrt(argument.value))
+            else Num.D(kotlin.math.sqrt(argument.toDouble()))
           else -> throw IllegalArgumentException("not a foldable function: $name")
-        }.also { requireOwner(name) }
+        }
       }
-      require(!integer)
       requireOwner(name)
       return when (name.substringAfterLast('.')) {
-        "PI" -> Math.PI
-        "TAU" -> Math.PI * 2.0
-        "E" -> Math.E
+        "PI" -> Num.D(Math.PI)
+        "TAU" -> Num.D(Math.PI * 2.0)
+        "E" -> Num.D(Math.E)
         else -> throw IllegalArgumentException("not a constant: $name")
       }
     }
@@ -171,7 +280,7 @@ internal object ConstantFolding {
       )
     }
 
-    private fun number(): Double {
+    private fun number(): Num {
       val start = pos
       while (peek()?.let { it.isDigit() || it == '_' } == true) pos++
       var decimal = false
@@ -187,31 +296,33 @@ internal object ConstantFolding {
         while (peek()?.isDigit() == true) pos++
       }
       val digits = text.substring(start, pos).replace("_", "")
-      val suffix = peek()
-      when (suffix) {
+      return when (peek()) {
         'f',
         'F' -> {
           // A Float literal: its value is the float nearest the digits.
           pos++
-          require(!integer)
-          return digits.toFloat().toDouble()
+          Num.F(digits.toFloat())
         }
         'd',
         'D' -> {
           pos++
-          require(!integer)
-          decimal = true
+          Num.D(digits.toDouble())
         }
         'L' -> {
           pos++
           require(!decimal)
+          Num.L(digits.toLong())
         }
+        else ->
+          when {
+            decimal -> Num.D(digits.toDouble())
+            longContext -> Num.L(digits.toLong())
+            else ->
+              digits.toLong().let {
+                if (it in Int.MIN_VALUE..Int.MAX_VALUE) Num.I(it.toInt()) else Num.L(it)
+              }
+          }
       }
-      if (integer) {
-        require(!decimal)
-        return digits.toLong().toDouble()
-      }
-      return digits.toDouble()
     }
 
     private fun qualifiedName(): String {

@@ -37,3 +37,5 @@ extends Node
 @export_file("*.png") var f_arr: Array[String]
 @export_multiline var ml_arr: Array[String]
 @export_enum("A", "B") var en_arr: Array[String]
+@export_color_no_alpha var cna: Color = Color.RED
+@export var col: Color = Color(0.2, 0.4, 0.6, 0.8)
