@@ -43250,6 +43250,12 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
       !node.isQueuedForDeletion(),
     )
     node.emitSignal("renamed")
+    // Two steps, as Godot 4.7.2 runs them (scene/animation/tween.cpp): the first finds the await
+    // received and finishes it, but AwaitTweener::step has set r_delta = 0 (line 976), so
+    // Tween::step's `while (running && rem_delta > 0)` loop (line 384) only starts the next step's
+    // tweeners and exits; the second step runs the CallbackTweener. The first device run stepped
+    // once and read the callback as not run.
+    tween.customStep(0.05)
     tween.customStep(0.05)
     val resumed = node.isQueuedForDeletion()
     check("tween-await(signal fires -> the callback after the await runs)", resumed)
