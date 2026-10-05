@@ -580,12 +580,28 @@ val t = GD.inverseLerp(0.0, 10.0, 2.5)
   `printT`, `printRaw`, `typeOf` (`typeof` is a Kotlin keyword) and `isNaN`. Parameter names are
   Godot's.
 - `float` is `Double`, `int` is `Long`, `bool` is `Boolean`. A `Variant` parameter or return is
-  `Any?`: GDScript's generic `abs`, `sign`, `floor`, `lerp`, `clamp`, `wrap`, `snapped`,
-  `max(a, b, ...)` and `min(a, b, ...)` return whatever Godot returns for the arguments; the typed
-  forms (`absf`, `lerpf`, `clampi`, `maxf`, ...) return a typed value.
+  `Any?`.
+- GDScript's generic `abs`, `sign`, `floor`, `ceil`, `round`, `lerp`, `clamp`, `wrap`, `snapped`,
+  `max` and `min` have typed overloads for numbers: `val m: Double = GD.max(1.5, 2.0)`,
+  `val n: Long = GD.max(1L, 2L)`, `val i: Int = GD.clamp(x, 0, 10)` (`Double` for all of them;
+  `Long` and `Int` where Godot has an int form: `abs`, `sign`, `max`, `min`, `clamp`, `wrap`). They
+  call the typed functions (`maxf`, `clampi`, ...). Vectors, mixed types and three or more values
+  (`GD.max(a, b, c)`) take the `Any?` form, which returns whatever Godot returns for the arguments
+  (`GD.abs(Vector3(-1.0, 2.0, -3.0))` is a `Vector3`, as an `Any?`).
 - `print`, `printErr`, `printS`, `printT`, `printRaw`, `printRich`, `printVerbose`, `pushError`,
   `pushWarning` and `str` take any number of values. Godot formats `null`, strings, booleans and
   numbers itself; any other value is passed as its `toString()`.
+- Every other `Any?` parameter (`typeOf`, `hash`, `isSame`, `varToStr`, `varToBytes`, `weakref`,
+  `typeConvert`, and the `Any?` forms of `max`, `lerp`, `clamp`, ...) needs a value Godot has a
+  Variant for: `null`, `Boolean`, the numbers, `String`, `NodePath`, the value types, `RID`, a
+  `GodotObject`, a `List` or `Map` of those, and on desktop and Android a `ByteArray`. Any other
+  Kotlin object throws (`Unsupported Variant value type` on desktop, `unsupported Variant argument
+  type` on iOS); Kanama does not turn it into a string behind your back.
+- Where the output goes: on desktop and Android, `GD.print` writes to Godot's output (the editor's
+  Output panel, the terminal Godot runs in). On iOS it goes to Godot's logger, which on the device
+  is the system log: you read it in Xcode's console or Console.app, not in the stdout stream
+  `xcrun devicectl ... --console` shows. Kotlin's `println` still writes to stdout, which is why the
+  iOS device harnesses print their markers with `println`.
 - `isInstanceValid` takes a `GodotObject?`: it answers from the instance id the wrapper captured,
   so it is safe on a wrapper whose object was freed. `isInstanceIdValid` takes a raw id.
 

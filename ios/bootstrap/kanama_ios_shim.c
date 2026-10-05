@@ -7418,9 +7418,19 @@ static int32_t kanama_ios_decode_variant_scalar(
             if (out_str_len != NULL) *out_str_len = (len < 0) ? 0 : len;
             break;
         }
-        default:
-            // NIL / un-decoded type: leave outs zero; Kotlin surfaces null.
+        default: {
+            // The raw value kinds (task 133: Vector3i, Vector4, Vector4i, Rect2, Rect2i, Plane,
+            // AABB, Quaternion, Basis, Transform2D/3D, Projection) ship their Godot bytes through
+            // out_str like Vector3 above; Kotlin decodes them with decodeIosRawValue (task 129 B
+            // review: the Variant-form GD.abs(Vector3i) and friends). Anything else (NIL, an
+            // un-decoded type) leaves the outs zero and Kotlin surfaces null.
+            int32_t raw = kanama_ios_raw_value_index_by_variant_type(ret_type);
+            if (raw >= 0 && out_str != NULL && out_str_size >= k_kanama_ios_raw_value_kinds[raw].bytes &&
+                kanama_ios_raw_value_from_variant(raw, ret_variant, out_str)) {
+                if (out_str_len != NULL) *out_str_len = k_kanama_ios_raw_value_kinds[raw].bytes;
+            }
             break;
+        }
     }
     return ret_type;
 }

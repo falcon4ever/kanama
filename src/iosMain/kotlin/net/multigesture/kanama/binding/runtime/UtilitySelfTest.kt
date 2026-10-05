@@ -5,15 +5,16 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.types.Vector2
+import net.multigesture.kanama.types.Vector3i
 
 /**
  * Task 129 B rows of the OBJECTCALLS SELFTEST scene-init phase: the generated common `GD` through
  * the iOS utility-call seam (`kanama_ios_godot_get_utility_function` /
  * `kanama_ios_godot_utility_call`). Each path gets a row whose expected value a call that never ran
  * cannot produce: the frame path (float / int / bool), the seeded RNG, the boxed path (String /
- * PackedByteArray arguments, String / Variant / packed / Object returns), a vararg call past the
- * shim's 16 stack cells, and the common Mathf. Nothing here may raise a shim fault: the phase
- * asserts the exact fault count.
+ * PackedByteArray arguments, String / Variant / packed / Object / raw-value returns, the >1024-byte
+ * pending paths, a typed overload), a vararg call past the shim's 16 stack cells, and the common
+ * Mathf. Nothing here may raise a shim fault: the phase asserts the exact fault count.
  */
 internal fun utilitySelfTestRows(check: (String, Boolean) -> Unit) {
   val faultsBefore = ObjectCalls.faultCount()
@@ -55,6 +56,21 @@ internal fun utilitySelfTestRows(check: (String, Boolean) -> Unit) {
   // Past the 16 stack cells, the shim's heap path: every argument must arrive.
   val twenty = Array<Any?>(20) { it.toLong() }
   check("utility-vararg(str of 20 values)", GD.str(*twenty) == (0 until 20).joinToString(""))
+
+  // Past the 1024-byte inline buffers: a long String return comes back through the shim's pending
+  // UTF-8 slot, a long PackedByteArray through the pending container slot, whole.
+  val long = "x".repeat(5000)
+  check("utility-long(str of 5000 chars -> 5000)", GD.str(long).length == 5000)
+  check(
+    "utility-long(bytes_to_var(var_to_bytes(5000 chars)) round-trip)",
+    GD.bytesToVar(GD.varToBytes(long)) == long,
+  )
+  // A raw value kind decoded from a Variant return (Vector3i), and a typed overload (frame path).
+  check(
+    "utility-boxed(abs(Vector3i(-1, 2, -3)) -> Vector3i(1, 2, 3))",
+    GD.abs(Vector3i(-1, 2, -3)) == Vector3i(1, 2, 3),
+  )
+  check("utility-typed(max(1.5, 2.0) -> 2.0: Double)", GD.max(1.5, 2.0) == 2.0)
 
   // Object return (owned decode) and the typed isInstanceValid.
   val segment = ObjectCalls.constructObject("Node")

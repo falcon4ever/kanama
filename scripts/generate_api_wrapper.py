@@ -5125,6 +5125,49 @@ GD_MEMBER_SECTIONS: dict[str, str] = {
         }""",
 }
 
+# Typed overloads of the Variant-form utilities (task 129 B review): GDScript's `max(a, b)` on two
+# floats is a float, so `GD.max(1.5, 2.0)` should be a `Double`, not an `Any?`. Each listed utility
+# also gets a `Double` overload delegating to its float form and, where Godot has one, `Long` and
+# `Int` overloads delegating to its int form (the frame path: no allocation). The `Any?` member stays
+# for vectors and mixed types. Value: (float form, int form or None).
+GD_TYPED_OVERLOADS: dict[str, tuple[str, str | None]] = {
+    "abs": ("absf", "absi"),
+    "sign": ("signf", "signi"),
+    "max": ("maxf", "maxi"),
+    "min": ("minf", "mini"),
+    "clamp": ("clampf", "clampi"),
+    "wrap": ("wrapf", "wrapi"),
+    "snapped": ("snappedf", None),
+    "floor": ("floorf", None),
+    "ceil": ("ceilf", None),
+    "round": ("roundf", None),
+    "lerp": ("lerpf", None),
+}
+
+
+def _gd_typed_overloads(name: str, by_name: dict[str, dict]) -> list[str]:
+    """`fun max(a: Double, b: Double): Double = maxf(a, b)` and its Long / Int twins."""
+    float_form, int_form = GD_TYPED_OVERLOADS[name]
+    kotlin = gd_kotlin_name(name)
+    out = []
+    for delegate, kind in ((float_form, "float"), (int_form, "int")):
+        if delegate is None:
+            continue
+        fn = by_name[delegate]
+        args = fn.get("arguments", [])
+        if any(a["type"] != kind for a in args) or fn.get("return_type") != kind:
+            raise SystemExit(f"[generate_api_wrapper] GD_TYPED_OVERLOADS[{name!r}]: {delegate} is not all-{kind}")
+        names = [camel_name(a["name"]) for a in args]
+        call = f"{gd_kotlin_name(delegate)}({', '.join(names)})"
+        if kind == "float":
+            out.append(f"    fun {kotlin}({', '.join(f'{n}: Double' for n in names)}): Double = {call}")
+        else:
+            out.append(f"    fun {kotlin}({', '.join(f'{n}: Long' for n in names)}): Long = {call}")
+            widened = f"{gd_kotlin_name(delegate)}({', '.join(f'{n}.toLong()' for n in names)})"
+            out.append(f"    fun {kotlin}({', '.join(f'{n}: Int' for n in names)}): Int = {widened}.toInt()")
+    return out
+
+
 # Godot type -> (Kotlin type, Variant type id). `Variant` is 0 (passed / returned as a Variant).
 _GD_TYPES: dict[str, tuple[str, int]] = {
     "Variant": ("Any?", 0),
@@ -5169,6 +5212,7 @@ def render_gd(api_path: Path) -> str:
     import json
 
     functions = json.loads(api_path.read_text(encoding="utf-8"))["utility_functions"]
+    by_name = {f["name"]: f for f in functions}
     unknown = sorted(set(GD_MEMBER_SECTIONS) - {f["name"] for f in functions} - {"GD"})
     if unknown:
         raise SystemExit(f"[generate_api_wrapper] GD_MEMBER_SECTIONS keys that are not utility functions: {unknown}")
@@ -5224,6 +5268,8 @@ def render_gd(api_path: Path) -> str:
             cast = "" if ret_kotlin == "Any?" else f" as {ret_kotlin}"
             suppress = '    @Suppress("UNCHECKED_CAST")\n' if "<" in ret_kotlin else ""
             members.append(f"{suppress}    fun {kotlin}({decl}): {ret_kotlin} =\n        {call}{cast}")
+        if name in GD_TYPED_OVERLOADS:
+            members.extend(_gd_typed_overloads(name, by_name))
     if "GD" in GD_MEMBER_SECTIONS:
         members.append(GD_MEMBER_SECTIONS["GD"])
     sig_lines = [f"        val {k} = intArrayOf({', '.join(str(i) for i in v)})" for k, v in sorted(signatures.items())]

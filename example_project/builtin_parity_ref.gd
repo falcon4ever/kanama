@@ -707,6 +707,8 @@ func utilities() -> void:
 	mix("GD.lerp", lerp(Vector2(0.0, 0.0), Vector2(2.0, 4.0), 0.25))
 	mix("GD.clamp", clamp(7, 0, 5))
 	mix("GD.abs", abs(-3))
+	mix("GD.abs(Vector3i)", abs(Vector3i(-1, 2, -3)))
+	mix("GD.max(Double)", max(1.5, 2.0))
 	mix("GD.sign", sign(-2.5))
 	mix("GD.floor", floor(Vector2(1.5, -1.5)))
 	mix("GD.round", round(2.5))

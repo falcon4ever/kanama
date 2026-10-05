@@ -253,6 +253,6 @@ internal constructor(private val stack: FrameStack, private val index: Int) {
     const val TOTAL_BYTES = RET_OFFSET + 128
     const val VARIANT_PAYLOAD = 8
     // Variant::Type INT: kanama_ios_godot_utility_call copies the raw 8 return bytes to ret_raw.
-    const val UTILITY_RAW_RETURN = 2
+    const val UTILITY_RAW_RETURN = VT_INT
   }
 }

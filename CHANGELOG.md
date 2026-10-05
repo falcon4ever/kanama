@@ -58,10 +58,22 @@ reproducible). `Mathf` was written three times (desktop 55 members, iOS 18, Web 
   `isSame`, `weakref`, `ridAllocateId` / `ridFromInt64`, and the Variant forms `abs`, `sign`,
   `floor`, `ceil`, `round`, `snapped`, `lerp`, `wrap`, `clamp`, `max(a, b, ...)`, `min(a, b, ...)`
   (they return `Any?`, like GDScript's).
+- **Typed overloads for the generic number functions**: `abs`, `sign`, `floor`, `ceil`, `round`,
+  `lerp`, `clamp`, `wrap`, `snapped`, `max` and `min` also take and return `Double` (and `Long` /
+  `Int` where Godot has an int form), so `val m: Double = GD.max(1.5, 2.0)` compiles and an `Int`
+  stays an `Int`; they call the typed functions (`maxf`, `clampi`, ...) without allocating. Vectors
+  and mixed types use the `Any?` form.
 - **iOS `GD` behaves like desktop and GDScript now**: `GD.print` and the other print functions
-  write to Godot's log, as on desktop (they wrote to stdout), random numbers come from
-  the engine's global generator, so `GD.seed(n)` reproduces GDScript's `seed(n)` sequence on the
-  phone, and the 91 members iOS lacked exist.
+  write to Godot's logger (they wrote to stdout). On the device that is the system log, read in
+  Xcode's console or Console.app; it is not in the stdout stream `xcrun devicectl ... --console`
+  shows, so a harness marker a device runner greps for must use Kotlin's `println` (Kanama's and
+  kanama-demos' iOS harnesses do). Random numbers come from the engine's global generator, so
+  `GD.seed(n)` reproduces GDScript's `seed(n)` sequence on the phone, and the 91 members iOS lacked
+  exist.
+- **iOS decodes every value type in a Variant return**: a `Vector3i`, `Vector4`, `Vector4i`,
+  `Rect2`, `Rect2i`, `Plane`, `AABB`, `Quaternion`, `Basis`, `Transform2D`, `Transform3D` or
+  `Projection` returned as a Variant (`GD.abs(Vector3i(...))`, `GodotObject.call(...)`,
+  `get(...)`) was `null` on iOS; it is the value now, as on desktop.
 - **`Mathf` is common code**, compiled by every native platform: where Godot's function is plain
   arithmetic (`lerp`, `inverseLerp`, `remap`, `clamp`, `min`/`max`, `wrap`, `snapped`, `moveToward`,
   `rotateToward`, `lerpAngle`, `smoothStep`, `fposmod`, `pingPong`, `round`, `sign`, ...) the body is
@@ -73,7 +85,7 @@ reproducible). `Mathf` was written three times (desktop 55 members, iOS 18, Web 
   `Mathf.inverseLerp(a, a, x)` divides by zero as Godot does (it returned 0), and `Mathf.lerpAngle`
   takes the shortest way round as Godot's does (iOS used a different formula).
 - **Source break:** `GD` — parameter names follow Godot's (`GD.sin(angleRad)`, `GD.degToRad(deg)`,
-  `GD.seed(base)`, `GD.typeOf(variant)`, `GD.hash(variable)`, ...), which matters only to a call
+  `GD.seed(base)`, `GD.typeOf(variable)`, `GD.hash(variable)`, ...), which matters only to a call
   that names its arguments; `GD.typeString` and `GD.errorString` take a `Long` (they took an `Int`:
   pass `n.toLong()`, a literal still compiles); `GD.randfn` has no default arguments (Godot's has
   none: write `GD.randfn(0.0, 1.0)`). On iOS, `GD.isInstanceValid` takes a `GodotObject?` (it took

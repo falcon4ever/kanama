@@ -41,13 +41,6 @@ actual constructor(private val name: String, private val hash: Long) {
 }
 
 internal actual object UtilityCalls {
-  private const val VT_NIL = 0
-  private const val VT_BOOL = 1
-  private const val VT_INT = 2
-  private const val VT_FLOAT = 3
-  private const val VT_STRING = 4
-  private const val VT_RID = 23
-  private const val VT_PACKED_BYTE_ARRAY = 29
   private const val STR_BUF_SIZE = 1024L
 
   actual fun call(

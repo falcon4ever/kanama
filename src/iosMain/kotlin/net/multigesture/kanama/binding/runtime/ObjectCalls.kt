@@ -3574,7 +3574,11 @@ actual object ObjectCalls {
             Float.fromBits(i32LE(b, 12)),
           )
         } else null
-      else -> null
+      // The raw value kinds (Vector3i ... Projection) arrive as their Godot bytes in out_str (task
+      // 129 B review); zero length = the C side could not decode.
+      else ->
+        if (outStrLen.value > 0L) net.multigesture.kanama.ios.decodeIosRawVariant(retType, outStr)
+        else null
     }
 
   // Generic Variant Object.call dispatch (mirrors desktop ObjectCalls.callWithVariantArgs):

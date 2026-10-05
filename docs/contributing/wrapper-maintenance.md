@@ -228,10 +228,14 @@ pointer `variant_get_ptr_utility_function` returns), iOS `src/iosMain/.../Utilit
 C shim's `kanama_ios_godot_get_utility_function` / `kanama_ios_godot_utility_call` (no argument
 cap: vararg cells past 16 live on the heap). The data is in the generator: `GD_NAME_OVERRIDES`
 (the Kotlin names that differ from Godot's camel case), `GD_TEXT_UTILITIES` (the print family and
-`str`, whose non-Variant arguments are passed as `toString()`), and `GD_MEMBER_SECTIONS`
+`str`, whose non-Variant arguments are passed as `toString()`), `GD_TYPED_OVERLOADS` (the
+`Double` / `Long` / `Int` overloads of the Variant-form `max`, `abs`, `clamp`, ..., each delegating
+to the typed function), and `GD_MEMBER_SECTIONS`
 (budgeted hand members: the typed `isInstanceValid`, the text helper). `sync_kdoc_from_godot_docs.py`
 documents each member from `@GlobalScope.xml` through the file's `Fn` table. `Mathf` is hand-written
-once in common (`sugar`): Godot's formula where it is plain arithmetic, a `GD` call otherwise; the
+once in common (`sugar`): Godot's formula where it is plain arithmetic, a `GD` call otherwise (its
+`Float` overloads stay hand-written: generated ones would have to be extension functions, which a
+script importing only `Mathf` would not see); the
 runtime smoke's parity pair (`generate_builtin_ops.py`, rows `mathf=` / `mathfedge=` / `gd=` /
 `rand=`) holds both to GDScript.
 

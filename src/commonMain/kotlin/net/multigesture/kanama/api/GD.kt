@@ -22,6 +22,30 @@ object GD {
         UtilityCalls.call(Fn.abs, Sig.VARIANTS, arrayOf(x), VARIANT)
 
     /**
+     * Returns the absolute value of a `Variant` parameter `x` (i.e. non-negative value). Supported
+     * types: `int`, `float`, `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.abs
+     */
+    fun abs(x: Double): Double = absf(x)
+
+    /**
+     * Returns the absolute value of a `Variant` parameter `x` (i.e. non-negative value). Supported
+     * types: `int`, `float`, `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.abs
+     */
+    fun abs(x: Long): Long = absi(x)
+
+    /**
+     * Returns the absolute value of a `Variant` parameter `x` (i.e. non-negative value). Supported
+     * types: `int`, `float`, `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.abs
+     */
+    fun abs(x: Int): Int = absi(x.toLong()).toInt()
+
+    /**
      * Returns the absolute value of float parameter `x` (i.e. positive value).
      *
      * Generated from Godot docs: @GlobalScope.absf
@@ -228,6 +252,15 @@ object GD {
 
     /**
      * Rounds `x` upward (towards positive infinity), returning the smallest whole number that is not
+     * less than `x`. Supported types: `int`, `float`, `Vector2`, `Vector2i`, `Vector3`, `Vector3i`,
+     * `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.ceil
+     */
+    fun ceil(x: Double): Double = ceilf(x)
+
+    /**
+     * Rounds `x` upward (towards positive infinity), returning the smallest whole number that is not
      * less than `x`. A type-safe version of `ceil`, returning a `float`.
      *
      * Generated from Godot docs: @GlobalScope.ceilf
@@ -260,6 +293,30 @@ object GD {
      */
     fun clamp(value: Any?, min: Any?, max: Any?): Any? =
         UtilityCalls.call(Fn.clamp, Sig.VARIANTS, arrayOf(value, min, max), VARIANT)
+
+    /**
+     * Clamps the `value`, returning a `Variant` not less than `min` and not more than `max`. Any
+     * values that can be compared with the less than and greater than operators will work.
+     *
+     * Generated from Godot docs: @GlobalScope.clamp
+     */
+    fun clamp(value: Double, min: Double, max: Double): Double = clampf(value, min, max)
+
+    /**
+     * Clamps the `value`, returning a `Variant` not less than `min` and not more than `max`. Any
+     * values that can be compared with the less than and greater than operators will work.
+     *
+     * Generated from Godot docs: @GlobalScope.clamp
+     */
+    fun clamp(value: Long, min: Long, max: Long): Long = clampi(value, min, max)
+
+    /**
+     * Clamps the `value`, returning a `Variant` not less than `min` and not more than `max`. Any
+     * values that can be compared with the less than and greater than operators will work.
+     *
+     * Generated from Godot docs: @GlobalScope.clamp
+     */
+    fun clamp(value: Int, min: Int, max: Int): Int = clampi(value.toLong(), min.toLong(), max.toLong()).toInt()
 
     /**
      * Clamps the `value`, returning a `float` not less than `min` and not more than `max`.
@@ -457,6 +514,15 @@ object GD {
      */
     fun floor(x: Any?): Any? =
         UtilityCalls.call(Fn.floor, Sig.VARIANTS, arrayOf(x), VARIANT)
+
+    /**
+     * Rounds `x` downward (towards negative infinity), returning the largest whole number that is not
+     * more than `x`. Supported types: `int`, `float`, `Vector2`, `Vector2i`, `Vector3`, `Vector3i`,
+     * `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.floor
+     */
+    fun floor(x: Double): Double = floorf(x)
 
     /**
      * Rounds `x` downward (towards negative infinity), returning the largest whole number that is not
@@ -665,6 +731,18 @@ object GD {
         UtilityCalls.call(Fn.lerp, Sig.VARIANTS, arrayOf(from, to, weight), VARIANT)
 
     /**
+     * Linearly interpolates between two values by the factor defined in `weight`. To perform
+     * interpolation, `weight` should be between `0.0` and `1.0` (inclusive). However, values outside
+     * this range are allowed and can be used to perform extrapolation. If this is not desired, use
+     * `clampf` to limit `weight`. Both `from` and `to` must be the same type. Supported types: `int`,
+     * `float`, `Vector2`, `Vector3`, `Vector4`, `Color`, `Quaternion`, `Basis`, `Transform2D`,
+     * `Transform3D`.
+     *
+     * Generated from Godot docs: @GlobalScope.lerp
+     */
+    fun lerp(from: Double, to: Double, weight: Double): Double = lerpf(from, to, weight)
+
+    /**
      * Linearly interpolates between two angles (in radians) by a `weight` value between 0.0 and 1.0.
      * Similar to `lerp`, but interpolates correctly when the angles wrap around `@GDScript.TAU`. To
      * perform eased interpolation with `lerp_angle`, combine it with `ease` or `smoothstep`.
@@ -735,6 +813,27 @@ object GD {
         UtilityCalls.call(Fn.max, Sig.VARIANTS, arrayOf(arg1, arg2, *values), VARIANT)
 
     /**
+     * Returns the maximum of the given numeric values. This function can take any number of arguments.
+     *
+     * Generated from Godot docs: @GlobalScope.max
+     */
+    fun max(a: Double, b: Double): Double = maxf(a, b)
+
+    /**
+     * Returns the maximum of the given numeric values. This function can take any number of arguments.
+     *
+     * Generated from Godot docs: @GlobalScope.max
+     */
+    fun max(a: Long, b: Long): Long = maxi(a, b)
+
+    /**
+     * Returns the maximum of the given numeric values. This function can take any number of arguments.
+     *
+     * Generated from Godot docs: @GlobalScope.max
+     */
+    fun max(a: Int, b: Int): Int = maxi(a.toLong(), b.toLong()).toInt()
+
+    /**
      * Returns the maximum of two `float` values.
      *
      * Generated from Godot docs: @GlobalScope.maxf
@@ -767,6 +866,27 @@ object GD {
      */
     fun min(arg1: Any?, arg2: Any?, vararg values: Any?): Any? =
         UtilityCalls.call(Fn.min, Sig.VARIANTS, arrayOf(arg1, arg2, *values), VARIANT)
+
+    /**
+     * Returns the minimum of the given numeric values. This function can take any number of arguments.
+     *
+     * Generated from Godot docs: @GlobalScope.min
+     */
+    fun min(a: Double, b: Double): Double = minf(a, b)
+
+    /**
+     * Returns the minimum of the given numeric values. This function can take any number of arguments.
+     *
+     * Generated from Godot docs: @GlobalScope.min
+     */
+    fun min(a: Long, b: Long): Long = mini(a, b)
+
+    /**
+     * Returns the minimum of the given numeric values. This function can take any number of arguments.
+     *
+     * Generated from Godot docs: @GlobalScope.min
+     */
+    fun min(a: Int, b: Int): Int = mini(a.toLong(), b.toLong()).toInt()
 
     /**
      * Returns the minimum of two `float` values.
@@ -1124,6 +1244,14 @@ object GD {
         UtilityCalls.call(Fn.round, Sig.VARIANTS, arrayOf(x), VARIANT)
 
     /**
+     * Rounds `x` to the nearest whole number, with halfway cases rounded away from 0. Supported types:
+     * `int`, `float`, `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.round
+     */
+    fun round(x: Double): Double = roundf(x)
+
+    /**
      * Rounds `x` to the nearest whole number, with halfway cases rounded away from 0. A type-safe
      * version of `round`, returning a `float`.
      *
@@ -1170,6 +1298,33 @@ object GD {
      */
     fun sign(x: Any?): Any? =
         UtilityCalls.call(Fn.sign, Sig.VARIANTS, arrayOf(x), VARIANT)
+
+    /**
+     * Returns the same type of `Variant` as `x`, with `-1` for negative values, `1` for positive
+     * values, and `0` for zeros. For `nan` values it returns 0. Supported types: `int`, `float`,
+     * `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.sign
+     */
+    fun sign(x: Double): Double = signf(x)
+
+    /**
+     * Returns the same type of `Variant` as `x`, with `-1` for negative values, `1` for positive
+     * values, and `0` for zeros. For `nan` values it returns 0. Supported types: `int`, `float`,
+     * `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.sign
+     */
+    fun sign(x: Long): Long = signi(x)
+
+    /**
+     * Returns the same type of `Variant` as `x`, with `-1` for negative values, `1` for positive
+     * values, and `0` for zeros. For `nan` values it returns 0. Supported types: `int`, `float`,
+     * `Vector2`, `Vector2i`, `Vector3`, `Vector3i`, `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.sign
+     */
+    fun sign(x: Int): Int = signi(x.toLong()).toInt()
 
     /**
      * Returns `-1.0` if `x` is negative, `1.0` if `x` is positive, and `0.0` if `x` is zero. For `nan`
@@ -1249,6 +1404,16 @@ object GD {
      */
     fun snapped(x: Any?, step: Any?): Any? =
         UtilityCalls.call(Fn.snapped, Sig.VARIANTS, arrayOf(x, step), VARIANT)
+
+    /**
+     * Returns the multiple of `step` that is the closest to `x`. This can also be used to round a
+     * floating-point number to an arbitrary number of decimals. The returned value is the same type of
+     * `Variant` as `step`. Supported types: `int`, `float`, `Vector2`, `Vector2i`, `Vector3`,
+     * `Vector3i`, `Vector4`, `Vector4i`.
+     *
+     * Generated from Godot docs: @GlobalScope.snapped
+     */
+    fun snapped(x: Double, step: Double): Double = snappedf(x, step)
 
     /**
      * Returns the multiple of `step` that is the closest to `x`. This can also be used to round a
@@ -1428,6 +1593,36 @@ object GD {
      */
     fun wrap(value: Any?, min: Any?, max: Any?): Any? =
         UtilityCalls.call(Fn.wrap, Sig.VARIANTS, arrayOf(value, min, max), VARIANT)
+
+    /**
+     * Wraps the `Variant` `value` between `min` and `max`. `min` is inclusive while `max` is
+     * exclusive. This can be used for creating loop-like behavior or infinite surfaces. Variant types
+     * `int` and `float` are supported. If any of the arguments is `float`, this function returns a
+     * `float`, otherwise it returns an `int`.
+     *
+     * Generated from Godot docs: @GlobalScope.wrap
+     */
+    fun wrap(value: Double, min: Double, max: Double): Double = wrapf(value, min, max)
+
+    /**
+     * Wraps the `Variant` `value` between `min` and `max`. `min` is inclusive while `max` is
+     * exclusive. This can be used for creating loop-like behavior or infinite surfaces. Variant types
+     * `int` and `float` are supported. If any of the arguments is `float`, this function returns a
+     * `float`, otherwise it returns an `int`.
+     *
+     * Generated from Godot docs: @GlobalScope.wrap
+     */
+    fun wrap(value: Long, min: Long, max: Long): Long = wrapi(value, min, max)
+
+    /**
+     * Wraps the `Variant` `value` between `min` and `max`. `min` is inclusive while `max` is
+     * exclusive. This can be used for creating loop-like behavior or infinite surfaces. Variant types
+     * `int` and `float` are supported. If any of the arguments is `float`, this function returns a
+     * `float`, otherwise it returns an `int`.
+     *
+     * Generated from Godot docs: @GlobalScope.wrap
+     */
+    fun wrap(value: Int, min: Int, max: Int): Int = wrapi(value.toLong(), min.toLong(), max.toLong()).toInt()
 
     /**
      * Wraps the float `value` between `min` and `max`. `min` is inclusive while `max` is exclusive.

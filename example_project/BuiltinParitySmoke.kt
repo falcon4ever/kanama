@@ -698,6 +698,8 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("GD.lerp", GD.lerp(Vector2(0.0, 0.0), Vector2(2.0, 4.0), 0.25))
     mix("GD.clamp", GD.clamp(7L, 0L, 5L))
     mix("GD.abs", GD.abs(-3L))
+    mix("GD.abs(Vector3i)", GD.abs(Vector3i(-1, 2, -3)))
+    mix("GD.max(Double)", GD.max(1.5, 2.0))
     mix("GD.sign", GD.sign(-2.5))
     mix("GD.floor", GD.floor(Vector2(1.5, -1.5)))
     mix("GD.round", GD.round(2.5))
@@ -711,10 +713,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("GD.typeConvert", GD.typeConvert("12", 2L))
     mix("GD.errorString", GD.errorString(0L))
     mix("GD.randFromSeed", GD.randFromSeed(42L))
-    mix(
-      "GD.instanceFromId",
-      GD.instanceFromId(self.getInstanceId())?.getInstanceId() == self.getInstanceId(),
-    )
+    mix("GD.instanceFromId", GD.instanceFromId(self.getInstanceId())?.getInstanceId() == self.getInstanceId())
     mix("GD.isInstanceIdValid", GD.isInstanceIdValid(self.getInstanceId()))
   }
 
@@ -1908,11 +1907,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun pure60() {
     val l = Vector3(nv(), nv(), nv())
-    val r =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     mix("Vector3 * Transform3D", l * r)
   }
 
@@ -2182,13 +2177,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun pure107() {
     val l = Vector4(nv(), nv(), nv(), nv())
-    val r =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val r = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Vector4 * Projection", l * r)
   }
 
@@ -2446,11 +2435,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun pure153() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-    val r =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     mix("Plane * Transform3D", l * r)
   }
 
@@ -2590,11 +2575,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun pure176() {
     val l = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
-    val r =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     mix("AABB * Transform3D", l * r)
   }
 
@@ -2727,157 +2708,89 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure200() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Transform3D * int", l * r)
   }
 
   private fun pure201() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Transform3D / int", l / r)
   }
 
   private fun pure202() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Transform3D * float", l * r)
   }
 
   private fun pure203() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Transform3D / float", l / r)
   }
 
   private fun pure204() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val r = Vector3(nv(), nv(), nv())
     mix("Transform3D * Vector3", l * r)
   }
 
   private fun pure205() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val r = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("Transform3D * Plane", l * r)
   }
 
   private fun pure206() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val r = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("Transform3D * AABB", l * r)
   }
 
   private fun pure207() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
-    val r =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
+    val r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     mix("Transform3D * Transform3D", l * r)
   }
 
   private fun pure208() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val r = listOf(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Transform3D * PackedVector3Array", l * r)
   }
 
   private fun pure209() {
-    val b =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     mix("Transform3D.inverse", b.inverse())
   }
 
   private fun pure210() {
-    val b =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     mix("Transform3D.affine_inverse", b.affineInverse())
   }
 
   private fun pure211() {
-    val b =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     mix("Transform3D.orthonormalized", b.orthonormalized())
   }
 
   private fun pure212() {
-    val b =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv())
     mix("Transform3D.translated", b.translated(a0))
   }
 
   private fun pure213() {
-    val b =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv())
     mix("Transform3D.translated_local", b.translatedLocal(a0))
   }
 
   private fun pure214() {
-    val b =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
-    val a0 =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
+    val b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
+    val a0 = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
     mix("Transform3D.is_equal_approx", b.isEqualApprox(a0))
   }
 
@@ -2970,32 +2883,14 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun pure230() {
-    val l =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val l = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     val r = Vector4(nv(), nv(), nv(), nv())
     mix("Projection * Vector4", l * r)
   }
 
   private fun pure231() {
-    val l =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
-    val r =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val l = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
+    val r = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection * Projection", l * r)
   }
 
@@ -3941,10 +3836,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     val a4 = nv()
     val a5 = nv()
     val a6 = nv()
-    mix(
-      "Quaternion.spherical_cubic_interpolate_in_time",
-      b.sphericalCubicInterpolateInTime(a0, a1, a2, a3, a4, a5, a6),
-    )
+    mix("Quaternion.spherical_cubic_interpolate_in_time", b.sphericalCubicInterpolateInTime(a0, a1, a2, a3, a4, a5, a6))
   }
 
   private fun facade40() {
@@ -4171,38 +4063,33 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade79() {
-    val b =
-      Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
+    val b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
     mix("Transform3D.rotated", b.rotated(a0, a1))
   }
 
   private fun facade80() {
-    val b =
-      Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
+    val b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = nv()
     mix("Transform3D.rotated_local", b.rotatedLocal(a0, a1))
   }
 
   private fun facade81() {
-    val b =
-      Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
+    val b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Transform3D.scaled", b.scaled(a0))
   }
 
   private fun facade82() {
-    val b =
-      Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
+    val b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Transform3D.scaled_local", b.scaledLocal(a0))
   }
 
   private fun facade83() {
-    val b =
-      Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
+    val b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     val a1 = Vector3(nv(), nv(), nv()).normalized()
     val a2 = rb()
@@ -4210,17 +4097,14 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade84() {
-    val b =
-      Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
-    val a0 =
-      Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
+    val b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
+    val a0 = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     val a1 = nv()
     mix("Transform3D.interpolate_with", b.interpolateWith(a0, a1))
   }
 
   private fun facade85() {
-    val b =
-      Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
+    val b = Transform3D(Basis(Quaternion(nv(), nv(), nv(), nv()).normalized()), Vector3(nv(), nv(), nv()))
     mix("Transform3D.is_finite", b.isFinite())
   }
 
@@ -4329,10 +4213,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     val a5 = rs().toLong()
     val a6 = nv()
     val a7 = nv()
-    mix(
-      "Projection.create_perspective_hmd",
-      Projection.createPerspectiveHmd(a0, a1, a2, a3, a4, a5, a6, a7),
-    )
+    mix("Projection.create_perspective_hmd", Projection.createPerspectiveHmd(a0, a1, a2, a3, a4, a5, a6, a7))
   }
 
   private fun facade104() {
@@ -4363,10 +4244,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     val a2 = nv()
     val a3 = nv()
     val a4 = rb()
-    mix(
-      "Projection.create_orthogonal_aspect",
-      Projection.createOrthogonalAspect(a0, a1, a2, a3, a4),
-    )
+    mix("Projection.create_orthogonal_aspect", Projection.createOrthogonalAspect(a0, a1, a2, a3, a4))
   }
 
   private fun facade107() {
@@ -4395,59 +4273,29 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade110() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.determinant", b.determinant())
   }
 
   private fun facade111() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     val a0 = nv()
     mix("Projection.perspective_znear_adjusted", b.perspectiveZnearAdjusted(a0))
   }
 
   private fun facade112() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     val a0 = rs().toLong()
     mix("Projection.get_projection_plane", b.getProjectionPlane(a0))
   }
 
   private fun facade113() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.flipped_y", b.flippedY())
   }
 
   private fun facade114() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Projection.jitter_offseted", b.jitterOffseted(a0))
   }
@@ -4459,113 +4307,53 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun facade116() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.get_z_far", b.getZFar())
   }
 
   private fun facade117() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.get_z_near", b.getZNear())
   }
 
   private fun facade118() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.get_aspect", b.getAspect())
   }
 
   private fun facade119() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.get_fov", b.getFov())
   }
 
   private fun facade120() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.is_orthogonal", b.isOrthogonal())
   }
 
   private fun facade121() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.get_viewport_half_extents", b.getViewportHalfExtents())
   }
 
   private fun facade122() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.get_far_plane_half_extents", b.getFarPlaneHalfExtents())
   }
 
   private fun facade123() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.inverse", b.inverse())
   }
 
   private fun facade124() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     val a0 = rs().toLong()
     mix("Projection.get_pixels_per_meter", b.getPixelsPerMeter(a0))
   }
 
   private fun facade125() {
-    val b =
-      Projection(
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-        Vector4(nv(), nv(), nv(), nv()),
-      )
+    val b = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
     mix("Projection.get_lod_multiplier", b.getLodMultiplier())
   }
 
@@ -4800,9 +4588,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   }
 
   private fun summary(): String =
-    hashes.entries.joinToString(" ") { (name, hash) ->
-      "${name.replace(' ', '_')}=${hash.toString(16)}"
-    }
+    hashes.entries.joinToString(" ") { (name, hash) -> "${name.replace(' ', '_')}=${hash.toString(16)}" }
 
   private fun report(line: String) {
     System.err.println("[kanama:kt] BuiltinParity kotlin $line")
@@ -4811,20 +4597,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
   private companion object {
     val SCALES = doubleArrayOf(0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0)
     val EDGE =
-      doubleArrayOf(
-        0.0,
-        -0.0,
-        Double.NaN,
-        Double.POSITIVE_INFINITY,
-        Double.NEGATIVE_INFINITY,
-        0.5,
-        -0.5,
-        1.5,
-        2.5,
-        -2.5,
-        1e-30,
-        3.0,
-      )
+      doubleArrayOf(0.0, -0.0, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)
     val EDGE_FINITE = doubleArrayOf(0.0, -0.0, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)
   }
 }

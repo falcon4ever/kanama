@@ -1850,6 +1850,8 @@ GD_ENTRIES: list[tuple[str, str, str]] = [
     ("GD.lerp", "GD.lerp(Vector2(0.0, 0.0), Vector2(2.0, 4.0), 0.25)", "lerp(Vector2(0.0, 0.0), Vector2(2.0, 4.0), 0.25)"),
     ("GD.clamp", "GD.clamp(7L, 0L, 5L)", "clamp(7, 0, 5)"),
     ("GD.abs", "GD.abs(-3L)", "abs(-3)"),
+    ("GD.abs(Vector3i)", "GD.abs(Vector3i(-1, 2, -3))", "abs(Vector3i(-1, 2, -3))"),
+    ("GD.max(Double)", "GD.max(1.5, 2.0)", "max(1.5, 2.0)"),
     ("GD.sign", "GD.sign(-2.5)", "sign(-2.5)"),
     ("GD.floor", "GD.floor(Vector2(1.5, -1.5))", "floor(Vector2(1.5, -1.5))"),
     ("GD.round", "GD.round(2.5)", "round(2.5)"),
