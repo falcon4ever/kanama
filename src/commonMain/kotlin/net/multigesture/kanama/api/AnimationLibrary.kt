@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -81,6 +82,26 @@ class AnimationLibrary(handle: GodotHandle) : Resource(handle) {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetInt(getAnimationListSizeBind, segment)
     }
+
+    /** Signal `animation_added(anim_name: StringName)`; see [TypedSignal]. */
+    val animationAdded: Signal1<String>
+        @JvmName("animationAddedTypedSignal")
+        get() = Signal1(this, "animation_added", SignalArgType.STRING)
+
+    /** Signal `animation_removed(anim_name: StringName)`; see [TypedSignal]. */
+    val animationRemoved: Signal1<String>
+        @JvmName("animationRemovedTypedSignal")
+        get() = Signal1(this, "animation_removed", SignalArgType.STRING)
+
+    /** Signal `animation_renamed(old_name: StringName, new_name: StringName)`; see [TypedSignal]. */
+    val animationRenamed: Signal2<String, String>
+        @JvmName("animationRenamedTypedSignal")
+        get() = Signal2(this, "animation_renamed", SignalArgType.STRING, SignalArgType.STRING)
+
+    /** Signal `animation_changed(anim_name: StringName)`; see [TypedSignal]. */
+    val animationChanged: Signal1<String>
+        @JvmName("animationChangedTypedSignal")
+        get() = Signal1(this, "animation_changed", SignalArgType.STRING)
 
     object Signals {
         const val animationAdded: String = "animation_added"

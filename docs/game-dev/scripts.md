@@ -511,13 +511,14 @@ GDScript function `await`s:
 |---|---|
 | `await get_tree().create_timer(1.0).timeout` | `wait(1.0)` |
 | `await get_tree().process_frame` | `nextFrame()` |
-| `await $MessageTimer.timeout` | `messageTimer.signal(Timer.Signals.timeout).await(self)` |
+| `await $MessageTimer.timeout` | `messageTimer.timeout.await()` |
+| `var body = await area.body_entered` | `val body = area.bodyEntered.await()` (typed: `Node3D`) |
 
 ```kotlin
 fun showGameOver() {
     launch {
         showMessage("Game Over")
-        messageTimer.signal(Timer.Signals.timeout).await(self)
+        messageTimer.timeout.await()
         wait(1.0)
         startButton.show()
     }

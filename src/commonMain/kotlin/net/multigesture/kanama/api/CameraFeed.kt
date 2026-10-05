@@ -205,6 +205,16 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(setFormatBind, segment, index, parameters)
     }
 
+    /** Signal `frame_changed()`; see [TypedSignal]. */
+    val frameChanged: Signal0
+        @JvmName("frameChangedTypedSignal")
+        get() = Signal0(this, "frame_changed")
+
+    /** Signal `format_changed()`; see [TypedSignal]. */
+    val formatChanged: Signal0
+        @JvmName("formatChangedTypedSignal")
+        get() = Signal0(this, "format_changed")
+
     object Signals {
         const val frameChanged: String = "frame_changed"
         const val formatChanged: String = "format_changed"

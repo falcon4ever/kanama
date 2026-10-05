@@ -41,6 +41,10 @@ open class BaseButton(godotObject: GodotHandle) : Control(godotObject) {
     get() = unsupportedWebGameplayFamily("BaseButton.get_button_group")
     set(newValue) = setButtonGroup(newValue)
 
+  /** Signal `pressed`; see [TypedSignal]. */
+  val pressed: Signal0
+    get() = Signal0(this, "pressed")
+
   object Signals {
     const val pressed: String = "pressed"
   }

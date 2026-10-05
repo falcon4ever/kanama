@@ -577,6 +577,41 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getDeselectEnabledBind, segment)
     }
 
+    /** Signal `active_tab_rearranged(idx_to: int)`; see [TypedSignal]. */
+    val activeTabRearranged: Signal1<Long>
+        @JvmName("activeTabRearrangedTypedSignal")
+        get() = Signal1(this, "active_tab_rearranged", SignalArgType.LONG)
+
+    /** Signal `tab_changed(tab: int)`; see [TypedSignal]. */
+    val tabChanged: Signal1<Long>
+        @JvmName("tabChangedTypedSignal")
+        get() = Signal1(this, "tab_changed", SignalArgType.LONG)
+
+    /** Signal `tab_clicked(tab: int)`; see [TypedSignal]. */
+    val tabClicked: Signal1<Long>
+        @JvmName("tabClickedTypedSignal")
+        get() = Signal1(this, "tab_clicked", SignalArgType.LONG)
+
+    /** Signal `tab_hovered(tab: int)`; see [TypedSignal]. */
+    val tabHovered: Signal1<Long>
+        @JvmName("tabHoveredTypedSignal")
+        get() = Signal1(this, "tab_hovered", SignalArgType.LONG)
+
+    /** Signal `tab_selected(tab: int)`; see [TypedSignal]. */
+    val tabSelected: Signal1<Long>
+        @JvmName("tabSelectedTypedSignal")
+        get() = Signal1(this, "tab_selected", SignalArgType.LONG)
+
+    /** Signal `tab_button_pressed(tab: int)`; see [TypedSignal]. */
+    val tabButtonPressed: Signal1<Long>
+        @JvmName("tabButtonPressedTypedSignal")
+        get() = Signal1(this, "tab_button_pressed", SignalArgType.LONG)
+
+    /** Signal `pre_popup_pressed()`; see [TypedSignal]. */
+    val prePopupPressed: Signal0
+        @JvmName("prePopupPressedTypedSignal")
+        get() = Signal0(this, "pre_popup_pressed")
+
     object Signals {
         const val activeTabRearranged: String = "active_tab_rearranged"
         const val tabChanged: String = "tab_changed"

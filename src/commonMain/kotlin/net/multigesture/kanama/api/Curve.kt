@@ -377,6 +377,16 @@ class Curve(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithIntArg(setBakeResolutionBind, segment, resolution)
     }
 
+    /** Signal `range_changed()`; see [TypedSignal]. */
+    val rangeChanged: Signal0
+        @JvmName("rangeChangedTypedSignal")
+        get() = Signal0(this, "range_changed")
+
+    /** Signal `domain_changed()`; see [TypedSignal]. */
+    val domainChanged: Signal0
+        @JvmName("domainChangedTypedSignal")
+        get() = Signal0(this, "domain_changed")
+
     object Signals {
         const val rangeChanged: String = "range_changed"
         const val domainChanged: String = "domain_changed"

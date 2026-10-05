@@ -354,6 +354,16 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getDrawFocusBorderBind, segment)
     }
 
+    /** Signal `scroll_started()`; see [TypedSignal]. */
+    val scrollStarted: Signal0
+        @JvmName("scrollStartedTypedSignal")
+        get() = Signal0(this, "scroll_started")
+
+    /** Signal `scroll_ended()`; see [TypedSignal]. */
+    val scrollEnded: Signal0
+        @JvmName("scrollEndedTypedSignal")
+        get() = Signal0(this, "scroll_ended")
+
     object Signals {
         const val scrollStarted: String = "scroll_started"
         const val scrollEnded: String = "scroll_ended"

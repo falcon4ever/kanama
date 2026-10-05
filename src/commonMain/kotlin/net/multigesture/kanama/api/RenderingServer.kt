@@ -6242,6 +6242,16 @@ object RenderingServer {
         return ObjectCalls.ptrcallWithLongArgRetBool(hasFeatureBind, singleton, feature.value)
     }
 
+    /** Signal `frame_pre_draw()`; see [TypedSignal]. */
+    val framePreDraw: Signal0
+        @JvmName("framePreDrawTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "frame_pre_draw")
+
+    /** Signal `frame_post_draw()`; see [TypedSignal]. */
+    val framePostDraw: Signal0
+        @JvmName("framePostDrawTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "frame_post_draw")
+
     object Signals {
         const val framePreDraw: String = "frame_pre_draw"
         const val framePostDraw: String = "frame_post_draw"

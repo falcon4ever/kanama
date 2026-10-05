@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,6 +19,11 @@ class ScriptCreateDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     fun config(inherits: String, path: String, builtInEnabled: Boolean = true, loadEnabled: Boolean = true) {
         ObjectCalls.ptrcallWithTwoStringAndTwoBoolArgs(configBind, segment, inherits, path, builtInEnabled, loadEnabled)
     }
+
+    /** Signal `script_created(script: Script)`; see [TypedSignal]. */
+    val scriptCreated: Signal1<Script?>
+        @JvmName("scriptCreatedTypedSignal")
+        get() = Signal1(this, "script_created", SignalArgType.nullableObjectOf("Script") { Script(it) })
 
     object Signals {
         const val scriptCreated: String = "script_created"

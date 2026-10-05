@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -64,6 +65,21 @@ open class WebRTCPeerConnection(handle: GodotHandle) : RefCounted(handle) {
         checkOpen()
         return WebRTCPeerConnection.SignalingState(ObjectCalls.ptrcallNoArgsRetLong(getSignalingStateBind, segment))
     }
+
+    /** Signal `session_description_created(type: String, sdp: String)`; see [TypedSignal]. */
+    val sessionDescriptionCreated: Signal2<String, String>
+        @JvmName("sessionDescriptionCreatedTypedSignal")
+        get() = Signal2(this, "session_description_created", SignalArgType.STRING, SignalArgType.STRING)
+
+    /** Signal `ice_candidate_created(media: String, index: int, name: String)`; see [TypedSignal]. */
+    val iceCandidateCreated: Signal3<String, Long, String>
+        @JvmName("iceCandidateCreatedTypedSignal")
+        get() = Signal3(this, "ice_candidate_created", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.STRING)
+
+    /** Signal `data_channel_received(channel: WebRTCDataChannel)`; see [TypedSignal]. */
+    val dataChannelReceived: Signal1<WebRTCDataChannel>
+        @JvmName("dataChannelReceivedTypedSignal")
+        get() = Signal1(this, "data_channel_received", SignalArgType.objectOf("WebRTCDataChannel") { WebRTCDataChannel(it) })
 
     object Signals {
         const val sessionDescriptionCreated: String = "session_description_created"

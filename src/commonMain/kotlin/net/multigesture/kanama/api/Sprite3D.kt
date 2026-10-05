@@ -198,6 +198,16 @@ class Sprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getHframesBind, segment)
     }
 
+    /** Signal `frame_changed()`; see [TypedSignal]. */
+    val frameChanged: Signal0
+        @JvmName("frameChangedTypedSignal")
+        get() = Signal0(this, "frame_changed")
+
+    /** Signal `texture_changed()`; see [TypedSignal]. */
+    val textureChanged: Signal0
+        @JvmName("textureChangedTypedSignal")
+        get() = Signal0(this, "texture_changed")
+
     object Signals {
         const val frameChanged: String = "frame_changed"
         const val textureChanged: String = "texture_changed"

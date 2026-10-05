@@ -49,6 +49,20 @@ internal expect object ObjectRuntime {
   /** `Object.emit_signal([signal], *[args])` on the object behind [segment]. */
   fun emitSignal(segment: RawSegment, signal: String, args: List<Any?>)
 
+  /**
+   * Starts a typed signal emission (task 134 C review S5): the caller writes [argumentCount]
+   * arguments into the returned writer and ends with [finishEmit], which emits when [send] (and
+   * always releases the writer). Emissions nest (a handler may emit), so each gets its own writer.
+   */
+  fun beginEmit(
+    segment: RawSegment,
+    signal: String,
+    argumentCount: Int,
+  ): net.multigesture.kanama.api.SignalArgWriter
+
+  /** Emits what [writer] holds (when [send]) and releases it. */
+  fun finishEmit(writer: net.multigesture.kanama.api.SignalArgWriter, send: Boolean)
+
   /** Called after `GodotObject.set`/`call("set", …)` wrote [property] on the object. */
   fun onPropertySet(segment: RawSegment, property: String, value: Any?)
 

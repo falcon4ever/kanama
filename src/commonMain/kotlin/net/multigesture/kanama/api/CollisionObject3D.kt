@@ -7,6 +7,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
+import net.multigesture.kanama.types.Vector3
 
 /**
  * Abstract base class for 3D physics objects.
@@ -369,6 +370,21 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
     fun shapeFindOwner(shapeIndex: Int): Long {
         return ObjectCalls.ptrcallWithIntArgRetUInt32(shapeFindOwnerBind, segment, shapeIndex)
     }
+
+    /** Signal `input_event(camera: Node, event: InputEvent, event_position: Vector3, normal: Vector3, shape_idx: int)`; see [TypedSignal]. */
+    val inputEvent: Signal5<Node, InputEvent, Vector3, Vector3, Long>
+        @JvmName("inputEventTypedSignal")
+        get() = Signal5(this, "input_event", SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.objectOf("InputEvent") { InputEvent(it) }, SignalArgType.valueOf<Vector3>("Vector3", Vector3::class), SignalArgType.valueOf<Vector3>("Vector3", Vector3::class), SignalArgType.LONG)
+
+    /** Signal `mouse_entered()`; see [TypedSignal]. */
+    val mouseEntered: Signal0
+        @JvmName("mouseEnteredTypedSignal")
+        get() = Signal0(this, "mouse_entered")
+
+    /** Signal `mouse_exited()`; see [TypedSignal]. */
+    val mouseExited: Signal0
+        @JvmName("mouseExitedTypedSignal")
+        get() = Signal0(this, "mouse_exited")
 
     object Signals {
         const val inputEvent: String = "input_event"

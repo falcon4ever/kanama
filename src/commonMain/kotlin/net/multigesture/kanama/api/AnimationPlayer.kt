@@ -649,6 +649,16 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         return ObjectCalls.ptrcallNoArgsRetNodePath(getRootBind, segment)
     }
 
+    /** Signal `current_animation_changed(anim_name: StringName)`; see [TypedSignal]. */
+    val currentAnimationChanged: Signal1<String>
+        @JvmName("currentAnimationChangedTypedSignal")
+        get() = Signal1(this, "current_animation_changed", SignalArgType.STRING)
+
+    /** Signal `animation_changed(old_name: StringName, new_name: StringName)`; see [TypedSignal]. */
+    val animationChanged: Signal2<String, String>
+        @JvmName("animationChangedTypedSignal")
+        get() = Signal2(this, "animation_changed", SignalArgType.STRING, SignalArgType.STRING)
+
     object Signals {
         const val currentAnimationChanged: String = "current_animation_changed"
         const val animationChanged: String = "animation_changed"

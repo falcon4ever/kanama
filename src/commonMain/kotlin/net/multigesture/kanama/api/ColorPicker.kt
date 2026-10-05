@@ -367,6 +367,21 @@ class ColorPicker(handle: GodotHandle) : VBoxContainer(handle) {
         return ColorPicker.PickerShapeType(ObjectCalls.ptrcallNoArgsRetLong(getPickerShapeBind, segment))
     }
 
+    /** Signal `color_changed(color: Color)`; see [TypedSignal]. */
+    val colorChanged: Signal1<Color>
+        @JvmName("colorChangedTypedSignal")
+        get() = Signal1(this, "color_changed", SignalArgType.valueOf<Color>("Color", Color::class))
+
+    /** Signal `preset_added(color: Color)`; see [TypedSignal]. */
+    val presetAdded: Signal1<Color>
+        @JvmName("presetAddedTypedSignal")
+        get() = Signal1(this, "preset_added", SignalArgType.valueOf<Color>("Color", Color::class))
+
+    /** Signal `preset_removed(color: Color)`; see [TypedSignal]. */
+    val presetRemoved: Signal1<Color>
+        @JvmName("presetRemovedTypedSignal")
+        get() = Signal1(this, "preset_removed", SignalArgType.valueOf<Color>("Color", Color::class))
+
     object Signals {
         const val colorChanged: String = "color_changed"
         const val presetAdded: String = "preset_added"

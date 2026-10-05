@@ -318,6 +318,16 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
         ObjectCalls.ptrcallWithBoolAndDoubleArgs(makeBakedMeshesBind, segment, genLightmapUv, lightmapUvTexelSize)
     }
 
+    /** Signal `cell_size_changed(cell_size: Vector3)`; see [TypedSignal]. */
+    val cellSizeChanged: Signal1<Vector3>
+        @JvmName("cellSizeChangedTypedSignal")
+        get() = Signal1(this, "cell_size_changed", SignalArgType.valueOf<Vector3>("Vector3", Vector3::class))
+
+    /** Signal `changed()`; see [TypedSignal]. */
+    val changed: Signal0
+        @JvmName("changedTypedSignal")
+        get() = Signal0(this, "changed")
+
     object Signals {
         const val cellSizeChanged: String = "cell_size_changed"
         const val changed: String = "changed"

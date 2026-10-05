@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -528,6 +529,36 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
     fun getPluginVersion(): String {
         return ObjectCalls.ptrcallNoArgsRetString(getPluginVersionBind, segment)
     }
+
+    /** Signal `scene_changed(scene_root: Node)`; see [TypedSignal]. */
+    val sceneChanged: Signal1<Node?>
+        @JvmName("sceneChangedTypedSignal")
+        get() = Signal1(this, "scene_changed", SignalArgType.nullableObjectOf("Node") { Node(it) })
+
+    /** Signal `scene_closed(filepath: String)`; see [TypedSignal]. */
+    val sceneClosed: Signal1<String>
+        @JvmName("sceneClosedTypedSignal")
+        get() = Signal1(this, "scene_closed", SignalArgType.STRING)
+
+    /** Signal `main_screen_changed(screen_name: String)`; see [TypedSignal]. */
+    val mainScreenChanged: Signal1<String>
+        @JvmName("mainScreenChangedTypedSignal")
+        get() = Signal1(this, "main_screen_changed", SignalArgType.STRING)
+
+    /** Signal `resource_saved(resource: Resource)`; see [TypedSignal]. */
+    val resourceSaved: Signal1<Resource?>
+        @JvmName("resourceSavedTypedSignal")
+        get() = Signal1(this, "resource_saved", SignalArgType.nullableObjectOf("Resource") { Resource(it) })
+
+    /** Signal `scene_saved(filepath: String)`; see [TypedSignal]. */
+    val sceneSaved: Signal1<String>
+        @JvmName("sceneSavedTypedSignal")
+        get() = Signal1(this, "scene_saved", SignalArgType.STRING)
+
+    /** Signal `project_settings_changed()`; see [TypedSignal]. */
+    val projectSettingsChanged: Signal0
+        @JvmName("projectSettingsChangedTypedSignal")
+        get() = Signal0(this, "project_settings_changed")
 
     object Signals {
         const val sceneChanged: String = "scene_changed"

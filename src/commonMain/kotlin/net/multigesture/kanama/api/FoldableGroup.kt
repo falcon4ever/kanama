@@ -60,6 +60,11 @@ class FoldableGroup(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowFoldingAllBind, segment)
     }
 
+    /** Signal `expanded(container: FoldableContainer)`; see [TypedSignal]. */
+    val expanded: Signal1<FoldableContainer>
+        @JvmName("expandedTypedSignal")
+        get() = Signal1(this, "expanded", SignalArgType.objectOf("FoldableContainer") { FoldableContainer(it) })
+
     object Signals {
         const val expanded: String = "expanded"
     }

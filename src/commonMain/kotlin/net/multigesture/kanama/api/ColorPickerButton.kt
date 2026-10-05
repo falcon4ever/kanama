@@ -107,6 +107,21 @@ class ColorPickerButton(handle: GodotHandle) : Button(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditingIntensityBind, segment)
     }
 
+    /** Signal `color_changed(color: Color)`; see [TypedSignal]. */
+    val colorChanged: Signal1<Color>
+        @JvmName("colorChangedTypedSignal")
+        get() = Signal1(this, "color_changed", SignalArgType.valueOf<Color>("Color", Color::class))
+
+    /** Signal `popup_closed()`; see [TypedSignal]. */
+    val popupClosed: Signal0
+        @JvmName("popupClosedTypedSignal")
+        get() = Signal0(this, "popup_closed")
+
+    /** Signal `picker_created()`; see [TypedSignal]. */
+    val pickerCreated: Signal0
+        @JvmName("pickerCreatedTypedSignal")
+        get() = Signal0(this, "picker_created")
+
     object Signals {
         const val colorChanged: String = "color_changed"
         const val popupClosed: String = "popup_closed"

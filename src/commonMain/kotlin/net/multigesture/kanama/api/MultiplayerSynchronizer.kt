@@ -116,6 +116,21 @@ class MultiplayerSynchronizer(handle: GodotHandle) : Node(handle) {
         return ObjectCalls.ptrcallWithIntArgRetBool(getVisibilityForBind, segment, peer)
     }
 
+    /** Signal `synchronized()`; see [TypedSignal]. */
+    val synchronized: Signal0
+        @JvmName("synchronizedTypedSignal")
+        get() = Signal0(this, "synchronized")
+
+    /** Signal `delta_synchronized()`; see [TypedSignal]. */
+    val deltaSynchronized: Signal0
+        @JvmName("deltaSynchronizedTypedSignal")
+        get() = Signal0(this, "delta_synchronized")
+
+    /** Signal `visibility_changed(for_peer: int)`; see [TypedSignal]. */
+    val visibilityChanged: Signal1<Long>
+        @JvmName("visibilityChangedTypedSignal")
+        get() = Signal1(this, "visibility_changed", SignalArgType.LONG)
+
     object Signals {
         const val synchronized: String = "synchronized"
         const val deltaSynchronized: String = "delta_synchronized"

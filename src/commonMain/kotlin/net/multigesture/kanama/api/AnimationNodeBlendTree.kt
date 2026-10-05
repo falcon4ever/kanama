@@ -146,6 +146,11 @@ class AnimationNodeBlendTree(handle: GodotHandle) : AnimationRootNode(handle) {
         return ObjectCalls.ptrcallNoArgsRetVector2(getGraphOffsetBind, segment)
     }
 
+    /** Signal `node_changed(node_name: StringName)`; see [TypedSignal]. */
+    val nodeChanged: Signal1<String>
+        @JvmName("nodeChangedTypedSignal")
+        get() = Signal1(this, "node_changed", SignalArgType.STRING)
+
     object Signals {
         const val nodeChanged: String = "node_changed"
     }

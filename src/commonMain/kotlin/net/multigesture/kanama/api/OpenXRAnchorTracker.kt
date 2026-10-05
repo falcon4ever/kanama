@@ -30,6 +30,11 @@ class OpenXRAnchorTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
         return ObjectCalls.ptrcallNoArgsRetString(getUuidBind, segment)
     }
 
+    /** Signal `uuid_changed()`; see [TypedSignal]. */
+    val uuidChanged: Signal0
+        @JvmName("uuidChangedTypedSignal")
+        get() = Signal0(this, "uuid_changed")
+
     object Signals {
         const val uuidChanged: String = "uuid_changed"
     }

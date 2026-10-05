@@ -1169,6 +1169,8 @@ val SceneTree.root: Viewport
     },
     "AudioStreamPlayer3D": {"signals": ["finished"]},
     "Timer": {"signals": ["timeout"]},
+    # Task 134 D4: Match3's shared Main.kt connects `viewport.sizeChanged` to a method by name.
+    "Viewport": {"signals": ["size_changed"]},
     "Area3D": {"signals": ["body_entered", "body_exited"]},
     "BaseButton": {"signals": ["pressed"]},
     "AnimationMixer": {
@@ -1719,11 +1721,76 @@ def emit_constants(api: Api, godot_name: str, class_policy: dict) -> list[str]:
     return lines
 
 
+# Task 134 D4: the Web bridge delivers a signal's first argument as an object handle or a packed
+# scalar, so a policy signal with no argument is a `Signal0` and one with one argument of these types
+# a `Signal1<T>`; any other shape fails generation rather than produce a handle that cannot deliver.
+WEB_SIGNAL_SCALARS = {
+    "int": ("Long", "SignalArgType.LONG"),
+    "float": ("Double", "SignalArgType.DOUBLE"),
+    "bool": ("Boolean", "SignalArgType.BOOLEAN"),
+    "String": ("String", "SignalArgType.STRING"),
+    "StringName": ("String", "SignalArgType.STRING"),
+    "Vector2": ("Vector2", 'SignalArgType.valueOf<Vector2>("Vector2", Vector2::class)'),
+    "Vector2i": ("Vector2i", 'SignalArgType.valueOf<Vector2i>("Vector2i", Vector2i::class)'),
+    "Vector3": ("Vector3", 'SignalArgType.valueOf<Vector3>("Vector3", Vector3::class)'),
+    "Color": ("Color", 'SignalArgType.valueOf<Color>("Color", Color::class)'),
+}
+
+
+def signal_declaration(api: Api, godot_name: str, signal: str) -> dict:
+    for owner in api.chain(godot_name):
+        for declared in api.classes[owner].get("signals", ()):
+            if declared["name"] == signal:
+                return declared
+    raise GenerationError(f"{godot_name} has no signal {signal}")
+
+
+def web_signal_object_wrapper(api: Api, type_name: str) -> str:
+    """The Web wrapper for an emitted object: the class itself when Web generates it, else its
+    nearest generated ancestor."""
+    current: str | None = type_name
+    while current:
+        if current == "Object":
+            return "GodotObject"
+        if current in CLASS_POLICY:
+            return kotlin_class_name(current)
+        current = api.parent(current) if current in api.classes else None
+    return "GodotObject"
+
+
+def emit_typed_signal(api: Api, godot_name: str, signal: str) -> list[str]:
+    args = list(signal_declaration(api, godot_name, signal).get("arguments") or [])
+    prop = camel(signal)
+    if not args:
+        signal_type, ctor = "Signal0", f'Signal0(this, "{signal}")'
+    elif len(args) == 1:
+        arg_type = args[0]["type"]
+        if arg_type in WEB_SIGNAL_SCALARS:
+            kotlin, expr = WEB_SIGNAL_SCALARS[arg_type]
+        elif arg_type in api.classes:
+            wrapper = web_signal_object_wrapper(api, arg_type)
+            kotlin, expr = wrapper, f'SignalArgType.objectOf("{arg_type}") {{ {wrapper}(it) }}'
+        else:
+            raise GenerationError(f"{godot_name}.{signal}: a {arg_type} argument is not delivered on Web")
+        signal_type, ctor = f"Signal1<{kotlin}>", f'Signal1(this, "{signal}", {expr})'
+    else:
+        raise GenerationError(f"{godot_name}.{signal}: the Web bridge delivers at most one argument")
+    return [
+        f"  /** Signal `{signal}`; see [TypedSignal]. */",
+        f"  val {prop}: {signal_type}",
+        f'    get() = {ctor}',
+    ]
+
+
 def emit_signals(api: Api, godot_name: str, class_policy: dict) -> list[str]:
     names = class_policy.get("signals", ())
     if not names:
         return []
-    lines = ["  object Signals {"]
+    lines: list[str] = []
+    for signal in names:
+        lines += emit_typed_signal(api, godot_name, signal)
+        lines.append("")
+    lines.append("  object Signals {")
     for signal in names:
         if not api.has_signal(godot_name, signal):
             raise GenerationError(f"{godot_name} has no signal {signal}")

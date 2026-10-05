@@ -1642,6 +1642,86 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         ObjectCalls.ptrcallWithObjectVector2iAndDoubleArg(popupExclusiveCenteredClampedBind, segment, fromNode.segment, minsize, fallbackRatio)
     }
 
+    /** Signal `window_input(event: InputEvent)`; see [TypedSignal]. */
+    val windowInput: Signal1<InputEvent>
+        @JvmName("windowInputTypedSignal")
+        get() = Signal1(this, "window_input", SignalArgType.objectOf("InputEvent") { InputEvent(it) })
+
+    /** Signal `nonclient_window_input(event: InputEvent)`; see [TypedSignal]. */
+    val nonclientWindowInput: Signal1<InputEvent>
+        @JvmName("nonclientWindowInputTypedSignal")
+        get() = Signal1(this, "nonclient_window_input", SignalArgType.objectOf("InputEvent") { InputEvent(it) })
+
+    /** Signal `files_dropped(files: PackedStringArray)`; see [TypedSignal]. On iOS a PackedStringArray argument is not delivered yet: a connection reports a script error. */
+    val filesDropped: Signal1<List<String>>
+        @JvmName("filesDroppedTypedSignal")
+        get() = Signal1(this, "files_dropped", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))
+
+    /** Signal `mouse_entered()`; see [TypedSignal]. */
+    val mouseEntered: Signal0
+        @JvmName("mouseEnteredTypedSignal")
+        get() = Signal0(this, "mouse_entered")
+
+    /** Signal `mouse_exited()`; see [TypedSignal]. */
+    val mouseExited: Signal0
+        @JvmName("mouseExitedTypedSignal")
+        get() = Signal0(this, "mouse_exited")
+
+    /** Signal `focus_entered()`; see [TypedSignal]. */
+    val focusEntered: Signal0
+        @JvmName("focusEnteredTypedSignal")
+        get() = Signal0(this, "focus_entered")
+
+    /** Signal `focus_exited()`; see [TypedSignal]. */
+    val focusExited: Signal0
+        @JvmName("focusExitedTypedSignal")
+        get() = Signal0(this, "focus_exited")
+
+    /** Signal `close_requested()`; see [TypedSignal]. */
+    val closeRequested: Signal0
+        @JvmName("closeRequestedTypedSignal")
+        get() = Signal0(this, "close_requested")
+
+    /** Signal `go_back_requested()`; see [TypedSignal]. */
+    val goBackRequested: Signal0
+        @JvmName("goBackRequestedTypedSignal")
+        get() = Signal0(this, "go_back_requested")
+
+    /** Signal `visibility_changed()`; see [TypedSignal]. */
+    val visibilityChanged: Signal0
+        @JvmName("visibilityChangedTypedSignal")
+        get() = Signal0(this, "visibility_changed")
+
+    /** Signal `about_to_popup()`; see [TypedSignal]. */
+    val aboutToPopup: Signal0
+        @JvmName("aboutToPopupTypedSignal")
+        get() = Signal0(this, "about_to_popup")
+
+    /** Signal `theme_changed()`; see [TypedSignal]. */
+    val themeChanged: Signal0
+        @JvmName("themeChangedTypedSignal")
+        get() = Signal0(this, "theme_changed")
+
+    /** Signal `dpi_changed()`; see [TypedSignal]. */
+    val dpiChanged: Signal0
+        @JvmName("dpiChangedTypedSignal")
+        get() = Signal0(this, "dpi_changed")
+
+    /** Signal `titlebar_changed()`; see [TypedSignal]. */
+    val titlebarChanged: Signal0
+        @JvmName("titlebarChangedTypedSignal")
+        get() = Signal0(this, "titlebar_changed")
+
+    /** Signal `title_changed()`; see [TypedSignal]. */
+    val titleChanged: Signal0
+        @JvmName("titleChangedTypedSignal")
+        get() = Signal0(this, "title_changed")
+
+    /** Signal `output_max_linear_value_changed(output_max_linear_value: float)`; see [TypedSignal]. */
+    val outputMaxLinearValueChanged: Signal1<Double>
+        @JvmName("outputMaxLinearValueChangedTypedSignal")
+        get() = Signal1(this, "output_max_linear_value_changed", SignalArgType.DOUBLE)
+
     object Signals {
         const val windowInput: String = "window_input"
         const val nonclientWindowInput: String = "nonclient_window_input"

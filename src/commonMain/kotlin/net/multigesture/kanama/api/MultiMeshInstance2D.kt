@@ -62,6 +62,11 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
         return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
     }
 
+    /** Signal `texture_changed()`; see [TypedSignal]. */
+    val textureChanged: Signal0
+        @JvmName("textureChangedTypedSignal")
+        get() = Signal0(this, "texture_changed")
+
     object Signals {
         const val textureChanged: String = "texture_changed"
     }

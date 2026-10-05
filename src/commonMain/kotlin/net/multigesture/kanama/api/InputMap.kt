@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -161,6 +162,11 @@ object InputMap {
     fun loadFromProjectSettings() {
         ObjectCalls.ptrcallNoArgs(loadFromProjectSettingsBind, singleton)
     }
+
+    /** Signal `project_settings_loaded()`; see [TypedSignal]. */
+    val projectSettingsLoaded: Signal0
+        @JvmName("projectSettingsLoadedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "project_settings_loaded")
 
     object Signals {
         const val projectSettingsLoaded: String = "project_settings_loaded"

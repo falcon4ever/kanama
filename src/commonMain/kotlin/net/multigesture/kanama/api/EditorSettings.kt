@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -255,6 +256,11 @@ class EditorSettings(handle: GodotHandle) : Resource(handle) {
         checkOpen()
         ObjectCalls.ptrcallWithStringArg(markSettingChangedBind, segment, setting)
     }
+
+    /** Signal `settings_changed()`; see [TypedSignal]. */
+    val settingsChanged: Signal0
+        @JvmName("settingsChangedTypedSignal")
+        get() = Signal0(this, "settings_changed")
 
     object Signals {
         const val settingsChanged: String = "settings_changed"

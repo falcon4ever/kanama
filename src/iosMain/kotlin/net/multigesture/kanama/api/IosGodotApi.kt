@@ -7,7 +7,11 @@ import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.* // generated ObjectCalls.* extension helpers
 import kotlin.experimental.ExperimentalNativeApi
+import kotlin.jvm.JvmName
 import kotlin.native.CName
+import kotlin.native.concurrent.ThreadLocal
+import net.multigesture.kanama.ios.IosSignalArgReader
+import kotlinx.cinterop.COpaquePointerVar
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import net.multigesture.kanama.binding.runtime.IosScriptErrors
@@ -194,6 +198,11 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
     fun stop() {
         ObjectCalls.ptrcallNoArgs(stopBind, segment)
     }
+
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
 
     companion object {
         private val stopBind by lazy { ObjectCalls.getMethodBind("AudioStreamPlayer", "stop", 3218959716L) }
@@ -462,6 +471,21 @@ actual class Tween(handle: GodotHandle) : RefCounted(handle) {
     fun kill() {
         IosGodot.tweenKill(segment.address())
     }
+
+    /** Signal `step_finished(idx: int)`; see [TypedSignal]. */
+    val stepFinished: Signal1<Long>
+        @JvmName("stepFinishedTypedSignal")
+        get() = Signal1(this, "step_finished", SignalArgType.LONG)
+
+    /** Signal `loop_finished(loop_count: int)`; see [TypedSignal]. */
+    val loopFinished: Signal1<Long>
+        @JvmName("loopFinishedTypedSignal")
+        get() = Signal1(this, "loop_finished", SignalArgType.LONG)
+
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
 
     object Signals {
         const val finished: String = "finished"
@@ -1153,24 +1177,34 @@ private typealias DoubleVarCompat = kotlinx.cinterop.DoubleVar
 // Registry backing lambda/bound signal connections. A connection registers its
 // callback here and passes the integer id to the C shim, which binds it to a
 // custom Godot Callable. When the signal fires the shim calls back into
-// kanamaIosRuntimeDispatchCallable; when Godot drops the connection it calls
-// kanamaIosRuntimeReleaseCallable so the entry can be collected.
+// kanamaIosRuntimeDispatchCallable with the arguments as PT-tagged cells; when Godot drops the
+// connection it calls kanamaIosRuntimeReleaseCallable so the entry can be collected. Since task 134
+// D4 an entry reads its arguments through a [SignalArgReader] (typed signals, no argument cap).
 internal object IosCallableRegistry {
-    private var nextId = 1L
-    private val callbacks = HashMap<Long, (List<Any?>) -> Unit>()
+    class Entry(
+        val argumentCount: Int,
+        val onRelease: (() -> Unit)?,
+        val dispatch: (SignalArgReader) -> Unit,
+    )
 
-    fun register(callback: (List<Any?>) -> Unit): Long {
+    private var nextId = 1L
+    private val callbacks = HashMap<Long, Entry>()
+
+    fun register(argumentCount: Int, onRelease: (() -> Unit)?, dispatch: (SignalArgReader) -> Unit): Long {
         val id = nextId++
-        callbacks[id] = callback
+        callbacks[id] = Entry(argumentCount, onRelease, dispatch)
         return id
     }
 
-    fun dispatch(callbackId: Long, args: List<Any?>) {
-        callbacks[callbackId]?.invoke(args)
-    }
+    /** Registers [callback] with every emitted argument decoded (the self-test's lambda rows). */
+    fun register(callback: (List<Any?>) -> Unit): Long =
+        register(0, null) { args -> callback(List(args.count) { args.value(it) }) }
 
+    fun entry(callbackId: Long): Entry? = callbacks[callbackId]
+
+    /** Godot dropped the Callable (its free_func): drops the entry and runs its release hook. */
     fun release(callbackId: Long) {
-        callbacks.remove(callbackId)
+        callbacks.remove(callbackId)?.onRelease?.invoke()
     }
 
     /** Live entries; the self-test's leak rows compare it before and after (task 131). */
@@ -1178,45 +1212,32 @@ internal object IosCallableRegistry {
         get() = callbacks.size
 }
 
+@ThreadLocal
+private object IosSignalReaders {
+    val reader = IosSignalArgReader()
+}
+
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_dispatch_callable")
 fun kanamaIosRuntimeDispatchCallable(
     callbackId: Long,
+    argumentTags: CPointer<IntVar>?,
+    argumentPtrs: CPointer<COpaquePointerVar>?,
     argumentCount: Int,
-    argumentTypes: CPointer<IntVar>?,
-    argumentValues: CPointer<LongVar>?,
-) {
+): Int {
+    val entry = IosCallableRegistry.entry(callbackId) ?: return 0
+    // Fewer arguments than the connection reads: a call error, as for a GDScript function.
+    if (argumentCount < entry.argumentCount) return entry.argumentCount
     // A throwing signal lambda is contained here (task 131): an exception crossing this @CName
     // export terminates the app. It is printed and reported as a Godot script error; the Callable
     // call itself still completes, as a GDScript lambda's runtime error does.
     try {
-        val count = argumentCount.coerceIn(0, MAX_CALLABLE_ARGUMENTS)
-        val args = ArrayList<Any?>(count)
-        for (i in 0 until count) {
-            val type = argumentTypes?.get(i) ?: VT_NIL
-            val value = argumentValues?.get(i) ?: 0L
-            args.add(
-                when (type) {
-                    VT_BOOL -> value != 0L
-                    VT_INT -> value
-                    VT_FLOAT -> Double.fromBits(value)
-                    VT_OBJECT -> GodotObject.wrap(RawSegment.ofAddress(value))
-                    else -> null
-                },
-            )
-        }
-        IosCallableRegistry.dispatch(callbackId, args)
+        IosSignalReaders.reader.dispatch(argumentTags, argumentPtrs, argumentCount, entry.dispatch)
     } catch (t: Throwable) {
         IosScriptErrors.report(t, "signal lambda")
     }
+    return 0
 }
-
-private const val MAX_CALLABLE_ARGUMENTS = 4
-private const val VT_NIL = 0
-private const val VT_BOOL = 1
-private const val VT_INT = 2
-private const val VT_FLOAT = 3
-private const val VT_OBJECT = 24
 
 @OptIn(ExperimentalNativeApi::class)
 @CName("kanama_ios_runtime_release_callable")

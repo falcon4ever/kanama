@@ -818,6 +818,11 @@ class GPUParticles2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetUInt32(getSeedBind, segment)
     }
 
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
+
     object Signals {
         const val finished: String = "finished"
     }

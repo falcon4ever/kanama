@@ -248,6 +248,11 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(undoBind, segment)
     }
 
+    /** Signal `version_changed()`; see [TypedSignal]. */
+    val versionChanged: Signal0
+        @JvmName("versionChangedTypedSignal")
+        get() = Signal0(this, "version_changed")
+
     object Signals {
         const val versionChanged: String = "version_changed"
     }

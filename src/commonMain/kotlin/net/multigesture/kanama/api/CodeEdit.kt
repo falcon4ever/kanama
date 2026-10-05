@@ -1262,6 +1262,31 @@ class CodeEdit(handle: GodotHandle) : TextEdit(handle) {
         ObjectCalls.ptrcallNoArgs(duplicateLinesBind, segment)
     }
 
+    /** Signal `breakpoint_toggled(line: int)`; see [TypedSignal]. */
+    val breakpointToggled: Signal1<Long>
+        @JvmName("breakpointToggledTypedSignal")
+        get() = Signal1(this, "breakpoint_toggled", SignalArgType.LONG)
+
+    /** Signal `code_completion_requested()`; see [TypedSignal]. */
+    val codeCompletionRequested: Signal0
+        @JvmName("codeCompletionRequestedTypedSignal")
+        get() = Signal0(this, "code_completion_requested")
+
+    /** Signal `symbol_lookup(symbol: String, line: int, column: int)`; see [TypedSignal]. */
+    val symbolLookup: Signal3<String, Long, Long>
+        @JvmName("symbolLookupTypedSignal")
+        get() = Signal3(this, "symbol_lookup", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `symbol_validate(symbol: String)`; see [TypedSignal]. */
+    val symbolValidate: Signal1<String>
+        @JvmName("symbolValidateTypedSignal")
+        get() = Signal1(this, "symbol_validate", SignalArgType.STRING)
+
+    /** Signal `symbol_hovered(symbol: String, line: int, column: int)`; see [TypedSignal]. */
+    val symbolHovered: Signal3<String, Long, Long>
+        @JvmName("symbolHoveredTypedSignal")
+        get() = Signal3(this, "symbol_hovered", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.LONG)
+
     object Signals {
         const val breakpointToggled: String = "breakpoint_toggled"
         const val codeCompletionRequested: String = "code_completion_requested"

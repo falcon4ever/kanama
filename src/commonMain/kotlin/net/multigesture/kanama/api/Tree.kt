@@ -818,6 +818,81 @@ class Tree(handle: GodotHandle) : Control(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isAutoTooltipEnabledBind, segment)
     }
 
+    /** Signal `item_selected()`; see [TypedSignal]. */
+    val itemSelected: Signal0
+        @JvmName("itemSelectedTypedSignal")
+        get() = Signal0(this, "item_selected")
+
+    /** Signal `cell_selected()`; see [TypedSignal]. */
+    val cellSelected: Signal0
+        @JvmName("cellSelectedTypedSignal")
+        get() = Signal0(this, "cell_selected")
+
+    /** Signal `multi_selected(item: TreeItem, column: int, selected: bool)`; see [TypedSignal]. */
+    val multiSelected: Signal3<TreeItem, Long, Boolean>
+        @JvmName("multiSelectedTypedSignal")
+        get() = Signal3(this, "multi_selected", SignalArgType.objectOf("TreeItem") { TreeItem(it) }, SignalArgType.LONG, SignalArgType.BOOLEAN)
+
+    /** Signal `item_mouse_selected(mouse_position: Vector2, mouse_button_index: int)`; see [TypedSignal]. */
+    val itemMouseSelected: Signal2<Vector2, Long>
+        @JvmName("itemMouseSelectedTypedSignal")
+        get() = Signal2(this, "item_mouse_selected", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class), SignalArgType.LONG)
+
+    /** Signal `empty_clicked(click_position: Vector2, mouse_button_index: int)`; see [TypedSignal]. */
+    val emptyClicked: Signal2<Vector2, Long>
+        @JvmName("emptyClickedTypedSignal")
+        get() = Signal2(this, "empty_clicked", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class), SignalArgType.LONG)
+
+    /** Signal `item_edited()`; see [TypedSignal]. */
+    val itemEdited: Signal0
+        @JvmName("itemEditedTypedSignal")
+        get() = Signal0(this, "item_edited")
+
+    /** Signal `custom_item_clicked(mouse_button_index: int)`; see [TypedSignal]. */
+    val customItemClicked: Signal1<Long>
+        @JvmName("customItemClickedTypedSignal")
+        get() = Signal1(this, "custom_item_clicked", SignalArgType.LONG)
+
+    /** Signal `item_icon_double_clicked()`; see [TypedSignal]. */
+    val itemIconDoubleClicked: Signal0
+        @JvmName("itemIconDoubleClickedTypedSignal")
+        get() = Signal0(this, "item_icon_double_clicked")
+
+    /** Signal `item_collapsed(item: TreeItem)`; see [TypedSignal]. */
+    val itemCollapsed: Signal1<TreeItem>
+        @JvmName("itemCollapsedTypedSignal")
+        get() = Signal1(this, "item_collapsed", SignalArgType.objectOf("TreeItem") { TreeItem(it) })
+
+    /** Signal `check_propagated_to_item(item: TreeItem, column: int)`; see [TypedSignal]. */
+    val checkPropagatedToItem: Signal2<TreeItem, Long>
+        @JvmName("checkPropagatedToItemTypedSignal")
+        get() = Signal2(this, "check_propagated_to_item", SignalArgType.objectOf("TreeItem") { TreeItem(it) }, SignalArgType.LONG)
+
+    /** Signal `button_clicked(item: TreeItem, column: int, id: int, mouse_button_index: int)`; see [TypedSignal]. */
+    val buttonClicked: Signal4<TreeItem, Long, Long, Long>
+        @JvmName("buttonClickedTypedSignal")
+        get() = Signal4(this, "button_clicked", SignalArgType.objectOf("TreeItem") { TreeItem(it) }, SignalArgType.LONG, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `custom_popup_edited(arrow_clicked: bool)`; see [TypedSignal]. */
+    val customPopupEdited: Signal1<Boolean>
+        @JvmName("customPopupEditedTypedSignal")
+        get() = Signal1(this, "custom_popup_edited", SignalArgType.BOOLEAN)
+
+    /** Signal `item_activated()`; see [TypedSignal]. */
+    val itemActivated: Signal0
+        @JvmName("itemActivatedTypedSignal")
+        get() = Signal0(this, "item_activated")
+
+    /** Signal `column_title_clicked(column: int, mouse_button_index: int)`; see [TypedSignal]. */
+    val columnTitleClicked: Signal2<Long, Long>
+        @JvmName("columnTitleClickedTypedSignal")
+        get() = Signal2(this, "column_title_clicked", SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `nothing_selected()`; see [TypedSignal]. */
+    val nothingSelected: Signal0
+        @JvmName("nothingSelectedTypedSignal")
+        get() = Signal0(this, "nothing_selected")
+
     object Signals {
         const val itemSelected: String = "item_selected"
         const val cellSelected: String = "cell_selected"

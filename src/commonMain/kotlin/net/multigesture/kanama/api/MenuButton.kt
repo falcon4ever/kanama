@@ -91,6 +91,11 @@ class MenuButton(handle: GodotHandle) : Button(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
     }
 
+    /** Signal `about_to_popup()`; see [TypedSignal]. */
+    val aboutToPopup: Signal0
+        @JvmName("aboutToPopupTypedSignal")
+        get() = Signal0(this, "about_to_popup")
+
     object Signals {
         const val aboutToPopup: String = "about_to_popup"
     }

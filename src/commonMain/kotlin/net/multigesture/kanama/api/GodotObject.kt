@@ -237,6 +237,16 @@ open class GodotObject(val handle: GodotHandle) {
     fun signal(name: String): GodotSignal =
         GodotSignal(this, name)
 
+    /** Signal `script_changed()`; see [TypedSignal]. */
+    val scriptChanged: Signal0
+        @JvmName("scriptChangedTypedSignal")
+        get() = Signal0(this, "script_changed")
+
+    /** Signal `property_list_changed()`; see [TypedSignal]. */
+    val propertyListChanged: Signal0
+        @JvmName("propertyListChangedTypedSignal")
+        get() = Signal0(this, "property_list_changed")
+
     /**
      * Connects [signal] to [method] on [target]; returns Godot's `Error`. [flags] combine
      * [GodotObject.ConnectFlags] values (`ConnectFlags.DEFERRED or ConnectFlags.ONE_SHOT`); Godot has

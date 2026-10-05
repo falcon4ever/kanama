@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -66,6 +67,51 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
     fun expandRevertable() {
         ObjectCalls.ptrcallNoArgs(expandRevertableBind, segment)
     }
+
+    /** Signal `property_selected(property: String)`; see [TypedSignal]. */
+    val propertySelected: Signal1<String>
+        @JvmName("propertySelectedTypedSignal")
+        get() = Signal1(this, "property_selected", SignalArgType.STRING)
+
+    /** Signal `property_keyed(property: String, value: Variant, advance: bool)`; see [TypedSignal]. */
+    val propertyKeyed: Signal3<String, Any?, Boolean>
+        @JvmName("propertyKeyedTypedSignal")
+        get() = Signal3(this, "property_keyed", SignalArgType.STRING, SignalArgType.VARIANT, SignalArgType.BOOLEAN)
+
+    /** Signal `property_deleted(property: String)`; see [TypedSignal]. */
+    val propertyDeleted: Signal1<String>
+        @JvmName("propertyDeletedTypedSignal")
+        get() = Signal1(this, "property_deleted", SignalArgType.STRING)
+
+    /** Signal `resource_selected(resource: Resource, path: String)`; see [TypedSignal]. */
+    val resourceSelected: Signal2<Resource?, String>
+        @JvmName("resourceSelectedTypedSignal")
+        get() = Signal2(this, "resource_selected", SignalArgType.nullableObjectOf("Resource") { Resource(it) }, SignalArgType.STRING)
+
+    /** Signal `object_id_selected(id: int)`; see [TypedSignal]. */
+    val objectIdSelected: Signal1<Long>
+        @JvmName("objectIdSelectedTypedSignal")
+        get() = Signal1(this, "object_id_selected", SignalArgType.LONG)
+
+    /** Signal `property_edited(property: String)`; see [TypedSignal]. */
+    val propertyEdited: Signal1<String>
+        @JvmName("propertyEditedTypedSignal")
+        get() = Signal1(this, "property_edited", SignalArgType.STRING)
+
+    /** Signal `property_toggled(property: String, checked: bool)`; see [TypedSignal]. */
+    val propertyToggled: Signal2<String, Boolean>
+        @JvmName("propertyToggledTypedSignal")
+        get() = Signal2(this, "property_toggled", SignalArgType.STRING, SignalArgType.BOOLEAN)
+
+    /** Signal `edited_object_changed()`; see [TypedSignal]. */
+    val editedObjectChanged: Signal0
+        @JvmName("editedObjectChangedTypedSignal")
+        get() = Signal0(this, "edited_object_changed")
+
+    /** Signal `restart_requested()`; see [TypedSignal]. */
+    val restartRequested: Signal0
+        @JvmName("restartRequestedTypedSignal")
+        get() = Signal0(this, "restart_requested")
 
     object Signals {
         const val propertySelected: String = "property_selected"

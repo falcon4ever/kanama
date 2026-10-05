@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -64,6 +65,31 @@ class XRController3D(handle: GodotHandle) : XRNode3D(handle) {
     fun getTrackerHand(): XRPositionalTracker.TrackerHand {
         return XRPositionalTracker.TrackerHand(ObjectCalls.ptrcallNoArgsRetLong(getTrackerHandBind, segment))
     }
+
+    /** Signal `button_pressed(action_name: String)`; see [TypedSignal]. */
+    val buttonPressed: Signal1<String>
+        @JvmName("buttonPressedTypedSignal")
+        get() = Signal1(this, "button_pressed", SignalArgType.STRING)
+
+    /** Signal `button_released(action_name: String)`; see [TypedSignal]. */
+    val buttonReleased: Signal1<String>
+        @JvmName("buttonReleasedTypedSignal")
+        get() = Signal1(this, "button_released", SignalArgType.STRING)
+
+    /** Signal `input_float_changed(action_name: String, value: float)`; see [TypedSignal]. */
+    val inputFloatChanged: Signal2<String, Double>
+        @JvmName("inputFloatChangedTypedSignal")
+        get() = Signal2(this, "input_float_changed", SignalArgType.STRING, SignalArgType.DOUBLE)
+
+    /** Signal `input_vector2_changed(action_name: String, value: Vector2)`; see [TypedSignal]. */
+    val inputVector2Changed: Signal2<String, Vector2>
+        @JvmName("inputVector2ChangedTypedSignal")
+        get() = Signal2(this, "input_vector2_changed", SignalArgType.STRING, SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `profile_changed(role: String)`; see [TypedSignal]. */
+    val profileChanged: Signal1<String>
+        @JvmName("profileChangedTypedSignal")
+        get() = Signal1(this, "profile_changed", SignalArgType.STRING)
 
     object Signals {
         const val buttonPressed: String = "button_pressed"

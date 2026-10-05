@@ -40,7 +40,8 @@ expect class GodotSignal internal constructor(owner: GodotObject, name: String) 
     /**
      * Connects a Kotlin lambda receiving the signal's first [argumentCount] arguments, bound to
      * [target] so Godot drops the connection when [target] is freed. Close the returned
-     * [SignalConnection] to disconnect.
+     * [SignalConnection] to disconnect. The typed form, `area.bodyEntered.connect(target) { body ->
+     * }`, is generated for every engine signal (task 134).
      */
     fun connect(
         target: GodotObject,
@@ -67,6 +68,21 @@ expect class GodotSignal internal constructor(owner: GodotObject, name: String) 
 
     /** Suspends until the signal fires once; returns its first argument as a [GodotObject]. */
     suspend fun awaitObject(target: GodotObject): GodotObject?
+
+    /**
+     * The lambda connection every other form is built on (task 134 D4): a custom Callable bound to
+     * [target] whose call hands [dispatch] a reader over the emitted arguments (no list, no
+     * argument-count limit) and whose release — Godot dropped the connection — runs [onRelease].
+     * An emission with fewer than [argumentCount] arguments is a call error, as for a GDScript
+     * function.
+     */
+    internal fun connectArgs(
+        target: GodotObject,
+        argumentCount: Int,
+        flags: GodotObject.ConnectFlags,
+        onRelease: (() -> Unit)?,
+        dispatch: (SignalArgReader) -> Unit,
+    ): SignalConnection
 }
 
 /**

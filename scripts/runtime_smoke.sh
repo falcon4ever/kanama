@@ -55,6 +55,9 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://signal_leak_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 131 items 2 + 6 -- wrapper equality and a call through a wrapper of a freed object.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://freed_object_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
+# task 134 D4 -- typed engine signals (connect, close, one-shot, deferred, await, freed receiver,
+# typed emit seen by GDScript, GDScript emit decoded typed); the scene quits itself.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://typed_signal_smoke.tscn --quit-after 5000 --verbose >>"$LOG_FILE" 2>&1
 # task 134 A2 -- value types store Godot's width: Kotlin and GDScript print the same three lines.
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_storage_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 133 C2 -- Color as a script type, beside its GDScript twin (color_script_smoke.tscn).
@@ -580,6 +583,13 @@ check "script property cleanup smoke_scene type=PackedScene"
 check "script property cleanup RefCounted handle=0x[0-9a-f]+ destroy=true"
 check "destroyed [0-9]+/[0-9]+ tracked KanamaScript object\\(s\\)"
 check "unregistered [0-9]+ extension class\\(es\\)"
+# task 134 D4 -- typed engine signals (typed_signal_smoke.tscn)
+check "TypedSignalSmoke sync typed_connect=true one_shot=1 receiver_freed_fired=0 emit_kotlin=\\(1\\.5, -2\\.0\\);3;hi emit_gdscript=\\(1\\.5, -2\\.0\\);3;hi;5,2,4 from_gdscript=\\(0\\.5, 4\\.0\\);1;from_gd wrong_type_skipped=true deferred_immediate=0"
+check "signal 'kanama_typed': argument 1: expected Vector2, got Long"
+# task 134 C review: P1 a RefCounted argument kept past its emission / returned by await is owned;
+# P2 a closed one-shot and cancelled awaits leave no connection; P6 a null body reaches the lambda.
+check "TypedSignalSmoke review kept_event_alive=true awaited_event_alive=true one_shot_closed_left=0 awaits_connected=5 awaits_cancelled_left=0 null_body_hits=1 null_body=true color=\\(1\\.0, 0\\.5, 0\\.25, 1\\.0\\)"
+check "TypedSignalSmoke async deferred_later=1 await_signal0=true await_pair=7,seven await_cancelled_on_free=true released=true"
 # task 133 -- script authoring like GDScript (script_access_smoke.tscn)
 check "ScriptAccessSmoke sync before_ready=true node=true wrong_type=true missing=true script=true no_script=true is_script=true as_script=true cast=true require_as=true preload=true preload_wrong=true instantiate=true tree=true orphan_tree=true"
 # task 132 -- a cast to a RefCounted class owns a reference, like the from* downcasts (883c936c:

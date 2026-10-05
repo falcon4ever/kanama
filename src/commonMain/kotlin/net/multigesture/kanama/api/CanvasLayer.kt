@@ -285,6 +285,11 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
         return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, segment)
     }
 
+    /** Signal `visibility_changed()`; see [TypedSignal]. */
+    val visibilityChanged: Signal0
+        @JvmName("visibilityChangedTypedSignal")
+        get() = Signal0(this, "visibility_changed")
+
     object Signals {
         const val visibilityChanged: String = "visibility_changed"
     }

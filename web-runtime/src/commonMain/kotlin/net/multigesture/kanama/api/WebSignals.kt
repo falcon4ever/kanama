@@ -128,7 +128,7 @@ internal object WebSignalCallbackRegistry {
   }
 }
 
-class GodotSignal internal constructor(private val owner: GodotObject, private val name: String) {
+class GodotSignal internal constructor(private val owner: GodotObject, internal val name: String) {
   fun connect(
     target: GodotObject,
     method: String,
@@ -325,6 +325,74 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
     return SignalConnection(owner, name, target, callbackId)
   }
 
+  // ── The typed signals' plumbing (task 134 D4): the same bridge paths, returning a
+  // SignalConnection that can be closed. ──
+
+  internal fun connectPlainConnection(
+    target: GodotObject,
+    argumentCount: Int,
+    flags: GodotObject.ConnectFlags,
+    callback: () -> Unit,
+  ): SignalConnection {
+    val callbackId =
+      WebSignalCallbackRegistry.register(
+        target.handle.value,
+        owner.handle.value,
+        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
+        callback,
+      )
+    val dispatchMethod =
+      if (argumentCount == 0) "_kanama_web_signal_dispatch0" else "_kanama_web_signal_dispatch1"
+    val result = owner.connectBound(name, target, dispatchMethod, callbackId.toLong(), flags)
+    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
+    return SignalConnection(owner, name, target, callbackId, dispatchMethod, result)
+  }
+
+  internal fun <T> connectScalarConnection(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags,
+    parse: (String) -> T,
+    callback: (T) -> Unit,
+  ): SignalConnection {
+    val callbackId =
+      WebSignalCallbackRegistry.registerScalar(
+        target.handle.value,
+        owner.handle.value,
+        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
+      ) { packed ->
+        callback(parse(packed))
+      }
+    val result =
+      owner.connectBound(name, target, "_kanama_web_signal_dispatch1", callbackId.toLong(), flags)
+    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
+    return SignalConnection(owner, name, target, callbackId, "_kanama_web_signal_dispatch1", result)
+  }
+
+  internal fun connectObjectConnection(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags,
+    callback: (GodotHandle?) -> Unit,
+  ): SignalConnection {
+    val callbackId =
+      WebSignalCallbackRegistry.registerObject(
+        target.handle.value,
+        owner.handle.value,
+        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
+      ) { argHandle ->
+        callback(if (argHandle == 0) null else WebObjectId(argHandle))
+      }
+    val result =
+      owner.connectBound(
+        name,
+        target,
+        "_kanama_web_signal_dispatch_object",
+        callbackId.toLong(),
+        flags,
+      )
+    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
+    return SignalConnection(owner, name, target, callbackId, "_kanama_web_signal_dispatch_object", result)
+  }
+
   /** Suspends until this signal fires once (a one-shot connection resumes the coroutine). */
   suspend fun await(target: GodotObject, argumentCount: Int = 0) {
     require(argumentCount in 0..1) {
@@ -336,6 +404,31 @@ class GodotSignal internal constructor(private val owner: GodotObject, private v
       }
     }
   }
+
+  internal companion object {
+    // Floats arrive in the protocol-30 packing (`WebPackedFloats`: NaN and the infinities kept).
+    fun parseVector2Packed(packed: String): Vector2 =
+      packed.split(',').let { Vector2(WebPackedFloats.decode(it[0]), WebPackedFloats.decode(it[1])) }
+
+    fun parseVector2iPacked(packed: String): Vector2i =
+      packed.split(',').let { Vector2i(it[0].trim().toInt(), it[1].trim().toInt()) }
+
+    fun parseVector3Packed(packed: String): Vector3 =
+      packed.split(',').let {
+        Vector3(WebPackedFloats.decode(it[0]), WebPackedFloats.decode(it[1]), WebPackedFloats.decode(it[2]))
+      }
+
+    fun parseColorPacked(packed: String): Color =
+      packed.split(',').let {
+        Color(
+          WebPackedFloats.decode(it[0]),
+          WebPackedFloats.decode(it[1]),
+          WebPackedFloats.decode(it[2]),
+          WebPackedFloats.decode(it[3]),
+        )
+      }
+  }
+
 }
 
 /** A live bound connection; [close] disconnects and releases the Kotlin callback. */
@@ -345,13 +438,16 @@ internal constructor(
   private val name: String,
   private val target: GodotObject,
   private val callbackId: Int,
+  private val dispatchMethod: String = "_kanama_web_signal_dispatch_object",
+  /** Godot's `Error` from the connect call ([GodotError.OK] on success). */
+  val error: GodotError = GodotError.OK,
 ) {
-  private var closed = false
+  private var closed = error != GodotError.OK
 
   fun close() {
     if (closed) return
     closed = true
-    source.disconnectBound(name, target, "_kanama_web_signal_dispatch_object", callbackId.toLong())
+    source.disconnectBound(name, target, dispatchMethod, callbackId.toLong())
     WebSignalCallbackRegistry.unregister(callbackId)
   }
 }

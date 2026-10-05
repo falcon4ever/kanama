@@ -1,5 +1,7 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
+
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import java.lang.foreign.MemorySegment
 
@@ -327,6 +329,11 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
      */
     fun getPlaybackType(): AudioServer.PlaybackType =
         AudioServer.PlaybackType(ObjectCalls.ptrcallNoArgsRetLong(getPlaybackTypeBind, segment))
+
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
 
     companion object {
 

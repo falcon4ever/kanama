@@ -1155,6 +1155,26 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, segment)
     }
 
+    /** Signal `text_changed(new_text: String)`; see [TypedSignal]. */
+    val textChanged: Signal1<String>
+        @JvmName("textChangedTypedSignal")
+        get() = Signal1(this, "text_changed", SignalArgType.STRING)
+
+    /** Signal `text_change_rejected(rejected_substring: String)`; see [TypedSignal]. */
+    val textChangeRejected: Signal1<String>
+        @JvmName("textChangeRejectedTypedSignal")
+        get() = Signal1(this, "text_change_rejected", SignalArgType.STRING)
+
+    /** Signal `text_submitted(new_text: String)`; see [TypedSignal]. */
+    val textSubmitted: Signal1<String>
+        @JvmName("textSubmittedTypedSignal")
+        get() = Signal1(this, "text_submitted", SignalArgType.STRING)
+
+    /** Signal `editing_toggled(toggled_on: bool)`; see [TypedSignal]. */
+    val editingToggled: Signal1<Boolean>
+        @JvmName("editingToggledTypedSignal")
+        get() = Signal1(this, "editing_toggled", SignalArgType.BOOLEAN)
+
     object Signals {
         const val textChanged: String = "text_changed"
         const val textChangeRejected: String = "text_change_rejected"

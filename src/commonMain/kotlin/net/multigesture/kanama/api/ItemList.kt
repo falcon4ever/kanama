@@ -934,6 +934,31 @@ class ItemList(handle: GodotHandle) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(forceUpdateListSizeBind, segment)
     }
 
+    /** Signal `item_selected(index: int)`; see [TypedSignal]. */
+    val itemSelected: Signal1<Long>
+        @JvmName("itemSelectedTypedSignal")
+        get() = Signal1(this, "item_selected", SignalArgType.LONG)
+
+    /** Signal `empty_clicked(at_position: Vector2, mouse_button_index: int)`; see [TypedSignal]. */
+    val emptyClicked: Signal2<Vector2, Long>
+        @JvmName("emptyClickedTypedSignal")
+        get() = Signal2(this, "empty_clicked", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class), SignalArgType.LONG)
+
+    /** Signal `item_clicked(index: int, at_position: Vector2, mouse_button_index: int)`; see [TypedSignal]. */
+    val itemClicked: Signal3<Long, Vector2, Long>
+        @JvmName("itemClickedTypedSignal")
+        get() = Signal3(this, "item_clicked", SignalArgType.LONG, SignalArgType.valueOf<Vector2>("Vector2", Vector2::class), SignalArgType.LONG)
+
+    /** Signal `multi_selected(index: int, selected: bool)`; see [TypedSignal]. */
+    val multiSelected: Signal2<Long, Boolean>
+        @JvmName("multiSelectedTypedSignal")
+        get() = Signal2(this, "multi_selected", SignalArgType.LONG, SignalArgType.BOOLEAN)
+
+    /** Signal `item_activated(index: int)`; see [TypedSignal]. */
+    val itemActivated: Signal1<Long>
+        @JvmName("itemActivatedTypedSignal")
+        get() = Signal1(this, "item_activated", SignalArgType.LONG)
+
     object Signals {
         const val itemSelected: String = "item_selected"
         const val emptyClicked: String = "empty_clicked"

@@ -668,6 +668,46 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         ObjectCalls.ptrcallNoArgs(clearTabsBind, segment)
     }
 
+    /** Signal `tab_selected(tab: int)`; see [TypedSignal]. */
+    val tabSelected: Signal1<Long>
+        @JvmName("tabSelectedTypedSignal")
+        get() = Signal1(this, "tab_selected", SignalArgType.LONG)
+
+    /** Signal `tab_changed(tab: int)`; see [TypedSignal]. */
+    val tabChanged: Signal1<Long>
+        @JvmName("tabChangedTypedSignal")
+        get() = Signal1(this, "tab_changed", SignalArgType.LONG)
+
+    /** Signal `tab_clicked(tab: int)`; see [TypedSignal]. */
+    val tabClicked: Signal1<Long>
+        @JvmName("tabClickedTypedSignal")
+        get() = Signal1(this, "tab_clicked", SignalArgType.LONG)
+
+    /** Signal `tab_rmb_clicked(tab: int)`; see [TypedSignal]. */
+    val tabRmbClicked: Signal1<Long>
+        @JvmName("tabRmbClickedTypedSignal")
+        get() = Signal1(this, "tab_rmb_clicked", SignalArgType.LONG)
+
+    /** Signal `tab_close_pressed(tab: int)`; see [TypedSignal]. */
+    val tabClosePressed: Signal1<Long>
+        @JvmName("tabClosePressedTypedSignal")
+        get() = Signal1(this, "tab_close_pressed", SignalArgType.LONG)
+
+    /** Signal `tab_button_pressed(tab: int)`; see [TypedSignal]. */
+    val tabButtonPressed: Signal1<Long>
+        @JvmName("tabButtonPressedTypedSignal")
+        get() = Signal1(this, "tab_button_pressed", SignalArgType.LONG)
+
+    /** Signal `tab_hovered(tab: int)`; see [TypedSignal]. */
+    val tabHovered: Signal1<Long>
+        @JvmName("tabHoveredTypedSignal")
+        get() = Signal1(this, "tab_hovered", SignalArgType.LONG)
+
+    /** Signal `active_tab_rearranged(idx_to: int)`; see [TypedSignal]. */
+    val activeTabRearranged: Signal1<Long>
+        @JvmName("activeTabRearrangedTypedSignal")
+        get() = Signal1(this, "active_tab_rearranged", SignalArgType.LONG)
+
     object Signals {
         const val tabSelected: String = "tab_selected"
         const val tabChanged: String = "tab_changed"

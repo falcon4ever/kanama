@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -93,6 +94,26 @@ class EditorDebuggerSession(handle: GodotHandle) : RefCounted(handle) {
         checkOpen()
         ObjectCalls.ptrcallWithStringIntAndBoolArgs(setBreakpointBind, segment, path, line, enabled)
     }
+
+    /** Signal `started()`; see [TypedSignal]. */
+    val started: Signal0
+        @JvmName("startedTypedSignal")
+        get() = Signal0(this, "started")
+
+    /** Signal `stopped()`; see [TypedSignal]. */
+    val stopped: Signal0
+        @JvmName("stoppedTypedSignal")
+        get() = Signal0(this, "stopped")
+
+    /** Signal `breaked(can_debug: bool)`; see [TypedSignal]. */
+    val breaked: Signal1<Boolean>
+        @JvmName("breakedTypedSignal")
+        get() = Signal1(this, "breaked", SignalArgType.BOOLEAN)
+
+    /** Signal `continued()`; see [TypedSignal]. */
+    val continued: Signal0
+        @JvmName("continuedTypedSignal")
+        get() = Signal0(this, "continued")
 
     object Signals {
         const val started: String = "started"

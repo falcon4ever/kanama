@@ -879,6 +879,101 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
         ObjectCalls.ptrcallWithObjectArgs(setSelectedBind, segment, listOf(node.segment))
     }
 
+    /** Signal `connection_request(from_node: StringName, from_port: int, to_node: StringName, to_port: int)`; see [TypedSignal]. */
+    val connectionRequest: Signal4<String, Long, String, Long>
+        @JvmName("connectionRequestTypedSignal")
+        get() = Signal4(this, "connection_request", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.STRING, SignalArgType.LONG)
+
+    /** Signal `disconnection_request(from_node: StringName, from_port: int, to_node: StringName, to_port: int)`; see [TypedSignal]. */
+    val disconnectionRequest: Signal4<String, Long, String, Long>
+        @JvmName("disconnectionRequestTypedSignal")
+        get() = Signal4(this, "disconnection_request", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.STRING, SignalArgType.LONG)
+
+    /** Signal `connection_to_empty(from_node: StringName, from_port: int, release_position: Vector2)`; see [TypedSignal]. */
+    val connectionToEmpty: Signal3<String, Long, Vector2>
+        @JvmName("connectionToEmptyTypedSignal")
+        get() = Signal3(this, "connection_to_empty", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `connection_from_empty(to_node: StringName, to_port: int, release_position: Vector2)`; see [TypedSignal]. */
+    val connectionFromEmpty: Signal3<String, Long, Vector2>
+        @JvmName("connectionFromEmptyTypedSignal")
+        get() = Signal3(this, "connection_from_empty", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `connection_drag_started(from_node: StringName, from_port: int, is_output: bool)`; see [TypedSignal]. */
+    val connectionDragStarted: Signal3<String, Long, Boolean>
+        @JvmName("connectionDragStartedTypedSignal")
+        get() = Signal3(this, "connection_drag_started", SignalArgType.STRING, SignalArgType.LONG, SignalArgType.BOOLEAN)
+
+    /** Signal `connection_drag_ended()`; see [TypedSignal]. */
+    val connectionDragEnded: Signal0
+        @JvmName("connectionDragEndedTypedSignal")
+        get() = Signal0(this, "connection_drag_ended")
+
+    /** Signal `copy_nodes_request()`; see [TypedSignal]. */
+    val copyNodesRequest: Signal0
+        @JvmName("copyNodesRequestTypedSignal")
+        get() = Signal0(this, "copy_nodes_request")
+
+    /** Signal `cut_nodes_request()`; see [TypedSignal]. */
+    val cutNodesRequest: Signal0
+        @JvmName("cutNodesRequestTypedSignal")
+        get() = Signal0(this, "cut_nodes_request")
+
+    /** Signal `paste_nodes_request()`; see [TypedSignal]. */
+    val pasteNodesRequest: Signal0
+        @JvmName("pasteNodesRequestTypedSignal")
+        get() = Signal0(this, "paste_nodes_request")
+
+    /** Signal `duplicate_nodes_request()`; see [TypedSignal]. */
+    val duplicateNodesRequest: Signal0
+        @JvmName("duplicateNodesRequestTypedSignal")
+        get() = Signal0(this, "duplicate_nodes_request")
+
+    /** Signal `delete_nodes_request(nodes: typedarray::StringName)`; see [TypedSignal]. On iOS a typedarray::StringName argument is not delivered yet: a connection reports a script error. */
+    val deleteNodesRequest: Signal1<List<String>>
+        @JvmName("deleteNodesRequestTypedSignal")
+        get() = Signal1(this, "delete_nodes_request", SignalArgType.valueOf<List<String>>("typedarray::StringName", List::class))
+
+    /** Signal `node_selected(node: Node)`; see [TypedSignal]. */
+    val nodeSelected: Signal1<Node>
+        @JvmName("nodeSelectedTypedSignal")
+        get() = Signal1(this, "node_selected", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `node_deselected(node: Node)`; see [TypedSignal]. */
+    val nodeDeselected: Signal1<Node>
+        @JvmName("nodeDeselectedTypedSignal")
+        get() = Signal1(this, "node_deselected", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `frame_rect_changed(frame: GraphFrame, new_rect: Rect2)`; see [TypedSignal]. On iOS a Rect2 argument is not delivered yet: a connection reports a script error. */
+    val frameRectChanged: Signal2<GraphFrame, Rect2>
+        @JvmName("frameRectChangedTypedSignal")
+        get() = Signal2(this, "frame_rect_changed", SignalArgType.objectOf("GraphFrame") { GraphFrame(it) }, SignalArgType.valueOf<Rect2>("Rect2", Rect2::class))
+
+    /** Signal `popup_request(at_position: Vector2)`; see [TypedSignal]. */
+    val popupRequest: Signal1<Vector2>
+        @JvmName("popupRequestTypedSignal")
+        get() = Signal1(this, "popup_request", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `begin_node_move()`; see [TypedSignal]. */
+    val beginNodeMove: Signal0
+        @JvmName("beginNodeMoveTypedSignal")
+        get() = Signal0(this, "begin_node_move")
+
+    /** Signal `end_node_move()`; see [TypedSignal]. */
+    val endNodeMove: Signal0
+        @JvmName("endNodeMoveTypedSignal")
+        get() = Signal0(this, "end_node_move")
+
+    /** Signal `graph_elements_linked_to_frame_request(elements: Array, frame: StringName)`; see [TypedSignal]. On iOS a Array argument is not delivered yet: a connection reports a script error. */
+    val graphElementsLinkedToFrameRequest: Signal2<List<Any?>, String>
+        @JvmName("graphElementsLinkedToFrameRequestTypedSignal")
+        get() = Signal2(this, "graph_elements_linked_to_frame_request", SignalArgType.valueOf<List<Any?>>("Array", List::class), SignalArgType.STRING)
+
+    /** Signal `scroll_offset_changed(offset: Vector2)`; see [TypedSignal]. */
+    val scrollOffsetChanged: Signal1<Vector2>
+        @JvmName("scrollOffsetChangedTypedSignal")
+        get() = Signal1(this, "scroll_offset_changed", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
     object Signals {
         const val connectionRequest: String = "connection_request"
         const val disconnectionRequest: String = "disconnection_request"

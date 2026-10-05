@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -33,6 +34,11 @@ class OpenXRFutureResult(handle: GodotHandle) : RefCounted(handle) {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetVariantScalar(getResultValueBind, segment)
     }
+
+    /** Signal `completed(result: OpenXRFutureResult)`; see [TypedSignal]. */
+    val completed: Signal1<Any?>
+        @JvmName("completedTypedSignal")
+        get() = Signal1(this, "completed", SignalArgType.VARIANT)
 
     object Signals {
         const val completed: String = "completed"

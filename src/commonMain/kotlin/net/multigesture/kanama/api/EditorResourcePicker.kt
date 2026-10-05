@@ -129,6 +129,16 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
     }
 
+    /** Signal `resource_selected(resource: Resource, inspect: bool)`; see [TypedSignal]. */
+    val resourceSelected: Signal2<Resource?, Boolean>
+        @JvmName("resourceSelectedTypedSignal")
+        get() = Signal2(this, "resource_selected", SignalArgType.nullableObjectOf("Resource") { Resource(it) }, SignalArgType.BOOLEAN)
+
+    /** Signal `resource_changed(resource: Resource)`; see [TypedSignal]. */
+    val resourceChanged: Signal1<Resource?>
+        @JvmName("resourceChangedTypedSignal")
+        get() = Signal1(this, "resource_changed", SignalArgType.nullableObjectOf("Resource") { Resource(it) })
+
     object Signals {
         const val resourceSelected: String = "resource_selected"
         const val resourceChanged: String = "resource_changed"

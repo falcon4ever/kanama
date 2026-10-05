@@ -84,6 +84,11 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
         return Shape3D.wrapOwned(ObjectCalls.ptrcallWithDoubleArgRetObject(getShapeBind, segment, thickness))
     }
 
+    /** Signal `mesh_changed()`; see [TypedSignal]. */
+    val meshChanged: Signal0
+        @JvmName("meshChangedTypedSignal")
+        get() = Signal0(this, "mesh_changed")
+
     object Signals {
         const val meshChanged: String = "mesh_changed"
     }

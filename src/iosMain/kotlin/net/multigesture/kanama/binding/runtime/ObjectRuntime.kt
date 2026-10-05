@@ -2,6 +2,7 @@ package net.multigesture.kanama.binding.runtime
 
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.IosGodot
+import net.multigesture.kanama.api.SignalArgWriter
 import net.multigesture.kanama.types.Vector2i
 
 /**
@@ -18,6 +19,45 @@ internal actual object ObjectRuntime {
 
   // No instance binding on iOS yet (task 132 D7): the wrapper keeps the instance-id lookup.
   actual fun liveFlagOf(segment: RawSegment): LiveFlag? = null
+
+  // The typed signals' emit (task 134 C review S5): iOS collects the arguments and takes the
+  // emitSignal path below.
+  private class ListWriter(val segment: RawSegment, val signal: String, count: Int) :
+    SignalArgWriter {
+    val values = arrayOfNulls<Any?>(count)
+
+    override fun long(index: Int, value: Long) {
+      values[index] = value
+    }
+
+    override fun double(index: Int, value: Double) {
+      values[index] = value
+    }
+
+    override fun bool(index: Int, value: Boolean) {
+      values[index] = value
+    }
+
+    override fun string(index: Int, value: String) {
+      values[index] = value
+    }
+
+    override fun obj(index: Int, value: GodotObject?) {
+      values[index] = value
+    }
+
+    override fun value(index: Int, value: Any?) {
+      values[index] = value
+    }
+  }
+
+  actual fun beginEmit(segment: RawSegment, signal: String, argumentCount: Int): SignalArgWriter =
+    ListWriter(segment, signal, argumentCount)
+
+  actual fun finishEmit(writer: SignalArgWriter, send: Boolean) {
+    val list = writer as ListWriter
+    if (send) emitSignal(list.segment, list.signal, list.values.asList())
+  }
 
   actual fun emitSignal(segment: RawSegment, signal: String, args: List<Any?>) {
     val instance = segment.address()

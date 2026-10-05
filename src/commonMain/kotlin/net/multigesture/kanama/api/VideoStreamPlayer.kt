@@ -363,6 +363,11 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
         return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getVideoTextureBind, segment))
     }
 
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
+
     object Signals {
         const val finished: String = "finished"
     }

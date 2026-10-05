@@ -222,6 +222,16 @@ open class MultiplayerPeer(handle: GodotHandle) : PacketPeer(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isServerRelaySupportedBind, segment)
     }
 
+    /** Signal `peer_connected(id: int)`; see [TypedSignal]. */
+    val peerConnected: Signal1<Long>
+        @JvmName("peerConnectedTypedSignal")
+        get() = Signal1(this, "peer_connected", SignalArgType.LONG)
+
+    /** Signal `peer_disconnected(id: int)`; see [TypedSignal]. */
+    val peerDisconnected: Signal1<Long>
+        @JvmName("peerDisconnectedTypedSignal")
+        get() = Signal1(this, "peer_disconnected", SignalArgType.LONG)
+
     object Signals {
         const val peerConnected: String = "peer_connected"
         const val peerDisconnected: String = "peer_disconnected"

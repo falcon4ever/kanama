@@ -28,6 +28,11 @@ class OpenXRRenderModel(handle: GodotHandle) : Node3D(handle) {
         ObjectCalls.ptrcallWithRIDArg(setRenderModelBind, segment, renderModel)
     }
 
+    /** Signal `render_model_top_level_path_changed()`; see [TypedSignal]. */
+    val renderModelTopLevelPathChanged: Signal0
+        @JvmName("renderModelTopLevelPathChangedTypedSignal")
+        get() = Signal0(this, "render_model_top_level_path_changed")
+
     object Signals {
         const val renderModelTopLevelPathChanged: String = "render_model_top_level_path_changed"
     }

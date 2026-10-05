@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -158,6 +159,16 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
     fun clearHistory(id: Int = -99, increaseVersion: Boolean = true) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(clearHistoryBind, segment, id, increaseVersion)
     }
+
+    /** Signal `history_changed()`; see [TypedSignal]. */
+    val historyChanged: Signal0
+        @JvmName("historyChangedTypedSignal")
+        get() = Signal0(this, "history_changed")
+
+    /** Signal `version_changed()`; see [TypedSignal]. */
+    val versionChanged: Signal0
+        @JvmName("versionChangedTypedSignal")
+        get() = Signal0(this, "version_changed")
 
     object Signals {
         const val historyChanged: String = "history_changed"

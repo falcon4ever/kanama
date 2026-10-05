@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -11,6 +12,11 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 open class Popup(handle: GodotHandle) : Window(handle) {
     // No conservative instance methods emitted yet.
+
+    /** Signal `popup_hide()`; see [TypedSignal]. */
+    val popupHide: Signal0
+        @JvmName("popupHideTypedSignal")
+        get() = Signal0(this, "popup_hide")
 
     object Signals {
         const val popupHide: String = "popup_hide"

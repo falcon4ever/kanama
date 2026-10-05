@@ -355,6 +355,11 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
         ObjectCalls.ptrcallWithIntAndBoolArgs(setRequiredBind, segment, boneIdx, required)
     }
 
+    /** Signal `profile_updated()`; see [TypedSignal]. */
+    val profileUpdated: Signal0
+        @JvmName("profileUpdatedTypedSignal")
+        get() = Signal0(this, "profile_updated")
+
     object Signals {
         const val profileUpdated: String = "profile_updated"
     }

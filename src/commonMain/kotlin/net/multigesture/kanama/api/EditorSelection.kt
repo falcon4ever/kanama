@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -69,6 +70,11 @@ class EditorSelection(handle: GodotHandle) : GodotObject(handle) {
     fun getTransformableSelectedNodes(): List<Node> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTransformableSelectedNodesBind, segment, Node::wrap)
     }
+
+    /** Signal `selection_changed()`; see [TypedSignal]. */
+    val selectionChanged: Signal0
+        @JvmName("selectionChangedTypedSignal")
+        get() = Signal0(this, "selection_changed")
 
     object Signals {
         const val selectionChanged: String = "selection_changed"
