@@ -40,6 +40,7 @@ import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.createTween
+import net.multigesture.kanama.ios.IOS_RAW_VALUE_MAX_BYTES
 import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
 import net.multigesture.kanama.ios.KanamaIosRpcConfig
@@ -114,6 +115,7 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_take_pending_utf8
 import net.multigesture.kanama.ios.cinterop.kanama_ios_last_fault
 import net.multigesture.kanama.ios.decodeIosCallArg
 import net.multigesture.kanama.ios.decodeIosPropertyValue
+import net.multigesture.kanama.ios.encodeIosRawValue
 import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceCallV
 import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceGetProperty
 import net.multigesture.kanama.ios.kanamaIosRuntimeScriptInstanceSetProperty
@@ -2081,13 +2083,22 @@ actual object ObjectCalls {
             strict = true,
           )
       }
-      else ->
+      // Task 133 value types (Vector3i ... Projection): raw Godot bytes, boxed by the shim.
+      else -> {
+        val raw = allocArray<ByteVar>(IOS_RAW_VALUE_MAX_BYTES)
+        val tag = encodeIosRawValue(value, raw)
+        if (tag >= 0) {
+          desc.tag = tag
+          desc.ptr = raw
+          return descPtr
+        }
         error(
           "iOS: unsupported Variant argument type " +
             (value::class.simpleName ?: "<anonymous>") +
             " (task 100 parcel 7 marshals scalars, String/NodePath, Vector2/2i/3, Color, RID, " +
-            "object handles and nested Map / List up to 8 levels)"
+            "the task 133 value types, object handles and nested Map / List up to 8 levels)"
         )
+      }
     }
     return descPtr
   }
@@ -3699,8 +3710,19 @@ actual object ObjectCalls {
           tags[i] = PT_RID
           ptrs[i] = c.ptr.reinterpret<CPointed>()
         }
-        else ->
-          error("encodeVariantArgs: unsupported arg type " + (a::class.simpleName ?: "<anonymous>"))
+        // Task 133 value types (Vector3i ... Projection): raw Godot bytes, boxed by the shim
+        // (kanama_ios_pt_arg_to_variant) — e.g. a script signal's emitted arguments.
+        else -> {
+          val raw = allocArray<ByteVar>(IOS_RAW_VALUE_MAX_BYTES)
+          val tag = encodeIosRawValue(a, raw)
+          if (tag < 0) {
+            error(
+              "encodeVariantArgs: unsupported arg type " + (a::class.simpleName ?: "<anonymous>")
+            )
+          }
+          tags[i] = tag
+          ptrs[i] = raw.reinterpret<CPointed>()
+        }
       }
     }
     return Triple(tags, ptrs, n)
@@ -41207,6 +41229,146 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       "typed-signal(generated renamed: Signal0, one-shot fires once and is released, close releases) " +
         "registered=$registered fires=$renamedFires leaked=$leaked closed=$closed",
       registered == 1 && renamedFires == 1 && leaked == 0 && closed == 0,
+    )
+  }
+
+  // Task 133: the value types as script types cross the shim as their raw Godot bytes. Values an
+  // Expression emits (GDScript literals) arrive through kanama_ios_marshal_variant_args +
+  // decodeIosCallArg and must equal the same values built in Kotlin (so a Basis' rows/columns and
+  // a Projection's columns land right); the same values emitted from Kotlin go out through
+  // encodeVariantArgs + kanama_ios_pt_arg_to_variant and come back equal; the property set
+  // (decodeIosPropertyValue) and get / return (encodeIosReturn) layouts round-trip every type.
+  run {
+    val api = net.multigesture.kanama.api.SignalArgType
+    val vtHandle = ObjectCalls.constructObject("Node")
+    val vtNode = net.multigesture.kanama.api.Node(net.multigesture.kanama.api.GodotHandle(vtHandle))
+    for (name in listOf("kanamaFlats", "kanamaSolids", "kanamaFrames")) {
+      ObjectCalls.callWithVariantArgs(
+        ObjectCalls.getMethodBind("Object", "add_user_signal", 85656714L),
+        vtHandle,
+        listOf(name),
+      )
+    }
+    fun <T : Any> type(name: String, kClass: kotlin.reflect.KClass<*>) =
+      api.valueOf<T>(name, kClass)
+    val flats =
+      net.multigesture.kanama.api.Signal4(
+        vtNode,
+        "kanamaFlats",
+        type<Rect2>("Rect2", Rect2::class),
+        type<Rect2i>("Rect2i", Rect2i::class),
+        type<Vector4>("Vector4", Vector4::class),
+        type<net.multigesture.kanama.types.Vector4i>(
+          "Vector4i",
+          net.multigesture.kanama.types.Vector4i::class,
+        ),
+      )
+    val solids =
+      net.multigesture.kanama.api.Signal4(
+        vtNode,
+        "kanamaSolids",
+        type<Plane>("Plane", Plane::class),
+        type<AABB>("AABB", AABB::class),
+        type<Vector3i>("Vector3i", Vector3i::class),
+        type<Quaternion>("Quaternion", Quaternion::class),
+      )
+    val frames =
+      net.multigesture.kanama.api.Signal4(
+        vtNode,
+        "kanamaFrames",
+        type<Transform2D>("Transform2D", Transform2D::class),
+        type<Transform3D>("Transform3D", Transform3D::class),
+        type<Projection>("Projection", Projection::class),
+        type<Basis>("Basis", Basis::class),
+      )
+    val rect = Rect2(Vector2(0.5, 1.5), Vector2(2.25, 3.125))
+    val recti = Rect2i(Vector2i(-1, 2), Vector2i(30, 40))
+    val vec4 = Vector4(0.5, -0.25, 8.0, 1e-10)
+    val vec4i = net.multigesture.kanama.types.Vector4i(Int.MIN_VALUE, Int.MAX_VALUE, 0, 7)
+    val plane = Plane(Vector3(0.0, 1.0, 0.0), 2.5)
+    val box = AABB(Vector3(-1.0, -2.0, -3.0), Vector3(4.0, 5.0, 6.0))
+    val cell = Vector3i(7, -8, 9)
+    val rot = Quaternion(0.0, 0.6, 0.0, 0.8)
+    val xform2 = Transform2D(Vector2(1.0, 2.0), Vector2(3.0, 4.0), Vector2(5.0, 6.0))
+    val xform3 =
+      Transform3D(
+        Basis(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0), Vector3(7.0, 8.0, 9.0)),
+        Vector3(10.0, 11.0, 12.0),
+      )
+    val proj =
+      Projection(
+        Vector4(1.0, 2.0, 3.0, 4.0),
+        Vector4(5.0, 6.0, 7.0, 8.0),
+        Vector4(9.0, 10.0, 11.0, 12.0),
+        Vector4(13.0, 14.0, 15.0, 16.0),
+      )
+    val basis = Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 0.0, 1.0), Vector3(0.0, -1.0, 0.0))
+    val expected =
+      listOf<Any>(rect, recti, vec4, vec4i, plane, box, cell, rot, xform2, xform3, proj, basis)
+    val seen = mutableListOf<Any>()
+    val connections =
+      listOf(
+        flats.connect(vtNode) { a, b, c, d -> seen.addAll(listOf(a, b, c, d)) },
+        solids.connect(vtNode) { a, b, c, d -> seen.addAll(listOf(a, b, c, d)) },
+        frames.connect(vtNode) { a, b, c, d -> seen.addAll(listOf(a, b, c, d)) },
+      )
+    val expressionHandle = ObjectCalls.constructObject("Expression")
+    val expression =
+      net.multigesture.kanama.api.Expression(
+        net.multigesture.kanama.api.GodotHandle(expressionHandle)
+      )
+    for (call in
+      listOf(
+        "emit_signal(\"kanamaFlats\", Rect2(0.5, 1.5, 2.25, 3.125), Rect2i(-1, 2, 30, 40), " +
+          "Vector4(0.5, -0.25, 8, 1e-10), Vector4i(-2147483648, 2147483647, 0, 7))",
+        "emit_signal(\"kanamaSolids\", Plane(0, 1, 0, 2.5), AABB(Vector3(-1, -2, -3), " +
+          "Vector3(4, 5, 6)), Vector3i(7, -8, 9), Quaternion(0, 0.6, 0, 0.8))",
+        "emit_signal(\"kanamaFrames\", Transform2D(Vector2(1, 2), Vector2(3, 4), Vector2(5, 6)), " +
+          "Transform3D(Basis(Vector3(1, 2, 3), Vector3(4, 5, 6), Vector3(7, 8, 9)), " +
+          "Vector3(10, 11, 12)), Projection(Vector4(1, 2, 3, 4), Vector4(5, 6, 7, 8), " +
+          "Vector4(9, 10, 11, 12), Vector4(13, 14, 15, 16)), Basis(Vector3(1, 0, 0), " +
+          "Vector3(0, 0, 1), Vector3(0, -1, 0)))",
+      )) {
+      expression.parse(call, emptyList())
+      expression.execute(emptyList(), vtNode)
+    }
+    ObjectCalls.destroyObject(expressionHandle)
+    val fromEngine = seen.toList()
+    seen.clear()
+    flats.emit(rect, recti, vec4, vec4i)
+    solids.emit(plane, box, cell, rot)
+    frames.emit(xform2, xform3, proj, basis)
+    val fromKotlin = seen.toList()
+    connections.forEach { it.close() }
+    ObjectCalls.destroyObject(vtHandle)
+    check("value-types(engine emit decoded) seen=$fromEngine", fromEngine == expected)
+    check("value-types(Kotlin emit round trip) seen=$fromKotlin", fromKotlin == expected)
+    val layoutOk = memScoped {
+      val buf = allocArray<ByteVar>(net.multigesture.kanama.ios.IOS_RAW_VALUE_MAX_BYTES)
+      val roundTrips =
+        expected.all { value ->
+          val tag = net.multigesture.kanama.ios.encodeIosRawValue(value, buf)
+          tag >= 0 &&
+            net.multigesture.kanama.ios.decodeIosPropertyValue(
+              tag,
+              buf,
+              net.multigesture.kanama.ios.IOS_RAW_VALUE_MAX_BYTES,
+            ) == value
+        }
+      // Godot's memory order: a Transform3D's basis is three ROWS, then the origin.
+      net.multigesture.kanama.ios.encodeIosRawValue(xform3, buf)
+      val f = buf.reinterpret<GodotRealVar>()
+      roundTrips && f[0] == 1f && f[1] == 4f && f[2] == 7f && f[3] == 2f && f[9] == 10f
+    }
+    check("value-types(property set/get byte layout)", layoutOk)
+    // The get / return encode tags every type (Color too: an iOS Color export read back nil).
+    val tags =
+      (expected + net.multigesture.kanama.types.Color.RED).map {
+        net.multigesture.kanama.ios.kanamaIosVariantReturnSelfTest(it)
+      }
+    check(
+      "value-types(return tags) tags=$tags",
+      tags == listOf(12, 37, 10, 40, 26, 21, 9, 20, 22, 19, 25, 18, 11),
     )
   }
 

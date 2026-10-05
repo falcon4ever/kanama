@@ -102,6 +102,8 @@ internal enum class WebPropertyArm(val dispatch: WebDispatch) {
   VECTOR3(WebDispatch(WebDispatchStatus.TYPED)),
   VECTOR2I(WebDispatch(WebDispatchStatus.TYPED)),
   COLOR(WebDispatch(WebDispatchStatus.TYPED)),
+  /** Task 133: a [WebValueTypes] value as its packed components (protocol 31). */
+  PACKED_VALUE(WebDispatch(WebDispatchStatus.TYPED)),
   OBJECT(WebDispatch(WebDispatchStatus.TYPED)),
   STRING_ARRAY(WebDispatch(WebDispatchStatus.TYPED)),
   OBJECT_ARRAY(WebDispatch(WebDispatchStatus.TYPED)),
@@ -148,9 +150,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `Viewport.set_input_as_handled` and the Control window family `Control.set_position` /
      * `set_size` (331-332). The LONG_OBJECT_ARG slot also became nullable in 28, so
      * `Mesh.surface_set_material(i, null)` clears the slot (handle id 0). 30 (task 133 C2) adds the
-     * `kanamaWebSetColorProperty` entry point: a `Color` export's push arm.
+     * `kanamaWebSetColorProperty` entry point: a `Color` export's push arm. 31 (task 133 value
+     * types) adds `kanamaWebSetPackedValueProperty`: the push arm of a Vector3i, Rect2, Rect2i,
+     * Plane, Quaternion, Basis or Transform3D export, carried as its packed components.
      */
-    const val PROTOCOL_VERSION = 30
+    const val PROTOCOL_VERSION = 31
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -254,6 +258,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.VECTOR2I -> 2
         TypeMapping.VECTOR3 -> 3
         TypeMapping.COLOR -> 4
+        // Task 133: the Web value types that fit the six slots (Basis / Transform3D do not).
+        in WebValueTypes.COMPONENTS -> WebValueTypes.COMPONENTS.getValue(type).size
         else -> null
       }
 
@@ -286,6 +292,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.QUATERNION,
         TypeMapping.BASIS,
         TypeMapping.COLOR -> true
+        in WebValueTypes.COMPONENTS -> true
         else -> false
       }
 
@@ -316,6 +323,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             add(arg.name + ".b")
             add(arg.name + ".a")
           }
+          in WebValueTypes.COMPONENTS ->
+            WebValueTypes.COMPONENTS.getValue(arg.type).forEach { add("float(${arg.name}.$it)") }
           else -> error("no numeric slot layout for ${arg.type.name}")
         }
       }
@@ -340,6 +349,13 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             add("net.multigesture.kanama.types.Vector3(${next()}, ${next()}, ${next()})")
           TypeMapping.COLOR ->
             add("net.multigesture.kanama.types.Color(${next()}, ${next()}, ${next()}, ${next()})")
+          in WebValueTypes.COMPONENTS ->
+            add(
+              WebValueTypes.kotlinFromSlots(
+                arg.type,
+                WebValueTypes.COMPONENTS.getValue(arg.type).map { next() },
+              )
+            )
           else -> error("no numeric slot layout for ${arg.type.name}")
         }
       }
@@ -382,6 +398,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.COLOR -> packedFloats(access, "r", "g", "b", "a")
         TypeMapping.BASIS ->
           packedFloats(access, "x.x", "x.y", "x.z", "y.x", "y.y", "y.z", "z.x", "z.y", "z.z")
+        in WebValueTypes.COMPONENTS -> WebValueTypes.kotlinPack(access)
         else -> error("no packed return encoding for ${type.name}")
       }
 
@@ -416,6 +433,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.INT,
         TypeMapping.BOOL -> true
         TypeMapping.OBJECT -> arg.objectWrapperFqName != null
+        // Task 133: a value type's components are written with `String.num_scientific`, which
+        // round-trips exactly — unlike `str()` of a bare float, the reason FLOAT stays out.
+        in WebValueTypes.COMPONENTS -> true
         else -> false
       }
 
@@ -437,6 +457,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           TypeMapping.INT -> "str(${arg.name})"
           TypeMapping.BOOL -> "(\"1\" if ${arg.name} else \"0\")"
           TypeMapping.OBJECT -> "str($PACKED_ARG_PACK_OBJECT(${arg.name}, $PACKED_ARG_TRANSIENT))"
+          in WebValueTypes.COMPONENTS -> WebValueTypes.gdPack(arg.name)
           else -> error("no packed argument encoding for ${arg.type.name}")
         }
       }
@@ -462,6 +483,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             if (arg.nullable) "$handle?.let { $wrapper(it) }"
             else "$wrapper(checkNotNull($handle) { \"Argument ${arg.name} is not nullable\" })"
           }
+          in WebValueTypes.COMPONENTS -> WebValueTypes.kotlinUnpack(arg.type, part)
           else -> error("no packed argument decoding for ${arg.type.name}")
         }
       }
@@ -496,6 +518,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.VECTOR2I,
         TypeMapping.VECTOR3,
         TypeMapping.COLOR -> true
+        in WebValueTypes.COMPONENTS -> true
         else -> false
       }
 
@@ -556,6 +579,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.VECTOR3 -> WebPropertyArm.VECTOR3
         TypeMapping.VECTOR2I -> WebPropertyArm.VECTOR2I
         TypeMapping.COLOR -> WebPropertyArm.COLOR
+        in WebValueTypes.COMPONENTS -> WebPropertyArm.PACKED_VALUE
         TypeMapping.OBJECT -> WebPropertyArm.OBJECT
         TypeMapping.ARRAY ->
           if (property.arrayElementString) WebPropertyArm.STRING_ARRAY
@@ -719,6 +743,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
                 TypeMapping.VECTOR3,
                 TypeMapping.COLOR,
                 TypeMapping.NODE_PATH -> true
+                in WebValueTypes.COMPONENTS -> true
                 TypeMapping.OBJECT ->
                   property.objectWrapperFqName != null || property.customScriptFqName != null
                 TypeMapping.ARRAY ->
@@ -741,8 +766,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "$where: @Export type '$declared' has no full Kanama Web property arm set " +
               "(declaration/push/pull/registry); a Web build would emit broken or silently " +
               "dropped property code. Use a Web-supported property type " +
-              "(String, Long, Double, Boolean, Vector2, Vector2i, Vector3, Color, NodePath, a wrapped " +
-              "object/script type, or a supported List) or keep the property off the Web target."
+              "(String, Long, Double, Boolean, Vector2, Vector2i, Vector3, Vector3i, Color, Rect2, " +
+              "Rect2i, Plane, Quaternion, Basis, Transform3D, NodePath, a wrapped object/script " +
+              "type, or a supported List) or keep the property off the Web target."
           continue
         }
         val defaultDrivesProxy =
@@ -756,6 +782,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             TypeMapping.VECTOR3,
             TypeMapping.COLOR,
             TypeMapping.NODE_PATH -> true
+            in WebValueTypes.COMPONENTS -> true
             else -> false
           }
         if (defaultDrivesProxy && property.defaultLiteral == null) {
@@ -1249,6 +1276,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendVector2iPropertySetter()
     appendVector3PropertySetter()
     appendColorPropertySetter()
+    appendPackedValuePropertySetter()
     appendObjectPropertySetter()
     appendPackedPropertyGetter()
     appendObjectArrayPropertySetter()
@@ -1859,6 +1887,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             property.type == TypeMapping.VECTOR2I -> "$access.let { \"\${it.x},\${it.y}\" }"
             property.type == TypeMapping.VECTOR3 -> packedFloats(access, "x", "y", "z")
             property.type == TypeMapping.COLOR -> packedFloats(access, "r", "g", "b", "a")
+            WebValueTypes.isWebValueType(property.type) -> WebValueTypes.kotlinPack(access)
             property.type == TypeMapping.OBJECT && property.customScriptFqName != null ->
               if (property.nullable) "($access?.objectId?.value ?: 0).toString()"
               else "$access.objectId.value.toString()"
@@ -1896,6 +1925,32 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         if (property.type == TypeMapping.VECTOR3 && property.isMutable) {
           appendLine(
             "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = net.multigesture.kanama.types.Vector3(x, y, z)"
+          )
+        }
+      }
+      appendLine("        else -> unknown(\"property\", propertyId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine("  }")
+    appendLine()
+  }
+
+  /**
+   * Task 133: a [WebValueTypes] export's push arm, its packed components decoded by the runtime.
+   */
+  private fun StringBuilder.appendPackedValuePropertySetter() {
+    appendLine(
+      "  fun setPackedValueProperty(scriptId: Int, propertyId: Int, script: KanamaWebScript, packed: String) {"
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (propertyId) {")
+      input.model.properties.forEachIndexed { propertyIndex, property ->
+        if (WebValueTypes.isWebValueType(property.type) && property.isMutable) {
+          appendLine(
+            "        ${propertyIndex + 1} -> (script as ${input.model.simpleName}).${property.kotlinName} = ${WebValueTypes.kotlinUnpack(property.type, "packed")}"
           )
         }
       }
@@ -2247,6 +2302,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         WebPropertyArm.COLOR ->
           appendLine(
             "\t_kanama_bridge.setColorProperty(_kanama_handle, ${index + 1}, ${property.godotName}.r, ${property.godotName}.g, ${property.godotName}.b, ${property.godotName}.a)"
+          )
+        WebPropertyArm.PACKED_VALUE ->
+          appendLine(
+            "\t_kanama_bridge.setPackedValueProperty(_kanama_handle, ${index + 1}, ${WebValueTypes.gdPack(property.godotName)})"
           )
         WebPropertyArm.OBJECT -> {
           appendLine("\tvar property_handle_${index + 1}: int = 0")
@@ -3975,6 +4034,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\tvalues.append($WEB_FLOAT(part))")
     appendLine("\treturn values")
     appendLine()
+    append(WebValueTypes.gdHelpers())
     appendLine("func $SIGNAL_PACK_ARG(arg: Variant) -> String:")
     appendLine("\tmatch typeof(arg):")
     appendLine("\t\tTYPE_NIL:")
@@ -3987,6 +4047,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\treturn \"%s,%s,%s\" % [arg.x, arg.y, arg.z]")
     appendLine("\t\tTYPE_COLOR:")
     appendLine("\t\t\treturn \"%s,%s,%s,%s\" % [arg.r, arg.g, arg.b, arg.a]")
+    // Task 133: the other value types as their exact packed components (Vector3i keeps its arm).
+    appendLine(
+      "\t\t${(WebValueTypes.COMPONENTS.keys - TypeMapping.VECTOR3I).joinToString(", ") { WebValueTypes.gdTypeConstant(it) }}:"
+    )
+    appendLine("\t\t\treturn ${WebValueTypes.gdPack("arg")}")
     appendLine("\t\t_:")
     appendLine("\t\t\treturn str(arg)")
     appendLine()
@@ -5089,6 +5154,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "Vector3(_kanama_parts[6], _kanama_parts[7], _kanama_parts[8]))"
         )
       }
+      in WebValueTypes.COMPONENTS ->
+        appendLine("\treturn ${WebValueTypes.gdUnpack(type, "_kanama_packed")}")
       else -> error("no packed return parse for ${type.name}")
     }
   }
@@ -5208,6 +5275,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           TypeMapping.VECTOR3,
           TypeMapping.COLOR,
           TypeMapping.NODE_PATH -> true
+          in WebValueTypes.COMPONENTS -> true
           TypeMapping.OBJECT ->
             property.customScriptFqName != null || property.objectWrapperFqName != null
           TypeMapping.ARRAY ->
@@ -5247,6 +5315,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "\t$name = Color(_kanama_parts_$id[0], _kanama_parts_$id[1], _kanama_parts_$id[2], _kanama_parts_$id[3])"
           )
         }
+        WebValueTypes.isWebValueType(property.type) ->
+          appendLine("\t$name = ${WebValueTypes.gdUnpack(property.type, packed)}")
         property.type == TypeMapping.OBJECT -> {
           appendLine("\tvar _kanama_pull_handle_$id := int($packed)")
           appendLine("\tvar _kanama_pull_value_$id: Object = null")
@@ -5301,6 +5371,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       // return would turn into a GDScript compile error).
       property.type == TypeMapping.VECTOR3 -> "Vector3"
       property.type == TypeMapping.COLOR -> "Color"
+      WebValueTypes.isWebValueType(property.type) -> WebValueTypes.gdName(property.type)
       property.type == TypeMapping.NODE_PATH -> "NodePath"
       else -> gdType(property.type)
     }
@@ -5335,6 +5406,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.VECTOR2I -> vectorGdDefault(property.defaultLiteral, "Vector2i")
       TypeMapping.VECTOR3 -> vectorGdDefault(property.defaultLiteral, "Vector3")
       TypeMapping.COLOR -> colorGdDefault(property.defaultLiteral)
+      in WebValueTypes.COMPONENTS -> gdValueTypeDefault(property.defaultLiteral, property.type)
       TypeMapping.ARRAY -> "[]"
       else -> "null"
     }

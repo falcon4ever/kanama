@@ -103,7 +103,18 @@ each element, as on a GDScript `Array[String]`.
 `@ExportCustom`, the escape hatch for a hint no typed annotation covers. A
 `Color` is a script type like the vectors: an exported property
 (`@Export var tint = Color(1.0, 0.5, 0.0)`, or `Color.RED`), a function's
-parameter or return, a signal argument. Enum-typed properties need no hint: a Kotlin
+parameter or return, a signal argument. So are the other Godot value types:
+`Vector4`, `Vector4i`, `Rect2`, `Rect2i`, `Plane`, `AABB`, `Quaternion`,
+`Basis`, `Transform2D`, `Transform3D` and `Projection`
+(`@Export var area = Rect2(Vector2(0.0, 0.0), Vector2(64.0, 32.0))`,
+`@Export var pose = Transform3D.IDENTITY`). A default is a named constant
+(`Vector4.ZERO`, `Plane.PLANE_XY`, `Basis.FLIP_Y`) or a constructor of literals
+and nested value types; anything else is read when the script is created (and
+is a build error on Web, whose proxy declares the default). On Web, `Vector3i`,
+`Rect2`, `Rect2i`, `Plane`, `Quaternion`, `Basis` and `Transform3D` are script
+types; `Vector4`, `Vector4i`, `AABB`, `Transform2D` and `Projection` are not
+yet (the Web runtime has no such value type), and a Web method still takes
+arguments or returns a value, not both. Enum-typed properties need no hint: a Kotlin
 `enum class` or a Godot enum exports as a dropdown (a bitfield as flag
 checkboxes) automatically (see below).
 

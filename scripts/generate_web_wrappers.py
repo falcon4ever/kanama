@@ -1734,6 +1734,11 @@ WEB_SIGNAL_SCALARS = {
     "Vector2i": ("Vector2i", 'SignalArgType.valueOf<Vector2i>("Vector2i", Vector2i::class)'),
     "Vector3": ("Vector3", 'SignalArgType.valueOf<Vector3>("Vector3", Vector3::class)'),
     "Color": ("Color", 'SignalArgType.valueOf<Color>("Color", Color::class)'),
+    # Task 133: the Web value types that cross as packed components (WebPackedValues).
+    **{
+        name: (name, f'SignalArgType.valueOf<{name}>("{name}", {name}::class)')
+        for name in ("Vector3i", "Rect2", "Rect2i", "Plane", "Quaternion", "Basis", "Transform3D")
+    },
 }
 
 

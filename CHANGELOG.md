@@ -38,6 +38,35 @@ only `--write`.
 
 ## Unreleased
 
+### Added — every Godot value type is a script type (task 133)
+
+- **`Rect2`, `Rect2i`, `Vector4`, `Vector4i`, `Plane`, `AABB`, `Transform2D`, `Transform3D` and
+  `Projection`** are script types on desktop, Android and iOS, like `Color`: an `@Export`
+  property, a registered function's parameter and return, and a `@Signal` / typed signal
+  argument in both directions. iOS also delivers `Vector3i`, `Quaternion` and `Basis` (before:
+  desktop only). A default is a named constant (`Transform3D.IDENTITY`, `Vector4.ZERO`,
+  `Plane.PLANE_XY`) or a constructor of literals and nested value types
+  (`Rect2(Vector2(1.0, 2.0), Vector2(3.0, 4.0))`); anything else is read when the script is
+  created. Desktop marshals Godot's memory layout at the engine's `real_t` width; iOS ships the
+  raw bytes PT-tagged through one table in the shim (the script return scratch grew from 32 to
+  64 bytes, a `Projection`). Proof: `ValueTypeScriptTypesTest` (three emitters) and the
+  `ValueTypeScript` row of `scripts/runtime_smoke.sh`: all twelve types stored in a `.tscn`, their
+  property rows and defaults, set/get through `Object`, a function argument and return, a GDScript
+  emit received by Kotlin's typed handles and a Kotlin emit received by GDScript print the same
+  lines as the GDScript twin; the iOS self-test adds the `value-types(...)` rows.
+- **Web:** `Vector3i`, `Rect2`, `Rect2i`, `Plane`, `Quaternion`, `Basis` and `Transform3D` are Web
+  script types too. Protocol 31 adds the `kanamaWebSetPackedValueProperty` push arm; the values
+  ride the numeric argument channel when they fit its six slots, the packed argument list
+  otherwise (the proxy writes each decimal with `String.num_scientific`, exact), the packed return
+  and pull channels and the one-argument signal channel (`SignalArgType.valueOf`). `Vector4`,
+  `Vector4i`, `AABB`, `Transform2D` and `Projection` have no Web value type yet, so a Web build
+  refuses them as before.
+
+### Fixed — iOS `Color` export read back as nil (task 133)
+
+- An `Object.get` of a `Color` `@Export` and a `Color` return answered nil on iOS: the return
+  encoder had no `Color` arm. It ships the four float32 channels now.
+
 ### Added — typed engine signals (task 134 D4)
 
 Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrappers expose (below).
