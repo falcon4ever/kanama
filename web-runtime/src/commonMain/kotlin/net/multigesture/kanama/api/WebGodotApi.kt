@@ -160,10 +160,3 @@ internal expect fun isWebBrowserHandleLive(handle: Int): Boolean
  * report's slow-path bucket stays honest.
  */
 internal expect fun webGenericImmediateStringCall(target: GodotObject, method: String): String
-
-/**
- * Task 134 D1: `emit_signal` with an argument list no typed arm carries (several arguments, a
- * float, a bool, a value type), as one immediate generic call so handlers run before it returns.
- * The wasmJs actual routes through `WebExperimentalGenericCall.callImmediate`.
- */
-internal expect fun webEmitSignalGeneric(target: GodotObject, signal: String, args: Array<out Any?>)

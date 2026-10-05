@@ -464,6 +464,13 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
 
 }
 
+/**
+ * Task 134 D1: `emit_signal` with an argument list no typed arm carries (several arguments, a
+ * float, a bool, a value type), as one immediate generic call so handlers run before it returns.
+ * The wasmJs actual routes through `WebExperimentalGenericCall.callImmediate`.
+ */
+internal expect fun webEmitSignalGeneric(target: GodotObject, signal: String, args: Array<out Any?>)
+
 /** A live bound connection; [close] disconnects and releases the Kotlin callback. */
 class SignalConnection
 internal constructor(
