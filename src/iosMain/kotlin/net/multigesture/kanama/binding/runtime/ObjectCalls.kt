@@ -41179,6 +41179,12 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       "typed-signal(five arguments incl. StringName, Vector2 and an object) seen=$typedSeen",
       typedSeen == "5;s;sn;(1.5, 2.0);true",
     )
+    // The generated `renamed: Signal0`. Godot emits `renamed` from Node::set_name only for a node
+    // inside the tree, and this self-test node is an orphan (so the first version of this row,
+    // which renamed it, never fired: fires=0, the one-shot entry still registered). The signal is
+    // emitted through its typed handle instead, which also covers the typed emit on iOS.
+    // `registered` proves the counter sees a live connection; `leaked` catches a one-shot entry
+    // Godot's free_func did not release, and `closed` one that close() did not.
     var renamedFires = 0
     emitter.renamed.connect(
       emitter,
@@ -41186,11 +41192,21 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     ) {
       renamedFires++
     }
-    emitter.setName("KanamaTypedA")
-    emitter.setName("KanamaTypedB")
+    val registered = IosCallableRegistry.size - typedBefore
+    emitter.renamed.emit()
+    emitter.renamed.emit()
+    val leaked = IosCallableRegistry.size - typedBefore
+    emitter.renamed.connect(emitter) { renamedFires += 100 }.close()
+    emitter.renamed.emit()
+    val closed = IosCallableRegistry.size - typedBefore
+    println(
+      "[kanama][ios][kn] OBJECTCALLS SELFTEST typed-signal renamed registered=$registered " +
+        "fires=$renamedFires leaked=$leaked closed=$closed"
+    )
     check(
-      "typed-signal(generated renamed: Signal0, one-shot, entries released)",
-      renamedFires == 1 && IosCallableRegistry.size == typedBefore,
+      "typed-signal(generated renamed: Signal0, one-shot fires once and is released, close releases) " +
+        "registered=$registered fires=$renamedFires leaked=$leaked closed=$closed",
+      registered == 1 && renamedFires == 1 && leaked == 0 && closed == 0,
     )
   }
 
