@@ -1206,9 +1206,8 @@ class Main(godotObject: GodotHandle) :
     // (another script) awaits D1Emitter's `renamed`; the await is a connection on the emitter
     // (bit 4), and freeing the router first disconnects it from the emitter that lives on (bit 8).
     // Review N6: Node.duplicate() of an emitter with a pending await does not copy it (bit 16).
-    // D1Emitter is scripted so both scripts address it by its script handle: a plain node's
-    // looked-up handle is released with the first of its lookers to be freed (a separate,
-    // pre-existing Web handle-ownership limit this probe stays clear of).
+    // D1Emitter is scripted so both scripts address it by its script handle; a plain node's handle
+    // shared by two scripts is [shareProbe]'s subject.
     val router = self.requireAs("D1Router", ::Node)
     val emitter = self.requireAs("D1Emitter", ::Node)
     val says = { target: Node, method: String ->
@@ -1254,6 +1253,52 @@ class Main(godotObject: GodotHandle) :
 
   /** Task 134 D1 readback of [d1Probe]'s awaits: 31 once all have settled. */
   fun d1ProbeAfter(value: Long): Long = d1AfterMask
+
+  private var shareMask = 0L
+
+  /**
+   * Shared-node-handle probe (driver `share_probe`, then `share_probe_after`). ShareA and ShareB
+   * (HandleShare) look up the same plain node, ShareTarget. Bits:
+   * - 1: both looked it up and both reached it;
+   * - 2: after ShareA is freed (it looked the node up first), ShareB still reaches it;
+   * - 4: a third script (this one) looking the same node up afterwards gets a working handle;
+   * - 8: after ShareTarget itself is freed (queue_free) with ShareB and this script still holding it,
+   *   ShareB's use of it throws the freed-handle IllegalStateException its script can catch, and
+   *   its other calls keep working;
+   * - 16: ShareB reaches the node again after ShareA's free through a fresh lookup of its own.
+   * A healthy run returns 31 from [shareProbeAfter].
+   */
+  fun shareProbe(value: Long): Long {
+    val a = self.requireAs("ShareA", ::Node)
+    val b = self.requireAs("ShareB", ::Node)
+    val says = { node: Node, method: String ->
+      WebExperimentalGenericCall.callImmediate(node, method, listOf(0L)).asLong() == 1L
+    }
+    shareMask = 0L
+    if (says(a, "share_lookup") && says(b, "share_lookup") && says(a, "share_name") && says(b, "share_name")) {
+      shareMask = shareMask or 1L
+    }
+    a.queueFree()
+    MainThread.postAfterFrames(3) {
+      if (runCatching { says(b, "share_name") }.getOrDefault(false)) shareMask = shareMask or 2L
+      val third = runCatching { self.requireAs("ShareTarget", ::Node) }.getOrNull()
+      if (third != null && runCatching { third.getName().toString() == "ShareTarget" }.getOrDefault(false)) {
+        shareMask = shareMask or 4L
+      }
+      if (runCatching { says(b, "share_lookup") && says(b, "share_name") }.getOrDefault(false)) {
+        shareMask = shareMask or 16L
+      }
+      third?.queueFree()
+      MainThread.postAfterFrames(3) {
+        val freedError = WebExperimentalGenericCall.callImmediate(b, "share_name", listOf(0L)).asLong() == 2L
+        if (freedError && says(b, "share_self")) shareMask = shareMask or 8L
+      }
+    }
+    return 0L
+  }
+
+  /** Readback of [shareProbe]: 31 once its frames have passed. */
+  fun shareProbeAfter(value: Long): Long = shareMask
 
   /**
    * Connects and fires the scalar-payload signal once. Called from [ready] so the payload has

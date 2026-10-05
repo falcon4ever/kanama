@@ -341,6 +341,13 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`d1Probe: mask=${d1Probe}`);
 
+  // Shared-node-handle fix: two scripts look up the same plain node, the first is freed, the second
+  // keeps calling it and a third looks it up again; then the node itself is freed under its owners
+  // (see Main.share_probe). Armed here, read back after the pumps (healthy = 31).
+  await evaluate(
+    `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("share_probe")}, 0)`,
+  );
+
   // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
@@ -415,6 +422,17 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     d1ProbeAfter = await readD1After();
   }
   trace(`d1ProbeAfter: ${d1ProbeAfter}`);
+  const readShareAfter = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("share_probe_after")}, 0)`,
+    ).then(Number);
+  let shareProbeAfter = await readShareAfter();
+  const shareDeadline = Math.min(deadline, Date.now() + 10_000);
+  while (shareProbeAfter !== 31 && Date.now() < shareDeadline) {
+    await delay(150);
+    shareProbeAfter = await readShareAfter();
+  }
+  trace(`shareProbeAfter: ${shareProbeAfter}`);
 
   // KANAMA_WEB3D_EXTRA_PLAY_MS=<ms>: keep the level running this long before teardown. A timing-dependent
   // defect in the fixture (the Player drifting off its floor, task 118) fires with a small probability per
@@ -495,6 +513,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // script types, arguments + return, an await that resumes on an engine emitter, and an await
     // cancelled by its emitter's free.
     webParitySignalsAndValueTypes: d1Probe === 255 && d1ProbeAfter === 31,
+    // A plain node's handle shared by two scripts survives the first script's free (owner counting),
+    // a later lookup of it works, and a node freed under its owners fails cleanly.
+    sharedNodeHandleSurvivesFirstFree: shareProbeAfter === 31,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an
