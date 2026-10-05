@@ -5,6 +5,7 @@ package net.multigesture.kanama.types
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import net.multigesture.kanama.builtins.*
 
 /**
  * Task 134 B/D1: the value types compiled to Wasm run the runtime smoke's builtin parity row (the
@@ -42,6 +43,313 @@ class WebBuiltinParityTest {
         (a.isNaN() && b.isNaN()) ||
           kotlin.math.abs(ordered(a).toLong() - ordered(b).toLong()) <= ulps
       }
+
+  /**
+   * Task 134 D2: the PackedByteArray codecs ported to Kotlin (`net.multigesture.kanama.builtins`),
+   * compiled to Wasm, over the runtime smoke's `bytes=` row: Godot's hashes are recorded beside the
+   * others (`bytes` in the fixture).
+   */
+  @Test
+  fun webByteCodecsMatchGodot() {
+    hashes.clear()
+    seed = 2463534242L
+    repeat(64) { bytesRound() }
+    val wrong = EXPECTED_BYTES.filter { (key, hash) -> hashes[key]?.toString(16) != hash }.keys
+    assertEquals(emptySet(), wrong, "byte codecs whose hash differs from Godot's")
+  }
+
+  private fun bytesRound() {
+    val n = 16 + (nextRandom() % 32).toInt()
+    val b = ByteArray(n) { (nextRandom() and 0xFFL).toByte() }
+    bytes0(b)
+    bytes1(b)
+    bytes2(b)
+    bytes3(b)
+    bytes4(b)
+    bytes5(b)
+    bytes6(b)
+    bytes7(b)
+    bytes8(b)
+    bytes9(b)
+    bytes10(b)
+    bytes11(b)
+    bytes12(b)
+    bytes13(b)
+    bytes14(b)
+    bytes15(b)
+    bytes16(b)
+    bytes17(b)
+    bytes18(b)
+    bytes19(b)
+    bytes20(b)
+    bytes21(b)
+    bytes22(b)
+    bytes23(b)
+    bytes24(b)
+    bytes25(b)
+    bytes26(b)
+    bytes27(b)
+    bytes28(b)
+    bytes29(b)
+    bytes30(b)
+    bytes31(b)
+    bytes32(b)
+    bytes33(b)
+    bytes34(b)
+    bytes35(b)
+    bytes36(b)
+    bytes37(b)
+    bytes38(b)
+    bytes39(b)
+    bytes40(b)
+    bytes41(b)
+    bytes42(b)
+  }
+
+  private fun bytes0(b: ByteArray) {
+    mixText("PackedByteArray.hex_encode", b.hexEncode())
+  }
+
+  private fun bytes1(b: ByteArray) {
+    val o = nextRandom() % (b.size - 1 + 1)
+    mixText("PackedByteArray.decode_u8", b.decodeU8(o))
+  }
+
+  private fun bytes2(b: ByteArray) {
+    val o = nextRandom() % (b.size - 1 + 1)
+    mixText("PackedByteArray.decode_s8", b.decodeS8(o))
+  }
+
+  private fun bytes3(b: ByteArray) {
+    val o = nextRandom() % (b.size - 2 + 1)
+    mixText("PackedByteArray.decode_u16", b.decodeU16(o))
+  }
+
+  private fun bytes4(b: ByteArray) {
+    val o = nextRandom() % (b.size - 2 + 1)
+    mixText("PackedByteArray.decode_s16", b.decodeS16(o))
+  }
+
+  private fun bytes5(b: ByteArray) {
+    val o = nextRandom() % (b.size - 4 + 1)
+    mixText("PackedByteArray.decode_u32", b.decodeU32(o))
+  }
+
+  private fun bytes6(b: ByteArray) {
+    val o = nextRandom() % (b.size - 4 + 1)
+    mixText("PackedByteArray.decode_s32", b.decodeS32(o))
+  }
+
+  private fun bytes7(b: ByteArray) {
+    val o = nextRandom() % (b.size - 8 + 1)
+    mixText("PackedByteArray.decode_u64", b.decodeU64(o))
+  }
+
+  private fun bytes8(b: ByteArray) {
+    val o = nextRandom() % (b.size - 8 + 1)
+    mixText("PackedByteArray.decode_s64", b.decodeS64(o))
+  }
+
+  private fun bytes9(b: ByteArray) {
+    val o = nextRandom() % (b.size - 2 + 1)
+    mixText("PackedByteArray.decode_half", b.decodeHalf(o))
+  }
+
+  private fun bytes10(b: ByteArray) {
+    val o = nextRandom() % (b.size - 4 + 1)
+    mixText("PackedByteArray.decode_float", b.decodeFloat(o))
+  }
+
+  private fun bytes11(b: ByteArray) {
+    val o = nextRandom() % (b.size - 8 + 1)
+    mixText("PackedByteArray.decode_double", b.decodeDouble(o))
+  }
+
+  private fun bytes12(b: ByteArray) {
+    mixText("PackedByteArray.to_int32_array", b.copyOf(b.size / 4 * 4).toInt32Array())
+  }
+
+  private fun bytes13(b: ByteArray) {
+    mixText("PackedByteArray.to_int64_array", b.copyOf(b.size / 8 * 8).toInt64Array())
+  }
+
+  private fun bytes14(b: ByteArray) {
+    mixText("PackedByteArray.to_float32_array", b.copyOf(b.size / 4 * 4).toFloat32Array())
+  }
+
+  private fun bytes15(b: ByteArray) {
+    mixText("PackedByteArray.to_float64_array", b.copyOf(b.size / 8 * 8).toFloat64Array())
+  }
+
+  private fun bytes16(b: ByteArray) {
+    mixText("PackedByteArray.to_vector2_array", b.copyOf(b.size / 8 * 8).toVector2Array())
+  }
+
+  private fun bytes17(b: ByteArray) {
+    mixText("PackedByteArray.to_vector3_array", b.copyOf(b.size / 12 * 12).toVector3Array())
+  }
+
+  private fun bytes18(b: ByteArray) {
+    mixText("PackedByteArray.to_vector4_array", b.copyOf(b.size / 16 * 16).toVector4Array())
+  }
+
+  private fun bytes19(b: ByteArray) {
+    mixText("PackedByteArray.to_color_array", b.copyOf(b.size / 16 * 16).toColorArray())
+  }
+
+  private fun bytes20(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 2 + 1)
+    val available = (c.size - o) / 2
+    val count = if (rb()) -1L else nextRandom() % (available + 1)
+    c.bswap16(o, count)
+    mixText("PackedByteArray.bswap16", c)
+  }
+
+  private fun bytes21(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 4 + 1)
+    val available = (c.size - o) / 4
+    val count = if (rb()) -1L else nextRandom() % (available + 1)
+    c.bswap32(o, count)
+    mixText("PackedByteArray.bswap32", c)
+  }
+
+  private fun bytes22(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 8 + 1)
+    val available = (c.size - o) / 8
+    val count = if (rb()) -1L else nextRandom() % (available + 1)
+    c.bswap64(o, count)
+    mixText("PackedByteArray.bswap64", c)
+  }
+
+  private fun bytes23(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 1 + 1)
+    c.encodeU8(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_u8", c)
+  }
+
+  private fun bytes24(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 1 + 1)
+    c.encodeS8(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_s8", c)
+  }
+
+  private fun bytes25(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 2 + 1)
+    c.encodeU16(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_u16", c)
+  }
+
+  private fun bytes26(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 2 + 1)
+    c.encodeS16(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_s16", c)
+  }
+
+  private fun bytes27(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 4 + 1)
+    c.encodeU32(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_u32", c)
+  }
+
+  private fun bytes28(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 4 + 1)
+    c.encodeS32(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_s32", c)
+  }
+
+  private fun bytes29(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 8 + 1)
+    c.encodeU64(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_u64", c)
+  }
+
+  private fun bytes30(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 8 + 1)
+    c.encodeS64(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_s64", c)
+  }
+
+  private fun bytes31(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 2 + 1)
+    c.encodeHalf(o, nv())
+    mixText("PackedByteArray.encode_half", c)
+  }
+
+  private fun bytes32(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 4 + 1)
+    c.encodeFloat(o, nv())
+    mixText("PackedByteArray.encode_float", c)
+  }
+
+  private fun bytes33(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 8 + 1)
+    c.encodeDouble(o, nv())
+    mixText("PackedByteArray.encode_double", c)
+  }
+
+  private fun bytes34(b: ByteArray) {
+    mixText("PackedInt32Array.to_byte_array", listOf(ri(), ri(), ri()).toByteArray())
+  }
+
+  private fun bytes35(b: ByteArray) {
+    mixText("PackedInt64Array.to_byte_array", listOf((rl() shl 32) or rl(), rl()).toByteArray())
+  }
+
+  private fun bytes36(b: ByteArray) {
+    mixText(
+      "PackedFloat32Array.to_byte_array",
+      listOf(nv().toFloat(), nv().toFloat()).toByteArray(),
+    )
+  }
+
+  private fun bytes37(b: ByteArray) {
+    mixText("PackedFloat64Array.to_byte_array", listOf(nv(), nv()).toByteArray())
+  }
+
+  private fun bytes38(b: ByteArray) {
+    mixText("PackedStringArray.to_byte_array", listOf("ünï", "", "🎉 x").toByteArray())
+  }
+
+  private fun bytes39(b: ByteArray) {
+    mixText("PackedVector2Array.to_byte_array", listOf(Vector2(nv(), nv())).toByteArray())
+  }
+
+  private fun bytes40(b: ByteArray) {
+    mixText("PackedVector3Array.to_byte_array", listOf(Vector3(nv(), nv(), nv())).toByteArray())
+  }
+
+  private fun bytes41(b: ByteArray) {
+    mixText("PackedColorArray.to_byte_array", listOf(Color(nv(), nv(), nv(), nv())).toByteArray())
+  }
+
+  private fun bytes42(b: ByteArray) {
+    mixText(
+      "PackedVector4Array.to_byte_array",
+      listOf(Vector4(nv(), nv(), nv(), nv())).toByteArray(),
+    )
+  }
+
+  private fun mixText(name: String, value: Any?) {
+    when (value) {
+      is String -> mix(name, value.encodeToByteArray())
+      is List<*> -> value.forEach { mixText(name, it) }
+      else -> mix(name, value)
+    }
+  }
 
   private fun round() {
     pure0()
@@ -2763,6 +3071,8 @@ class WebBuiltinParityTest {
       is Long -> mixLong(name, value)
       is Int -> mixLong(name, value.toLong())
       is Boolean -> mixLong(name, if (value) 1L else 0L)
+      is Float -> mix(key, value.toDouble())
+      is ByteArray -> value.forEach { mixLong(name, it.toLong() and 0xFFL) }
       is String -> value.forEach { mixLong(name, it.code.toLong()) }
       is RID -> mixLong(name, value.value)
       is Vector2 -> listOf(value.x, value.y).forEach { mix(key, it) }
@@ -3706,6 +4016,54 @@ class WebBuiltinParityTest {
               4705159396366221312L,
               -4566687009338294272L,
             )),
+      )
+
+    // Godot 4.7.2's `bytes=` row (task 134 D2).
+    val EXPECTED_BYTES =
+      mapOf(
+        "PackedByteArray.hex_encode" to "32bce924",
+        "PackedByteArray.decode_u8" to "6676bb35",
+        "PackedByteArray.decode_s8" to "5817f80b",
+        "PackedByteArray.decode_u16" to "91ecffef",
+        "PackedByteArray.decode_s16" to "845fdd8",
+        "PackedByteArray.decode_u32" to "adba0fce",
+        "PackedByteArray.decode_s32" to "727c8096",
+        "PackedByteArray.decode_u64" to "1d7e8d4e",
+        "PackedByteArray.decode_s64" to "537851f6",
+        "PackedByteArray.decode_half" to "24e69bc5",
+        "PackedByteArray.decode_float" to "edce1086",
+        "PackedByteArray.decode_double" to "14ce93a8",
+        "PackedByteArray.to_int32_array" to "4fca2946",
+        "PackedByteArray.to_int64_array" to "6e2c2915",
+        "PackedByteArray.to_float32_array" to "84879cf7",
+        "PackedByteArray.to_float64_array" to "6e2c2915",
+        "PackedByteArray.to_vector2_array" to "633ebdbe",
+        "PackedByteArray.to_vector3_array" to "5d6e6cda",
+        "PackedByteArray.to_vector4_array" to "41585171",
+        "PackedByteArray.to_color_array" to "41585171",
+        "PackedByteArray.bswap16" to "6b6edb47",
+        "PackedByteArray.bswap32" to "d28361f",
+        "PackedByteArray.bswap64" to "40bff34f",
+        "PackedByteArray.encode_u8" to "c76ce96f",
+        "PackedByteArray.encode_s8" to "40108f48",
+        "PackedByteArray.encode_u16" to "948195b9",
+        "PackedByteArray.encode_s16" to "24f543d",
+        "PackedByteArray.encode_u32" to "4bcf769b",
+        "PackedByteArray.encode_s32" to "6b894676",
+        "PackedByteArray.encode_u64" to "d8553692",
+        "PackedByteArray.encode_s64" to "c055f7b6",
+        "PackedByteArray.encode_half" to "f01b7850",
+        "PackedByteArray.encode_float" to "a4b03cc6",
+        "PackedByteArray.encode_double" to "b3ab3d29",
+        "PackedInt32Array.to_byte_array" to "7cc06df0",
+        "PackedInt64Array.to_byte_array" to "948e4146",
+        "PackedFloat32Array.to_byte_array" to "5322c4a1",
+        "PackedFloat64Array.to_byte_array" to "e84d5acc",
+        "PackedStringArray.to_byte_array" to "47f929c5",
+        "PackedVector2Array.to_byte_array" to "7cb725c4",
+        "PackedVector3Array.to_byte_array" to "a4d3490b",
+        "PackedColorArray.to_byte_array" to "7242609f",
+        "PackedVector4Array.to_byte_array" to "46420144",
       )
   }
 }

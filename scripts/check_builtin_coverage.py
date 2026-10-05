@@ -17,8 +17,10 @@ How an entry is covered:
     `types/BuiltinScalarOperators.kt`;
   * `==`/`!=` (equals), `not` (no truthiness in Kotlin), `in` (the container's own `contains`):
     language-level reasons below;
-  * the classes Kotlin maps to its own types (String, Array, Dictionary, Packed*, ...): the class
-    reasons below.
+  * the classes Kotlin maps to its own types: String / StringName, NodePath, Callable, Signal and the
+    packed arrays per method from scripts/builtin_boxed_methods.py (task 134 D2: a member, which the
+    gate finds in the Kotlin source it names, or a recorded reason); Array, Dictionary and the
+    packed arrays' container methods by the class reasons below.
 
 Usage:
     python3 scripts/check_builtin_coverage.py            # gate
@@ -35,6 +37,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+import builtin_boxed_methods as boxed  # noqa: E402
 from generate_builtin_ops import (  # noqa: E402
     DEFERRED_METHODS,
     OP_KOTLIN,
@@ -60,29 +63,36 @@ POW_REASON = (
     "`pow`), as porting-gdscript.md says"
 )
 
-PARCEL_D = "task 134 parcel D (builtin methods for String, NodePath, Callable, Signal, packed arrays)"
-
-# Builtin classes Kotlin represents with its own types; their entries are covered by the language
-# and the stdlib, or deferred to parcel D as stated.
+# Builtin classes Kotlin represents with its own types: their operators are the language's. Their
+# methods (String, StringName, NodePath, Callable, Signal, the packed arrays) are members or reasons in
+# scripts/builtin_boxed_methods.py (task 134 D2).
 CLASS_REASONS = {
     "Nil": "Kotlin `null`: the language's own operators",
     "bool": "Kotlin `Boolean`: the language's own operators",
     "int": "Kotlin `Int`/`Long`: the language's own operators",
     "float": "Kotlin `Double`: the language's own operators",
-    "String": f"Kotlin `String` and its stdlib for the common operations; Godot's String methods are deferred: {PARCEL_D}",
-    "StringName": f"Kotlin `String` (a StringName is marshalled from it); its methods are deferred: {PARCEL_D}",
-    "NodePath": f"NodePath wraps the path text; its methods need a NodePath facade base, deferred: {PARCEL_D}",
-    "Callable": f"deferred (no call/bind API yet): {PARCEL_D}",
-    "Signal": f"GodotSignal's connect/emit/await; Signal's builtin methods are deferred: {PARCEL_D}",
+    "String": "Kotlin `String` and its operators (`+`, `<`, ...)",
+    "StringName": "Kotlin `String` (a StringName is marshalled from it) and its operators",
+    "NodePath": "NodePath wraps the path text; Kotlin has no NodePath operator besides `==`",
+    "Callable": "GodotCallable is a Kotlin data class: no operator besides `==`",
+    "Signal": "GodotSignal: no operator besides `==`",
     "Dictionary": "Kotlin `Map` and its stdlib",
     "Array": "Kotlin `List` and its stdlib",
 }
 PACKED_REASON = "Kotlin arrays / `List<T>` and their stdlib (`size`, `contains`, `binarySearch`, `sorted`, ...)"
-# Packed-array methods with no stdlib equivalent: deferred, not "covered by the stdlib".
-PACKED_DEFERRED_PREFIXES = ("compress", "decompress", "encode_", "decode_", "has_encoded_var", "bswap", "to_")
-PACKED_DEFERRED = {"hex_encode", "get_string_from_utf16", "get_string_from_utf32", "get_string_from_wchar",
-                   "get_string_from_multibyte_char"}
-PACKED_DEFERRED_REASON = f"no stdlib equivalent; deferred: {PARCEL_D}"
+BOXED_CLASSES = ("String", "StringName", "NodePath", "Callable", "Signal", "PackedByteArray")
+
+
+def boxed_member_present(cls: str, name: str, what: str) -> bool:
+    """Whether the member a disposition names is declared where builtin_boxed_methods puts it."""
+    if name == "to_byte_array":
+        element = what.removeprefix("List<").split(">")[0]
+        return re.search(rf"\bfun List<{element}>\.toByteArray\(", boxed.BYTES_KT.read_text(encoding="utf-8")) is not None
+    path, receiver = boxed.member_sources()[cls]
+    source = path.read_text(encoding="utf-8")
+    prefixes = [re.escape(receiver)] + ([r"String\.Companion\."] if cls == "String" else [])
+    return any(re.search(rf"\bfun {p}{re.escape(what)}\(", source) for p in prefixes)
+
 
 MEMBER_RE = re.compile(
     r"\bfun\s+(?:<[^>]*>\s*)?(?:(?P<receiver>[A-Za-z0-9_.<>]+)\.)?(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*\("
@@ -146,12 +156,18 @@ def operator_status(cls: str, op: dict, found: set, scalar: set) -> tuple[str, s
     return ("member", f"{fn}({ptype})") if has(found, fn, ptype) else ("missing", f"operator fun {fn}(other: {ptype})")
 
 
-def method_status(cls: str, m: dict, found: set) -> tuple[str, str]:
+def method_status(cls: str, m: dict, found: set, dispositions: dict) -> tuple[str, str]:
     if cls not in OWNED_CLASSES:
+        status, what = dispositions.get((cls, m["name"]), (None, ""))
+        if status == "member":
+            if boxed_member_present(cls, m["name"], what):
+                return ("member", what)
+            return ("missing", f"{what} (builtin_boxed_methods.py names it; the Kotlin source lacks it)")
+        if status == "reason":
+            return ("reason", what)
+        if cls in BOXED_CLASSES:
+            return ("missing", f"{cls}.{m['name']}: no disposition in builtin_boxed_methods.py")
         if cls.startswith("Packed"):
-            name = m["name"]
-            if name in PACKED_DEFERRED or name.startswith(PACKED_DEFERRED_PREFIXES):
-                return ("reason", PACKED_DEFERRED_REASON)
             return ("reason", PACKED_REASON)
         return ("reason", CLASS_REASONS[cls])
     if (cls, m["name"]) in PROPERTY_MEMBERS:
@@ -170,6 +186,7 @@ def main() -> int:
     args = parser.parse_args()
     api = json.loads(API_PATH.read_text(encoding="utf-8"))
     scalar = extensions(SCALAR_OPS.read_text(encoding="utf-8"))
+    dispositions = boxed.all_dispositions(api)
     missing: list[str] = []
     totals = {"op": [0, 0, 0], "method": [0, 0, 0]}  # member, reason, missing
     const_total = const_have = enum_total = enum_have = 0
@@ -188,7 +205,7 @@ def main() -> int:
                 right = op.get("right_type", "")
                 missing.append(f"{cls} {op['name']} {right}".rstrip() + f": no Kotlin member ({what}) and no recorded reason")
         for m in cls_api.get("methods", []):
-            status, what = method_status(cls, m, found)
+            status, what = method_status(cls, m, found, dispositions)
             index = {"member": 0, "reason": 1, "missing": 2}[status]
             counts["method"][index] += 1
             if status == "missing":

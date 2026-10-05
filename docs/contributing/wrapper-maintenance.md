@@ -1040,6 +1040,23 @@ change to the probe, record them from a runtime smoke log with
 `scripts/check_builtin_coverage.py` fails when an API operator or method has neither a Kotlin
 member nor a recorded reason.
 
+The builtin classes Kotlin represents with its own types (task 134 D2) are rendered by
+`scripts/builtin_boxed_methods.py`, which `generate_builtin_ops.py` imports, writes and checks:
+Godot's String methods as extensions on `kotlin.String` (`builtins/GodotString.kt`), the
+PackedByteArray methods on `ByteArray` and the other packed arrays' `to_byte_array` on their list
+types (`builtins/GodotBytes.kt`), NodePath's methods into a GENERATED BUILTIN MEMBERS region of
+`types/NodePath.kt`, and their method constants (`builtins/BoxedMethods.kt`). An engine-run one
+goes through the boxed builtin call, `UtilityCalls.callMethod` (the base and the arguments
+converted like a utility function's: desktop/Android FFM, iOS `kanama_ios_godot_builtin_call_boxed`,
+Web the builtin-call crossing), so only `const` methods may be engine-run; the byte codecs are
+Godot's code ported (`PBA_PURE`). A Godot method whose Kotlin name the standard library already has
+on `String` gets a reason in `STRING_REASONS` instead of a member (importing the package must not
+change an existing call). The Callable and Signal members are hand-written in the `GodotCallable` /
+`GodotSignal` roots; `CALLABLE_DISPOSITIONS` / `SIGNAL_DISPOSITIONS` record which method each is,
+or why there is none, and `check_builtin_coverage.py` checks every recorded member exists. The
+probe pair's `bytes=` row compares the codecs with GDScript over random arrays (and the Web test
+with the recorded `bytes` hashes), `text=` every engine-run member on fixed samples.
+
 For scalar Godot `float` method arguments, the ptrcall helper layout audit is
 the ABI guard (it absorbed the narrower `audit_scalar_float_abi.py`, retired in
 task 99 — see the [Gates Index](../reference/generated/gates.md)):

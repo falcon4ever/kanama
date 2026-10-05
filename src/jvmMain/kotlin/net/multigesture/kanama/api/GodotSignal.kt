@@ -35,6 +35,17 @@ internal actual constructor(
         owner.emitSignal(name, *args)
     }
 
+    actual fun isConnected(target: GodotObject, method: String): Boolean =
+        owner.isConnected(name, target, method)
+
+    actual fun getConnections(): List<Map<String, Any?>> = owner.getSignalConnectionList(name)
+
+    actual fun hasConnections(): Boolean = owner.hasConnections(name)
+
+    actual fun getObject(): GodotObject? = if (GD.isInstanceValid(owner)) owner else null
+
+    actual fun getObjectId(): Long = owner.getInstanceId()
+
     actual fun connect(
         target: GodotObject,
         argumentCount: Int,

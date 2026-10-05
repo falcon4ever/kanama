@@ -2311,6 +2311,115 @@ typedef struct {
     int inner_kind;
 } KanamaIosUtilityArg;
 
+// Build one boxed-call argument (a utility function's, or a builtin method's base or argument) from
+// its tag into `c`; returns the pointer the call reads. POD tags pass the caller's bytes through.
+static const void *kanama_ios_boxed_arg_build(KanamaIosUtilityArg *c, int32_t tag, const void *p) {
+    memset(c, 0, sizeof(*c));
+    switch (tag) {
+        case KANAMA_IOS_PT_STRING:
+            kanama_ios_init_string(&c->cell[0], p != NULL ? (const char *)p : "");
+            c->kind = tag;
+            return (const void *)c->cell;
+        case KANAMA_IOS_PT_STRING_NAME:
+            kanama_ios_init_string_name(&c->cell[0], p != NULL ? (const char *)p : "");
+            c->kind = tag;
+            return (const void *)c->cell;
+        case KANAMA_IOS_PT_NODE_PATH:
+            kanama_ios_init_node_path(&c->cell[0], p != NULL ? (const char *)p : "");
+            c->kind = tag;
+            return (const void *)c->cell;
+        case KANAMA_IOS_PT_PACKED_BYTE_ARRAY:
+            if (kanama_ios_build_packed_arg(tag, (const KanamaIosPackedArgDesc *)p, c->cell)) {
+                c->kind = tag;
+            }
+            return (const void *)c->cell;  // empty/zeroed fallback when the build failed
+        case KANAMA_IOS_PT_VARIANT: {
+            const KanamaIosVariantArgDesc *desc = (const KanamaIosVariantArgDesc *)p;
+            kanama_ios_pt_arg_to_variant(
+                (desc != NULL) ? desc->tag : KANAMA_IOS_PT_VOID,
+                (desc != NULL) ? desc->ptr : NULL,
+                c->variant,
+                c->inner,
+                &c->inner_kind);
+            c->kind = tag;
+            return (const void *)c->variant;
+        }
+        default:
+            // POD: the caller-laid bytes (bool 1 byte, int64, double) are the argument.
+            return p;
+    }
+}
+
+static void kanama_ios_boxed_arg_destroy(KanamaIosUtilityArg *c) {
+    switch (c->kind) {
+        case KANAMA_IOS_PT_STRING: kanama_ios_destroy_string(&c->cell[0]); break;
+        case KANAMA_IOS_PT_STRING_NAME: kanama_ios_destroy_string_name(&c->cell[0]); break;
+        case KANAMA_IOS_PT_NODE_PATH: kanama_ios_destroy_node_path(&c->cell[0]); break;
+        case KANAMA_IOS_PT_PACKED_BYTE_ARRAY: kanama_ios_destroy_packed_arg(c->kind, c->cell); break;
+        case KANAMA_IOS_PT_VARIANT: kanama_ios_destroy_variant_arg(c->variant, c->inner, c->inner_kind); break;
+        default: break;
+    }
+}
+
+// Deliver a boxed call's typed return `ret_cell` (see kanama_ios_godot_utility_call) and destroy it.
+static int32_t kanama_ios_boxed_return(
+    const char *caller,
+    int32_t ret_variant_type,
+    uint8_t *ret_cell,
+    void *ret_raw,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
+) {
+    int32_t result = KANAMA_IOS_VARIANT_TYPE_NIL;
+    switch (ret_variant_type) {
+        case -1:
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_BOOL:
+            if (ret_raw != NULL) memcpy(ret_raw, ret_cell, 1);
+            if (out_int != NULL) *out_int = ret_cell[0] ? 1 : 0;
+            result = ret_variant_type;
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_INT:
+        case KANAMA_IOS_VARIANT_TYPE_RID:
+            if (ret_raw != NULL) memcpy(ret_raw, ret_cell, 8);
+            if (out_int != NULL) memcpy(out_int, ret_cell, 8);
+            result = ret_variant_type;
+            break;
+        case KANAMA_IOS_VARIANT_TYPE_FLOAT:
+            if (ret_raw != NULL) memcpy(ret_raw, ret_cell, 8);
+            if (out_double != NULL) memcpy(out_double, ret_cell, 8);
+            result = ret_variant_type;
+            break;
+        default: {
+            uint8_t ret_variant[24];
+            if (ret_variant_type == KANAMA_IOS_VARIANT_TYPE_NIL) {
+                memcpy(ret_variant, ret_cell, sizeof(ret_variant));
+            } else {
+                GDExtensionVariantFromTypeConstructorFunc from =
+                    g_get_variant_from_type_constructor((GDExtensionVariantType)ret_variant_type);
+                GDExtensionPtrDestructor destroy =
+                    g_variant_get_ptr_destructor((GDExtensionVariantType)ret_variant_type);
+                if (from == NULL) {
+                    kanama_ios_fault(caller, "api-unresolved", "get_variant_from_type_constructor");
+                    if (destroy != NULL) destroy((GDExtensionTypePtr)ret_cell);
+                    return -1;
+                }
+                from((GDExtensionUninitializedVariantPtr)ret_variant, (GDExtensionTypePtr)ret_cell);
+                if (destroy != NULL) destroy((GDExtensionTypePtr)ret_cell);
+            }
+            result = kanama_ios_decode_variant_scalar(
+                ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, out_is_refcounted);
+            g_variant_destroy((GDExtensionVariantPtr)ret_variant);
+            break;
+        }
+    }
+    return result;
+}
+
 // Call a utility function: fn(ret, args, argc). Arguments carry the kanama_ios_godot_ptrcall tags a
 // utility signature uses: POD passthrough (bool, int64, double), KANAMA_IOS_PT_STRING (built from a C
 // string), KANAMA_IOS_PT_PACKED_BYTE_ARRAY (a KanamaIosPackedArgDesc) and KANAMA_IOS_PT_VARIANT (a
@@ -2366,39 +2475,9 @@ int32_t kanama_ios_godot_utility_call(
     }
 
     for (int32_t i = 0; i < arg_count; i++) {
-        KanamaIosUtilityArg *c = &cells[i];
-        memset(c, 0, sizeof(*c));
         int32_t tag = (arg_types != NULL) ? arg_types[i] : KANAMA_IOS_PT_VOID;
         const void *p = (arg_ptrs != NULL) ? arg_ptrs[i] : NULL;
-        switch (tag) {
-            case KANAMA_IOS_PT_STRING:
-                kanama_ios_init_string(&c->cell[0], p != NULL ? (const char *)p : "");
-                args[i] = (const void *)c->cell;
-                c->kind = tag;
-                break;
-            case KANAMA_IOS_PT_PACKED_BYTE_ARRAY:
-                if (kanama_ios_build_packed_arg(tag, (const KanamaIosPackedArgDesc *)p, c->cell)) {
-                    c->kind = tag;
-                }
-                args[i] = (const void *)c->cell;  // empty/zeroed fallback when the build failed
-                break;
-            case KANAMA_IOS_PT_VARIANT: {
-                const KanamaIosVariantArgDesc *desc = (const KanamaIosVariantArgDesc *)p;
-                kanama_ios_pt_arg_to_variant(
-                    (desc != NULL) ? desc->tag : KANAMA_IOS_PT_VOID,
-                    (desc != NULL) ? desc->ptr : NULL,
-                    c->variant,
-                    c->inner,
-                    &c->inner_kind);
-                args[i] = (const void *)c->variant;
-                c->kind = tag;
-                break;
-            }
-            default:
-                // POD: the caller-laid bytes (bool 1 byte, int64, double) are the argument.
-                args[i] = p;
-                break;
-        }
+        args[i] = kanama_ios_boxed_arg_build(&cells[i], tag, p);
     }
 
     // Zeroed: a zeroed String / Packed*Array / Variant is a valid empty value, which is what the
@@ -2411,63 +2490,89 @@ int32_t kanama_ios_godot_utility_call(
         (int32_t)arg_count);
 
     for (int32_t i = 0; i < arg_count; i++) {
-        KanamaIosUtilityArg *c = &cells[i];
-        switch (c->kind) {
-            case KANAMA_IOS_PT_STRING: kanama_ios_destroy_string(&c->cell[0]); break;
-            case KANAMA_IOS_PT_PACKED_BYTE_ARRAY: kanama_ios_destroy_packed_arg(c->kind, c->cell); break;
-            case KANAMA_IOS_PT_VARIANT: kanama_ios_destroy_variant_arg(c->variant, c->inner, c->inner_kind); break;
-            default: break;
-        }
+        kanama_ios_boxed_arg_destroy(&cells[i]);
     }
     if (cells != stack_cells) {
         free(cells);
         free((void *)args);
     }
+    return kanama_ios_boxed_return(
+        __func__, ret_variant_type, ret_cell, ret_raw, out_int, out_double, out_str, out_str_size,
+        out_str_len, out_is_refcounted);
+}
 
-    int32_t result = KANAMA_IOS_VARIANT_TYPE_NIL;
-    switch (ret_variant_type) {
-        case -1:
-            break;
-        case KANAMA_IOS_VARIANT_TYPE_BOOL:
-            if (ret_raw != NULL) memcpy(ret_raw, ret_cell, 1);
-            if (out_int != NULL) *out_int = ret_cell[0] ? 1 : 0;
-            result = ret_variant_type;
-            break;
-        case KANAMA_IOS_VARIANT_TYPE_INT:
-        case KANAMA_IOS_VARIANT_TYPE_RID:
-            if (ret_raw != NULL) memcpy(ret_raw, ret_cell, 8);
-            if (out_int != NULL) memcpy(out_int, ret_cell, 8);
-            result = ret_variant_type;
-            break;
-        case KANAMA_IOS_VARIANT_TYPE_FLOAT:
-            if (ret_raw != NULL) memcpy(ret_raw, ret_cell, 8);
-            if (out_double != NULL) memcpy(out_double, ret_cell, 8);
-            result = ret_variant_type;
-            break;
-        default: {
-            uint8_t ret_variant[24];
-            if (ret_variant_type == KANAMA_IOS_VARIANT_TYPE_NIL) {
-                memcpy(ret_variant, ret_cell, sizeof(ret_variant));
-            } else {
-                GDExtensionVariantFromTypeConstructorFunc from =
-                    g_get_variant_from_type_constructor((GDExtensionVariantType)ret_variant_type);
-                GDExtensionPtrDestructor destroy =
-                    g_variant_get_ptr_destructor((GDExtensionVariantType)ret_variant_type);
-                if (from == NULL) {
-                    kanama_ios_fault(__func__, "api-unresolved", "get_variant_from_type_constructor");
-                    if (destroy != NULL) destroy((GDExtensionTypePtr)ret_cell);
-                    return -1;
-                }
-                from((GDExtensionUninitializedVariantPtr)ret_variant, (GDExtensionTypePtr)ret_cell);
-                if (destroy != NULL) destroy((GDExtensionTypePtr)ret_cell);
-            }
-            result = kanama_ios_decode_variant_scalar(
-                ret_variant, out_int, out_double, out_str, out_str_size, out_str_len, out_is_refcounted);
-            g_variant_destroy((GDExtensionVariantPtr)ret_variant);
-            break;
-        }
+// Task 134 D2 — a builtin method on a boxed base: method_ptr(base, args, ret, argc), the base built
+// from `base_tag` / `base_ptr` like an argument (KANAMA_IOS_PT_STRING / _STRING_NAME / _NODE_PATH from
+// a C string, KANAMA_IOS_PT_PACKED_BYTE_ARRAY from a KanamaIosPackedArgDesc) and destroyed after the
+// call; KANAMA_IOS_PT_VOID is Godot's NULL instance (a static method). Arguments and the return are
+// kanama_ios_godot_utility_call's. Only const methods come here: a change a method makes to the
+// base is destroyed with it. Returns the delivered Variant type, or -1 when the call did not run.
+int32_t kanama_ios_godot_builtin_call_boxed(
+    int64_t method_ptr,
+    int32_t base_tag,
+    const void *base_ptr,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_variant_type,
+    void *ret_raw,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
+) {
+    if (out_int != NULL) *out_int = 0;
+    if (out_double != NULL) *out_double = 0.0;
+    if (out_str_len != NULL) *out_str_len = 0;
+    if (out_is_refcounted != NULL) *out_is_refcounted = 0;
+    if (!kanama_ios_resolve_godot_api()) {
+        kanama_ios_fault(__func__, "api-unresolved", NULL);
+        return -1;
     }
-    return result;
+    if (method_ptr == 0) {
+        kanama_ios_fault(__func__, "null-bind", NULL);
+        return -1;
+    }
+    if (arg_count < 0) {
+        arg_count = 0;
+    }
+    if (arg_count > KANAMA_IOS_PTRCALL_MAX_ARGS) {
+        char detail[32];
+        snprintf(detail, sizeof detail, "arg_count=%d", (int)arg_count);
+        kanama_ios_fault(__func__, "too-many-args", detail);
+        return -1;
+    }
+    KanamaIosUtilityArg base_cell;
+    const void *base = NULL;
+    memset(&base_cell, 0, sizeof(base_cell));
+    if (base_tag != KANAMA_IOS_PT_VOID) {
+        base = kanama_ios_boxed_arg_build(&base_cell, base_tag, base_ptr);
+    }
+    KanamaIosUtilityArg cells[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    const void *args[KANAMA_IOS_PTRCALL_MAX_ARGS];
+    for (int32_t i = 0; i < arg_count; i++) {
+        int32_t tag = (arg_types != NULL) ? arg_types[i] : KANAMA_IOS_PT_VOID;
+        const void *p = (arg_ptrs != NULL) ? arg_ptrs[i] : NULL;
+        args[i] = kanama_ios_boxed_arg_build(&cells[i], tag, p);
+    }
+
+    uint8_t ret_cell[24];
+    memset(ret_cell, 0, sizeof(ret_cell));
+    ((GDExtensionPtrBuiltInMethod)(intptr_t)method_ptr)(
+        (GDExtensionTypePtr)base,
+        (const GDExtensionConstTypePtr *)args,
+        (ret_variant_type < 0) ? NULL : (GDExtensionTypePtr)ret_cell,
+        (int32_t)arg_count);
+
+    for (int32_t i = 0; i < arg_count; i++) {
+        kanama_ios_boxed_arg_destroy(&cells[i]);
+    }
+    kanama_ios_boxed_arg_destroy(&base_cell);
+    return kanama_ios_boxed_return(
+        __func__, ret_variant_type, ret_cell, ret_raw, out_int, out_double, out_str, out_str_size,
+        out_str_len, out_is_refcounted);
 }
 
 void kanama_ios_godot_ptrcall_string_arg(

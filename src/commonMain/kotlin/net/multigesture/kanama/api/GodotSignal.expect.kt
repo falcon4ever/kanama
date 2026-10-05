@@ -33,6 +33,27 @@ expect class GodotSignal internal constructor(owner: GodotObject, name: String) 
     /** Emits this signal with [args]. */
     fun emit(vararg args: Any?)
 
+    /**
+     * Godot's `Signal.is_connected`: whether [target]'s [method] is connected to this signal (the
+     * emitter's `Object.is_connected`, which Godot's Signal calls).
+     */
+    fun isConnected(target: GodotObject, method: String): Boolean
+
+    /**
+     * Godot's `Signal.get_connections`: one Dictionary per connection (`signal`, `callable`,
+     * `flags`), from the emitter's `Object.get_signal_connection_list`.
+     */
+    fun getConnections(): List<Map<String, Any?>>
+
+    /** Godot's `Signal.has_connections`: whether anything is connected (`Object.has_connections`). */
+    fun hasConnections(): Boolean
+
+    /** Godot's `Signal.get_object`: the emitter, or null once it is freed. */
+    fun getObject(): GodotObject?
+
+    /** Godot's `Signal.get_object_id`: the emitter's instance id. */
+    fun getObjectId(): Long
+
     /** `connect(target, argumentCount, GodotObject.ConnectFlags(0L), callback)`. */
     fun connect(
         target: GodotObject,

@@ -10,6 +10,7 @@ import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.Node2D
+import net.multigesture.kanama.builtins.*
 import net.multigesture.kanama.types.*
 
 /**
@@ -55,6 +56,1404 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     GD.seed(12345L)
     mix("GD.seed", GD.randi())
     report("rand=n=8 " + summary())
+    hashes.clear()
+    seed = 2463534242L
+    repeat(64) { bytesRound() }
+    report("bytes=n=64 " + summary())
+    hashes.clear()
+    textRow()
+    report("text=n=1 " + summary())
+  }
+
+  // Task 134 D2: the pure byte codecs over a random array per round (`bytes=`).
+  private fun bytesRound() {
+    val n = 16 + (nextRandom() % 32).toInt()
+    val b = ByteArray(n) { (nextRandom() and 0xFFL).toByte() }
+    bytes0(b)
+    bytes1(b)
+    bytes2(b)
+    bytes3(b)
+    bytes4(b)
+    bytes5(b)
+    bytes6(b)
+    bytes7(b)
+    bytes8(b)
+    bytes9(b)
+    bytes10(b)
+    bytes11(b)
+    bytes12(b)
+    bytes13(b)
+    bytes14(b)
+    bytes15(b)
+    bytes16(b)
+    bytes17(b)
+    bytes18(b)
+    bytes19(b)
+    bytes20(b)
+    bytes21(b)
+    bytes22(b)
+    bytes23(b)
+    bytes24(b)
+    bytes25(b)
+    bytes26(b)
+    bytes27(b)
+    bytes28(b)
+    bytes29(b)
+    bytes30(b)
+    bytes31(b)
+    bytes32(b)
+    bytes33(b)
+    bytes34(b)
+    bytes35(b)
+    bytes36(b)
+    bytes37(b)
+    bytes38(b)
+    bytes39(b)
+    bytes40(b)
+    bytes41(b)
+    bytes42(b)
+  }
+
+  private fun bytes0(b: ByteArray) {
+    mixText("PackedByteArray.hex_encode", b.hexEncode())
+  }
+
+  private fun bytes1(b: ByteArray) {
+    val o = nextRandom() % (b.size - 1 + 1)
+    mixText("PackedByteArray.decode_u8", b.decodeU8(o))
+  }
+
+  private fun bytes2(b: ByteArray) {
+    val o = nextRandom() % (b.size - 1 + 1)
+    mixText("PackedByteArray.decode_s8", b.decodeS8(o))
+  }
+
+  private fun bytes3(b: ByteArray) {
+    val o = nextRandom() % (b.size - 2 + 1)
+    mixText("PackedByteArray.decode_u16", b.decodeU16(o))
+  }
+
+  private fun bytes4(b: ByteArray) {
+    val o = nextRandom() % (b.size - 2 + 1)
+    mixText("PackedByteArray.decode_s16", b.decodeS16(o))
+  }
+
+  private fun bytes5(b: ByteArray) {
+    val o = nextRandom() % (b.size - 4 + 1)
+    mixText("PackedByteArray.decode_u32", b.decodeU32(o))
+  }
+
+  private fun bytes6(b: ByteArray) {
+    val o = nextRandom() % (b.size - 4 + 1)
+    mixText("PackedByteArray.decode_s32", b.decodeS32(o))
+  }
+
+  private fun bytes7(b: ByteArray) {
+    val o = nextRandom() % (b.size - 8 + 1)
+    mixText("PackedByteArray.decode_u64", b.decodeU64(o))
+  }
+
+  private fun bytes8(b: ByteArray) {
+    val o = nextRandom() % (b.size - 8 + 1)
+    mixText("PackedByteArray.decode_s64", b.decodeS64(o))
+  }
+
+  private fun bytes9(b: ByteArray) {
+    val o = nextRandom() % (b.size - 2 + 1)
+    mixText("PackedByteArray.decode_half", b.decodeHalf(o))
+  }
+
+  private fun bytes10(b: ByteArray) {
+    val o = nextRandom() % (b.size - 4 + 1)
+    mixText("PackedByteArray.decode_float", b.decodeFloat(o))
+  }
+
+  private fun bytes11(b: ByteArray) {
+    val o = nextRandom() % (b.size - 8 + 1)
+    mixText("PackedByteArray.decode_double", b.decodeDouble(o))
+  }
+
+  private fun bytes12(b: ByteArray) {
+    mixText("PackedByteArray.to_int32_array", b.copyOf(b.size / 4 * 4).toInt32Array())
+  }
+
+  private fun bytes13(b: ByteArray) {
+    mixText("PackedByteArray.to_int64_array", b.copyOf(b.size / 8 * 8).toInt64Array())
+  }
+
+  private fun bytes14(b: ByteArray) {
+    mixText("PackedByteArray.to_float32_array", b.copyOf(b.size / 4 * 4).toFloat32Array())
+  }
+
+  private fun bytes15(b: ByteArray) {
+    mixText("PackedByteArray.to_float64_array", b.copyOf(b.size / 8 * 8).toFloat64Array())
+  }
+
+  private fun bytes16(b: ByteArray) {
+    mixText("PackedByteArray.to_vector2_array", b.copyOf(b.size / 8 * 8).toVector2Array())
+  }
+
+  private fun bytes17(b: ByteArray) {
+    mixText("PackedByteArray.to_vector3_array", b.copyOf(b.size / 12 * 12).toVector3Array())
+  }
+
+  private fun bytes18(b: ByteArray) {
+    mixText("PackedByteArray.to_vector4_array", b.copyOf(b.size / 16 * 16).toVector4Array())
+  }
+
+  private fun bytes19(b: ByteArray) {
+    mixText("PackedByteArray.to_color_array", b.copyOf(b.size / 16 * 16).toColorArray())
+  }
+
+  private fun bytes20(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 2 + 1)
+    val available = (c.size - o) / 2
+    val count = if (rb()) -1L else nextRandom() % (available + 1)
+    c.bswap16(o, count)
+    mixText("PackedByteArray.bswap16", c)
+  }
+
+  private fun bytes21(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 4 + 1)
+    val available = (c.size - o) / 4
+    val count = if (rb()) -1L else nextRandom() % (available + 1)
+    c.bswap32(o, count)
+    mixText("PackedByteArray.bswap32", c)
+  }
+
+  private fun bytes22(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 8 + 1)
+    val available = (c.size - o) / 8
+    val count = if (rb()) -1L else nextRandom() % (available + 1)
+    c.bswap64(o, count)
+    mixText("PackedByteArray.bswap64", c)
+  }
+
+  private fun bytes23(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 1 + 1)
+    c.encodeU8(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_u8", c)
+  }
+
+  private fun bytes24(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 1 + 1)
+    c.encodeS8(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_s8", c)
+  }
+
+  private fun bytes25(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 2 + 1)
+    c.encodeU16(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_u16", c)
+  }
+
+  private fun bytes26(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 2 + 1)
+    c.encodeS16(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_s16", c)
+  }
+
+  private fun bytes27(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 4 + 1)
+    c.encodeU32(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_u32", c)
+  }
+
+  private fun bytes28(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 4 + 1)
+    c.encodeS32(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_s32", c)
+  }
+
+  private fun bytes29(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 8 + 1)
+    c.encodeU64(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_u64", c)
+  }
+
+  private fun bytes30(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 8 + 1)
+    c.encodeS64(o, (rl() shl 32) or rl())
+    mixText("PackedByteArray.encode_s64", c)
+  }
+
+  private fun bytes31(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 2 + 1)
+    c.encodeHalf(o, nv())
+    mixText("PackedByteArray.encode_half", c)
+  }
+
+  private fun bytes32(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 4 + 1)
+    c.encodeFloat(o, nv())
+    mixText("PackedByteArray.encode_float", c)
+  }
+
+  private fun bytes33(b: ByteArray) {
+    val c = b.copyOf()
+    val o = nextRandom() % (c.size - 8 + 1)
+    c.encodeDouble(o, nv())
+    mixText("PackedByteArray.encode_double", c)
+  }
+
+  private fun bytes34(b: ByteArray) {
+    mixText("PackedInt32Array.to_byte_array", listOf(ri(), ri(), ri()).toByteArray())
+  }
+
+  private fun bytes35(b: ByteArray) {
+    mixText("PackedInt64Array.to_byte_array", listOf((rl() shl 32) or rl(), rl()).toByteArray())
+  }
+
+  private fun bytes36(b: ByteArray) {
+    mixText(
+      "PackedFloat32Array.to_byte_array",
+      listOf(nv().toFloat(), nv().toFloat()).toByteArray(),
+    )
+  }
+
+  private fun bytes37(b: ByteArray) {
+    mixText("PackedFloat64Array.to_byte_array", listOf(nv(), nv()).toByteArray())
+  }
+
+  private fun bytes38(b: ByteArray) {
+    mixText("PackedStringArray.to_byte_array", listOf("ünï", "", "🎉 x").toByteArray())
+  }
+
+  private fun bytes39(b: ByteArray) {
+    mixText("PackedVector2Array.to_byte_array", listOf(Vector2(nv(), nv())).toByteArray())
+  }
+
+  private fun bytes40(b: ByteArray) {
+    mixText("PackedVector3Array.to_byte_array", listOf(Vector3(nv(), nv(), nv())).toByteArray())
+  }
+
+  private fun bytes41(b: ByteArray) {
+    mixText("PackedColorArray.to_byte_array", listOf(Color(nv(), nv(), nv(), nv())).toByteArray())
+  }
+
+  private fun bytes42(b: ByteArray) {
+    mixText(
+      "PackedVector4Array.to_byte_array",
+      listOf(Vector4(nv(), nv(), nv(), nv())).toByteArray(),
+    )
+  }
+
+  // Task 134 D2: the engine-run String / NodePath / PackedByteArray members on fixed samples.
+  private fun textRow() {
+    text0()
+    text1()
+    text2()
+    text3()
+    text4()
+    text5()
+    text6()
+    text7()
+    text8()
+    text9()
+    text10()
+    text11()
+    text12()
+    text13()
+    text14()
+    text15()
+    text16()
+    text17()
+    text18()
+    text19()
+    text20()
+    text21()
+    text22()
+    text23()
+    text24()
+    text25()
+    text26()
+    text27()
+    text28()
+    text29()
+    text30()
+    text31()
+    text32()
+    text33()
+    text34()
+    text35()
+    text36()
+    text37()
+    text38()
+    text39()
+    text40()
+    text41()
+    text42()
+    text43()
+    text44()
+    text45()
+    text46()
+    text47()
+    text48()
+    text49()
+    text50()
+    text51()
+    text52()
+    text53()
+    text54()
+    text55()
+    text56()
+    text57()
+    text58()
+    text59()
+    text60()
+    text61()
+    text62()
+    text63()
+    text64()
+    text65()
+    text66()
+    text67()
+    text68()
+    text69()
+    text70()
+    text71()
+    text72()
+    text73()
+    text74()
+    text75()
+    text76()
+    text77()
+    text78()
+    text79()
+    text80()
+    text81()
+    text82()
+    text83()
+    text84()
+    text85()
+    text86()
+    text87()
+    text88()
+    text89()
+    text90()
+    text91()
+    text92()
+    text93()
+    text94()
+    text95()
+    text96()
+    text97()
+    text98()
+    text99()
+    text100()
+    text101()
+    text102()
+    text103()
+    text104()
+    text105()
+    text106()
+    text107()
+    text108()
+    text109()
+    text110()
+    text111()
+    text112()
+    text113()
+    text114()
+    text115()
+    text116()
+    text117()
+    text118()
+    text119()
+    text120()
+    text121()
+    text122()
+    text123()
+    text124()
+    text125()
+  }
+
+  private fun text0() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.casecmp_to", s.casecmpTo("a"))
+      mixText("String.casecmp_to", s.casecmpTo("/"))
+      mixText("String.casecmp_to", s.casecmpTo("Wörld"))
+      mixText("String.casecmp_to", s.casecmpTo("日本"))
+      mixText("String.casecmp_to", s.casecmpTo("{0}"))
+      mixText("String.casecmp_to", s.casecmpTo("e"))
+    }
+  }
+
+  private fun text1() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.nocasecmp_to", s.nocasecmpTo("a"))
+      mixText("String.nocasecmp_to", s.nocasecmpTo("/"))
+      mixText("String.nocasecmp_to", s.nocasecmpTo("Wörld"))
+      mixText("String.nocasecmp_to", s.nocasecmpTo("日本"))
+      mixText("String.nocasecmp_to", s.nocasecmpTo("{0}"))
+      mixText("String.nocasecmp_to", s.nocasecmpTo("e"))
+    }
+  }
+
+  private fun text2() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.naturalcasecmp_to", s.naturalcasecmpTo("a"))
+      mixText("String.naturalcasecmp_to", s.naturalcasecmpTo("/"))
+      mixText("String.naturalcasecmp_to", s.naturalcasecmpTo("Wörld"))
+      mixText("String.naturalcasecmp_to", s.naturalcasecmpTo("日本"))
+      mixText("String.naturalcasecmp_to", s.naturalcasecmpTo("{0}"))
+      mixText("String.naturalcasecmp_to", s.naturalcasecmpTo("e"))
+    }
+  }
+
+  private fun text3() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.naturalnocasecmp_to", s.naturalnocasecmpTo("a"))
+      mixText("String.naturalnocasecmp_to", s.naturalnocasecmpTo("/"))
+      mixText("String.naturalnocasecmp_to", s.naturalnocasecmpTo("Wörld"))
+      mixText("String.naturalnocasecmp_to", s.naturalnocasecmpTo("日本"))
+      mixText("String.naturalnocasecmp_to", s.naturalnocasecmpTo("{0}"))
+      mixText("String.naturalnocasecmp_to", s.naturalnocasecmpTo("e"))
+    }
+  }
+
+  private fun text4() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.filecasecmp_to", s.filecasecmpTo("a"))
+      mixText("String.filecasecmp_to", s.filecasecmpTo("/"))
+      mixText("String.filecasecmp_to", s.filecasecmpTo("Wörld"))
+      mixText("String.filecasecmp_to", s.filecasecmpTo("日本"))
+      mixText("String.filecasecmp_to", s.filecasecmpTo("{0}"))
+      mixText("String.filecasecmp_to", s.filecasecmpTo("e"))
+    }
+  }
+
+  private fun text5() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.filenocasecmp_to", s.filenocasecmpTo("a"))
+      mixText("String.filenocasecmp_to", s.filenocasecmpTo("/"))
+      mixText("String.filenocasecmp_to", s.filenocasecmpTo("Wörld"))
+      mixText("String.filenocasecmp_to", s.filenocasecmpTo("日本"))
+      mixText("String.filenocasecmp_to", s.filenocasecmpTo("{0}"))
+      mixText("String.filenocasecmp_to", s.filenocasecmpTo("e"))
+    }
+  }
+
+  private fun text6() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.substr", s.substr(0L, -1L))
+      mixText("String.substr", s.substr(1L, 3L))
+    }
+  }
+
+  private fun text7() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.get_slice", s.getSlice("a", 0L))
+      mixText("String.get_slice", s.getSlice("/", 1L))
+      mixText("String.get_slice", s.getSlice("Wörld", 0L))
+      mixText("String.get_slice", s.getSlice("日本", 1L))
+      mixText("String.get_slice", s.getSlice("{0}", 0L))
+      mixText("String.get_slice", s.getSlice("e", 1L))
+    }
+  }
+
+  private fun text8() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.get_slicec", s.getSlicec(44L, 0L))
+      mixText("String.get_slicec", s.getSlicec(47L, 1L))
+    }
+  }
+
+  private fun text9() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.get_slice_count", s.getSliceCount("a"))
+      mixText("String.get_slice_count", s.getSliceCount("/"))
+      mixText("String.get_slice_count", s.getSliceCount("Wörld"))
+      mixText("String.get_slice_count", s.getSliceCount("日本"))
+      mixText("String.get_slice_count", s.getSliceCount("{0}"))
+      mixText("String.get_slice_count", s.getSliceCount("e"))
+    }
+  }
+
+  private fun text10() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.find", s.find("a", 0L))
+      mixText("String.find", s.find("/", 1L))
+      mixText("String.find", s.find("Wörld", 0L))
+      mixText("String.find", s.find("日本", 1L))
+      mixText("String.find", s.find("{0}", 0L))
+      mixText("String.find", s.find("e", 1L))
+    }
+  }
+
+  private fun text11() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.findn", s.findn("a", 0L))
+      mixText("String.findn", s.findn("/", 1L))
+      mixText("String.findn", s.findn("Wörld", 0L))
+      mixText("String.findn", s.findn("日本", 1L))
+      mixText("String.findn", s.findn("{0}", 0L))
+      mixText("String.findn", s.findn("e", 1L))
+    }
+  }
+
+  private fun text12() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.count", s.count("a", 0L, 0L))
+      mixText("String.count", s.count("/", 1L, 5L))
+      mixText("String.count", s.count("Wörld", 0L, 0L))
+      mixText("String.count", s.count("日本", 1L, 5L))
+      mixText("String.count", s.count("{0}", 0L, 0L))
+      mixText("String.count", s.count("e", 1L, 5L))
+    }
+  }
+
+  private fun text13() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.countn", s.countn("a", 0L, 0L))
+      mixText("String.countn", s.countn("/", 1L, 5L))
+      mixText("String.countn", s.countn("Wörld", 0L, 0L))
+      mixText("String.countn", s.countn("日本", 1L, 5L))
+      mixText("String.countn", s.countn("{0}", 0L, 0L))
+      mixText("String.countn", s.countn("e", 1L, 5L))
+    }
+  }
+
+  private fun text14() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.rfind", s.rfind("a", 0L))
+      mixText("String.rfind", s.rfind("/", 1L))
+      mixText("String.rfind", s.rfind("Wörld", 0L))
+      mixText("String.rfind", s.rfind("日本", 1L))
+      mixText("String.rfind", s.rfind("{0}", 0L))
+      mixText("String.rfind", s.rfind("e", 1L))
+    }
+  }
+
+  private fun text15() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.rfindn", s.rfindn("a", 0L))
+      mixText("String.rfindn", s.rfindn("/", 1L))
+      mixText("String.rfindn", s.rfindn("Wörld", 0L))
+      mixText("String.rfindn", s.rfindn("日本", 1L))
+      mixText("String.rfindn", s.rfindn("{0}", 0L))
+      mixText("String.rfindn", s.rfindn("e", 1L))
+    }
+  }
+
+  private fun text16() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.match", s.match("a"))
+      mixText("String.match", s.match("/"))
+      mixText("String.match", s.match("Wörld"))
+      mixText("String.match", s.match("日本"))
+      mixText("String.match", s.match("{0}"))
+      mixText("String.match", s.match("e"))
+    }
+  }
+
+  private fun text17() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.matchn", s.matchn("a"))
+      mixText("String.matchn", s.matchn("/"))
+      mixText("String.matchn", s.matchn("Wörld"))
+      mixText("String.matchn", s.matchn("日本"))
+      mixText("String.matchn", s.matchn("{0}"))
+      mixText("String.matchn", s.matchn("e"))
+    }
+  }
+
+  private fun text18() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_subsequence_of", s.isSubsequenceOf("a"))
+      mixText("String.is_subsequence_of", s.isSubsequenceOf("/"))
+      mixText("String.is_subsequence_of", s.isSubsequenceOf("Wörld"))
+      mixText("String.is_subsequence_of", s.isSubsequenceOf("日本"))
+      mixText("String.is_subsequence_of", s.isSubsequenceOf("{0}"))
+      mixText("String.is_subsequence_of", s.isSubsequenceOf("e"))
+    }
+  }
+
+  private fun text19() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_subsequence_ofn", s.isSubsequenceOfn("a"))
+      mixText("String.is_subsequence_ofn", s.isSubsequenceOfn("/"))
+      mixText("String.is_subsequence_ofn", s.isSubsequenceOfn("Wörld"))
+      mixText("String.is_subsequence_ofn", s.isSubsequenceOfn("日本"))
+      mixText("String.is_subsequence_ofn", s.isSubsequenceOfn("{0}"))
+      mixText("String.is_subsequence_ofn", s.isSubsequenceOfn("e"))
+    }
+  }
+
+  private fun text20() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.bigrams", s.bigrams())
+    }
+  }
+
+  private fun text21() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.similarity", s.similarity("a"))
+      mixText("String.similarity", s.similarity("/"))
+      mixText("String.similarity", s.similarity("Wörld"))
+      mixText("String.similarity", s.similarity("日本"))
+      mixText("String.similarity", s.similarity("{0}"))
+      mixText("String.similarity", s.similarity("e"))
+    }
+  }
+
+  private fun text22() {
+    mixText("String.format", "{0} and {1}".format(listOf<Any?>(1L, "x")))
+    mixText("String.format", "{name} 🎉".format(mapOf<String, Any?>("name" to "Kanama")))
+    mixText("String.format", "<_>".format(listOf<Any?>("ü"), "<_>"))
+  }
+
+  private fun text23() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.replacen", s.replacen("a", "a"))
+      mixText("String.replacen", s.replacen("/", "/"))
+      mixText("String.replacen", s.replacen("Wörld", "Wörld"))
+      mixText("String.replacen", s.replacen("日本", "日本"))
+      mixText("String.replacen", s.replacen("{0}", "{0}"))
+      mixText("String.replacen", s.replacen("e", "e"))
+    }
+  }
+
+  private fun text24() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.replace_char", s.replaceChar(97L, 90L))
+      mixText("String.replace_char", s.replaceChar(26085L, 127881L))
+    }
+  }
+
+  private fun text25() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.replace_chars", s.replaceChars("a", 90L))
+      mixText("String.replace_chars", s.replaceChars("/", 127881L))
+      mixText("String.replace_chars", s.replaceChars("Wörld", 90L))
+      mixText("String.replace_chars", s.replaceChars("日本", 127881L))
+      mixText("String.replace_chars", s.replaceChars("{0}", 90L))
+      mixText("String.replace_chars", s.replaceChars("e", 127881L))
+    }
+  }
+
+  private fun text26() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.remove_char", s.removeChar(101L))
+      mixText("String.remove_char", s.removeChar(32L))
+    }
+  }
+
+  private fun text27() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.remove_chars", s.removeChars("a"))
+      mixText("String.remove_chars", s.removeChars("/"))
+      mixText("String.remove_chars", s.removeChars("Wörld"))
+      mixText("String.remove_chars", s.removeChars("日本"))
+      mixText("String.remove_chars", s.removeChars("{0}"))
+      mixText("String.remove_chars", s.removeChars("e"))
+    }
+  }
+
+  private fun text28() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.reverse", s.reverse())
+    }
+  }
+
+  private fun text29() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.insert", s.insert(0L, "a"))
+      mixText("String.insert", s.insert(2L, "/"))
+      mixText("String.insert", s.insert(0L, "Wörld"))
+      mixText("String.insert", s.insert(2L, "日本"))
+      mixText("String.insert", s.insert(0L, "{0}"))
+      mixText("String.insert", s.insert(2L, "e"))
+    }
+  }
+
+  private fun text30() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.erase", s.erase(0L, 1L))
+      mixText("String.erase", s.erase(2L, 2L))
+    }
+  }
+
+  private fun text31() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.capitalize", s.capitalize())
+    }
+  }
+
+  private fun text32() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_camel_case", s.toCamelCase())
+    }
+  }
+
+  private fun text33() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_pascal_case", s.toPascalCase())
+    }
+  }
+
+  private fun text34() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_snake_case", s.toSnakeCase())
+    }
+  }
+
+  private fun text35() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_kebab_case", s.toKebabCase())
+    }
+  }
+
+  private fun text36() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.rsplit", s.rsplit("a", true, 0L))
+      mixText("String.rsplit", s.rsplit("/", false, 1L))
+      mixText("String.rsplit", s.rsplit("Wörld", true, 0L))
+      mixText("String.rsplit", s.rsplit("日本", false, 1L))
+      mixText("String.rsplit", s.rsplit("{0}", true, 0L))
+      mixText("String.rsplit", s.rsplit("e", false, 1L))
+    }
+  }
+
+  private fun text37() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.split_floats", s.splitFloats("a", true))
+      mixText("String.split_floats", s.splitFloats("/", false))
+      mixText("String.split_floats", s.splitFloats("Wörld", true))
+      mixText("String.split_floats", s.splitFloats("日本", false))
+      mixText("String.split_floats", s.splitFloats("{0}", true))
+      mixText("String.split_floats", s.splitFloats("e", false))
+    }
+  }
+
+  private fun text38() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_upper", s.toUpper())
+    }
+  }
+
+  private fun text39() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_lower", s.toLower())
+    }
+  }
+
+  private fun text40() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.left", s.left(-2L))
+      mixText("String.left", s.left(3L))
+    }
+  }
+
+  private fun text41() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.right", s.right(-2L))
+      mixText("String.right", s.right(3L))
+    }
+  }
+
+  private fun text42() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.strip_edges", s.stripEdges(true, true))
+      mixText("String.strip_edges", s.stripEdges(false, false))
+    }
+  }
+
+  private fun text43() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.strip_escapes", s.stripEscapes())
+    }
+  }
+
+  private fun text44() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.lstrip", s.lstrip("a"))
+      mixText("String.lstrip", s.lstrip("/"))
+      mixText("String.lstrip", s.lstrip("Wörld"))
+      mixText("String.lstrip", s.lstrip("日本"))
+      mixText("String.lstrip", s.lstrip("{0}"))
+      mixText("String.lstrip", s.lstrip("e"))
+    }
+  }
+
+  private fun text45() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.rstrip", s.rstrip("a"))
+      mixText("String.rstrip", s.rstrip("/"))
+      mixText("String.rstrip", s.rstrip("Wörld"))
+      mixText("String.rstrip", s.rstrip("日本"))
+      mixText("String.rstrip", s.rstrip("{0}"))
+      mixText("String.rstrip", s.rstrip("e"))
+    }
+  }
+
+  private fun text46() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.get_extension", s.getExtension())
+    }
+  }
+
+  private fun text47() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.get_basename", s.getBasename())
+    }
+  }
+
+  private fun text48() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.path_join", s.pathJoin("a"))
+      mixText("String.path_join", s.pathJoin("/"))
+      mixText("String.path_join", s.pathJoin("Wörld"))
+      mixText("String.path_join", s.pathJoin("日本"))
+      mixText("String.path_join", s.pathJoin("{0}"))
+      mixText("String.path_join", s.pathJoin("e"))
+    }
+  }
+
+  private fun text49() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.unicode_at", s.unicodeAt(0L))
+      mixText("String.unicode_at", s.unicodeAt(1L))
+    }
+  }
+
+  private fun text50() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.indent", s.indent("a"))
+      mixText("String.indent", s.indent("/"))
+      mixText("String.indent", s.indent("Wörld"))
+      mixText("String.indent", s.indent("日本"))
+      mixText("String.indent", s.indent("{0}"))
+      mixText("String.indent", s.indent("e"))
+    }
+  }
+
+  private fun text51() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.dedent", s.dedent())
+    }
+  }
+
+  private fun text52() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.hash", s.hash())
+    }
+  }
+
+  private fun text53() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.md5_text", s.md5Text())
+    }
+  }
+
+  private fun text54() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.sha1_text", s.sha1Text())
+    }
+  }
+
+  private fun text55() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.sha256_text", s.sha256Text())
+    }
+  }
+
+  private fun text56() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.md5_buffer", s.md5Buffer())
+    }
+  }
+
+  private fun text57() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.sha1_buffer", s.sha1Buffer())
+    }
+  }
+
+  private fun text58() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.sha256_buffer", s.sha256Buffer())
+    }
+  }
+
+  private fun text59() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.containsn", s.containsn("a"))
+      mixText("String.containsn", s.containsn("/"))
+      mixText("String.containsn", s.containsn("Wörld"))
+      mixText("String.containsn", s.containsn("日本"))
+      mixText("String.containsn", s.containsn("{0}"))
+      mixText("String.containsn", s.containsn("e"))
+    }
+  }
+
+  private fun text60() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_absolute_path", s.isAbsolutePath())
+    }
+  }
+
+  private fun text61() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_relative_path", s.isRelativePath())
+    }
+  }
+
+  private fun text62() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.simplify_path", s.simplifyPath())
+    }
+  }
+
+  private fun text63() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.get_base_dir", s.getBaseDir())
+    }
+  }
+
+  private fun text64() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.get_file", s.getFile())
+    }
+  }
+
+  private fun text65() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.xml_escape", s.xmlEscape(true))
+      mixText("String.xml_escape", s.xmlEscape(false))
+    }
+  }
+
+  private fun text66() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.xml_unescape", s.xmlUnescape())
+    }
+  }
+
+  private fun text67() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.uri_encode", s.uriEncode())
+    }
+  }
+
+  private fun text68() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.uri_decode", s.uriDecode())
+    }
+  }
+
+  private fun text69() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.uri_file_decode", s.uriFileDecode())
+    }
+  }
+
+  private fun text70() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.c_escape", s.cEscape())
+    }
+  }
+
+  private fun text71() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.c_unescape", s.cUnescape())
+    }
+  }
+
+  private fun text72() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.json_escape", s.jsonEscape())
+    }
+  }
+
+  private fun text73() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.validate_node_name", s.validateNodeName())
+    }
+  }
+
+  private fun text74() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.validate_filename", s.validateFilename())
+    }
+  }
+
+  private fun text75() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_ascii_identifier", s.isValidAsciiIdentifier())
+    }
+  }
+
+  private fun text76() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_unicode_identifier", s.isValidUnicodeIdentifier())
+    }
+  }
+
+  private fun text77() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_identifier", s.isValidIdentifier())
+    }
+  }
+
+  private fun text78() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_int", s.isValidInt())
+    }
+  }
+
+  private fun text79() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_float", s.isValidFloat())
+    }
+  }
+
+  private fun text80() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_hex_number", s.isValidHexNumber(true))
+      mixText("String.is_valid_hex_number", s.isValidHexNumber(false))
+    }
+  }
+
+  private fun text81() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_html_color", s.isValidHtmlColor())
+    }
+  }
+
+  private fun text82() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_ip_address", s.isValidIpAddress())
+    }
+  }
+
+  private fun text83() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.is_valid_filename", s.isValidFilename())
+    }
+  }
+
+  private fun text84() {
+    for (s in listOf("0x1F", "ff", "-0xA")) {
+      mixText("String.hex_to_int", s.hexToInt())
+    }
+  }
+
+  private fun text85() {
+    for (s in listOf("0b101", "1101", "-0b11")) {
+      mixText("String.bin_to_int", s.binToInt())
+    }
+  }
+
+  private fun text86() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.lpad", s.lpad(3L, "a"))
+      mixText("String.lpad", s.lpad(20L, "/"))
+      mixText("String.lpad", s.lpad(3L, "Wörld"))
+      mixText("String.lpad", s.lpad(20L, "日本"))
+      mixText("String.lpad", s.lpad(3L, "{0}"))
+      mixText("String.lpad", s.lpad(20L, "e"))
+    }
+  }
+
+  private fun text87() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.rpad", s.rpad(3L, "a"))
+      mixText("String.rpad", s.rpad(20L, "/"))
+      mixText("String.rpad", s.rpad(3L, "Wörld"))
+      mixText("String.rpad", s.rpad(20L, "日本"))
+      mixText("String.rpad", s.rpad(3L, "{0}"))
+      mixText("String.rpad", s.rpad(20L, "e"))
+    }
+  }
+
+  private fun text88() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.pad_decimals", s.padDecimals(0L))
+      mixText("String.pad_decimals", s.padDecimals(3L))
+    }
+  }
+
+  private fun text89() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.pad_zeros", s.padZeros(0L))
+      mixText("String.pad_zeros", s.padZeros(3L))
+    }
+  }
+
+  private fun text90() {
+    for (s in listOf("Hello World", "snake_case_name", "a,b,,c", "192.168.0.1")) {
+      mixText("String.to_ascii_buffer", s.toAsciiBuffer())
+    }
+  }
+
+  private fun text91() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_utf8_buffer", s.toUtf8Buffer())
+    }
+  }
+
+  private fun text92() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_utf16_buffer", s.toUtf16Buffer())
+    }
+  }
+
+  private fun text93() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_utf32_buffer", s.toUtf32Buffer())
+    }
+  }
+
+  private fun text94() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_wchar_buffer", s.toWcharBuffer())
+    }
+  }
+
+  private fun text95() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_multibyte_char_buffer", s.toMultibyteCharBuffer())
+    }
+  }
+
+  private fun text96() {
+    for (s in listOf("48656c6c6f", "e697a5", "")) {
+      mixText("String.hex_decode", s.hexDecode())
+    }
+  }
+
+  private fun text97() {
+    mixText("String.num_scientific", String.numScientific(3.14159))
+    mixText("String.num_scientific", String.numScientific(-0.5))
+    mixText("String.num_scientific", String.numScientific(1e+21))
+    mixText("String.num_scientific", String.numScientific(2.5))
+  }
+
+  private fun text98() {
+    mixText("String.num", String.num(3.14159, -1L))
+    mixText("String.num", String.num(-0.5, 2L))
+    mixText("String.num", String.num(1e+21, 0L))
+    mixText("String.num", String.num(2.5, -1L))
+  }
+
+  private fun text99() {
+    mixText("String.num_int64", String.numInt64(255L, 10L, true))
+    mixText("String.num_int64", String.numInt64(-42L, 16L, false))
+    mixText("String.num_int64", String.numInt64(0L, 2L, true))
+  }
+
+  private fun text100() {
+    mixText("String.num_uint64", String.numUint64(255L, 10L, true))
+    mixText("String.num_uint64", String.numUint64(-42L, 16L, false))
+    mixText("String.num_uint64", String.numUint64(0L, 2L, true))
+  }
+
+  private fun text101() {
+    mixText("String.chr", String.chr(65L))
+    mixText("String.chr", String.chr(9786L))
+    mixText("String.chr", String.chr(127881L))
+  }
+
+  private fun text102() {
+    mixText("String.humanize_size", String.humanizeSize(1023L))
+    mixText("String.humanize_size", String.humanizeSize(1048576L))
+    mixText("String.humanize_size", String.humanizeSize(123456789L))
+  }
+
+  private fun text103() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.is_absolute", NodePath(s).isAbsolute())
+    }
+  }
+
+  private fun text104() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.get_name_count", NodePath(s).getNameCount())
+    }
+  }
+
+  private fun text105() {
+    for (s in NODE_PATH_SAMPLES) {
+      val p = NodePath(s)
+      for (i in 0 until p.getNameCount()) {
+        mixText("NodePath.get_name", p.getName(i))
+      }
+    }
+  }
+
+  private fun text106() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.get_subname_count", NodePath(s).getSubnameCount())
+    }
+  }
+
+  private fun text107() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.hash", NodePath(s).hash())
+    }
+  }
+
+  private fun text108() {
+    for (s in NODE_PATH_SAMPLES) {
+      val p = NodePath(s)
+      for (i in 0 until p.getSubnameCount()) {
+        mixText("NodePath.get_subname", p.getSubname(i))
+      }
+    }
+  }
+
+  private fun text109() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.get_concatenated_names", NodePath(s).getConcatenatedNames())
+    }
+  }
+
+  private fun text110() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.get_concatenated_subnames", NodePath(s).getConcatenatedSubnames())
+    }
+  }
+
+  private fun text111() {
+    for (s in NODE_PATH_SAMPLES) {
+      val p = NodePath(s)
+      mixText("NodePath.slice", p.slice(0L))
+      mixText("NodePath.slice", p.slice(1L))
+      mixText("NodePath.slice", p.slice(-2L, -1L))
+    }
+  }
+
+  private fun text112() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.get_as_property_path", NodePath(s).getAsPropertyPath())
+    }
+  }
+
+  private fun text113() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.is_empty", NodePath(s).isEmpty())
+    }
+  }
+
+  private fun text114() {
+    for (s in ASCII_SAMPLES) {
+      mixText("PackedByteArray.get_string_from_ascii", s.toAsciiBuffer().getStringFromAscii())
+    }
+  }
+
+  private fun text115() {
+    for (s in TEXT_SAMPLES) {
+      mixText("PackedByteArray.get_string_from_utf8", s.toUtf8Buffer().getStringFromUtf8())
+    }
+  }
+
+  private fun text116() {
+    for (s in TEXT_SAMPLES) {
+      mixText("PackedByteArray.get_string_from_utf16", s.toUtf16Buffer().getStringFromUtf16())
+    }
+  }
+
+  private fun text117() {
+    for (s in TEXT_SAMPLES) {
+      mixText("PackedByteArray.get_string_from_utf32", s.toUtf32Buffer().getStringFromUtf32())
+    }
+  }
+
+  private fun text118() {
+    for (s in TEXT_SAMPLES) {
+      mixText("PackedByteArray.get_string_from_wchar", s.toWcharBuffer().getStringFromWchar())
+    }
+  }
+
+  private fun text119() {
+    for (s in TEXT_SAMPLES) {
+      mixText(
+        "PackedByteArray.get_string_from_multibyte_char",
+        s.toMultibyteCharBuffer().getStringFromMultibyteChar(),
+      )
+    }
+  }
+
+  private fun text120() {
+    for (mode in 0L..3L) {
+      for (s in TEXT_SAMPLES) {
+        mixText("PackedByteArray.compress", s.toUtf8Buffer().compress(mode))
+      }
+    }
+  }
+
+  private fun text121() {
+    for (mode in 0L..3L) {
+      for (s in TEXT_SAMPLES) {
+        val raw = s.toUtf8Buffer()
+        mixText(
+          "PackedByteArray.decompress",
+          raw.compress(mode).decompress(raw.size.toLong(), mode),
+        )
+      }
+    }
+  }
+
+  private fun text122() {
+    for (mode in listOf(1L, 3L)) {
+      for (s in TEXT_SAMPLES) {
+        val raw = s.toUtf8Buffer()
+        mixText(
+          "PackedByteArray.decompress_dynamic",
+          raw.compress(mode).decompressDynamic(raw.size * 2L, mode),
+        )
+      }
+    }
+  }
+
+  private fun text123() {
+    for (v in listOf<Any?>(42L, "ünï 🎉", Vector2(1.5, -2.0), listOf<Any?>(1L, "a"), null)) {
+      mixText("PackedByteArray.has_encoded_var", GD.varToBytes(v).hasEncodedVar(0L))
+      mixText(
+        "PackedByteArray.has_encoded_var",
+        (GD.varToBytes(v) + ByteArray(3)).hasEncodedVar(0L, true),
+      )
+    }
+  }
+
+  private fun text124() {
+    for (v in listOf<Any?>(42L, "ünï 🎉", Vector2(1.5, -2.0), listOf<Any?>(1L, "a"), null)) {
+      mixText("PackedByteArray.decode_var", GD.varToBytes(v).decodeVar(0L))
+      mixText("PackedByteArray.decode_var", (GD.varToBytes(v) + ByteArray(3)).decodeVar(0L, true))
+    }
+  }
+
+  private fun text125() {
+    for (v in listOf<Any?>(42L, "ünï 🎉", Vector2(1.5, -2.0), listOf<Any?>(1L, "a"), null)) {
+      mixText("PackedByteArray.decode_var_size", GD.varToBytes(v).decodeVarSize(0L))
+      mixText(
+        "PackedByteArray.decode_var_size",
+        (GD.varToBytes(v) + ByteArray(3)).decodeVarSize(0L, true),
+      )
+    }
+  }
+
+  private fun mixText(name: String, value: Any?) {
+    when (value) {
+      is String -> mix(name, value.encodeToByteArray())
+      is NodePath -> mix(name, value.path.encodeToByteArray())
+      is List<*> -> value.forEach { mixText(name, it) }
+      else -> mix(name, value)
+    }
   }
 
   private fun constants() {
@@ -4778,6 +6177,8 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
       is Long -> mixLong(name, value)
       is Int -> mixLong(name, value.toLong())
       is Boolean -> mixLong(name, if (value) 1L else 0L)
+      is Float -> mix(name, value.toDouble())
+      is ByteArray -> value.forEach { mixLong(name, it.toLong() and 0xFFL) }
       is String -> value.forEach { mixLong(name, it.code.toLong()) }
       is RID -> mixLong(name, value.value)
       is Vector2 -> listOf(value.x, value.y).forEach { mix(name, it) }
@@ -4828,5 +6229,33 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
         3.0,
       )
     val EDGE_FINITE = doubleArrayOf(0.0, -0.0, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)
+    val TEXT_SAMPLES =
+      listOf(
+        "res://folder/file.tar.gz",
+        "user://a/../b/./c.png",
+        "Hello World",
+        "ünïcödé ÄÖÜ ß",
+        "日本語のテキスト",
+        "emoji 🎉👍 text",
+        "snake_case_name",
+        "camelCaseName",
+        "  padded\t ",
+        "-12.5e3",
+        "a,b,,c",
+        "<tag a=\"v\">&amp;</tag>",
+        "192.168.0.1",
+        "%E3%81%82 x+y",
+      )
+    val NODE_PATH_SAMPLES =
+      listOf(
+        "Path/To:prop:sub",
+        "/root/Main/Player",
+        "../Sibling",
+        "%Unique/Child:position:x",
+        ".",
+        "Node",
+        ":only:sub",
+      )
+    val ASCII_SAMPLES = listOf("Hello World", "snake_case_name", "a,b,,c", "192.168.0.1")
   }
 }

@@ -12,4 +12,42 @@ package net.multigesture.kanama.api
 data class GodotCallable(
     val target: GodotObject,
     val method: String,
-)
+) {
+    // Godot's Callable methods for this object+method form (task 134 D2). A standard Callable's
+    // `call`, `call_deferred`, `get_argument_count` and `rpc` are the target's Object calls with the
+    // method name (variant_call.cpp / callable.cpp), so each is that call here. `bind`/`unbind`
+    // and the bound-argument queries are not offered: a GodotCallable carries no bound arguments.
+
+    /** Godot's `Callable.call`: `target.call(method, *args)`. */
+    fun call(vararg args: Any?): Any? = target.call(method, *args)
+
+    /** Godot's `Callable.callv`: `target.callv(method, arguments)`. */
+    fun callv(arguments: List<Any?>): Any? = target.callv(method, arguments)
+
+    /** Godot's `Callable.call_deferred`: the call at the end of the frame (`Object.call_deferred`). */
+    fun callDeferred(vararg args: Any?) {
+        target.callDeferred(method, *args)
+    }
+
+    /** Godot's `Callable.is_valid`: the target is alive and has [method]. */
+    fun isValid(): Boolean = GD.isInstanceValid(target) && target.hasMethod(method)
+
+    /** Godot's `Callable.get_object`: the target, or null once it is freed. */
+    fun getObject(): GodotObject? = if (GD.isInstanceValid(target)) target else null
+
+    /** Godot's `Callable.get_object_id`: the target's instance id. */
+    fun getObjectId(): Long = target.getInstanceId()
+
+    /** Godot's `Callable.get_argument_count`: [method]'s argument count on the target. */
+    fun getArgumentCount(): Long = target.getMethodArgumentCount(method)
+
+    /** Godot's `Callable.rpc`: the target node's `rpc(method, *args)`. */
+    fun rpc(vararg args: Any?) {
+        target.call("rpc", method, *args)
+    }
+
+    /** Godot's `Callable.rpc_id`: the target node's `rpc_id(peerId, method, *args)`. */
+    fun rpcId(peerId: Long, vararg args: Any?) {
+        target.call("rpc_id", peerId, method, *args)
+    }
+}

@@ -65,7 +65,15 @@ FINAL_GODOT_OBJECT_METHOD_RE = re.compile(
 )
 # TypedSignals.kt (task 134 D4) is not a GodotObject subclass: its `hasConnections()` is Godot's
 # `Signal.has_connections()` on a signal handle, so it cannot shadow the GodotObject member.
-GODOT_OBJECT_COLLISION_EXEMPT_FILES = {"GodotObject.kt", "Resource.kt", "TypedSignals.kt"}
+# GodotCallable.kt and GodotSignal.expect.kt (task 134 D2) are not GodotObject subclasses either:
+# their `call()` / `hasConnections()` are Godot's `Callable.call` / `Signal.has_connections`.
+GODOT_OBJECT_COLLISION_EXEMPT_FILES = {
+    "GodotObject.kt",
+    "Resource.kt",
+    "TypedSignals.kt",
+    "GodotCallable.kt",
+    "GodotSignal.expect.kt",
+}
 
 MULTIPLIERS = {
     "Two": 2,

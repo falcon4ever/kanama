@@ -244,6 +244,78 @@ Upgrading from 0.4: `scripts/migrate_enum_constants.py <kotlin-src>` rewrites th
 `Node.PROCESS_MODE_ALWAYS`-style constants in a source tree and lists what needs a human; the full
 table is [Enum Constant Migration](../reference/generated/enum-migration.md).
 
+## Strings, Node Paths and Bytes
+
+A script's text is a Kotlin `String` (a Godot `StringName` is one too), a byte buffer a Kotlin
+`ByteArray`. Godot's own methods for them are generated from `extension_api.json` as extension
+functions in one package, so GDScript's `path.get_extension()` is `path.getExtension()` once the
+package is imported (the IDE offers the import when you type the call):
+
+```kotlin
+import net.multigesture.kanama.builtins.*
+
+val ext = path.getExtension()                    // "png"
+val folder = path.getBaseDir()                   // "res://art"
+val scene = "res://levels".pathJoin("one.tscn")
+val id = "PlayerScore".toSnakeCase()             // "player_score"
+val label = String.num(3.14159, 2)               // "3.14", Godot's String.num
+val code = "7".padZeros(3)                       // "007"
+val ok = text.isValidFloat()
+val line = "{0} has {1} HP".format(listOf("Bob", 3))
+val words = csv.rsplit(",", false)               // Godot's rsplit, allow_empty = false
+```
+
+- **Godot's semantics, exactly.** Each String function runs Godot's implementation in the engine,
+  so it answers what GDScript answers: positions and lengths (`find`, `substr`, `unicodeAt`,
+  `left`) count Unicode code points like GDScript, where Kotlin's `indexOf` counts UTF-16 units
+  (they differ only for text outside the Basic Multilingual Plane, such as emoji). The price is
+  one engine call per function, which converts the text both ways: `getExtension()` takes about
+  0.3 µs on desktop where GDScript's takes 0.08 µs (a `NodePath` member about 0.6 µs, since Kotlin
+  keeps a `NodePath` as its text and Godot parses it for every call). In a per-frame loop over many
+  strings, Kotlin's own `String` functions are cheaper; the byte codecs run in Kotlin and cost
+  nothing extra.
+- **No shadowing.** A Godot method whose Kotlin name the standard library already has is not
+  generated, so importing the package never changes an existing Kotlin call: use Kotlin's
+  `length`, `isEmpty()`, `contains(...)`, `startsWith(...)`/`endsWith(...)` (`begins_with`),
+  `replace(...)`, `repeat(n)`, `split(...)` (Godot's `rsplit` is generated),
+  `parts.joinToString(sep)` (`join`), `removePrefix`/`removeSuffix` (`trim_prefix`/`trim_suffix`)
+  and `toLong()`/`toDouble()` (`to_int`/`to_float`, strict where Godot's parse is lenient: check
+  with `isValidInt()`/`isValidFloat()` first). `format` takes a `List` or a `Map`, so JVM's
+  `"%d".format(5)` keeps its meaning. `scripts/check_builtin_coverage.py --report` lists every
+  Godot method with its Kotlin member or the reason it has none.
+- **`NodePath`** has Godot's NodePath methods as members, parsed by the engine:
+  `NodePath("Arm/Hand:position:x").getName(1)` is `"Hand"`, `getSubname(1)` is `"x"`, plus
+  `getNameCount()`, `getConcatenatedNames()`, `getConcatenatedSubnames()`, `isAbsolute()`,
+  `isEmpty()`, `slice(begin, end)` and `getAsPropertyPath()`.
+- **`ByteArray`** gets the PackedByteArray methods Kotlin arrays lack: `decodeU8` ...
+  `decodeS64`, `decodeHalf`/`decodeFloat`/`decodeDouble`, the `encode*` twins, `bswap16/32/64`,
+  `hexEncode()`, `toInt32Array()` ... `toColorArray()` (Godot's byte codecs, ported to Kotlin:
+  little-endian, Godot's half-float conversion), and, run by the engine,
+  `getStringFromUtf8()`/`Utf16`/`Utf32`/`Ascii`/`Wchar`, `compress(mode)`,
+  `decompress(size, mode)`, `decompressDynamic(max, mode)`, `decodeVar(offset)` and
+  `decodeVarSize`/`hasEncodedVar`. Where Godot prints an error and returns 0 for an offset outside
+  the array, the Kotlin function throws `IndexOutOfBoundsException`, like any `ByteArray` index.
+  `encode_var` writes into the array: `GD.varToBytes(value).copyInto(bytes, offset)` is the same
+  encoding. The other packed arrays' `to_byte_array` is `toByteArray()` on their list types
+  (`listOf(1, 2).toByteArray()`, `points.toByteArray()`).
+
+### Callables and signals
+
+A `GodotCallable(target, "method")` has Godot's Callable methods for that object + method form:
+`call(...)`, `callv(list)`, `callDeferred(...)`, `isValid()`, `getObject()`, `getObjectId()`,
+`getArgumentCount()`, `rpc(...)` and `rpcId(peer, ...)`; each is the target's Object call that
+Godot's Callable makes. A `GodotCallable` carries no bound arguments, so `bind`/`unbind` and the
+bound-argument queries are not offered. A `GodotSignal` (`node.signal("name")`, or a typed
+signal's handle) adds `isConnected(target, "method")`, `getConnections()`, `hasConnections()`,
+`getObject()` and `getObjectId()` to `connect`/`disconnect`/`emit`.
+
+On **Web** the String, NodePath and ByteArray functions compile from the same source: the byte
+codecs run in Kotlin/Wasm (checked against Godot's recorded results), the engine-run ones cross
+the Web bridge, which carries text, numbers, `NodePath`, `ByteArray` and the packed String/float
+returns but not a `List`/`Map` argument (`format`) or an `Array`/`Dictionary` result (`decodeVar`
+of a container): those fail with a clear error. Web has no `GodotCallable`, and its `GodotSignal`
+does not have the signal queries above yet.
+
 ## Collections
 
 Godot collections only matter when data crosses the engine boundary. For pure

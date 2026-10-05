@@ -160,6 +160,20 @@ internal constructor(private val stack: FrameStack, private val index: Int) {
     strings = strings or (1 shl slot)
   }
 
+  /**
+   * Task 134 D2: the boxed builtin call (`UtilityCalls.callMethod`) builds typed cells (a NodePath,
+   * a PackedByteArray, a Variant) in the slots itself and reads the return slot directly.
+   */
+  internal fun slotSegment(slot: Int): MemorySegment = slots[slot]
+
+  internal fun retSegment(): MemorySegment = ret
+
+  /** Give the frame back without calling (a boxed call whose arguments failed to convert). */
+  internal fun callAborted() {
+    if (strings != 0) releaseStrings()
+    stack.depth = index
+  }
+
   actual fun call(method: BuiltinMethod, argc: Int) {
     invoke(method, base, argc)
   }

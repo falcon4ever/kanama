@@ -86,3 +86,16 @@ const val PT_STRING = 16
 const val PT_PACKED_BYTE_ARRAY = 31
 
 const val PT_VARIANT = 38
+
+// Task 134 D2: the boxed builtin-method call (`UtilityCalls.callMethod`) -- the StringName and
+// NodePath base / argument types, and the iOS tags that build one from a C string (PT_VOID: no
+// base, a static method). The generated callers name their types through `builtins.BoxedType`.
+const val VT_STRING_NAME = 21
+
+const val VT_NODE_PATH = 22
+
+const val PT_VOID = 0
+
+const val PT_STRING_NAME = 15
+
+const val PT_NODE_PATH = 17

@@ -121,7 +121,9 @@ BUILTIN_CALL_RE = re.compile(
     r"\bBuiltinCalls\.(?:call|callNoArgsFloat32|callScalar|callBool|callInt|invoke\w+)\s*\("
     r"|\bBuiltinTypes\.(?:call|construct)\s*\("
     # The task 134 B generated members call the engine through the thread's BuiltinFrame.
-    r"|\bbuiltinFrame\s*\(",
+    r"|\bbuiltinFrame\s*\("
+    # Task 134 D2: NodePath's generated members call the engine through the boxed builtin call.
+    r"|\bUtilityCalls\.callMethod\s*\(",
 )
 # The two BArg encodings a scalar argument can take. Godot's ptr-ABI passes a
 # Variant FLOAT argument as an 8-byte double (BArg.Real) regardless of real_t

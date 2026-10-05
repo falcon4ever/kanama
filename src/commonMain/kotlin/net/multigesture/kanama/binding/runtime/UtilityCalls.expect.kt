@@ -28,4 +28,22 @@ internal expect object UtilityCalls {
    * returned owned, as `RefCounted.owned` for a reference-counted one).
    */
   fun call(fn: UtilityFunction, argTypes: IntArray, args: Array<out Any?>, retType: Int): Any?
+
+  /**
+   * Call the builtin [method] on [base], a Kotlin value of Variant type [baseType] (`String` for
+   * `VT_STRING`, a `NodePath` for `VT_NODE_PATH`, a `ByteArray` for `VT_PACKED_BYTE_ARRAY`), or
+   * with Godot's NULL instance when [base] is null (a static method). The arguments and the return
+   * convert as for [call]. The base is built for the call and destroyed after it, so only a `const`
+   * method may come here: a change a non-const method makes to its base would be lost (task 134 D2:
+   * the boxed path of the String, NodePath and PackedByteArray methods; the value types keep the
+   * allocation-free [BuiltinFrame]).
+   */
+  fun callMethod(
+    method: BuiltinMethod,
+    baseType: Int,
+    base: Any?,
+    argTypes: IntArray,
+    args: Array<out Any?>,
+    retType: Int,
+  ): Any?
 }

@@ -92,3 +92,47 @@ private fun encodeSlot(frame: BuiltinFrame, slot: Int, type: Int): String {
     }
   return "$type:$payload"
 }
+
+/**
+ * The Web half of the boxed builtin-method call (task 134 D2; native: `UtilityCalls.callMethod` in
+ * `src/commonMain/.../binding/runtime/UtilityCalls.expect.kt`), which the shared String, NodePath
+ * and PackedByteArray methods (`net.multigesture.kanama.builtins`, `types/NodePath.kt`) call. Web
+ * is a separate project, so this is a plain object with the same shape. One crossing carries the
+ * base and the arguments as encoded Variants ([WebPackedValues.encodeVariant]: scalars, String,
+ * NodePath, value types, ByteArray) and returns one; a type the Web channel does not carry (a Map
+ * or List argument, an Array or Dictionary return) fails loud.
+ */
+internal object UtilityCalls {
+  fun callMethod(
+    method: BuiltinMethod,
+    baseType: Int,
+    base: Any?,
+    argTypes: IntArray,
+    args: Array<out Any?>,
+    retType: Int,
+  ): Any? {
+    val packed = buildString {
+      append(method.variantType)
+        .append(US)
+        .append(method.name)
+        .append(US)
+        .append(if (base == null) '1' else '0')
+      append(US)
+      if (base != null) append(WebPackedValues.encodeVariant(base))
+      for (arg in args) append(US).append(WebPackedValues.encodeVariant(arg))
+    }
+    val result = webBuiltinTransportForTests?.invoke(packed) ?: webBuiltinTransport(packed)
+    if (result.startsWith("E:")) {
+      error(
+        "Godot builtin ${method.name} (Variant type ${method.variantType}) failed on Web: ${result.substring(2)}"
+      )
+    }
+    if (retType < 0) return null
+    val type = WebPackedValues.variantType(result)
+    check(retType == 0 || type == retType) {
+      "Godot builtin ${method.name} (Variant type ${method.variantType}) returned Variant type $type " +
+        "on Web, expected $retType (a wrong argument count or type makes the engine answer nil)"
+    }
+    return WebPackedValues.decodeVariant(result)
+  }
+}

@@ -61,6 +61,12 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `x ** y` | `x.pow(y)` (`kotlin.math`) or `GD.pow(x, y)` (Godot's `pow`): Kotlin has no power operator |
 | `Color.RED`, `Vector2i.LEFT`, `Vector3.MODEL_FRONT` | the same |
 | `v.direction_to(t)`, `rect.get_center()`, `Color.from_hsv(h, s, v)` | `v.directionTo(t)`, `rect.getCenter()`, `Color.fromHsv(h, s, v)` |
+| `path.get_extension()`, `name.to_snake_case()`, `String.num(x, 2)` | the same in camelCase, after `import net.multigesture.kanama.builtins.*` (Godot's String methods on Kotlin's `String`) |
+| `text.length()`, `text.begins_with("a")`, `", ".join(parts)`, `"%d" % n` | Kotlin's `text.length`, `startsWith("a")`, `parts.joinToString(", ")`, `"$n"` ([the list](godot-api.md#strings-node-paths-and-bytes)) |
+| `"{name}".format({"name": n})` | `"{name}".format(mapOf("name" to n))` (same package) |
+| `bytes.decode_u32(0)`, `bytes.get_string_from_utf8()` | `bytes.decodeU32(0)`, `bytes.getStringFromUtf8()` (a `ByteArray`, same package) |
+| `NodePath("a/b:x").get_name(1)` | `NodePath("a/b:x").getName(1)` |
+| `Callable(obj, "m").call(1)` | `GodotCallable(obj, "m").call(1)` (no `bind`) |
 
 Decimals behave as in GDScript: every decimal is `Double` (GDScript's `float`), and a vector,
 transform or color stores its components at Godot's width (float32 in normal builds), so equality,

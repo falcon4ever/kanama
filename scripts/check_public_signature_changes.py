@@ -145,6 +145,13 @@ SURFACES = (
         "the Web wrappers: the generated classes (api/generated) and the hand-written facades",
     ),
     Surface(
+        "builtins",
+        ("src/commonMain/kotlin/net/multigesture/kanama/builtins",),
+        "Godot's String / PackedByteArray methods as extensions on Kotlin's String, ByteArray and "
+        "packed list types (task 134 D2; native and Web compile the same source)",
+        "net.multigesture.kanama.builtins",
+    ),
+    Surface(
         "web-types",
         # Task 134 D1: the Web build compiles the shared value types, plus its own `real_t` storage
         # half (`WebReal.kt`, internal) in place of the generated Real.kt.
