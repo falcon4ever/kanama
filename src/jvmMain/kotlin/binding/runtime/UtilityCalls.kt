@@ -105,9 +105,10 @@ internal actual object UtilityCalls {
     retType: Int,
   ): Any? {
     // The thread's builtin frame holds the base, the arguments and the return (no per-call arena
-    // for the common String / number shapes); a String cell is released by the frame's call, the
-    // other typed cells built here are destroyed below. A builtin can re-enter Kotlin (a logger),
-    // which takes the next frame of the stack, as for the value types.
+    // for the common String / number shapes). It stays taken until the cells built in it are
+    // destroyed and the return is read (`callHeld` ... `release`), so a builtin call made meanwhile
+    // -- a logger the call re-entered, a decode -- takes the next frame of the stack and never
+    // reuses these slots.
     val count = args.size
     require(count <= 8) { "builtin call with $count arguments (the frame holds 8)" }
     val f = builtinFrame()
@@ -115,6 +116,10 @@ internal actual object UtilityCalls {
     val cellTypes = IntArray(count + 1)
     var arena: Arena? = null
     fun arena(): Arena = arena ?: Arena.ofConfined().also { arena = it }
+    fun own(slot: Int, type: Int) {
+      cellTypes[slot] = type
+      owned = owned or (1 shl slot)
+    }
     fun put(slot: Int, type: Int, value: Any?) {
       when (type) {
         VT_STRING -> f.putString(slot, value as String)
@@ -123,12 +128,11 @@ internal actual object UtilityCalls {
         VT_BOOL -> f.putBool(slot, value as Boolean)
         VT_STRING_NAME -> {
           GodotStrings.initStringName(f.slotSegment(slot), value as String)
-          cellTypes[slot] = type
-          owned = owned or (1 shl slot)
+          own(slot, type)
         }
         VT_NODE_PATH -> {
           val text = arena().allocate(8L, 8L)
-          GodotStrings.initString(text, (value as NodePath).path)
+          GodotStrings.initString(text, (value as NodePath).path, f.scratch)
           try {
             BuiltinTypes.construct(
               type = VariantType.NODE_PATH,
@@ -139,32 +143,23 @@ internal actual object UtilityCalls {
           } finally {
             GodotStrings.destroyString(text)
           }
-          cellTypes[slot] = type
-          owned = owned or (1 shl slot)
+          own(slot, type)
         }
         VT_PACKED_BYTE_ARRAY -> {
           BuiltinTypes.initPackedByteArray(f.slotSegment(slot), value as ByteArray)
-          cellTypes[slot] = type
-          owned = owned or (1 shl slot)
+          own(slot, type)
         }
         VT_NIL -> {
           BuiltinTypes.initVariantFromAny(f.slotSegment(slot), value, arena())
-          cellTypes[slot] = VARIANT_CELL
-          owned = owned or (1 shl slot)
+          own(slot, VARIANT_CELL)
         }
         else -> error("boxed builtin call: unsupported Variant type $type")
       }
     }
     try {
-      try {
-        if (base != null) put(0, baseType, base)
-        for (i in 0 until count) put(i + 1, if (i < argTypes.size) argTypes[i] else VT_NIL, args[i])
-      } catch (e: Throwable) {
-        // Nothing was called: hand the frame back (its call would have) and release the cells.
-        f.callAborted()
-        throw e
-      }
-      if (base == null) f.callStatic(method, count) else f.call(method, count)
+      if (base != null) put(0, baseType, base)
+      for (i in 0 until count) put(i + 1, if (i < argTypes.size) argTypes[i] else VT_NIL, args[i])
+      f.callHeld(method, count, static = base == null)
       val ret = f.retSegment()
       return when (retType) {
         -1 -> null
@@ -173,16 +168,29 @@ internal actual object UtilityCalls {
         VT_FLOAT -> ret.get(JAVA_DOUBLE, 0L)
         VT_STRING ->
           try {
-            GodotStrings.readString(ret)
+            GodotStrings.readString(ret, f.scratch)
           } finally {
             GodotStrings.destroyString(ret)
           }
-        VT_STRING_NAME ->
+        VT_STRING_NAME -> {
+          // String(StringName) in the frame's return slot, read through the scratch buffer.
+          val text = ret.asSlice(STRING_FROM_NAME_OFFSET, 8L)
           try {
-            GodotStrings.readStringName(ret)
+            BuiltinTypes.construct(
+              VariantType.STRING,
+              text,
+              constructorIndex = 2,
+              args = listOf(ret),
+            )
+            try {
+              GodotStrings.readString(text, f.scratch)
+            } finally {
+              GodotStrings.destroyString(text)
+            }
           } finally {
             BuiltinTypes.destroyTyped(VariantType.STRING_NAME, ret)
           }
+        }
         else -> decode(retType, ret, arena())
       }
     } finally {
@@ -192,9 +200,13 @@ internal actual object UtilityCalls {
         if (cellTypes[slot] == VARIANT_CELL) BuiltinTypes.destroyVariant(cell)
         else destroyTyped(cellTypes[slot], cell)
       }
+      f.release()
       arena?.close()
     }
   }
+
+  // Where a StringName return is converted: inside the 128-byte return slot, past the StringName.
+  private const val STRING_FROM_NAME_OFFSET = 64L
 
   // cellTypes marker of a slot holding a Variant (VT_NIL is 0, the "no cell" default).
   private const val VARIANT_CELL = -2

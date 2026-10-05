@@ -479,6 +479,10 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     text123()
     text124()
     text125()
+    text126()
+    text127()
+    text128()
+    text129()
   }
 
   private fun text0() {
@@ -549,12 +553,18 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
 
   private fun text6() {
     for (s in TEXT_SAMPLES) {
+      mixText("String.length", s.godotLength())
+    }
+  }
+
+  private fun text7() {
+    for (s in TEXT_SAMPLES) {
       mixText("String.substr", s.substr(0L, -1L))
       mixText("String.substr", s.substr(1L, 3L))
     }
   }
 
-  private fun text7() {
+  private fun text8() {
     for (s in TEXT_SAMPLES) {
       mixText("String.get_slice", s.getSlice("a", 0L))
       mixText("String.get_slice", s.getSlice("/", 1L))
@@ -565,14 +575,14 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text8() {
+  private fun text9() {
     for (s in TEXT_SAMPLES) {
       mixText("String.get_slicec", s.getSlicec(44L, 0L))
       mixText("String.get_slicec", s.getSlicec(47L, 1L))
     }
   }
 
-  private fun text9() {
+  private fun text10() {
     for (s in TEXT_SAMPLES) {
       mixText("String.get_slice_count", s.getSliceCount("a"))
       mixText("String.get_slice_count", s.getSliceCount("/"))
@@ -583,18 +593,18 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text10() {
+  private fun text11() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.find", s.find("a", 0L))
-      mixText("String.find", s.find("/", 1L))
-      mixText("String.find", s.find("Wörld", 0L))
-      mixText("String.find", s.find("日本", 1L))
-      mixText("String.find", s.find("{0}", 0L))
-      mixText("String.find", s.find("e", 1L))
+      mixText("String.find", s.godotFind("a", 0L))
+      mixText("String.find", s.godotFind("/", 1L))
+      mixText("String.find", s.godotFind("Wörld", 0L))
+      mixText("String.find", s.godotFind("日本", 1L))
+      mixText("String.find", s.godotFind("{0}", 0L))
+      mixText("String.find", s.godotFind("e", 1L))
     }
   }
 
-  private fun text11() {
+  private fun text12() {
     for (s in TEXT_SAMPLES) {
       mixText("String.findn", s.findn("a", 0L))
       mixText("String.findn", s.findn("/", 1L))
@@ -605,18 +615,18 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text12() {
+  private fun text13() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.count", s.count("a", 0L, 0L))
-      mixText("String.count", s.count("/", 1L, 5L))
-      mixText("String.count", s.count("Wörld", 0L, 0L))
-      mixText("String.count", s.count("日本", 1L, 5L))
-      mixText("String.count", s.count("{0}", 0L, 0L))
-      mixText("String.count", s.count("e", 1L, 5L))
+      mixText("String.count", s.godotCount("a", 0L, 0L))
+      mixText("String.count", s.godotCount("/", 1L, 5L))
+      mixText("String.count", s.godotCount("Wörld", 0L, 0L))
+      mixText("String.count", s.godotCount("日本", 1L, 5L))
+      mixText("String.count", s.godotCount("{0}", 0L, 0L))
+      mixText("String.count", s.godotCount("e", 1L, 5L))
     }
   }
 
-  private fun text13() {
+  private fun text14() {
     for (s in TEXT_SAMPLES) {
       mixText("String.countn", s.countn("a", 0L, 0L))
       mixText("String.countn", s.countn("/", 1L, 5L))
@@ -627,7 +637,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text14() {
+  private fun text15() {
     for (s in TEXT_SAMPLES) {
       mixText("String.rfind", s.rfind("a", 0L))
       mixText("String.rfind", s.rfind("/", 1L))
@@ -638,7 +648,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text15() {
+  private fun text16() {
     for (s in TEXT_SAMPLES) {
       mixText("String.rfindn", s.rfindn("a", 0L))
       mixText("String.rfindn", s.rfindn("/", 1L))
@@ -649,7 +659,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text16() {
+  private fun text17() {
     for (s in TEXT_SAMPLES) {
       mixText("String.match", s.match("a"))
       mixText("String.match", s.match("/"))
@@ -660,7 +670,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text17() {
+  private fun text18() {
     for (s in TEXT_SAMPLES) {
       mixText("String.matchn", s.matchn("a"))
       mixText("String.matchn", s.matchn("/"))
@@ -671,7 +681,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text18() {
+  private fun text19() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_subsequence_of", s.isSubsequenceOf("a"))
       mixText("String.is_subsequence_of", s.isSubsequenceOf("/"))
@@ -682,7 +692,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text19() {
+  private fun text20() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_subsequence_ofn", s.isSubsequenceOfn("a"))
       mixText("String.is_subsequence_ofn", s.isSubsequenceOfn("/"))
@@ -693,13 +703,13 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text20() {
+  private fun text21() {
     for (s in TEXT_SAMPLES) {
       mixText("String.bigrams", s.bigrams())
     }
   }
 
-  private fun text21() {
+  private fun text22() {
     for (s in TEXT_SAMPLES) {
       mixText("String.similarity", s.similarity("a"))
       mixText("String.similarity", s.similarity("/"))
@@ -710,13 +720,13 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text22() {
-    mixText("String.format", "{0} and {1}".format(listOf<Any?>(1L, "x")))
-    mixText("String.format", "{name} 🎉".format(mapOf<String, Any?>("name" to "Kanama")))
-    mixText("String.format", "<_>".format(listOf<Any?>("ü"), "<_>"))
+  private fun text23() {
+    mixText("String.format", "{0} and {1}".godotFormat(listOf<Any?>(1L, "x")))
+    mixText("String.format", "{name} 🎉".godotFormat(mapOf<String, Any?>("name" to "Kanama")))
+    mixText("String.format", "<_>".godotFormat(listOf<Any?>("ü"), "<_>"))
   }
 
-  private fun text23() {
+  private fun text24() {
     for (s in TEXT_SAMPLES) {
       mixText("String.replacen", s.replacen("a", "a"))
       mixText("String.replacen", s.replacen("/", "/"))
@@ -727,14 +737,14 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text24() {
+  private fun text25() {
     for (s in TEXT_SAMPLES) {
       mixText("String.replace_char", s.replaceChar(97L, 90L))
       mixText("String.replace_char", s.replaceChar(26085L, 127881L))
     }
   }
 
-  private fun text25() {
+  private fun text26() {
     for (s in TEXT_SAMPLES) {
       mixText("String.replace_chars", s.replaceChars("a", 90L))
       mixText("String.replace_chars", s.replaceChars("/", 127881L))
@@ -745,14 +755,14 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text26() {
+  private fun text27() {
     for (s in TEXT_SAMPLES) {
       mixText("String.remove_char", s.removeChar(101L))
       mixText("String.remove_char", s.removeChar(32L))
     }
   }
 
-  private fun text27() {
+  private fun text28() {
     for (s in TEXT_SAMPLES) {
       mixText("String.remove_chars", s.removeChars("a"))
       mixText("String.remove_chars", s.removeChars("/"))
@@ -763,13 +773,13 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text28() {
+  private fun text29() {
     for (s in TEXT_SAMPLES) {
       mixText("String.reverse", s.reverse())
     }
   }
 
-  private fun text29() {
+  private fun text30() {
     for (s in TEXT_SAMPLES) {
       mixText("String.insert", s.insert(0L, "a"))
       mixText("String.insert", s.insert(2L, "/"))
@@ -780,44 +790,55 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text30() {
+  private fun text31() {
     for (s in TEXT_SAMPLES) {
       mixText("String.erase", s.erase(0L, 1L))
       mixText("String.erase", s.erase(2L, 2L))
     }
   }
 
-  private fun text31() {
-    for (s in TEXT_SAMPLES) {
-      mixText("String.capitalize", s.capitalize())
-    }
-  }
-
   private fun text32() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.to_camel_case", s.toCamelCase())
+      mixText("String.capitalize", s.godotCapitalize())
     }
   }
 
   private fun text33() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.to_pascal_case", s.toPascalCase())
+      mixText("String.to_camel_case", s.toCamelCase())
     }
   }
 
   private fun text34() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.to_snake_case", s.toSnakeCase())
+      mixText("String.to_pascal_case", s.toPascalCase())
     }
   }
 
   private fun text35() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.to_kebab_case", s.toKebabCase())
+      mixText("String.to_snake_case", s.toSnakeCase())
     }
   }
 
   private fun text36() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_kebab_case", s.toKebabCase())
+    }
+  }
+
+  private fun text37() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.split", s.godotSplit("a", true, 0L))
+      mixText("String.split", s.godotSplit("/", false, 1L))
+      mixText("String.split", s.godotSplit("Wörld", true, 0L))
+      mixText("String.split", s.godotSplit("日本", false, 1L))
+      mixText("String.split", s.godotSplit("{0}", true, 0L))
+      mixText("String.split", s.godotSplit("e", false, 1L))
+    }
+  }
+
+  private fun text38() {
     for (s in TEXT_SAMPLES) {
       mixText("String.rsplit", s.rsplit("a", true, 0L))
       mixText("String.rsplit", s.rsplit("/", false, 1L))
@@ -828,7 +849,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text37() {
+  private fun text39() {
     for (s in TEXT_SAMPLES) {
       mixText("String.split_floats", s.splitFloats("a", true))
       mixText("String.split_floats", s.splitFloats("/", false))
@@ -839,46 +860,46 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text38() {
+  private fun text40() {
     for (s in TEXT_SAMPLES) {
       mixText("String.to_upper", s.toUpper())
     }
   }
 
-  private fun text39() {
+  private fun text41() {
     for (s in TEXT_SAMPLES) {
       mixText("String.to_lower", s.toLower())
     }
   }
 
-  private fun text40() {
+  private fun text42() {
     for (s in TEXT_SAMPLES) {
       mixText("String.left", s.left(-2L))
       mixText("String.left", s.left(3L))
     }
   }
 
-  private fun text41() {
+  private fun text43() {
     for (s in TEXT_SAMPLES) {
       mixText("String.right", s.right(-2L))
       mixText("String.right", s.right(3L))
     }
   }
 
-  private fun text42() {
+  private fun text44() {
     for (s in TEXT_SAMPLES) {
       mixText("String.strip_edges", s.stripEdges(true, true))
       mixText("String.strip_edges", s.stripEdges(false, false))
     }
   }
 
-  private fun text43() {
+  private fun text45() {
     for (s in TEXT_SAMPLES) {
       mixText("String.strip_escapes", s.stripEscapes())
     }
   }
 
-  private fun text44() {
+  private fun text46() {
     for (s in TEXT_SAMPLES) {
       mixText("String.lstrip", s.lstrip("a"))
       mixText("String.lstrip", s.lstrip("/"))
@@ -889,7 +910,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text45() {
+  private fun text47() {
     for (s in TEXT_SAMPLES) {
       mixText("String.rstrip", s.rstrip("a"))
       mixText("String.rstrip", s.rstrip("/"))
@@ -900,19 +921,19 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text46() {
+  private fun text48() {
     for (s in TEXT_SAMPLES) {
       mixText("String.get_extension", s.getExtension())
     }
   }
 
-  private fun text47() {
+  private fun text49() {
     for (s in TEXT_SAMPLES) {
       mixText("String.get_basename", s.getBasename())
     }
   }
 
-  private fun text48() {
+  private fun text50() {
     for (s in TEXT_SAMPLES) {
       mixText("String.path_join", s.pathJoin("a"))
       mixText("String.path_join", s.pathJoin("/"))
@@ -923,73 +944,73 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text49() {
+  private fun text51() {
     for (s in TEXT_SAMPLES) {
       mixText("String.unicode_at", s.unicodeAt(0L))
       mixText("String.unicode_at", s.unicodeAt(1L))
     }
   }
 
-  private fun text50() {
-    for (s in TEXT_SAMPLES) {
-      mixText("String.indent", s.indent("a"))
-      mixText("String.indent", s.indent("/"))
-      mixText("String.indent", s.indent("Wörld"))
-      mixText("String.indent", s.indent("日本"))
-      mixText("String.indent", s.indent("{0}"))
-      mixText("String.indent", s.indent("e"))
-    }
-  }
-
-  private fun text51() {
-    for (s in TEXT_SAMPLES) {
-      mixText("String.dedent", s.dedent())
-    }
-  }
-
   private fun text52() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.hash", s.hash())
+      mixText("String.indent", s.godotIndent("a"))
+      mixText("String.indent", s.godotIndent("/"))
+      mixText("String.indent", s.godotIndent("Wörld"))
+      mixText("String.indent", s.godotIndent("日本"))
+      mixText("String.indent", s.godotIndent("{0}"))
+      mixText("String.indent", s.godotIndent("e"))
     }
   }
 
   private fun text53() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.md5_text", s.md5Text())
+      mixText("String.dedent", s.dedent())
     }
   }
 
   private fun text54() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.sha1_text", s.sha1Text())
+      mixText("String.hash", s.hash())
     }
   }
 
   private fun text55() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.sha256_text", s.sha256Text())
+      mixText("String.md5_text", s.md5Text())
     }
   }
 
   private fun text56() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.md5_buffer", s.md5Buffer())
+      mixText("String.sha1_text", s.sha1Text())
     }
   }
 
   private fun text57() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.sha1_buffer", s.sha1Buffer())
+      mixText("String.sha256_text", s.sha256Text())
     }
   }
 
   private fun text58() {
     for (s in TEXT_SAMPLES) {
-      mixText("String.sha256_buffer", s.sha256Buffer())
+      mixText("String.md5_buffer", s.md5Buffer())
     }
   }
 
   private fun text59() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.sha1_buffer", s.sha1Buffer())
+    }
+  }
+
+  private fun text60() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.sha256_buffer", s.sha256Buffer())
+    }
+  }
+
+  private fun text61() {
     for (s in TEXT_SAMPLES) {
       mixText("String.containsn", s.containsn("a"))
       mixText("String.containsn", s.containsn("/"))
@@ -1000,165 +1021,177 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text60() {
+  private fun text62() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_absolute_path", s.isAbsolutePath())
     }
   }
 
-  private fun text61() {
+  private fun text63() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_relative_path", s.isRelativePath())
     }
   }
 
-  private fun text62() {
+  private fun text64() {
     for (s in TEXT_SAMPLES) {
       mixText("String.simplify_path", s.simplifyPath())
     }
   }
 
-  private fun text63() {
+  private fun text65() {
     for (s in TEXT_SAMPLES) {
       mixText("String.get_base_dir", s.getBaseDir())
     }
   }
 
-  private fun text64() {
+  private fun text66() {
     for (s in TEXT_SAMPLES) {
       mixText("String.get_file", s.getFile())
     }
   }
 
-  private fun text65() {
+  private fun text67() {
     for (s in TEXT_SAMPLES) {
       mixText("String.xml_escape", s.xmlEscape(true))
       mixText("String.xml_escape", s.xmlEscape(false))
     }
   }
 
-  private fun text66() {
+  private fun text68() {
     for (s in TEXT_SAMPLES) {
       mixText("String.xml_unescape", s.xmlUnescape())
     }
   }
 
-  private fun text67() {
+  private fun text69() {
     for (s in TEXT_SAMPLES) {
       mixText("String.uri_encode", s.uriEncode())
     }
   }
 
-  private fun text68() {
+  private fun text70() {
     for (s in TEXT_SAMPLES) {
       mixText("String.uri_decode", s.uriDecode())
     }
   }
 
-  private fun text69() {
+  private fun text71() {
     for (s in TEXT_SAMPLES) {
       mixText("String.uri_file_decode", s.uriFileDecode())
     }
   }
 
-  private fun text70() {
+  private fun text72() {
     for (s in TEXT_SAMPLES) {
       mixText("String.c_escape", s.cEscape())
     }
   }
 
-  private fun text71() {
+  private fun text73() {
     for (s in TEXT_SAMPLES) {
       mixText("String.c_unescape", s.cUnescape())
     }
   }
 
-  private fun text72() {
+  private fun text74() {
     for (s in TEXT_SAMPLES) {
       mixText("String.json_escape", s.jsonEscape())
     }
   }
 
-  private fun text73() {
+  private fun text75() {
     for (s in TEXT_SAMPLES) {
       mixText("String.validate_node_name", s.validateNodeName())
     }
   }
 
-  private fun text74() {
+  private fun text76() {
     for (s in TEXT_SAMPLES) {
       mixText("String.validate_filename", s.validateFilename())
     }
   }
 
-  private fun text75() {
+  private fun text77() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_ascii_identifier", s.isValidAsciiIdentifier())
     }
   }
 
-  private fun text76() {
+  private fun text78() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_unicode_identifier", s.isValidUnicodeIdentifier())
     }
   }
 
-  private fun text77() {
+  private fun text79() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_identifier", s.isValidIdentifier())
     }
   }
 
-  private fun text78() {
+  private fun text80() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_int", s.isValidInt())
     }
   }
 
-  private fun text79() {
+  private fun text81() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_float", s.isValidFloat())
     }
   }
 
-  private fun text80() {
+  private fun text82() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_hex_number", s.isValidHexNumber(true))
       mixText("String.is_valid_hex_number", s.isValidHexNumber(false))
     }
   }
 
-  private fun text81() {
+  private fun text83() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_html_color", s.isValidHtmlColor())
     }
   }
 
-  private fun text82() {
+  private fun text84() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_ip_address", s.isValidIpAddress())
     }
   }
 
-  private fun text83() {
+  private fun text85() {
     for (s in TEXT_SAMPLES) {
       mixText("String.is_valid_filename", s.isValidFilename())
     }
   }
 
-  private fun text84() {
-    for (s in listOf("0x1F", "ff", "-0xA")) {
-      mixText("String.hex_to_int", s.hexToInt())
+  private fun text86() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_int", s.godotToInt())
     }
   }
 
-  private fun text85() {
+  private fun text87() {
+    for (s in TEXT_SAMPLES) {
+      mixText("String.to_float", s.godotToFloat())
+    }
+  }
+
+  private fun text88() {
+    for (s in listOf("0x1F", "ff", "-0xA")) {
+      mixText("String.hex_to_int", s.godotHexToInt())
+    }
+  }
+
+  private fun text89() {
     for (s in listOf("0b101", "1101", "-0b11")) {
       mixText("String.bin_to_int", s.binToInt())
     }
   }
 
-  private fun text86() {
+  private fun text90() {
     for (s in TEXT_SAMPLES) {
       mixText("String.lpad", s.lpad(3L, "a"))
       mixText("String.lpad", s.lpad(20L, "/"))
@@ -1169,7 +1202,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text87() {
+  private fun text91() {
     for (s in TEXT_SAMPLES) {
       mixText("String.rpad", s.rpad(3L, "a"))
       mixText("String.rpad", s.rpad(20L, "/"))
@@ -1180,206 +1213,219 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text88() {
+  private fun text92() {
     for (s in TEXT_SAMPLES) {
       mixText("String.pad_decimals", s.padDecimals(0L))
       mixText("String.pad_decimals", s.padDecimals(3L))
     }
   }
 
-  private fun text89() {
+  private fun text93() {
     for (s in TEXT_SAMPLES) {
       mixText("String.pad_zeros", s.padZeros(0L))
       mixText("String.pad_zeros", s.padZeros(3L))
     }
   }
 
-  private fun text90() {
+  private fun text94() {
     for (s in listOf("Hello World", "snake_case_name", "a,b,,c", "192.168.0.1")) {
       mixText("String.to_ascii_buffer", s.toAsciiBuffer())
     }
   }
 
-  private fun text91() {
+  private fun text95() {
     for (s in TEXT_SAMPLES) {
       mixText("String.to_utf8_buffer", s.toUtf8Buffer())
     }
   }
 
-  private fun text92() {
+  private fun text96() {
     for (s in TEXT_SAMPLES) {
       mixText("String.to_utf16_buffer", s.toUtf16Buffer())
     }
   }
 
-  private fun text93() {
+  private fun text97() {
     for (s in TEXT_SAMPLES) {
       mixText("String.to_utf32_buffer", s.toUtf32Buffer())
     }
   }
 
-  private fun text94() {
+  private fun text98() {
     for (s in TEXT_SAMPLES) {
       mixText("String.to_wchar_buffer", s.toWcharBuffer())
     }
   }
 
-  private fun text95() {
+  private fun text99() {
     for (s in TEXT_SAMPLES) {
       mixText("String.to_multibyte_char_buffer", s.toMultibyteCharBuffer())
     }
   }
 
-  private fun text96() {
+  private fun text100() {
     for (s in listOf("48656c6c6f", "e697a5", "")) {
       mixText("String.hex_decode", s.hexDecode())
     }
   }
 
-  private fun text97() {
+  private fun text101() {
     mixText("String.num_scientific", String.numScientific(3.14159))
     mixText("String.num_scientific", String.numScientific(-0.5))
     mixText("String.num_scientific", String.numScientific(1e+21))
     mixText("String.num_scientific", String.numScientific(2.5))
   }
 
-  private fun text98() {
+  private fun text102() {
     mixText("String.num", String.num(3.14159, -1L))
     mixText("String.num", String.num(-0.5, 2L))
     mixText("String.num", String.num(1e+21, 0L))
     mixText("String.num", String.num(2.5, -1L))
   }
 
-  private fun text99() {
+  private fun text103() {
     mixText("String.num_int64", String.numInt64(255L, 10L, true))
     mixText("String.num_int64", String.numInt64(-42L, 16L, false))
     mixText("String.num_int64", String.numInt64(0L, 2L, true))
   }
 
-  private fun text100() {
+  private fun text104() {
     mixText("String.num_uint64", String.numUint64(255L, 10L, true))
     mixText("String.num_uint64", String.numUint64(-42L, 16L, false))
     mixText("String.num_uint64", String.numUint64(0L, 2L, true))
   }
 
-  private fun text101() {
+  private fun text105() {
     mixText("String.chr", String.chr(65L))
     mixText("String.chr", String.chr(9786L))
     mixText("String.chr", String.chr(127881L))
   }
 
-  private fun text102() {
+  private fun text106() {
     mixText("String.humanize_size", String.humanizeSize(1023L))
     mixText("String.humanize_size", String.humanizeSize(1048576L))
     mixText("String.humanize_size", String.humanizeSize(123456789L))
   }
 
-  private fun text103() {
+  private fun text107() {
     for (s in NODE_PATH_SAMPLES) {
       mixText("NodePath.is_absolute", NodePath(s).isAbsolute())
     }
   }
 
-  private fun text104() {
+  private fun text108() {
     for (s in NODE_PATH_SAMPLES) {
       mixText("NodePath.get_name_count", NodePath(s).getNameCount())
     }
   }
 
-  private fun text105() {
+  private fun text109() {
     for (s in NODE_PATH_SAMPLES) {
       val p = NodePath(s)
       for (i in 0 until p.getNameCount()) {
         mixText("NodePath.get_name", p.getName(i))
       }
-    }
-  }
-
-  private fun text106() {
-    for (s in NODE_PATH_SAMPLES) {
-      mixText("NodePath.get_subname_count", NodePath(s).getSubnameCount())
-    }
-  }
-
-  private fun text107() {
-    for (s in NODE_PATH_SAMPLES) {
-      mixText("NodePath.hash", NodePath(s).hash())
-    }
-  }
-
-  private fun text108() {
-    for (s in NODE_PATH_SAMPLES) {
-      val p = NodePath(s)
-      for (i in 0 until p.getSubnameCount()) {
-        mixText("NodePath.get_subname", p.getSubname(i))
-      }
-    }
-  }
-
-  private fun text109() {
-    for (s in NODE_PATH_SAMPLES) {
-      mixText("NodePath.get_concatenated_names", NodePath(s).getConcatenatedNames())
+      mixText("NodePath.get_name", p.getName(p.getNameCount()) + "|")
+      mixText("NodePath.get_name", p.getName(-1L) + "|")
     }
   }
 
   private fun text110() {
     for (s in NODE_PATH_SAMPLES) {
-      mixText("NodePath.get_concatenated_subnames", NodePath(s).getConcatenatedSubnames())
+      mixText("NodePath.get_subname_count", NodePath(s).getSubnameCount())
     }
   }
 
   private fun text111() {
     for (s in NODE_PATH_SAMPLES) {
-      val p = NodePath(s)
-      mixText("NodePath.slice", p.slice(0L))
-      mixText("NodePath.slice", p.slice(1L))
-      mixText("NodePath.slice", p.slice(-2L, -1L))
+      mixText("NodePath.hash", NodePath(s).hash())
     }
   }
 
   private fun text112() {
     for (s in NODE_PATH_SAMPLES) {
-      mixText("NodePath.get_as_property_path", NodePath(s).getAsPropertyPath())
+      val p = NodePath(s)
+      for (i in 0 until p.getSubnameCount()) {
+        mixText("NodePath.get_subname", p.getSubname(i))
+      }
+      mixText("NodePath.get_subname", p.getSubname(p.getSubnameCount()) + "|")
+      mixText("NodePath.get_subname", p.getSubname(-1L) + "|")
     }
   }
 
   private fun text113() {
     for (s in NODE_PATH_SAMPLES) {
-      mixText("NodePath.is_empty", NodePath(s).isEmpty())
+      mixText(
+        "NodePath.get_concatenated_names",
+        NodePath(s).getConcatenatedNames().toString() + "|",
+      )
     }
   }
 
   private fun text114() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText(
+        "NodePath.get_concatenated_subnames",
+        NodePath(s).getConcatenatedSubnames().toString() + "|",
+      )
+    }
+  }
+
+  private fun text115() {
+    for (s in NODE_PATH_SAMPLES) {
+      val p = NodePath(s)
+      mixText("NodePath.slice", p.slice(0L).path + "|")
+      mixText("NodePath.slice", p.slice(1L).path + "|")
+      mixText("NodePath.slice", p.slice(-2L, -1L).path + "|")
+      mixText("NodePath.slice", p.slice(2L, 1L).path + "|")
+      mixText("NodePath.slice", p.slice(-100L, 100L).path + "|")
+      mixText("NodePath.slice", p.slice(1L, 3L).path + "|")
+    }
+  }
+
+  private fun text116() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.get_as_property_path", NodePath(s).getAsPropertyPath().toString() + "|")
+    }
+  }
+
+  private fun text117() {
+    for (s in NODE_PATH_SAMPLES) {
+      mixText("NodePath.is_empty", NodePath(s).isEmpty())
+    }
+  }
+
+  private fun text118() {
     for (s in ASCII_SAMPLES) {
       mixText("PackedByteArray.get_string_from_ascii", s.toAsciiBuffer().getStringFromAscii())
     }
   }
 
-  private fun text115() {
+  private fun text119() {
     for (s in TEXT_SAMPLES) {
       mixText("PackedByteArray.get_string_from_utf8", s.toUtf8Buffer().getStringFromUtf8())
     }
   }
 
-  private fun text116() {
+  private fun text120() {
     for (s in TEXT_SAMPLES) {
       mixText("PackedByteArray.get_string_from_utf16", s.toUtf16Buffer().getStringFromUtf16())
     }
   }
 
-  private fun text117() {
+  private fun text121() {
     for (s in TEXT_SAMPLES) {
       mixText("PackedByteArray.get_string_from_utf32", s.toUtf32Buffer().getStringFromUtf32())
     }
   }
 
-  private fun text118() {
+  private fun text122() {
     for (s in TEXT_SAMPLES) {
       mixText("PackedByteArray.get_string_from_wchar", s.toWcharBuffer().getStringFromWchar())
     }
   }
 
-  private fun text119() {
+  private fun text123() {
     for (s in TEXT_SAMPLES) {
       mixText(
         "PackedByteArray.get_string_from_multibyte_char",
@@ -1388,7 +1434,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text120() {
+  private fun text124() {
     for (mode in 0L..3L) {
       for (s in TEXT_SAMPLES) {
         mixText("PackedByteArray.compress", s.toUtf8Buffer().compress(mode))
@@ -1396,7 +1442,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text121() {
+  private fun text125() {
     for (mode in 0L..3L) {
       for (s in TEXT_SAMPLES) {
         val raw = s.toUtf8Buffer()
@@ -1408,7 +1454,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text122() {
+  private fun text126() {
     for (mode in listOf(1L, 3L)) {
       for (s in TEXT_SAMPLES) {
         val raw = s.toUtf8Buffer()
@@ -1420,7 +1466,7 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text123() {
+  private fun text127() {
     for (v in listOf<Any?>(42L, "ünï 🎉", Vector2(1.5, -2.0), listOf<Any?>(1L, "a"), null)) {
       mixText("PackedByteArray.has_encoded_var", GD.varToBytes(v).hasEncodedVar(0L))
       mixText(
@@ -1430,14 +1476,14 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     }
   }
 
-  private fun text124() {
+  private fun text128() {
     for (v in listOf<Any?>(42L, "ünï 🎉", Vector2(1.5, -2.0), listOf<Any?>(1L, "a"), null)) {
       mixText("PackedByteArray.decode_var", GD.varToBytes(v).decodeVar(0L))
       mixText("PackedByteArray.decode_var", (GD.varToBytes(v) + ByteArray(3)).decodeVar(0L, true))
     }
   }
 
-  private fun text125() {
+  private fun text129() {
     for (v in listOf<Any?>(42L, "ünï 🎉", Vector2(1.5, -2.0), listOf<Any?>(1L, "a"), null)) {
       mixText("PackedByteArray.decode_var_size", GD.varToBytes(v).decodeVarSize(0L))
       mixText(
@@ -6255,6 +6301,16 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
         ".",
         "Node",
         ":only:sub",
+        "",
+        "a::b",
+        ":",
+        "a:",
+        "a//b/",
+        "/",
+        "/:x",
+        "::",
+        "a:b::c",
+        "日本/ü:🎉",
       )
     val ASCII_SAMPLES = listOf("Hello World", "snake_case_name", "a,b,,c", "192.168.0.1")
   }

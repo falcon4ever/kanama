@@ -45,36 +45,41 @@ nothing of Godot's (`get_extension`, `to_snake_case`, `String.num`, `md5_text`, 
 `similarity`, ...), `NodePath` was an opaque wrapper, a `GodotCallable` could not be called, and a
 `ByteArray` had no `decode_u32` / `compress` / `get_string_from_utf8`.
 
-- **String**: 103 of Godot's 116 String methods are generated from `extension_api.json` as
+- **String**: 107 of Godot's 116 String methods are generated from `extension_api.json` as
   extension functions on Kotlin's `String` in the new package `net.multigesture.kanama.builtins`
   (`import net.multigesture.kanama.builtins.*`, then `path.getExtension()`,
-  `"PlayerScore".toSnakeCase()`, `String.num(x, 2)`, `"{0}!".format(listOf(name))`). Each runs
-  Godot's implementation, so the result is GDScript's, Unicode positions included. The 13 whose
-  Kotlin name the standard library already has (`length`, `isEmpty`, `contains`, `endsWith`,
-  `replace`, `repeat`, `split`, `toInt`, `toFloat`, ...) or that it answers identically
-  (`begins_with`, `join`, `trim_prefix`, `trim_suffix`) are not generated, so importing the
-  package never changes an existing call; the coverage gate lists each with its Kotlin form.
-  `StringName` methods are String's.
+  `"PlayerScore".toSnakeCase()`, `String.num(x, 2)`). Each runs Godot's implementation, so the
+  result is GDScript's, Unicode positions included. A star import outranks Kotlin's default
+  imports, so a Godot name that kotlin-stdlib or `java.lang.String` already has for `String` gets a
+  `godot` prefix and never changes an existing call: `godotLength`, `godotFind`, `godotCount`,
+  `godotSplit`, `godotFormat` (a `List` or a `Map`), `godotIndent`, `godotCapitalize`,
+  `godotHexToInt`, `godotToInt`, `godotToFloat`; `check_builtin_coverage.py` reads the standard
+  library with `javap` and fails on any collision. The 9 Kotlin answers identically (`isEmpty`,
+  `contains`, `startsWith`, `endsWith`, `replace`, `repeat`, `joinToString`, `removePrefix`,
+  `removeSuffix`) are not generated. `StringName` methods are String's.
 - **NodePath**: the 11 NodePath methods are members (`getName(i)`, `getSubname(i)`,
-  `getNameCount()`, `getConcatenatedNames()`, `isAbsolute()`, `slice(...)`, ...), parsed by the
-  engine.
+  `getNameCount()`, `getConcatenatedNames()`, `isAbsolute()`, `slice(...)`, ...): Godot's NodePath
+  parse ported to Kotlin (an invalid path is the empty NodePath, an index out of range `""`, each
+  with Godot's error), `hash()` in the engine.
 - **PackedByteArray**: 46 methods as extensions on `ByteArray`: the byte codecs `decodeU8` ...
   `decodeS64`, `decodeHalf/Float/Double`, the `encode*` twins, `bswap16/32/64`, `hexEncode`,
   `toInt32Array` ... `toColorArray` are Godot's code ported to Kotlin (an offset Godot rejects with
   an error print throws `IndexOutOfBoundsException`); `getStringFromUtf8/16/32/Ascii/Wchar`,
   `compress`, `decompress`, `decompressDynamic`, `decodeVar`, `decodeVarSize` and `hasEncodedVar`
-  run in the engine. The other packed arrays' `to_byte_array` is `toByteArray()` on their list types.
+  run in the engine; a `to*Array()` of a size that is not a multiple of the element, or a `bswap*`
+  count past the end, throws `IllegalArgumentException`. The other packed arrays' `to_byte_array` is
+  `toByteArray()` on their list types.
 - **Callable**: `GodotCallable` has `call`, `callv`, `callDeferred`, `isValid`, `getObject`,
-  `getObjectId`, `getArgumentCount`, `rpc` and `rpcId`. `bind`/`unbind` are not offered: a
+  `getObjectId` (also after the target is freed), `getArgumentCount`, `rpc` and `rpcId`. `bind`/`unbind` are not offered: a
   `GodotCallable` carries no bound arguments.
 - **Signal**: `GodotSignal` has `isConnected(target, method)`, `getConnections()`,
   `hasConnections()`, `getObject()` and `getObjectId()`.
 - **Web**: the String, NodePath and ByteArray functions compile from the same source; the byte
-  codecs run in Kotlin/Wasm, the engine-run ones cross the Web bridge (text, numbers, `NodePath`,
-  `ByteArray`, packed String/float returns; a `List`/`Map` argument or an `Array`/`Dictionary`
+  codecs and NodePath members run in Kotlin/Wasm, the engine-run ones cross the Web bridge (text,
+  numbers, `NodePath`, `ByteArray`, packed String/float returns; a `List`/`Map` argument or an `Array`/`Dictionary`
   result fails with a clear error). Web has no `GodotCallable`, and its `GodotSignal` lacks the
   signal queries above.
-- Builtin method coverage (`scripts/check_builtin_coverage.py`): Kotlin members 370 → 556 of 999,
+- Builtin method coverage (`scripts/check_builtin_coverage.py`): Kotlin members 370 → 560 of 999,
   every other method with a recorded reason. The runtime smoke compares every new member with
   GDScript (`bytes=` over 64 random arrays, `text=` on fixed samples with emoji and CJK text).
 

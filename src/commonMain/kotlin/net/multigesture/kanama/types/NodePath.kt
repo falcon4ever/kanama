@@ -5,11 +5,15 @@ import net.multigesture.kanama.binding.runtime.UtilityCalls
 import net.multigesture.kanama.builtins.BoxedSig
 import net.multigesture.kanama.builtins.BoxedType
 import net.multigesture.kanama.builtins.NodePathMethods
+import net.multigesture.kanama.builtins.nodePathAsPropertyPath
+import net.multigesture.kanama.builtins.nodePathConcatenated
+import net.multigesture.kanama.builtins.nodePathPart
+import net.multigesture.kanama.builtins.nodePathSlice
+import net.multigesture.kanama.builtins.parseNodePath
 
 // Godot's NodePath methods (`getName(0)`, `getSubname(0)`, `isAbsolute()`, ...) are generated into
-// the region below by scripts/generate_builtin_ops.py (task 134 D2): each runs the engine's
-// NodePath
-// parser on [path] through the boxed builtin call (`UtilityCalls.callMethod`).
+// the region below by scripts/generate_builtin_ops.py (task 134 D2): Godot's NodePath parse of
+// [path], ported to Kotlin (`builtins/BoxedMethods.kt`), answers them; `hash()` runs in the engine.
 
 /**
  * A pre-parsed scene tree path. Kanama value types are immutable snapshots; assign a new value back
@@ -30,15 +34,7 @@ value class NodePath(val path: String) {
    *
    * Generated from Godot docs: NodePath.is_absolute
    */
-  fun isAbsolute(): Boolean =
-    UtilityCalls.callMethod(
-      NodePathMethods.isAbsolute,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.NONE,
-      arrayOf<Any?>(),
-      BoxedType.BOOL,
-    ) as Boolean
+  fun isAbsolute(): Boolean = parseNodePath(path)?.absolute ?: false
 
   /**
    * Returns the number of node names in the path. Property subnames are not included. For example,
@@ -46,15 +42,7 @@ value class NodePath(val path: String) {
    *
    * Generated from Godot docs: NodePath.get_name_count
    */
-  fun getNameCount(): Long =
-    UtilityCalls.callMethod(
-      NodePathMethods.getNameCount,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.NONE,
-      arrayOf<Any?>(),
-      BoxedType.INT,
-    ) as Long
+  fun getNameCount(): Long = (parseNodePath(path)?.names?.size ?: 0).toLong()
 
   /**
    * Returns the node name indicated by `idx`, starting from 0. If `idx` is out of bounds, an error
@@ -62,15 +50,7 @@ value class NodePath(val path: String) {
    *
    * Generated from Godot docs: NodePath.get_name
    */
-  fun getName(idx: Long): String =
-    UtilityCalls.callMethod(
-      NodePathMethods.getName,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.INT,
-      arrayOf<Any?>(idx),
-      BoxedType.STRING_NAME,
-    ) as String
+  fun getName(idx: Long): String = nodePathPart(path, idx, subnames = false)
 
   /**
    * Returns the number of property names ("subnames") in the path. Each subname in the node path is
@@ -79,15 +59,7 @@ value class NodePath(val path: String) {
    *
    * Generated from Godot docs: NodePath.get_subname_count
    */
-  fun getSubnameCount(): Long =
-    UtilityCalls.callMethod(
-      NodePathMethods.getSubnameCount,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.NONE,
-      arrayOf<Any?>(),
-      BoxedType.INT,
-    ) as Long
+  fun getSubnameCount(): Long = (parseNodePath(path)?.subnames?.size ?: 0).toLong()
 
   /**
    * Returns the 32-bit hash value representing the node path's contents. Note: Node paths with
@@ -112,30 +84,14 @@ value class NodePath(val path: String) {
    *
    * Generated from Godot docs: NodePath.get_subname
    */
-  fun getSubname(idx: Long): String =
-    UtilityCalls.callMethod(
-      NodePathMethods.getSubname,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.INT,
-      arrayOf<Any?>(idx),
-      BoxedType.STRING_NAME,
-    ) as String
+  fun getSubname(idx: Long): String = nodePathPart(path, idx, subnames = true)
 
   /**
    * Returns all node names concatenated with a slash character (`/`) as a single `StringName`.
    *
    * Generated from Godot docs: NodePath.get_concatenated_names
    */
-  fun getConcatenatedNames(): String =
-    UtilityCalls.callMethod(
-      NodePathMethods.getConcatenatedNames,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.NONE,
-      arrayOf<Any?>(),
-      BoxedType.STRING_NAME,
-    ) as String
+  fun getConcatenatedNames(): String = nodePathConcatenated(path, subnames = false)
 
   /**
    * Returns all property subnames concatenated with a colon character (`:`) as a single
@@ -143,15 +99,7 @@ value class NodePath(val path: String) {
    *
    * Generated from Godot docs: NodePath.get_concatenated_subnames
    */
-  fun getConcatenatedSubnames(): String =
-    UtilityCalls.callMethod(
-      NodePathMethods.getConcatenatedSubnames,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.NONE,
-      arrayOf<Any?>(),
-      BoxedType.STRING_NAME,
-    ) as String
+  fun getConcatenatedSubnames(): String = nodePathConcatenated(path, subnames = true)
 
   /**
    * Returns the slice of the `NodePath`, from `begin` (inclusive) to `end` (exclusive), as a new
@@ -165,14 +113,7 @@ value class NodePath(val path: String) {
    * Generated from Godot docs: NodePath.slice
    */
   fun slice(begin: Long, end: Long = 2147483647L): NodePath =
-    UtilityCalls.callMethod(
-      NodePathMethods.slice,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.INT_INT,
-      arrayOf<Any?>(begin, end),
-      BoxedType.NODE_PATH,
-    ) as NodePath
+    NodePath(nodePathSlice(path, begin, end))
 
   /**
    * Returns a copy of this node path with a colon character (`:`) prefixed, transforming it to a
@@ -180,30 +121,14 @@ value class NodePath(val path: String) {
    *
    * Generated from Godot docs: NodePath.get_as_property_path
    */
-  fun getAsPropertyPath(): NodePath =
-    UtilityCalls.callMethod(
-      NodePathMethods.getAsPropertyPath,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.NONE,
-      arrayOf<Any?>(),
-      BoxedType.NODE_PATH,
-    ) as NodePath
+  fun getAsPropertyPath(): NodePath = NodePath(nodePathAsPropertyPath(path))
 
   /**
    * Returns `true` if the node path has been constructed from an empty `String` (`""`).
    *
    * Generated from Godot docs: NodePath.is_empty
    */
-  fun isEmpty(): Boolean =
-    UtilityCalls.callMethod(
-      NodePathMethods.isEmpty,
-      BoxedType.NODE_PATH,
-      this,
-      BoxedSig.NONE,
-      arrayOf<Any?>(),
-      BoxedType.BOOL,
-    ) as Boolean
+  fun isEmpty(): Boolean = parseNodePath(path) == null
 
   // ===== END GENERATED BUILTIN MEMBERS: NodePath =====
 

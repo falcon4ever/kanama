@@ -35,13 +35,16 @@ data class GodotCallable(
     /** Godot's `Callable.get_object`: the target, or null once it is freed. */
     fun getObject(): GodotObject? = if (GD.isInstanceValid(target)) target else null
 
-    /** Godot's `Callable.get_object_id`: the target's instance id. */
-    fun getObjectId(): Long = target.getInstanceId()
+    /** Godot's `Callable.get_object_id`: the target's instance id, also once it is freed (as in Godot). */
+    fun getObjectId(): Long = target.instanceId
 
     /** Godot's `Callable.get_argument_count`: [method]'s argument count on the target. */
     fun getArgumentCount(): Long = target.getMethodArgumentCount(method)
 
-    /** Godot's `Callable.rpc`: the target node's `rpc(method, *args)`. */
+    /**
+     * Godot's `Callable.rpc`: the target node's `rpc(method, *args)`. On a target that is not a
+     * `Node` both report a call error (here Godot's missing-method error for `rpc`).
+     */
     fun rpc(vararg args: Any?) {
         target.call("rpc", method, *args)
     }

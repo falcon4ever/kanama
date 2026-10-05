@@ -51,7 +51,7 @@ expect class GodotSignal internal constructor(owner: GodotObject, name: String) 
     /** Godot's `Signal.get_object`: the emitter, or null once it is freed. */
     fun getObject(): GodotObject?
 
-    /** Godot's `Signal.get_object_id`: the emitter's instance id. */
+    /** Godot's `Signal.get_object_id`: the emitter's instance id, also once it is freed (as in Godot). */
     fun getObjectId(): Long
 
     /** `connect(target, argumentCount, GodotObject.ConnectFlags(0L), callback)`. */

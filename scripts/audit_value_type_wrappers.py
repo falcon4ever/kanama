@@ -104,6 +104,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from generate_builtin_ops import PURE_METHODS, kotlin_name  # noqa: E402
 
 REVIEWED_LOCAL_MATH |= {f"{cls}.{kotlin_name(cls, name)}" for cls, names in PURE_METHODS.items() for name in names}
+# Task 134 D2 review: NodePath's members are Godot's NodePath parse ported to Kotlin
+# (builtin_boxed_methods.NODE_PATH_PURE), compared with GDScript by the runtime smoke's `text=` row.
+from builtin_boxed_methods import NODE_PATH_PURE, camel  # noqa: E402
+
+REVIEWED_LOCAL_MATH |= {f"NodePath.{camel(name)}" for name in NODE_PATH_PURE}
 
 
 FUN_RE = re.compile(

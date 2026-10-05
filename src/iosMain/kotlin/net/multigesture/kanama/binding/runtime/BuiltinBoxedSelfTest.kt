@@ -6,9 +6,10 @@ import net.multigesture.kanama.builtins.compress
 import net.multigesture.kanama.builtins.decodeU32
 import net.multigesture.kanama.builtins.decodeVar
 import net.multigesture.kanama.builtins.decompress
-import net.multigesture.kanama.builtins.format
 import net.multigesture.kanama.builtins.getExtension
 import net.multigesture.kanama.builtins.getStringFromUtf8
+import net.multigesture.kanama.builtins.godotFormat
+import net.multigesture.kanama.builtins.godotHexToInt
 import net.multigesture.kanama.builtins.md5Buffer
 import net.multigesture.kanama.builtins.num
 import net.multigesture.kanama.builtins.splitFloats
@@ -44,12 +45,21 @@ internal fun builtinBoxedSelfTestRows(check: (String, Boolean) -> Unit) {
   check("builtin-string(bigrams(abc) -> [ab, bc])", "abc".bigrams() == listOf("ab", "bc"))
   check("builtin-string(md5_buffer -> 16 bytes)", "x".md5Buffer().size == 16)
   check(
-    "builtin-string(format(Map) -> 1-x)",
-    "{a}-{b}".format(mapOf<String, Any?>("a" to 1L, "b" to "x")) == "1-x",
+    "builtin-string(godotFormat(Map) -> 1-x)",
+    "{a}-{b}".godotFormat(mapOf<String, Any?>("a" to 1L, "b" to "x")) == "1-x",
   )
   check("builtin-string(to_upper of 3000 chars -> 3000)", "x".repeat(3000).toUpper().length == 3000)
 
+  check("builtin-string(godotHexToInt(0x1F) -> 31)", "0x1F".godotHexToInt() == 31L)
+
+  // NodePath's members are Godot's parse in Kotlin; hash() is the one NodePath base the shim
+  // builds.
   val path = NodePath("Arm/Hand:position:x")
+  val hash = path.hash()
+  check(
+    "builtin-nodepath(hash -> nonzero, stable)",
+    hash != 0L && hash == NodePath("Arm/Hand:position:x").hash(),
+  )
   check("builtin-nodepath(get_name(1) -> Hand: StringName)", path.getName(1L) == "Hand")
   check("builtin-nodepath(get_subname_count -> 2)", path.getSubnameCount() == 2L)
   check("builtin-nodepath(is_absolute -> false)", !path.isAbsolute())

@@ -62,8 +62,9 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `Color.RED`, `Vector2i.LEFT`, `Vector3.MODEL_FRONT` | the same |
 | `v.direction_to(t)`, `rect.get_center()`, `Color.from_hsv(h, s, v)` | `v.directionTo(t)`, `rect.getCenter()`, `Color.fromHsv(h, s, v)` |
 | `path.get_extension()`, `name.to_snake_case()`, `String.num(x, 2)` | the same in camelCase, after `import net.multigesture.kanama.builtins.*` (Godot's String methods on Kotlin's `String`) |
-| `text.length()`, `text.begins_with("a")`, `", ".join(parts)`, `"%d" % n` | Kotlin's `text.length`, `startsWith("a")`, `parts.joinToString(", ")`, `"$n"` ([the list](godot-api.md#strings-node-paths-and-bytes)) |
-| `"{name}".format({"name": n})` | `"{name}".format(mapOf("name" to n))` (same package) |
+| `text.begins_with("a")`, `", ".join(parts)`, `"%d" % n` | Kotlin's `startsWith("a")`, `parts.joinToString(", ")`, `"$n"` ([the list](godot-api.md#strings-node-paths-and-bytes)) |
+| `text.length()`, `text.find("x")`, `text.split(",")`, `"ff".hex_to_int()`, `"12abc".to_int()` | `godotLength()`, `godotFind("x")`, `godotSplit(",")`, `"ff".godotHexToInt()`, `"12abc".godotToInt()` (a name Kotlin already has gets the `godot` prefix; Kotlin's `length`, `indexOf`, `split`, `toLong()` also work, with Kotlin's semantics) |
+| `"{name}".format({"name": n})` | `"{name}".godotFormat(mapOf("name" to n))` (same package) |
 | `bytes.decode_u32(0)`, `bytes.get_string_from_utf8()` | `bytes.decodeU32(0)`, `bytes.getStringFromUtf8()` (a `ByteArray`, same package) |
 | `NodePath("a/b:x").get_name(1)` | `NodePath("a/b:x").getName(1)` |
 | `Callable(obj, "m").call(1)` | `GodotCallable(obj, "m").call(1)` (no `bind`) |

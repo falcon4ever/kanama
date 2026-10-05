@@ -9,8 +9,9 @@ import net.multigesture.kanama.binding.runtime.UtilityCalls
 // `import net.multigesture.kanama.builtins.*`, then `path.getExtension()`,
 // `name.toSnakeCase()`, `String.num(x, 2)`. Each runs Godot's own
 // implementation (the boxed builtin call), so Unicode, paths and number formatting behave as in
-// GDScript. The methods Kotlin's String already has under the same name are not repeated here:
-// check_builtin_coverage.py lists each with its Kotlin form (`length`, `split`, `replace`, ...).
+// GDScript. A Godot name kotlin-stdlib / java.lang.String already has for String gets a `godot`
+// prefix (`godotSplit`, `godotFormat`; checked with javap by check_builtin_coverage.py), so a star
+// import never changes an existing call; the ones Kotlin answers identically are not repeated.
 
 /**
  * Performs a case-sensitive comparison to another string. Returns `-1` if less than, `1` if greater
@@ -144,6 +145,16 @@ fun String.filenocasecmpTo(to: String): Long =
     BoxedType.INT,
   ) as Long
 
+fun String.godotLength(): Long =
+  UtilityCalls.callMethod(
+    StringMethods.godotLength,
+    BoxedType.STRING,
+    this,
+    BoxedSig.NONE,
+    arrayOf<Any?>(),
+    BoxedType.INT,
+  ) as Long
+
 /**
  * Returns part of the string from the position `from` with length `len`. If `len` is `-1` (as by
  * default), returns the rest of the string starting from the given position.
@@ -210,15 +221,9 @@ fun String.getSliceCount(delimiter: String): Long =
     BoxedType.INT,
   ) as Long
 
-/**
- * Returns the index of the first occurrence of `what` in this string, or `-1` if there are none.
- * The search's start can be specified with `from`, continuing to the end of the string.
- *
- * Generated from Godot docs: String.find
- */
-fun String.find(what: String, from: Long = 0L): Long =
+fun String.godotFind(what: String, from: Long = 0L): Long =
   UtilityCalls.callMethod(
-    StringMethods.find,
+    StringMethods.godotFind,
     BoxedType.STRING,
     this,
     BoxedSig.STRING_INT,
@@ -243,15 +248,9 @@ fun String.findn(what: String, from: Long = 0L): Long =
     BoxedType.INT,
   ) as Long
 
-/**
- * Returns the number of occurrences of the substring `what` between `from` and `to` positions. If
- * `to` is 0, the search continues until the end of the string.
- *
- * Generated from Godot docs: String.count
- */
-fun String.count(what: String, from: Long = 0L, to: Long = 0L): Long =
+fun String.godotCount(what: String, from: Long = 0L, to: Long = 0L): Long =
   UtilityCalls.callMethod(
-    StringMethods.count,
+    StringMethods.godotCount,
     BoxedType.STRING,
     this,
     BoxedSig.STRING_INT_INT,
@@ -411,16 +410,9 @@ fun String.similarity(text: String): Double =
     BoxedType.FLOAT,
   ) as Double
 
-/**
- * Formats the string by replacing all occurrences of `placeholder` with the elements of `values`.
- * `values` can be a `Dictionary`, an `Array`, or an `Object`. Any underscores in `placeholder` will
- * be replaced with the corresponding keys in advance. Array elements use their index as keys.
- *
- * Generated from Godot docs: String.format
- */
-fun String.format(values: Map<String, Any?>, placeholder: String = "{_}"): String =
+fun String.godotFormat(values: Map<String, Any?>, placeholder: String = "{_}"): String =
   UtilityCalls.callMethod(
-    StringMethods.format,
+    StringMethods.godotFormat,
     BoxedType.STRING,
     this,
     BoxedSig.NIL_STRING,
@@ -428,16 +420,9 @@ fun String.format(values: Map<String, Any?>, placeholder: String = "{_}"): Strin
     BoxedType.STRING,
   ) as String
 
-/**
- * Formats the string by replacing all occurrences of `placeholder` with the elements of `values`.
- * `values` can be a `Dictionary`, an `Array`, or an `Object`. Any underscores in `placeholder` will
- * be replaced with the corresponding keys in advance. Array elements use their index as keys.
- *
- * Generated from Godot docs: String.format
- */
-fun String.format(values: List<Any?>, placeholder: String = "{_}"): String =
+fun String.godotFormat(values: List<Any?>, placeholder: String = "{_}"): String =
   UtilityCalls.callMethod(
-    StringMethods.format,
+    StringMethods.godotFormat,
     BoxedType.STRING,
     this,
     BoxedSig.NIL_STRING,
@@ -575,16 +560,9 @@ fun String.erase(position: Long, chars: Long = 1L): String =
     BoxedType.STRING,
   ) as String
 
-/**
- * Returns a copy of the string with changed appearance. Replaces underscores (`_`) and hyphens
- * (`-`) with spaces, adds spaces before uppercase letters in the middle of a word, converts all
- * letters to lowercase, then converts the first one and each one following a space to uppercase.
- *
- * Generated from Godot docs: String.capitalize
- */
-fun String.capitalize(): String =
+fun String.godotCapitalize(): String =
   UtilityCalls.callMethod(
-    StringMethods.capitalize,
+    StringMethods.godotCapitalize,
     BoxedType.STRING,
     this,
     BoxedSig.NONE,
@@ -653,6 +631,21 @@ fun String.toKebabCase(): String =
     arrayOf<Any?>(),
     BoxedType.STRING,
   ) as String
+
+@Suppress("UNCHECKED_CAST")
+fun String.godotSplit(
+  delimiter: String = "",
+  allowEmpty: Boolean = true,
+  maxsplit: Long = 0L,
+): List<String> =
+  UtilityCalls.callMethod(
+    StringMethods.godotSplit,
+    BoxedType.STRING,
+    this,
+    BoxedSig.STRING_BOOL_INT,
+    arrayOf<Any?>(delimiter, allowEmpty, maxsplit),
+    BoxedType.PACKED_STRING_ARRAY,
+  ) as List<String>
 
 /**
  * Splits the string using a `delimiter` and returns an array of the substrings, starting from the
@@ -889,16 +882,9 @@ fun String.unicodeAt(at: Long): Long =
     BoxedType.INT,
   ) as Long
 
-/**
- * Indents every line of the string with the given `prefix`. Empty lines are not indented. See also
- * `dedent` to remove indentation. For example, the string can be indented with two tabulations
- * using `"\t\t"`, or four spaces using `" "`.
- *
- * Generated from Godot docs: String.indent
- */
-fun String.indent(prefix: String): String =
+fun String.godotIndent(prefix: String): String =
   UtilityCalls.callMethod(
-    StringMethods.indent,
+    StringMethods.godotIndent,
     BoxedType.STRING,
     this,
     BoxedSig.STRING,
@@ -1443,15 +1429,29 @@ fun String.isValidFilename(): Boolean =
     BoxedType.BOOL,
   ) as Boolean
 
-/**
- * Converts the string representing a hexadecimal number into an `int`. The string may be optionally
- * prefixed with `"0x"`, and an additional `-` prefix for negative numbers.
- *
- * Generated from Godot docs: String.hex_to_int
- */
-fun String.hexToInt(): Long =
+fun String.godotToInt(): Long =
   UtilityCalls.callMethod(
-    StringMethods.hexToInt,
+    StringMethods.godotToInt,
+    BoxedType.STRING,
+    this,
+    BoxedSig.NONE,
+    arrayOf<Any?>(),
+    BoxedType.INT,
+  ) as Long
+
+fun String.godotToFloat(): Double =
+  UtilityCalls.callMethod(
+    StringMethods.godotToFloat,
+    BoxedType.STRING,
+    this,
+    BoxedSig.NONE,
+    arrayOf<Any?>(),
+    BoxedType.FLOAT,
+  ) as Double
+
+fun String.godotHexToInt(): Long =
+  UtilityCalls.callMethod(
+    StringMethods.godotHexToInt,
     BoxedType.STRING,
     this,
     BoxedSig.NONE,
@@ -1785,6 +1785,8 @@ internal object StringMethods {
 
   @JvmField val filenocasecmpTo = BuiltinMethod(4, "filenocasecmp_to", 2920860731L)
 
+  @JvmField val godotLength = BuiltinMethod(4, "length", 3173160232L)
+
   @JvmField val substr = BuiltinMethod(4, "substr", 787537301L)
 
   @JvmField val getSlice = BuiltinMethod(4, "get_slice", 3535100402L)
@@ -1793,11 +1795,11 @@ internal object StringMethods {
 
   @JvmField val getSliceCount = BuiltinMethod(4, "get_slice_count", 2920860731L)
 
-  @JvmField val find = BuiltinMethod(4, "find", 1760645412L)
+  @JvmField val godotFind = BuiltinMethod(4, "find", 1760645412L)
 
   @JvmField val findn = BuiltinMethod(4, "findn", 1760645412L)
 
-  @JvmField val count = BuiltinMethod(4, "count", 2343087891L)
+  @JvmField val godotCount = BuiltinMethod(4, "count", 2343087891L)
 
   @JvmField val countn = BuiltinMethod(4, "countn", 2343087891L)
 
@@ -1817,7 +1819,7 @@ internal object StringMethods {
 
   @JvmField val similarity = BuiltinMethod(4, "similarity", 2697460964L)
 
-  @JvmField val format = BuiltinMethod(4, "format", 3212199029L)
+  @JvmField val godotFormat = BuiltinMethod(4, "format", 3212199029L)
 
   @JvmField val replacen = BuiltinMethod(4, "replacen", 1340436205L)
 
@@ -1835,7 +1837,7 @@ internal object StringMethods {
 
   @JvmField val erase = BuiltinMethod(4, "erase", 787537301L)
 
-  @JvmField val capitalize = BuiltinMethod(4, "capitalize", 3942272618L)
+  @JvmField val godotCapitalize = BuiltinMethod(4, "capitalize", 3942272618L)
 
   @JvmField val toCamelCase = BuiltinMethod(4, "to_camel_case", 3942272618L)
 
@@ -1844,6 +1846,8 @@ internal object StringMethods {
   @JvmField val toSnakeCase = BuiltinMethod(4, "to_snake_case", 3942272618L)
 
   @JvmField val toKebabCase = BuiltinMethod(4, "to_kebab_case", 3942272618L)
+
+  @JvmField val godotSplit = BuiltinMethod(4, "split", 1252735785L)
 
   @JvmField val rsplit = BuiltinMethod(4, "rsplit", 1252735785L)
 
@@ -1873,7 +1877,7 @@ internal object StringMethods {
 
   @JvmField val unicodeAt = BuiltinMethod(4, "unicode_at", 4103005248L)
 
-  @JvmField val indent = BuiltinMethod(4, "indent", 3134094431L)
+  @JvmField val godotIndent = BuiltinMethod(4, "indent", 3134094431L)
 
   @JvmField val dedent = BuiltinMethod(4, "dedent", 3942272618L)
 
@@ -1942,7 +1946,11 @@ internal object StringMethods {
 
   @JvmField val isValidFilename = BuiltinMethod(4, "is_valid_filename", 3918633141L)
 
-  @JvmField val hexToInt = BuiltinMethod(4, "hex_to_int", 3173160232L)
+  @JvmField val godotToInt = BuiltinMethod(4, "to_int", 3173160232L)
+
+  @JvmField val godotToFloat = BuiltinMethod(4, "to_float", 466405837L)
+
+  @JvmField val godotHexToInt = BuiltinMethod(4, "hex_to_int", 3173160232L)
 
   @JvmField val binToInt = BuiltinMethod(4, "bin_to_int", 3173160232L)
 

@@ -6,7 +6,7 @@ extends Node2D
 const SCALES := [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
 var rng_state := 2463534242
 var TEXT_SAMPLES := ["res://folder/file.tar.gz", "user://a/../b/./c.png", "Hello World", "ünïcödé ÄÖÜ ß", "日本語のテキスト", "emoji 🎉👍 text", "snake_case_name", "camelCaseName", "  padded\t ", "-12.5e3", "a,b,,c", "<tag a=\"v\">&amp;</tag>", "192.168.0.1", "%E3%81%82 x+y"]
-var NODE_PATH_SAMPLES := ["Path/To:prop:sub", "/root/Main/Player", "../Sibling", "%Unique/Child:position:x", ".", "Node", ":only:sub"]
+var NODE_PATH_SAMPLES := ["Path/To:prop:sub", "/root/Main/Player", "../Sibling", "%Unique/Child:position:x", ".", "Node", ":only:sub", "", "a::b", ":", "a:", "a//b/", "/", "/:x", "::", "a:b::c", "日本/ü:🎉"]
 var ASCII_SAMPLES := ["Hello World", "snake_case_name", "a,b,,c", "192.168.0.1"]
 var hashes := {}
 var hash_order := []
@@ -488,6 +488,10 @@ func text_row() -> void:
 	text123()
 	text124()
 	text125()
+	text126()
+	text127()
+	text128()
+	text129()
 
 
 func text0() -> void:
@@ -552,11 +556,16 @@ func text5() -> void:
 
 func text6() -> void:
 	for s in TEXT_SAMPLES:
+		mix_text("String.length", s.length())
+
+
+func text7() -> void:
+	for s in TEXT_SAMPLES:
 		mix_text("String.substr", s.substr(0, -1))
 		mix_text("String.substr", s.substr(1, 3))
 
 
-func text7() -> void:
+func text8() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.get_slice", s.get_slice("a", 0))
 		mix_text("String.get_slice", s.get_slice("/", 1))
@@ -566,13 +575,13 @@ func text7() -> void:
 		mix_text("String.get_slice", s.get_slice("e", 1))
 
 
-func text8() -> void:
+func text9() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.get_slicec", s.get_slicec(44, 0))
 		mix_text("String.get_slicec", s.get_slicec(47, 1))
 
 
-func text9() -> void:
+func text10() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.get_slice_count", s.get_slice_count("a"))
 		mix_text("String.get_slice_count", s.get_slice_count("/"))
@@ -582,7 +591,7 @@ func text9() -> void:
 		mix_text("String.get_slice_count", s.get_slice_count("e"))
 
 
-func text10() -> void:
+func text11() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.find", s.find("a", 0))
 		mix_text("String.find", s.find("/", 1))
@@ -592,7 +601,7 @@ func text10() -> void:
 		mix_text("String.find", s.find("e", 1))
 
 
-func text11() -> void:
+func text12() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.findn", s.findn("a", 0))
 		mix_text("String.findn", s.findn("/", 1))
@@ -602,7 +611,7 @@ func text11() -> void:
 		mix_text("String.findn", s.findn("e", 1))
 
 
-func text12() -> void:
+func text13() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.count", s.count("a", 0, 0))
 		mix_text("String.count", s.count("/", 1, 5))
@@ -612,7 +621,7 @@ func text12() -> void:
 		mix_text("String.count", s.count("e", 1, 5))
 
 
-func text13() -> void:
+func text14() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.countn", s.countn("a", 0, 0))
 		mix_text("String.countn", s.countn("/", 1, 5))
@@ -622,7 +631,7 @@ func text13() -> void:
 		mix_text("String.countn", s.countn("e", 1, 5))
 
 
-func text14() -> void:
+func text15() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.rfind", s.rfind("a", 0))
 		mix_text("String.rfind", s.rfind("/", 1))
@@ -632,7 +641,7 @@ func text14() -> void:
 		mix_text("String.rfind", s.rfind("e", 1))
 
 
-func text15() -> void:
+func text16() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.rfindn", s.rfindn("a", 0))
 		mix_text("String.rfindn", s.rfindn("/", 1))
@@ -642,7 +651,7 @@ func text15() -> void:
 		mix_text("String.rfindn", s.rfindn("e", 1))
 
 
-func text16() -> void:
+func text17() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.match", s.match("a"))
 		mix_text("String.match", s.match("/"))
@@ -652,7 +661,7 @@ func text16() -> void:
 		mix_text("String.match", s.match("e"))
 
 
-func text17() -> void:
+func text18() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.matchn", s.matchn("a"))
 		mix_text("String.matchn", s.matchn("/"))
@@ -662,7 +671,7 @@ func text17() -> void:
 		mix_text("String.matchn", s.matchn("e"))
 
 
-func text18() -> void:
+func text19() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_subsequence_of", s.is_subsequence_of("a"))
 		mix_text("String.is_subsequence_of", s.is_subsequence_of("/"))
@@ -672,7 +681,7 @@ func text18() -> void:
 		mix_text("String.is_subsequence_of", s.is_subsequence_of("e"))
 
 
-func text19() -> void:
+func text20() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_subsequence_ofn", s.is_subsequence_ofn("a"))
 		mix_text("String.is_subsequence_ofn", s.is_subsequence_ofn("/"))
@@ -682,12 +691,12 @@ func text19() -> void:
 		mix_text("String.is_subsequence_ofn", s.is_subsequence_ofn("e"))
 
 
-func text20() -> void:
+func text21() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.bigrams", s.bigrams())
 
 
-func text21() -> void:
+func text22() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.similarity", s.similarity("a"))
 		mix_text("String.similarity", s.similarity("/"))
@@ -697,13 +706,13 @@ func text21() -> void:
 		mix_text("String.similarity", s.similarity("e"))
 
 
-func text22() -> void:
+func text23() -> void:
 	mix_text("String.format", "{0} and {1}".format([1, "x"]))
 	mix_text("String.format", "{name} 🎉".format({"name": "Kanama"}))
 	mix_text("String.format", "<_>".format(["ü"], "<_>"))
 
 
-func text23() -> void:
+func text24() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.replacen", s.replacen("a", "a"))
 		mix_text("String.replacen", s.replacen("/", "/"))
@@ -713,13 +722,13 @@ func text23() -> void:
 		mix_text("String.replacen", s.replacen("e", "e"))
 
 
-func text24() -> void:
+func text25() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.replace_char", s.replace_char(97, 90))
 		mix_text("String.replace_char", s.replace_char(26085, 127881))
 
 
-func text25() -> void:
+func text26() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.replace_chars", s.replace_chars("a", 90))
 		mix_text("String.replace_chars", s.replace_chars("/", 127881))
@@ -729,13 +738,13 @@ func text25() -> void:
 		mix_text("String.replace_chars", s.replace_chars("e", 127881))
 
 
-func text26() -> void:
+func text27() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.remove_char", s.remove_char(101))
 		mix_text("String.remove_char", s.remove_char(32))
 
 
-func text27() -> void:
+func text28() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.remove_chars", s.remove_chars("a"))
 		mix_text("String.remove_chars", s.remove_chars("/"))
@@ -745,12 +754,12 @@ func text27() -> void:
 		mix_text("String.remove_chars", s.remove_chars("e"))
 
 
-func text28() -> void:
+func text29() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.reverse", s.reverse())
 
 
-func text29() -> void:
+func text30() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.insert", s.insert(0, "a"))
 		mix_text("String.insert", s.insert(2, "/"))
@@ -760,38 +769,48 @@ func text29() -> void:
 		mix_text("String.insert", s.insert(2, "e"))
 
 
-func text30() -> void:
+func text31() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.erase", s.erase(0, 1))
 		mix_text("String.erase", s.erase(2, 2))
 
 
-func text31() -> void:
+func text32() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.capitalize", s.capitalize())
 
 
-func text32() -> void:
+func text33() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_camel_case", s.to_camel_case())
 
 
-func text33() -> void:
+func text34() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_pascal_case", s.to_pascal_case())
 
 
-func text34() -> void:
+func text35() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_snake_case", s.to_snake_case())
 
 
-func text35() -> void:
+func text36() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_kebab_case", s.to_kebab_case())
 
 
-func text36() -> void:
+func text37() -> void:
+	for s in TEXT_SAMPLES:
+		mix_text("String.split", s.split("a", true, 0))
+		mix_text("String.split", s.split("/", false, 1))
+		mix_text("String.split", s.split("Wörld", true, 0))
+		mix_text("String.split", s.split("日本", false, 1))
+		mix_text("String.split", s.split("{0}", true, 0))
+		mix_text("String.split", s.split("e", false, 1))
+
+
+func text38() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.rsplit", s.rsplit("a", true, 0))
 		mix_text("String.rsplit", s.rsplit("/", false, 1))
@@ -801,7 +820,7 @@ func text36() -> void:
 		mix_text("String.rsplit", s.rsplit("e", false, 1))
 
 
-func text37() -> void:
+func text39() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.split_floats", s.split_floats("a", true))
 		mix_text("String.split_floats", s.split_floats("/", false))
@@ -811,40 +830,40 @@ func text37() -> void:
 		mix_text("String.split_floats", s.split_floats("e", false))
 
 
-func text38() -> void:
+func text40() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_upper", s.to_upper())
 
 
-func text39() -> void:
+func text41() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_lower", s.to_lower())
 
 
-func text40() -> void:
+func text42() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.left", s.left(-2))
 		mix_text("String.left", s.left(3))
 
 
-func text41() -> void:
+func text43() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.right", s.right(-2))
 		mix_text("String.right", s.right(3))
 
 
-func text42() -> void:
+func text44() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.strip_edges", s.strip_edges(true, true))
 		mix_text("String.strip_edges", s.strip_edges(false, false))
 
 
-func text43() -> void:
+func text45() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.strip_escapes", s.strip_escapes())
 
 
-func text44() -> void:
+func text46() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.lstrip", s.lstrip("a"))
 		mix_text("String.lstrip", s.lstrip("/"))
@@ -854,7 +873,7 @@ func text44() -> void:
 		mix_text("String.lstrip", s.lstrip("e"))
 
 
-func text45() -> void:
+func text47() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.rstrip", s.rstrip("a"))
 		mix_text("String.rstrip", s.rstrip("/"))
@@ -864,17 +883,17 @@ func text45() -> void:
 		mix_text("String.rstrip", s.rstrip("e"))
 
 
-func text46() -> void:
+func text48() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.get_extension", s.get_extension())
 
 
-func text47() -> void:
+func text49() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.get_basename", s.get_basename())
 
 
-func text48() -> void:
+func text50() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.path_join", s.path_join("a"))
 		mix_text("String.path_join", s.path_join("/"))
@@ -884,13 +903,13 @@ func text48() -> void:
 		mix_text("String.path_join", s.path_join("e"))
 
 
-func text49() -> void:
+func text51() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.unicode_at", s.unicode_at(0))
 		mix_text("String.unicode_at", s.unicode_at(1))
 
 
-func text50() -> void:
+func text52() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.indent", s.indent("a"))
 		mix_text("String.indent", s.indent("/"))
@@ -900,47 +919,47 @@ func text50() -> void:
 		mix_text("String.indent", s.indent("e"))
 
 
-func text51() -> void:
+func text53() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.dedent", s.dedent())
 
 
-func text52() -> void:
+func text54() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.hash", s.hash())
 
 
-func text53() -> void:
+func text55() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.md5_text", s.md5_text())
 
 
-func text54() -> void:
+func text56() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.sha1_text", s.sha1_text())
 
 
-func text55() -> void:
+func text57() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.sha256_text", s.sha256_text())
 
 
-func text56() -> void:
+func text58() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.md5_buffer", s.md5_buffer())
 
 
-func text57() -> void:
+func text59() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.sha1_buffer", s.sha1_buffer())
 
 
-func text58() -> void:
+func text60() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.sha256_buffer", s.sha256_buffer())
 
 
-func text59() -> void:
+func text61() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.containsn", s.containsn("a"))
 		mix_text("String.containsn", s.containsn("/"))
@@ -950,139 +969,149 @@ func text59() -> void:
 		mix_text("String.containsn", s.containsn("e"))
 
 
-func text60() -> void:
+func text62() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_absolute_path", s.is_absolute_path())
 
 
-func text61() -> void:
+func text63() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_relative_path", s.is_relative_path())
 
 
-func text62() -> void:
+func text64() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.simplify_path", s.simplify_path())
 
 
-func text63() -> void:
+func text65() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.get_base_dir", s.get_base_dir())
 
 
-func text64() -> void:
+func text66() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.get_file", s.get_file())
 
 
-func text65() -> void:
+func text67() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.xml_escape", s.xml_escape(true))
 		mix_text("String.xml_escape", s.xml_escape(false))
 
 
-func text66() -> void:
+func text68() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.xml_unescape", s.xml_unescape())
 
 
-func text67() -> void:
+func text69() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.uri_encode", s.uri_encode())
 
 
-func text68() -> void:
+func text70() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.uri_decode", s.uri_decode())
 
 
-func text69() -> void:
+func text71() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.uri_file_decode", s.uri_file_decode())
 
 
-func text70() -> void:
+func text72() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.c_escape", s.c_escape())
 
 
-func text71() -> void:
+func text73() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.c_unescape", s.c_unescape())
 
 
-func text72() -> void:
+func text74() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.json_escape", s.json_escape())
 
 
-func text73() -> void:
+func text75() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.validate_node_name", s.validate_node_name())
 
 
-func text74() -> void:
+func text76() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.validate_filename", s.validate_filename())
 
 
-func text75() -> void:
+func text77() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_ascii_identifier", s.is_valid_ascii_identifier())
 
 
-func text76() -> void:
+func text78() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_unicode_identifier", s.is_valid_unicode_identifier())
 
 
-func text77() -> void:
+func text79() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_identifier", s.is_valid_identifier())
 
 
-func text78() -> void:
+func text80() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_int", s.is_valid_int())
 
 
-func text79() -> void:
+func text81() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_float", s.is_valid_float())
 
 
-func text80() -> void:
+func text82() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_hex_number", s.is_valid_hex_number(true))
 		mix_text("String.is_valid_hex_number", s.is_valid_hex_number(false))
 
 
-func text81() -> void:
+func text83() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_html_color", s.is_valid_html_color())
 
 
-func text82() -> void:
+func text84() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_ip_address", s.is_valid_ip_address())
 
 
-func text83() -> void:
+func text85() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.is_valid_filename", s.is_valid_filename())
 
 
-func text84() -> void:
+func text86() -> void:
+	for s in TEXT_SAMPLES:
+		mix_text("String.to_int", s.to_int())
+
+
+func text87() -> void:
+	for s in TEXT_SAMPLES:
+		mix_text("String.to_float", s.to_float())
+
+
+func text88() -> void:
 	for s in ["0x1F", "ff", "-0xA"]:
 		mix_text("String.hex_to_int", s.hex_to_int())
 
 
-func text85() -> void:
+func text89() -> void:
 	for s in ["0b101", "1101", "-0b11"]:
 		mix_text("String.bin_to_int", s.bin_to_int())
 
 
-func text86() -> void:
+func text90() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.lpad", s.lpad(3, "a"))
 		mix_text("String.lpad", s.lpad(20, "/"))
@@ -1092,7 +1121,7 @@ func text86() -> void:
 		mix_text("String.lpad", s.lpad(20, "e"))
 
 
-func text87() -> void:
+func text91() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.rpad", s.rpad(3, "a"))
 		mix_text("String.rpad", s.rpad(20, "/"))
@@ -1102,216 +1131,223 @@ func text87() -> void:
 		mix_text("String.rpad", s.rpad(20, "e"))
 
 
-func text88() -> void:
+func text92() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.pad_decimals", s.pad_decimals(0))
 		mix_text("String.pad_decimals", s.pad_decimals(3))
 
 
-func text89() -> void:
+func text93() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.pad_zeros", s.pad_zeros(0))
 		mix_text("String.pad_zeros", s.pad_zeros(3))
 
 
-func text90() -> void:
+func text94() -> void:
 	for s in ["Hello World", "snake_case_name", "a,b,,c", "192.168.0.1"]:
 		mix_text("String.to_ascii_buffer", s.to_ascii_buffer())
 
 
-func text91() -> void:
+func text95() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_utf8_buffer", s.to_utf8_buffer())
 
 
-func text92() -> void:
+func text96() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_utf16_buffer", s.to_utf16_buffer())
 
 
-func text93() -> void:
+func text97() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_utf32_buffer", s.to_utf32_buffer())
 
 
-func text94() -> void:
+func text98() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_wchar_buffer", s.to_wchar_buffer())
 
 
-func text95() -> void:
+func text99() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("String.to_multibyte_char_buffer", s.to_multibyte_char_buffer())
 
 
-func text96() -> void:
+func text100() -> void:
 	for s in ["48656c6c6f", "e697a5", ""]:
 		mix_text("String.hex_decode", s.hex_decode())
 
 
-func text97() -> void:
+func text101() -> void:
 	mix_text("String.num_scientific", String.num_scientific(3.14159))
 	mix_text("String.num_scientific", String.num_scientific(-0.5))
 	mix_text("String.num_scientific", String.num_scientific(1e+21))
 	mix_text("String.num_scientific", String.num_scientific(2.5))
 
 
-func text98() -> void:
+func text102() -> void:
 	mix_text("String.num", String.num(3.14159, -1))
 	mix_text("String.num", String.num(-0.5, 2))
 	mix_text("String.num", String.num(1e+21, 0))
 	mix_text("String.num", String.num(2.5, -1))
 
 
-func text99() -> void:
+func text103() -> void:
 	mix_text("String.num_int64", String.num_int64(255, 10, true))
 	mix_text("String.num_int64", String.num_int64(-42, 16, false))
 	mix_text("String.num_int64", String.num_int64(0, 2, true))
 
 
-func text100() -> void:
+func text104() -> void:
 	mix_text("String.num_uint64", String.num_uint64(255, 10, true))
 	mix_text("String.num_uint64", String.num_uint64(-42, 16, false))
 	mix_text("String.num_uint64", String.num_uint64(0, 2, true))
 
 
-func text101() -> void:
+func text105() -> void:
 	mix_text("String.chr", String.chr(65))
 	mix_text("String.chr", String.chr(9786))
 	mix_text("String.chr", String.chr(127881))
 
 
-func text102() -> void:
+func text106() -> void:
 	mix_text("String.humanize_size", String.humanize_size(1023))
 	mix_text("String.humanize_size", String.humanize_size(1048576))
 	mix_text("String.humanize_size", String.humanize_size(123456789))
 
 
-func text103() -> void:
+func text107() -> void:
 	for s in NODE_PATH_SAMPLES:
 		mix_text("NodePath.is_absolute", NodePath(s).is_absolute())
 
 
-func text104() -> void:
+func text108() -> void:
 	for s in NODE_PATH_SAMPLES:
 		mix_text("NodePath.get_name_count", NodePath(s).get_name_count())
 
 
-func text105() -> void:
+func text109() -> void:
 	for s in NODE_PATH_SAMPLES:
 		var p := NodePath(s)
 		for i in p.get_name_count():
 			mix_text("NodePath.get_name", p.get_name(i))
-
-
-func text106() -> void:
-	for s in NODE_PATH_SAMPLES:
-		mix_text("NodePath.get_subname_count", NodePath(s).get_subname_count())
-
-
-func text107() -> void:
-	for s in NODE_PATH_SAMPLES:
-		mix_text("NodePath.hash", NodePath(s).hash())
-
-
-func text108() -> void:
-	for s in NODE_PATH_SAMPLES:
-		var p := NodePath(s)
-		for i in p.get_subname_count():
-			mix_text("NodePath.get_subname", p.get_subname(i))
-
-
-func text109() -> void:
-	for s in NODE_PATH_SAMPLES:
-		mix_text("NodePath.get_concatenated_names", NodePath(s).get_concatenated_names())
+		mix_text("NodePath.get_name", String(p.get_name(p.get_name_count())) + "|")
+		mix_text("NodePath.get_name", String(p.get_name(-1)) + "|")
 
 
 func text110() -> void:
 	for s in NODE_PATH_SAMPLES:
-		mix_text("NodePath.get_concatenated_subnames", NodePath(s).get_concatenated_subnames())
+		mix_text("NodePath.get_subname_count", NodePath(s).get_subname_count())
 
 
 func text111() -> void:
 	for s in NODE_PATH_SAMPLES:
-		var p := NodePath(s)
-		mix_text("NodePath.slice", p.slice(0))
-		mix_text("NodePath.slice", p.slice(1))
-		mix_text("NodePath.slice", p.slice(-2, -1))
+		mix_text("NodePath.hash", NodePath(s).hash())
 
 
 func text112() -> void:
 	for s in NODE_PATH_SAMPLES:
-		mix_text("NodePath.get_as_property_path", NodePath(s).get_as_property_path())
+		var p := NodePath(s)
+		for i in p.get_subname_count():
+			mix_text("NodePath.get_subname", p.get_subname(i))
+		mix_text("NodePath.get_subname", String(p.get_subname(p.get_subname_count())) + "|")
+		mix_text("NodePath.get_subname", String(p.get_subname(-1)) + "|")
 
 
 func text113() -> void:
 	for s in NODE_PATH_SAMPLES:
-		mix_text("NodePath.is_empty", NodePath(s).is_empty())
+		mix_text("NodePath.get_concatenated_names", String(NodePath(s).get_concatenated_names()) + "|")
 
 
 func text114() -> void:
+	for s in NODE_PATH_SAMPLES:
+		mix_text("NodePath.get_concatenated_subnames", String(NodePath(s).get_concatenated_subnames()) + "|")
+
+
+func text115() -> void:
+	for s in NODE_PATH_SAMPLES:
+		var p := NodePath(s)
+		mix_text("NodePath.slice", String(p.slice(0)) + "|")
+		mix_text("NodePath.slice", String(p.slice(1)) + "|")
+		mix_text("NodePath.slice", String(p.slice(-2, -1)) + "|")
+		mix_text("NodePath.slice", String(p.slice(2, 1)) + "|")
+		mix_text("NodePath.slice", String(p.slice(-100, 100)) + "|")
+		mix_text("NodePath.slice", String(p.slice(1, 3)) + "|")
+
+
+func text116() -> void:
+	for s in NODE_PATH_SAMPLES:
+		mix_text("NodePath.get_as_property_path", String(NodePath(s).get_as_property_path()) + "|")
+
+
+func text117() -> void:
+	for s in NODE_PATH_SAMPLES:
+		mix_text("NodePath.is_empty", NodePath(s).is_empty())
+
+
+func text118() -> void:
 	for s in ASCII_SAMPLES:
 		mix_text("PackedByteArray.get_string_from_ascii", s.to_ascii_buffer().get_string_from_ascii())
 
 
-func text115() -> void:
+func text119() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("PackedByteArray.get_string_from_utf8", s.to_utf8_buffer().get_string_from_utf8())
 
 
-func text116() -> void:
+func text120() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("PackedByteArray.get_string_from_utf16", s.to_utf16_buffer().get_string_from_utf16())
 
 
-func text117() -> void:
+func text121() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("PackedByteArray.get_string_from_utf32", s.to_utf32_buffer().get_string_from_utf32())
 
 
-func text118() -> void:
+func text122() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("PackedByteArray.get_string_from_wchar", s.to_wchar_buffer().get_string_from_wchar())
 
 
-func text119() -> void:
+func text123() -> void:
 	for s in TEXT_SAMPLES:
 		mix_text("PackedByteArray.get_string_from_multibyte_char", s.to_multibyte_char_buffer().get_string_from_multibyte_char())
 
 
-func text120() -> void:
+func text124() -> void:
 	for mode in 4:
 		for s in TEXT_SAMPLES:
 			mix_text("PackedByteArray.compress", s.to_utf8_buffer().compress(mode))
 
 
-func text121() -> void:
+func text125() -> void:
 	for mode in 4:
 		for s in TEXT_SAMPLES:
 			var raw: PackedByteArray = s.to_utf8_buffer()
 			mix_text("PackedByteArray.decompress", raw.compress(mode).decompress(raw.size(), mode))
 
 
-func text122() -> void:
+func text126() -> void:
 	for mode in [1, 3]:
 		for s in TEXT_SAMPLES:
 			var raw: PackedByteArray = s.to_utf8_buffer()
 			mix_text("PackedByteArray.decompress_dynamic", raw.compress(mode).decompress_dynamic(raw.size() * 2, mode))
 
 
-func text123() -> void:
+func text127() -> void:
 	for v in [42, "ünï 🎉", Vector2(1.5, -2.0), [1, "a"], null]:
 		mix_text("PackedByteArray.has_encoded_var", var_to_bytes(v).has_encoded_var(0))
 		mix_text("PackedByteArray.has_encoded_var", (var_to_bytes(v) + PackedByteArray([0, 0, 0])).has_encoded_var(0, true))
 
 
-func text124() -> void:
+func text128() -> void:
 	for v in [42, "ünï 🎉", Vector2(1.5, -2.0), [1, "a"], null]:
 		mix_text("PackedByteArray.decode_var", var_to_bytes(v).decode_var(0))
 		mix_text("PackedByteArray.decode_var", (var_to_bytes(v) + PackedByteArray([0, 0, 0])).decode_var(0, true))
 
 
-func text125() -> void:
+func text129() -> void:
 	for v in [42, "ünï 🎉", Vector2(1.5, -2.0), [1, "a"], null]:
 		mix_text("PackedByteArray.decode_var_size", var_to_bytes(v).decode_var_size(0))
 		mix_text("PackedByteArray.decode_var_size", (var_to_bytes(v) + PackedByteArray([0, 0, 0])).decode_var_size(0, true))

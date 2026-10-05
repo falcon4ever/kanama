@@ -2,6 +2,7 @@
 package net.multigesture.kanama.builtins
 
 import kotlin.jvm.JvmField
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.binding.runtime.BuiltinMethod
 
 /** Godot's `Variant.Type` ids of the boxed calls' bases, arguments and returns. */
@@ -66,26 +67,146 @@ internal object BoxedSig {
 
 /** NodePath's engine-run builtin methods (resolved on their first call). */
 internal object NodePathMethods {
-  @JvmField val isAbsolute = BuiltinMethod(22, "is_absolute", 3918633141L)
-
-  @JvmField val getNameCount = BuiltinMethod(22, "get_name_count", 3173160232L)
-
-  @JvmField val getName = BuiltinMethod(22, "get_name", 2948586938L)
-
-  @JvmField val getSubnameCount = BuiltinMethod(22, "get_subname_count", 3173160232L)
-
   @JvmField val hash = BuiltinMethod(22, "hash", 3173160232L)
+}
 
-  @JvmField val getSubname = BuiltinMethod(22, "get_subname", 2948586938L)
+/** A parsed NodePath (Godot's `NodePath::Data`); [parseNodePath] answers null for the empty one. */
+internal class NodePathParts(
+  val names: List<String>,
+  val subnames: List<String>,
+  val absolute: Boolean,
+)
 
-  @JvmField val getConcatenatedNames = BuiltinMethod(22, "get_concatenated_names", 1825232092L)
+/**
+ * Godot's `NodePath(const String &)` (core/string/node_path.cpp): names split at `/`, subnames at
+ * `:`, empty names skipped, a trailing `:` allowed, an empty subname in the middle (`"a::b"`) an
+ * error that leaves the empty NodePath. The text ends at a NUL, as it does at the engine boundary.
+ */
+internal fun parseNodePath(text: String): NodePathParts? {
+  // The last text parsed, kept as one immutable entry (a racing thread sees an old or a new entry,
+  // each consistent): a script calls several members of the same NodePath in a row. An invalid
+  // text therefore prints its error when it is parsed, not on every member call.
+  val last = lastParsed
+  if (last != null && last.text == text) return last.parts
+  val parts = parseNodePathText(text)
+  lastParsed = ParsedNodePath(text, parts)
+  return parts
+}
 
-  @JvmField
-  val getConcatenatedSubnames = BuiltinMethod(22, "get_concatenated_subnames", 1825232092L)
+private class ParsedNodePath(val text: String, val parts: NodePathParts?)
 
-  @JvmField val slice = BuiltinMethod(22, "slice", 421628484L)
+private var lastParsed: ParsedNodePath? = null
 
-  @JvmField val getAsPropertyPath = BuiltinMethod(22, "get_as_property_path", 1598598043L)
+private fun parseNodePathText(text: String): NodePathParts? {
+  val original = text.substringBefore('\u0000')
+  if (original.isEmpty()) return null
+  var path = original
+  val subnames = ArrayList<String>()
+  val absolute = path[0] == '/'
+  val subpathPos = path.indexOf(':')
+  if (subpathPos != -1) {
+    var from = subpathPos + 1
+    for (i in from..path.length) {
+      val c = if (i < path.length) path[i] else '\u0000'
+      if (c == ':' || c == '\u0000') {
+        val str = path.substring(from, i)
+        if (str.isEmpty()) {
+          if (c == '\u0000') continue // Godot allows an end-of-path `:`
+          GD.pushError("Invalid NodePath '$original'.")
+          return null
+        }
+        subnames.add(str)
+        from = i + 1
+      }
+    }
+    path = path.substring(0, subpathPos)
+  }
+  val names = ArrayList<String>()
+  var from = if (absolute) 1 else 0
+  var lastIsSlash = true
+  for (i in from..path.length) {
+    val c = if (i < path.length) path[i] else '\u0000'
+    if (c == '/' || c == '\u0000') {
+      if (!lastIsSlash) names.add(path.substring(from, i))
+      from = i + 1
+      lastIsSlash = true
+    } else {
+      lastIsSlash = false
+    }
+  }
+  if (names.isEmpty() && !absolute && subnames.isEmpty()) return null
+  return NodePathParts(names, subnames, absolute)
+}
 
-  @JvmField val isEmpty = BuiltinMethod(22, "is_empty", 3918633141L)
+/** Godot's `NodePath::operator String()` of the NodePath built from these parts. */
+internal fun nodePathText(names: List<String>, subnames: List<String>, absolute: Boolean): String {
+  if (names.isEmpty() && subnames.isEmpty() && !absolute) return ""
+  val text = StringBuilder()
+  if (absolute) text.append('/')
+  names.joinTo(text, "/")
+  if (subnames.isNotEmpty()) subnames.joinTo(text.append(':'), ":")
+  return text.toString()
+}
+
+/** `get_name(idx)` / `get_subname(idx)`: Godot's ERR_FAIL_NULL_V / ERR_FAIL_INDEX_V answer "". */
+internal fun nodePathPart(text: String, idx: Long, subnames: Boolean): String {
+  val parts = parseNodePath(text)
+  if (parts == null) {
+    GD.pushError("Parameter \"data\" is null.")
+    return ""
+  }
+  val list = if (subnames) parts.subnames else parts.names
+  if (idx < 0 || idx >= list.size) {
+    val field = if (subnames) "data->subpath" else "data->path"
+    GD.pushError("Index p_idx = $idx is out of bounds ($field.size() = ${list.size}).")
+    return ""
+  }
+  return list[idx.toInt()]
+}
+
+/** `get_concatenated_names()` / `get_concatenated_subnames()`. */
+internal fun nodePathConcatenated(text: String, subnames: Boolean): String {
+  val parts = parseNodePath(text)
+  if (parts == null) {
+    GD.pushError("Parameter \"data\" is null.")
+    return ""
+  }
+  return if (subnames) parts.subnames.joinToString(":") else parts.names.joinToString("/")
+}
+
+/** Godot's `Vector::slice(begin, end)`. */
+private fun <T> vectorSlice(list: List<T>, begin: Long, end: Long): List<T> {
+  val s = list.size.toLong()
+  var b = begin.coerceIn(-s, s)
+  if (b < 0) b += s
+  var e = end.coerceIn(-s, s)
+  if (e < 0) e += s
+  if (b > e) {
+    GD.pushError("Condition \"begin > end\" is true. Returning: result")
+    return emptyList()
+  }
+  return list.subList(b.toInt(), e.toInt())
+}
+
+/** `NodePath::slice(begin, end)`: names then subnames as one sequence. */
+internal fun nodePathSlice(text: String, begin: Long, end: Long): String {
+  val parts = parseNodePath(text)
+  val names = parts?.names ?: emptyList()
+  val subnames = parts?.subnames ?: emptyList()
+  val nameCount = names.size.toLong()
+  val total = nameCount + subnames.size
+  var b = begin.coerceIn(-total, total)
+  if (b < 0) b += total
+  var e = end.coerceIn(-total, total)
+  if (e < 0) e += total
+  val newNames = vectorSlice(names, b, e)
+  val newSubnames = vectorSlice(subnames, maxOf(b - nameCount, 0L), maxOf(e - nameCount, 0L))
+  return nodePathText(newNames, newSubnames, (parts?.absolute ?: false) && b == 0L)
+}
+
+/** `get_as_property_path()`: the names joined into the first subname, not absolute. */
+internal fun nodePathAsPropertyPath(text: String): String {
+  val parts = parseNodePath(text) ?: return ""
+  if (parts.names.isEmpty()) return nodePathText(parts.names, parts.subnames, parts.absolute)
+  return nodePathText(emptyList(), listOf(parts.names.joinToString("/")) + parts.subnames, false)
 }

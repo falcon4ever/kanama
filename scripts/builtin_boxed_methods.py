@@ -11,11 +11,12 @@ their Godot methods cannot be members of a Kanama class the way the value types'
   `net.multigesture.kanama.builtins` (`builtins/GodotString.kt`), Godot's statics
   (`String.num`, `String.chr`, ...) extensions on `String.Companion`. An extension is found by the
   IDE's auto-import from the call site (`path.getExtension()`), and outside a file that imports
-  the package it adds nothing to `String`. A Godot method whose Kotlin name is already a stdlib
-  `String` function (`length`, `split`, `replace`, `toInt`, ...) is NOT generated: importing the
-  package must never change what an existing Kotlin call means. It gets a recorded reason naming
-  the Kotlin form instead (STRING_REASONS), as do the ones the stdlib answers identically. The
-  exception is `capitalize`, whose stdlib namesake is deprecated (`replaceFirstChar`).
+  the package it adds nothing to `String`. A star import outranks Kotlin's default imports, so no
+  generated extension may take a name kotlin-stdlib or java.lang.String already has for its receiver
+  (recorded with javap by `scripts/stdlib_names.py`, checked by `check_builtin_coverage.py`): such a
+  Godot method gets a `godot` prefix (`godotHexToInt()`, `godotFormat(...)`, `godotSplit(...)`).
+  The ones the stdlib answers identically (`is_empty`, `replace`, ...) get a reason instead
+  (STRING_REASONS).
   `StringName` is a Kotlin `String` too: its methods are String's.
 * **NodePath** methods are members of the `NodePath` value class (a GENERATED BUILTIN MEMBERS
   region in `types/NodePath.kt`, like the value types').
@@ -48,27 +49,20 @@ GENERATOR = "scripts/generate_builtin_ops.py"
 # reason here (the coverage gate reads both).
 # ---------------------------------------------------------------------------------------------
 
-_SHADOW = "a generated `{name}` would shadow Kotlin's in every file that imports the package"
+# Godot String methods the Kotlin stdlib answers with the same result: a recorded reason, no member.
+# (Name collisions are mechanical, not listed here: a Godot method whose camelCase name kotlin-stdlib
+# or java.lang.String already has for String gets the `godot` prefix -- `godotLength()` counts code
+# points, `godotSplit(...)` has Godot's allow_empty / maxsplit, `godotToInt()` parses leniently.)
 STRING_REASONS: dict[str, str] = {
-    "length": "Kotlin's `length` property (UTF-16 units; Godot counts code points, which differ only outside the "
-    "BMP: `codePointCount`); " + _SHADOW.format(name="length"),
-    "is_empty": "Kotlin `isEmpty()`: the same test; " + _SHADOW.format(name="isEmpty"),
-    "contains": "Kotlin `contains(what)`: the same case-sensitive substring test; " + _SHADOW.format(name="contains"),
+    "is_empty": "Kotlin `isEmpty()`: the same test",
+    "contains": "Kotlin `contains(what)`: the same case-sensitive substring test",
     "begins_with": "Kotlin `startsWith(text)`: the same test",
-    "ends_with": "Kotlin `endsWith(text)`: the same test; " + _SHADOW.format(name="endsWith"),
-    "replace": "Kotlin `replace(what, forwhat)`: the same (every occurrence, case-sensitive); "
-    + _SHADOW.format(name="replace"),
-    "repeat": "Kotlin `repeat(count)`: the same; " + _SHADOW.format(name="repeat"),
-    "split": "Kotlin `split(delimiter)` (`limit` = maxsplit + 1); " + _SHADOW.format(name="split")
-    + ". Godot's extra forms: `allow_empty = false` is `.filter { it.isNotEmpty() }`, an empty delimiter "
-    "splits into characters; `rsplit` is generated",
+    "ends_with": "Kotlin `endsWith(text)`: the same test",
+    "replace": "Kotlin `replace(what, forwhat)`: the same (every occurrence, case-sensitive)",
+    "repeat": "Kotlin `repeat(count)`: the same",
     "join": "Kotlin `parts.joinToString(separator)`: the same",
     "trim_prefix": "Kotlin `removePrefix(prefix)`: the same",
     "trim_suffix": "Kotlin `removeSuffix(suffix)`: the same",
-    "to_int": "Kotlin `toLong()` (strict: throws on `\"12abc\"`, which Godot's lenient parse reads as 12; check "
-    "with the generated `isValidInt()`); " + _SHADOW.format(name="toInt"),
-    "to_float": "Kotlin `toDouble()` (strict, like `toLong()`; check with the generated `isValidFloat()`); "
-    + _SHADOW.format(name="toFloat"),
 }
 
 STRING_NAME_REASON = "a StringName is a Kotlin `String` (marshalled at the boundary): String's member `{kn}` covers it"
@@ -164,6 +158,70 @@ KOTLIN_HARD_KEYWORDS = {
 }
 
 
+# ---------------------------------------------------------------------------------------------
+# No shadowing (task 134 D2 review): a star import of the package outranks Kotlin's default imports,
+# so a generated extension must never take a name kotlin-stdlib or java.lang.String already has for
+# the same receiver (scripts/stdlib_names.py records them with javap). Such a Godot method gets a
+# `godot` prefix instead: `hex_to_int` is `godotHexToInt()`, `format` `godotFormat(...)`.
+# ---------------------------------------------------------------------------------------------
+
+_TYPE_VAR = re.compile(r"^[A-Z]\w*$")
+_RECEIVER_KEYS = {
+    "String": ("java.lang.String", "java.lang.CharSequence", "java.lang.Object", "java.io.Serializable",
+               "java.lang.String#member"),
+    "String.Companion": ("kotlin.jvm.internal.StringCompanionObject", "java.lang.Object", "java.lang.String#static"),
+    "ByteArray": ("byte[]", "java.lang.Object", "java.io.Serializable"),
+}
+_BOXED = {"Int": "java.lang.Integer", "Long": "java.lang.Long", "Float": "java.lang.Float", "Double": "java.lang.Double",
+          "String": "java.lang.String", "Byte": "java.lang.Byte"}
+_STDLIB: dict[str, set[str]] | None = None
+
+
+def _stdlib() -> dict[str, set[str]]:
+    global _STDLIB
+    if _STDLIB is None:
+        import stdlib_names
+
+        _STDLIB = stdlib_names.load()
+    return _STDLIB
+
+
+def _list_receiver_applies(stdlib_receiver: str, element: str) -> bool:
+    """Whether a stdlib extension on [stdlib_receiver] (javap's spelling) is callable on `List<element>`."""
+    m = re.fullmatch(r"java\.(?:util\.List|util\.Collection|lang\.Iterable)<(.*)>", stdlib_receiver)
+    if not m:
+        return False
+    arg = m.group(1).strip()
+    arg = re.sub(r"^\?\s+(?:extends|super)\s+", "", arg)
+    return arg == "?" or bool(_TYPE_VAR.match(arg)) or arg == "java.lang.Object" or arg == _BOXED.get(element, element)
+
+
+def stdlib_taken(receiver: str, name: str) -> bool:
+    """Whether kotlin-stdlib / java.lang.String already has [name] for the Kotlin [receiver] text
+    (`String`, `String.Companion`, `ByteArray`, `List<Int>`, ...)."""
+    names = _stdlib()
+    for key, taken in names.items():
+        if name not in taken:
+            continue
+        if _TYPE_VAR.match(key) or key.startswith("java.lang.Comparable") and receiver == "String":
+            return True
+        list_match = re.fullmatch(r"List<(\w+)>", receiver)
+        if list_match:
+            if key == "java.lang.Object" or _list_receiver_applies(key, list_match.group(1)):
+                return True
+        elif key in _RECEIVER_KEYS.get(receiver, ()):
+            return True
+    return False
+
+
+def ext_name(receiver: str, godot_name: str) -> str:
+    """The Kotlin name of Godot's [godot_name] on [receiver]: camelCase, `godot`-prefixed when taken."""
+    kn = camel(godot_name)
+    if stdlib_taken(receiver, kn):
+        kn = "godot" + kn[:1].upper() + kn[1:]
+    return kn
+
+
 def camel(name: str) -> str:
     head, *rest = name.split("_")
     return head + "".join(part[:1].upper() + part[1:] for part in rest)
@@ -215,9 +273,8 @@ def _sig_name(types: list[str]) -> str:
 SIGNATURES: dict[str, list[str]] = {}
 
 
-def facade_fun(cls: str, m: dict, receiver: str, methods_object: str, *, member: bool = False) -> str:
+def facade_fun(cls: str, m: dict, receiver: str, methods_object: str, kn: str) -> str:
     """One engine-run function: the boxed call with the base, the arguments and the return."""
-    kn = camel(m["name"])
     static = m.get("is_static", False)
     params, args, vts = [], [], []
     for arg in m.get("arguments", []):
@@ -301,8 +358,12 @@ def string_dispositions(api: dict) -> dict[str, tuple[str, str]]:
         if name in STRING_REASONS:
             out[name] = ("reason", STRING_REASONS[name])
         else:
-            out[name] = ("member", camel(name))
+            out[name] = ("member", ext_name(string_receiver(m), name))
     return out
+
+
+def string_receiver(m: dict) -> str:
+    return "String.Companion" if m.get("is_static", False) else "String"
 
 
 def string_members(api: dict) -> list[Boxed]:
@@ -312,23 +373,24 @@ def string_members(api: dict) -> list[Boxed]:
             continue
         if not m.get("is_const", False) and not m.get("is_static", False):
             raise SystemExit(f"[builtin_boxed_methods] String.{m['name']} is not const: it cannot be engine-run boxed")
+        kn = ext_name(string_receiver(m), m["name"])
         if m["name"] == "format":
-            members.append(Boxed("String", m, "format", "facade", format_funs(m)))
+            members.append(Boxed("String", m, kn, "facade", format_funs(m, kn)))
             continue
-        receiver = "String.Companion." if m.get("is_static", False) else "String."
-        members.append(Boxed("String", m, camel(m["name"]), "facade", facade_fun("String", m, receiver, "StringMethods")))
+        receiver = string_receiver(m) + "."
+        members.append(Boxed("String", m, kn, "facade", facade_fun("String", m, receiver, "StringMethods", kn)))
     return members
 
 
-def format_funs(m: dict) -> str:
+def format_funs(m: dict, kn: str) -> str:
     """`format(values: Variant, placeholder)`: typed Map / List overloads instead of `Any?`, so that
     `"%d".format(5)` (JVM's `String.format`) still means what it means when the package is imported."""
     SIGNATURES["NIL_STRING"] = ["BoxedType.NIL", "BoxedType.STRING"]
     out = []
     for vtype in ("Map<String, Any?>", "List<Any?>"):
         out.append(
-            f'fun String.format(values: {vtype}, placeholder: String = "{{_}}"): String =\n'
-            f"  UtilityCalls.callMethod(StringMethods.format, BoxedType.STRING, this, BoxedSig.NIL_STRING, "
+            f'fun String.{kn}(values: {vtype}, placeholder: String = "{{_}}"): String =\n'
+            f"  UtilityCalls.callMethod(StringMethods.{kn}, BoxedType.STRING, this, BoxedSig.NIL_STRING, "
             f"arrayOf<Any?>(values, placeholder), BoxedType.STRING) as String"
         )
     return "\n\n".join(out)
@@ -363,8 +425,9 @@ def render_string_kt(api: dict) -> str:
         "// `import net.multigesture.kanama.builtins.*`, then `path.getExtension()`,",
         "// `name.toSnakeCase()`, `String.num(x, 2)`. Each runs Godot's own",
         "// implementation (the boxed builtin call), so Unicode, paths and number formatting behave as in",
-        "// GDScript. The methods Kotlin's String already has under the same name are not repeated here:",
-        "// check_builtin_coverage.py lists each with its Kotlin form (`length`, `split`, `replace`, ...).",
+        "// GDScript. A Godot name kotlin-stdlib / java.lang.String already has for String gets a `godot`",
+        "// prefix (`godotSplit`, `godotFormat`; checked with javap by check_builtin_coverage.py), so a star",
+        "// import never changes an existing call; the ones Kotlin answers identically are not repeated.",
     ]
     imports = {
         "kotlin.jvm.JvmField",
@@ -379,12 +442,176 @@ def render_string_kt(api: dict) -> str:
 # ---------------------------------------------------------------------------------------------
 
 
+# NodePath's methods in Kotlin (task 134 D2 review): Godot's `NodePath(String)` parse and getters
+# ported from core/string/node_path.cpp, so a member no longer constructs an engine NodePath from the
+# text on every call. An invalid path (`"a::b"`) parses as the empty NodePath, and Godot's error
+# prints (ERR_FAIL_*) are pushed with GD.pushError, as the engine would print them. `hash` stays in
+# the engine (Godot's string hash).
+NODE_PATH_PURE = {
+    "is_absolute": "fun isAbsolute(): Boolean = parseNodePath(path)?.absolute ?: false",
+    "get_name_count": "fun getNameCount(): Long = (parseNodePath(path)?.names?.size ?: 0).toLong()",
+    "get_name": "fun getName(idx: Long): String = nodePathPart(path, idx, subnames = false)",
+    "get_subname_count": "fun getSubnameCount(): Long = (parseNodePath(path)?.subnames?.size ?: 0).toLong()",
+    "get_subname": "fun getSubname(idx: Long): String = nodePathPart(path, idx, subnames = true)",
+    "get_concatenated_names": "fun getConcatenatedNames(): String = nodePathConcatenated(path, subnames = false)",
+    "get_concatenated_subnames": "fun getConcatenatedSubnames(): String = nodePathConcatenated(path, subnames = true)",
+    "slice": "fun slice(begin: Long, end: Long = 2147483647L): NodePath = NodePath(nodePathSlice(path, begin, end))",
+    "get_as_property_path": "fun getAsPropertyPath(): NodePath = NodePath(nodePathAsPropertyPath(path))",
+    "is_empty": "fun isEmpty(): Boolean = parseNodePath(path) == null",
+}
+
+NODE_PATH_HELPERS = r'''/** A parsed NodePath (Godot's `NodePath::Data`); [parseNodePath] answers null for the empty one. */
+internal class NodePathParts(
+  val names: List<String>,
+  val subnames: List<String>,
+  val absolute: Boolean,
+)
+
+/**
+ * Godot's `NodePath(const String &)` (core/string/node_path.cpp): names split at `/`, subnames at
+ * `:`, empty names skipped, a trailing `:` allowed, an empty subname in the middle (`"a::b"`) an
+ * error that leaves the empty NodePath. The text ends at a NUL, as it does at the engine boundary.
+ */
+internal fun parseNodePath(text: String): NodePathParts? {
+  // The last text parsed, kept as one immutable entry (a racing thread sees an old or a new entry,
+  // each consistent): a script calls several members of the same NodePath in a row. An invalid
+  // text therefore prints its error when it is parsed, not on every member call.
+  val last = lastParsed
+  if (last != null && last.text == text) return last.parts
+  val parts = parseNodePathText(text)
+  lastParsed = ParsedNodePath(text, parts)
+  return parts
+}
+
+private class ParsedNodePath(val text: String, val parts: NodePathParts?)
+
+private var lastParsed: ParsedNodePath? = null
+
+private fun parseNodePathText(text: String): NodePathParts? {
+  val original = text.substringBefore('\u0000')
+  if (original.isEmpty()) return null
+  var path = original
+  val subnames = ArrayList<String>()
+  val absolute = path[0] == '/'
+  val subpathPos = path.indexOf(':')
+  if (subpathPos != -1) {
+    var from = subpathPos + 1
+    for (i in from..path.length) {
+      val c = if (i < path.length) path[i] else '\u0000'
+      if (c == ':' || c == '\u0000') {
+        val str = path.substring(from, i)
+        if (str.isEmpty()) {
+          if (c == '\u0000') continue // Godot allows an end-of-path `:`
+          GD.pushError("Invalid NodePath '$original'.")
+          return null
+        }
+        subnames.add(str)
+        from = i + 1
+      }
+    }
+    path = path.substring(0, subpathPos)
+  }
+  val names = ArrayList<String>()
+  var from = if (absolute) 1 else 0
+  var lastIsSlash = true
+  for (i in from..path.length) {
+    val c = if (i < path.length) path[i] else '\u0000'
+    if (c == '/' || c == '\u0000') {
+      if (!lastIsSlash) names.add(path.substring(from, i))
+      from = i + 1
+      lastIsSlash = true
+    } else {
+      lastIsSlash = false
+    }
+  }
+  if (names.isEmpty() && !absolute && subnames.isEmpty()) return null
+  return NodePathParts(names, subnames, absolute)
+}
+
+/** Godot's `NodePath::operator String()` of the NodePath built from these parts. */
+internal fun nodePathText(names: List<String>, subnames: List<String>, absolute: Boolean): String {
+  if (names.isEmpty() && subnames.isEmpty() && !absolute) return ""
+  val text = StringBuilder()
+  if (absolute) text.append('/')
+  names.joinTo(text, "/")
+  if (subnames.isNotEmpty()) subnames.joinTo(text.append(':'), ":")
+  return text.toString()
+}
+
+/** `get_name(idx)` / `get_subname(idx)`: Godot's ERR_FAIL_NULL_V / ERR_FAIL_INDEX_V answer "". */
+internal fun nodePathPart(text: String, idx: Long, subnames: Boolean): String {
+  val parts = parseNodePath(text)
+  if (parts == null) {
+    GD.pushError("Parameter \"data\" is null.")
+    return ""
+  }
+  val list = if (subnames) parts.subnames else parts.names
+  if (idx < 0 || idx >= list.size) {
+    val field = if (subnames) "data->subpath" else "data->path"
+    GD.pushError("Index p_idx = $idx is out of bounds ($field.size() = ${list.size}).")
+    return ""
+  }
+  return list[idx.toInt()]
+}
+
+/** `get_concatenated_names()` / `get_concatenated_subnames()`. */
+internal fun nodePathConcatenated(text: String, subnames: Boolean): String {
+  val parts = parseNodePath(text)
+  if (parts == null) {
+    GD.pushError("Parameter \"data\" is null.")
+    return ""
+  }
+  return if (subnames) parts.subnames.joinToString(":") else parts.names.joinToString("/")
+}
+
+/** Godot's `Vector::slice(begin, end)`. */
+private fun <T> vectorSlice(list: List<T>, begin: Long, end: Long): List<T> {
+  val s = list.size.toLong()
+  var b = begin.coerceIn(-s, s)
+  if (b < 0) b += s
+  var e = end.coerceIn(-s, s)
+  if (e < 0) e += s
+  if (b > e) {
+    GD.pushError("Condition \"begin > end\" is true. Returning: result")
+    return emptyList()
+  }
+  return list.subList(b.toInt(), e.toInt())
+}
+
+/** `NodePath::slice(begin, end)`: names then subnames as one sequence. */
+internal fun nodePathSlice(text: String, begin: Long, end: Long): String {
+  val parts = parseNodePath(text)
+  val names = parts?.names ?: emptyList()
+  val subnames = parts?.subnames ?: emptyList()
+  val nameCount = names.size.toLong()
+  val total = nameCount + subnames.size
+  var b = begin.coerceIn(-total, total)
+  if (b < 0) b += total
+  var e = end.coerceIn(-total, total)
+  if (e < 0) e += total
+  val newNames = vectorSlice(names, b, e)
+  val newSubnames = vectorSlice(subnames, maxOf(b - nameCount, 0L), maxOf(e - nameCount, 0L))
+  return nodePathText(newNames, newSubnames, (parts?.absolute ?: false) && b == 0L)
+}
+
+/** `get_as_property_path()`: the names joined into the first subname, not absolute. */
+internal fun nodePathAsPropertyPath(text: String): String {
+  val parts = parseNodePath(text) ?: return ""
+  if (parts.names.isEmpty()) return nodePathText(parts.names, parts.subnames, parts.absolute)
+  return nodePathText(emptyList(), listOf(parts.names.joinToString("/")) + parts.subnames, false)
+}'''
+
+
 def node_path_members(api: dict) -> list[Boxed]:
     members = []
     for m in builtin(api, "NodePath")["methods"]:
         if not m.get("is_const", False):
             raise SystemExit(f"[builtin_boxed_methods] NodePath.{m['name']} is not const")
-        members.append(Boxed("NodePath", m, camel(m["name"]), "facade", facade_fun("NodePath", m, "", "NodePathMethods")))
+        kn = camel(m["name"])
+        if m["name"] in NODE_PATH_PURE:
+            members.append(Boxed("NodePath", m, kn, "pure", NODE_PATH_PURE[m["name"]]))
+        else:
+            members.append(Boxed("NodePath", m, kn, "facade", facade_fun("NodePath", m, "", "NodePathMethods", kn)))
     return members
 
 
@@ -396,12 +623,6 @@ def node_path_region_sources(api: dict) -> list[str]:
     return [e.code for e in node_path_members(api)]
 
 
-NODE_PATH_IMPORTS = (
-    "net.multigesture.kanama.binding.runtime.UtilityCalls",
-    "net.multigesture.kanama.builtins.BoxedSig",
-    "net.multigesture.kanama.builtins.BoxedType",
-    "net.multigesture.kanama.builtins.NodePathMethods",
-)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -690,7 +911,8 @@ def bytes_members(api: dict) -> list[Boxed]:
         if not m.get("is_const", False):
             raise SystemExit(f"[builtin_boxed_methods] PackedByteArray.{name} is not const: pure or a reason")
         members.append(
-            Boxed("PackedByteArray", m, camel(name), "facade", facade_fun("PackedByteArray", m, "ByteArray.", "BytesMethods"))
+            Boxed("PackedByteArray", m, ext_name("ByteArray", name), "facade",
+                  facade_fun("PackedByteArray", m, "ByteArray.", "BytesMethods", ext_name("ByteArray", name)))
         )
     return members
 
@@ -744,8 +966,10 @@ def render_signatures_kt(api: dict) -> str:
     ids = variant_ids(api)
     vid = ids["NODE_PATH"]
     body = boxed_type_object(ids) + [""] + signatures_object() + [""]
-    body += methods_object("NodePathMethods", "NodePath", node_path_members(api), vid)
-    imports = {"kotlin.jvm.JvmField", "net.multigesture.kanama.binding.runtime.BuiltinMethod"}
+    facade = [e for e in node_path_members(api) if e.impl == "facade"]
+    body += methods_object("NodePathMethods", "NodePath", facade, vid) + ["", NODE_PATH_HELPERS]
+    imports = {"kotlin.jvm.JvmField", "net.multigesture.kanama.binding.runtime.BuiltinMethod",
+               "net.multigesture.kanama.api.GD"}
     return file_text("net.multigesture.kanama.builtins", [], body, imports)
 
 
@@ -866,8 +1090,11 @@ TEXT_SAMPLES = [
     "192.168.0.1",
     "%E3%81%82 x+y",
 ]
-# No empty path: Godot's get_concatenated_names/subnames print an error on one.
-NODE_PATH_SAMPLES = ["Path/To:prop:sub", "/root/Main/Player", "../Sibling", "%Unique/Child:position:x", ".", "Node", ":only:sub"]
+# Valid paths, then the edges of Godot's parse: empty, an invalid empty subname (the empty NodePath
+# and an error), a trailing `:`, doubled and trailing slashes, the bare root (Godot prints an error
+# for the empty ones' get_concatenated_*; the row compares the results).
+NODE_PATH_SAMPLES = ["Path/To:prop:sub", "/root/Main/Player", "../Sibling", "%Unique/Child:position:x", ".", "Node",
+                     ":only:sub", "", "a::b", ":", "a:", "a//b/", "/", "/:x", "::", "a:b::c", "日本/ü:🎉"]
 ASCII_SAMPLES = ["Hello World", "snake_case_name", "a,b,,c", "192.168.0.1"]
 STRING_POOL = ["a", "/", "Wörld", "日本", "{0}", "e"]
 # Int arguments by Godot parameter name: values valid for every method that takes the name.
@@ -963,9 +1190,9 @@ def text_parity_entries(api: dict) -> list[tuple[str, list[str], list[str]]]:
         key = f"String.{m['name']}"
         if m["name"] == "format":
             kt = [
-                'mixText(KEY, "{0} and {1}".format(listOf<Any?>(1L, "x")))',
-                'mixText(KEY, "{name} 🎉".format(mapOf<String, Any?>("name" to "Kanama")))',
-                'mixText(KEY, "<_>".format(listOf<Any?>("ü"), "<_>"))',
+                'mixText(KEY, "{0} and {1}".godotFormat(listOf<Any?>(1L, "x")))',
+                'mixText(KEY, "{name} 🎉".godotFormat(mapOf<String, Any?>("name" to "Kanama")))',
+                'mixText(KEY, "<_>".godotFormat(listOf<Any?>("ü"), "<_>"))',
             ]
             gd = [
                 'mix_text(KEY, "{0} and {1}".format([1, "x"]))',
@@ -994,15 +1221,22 @@ def text_parity_entries(api: dict) -> list[tuple[str, list[str], list[str]]]:
         if m["name"] in ("get_name", "get_subname"):
             count_kt = "getNameCount" if m["name"] == "get_name" else "getSubnameCount"
             count_gd = "get_name_count" if m["name"] == "get_name" else "get_subname_count"
+            # Every index, then one past the end and -1: Godot prints an error and answers "".
             kt = ["for (s in NODE_PATH_SAMPLES) {", "  val p = NodePath(s)",
-                  f"  for (i in 0 until p.{count_kt}()) {{", f"    mixText(KEY, p.{e.kn}(i))", "  }", "}"]
+                  f"  for (i in 0 until p.{count_kt}()) {{", f"    mixText(KEY, p.{e.kn}(i))", "  }",
+                  f'  mixText(KEY, p.{e.kn}(p.{count_kt}()) + "|")', f'  mixText(KEY, p.{e.kn}(-1L) + "|")', "}"]
             gd = ["for s in NODE_PATH_SAMPLES:", "\tvar p := NodePath(s)",
-                  f"\tfor i in p.{count_gd}():", f"\t\tmix_text(KEY, p.{m['name']}(i))"]
+                  f"\tfor i in p.{count_gd}():", f"\t\tmix_text(KEY, p.{m['name']}(i))",
+                  f'\tmix_text(KEY, String(p.{m["name"]}(p.{count_gd}())) + "|")', f'\tmix_text(KEY, String(p.{m["name"]}(-1)) + "|")']
         elif m["name"] == "slice":
-            kt = ["for (s in NODE_PATH_SAMPLES) {", "  val p = NodePath(s)",
-                  "  mixText(KEY, p.slice(0L))", "  mixText(KEY, p.slice(1L))", "  mixText(KEY, p.slice(-2L, -1L))", "}"]
-            gd = ["for s in NODE_PATH_SAMPLES:", "\tvar p := NodePath(s)",
-                  "\tmix_text(KEY, p.slice(0))", "\tmix_text(KEY, p.slice(1))", "\tmix_text(KEY, p.slice(-2, -1))"]
+            calls = [("0L", "0"), ("1L", "1"), ("-2L, -1L", "-2, -1"), ("2L, 1L", "2, 1"), ("-100L, 100L", "-100, 100"), ("1L, 3L", "1, 3")]
+            kt = ["for (s in NODE_PATH_SAMPLES) {", "  val p = NodePath(s)"]
+            kt += [f'  mixText(KEY, p.slice({k}).path + "|")' for k, _ in calls] + ["}"]
+            gd = ["for s in NODE_PATH_SAMPLES:", "\tvar p := NodePath(s)"]
+            gd += [f'\tmix_text(KEY, String(p.slice({g})) + "|")' for _, g in calls]
+        elif m["name"] in ("get_concatenated_names", "get_concatenated_subnames", "get_as_property_path"):
+            kt = ["for (s in NODE_PATH_SAMPLES) {", f'  mixText(KEY, NodePath(s).{e.kn}().toString() + "|")', "}"]
+            gd = ["for s in NODE_PATH_SAMPLES:", f'\tmix_text(KEY, String(NodePath(s).{m["name"]}()) + "|")']
         else:
             kt = ["for (s in NODE_PATH_SAMPLES) {", f"  mixText(KEY, NodePath(s).{e.kn}())", "}"]
             gd = ["for s in NODE_PATH_SAMPLES:", f"\tmix_text(KEY, NodePath(s).{m['name']}())"]

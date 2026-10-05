@@ -8,9 +8,10 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotCallable.kt": {
       "category": "runtime-core",
-      "lines": 53,
+      "lines": 56,
       "raises": [
-        "15 -> 53: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
+        "15 -> 53: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
+        "53 -> 56: task 134 D2 review: rpc's KDoc names the non-Node case; getObjectId answers the stored id after the target is freed"
       ],
       "reason": "Callable value (target + method), a lifetime-free root"
     },

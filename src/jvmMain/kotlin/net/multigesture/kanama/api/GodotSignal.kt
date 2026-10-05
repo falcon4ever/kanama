@@ -44,7 +44,7 @@ internal actual constructor(
 
     actual fun getObject(): GodotObject? = if (GD.isInstanceValid(owner)) owner else null
 
-    actual fun getObjectId(): Long = owner.getInstanceId()
+    actual fun getObjectId(): Long = owner.instanceId
 
     actual fun connect(
         target: GodotObject,

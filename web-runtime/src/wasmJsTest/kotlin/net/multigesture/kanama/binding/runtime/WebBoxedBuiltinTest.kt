@@ -66,18 +66,28 @@ class WebBoxedBuiltinTest {
   }
 
   @Test
-  fun aByteArrayBaseCrossesAsHexAndANodePathReturnsANodePath() {
-    var request = ""
+  fun aByteArrayBaseCrossesAsHexAndNodePathIsLocal() {
+    var bytesRequest = ""
     webBuiltinTransportForTests = { packed ->
-      request = packed
+      bytesRequest = packed
       "4:é"
     }
     assertEquals("é", byteArrayOf(0xC3.toByte(), 0xA9.toByte()).getStringFromUtf8())
-    assertEquals("29:c3a9", request.split('\u001F')[3])
-    webBuiltinTransportForTests = { "22:Arm" }
+    assertEquals("29:c3a9", bytesRequest.split('\u001F')[3])
+    // NodePath's members are Godot's parse ported to Kotlin: no crossing (the transport would
+    // fail).
+    webBuiltinTransportForTests = { error("NodePath members must not cross the bridge") }
     assertEquals(NodePath("Arm"), NodePath("Arm/Hand").slice(0L, 1L))
-    webBuiltinTransportForTests = { "21:Hand" }
     assertEquals("Hand", NodePath("Arm/Hand").getName(1L))
+    assertEquals(NodePath(":Arm/Hand:x"), NodePath("/Arm/Hand:x").getAsPropertyPath())
+    // hash() stays in the engine.
+    var request = ""
+    webBuiltinTransportForTests = { packed ->
+      request = packed
+      "2:42"
+    }
+    assertEquals(42L, NodePath("Arm").hash())
+    assertEquals(listOf("22", "hash", "0", "22:Arm"), request.split('\u001F'))
   }
 
   @Test

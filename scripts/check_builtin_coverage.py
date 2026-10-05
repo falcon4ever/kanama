@@ -180,6 +180,38 @@ def method_status(cls: str, m: dict, found: set, dispositions: dict) -> tuple[st
     return ("missing", f"fun {kn}(...)")
 
 
+EXT_RE = re.compile(r"^fun (?:<[^>]*>\s*)?(?P<receiver>[A-Z][\w.<>?, ]*?)\.(?P<name>[A-Za-z_]\w*)\(", re.M)
+
+
+def stdlib_collisions() -> tuple[list[str], str]:
+    """Task 134 D2 review: no generated builtin extension may take a name kotlin-stdlib or
+    java.lang.String already has for its receiver (a star import of the package would change what an
+    existing call means). Returns (problems, how the stdlib names were read)."""
+    import stdlib_names
+
+    problems: list[str] = []
+    now = stdlib_names.live()
+    if now is None:
+        how = "the recorded stdlib names (javap or the kotlin-stdlib jar not available here)"
+    else:
+        version, text = now
+        how = f"kotlin-stdlib {version} read with javap"
+        current = stdlib_names.FIXTURE.read_text(encoding="utf-8") if stdlib_names.FIXTURE.exists() else ""
+        if current != text:
+            problems.append(
+                f"{stdlib_names.FIXTURE.relative_to(ROOT)} is stale for kotlin-stdlib {version}: "
+                "python3 scripts/stdlib_names.py --write, then generate_builtin_ops.py --write"
+            )
+    for path in sorted(boxed.BUILTINS_DIR.glob("*.kt")):
+        for m in EXT_RE.finditer(path.read_text(encoding="utf-8")):
+            if boxed.stdlib_taken(m.group("receiver"), m.group("name")):
+                problems.append(
+                    f"{path.relative_to(ROOT)}: fun {m.group('receiver')}.{m.group('name')} collides with "
+                    "kotlin-stdlib / java.lang.String (a star import would shadow it): give it the `godot` prefix"
+                )
+    return problems, how
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--report", action="store_true", help="print the per-class table")
@@ -240,6 +272,12 @@ def main() -> int:
         f"methods {method_total} (Kotlin member {totals['method'][0]}, reason {totals['method'][1]}), "
         f"constants {const_have}/{const_total}, enums {enum_have}/{enum_total}"
     )
+    collisions, how = stdlib_collisions()
+    if collisions:
+        print(f"[builtin_coverage] FAIL: {len(collisions)} stdlib name collision(s) ({how}):", file=sys.stderr)
+        for line in collisions:
+            print(f"    {line}", file=sys.stderr)
+        return 1
     if missing:
         print(f"[builtin_coverage] FAIL: {len(missing)} builtin operator(s)/method(s) uncovered; {summary}", file=sys.stderr)
         for line in missing:
@@ -250,7 +288,7 @@ def main() -> int:
             file=sys.stderr,
         )
         return 1
-    print(f"[builtin_coverage] PASS: {summary}")
+    print(f"[builtin_coverage] PASS: {summary}; no builtin extension shadows a stdlib name ({how})")
     return 0
 
 
