@@ -2,7 +2,6 @@
 
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.RawSegment
 import java.lang.foreign.MemorySegment
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.* // generated ObjectCalls.* extension helpers
@@ -16,54 +15,12 @@ import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import net.multigesture.kanama.binding.runtime.IosScriptErrors
 import kotlinx.cinterop.IntVar
-import kotlinx.cinterop.LongVar
-import kotlinx.cinterop.alloc
 import kotlinx.cinterop.get
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
 import kotlinx.cinterop.value
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_hide
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_local_mouse_position
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_get_viewport_rect
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_set_modulate
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_canvas_item_show
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_collision_shape3d_set_disabled
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles2d_restart
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles2d_set_emitting
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles2d_set_lifetime
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles3d_restart
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_gpu_particles3d_set_emitting
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_input_event_is_pressed
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_input_event_is_released
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_input_event_mouse_button_get_button_index
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_create_tween
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_get_position
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_get_scale
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_set_position
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node2d_set_scale
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_get_global_position
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_get_position
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_get_rotation
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_get_scale
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_rotate_y
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_global_position
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_position
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_rotation
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node3d_set_scale
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_add_child
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_child
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_child_count
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_node_or_null
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_tree
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_get_viewport
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_is_in_group
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_remove_child
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_set_process_input
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_play
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_bus
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_pitch_scale
@@ -71,29 +28,14 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_stream_paused
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_audio_stream_player_set_volume_db
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_construct_object
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_node_set_process_unhandled_input
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_connect_callable
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_disconnect_callable
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_disconnect
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_int
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_emit_signal_vector2i
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_is_instance_id_valid
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_get_instance_id
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_is_class
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_queue_free
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_packed_scene_instantiate
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_resource_loader_load
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_sprite2d_set_texture
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_kill
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_set_parallel
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_callback
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_tween_tween_method
-import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_viewport_get_visible_rect
-import net.multigesture.kanama.types.Color
-import net.multigesture.kanama.types.Rect2
-import net.multigesture.kanama.types.Vector2
-import net.multigesture.kanama.types.Vector3
 import kotlin.coroutines.CoroutineContext
 import kotlin.math.PI
 import kotlin.math.pow
@@ -211,344 +153,6 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
             AudioStreamPlayer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("AudioStreamPlayer"))))
     }
 }
-
-// KANAMA-IOS-HANDWRITTEN: [runtime] Tween uses the Variant tween_property path (final-value is a
-// Variant), not generatable via the audited ptrcall set. Bespoke by design. Its Tweener return
-// types are the generated shared classes (task 117 P2'): Tweener, PropertyTweener, MethodTweener
-// and CallbackTweener are one generated class each now, carrying their own fluent
-// setTrans/setEase/setDelay/from with the generator's self-return collapse.
-actual class Tween(handle: GodotHandle) : RefCounted(handle) {
-    // ===== BEGIN GENERATED ENUMS: Tween (scripts/generate_api_wrapper.py — do not edit) =====
-    /**
-     * Godot's `Tween.TweenProcessMode` enum as a typed value: `.value` is the raw number Godot uses,
-     * and the companion holds the named values (`Tween.TweenProcessMode.<NAME>`).
-     *
-     * Generated from Godot docs: Tween.TweenProcessMode
-     */
-    actual value class TweenProcessMode
-    actual constructor(
-        actual override val value: Long,
-    ) : GodotEnumValue {
-        actual companion object {
-            /**
-             * The `Tween` updates after each physics frame (see `Node._physics_process`).
-             *
-             * Generated from Godot docs: Tween.TWEEN_PROCESS_PHYSICS
-             */
-            actual val PHYSICS: TweenProcessMode get() = TweenProcessMode(0L)
-            /**
-             * The `Tween` updates after each process frame (see `Node._process`).
-             *
-             * Generated from Godot docs: Tween.TWEEN_PROCESS_IDLE
-             */
-            actual val IDLE: TweenProcessMode get() = TweenProcessMode(1L)
-        }
-    }
-
-    /**
-     * Godot's `Tween.TweenPauseMode` enum as a typed value: `.value` is the raw number Godot uses, and
-     * the companion holds the named values (`Tween.TweenPauseMode.<NAME>`).
-     *
-     * Generated from Godot docs: Tween.TweenPauseMode
-     */
-    actual value class TweenPauseMode
-    actual constructor(
-        actual override val value: Long,
-    ) : GodotEnumValue {
-        actual companion object {
-            /**
-             * If the `Tween` has a bound node, it will process when that node can process (see
-             * `Node.process_mode`). Otherwise it's the same as `TweenPauseMode.STOP`.
-             *
-             * Generated from Godot docs: Tween.TWEEN_PAUSE_BOUND
-             */
-            actual val BOUND: TweenPauseMode get() = TweenPauseMode(0L)
-            /**
-             * If `SceneTree` is paused, the `Tween` will also pause.
-             *
-             * Generated from Godot docs: Tween.TWEEN_PAUSE_STOP
-             */
-            actual val STOP: TweenPauseMode get() = TweenPauseMode(1L)
-            /**
-             * The `Tween` will process regardless of whether `SceneTree` is paused.
-             *
-             * Generated from Godot docs: Tween.TWEEN_PAUSE_PROCESS
-             */
-            actual val PROCESS: TweenPauseMode get() = TweenPauseMode(2L)
-        }
-    }
-
-    /**
-     * Godot's `Tween.TransitionType` enum as a typed value: `.value` is the raw number Godot uses, and
-     * the companion holds the named values (`Tween.TransitionType.<NAME>`).
-     *
-     * Generated from Godot docs: Tween.TransitionType
-     */
-    actual value class TransitionType
-    actual constructor(
-        actual override val value: Long,
-    ) : GodotEnumValue {
-        actual companion object {
-            /**
-             * The animation is interpolated linearly.
-             *
-             * Generated from Godot docs: Tween.TRANS_LINEAR
-             */
-            actual val LINEAR: TransitionType get() = TransitionType(0L)
-            /**
-             * The animation is interpolated using a sine function.
-             *
-             * Generated from Godot docs: Tween.TRANS_SINE
-             */
-            actual val SINE: TransitionType get() = TransitionType(1L)
-            /**
-             * The animation is interpolated with a quintic (to the power of 5) function.
-             *
-             * Generated from Godot docs: Tween.TRANS_QUINT
-             */
-            actual val QUINT: TransitionType get() = TransitionType(2L)
-            /**
-             * The animation is interpolated with a quartic (to the power of 4) function.
-             *
-             * Generated from Godot docs: Tween.TRANS_QUART
-             */
-            actual val QUART: TransitionType get() = TransitionType(3L)
-            /**
-             * The animation is interpolated with a quadratic (to the power of 2) function.
-             *
-             * Generated from Godot docs: Tween.TRANS_QUAD
-             */
-            actual val QUAD: TransitionType get() = TransitionType(4L)
-            /**
-             * The animation is interpolated with an exponential (to the power of x) function.
-             *
-             * Generated from Godot docs: Tween.TRANS_EXPO
-             */
-            actual val EXPO: TransitionType get() = TransitionType(5L)
-            /**
-             * The animation is interpolated with elasticity, wiggling around the edges.
-             *
-             * Generated from Godot docs: Tween.TRANS_ELASTIC
-             */
-            actual val ELASTIC: TransitionType get() = TransitionType(6L)
-            /**
-             * The animation is interpolated with a cubic (to the power of 3) function.
-             *
-             * Generated from Godot docs: Tween.TRANS_CUBIC
-             */
-            actual val CUBIC: TransitionType get() = TransitionType(7L)
-            /**
-             * The animation is interpolated with a function using square roots.
-             *
-             * Generated from Godot docs: Tween.TRANS_CIRC
-             */
-            actual val CIRC: TransitionType get() = TransitionType(8L)
-            /**
-             * The animation is interpolated by bouncing at the end.
-             *
-             * Generated from Godot docs: Tween.TRANS_BOUNCE
-             */
-            actual val BOUNCE: TransitionType get() = TransitionType(9L)
-            /**
-             * The animation is interpolated backing out at ends.
-             *
-             * Generated from Godot docs: Tween.TRANS_BACK
-             */
-            actual val BACK: TransitionType get() = TransitionType(10L)
-            /**
-             * The animation is interpolated like a spring towards the end.
-             *
-             * Generated from Godot docs: Tween.TRANS_SPRING
-             */
-            actual val SPRING: TransitionType get() = TransitionType(11L)
-        }
-    }
-
-    /**
-     * Godot's `Tween.EaseType` enum as a typed value: `.value` is the raw number Godot uses, and the
-     * companion holds the named values (`Tween.EaseType.<NAME>`).
-     *
-     * Generated from Godot docs: Tween.EaseType
-     */
-    actual value class EaseType
-    actual constructor(
-        actual override val value: Long,
-    ) : GodotEnumValue {
-        actual companion object {
-            /**
-             * The interpolation starts slowly and speeds up towards the end.
-             *
-             * Generated from Godot docs: Tween.EASE_IN
-             */
-            actual val IN: EaseType get() = EaseType(0L)
-            /**
-             * The interpolation starts quickly and slows down towards the end.
-             *
-             * Generated from Godot docs: Tween.EASE_OUT
-             */
-            actual val OUT: EaseType get() = EaseType(1L)
-            /**
-             * A combination of `EaseType.IN` and `EaseType.OUT`. The interpolation is slowest at both ends.
-             *
-             * Generated from Godot docs: Tween.EASE_IN_OUT
-             */
-            actual val IN_OUT: EaseType get() = EaseType(2L)
-            /**
-             * A combination of `EaseType.IN` and `EaseType.OUT`. The interpolation is fastest at both ends.
-             *
-             * Generated from Godot docs: Tween.EASE_OUT_IN
-             */
-            actual val OUT_IN: EaseType get() = EaseType(3L)
-        }
-    }
-    // ===== END GENERATED ENUMS: Tween =====
-
-    fun setParallel(parallel: Boolean): Tween {
-        releaseIosFluentSelf(
-            segment,
-            IosGodot.tweenSetParallel(segment.address(), if (parallel) 1 else 0),
-            "Tween.set_parallel",
-        )
-        return this
-    }
-
-    // Tween.bind_node(node) — ptrcall (object arg, returns self). Mirrors desktop Tween.bindNode.
-    fun bindNode(node: Node): Tween {
-        releaseIosFluentSelf(
-            segment,
-            ObjectCalls.ptrcallWithObjectArgRetObject(bindNodeBind, segment, node.segment).address(),
-            "Tween.bind_node",
-        )
-        return this
-    }
-
-    // Tween.set_ease(ease) — ptrcall (int arg, returns self). Tween-level default ease (distinct
-    // from Tweener.setEase, which configures an individual tweener).
-    fun setEase(ease: Tween.EaseType): Tween {
-        releaseIosFluentSelf(
-            segment,
-            ObjectCalls.ptrcallWithLongArgRetObject(setEaseBind, segment, ease.value).address(),
-            "Tween.set_ease",
-        )
-        return this
-    }
-
-    // Tween.tween_callback(Callable(target, method)). Routed through the C shim (Callable arg).
-    fun tweenCallback(target: GodotObject, method: String): CallbackTweener =
-        requireGodotReturn(
-            IosGodot.tweenTweenCallback(segment.address(), target.segment.address(), method)
-                .takeIf { it != 0L }
-                ?.let { RefCounted.owned(CallbackTweener(GodotHandle(MemorySegment.ofAddress(it)))) },
-            "Tween.tween_callback",
-        )
-
-    // Tween.tween_method(Callable(target, method), from, to, duration) — animates [from]->[to] over
-    // [duration], calling target.method(value) each frame. Callable arg → routed through the C shim.
-    fun tweenMethod(target: GodotObject, method: String, from: Double, to: Double, duration: Double): MethodTweener =
-        requireGodotReturn(
-            IosGodot.tweenTweenMethod(segment.address(), target.segment.address(), method, from, to, duration)
-                .takeIf { it != 0L }
-                ?.let { RefCounted.owned(MethodTweener(GodotHandle(MemorySegment.ofAddress(it)))) },
-            "Tween.tween_method",
-        )
-
-    // Tween.tween_property through the general Variant encoder (task 128 A review): any
-    // Variant-expressible final value (Double, Long, Vector2/3, Color, a typed GodotEnumValue, ...),
-    // as on desktop. The old Vector2 / Color C-shim pair tweened every other value to Vector2(0, 0).
-    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener =
-        requireGodotReturn(
-            ObjectCalls.ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
-                tweenPropertyBind,
-                segment,
-                target.segment,
-                property,
-                finalValue,
-                duration,
-            ).takeIf { it.address() != 0L }?.let { RefCounted.owned(PropertyTweener(GodotHandle(it))) },
-            "Tween.tween_property",
-        )
-
-    fun kill() {
-        IosGodot.tweenKill(segment.address())
-    }
-
-    /** Signal `step_finished(idx: int)`; see [TypedSignal]. */
-    val stepFinished: Signal1<Long>
-        @JvmName("stepFinishedTypedSignal")
-        get() = Signal1(this, "step_finished", SignalArgType.LONG)
-
-    /** Signal `loop_finished(loop_count: int)`; see [TypedSignal]. */
-    val loopFinished: Signal1<Long>
-        @JvmName("loopFinishedTypedSignal")
-        get() = Signal1(this, "loop_finished", SignalArgType.LONG)
-
-    /** Signal `finished()`; see [TypedSignal]. */
-    val finished: Signal0
-        @JvmName("finishedTypedSignal")
-        get() = Signal0(this, "finished")
-
-    object Signals {
-        const val finished: String = "finished"
-    }
-
-    companion object {
-
-        private val bindNodeBind by lazy { ObjectCalls.getMethodBind("Tween", "bind_node", 2946786331L) }
-        private val setEaseBind by lazy { ObjectCalls.getMethodBind("Tween", "set_ease", 1208117252L) }
-        private val tweenPropertyBind by lazy { ObjectCalls.getMethodBind("Tween", "tween_property", 4049770449L) }
-    }
-}
-
-// `meta: "required"` (task 128 A): a null fluent return throws instead of being ignored.
-private fun releaseIosFluentSelf(receiver: MemorySegment, returned: Long, godotMethod: String) {
-    if (returned == 0L) requireGodotReturn<Any>(null, godotMethod)
-    check(returned == receiver.address()) {
-        "Godot fluent RefCounted call returned a different object"
-    }
-    RefCounted.releaseHandle(MemorySegment.ofAddress(returned))
-}
-
-// An InputEvent (task 128 C), so `InputMap.actionAddEvent(action, InputEventMouseButton.create())` is the
-// same call on every backend. `from` also wraps an InputEventScreenTouch (touch drives the mouse-button
-// paths on iOS); that is still a valid InputEvent, so the inherited InputEvent members (isPressed,
-// isReleased, ...) are correct for both, while the button members check the real class.
-class InputEventMouseButton(handle: GodotHandle) : InputEvent(handle) {
-    var buttonIndex: MouseButton
-        get() = getButtonIndex()
-        set(value) = setButtonIndex(value)
-
-    fun getButtonIndex(): MouseButton =
-        MouseButton(if (isClass("InputEventMouseButton")) IosGodot.inputEventMouseButtonGetButtonIndex(segment.address())
-        else MouseButton.LEFT.value)
-
-    fun setButtonIndex(buttonIndex: MouseButton) {
-        checkOpen()
-        check(isClass("InputEventMouseButton")) { "setButtonIndex on a touch event wrapped as InputEventMouseButton" }
-        ObjectCalls.ptrcallWithLongArg(setButtonIndexBind, segment, buttonIndex.value)
-    }
-
-    companion object {
-
-        fun from(value: GodotObject): InputEventMouseButton? =
-            // A downcast takes a +1 of its own (task 132), as every generated `from*` does.
-            if (value.isClass("InputEventMouseButton")) RefCounted.retained(InputEventMouseButton(value.handle))
-            else if (value.isClass("InputEventScreenTouch")) RefCounted.retained(InputEventMouseButton(value.handle))
-            else null
-
-        // Instantiate an InputEventMouseButton (owned: close() it, or `use { }`).
-        fun create(): InputEventMouseButton =
-            RefCounted.owned(InputEventMouseButton(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("InputEventMouseButton")))))
-
-        private val setButtonIndexBind by lazy {
-            ObjectCalls.getMethodBind("InputEventMouseButton", "set_button_index", 3624991109L)
-        }
-    }
-}
-
-// Input is now a generated iOS wrapper (api/Input.kt, `object Input`), matching desktop's
-// generated Input. The previous hand-written stub (getAxis/isActionJustPressed/setCustomMouseCursor)
-// is retired; the generated object is a superset. setCustomMouseCursor remains guardrail-skipped on
-// iOS (Variant Object arg) and was unused.
 
 // KANAMA-IOS-HANDWRITTEN: [platform] pure-Kotlin math helpers (no Godot call). Bespoke utility,
 // matching the desktop Mathf facade (which is hand-authored, not generated).
@@ -737,7 +341,6 @@ object ResourceLoader {
             RefCounted.owned(LightmapGIData(GodotHandle(MemorySegment.ofAddress(it))))
         }
 
-
     /**
      * [loadThreadedGetStatusWithProgress]'s result (named `ThreadLoadStatus` before task 128 A, when
      * that name became Godot's enum `ResourceLoader.ThreadLoadStatus`).
@@ -870,28 +473,10 @@ inline fun <reified T> Node.kotlinScriptInstance(): T? =
     GodotObject(handle).kotlinScriptInstance<T>()
 
 @OptIn(ExperimentalForeignApi::class)
-// KANAMA-IOS-HANDWRITTEN: [glue] thin cinterop facade over the C shim helpers used by the bespoke
-// classes above. Predates the generated ObjectCalls path; kept for the bespoke runtime.
+// KANAMA-IOS-HANDWRITTEN: [seam] thin cinterop facade over the C shim entry points the runtime and
+// the bespoke classes above still call (instance ids, object construction, typed loads, signal
+// connections, AudioStreamPlayer). Task 129 A removed the 53 functions nothing called any more.
 internal object IosGodot {
-    private const val LABEL_SET_TEXT_HASH = 83702148L
-    private var labelSetTextBind = 0L
-
-    fun setObjectText(objectHandle: Long, value: String): Boolean {
-        val bind = labelSetTextBind()
-        if (bind == 0L || objectHandle == 0L) {
-            return false
-        }
-        net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg(bind, objectHandle, value)
-        return true
-    }
-
-    fun objectQueueFree(objectHandle: Long) {
-        kanama_ios_godot_object_queue_free(objectHandle)
-    }
-
-    fun objectIsClass(objectHandle: Long, className: String): Boolean =
-        kanama_ios_godot_object_is_class(objectHandle, className) != 0
-
     fun objectGetInstanceId(objectHandle: Long): Long =
         kanama_ios_godot_object_get_instance_id(objectHandle)
 
@@ -901,183 +486,8 @@ internal object IosGodot {
     fun objectIsLive(objectHandle: Long, instanceId: Long): Boolean =
         net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_is_live(objectHandle, instanceId) != 0
 
-    fun nodeIsInGroup(node: Long, groupName: String): Boolean =
-        kanama_ios_godot_node_is_in_group(node, groupName) != 0
-
-    fun inputEventIsPressed(event: Long): Boolean =
-        kanama_ios_godot_input_event_is_pressed(event) != 0
-
-    fun inputEventIsReleased(event: Long): Boolean =
-        kanama_ios_godot_input_event_is_released(event) != 0
-
-    fun inputEventMouseButtonGetButtonIndex(event: Long): Long =
-        kanama_ios_godot_input_event_mouse_button_get_button_index(event)
-
-    fun nodeAddChild(parent: Long, child: Long) {
-        kanama_ios_godot_node_add_child(parent, child)
-    }
-
-    fun nodeRemoveChild(parent: Long, child: Long) {
-        kanama_ios_godot_node_remove_child(parent, child)
-    }
-
-    fun nodeGetChildCount(node: Long): Long =
-        kanama_ios_godot_node_get_child_count(node)
-
-    fun nodeGetChild(node: Long, index: Int): Long =
-        kanama_ios_godot_node_get_child(node, index)
-
-    fun nodeGetNodeOrNull(node: Long, path: String): Long =
-        kanama_ios_godot_node_get_node_or_null(node, path)
-
-    fun nodeGetTree(node: Long): Long =
-        kanama_ios_godot_node_get_tree(node)
-
-    fun nodeGetViewport(node: Long): Long =
-        kanama_ios_godot_node_get_viewport(node)
-
-    fun nodeCreateTween(node: Long): Long =
-        kanama_ios_godot_node_create_tween(node)
-
-    fun nodeSetProcessInput(node: Long, enabled: Boolean) {
-        kanama_ios_godot_node_set_process_input(node, if (enabled) 1 else 0)
-    }
-
-    fun nodeSetProcessUnhandledInput(node: Long, enabled: Boolean) {
-        kanama_ios_godot_node_set_process_unhandled_input(node, if (enabled) 1 else 0)
-    }
-
-    fun node2dGetPosition(node: Long): Vector2 =
-        memScoped {
-            val x = alloc<DoubleVarCompat>()
-            val y = alloc<DoubleVarCompat>()
-            kanama_ios_godot_node2d_get_position(node, x.ptr, y.ptr)
-            Vector2(x.value, y.value)
-        }
-
-    fun node2dSetPosition(node: Long, value: Vector2) {
-        kanama_ios_godot_node2d_set_position(node, value.x.toDouble(), value.y.toDouble())
-    }
-
-    fun node2dGetScale(node: Long): Vector2 =
-        memScoped {
-            val x = alloc<DoubleVarCompat>()
-            val y = alloc<DoubleVarCompat>()
-            kanama_ios_godot_node2d_get_scale(node, x.ptr, y.ptr)
-            Vector2(x.value, y.value)
-        }
-
-    fun node2dSetScale(node: Long, value: Vector2) {
-        kanama_ios_godot_node2d_set_scale(node, value.x.toDouble(), value.y.toDouble())
-    }
-
-    fun node3dGetPosition(node: Long): Vector3 =
-        node3dGetVector3(node, ::kanama_ios_godot_node3d_get_position)
-
-    fun node3dSetPosition(node: Long, value: Vector3) {
-        kanama_ios_godot_node3d_set_position(node, value.x.toDouble(), value.y.toDouble(), value.z.toDouble())
-    }
-
-    fun node3dGetRotation(node: Long): Vector3 =
-        node3dGetVector3(node, ::kanama_ios_godot_node3d_get_rotation)
-
-    fun node3dSetRotation(node: Long, value: Vector3) {
-        kanama_ios_godot_node3d_set_rotation(node, value.x.toDouble(), value.y.toDouble(), value.z.toDouble())
-    }
-
-    fun node3dGetScale(node: Long): Vector3 =
-        node3dGetVector3(node, ::kanama_ios_godot_node3d_get_scale)
-
-    fun node3dSetScale(node: Long, value: Vector3) {
-        kanama_ios_godot_node3d_set_scale(node, value.x.toDouble(), value.y.toDouble(), value.z.toDouble())
-    }
-
-    fun node3dGetGlobalPosition(node: Long): Vector3 =
-        node3dGetVector3(node, ::kanama_ios_godot_node3d_get_global_position)
-
-    fun node3dSetGlobalPosition(node: Long, value: Vector3) {
-        kanama_ios_godot_node3d_set_global_position(node, value.x.toDouble(), value.y.toDouble(), value.z.toDouble())
-    }
-
-    fun node3dRotateY(node: Long, angle: Double) {
-        kanama_ios_godot_node3d_rotate_y(node, angle)
-    }
-
-    fun canvasItemGetViewportRect(objectHandle: Long): Rect2 =
-        memScoped {
-            val x = alloc<DoubleVarCompat>()
-            val y = alloc<DoubleVarCompat>()
-            val width = alloc<DoubleVarCompat>()
-            val height = alloc<DoubleVarCompat>()
-            kanama_ios_godot_canvas_item_get_viewport_rect(
-                objectHandle,
-                x.ptr,
-                y.ptr,
-                width.ptr,
-                height.ptr,
-            )
-            Rect2(Vector2(x.value, y.value), Vector2(width.value, height.value))
-        }
-
-    fun canvasItemGetLocalMousePosition(objectHandle: Long): Vector2 =
-        memScoped {
-            val x = alloc<DoubleVarCompat>()
-            val y = alloc<DoubleVarCompat>()
-            kanama_ios_godot_canvas_item_get_local_mouse_position(objectHandle, x.ptr, y.ptr)
-            Vector2(x.value, y.value)
-        }
-
-    fun canvasItemHide(objectHandle: Long) {
-        kanama_ios_godot_canvas_item_hide(objectHandle)
-    }
-
-    fun canvasItemShow(objectHandle: Long) {
-        kanama_ios_godot_canvas_item_show(objectHandle)
-    }
-
-    fun canvasItemSetModulate(objectHandle: Long, color: Color) {
-        kanama_ios_godot_canvas_item_set_modulate(
-            objectHandle,
-            color.r.toDouble(),
-            color.g.toDouble(),
-            color.b.toDouble(),
-            color.a.toDouble(),
-        )
-    }
-
-    fun packedSceneInstantiate(packedScene: Long, editState: Long): Long =
-        kanama_ios_godot_packed_scene_instantiate(packedScene, editState)
-
-    fun gpuParticles2dSetEmitting(particles: Long, value: Boolean) {
-        kanama_ios_godot_gpu_particles2d_set_emitting(particles, if (value) 1 else 0)
-    }
-
-    fun gpuParticles2dSetLifetime(particles: Long, value: Double) {
-        kanama_ios_godot_gpu_particles2d_set_lifetime(particles, value)
-    }
-
-    fun gpuParticles2dRestart(particles: Long, keepSeed: Boolean) {
-        kanama_ios_godot_gpu_particles2d_restart(particles, if (keepSeed) 1 else 0)
-    }
-
-    fun gpuParticles3dSetEmitting(particles: Long, value: Boolean) {
-        kanama_ios_godot_gpu_particles3d_set_emitting(particles, if (value) 1 else 0)
-    }
-
-    fun gpuParticles3dRestart(particles: Long, keepSeed: Boolean) {
-        kanama_ios_godot_gpu_particles3d_restart(particles, if (keepSeed) 1 else 0)
-    }
-
-    fun collisionShape3dSetDisabled(shape: Long, disabled: Boolean) {
-        kanama_ios_godot_collision_shape3d_set_disabled(shape, if (disabled) 1 else 0)
-    }
-
     fun resourceLoaderLoad(path: String, typeHint: String): Long =
         kanama_ios_godot_resource_loader_load(path, typeHint)
-
-    fun sprite2dSetTexture(sprite: Long, texture: Long) {
-        kanama_ios_godot_sprite2d_set_texture(sprite, texture)
-    }
 
     fun constructObject(className: String): Long =
         kanama_ios_godot_construct_object(className)
@@ -1115,64 +525,13 @@ internal object IosGodot {
     fun objectConnect(sourceObject: Long, signalName: String, targetObject: Long, method: String, flags: Long): Long =
         kanama_ios_godot_object_connect(sourceObject, signalName, targetObject, method, flags)
 
-    fun objectDisconnect(sourceObject: Long, signalName: String, targetObject: Long, method: String): Int =
-        kanama_ios_godot_object_disconnect(sourceObject, signalName, targetObject, method)
-
     fun objectConnectCallable(sourceObject: Long, signalName: String, targetObject: Long, callbackId: Long, flags: Long): Long =
         kanama_ios_godot_object_connect_callable(sourceObject, signalName, targetObject, callbackId, flags)
 
     fun objectDisconnectCallable(sourceObject: Long, signalName: String, targetObject: Long, callbackId: Long): Int =
         kanama_ios_godot_object_disconnect_callable(sourceObject, signalName, targetObject, callbackId)
-
-    fun tweenSetParallel(tween: Long, parallel: Int): Long =
-        kanama_ios_godot_tween_set_parallel(tween, parallel)
-
-    fun tweenTweenCallback(tween: Long, target: Long, method: String): Long =
-        kanama_ios_godot_tween_tween_callback(tween, target, method)
-
-    fun tweenTweenMethod(tween: Long, target: Long, method: String, from: Double, to: Double, duration: Double): Long =
-        kanama_ios_godot_tween_tween_method(tween, target, method, from, to, duration)
-
-    fun tweenKill(tween: Long) {
-        kanama_ios_godot_tween_kill(tween)
-    }
-
-    fun viewportGetVisibleRect(viewport: Long): Rect2 =
-        memScoped {
-            val x = alloc<DoubleVarCompat>()
-            val y = alloc<DoubleVarCompat>()
-            val w = alloc<DoubleVarCompat>()
-            val h = alloc<DoubleVarCompat>()
-            kanama_ios_godot_viewport_get_visible_rect(viewport, x.ptr, y.ptr, w.ptr, h.ptr)
-            Rect2(Vector2(x.value, y.value), Vector2(w.value, h.value))
-        }
-
-    private fun labelSetTextBind(): Long {
-        if (labelSetTextBind == 0L) {
-            labelSetTextBind = kanama_ios_godot_get_method_bind(
-                "Label",
-                "set_text",
-                LABEL_SET_TEXT_HASH,
-            )
-        }
-        return labelSetTextBind
-    }
-
-    private inline fun node3dGetVector3(
-        node: Long,
-        getter: (Long, kotlinx.cinterop.CPointer<DoubleVarCompat>?, kotlinx.cinterop.CPointer<DoubleVarCompat>?, kotlinx.cinterop.CPointer<DoubleVarCompat>?) -> Unit,
-    ): Vector3 =
-        memScoped {
-            val x = alloc<DoubleVarCompat>()
-            val y = alloc<DoubleVarCompat>()
-            val z = alloc<DoubleVarCompat>()
-            getter(node, x.ptr, y.ptr, z.ptr)
-            Vector3(x.value, y.value, z.value)
-        }
 }
 
-@OptIn(ExperimentalForeignApi::class)
-private typealias DoubleVarCompat = kotlinx.cinterop.DoubleVar
 
 // Registry backing lambda/bound signal connections. A connection registers its
 // callback here and passes the integer id to the C shim, which binds it to a

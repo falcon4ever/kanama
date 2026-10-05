@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.binding.runtime.requireGodotReturn
 import net.multigesture.kanama.types.NodePath
 import net.multigesture.kanama.types.RID
 
@@ -1154,6 +1155,15 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      */
     fun getTree(): SceneTree? {
         return SceneTree.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTreeBind, segment))
+    }
+
+    /**
+     * Creates a new `Tween` and binds it to this node. This is the equivalent of doing:
+     *
+     * Generated from Godot docs: Node.create_tween
+     */
+    fun createTween(): Tween {
+        return requireGodotReturn(Tween.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "Node.create_tween")
     }
 
     /**
@@ -2560,6 +2570,11 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         private const val GET_TREE_HASH = 2958820483L
         private val getTreeBind by lazy {
             ObjectCalls.getMethodBind("Node", "get_tree", GET_TREE_HASH)
+        }
+
+        private const val CREATE_TWEEN_HASH = 3426978995L
+        private val createTweenBind by lazy {
+            ObjectCalls.getMethodBind("Node", "create_tween", CREATE_TWEEN_HASH)
         }
 
         private const val DUPLICATE_HASH = 3511555459L

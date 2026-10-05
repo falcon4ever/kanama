@@ -38,6 +38,49 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — `Tween` and `InputEventMouseButton` generated once for every platform (task 129 A) — BREAKING
+
+Desktop, Android and iOS. Both classes were hand-written twice, once per platform, and had drifted:
+iOS `Tween` had 7 of Godot's 28 methods, and iOS `InputEventMouseButton` extended `InputEvent`, so
+its 26 `InputEventMouse` / `InputEventWithModifiers` members (`position`, `globalPosition`,
+`buttonMask`, the modifier keys, ...) and 6 of its own 8 methods did not exist on the phone. Both
+are now generated once into the shared API from `extension_api.json`, like the other 1,010
+classes; the desktop names, overloads and factories are kept.
+
+- **iOS gains the full `Tween`** (`stop`, `pause`, `play`, `customStep`, `isRunning`, `setLoops`,
+  `setTrans`, `setSpeedScale`, `parallel`, `chain`, `tweenInterval`, `tweenSubtween`, the static
+  `Tween.interpolateValue`, ...) and the full `InputEventMouseButton` (`factor`, `doubleClick`,
+  `setPressed`, `setCanceled`, and every `InputEventMouse` / `InputEventWithModifiers` member). Every platform also
+  gains `Tween.hasTweeners()` and the Godot-shaped overloads `tweenProperty(target, NodePath, ...)`,
+  `tweenCallback(GodotCallable)` and `tweenMethod(GodotCallable, ...)` next to the String-path and
+  target-plus-method-name forms scripts already use.
+- **`createTween()` is a member of `Node` and `SceneTree`**, and `SceneTree.createTween()` /
+  `SceneTree.getProcessedTweens()` are companion members, on every platform. They were per-platform
+  extension functions a script had to import by name.
+- **Source break:** `InputEventMouseButton` — one shared class now, and on iOS it extends
+  `InputEventMouse` (it extended `InputEvent`), so every member compiles on every platform. iOS
+  `InputEventMouseButton.from(event)` returns `null` for an `InputEventScreenTouch`; it used to wrap
+  the touch as a mouse button. A touch reaches mouse-button code through Godot's
+  `input_devices/pointing/emulate_mouse_from_touch` setting (on by default), as on every other
+  platform; code that wants the touch itself handles `InputEventScreenTouch`.
+- **Source break:** `top-level` — remove `import net.multigesture.kanama.api.createTween` and
+  `import net.multigesture.kanama.api.getProcessedTweens` (the functions are members now; the import
+  no longer resolves), and on iOS `import net.multigesture.kanama.api.setExclude` (the
+  `PhysicsRayQueryParameters3D.setExclude(List<RID>)` extension was shadowed by the identical
+  generated member and is gone). `Tween.tweenAwait(signal)` is a desktop/Android-only extension until
+  iOS can pass a `Signal` argument: a script outside the `net.multigesture.kanama.api` package that
+  calls it adds `import net.multigesture.kanama.api.tweenAwait`.
+- **Source break:** `Tween` — `setLoops(loops: Int = 0)` and `getLoopsLeft(): Int` take and return
+  `Int` (they were `Long` on desktop, as Godot types them `int32`): pass `n.toInt()` or compare with
+  an `Int`. `tweenSubtween(subtween: Tween)` takes a non-null `Tween` (Godot marks the parameter
+  required and fails on null).
+- Dead hand-written code removed: 45 iOS C shim entry points nothing called any more (the per-method
+  Node, Node2D, Node3D, CanvasItem, GPUParticles, Tween and InputEvent helpers of the first iOS
+  backend) with their `kanama_ios.h` declarations and the 16 static helpers, 44 method-bind caches
+  and 5 globals nothing else used (`clang -Wall` reports no unused static in the shim now); the 53
+  matching `IosGodot` facade functions; the inert iOS `java.io.File` shim; and 17 desktop
+  `ObjectCalls` helpers no wrapper calls.
+
 ### Fixed — Web: a typed `await()` on an engine object (task 134 C follow-up)
 
 - On Web, `animationPlayer.animationFinished.await()`, `sound.finished.await()` and every other

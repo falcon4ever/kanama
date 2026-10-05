@@ -552,31 +552,6 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] via ptrcall and reads an int64/enum return value. */
-  fun ptrcallWithObjectArgsRetLong(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    objectArgs: List<MemorySegment>,
-  ): Long {
-    Arena.ofConfined().use { arena ->
-      val argsArray =
-        if (objectArgs.isEmpty()) {
-          MemorySegment.NULL
-        } else {
-          val arr = arena.allocate(ADDRESS, objectArgs.size.toLong())
-          objectArgs.forEachIndexed { i, obj ->
-            val cell = arena.allocate(ADDRESS)
-            cell.set(ADDRESS, 0, obj)
-            arr.setAtIndex(ADDRESS, i.toLong(), cell)
-          }
-          arr
-        }
-      val ret = arena.allocate(JAVA_LONG)
-      bindPtrcall(methodBind, instance, argsArray, ret)
-      return ret.get(JAVA_LONG, 0)
-    }
-  }
-
   /** Calls [methodBind] via ptrcall with one Object* arg and one bool arg. */
   actual fun ptrcallWithObjectAndBoolArg(
     methodBind: MemorySegment,
@@ -2129,7 +2104,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoVariantTwoDoubleTwoLongArgsRetVariantScalar(
+  actual fun ptrcallWithTwoVariantTwoDoubleTwoLongArgsRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     initialValue: Any?,
@@ -8063,29 +8038,6 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] with (String, int64) args and no return value. */
-  fun ptrcallWithStringAndLongArg(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    text: String,
-    value: Long,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(8L, 8L)
-      val arg1 = arena.allocate(JAVA_LONG)
-      try {
-        GodotStrings.initString(arg0, text)
-        arg1.set(JAVA_LONG, 0, value)
-        val arr = arena.allocate(ADDRESS, 2)
-        arr.setAtIndex(ADDRESS, 0, arg0)
-        arr.setAtIndex(ADDRESS, 1, arg1)
-        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-      } finally {
-        GodotStrings.destroyString(arg0)
-      }
-    }
-  }
-
   fun ptrcallWithStringLongTwoIntArgsRetVector2i(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -9425,7 +9377,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with one scalar float arg and bool return value. */
-  fun ptrcallWithDoubleArgRetBool(
+  actual fun ptrcallWithDoubleArgRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Double,
@@ -14905,27 +14857,6 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] with one int64 arg and StringName return value. */
-  fun ptrcallWithLongArgRetStringName(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    value: Long,
-  ): String {
-    Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_LONG, 0, value)
-      val arr = arena.allocate(ADDRESS, 1)
-      arr.setAtIndex(ADDRESS, 0, arg0)
-      val ret = arena.allocate(8L, 8L)
-      bindPtrcall(methodBind, instance, arr, ret)
-      return try {
-        GodotStrings.readStringName(ret)
-      } finally {
-        BuiltinTypes.destroyTyped(VariantType.STRING_NAME, ret)
-      }
-    }
-  }
-
   /** Calls [methodBind] with no arguments and Vector2i return value. */
   actual fun ptrcallNoArgsRetVector2i(
     methodBind: MemorySegment,
@@ -19064,33 +18995,6 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] with (int64, float, float, float) and no return value. */
-  fun ptrcallWithLongAndThreeDoubleArgs(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    longArg: Long,
-    a: Double,
-    b: Double,
-    c: Double,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_LONG)
-      val arg1 = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
-      val arg2 = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
-      val arg3 = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
-      arg0.set(JAVA_LONG, 0, longArg)
-      arg1.set(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0, a)
-      arg2.set(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0, b)
-      arg3.set(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0, c)
-      val arr = arena.allocate(ADDRESS, 4)
-      arr.setAtIndex(ADDRESS, 0, arg0)
-      arr.setAtIndex(ADDRESS, 1, arg1)
-      arr.setAtIndex(ADDRESS, 2, arg2)
-      arr.setAtIndex(ADDRESS, 3, arg3)
-      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-    }
-  }
-
   /** Calls [methodBind] with (int32, float, float, float) and no return value. */
   actual fun ptrcallWithIntAndThreeDoubleArgs(
     methodBind: MemorySegment,
@@ -19403,40 +19307,6 @@ actual object ObjectCalls {
       GodotRealSegment.writeRaw(vec, 0, value.rawX)
       GodotRealSegment.writeRaw(vec, 1, value.rawY)
       arr.setAtIndex(ADDRESS, 1, vec)
-      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-    }
-  }
-
-  /** Calls [methodBind] with (float, bool, bool) args. */
-  fun ptrcallWithDoubleBoolBoolArgs(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    floatArg: Double,
-    firstBool: Boolean,
-    secondBool: Boolean,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val arr = arena.allocate(ADDRESS, 3)
-      val floatCell = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
-      floatCell.set(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0, floatArg)
-      arr.setAtIndex(ADDRESS, 0, floatCell)
-
-      val firstBoolCell = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      firstBoolCell.set(
-        java.lang.foreign.ValueLayout.JAVA_BYTE,
-        0,
-        if (firstBool) 1.toByte() else 0.toByte(),
-      )
-      arr.setAtIndex(ADDRESS, 1, firstBoolCell)
-
-      val secondBoolCell = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      secondBoolCell.set(
-        java.lang.foreign.ValueLayout.JAVA_BYTE,
-        0,
-        if (secondBool) 1.toByte() else 0.toByte(),
-      )
-      arr.setAtIndex(ADDRESS, 2, secondBoolCell)
-
       bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
@@ -20451,11 +20321,11 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Object, NodePath, Variant, float) and Object return value. */
-  fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+  actual fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
-    path: String,
+    path: NodePath,
     variantArg: Any?,
     doubleArg: Double,
   ): MemorySegment {
@@ -20469,7 +20339,7 @@ actual object ObjectCalls {
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       var variantInitialized = false
       try {
-        GodotStrings.initString(pathString, path)
+        GodotStrings.initString(pathString, path.path)
         BuiltinTypes.construct(
           type = VariantType.NODE_PATH,
           dest = nodePath,
@@ -20495,40 +20365,6 @@ actual object ObjectCalls {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
       }
-    }
-  }
-
-  fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    objectArg: MemorySegment,
-    path: NodePath,
-    variantArg: Any?,
-    doubleArg: Double,
-  ): MemorySegment =
-    ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
-      methodBind,
-      instance,
-      objectArg,
-      path.path,
-      variantArg,
-      doubleArg,
-    )
-
-  /** Calls [methodBind] with (StringName, scalar float) and no return value. */
-  fun ptrcallWithStringNameAndFloatArg(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    name: String,
-    value: Double,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val arr = arena.allocate(ADDRESS, 2)
-      arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-      val floatCell = arena.allocate(java.lang.foreign.ValueLayout.JAVA_DOUBLE)
-      floatCell.set(java.lang.foreign.ValueLayout.JAVA_DOUBLE, 0, value)
-      arr.setAtIndex(ADDRESS, 1, floatCell)
-      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -20851,31 +20687,6 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, dict)
         bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
       } finally {
-        BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
-      }
-    }
-  }
-
-  /**
-   * Calls [methodBind] with one Dictionary arg and decodes a Dictionary return as scalar key/value
-   * pairs.
-   */
-  fun ptrcallWithDictionaryArgRetDictionary(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    values: Map<String, Any?>,
-  ): Map<String, Any?> {
-    Arena.ofConfined().use { arena ->
-      val dict = arena.allocate(8L, 8L)
-      val ret = arena.allocate(8L, 8L)
-      try {
-        BuiltinTypes.initDictionary(dict, values)
-        val arr = arena.allocate(ADDRESS, 1)
-        arr.setAtIndex(ADDRESS, 0, dict)
-        bindPtrcall(methodBind, instance, arr, ret)
-        return BuiltinTypes.readDictionaryScalars(ret)
-      } finally {
-        BuiltinTypes.destroyTyped(VariantType.DICTIONARY, ret)
         BuiltinTypes.destroyTyped(VariantType.DICTIONARY, dict)
       }
     }
@@ -21332,23 +21143,6 @@ actual object ObjectCalls {
       val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
       bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
-    }
-  }
-
-  /** Calls [methodBind] with (int64, StringName) and no return value. */
-  fun ptrcallWithLongAndStringNameArg(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    value: Long,
-    name: String,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val arr = arena.allocate(ADDRESS, 2)
-      val intCell = arena.allocate(JAVA_LONG)
-      intCell.set(JAVA_LONG, 0, value)
-      arr.setAtIndex(ADDRESS, 0, intCell)
-      arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
   }
 
@@ -21841,27 +21635,6 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] with (int64, StringName, int64) and no return value. */
-  fun ptrcallWithLongStringNameAndLongArgs(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    first: Long,
-    name: String,
-    second: Long,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val arr = arena.allocate(ADDRESS, 3)
-      val int0 = arena.allocate(JAVA_LONG)
-      val int1 = arena.allocate(JAVA_LONG)
-      int0.set(JAVA_LONG, 0, first)
-      int1.set(JAVA_LONG, 0, second)
-      arr.setAtIndex(ADDRESS, 0, int0)
-      arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-      arr.setAtIndex(ADDRESS, 2, int1)
-      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-    }
-  }
-
   /** Calls [methodBind] with (int64, StringName, int32) and no return value. */
   fun ptrcallWithLongStringNameAndIntArgs(
     methodBind: MemorySegment,
@@ -21989,27 +21762,6 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] with (int32, StringName, int32) and no return value. */
-  fun ptrcallWithIntStringNameAndIntArgs(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    first: Int,
-    name: String,
-    second: Int,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val arr = arena.allocate(ADDRESS, 3)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
-      arr.setAtIndex(ADDRESS, 0, int0)
-      arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-      arr.setAtIndex(ADDRESS, 2, int1)
-      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-    }
-  }
-
   /** Calls [methodBind] with (StringName, Object) and no return value. */
   actual fun ptrcallWithStringNameAndObjectArg(
     methodBind: MemorySegment,
@@ -22087,56 +21839,6 @@ actual object ObjectCalls {
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 2, objCell)
       bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-    }
-  }
-
-  /** Calls [methodBind] with (StringName, Callable) and no return value. */
-  fun ptrcallWithStringNameAndCallableArg(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    name: String,
-    callableObject: MemorySegment,
-    callableMethod: String,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val callable = BuiltinTypes.allocateCallable(arena)
-      try {
-        BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        val arr = arena.allocate(ADDRESS, 2)
-        arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-        arr.setAtIndex(ADDRESS, 1, callable)
-        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-      } finally {
-        BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
-      }
-    }
-  }
-
-  /** Calls [methodBind] with (StringName, Callable, int64) and int64 return value. */
-  fun ptrcallWithStringNameCallableAndLongArgsRetLong(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    name: String,
-    callableObject: MemorySegment,
-    callableMethod: String,
-    flags: Long,
-  ): Long {
-    Arena.ofConfined().use { arena ->
-      val callable = BuiltinTypes.allocateCallable(arena)
-      val flagsArg = arena.allocate(JAVA_LONG)
-      try {
-        BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        flagsArg.set(JAVA_LONG, 0, flags)
-        val arr = arena.allocate(ADDRESS, 3)
-        arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-        arr.setAtIndex(ADDRESS, 1, callable)
-        arr.setAtIndex(ADDRESS, 2, flagsArg)
-        val ret = arena.allocate(JAVA_LONG)
-        bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_LONG, 0)
-      } finally {
-        BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
-      }
     }
   }
 
@@ -24126,7 +23828,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Callable, Variant, Variant, float) and Object return value. */
-  fun ptrcallWithCallableVariantVariantDoubleArgsRetObject(
+  actual fun ptrcallWithCallableVariantVariantDoubleArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     callableObject: MemorySegment,
@@ -24231,56 +23933,6 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] with (StringName, Array[Dictionary]) and no return value. */
-  fun ptrcallWithStringNameAndArrayOfDictionariesArg(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    name: String,
-    data: List<Map<String, Any>>,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val arrayArg = arena.allocate(8L, 8L)
-      try {
-        BuiltinTypes.initArrayOfDictionaries(arrayArg, data)
-        val arr = arena.allocate(ADDRESS, 2)
-        arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-        arr.setAtIndex(ADDRESS, 1, arrayArg)
-        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-      } finally {
-        BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayArg)
-      }
-    }
-  }
-
-  /** Calls [methodBind] with (StringName, bool, Array[Dictionary]) and no return value. */
-  fun ptrcallWithStringNameBoolAndArrayOfDictionariesArgs(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    name: String,
-    enabled: Boolean,
-    data: List<Map<String, Any>>,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val boolArg = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      val arrayArg = arena.allocate(8L, 8L)
-      try {
-        boolArg.set(
-          java.lang.foreign.ValueLayout.JAVA_BYTE,
-          0,
-          if (enabled) 1.toByte() else 0.toByte(),
-        )
-        BuiltinTypes.initArrayOfDictionaries(arrayArg, data)
-        val arr = arena.allocate(ADDRESS, 3)
-        arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-        arr.setAtIndex(ADDRESS, 1, boolArg)
-        arr.setAtIndex(ADDRESS, 2, arrayArg)
-        bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-      } finally {
-        BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayArg)
-      }
-    }
-  }
-
   /** Calls [methodBind] with (bool, PackedStringArray) and no return value. */
   actual fun ptrcallWithBoolAndPackedStringArrayArgs(
     methodBind: MemorySegment,
@@ -24305,25 +23957,6 @@ actual object ObjectCalls {
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packedArg)
       }
-    }
-  }
-
-  /** Calls [methodBind] with (int64, StringName) and bool return value. */
-  fun ptrcallWithLongAndStringNameArgRetBool(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    value: Long,
-    name: String,
-  ): Boolean {
-    Arena.ofConfined().use { arena ->
-      val arr = arena.allocate(ADDRESS, 2)
-      val intCell = arena.allocate(JAVA_LONG)
-      intCell.set(JAVA_LONG, 0, value)
-      arr.setAtIndex(ADDRESS, 0, intCell)
-      arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
-      val ret = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
-      bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(java.lang.foreign.ValueLayout.JAVA_BYTE, 0) != 0.toByte()
     }
   }
 
@@ -25070,29 +24703,6 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] with (Vector3, scalar float) args and no return value. */
-  fun ptrcallWithVector3FloatArg(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    vector: Vector3,
-    floatValue: Double,
-  ) {
-    Arena.ofConfined().use { arena ->
-      val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      GodotRealSegment.writeRaw(vectorCell, 0, vector.rawX)
-      GodotRealSegment.writeRaw(vectorCell, 1, vector.rawY)
-      GodotRealSegment.writeRaw(vectorCell, 2, vector.rawZ)
-
-      val floatCell = arena.allocate(JAVA_DOUBLE)
-      floatCell.set(JAVA_DOUBLE, 0, floatValue)
-
-      val arr = arena.allocate(ADDRESS, 2)
-      arr.setAtIndex(ADDRESS, 0, vectorCell)
-      arr.setAtIndex(ADDRESS, 1, floatCell)
-      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-    }
-  }
-
   /** Calls [methodBind] with (Vector3, bool, scalar float, bool, int32) and Object return value. */
   actual fun ptrcallWithVector3BoolFloatBoolIntArgsRetObject(
     methodBind: MemorySegment,
@@ -25259,30 +24869,6 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, ridCell)
       arr.setAtIndex(ADDRESS, 1, basis)
       bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
-    }
-  }
-
-  fun ptrcallWithBasisArgRetLong(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    value: Basis,
-  ): Long {
-    Arena.ofConfined().use { arena ->
-      val basis = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
-      GodotRealSegment.writeRaw(basis, 0, value.x.rawX)
-      GodotRealSegment.writeRaw(basis, 1, value.y.rawX)
-      GodotRealSegment.writeRaw(basis, 2, value.z.rawX)
-      GodotRealSegment.writeRaw(basis, 3, value.x.rawY)
-      GodotRealSegment.writeRaw(basis, 4, value.y.rawY)
-      GodotRealSegment.writeRaw(basis, 5, value.z.rawY)
-      GodotRealSegment.writeRaw(basis, 6, value.x.rawZ)
-      GodotRealSegment.writeRaw(basis, 7, value.y.rawZ)
-      GodotRealSegment.writeRaw(basis, 8, value.z.rawZ)
-      val arr = arena.allocate(ADDRESS, 1)
-      arr.setAtIndex(ADDRESS, 0, basis)
-      val ret = arena.allocate(JAVA_LONG)
-      bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_LONG, 0)
     }
   }
 

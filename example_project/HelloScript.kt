@@ -73,8 +73,7 @@ import net.multigesture.kanama.api.Texture2D
 import net.multigesture.kanama.api.Time
 import net.multigesture.kanama.api.Timer
 import net.multigesture.kanama.api.Tween
-import net.multigesture.kanama.api.createTween
-import net.multigesture.kanama.api.getProcessedTweens
+import net.multigesture.kanama.api.tweenAwait
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.generated.HelloScriptNames
 import net.multigesture.kanama.generated.HelloScriptSignals
@@ -1045,7 +1044,7 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
     val tweenStep = tween?.customStep(0.02) ?: false
     val tweenElapsed = tween?.getTotalElapsedTime() ?: -1.0
     val tweenRunningAfterStep = tween?.isRunning() ?: false
-    val tweenLoopsLeft = tween?.getLoopsLeft() ?: -1L
+    val tweenLoopsLeft = tween?.getLoopsLeft() ?: -1
     val tweenPriorityAfterStep = selfNode.getProcessPriority()
     // The first customStep drove the sequence into the AwaitTweener (it connects to the
     // awaited signal when it activates). Emit the signal and step again so the await

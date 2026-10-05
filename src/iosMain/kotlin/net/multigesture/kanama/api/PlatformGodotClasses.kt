@@ -17,7 +17,6 @@ internal object PlatformGodotClasses : GodotClassTable() {
         FileAccessHandle::class,
         ImageTexture::class,
         InputEventKey::class,
-        InputEventMouseButton::class,
         InputEventMouseMotion::class,
         LightmapGI::class,
         MeshDataTool::class,
@@ -28,7 +27,6 @@ internal object PlatformGodotClasses : GodotClassTable() {
         SceneMultiplayer::class,
         ShaderMaterial::class,
         SurfaceTool::class,
-        Tween::class,
     )
 
     override val names: Array<String> = arrayOf(
@@ -40,7 +38,6 @@ internal object PlatformGodotClasses : GodotClassTable() {
         "FileAccess",
         "ImageTexture",
         "InputEventKey",
-        "InputEventMouseButton",
         "InputEventMouseMotion",
         "LightmapGI",
         "MeshDataTool",
@@ -51,7 +48,6 @@ internal object PlatformGodotClasses : GodotClassTable() {
         "SceneMultiplayer",
         "ShaderMaterial",
         "SurfaceTool",
-        "Tween",
     )
 
     override fun wrap(index: Int, handle: GodotHandle): GodotObject = when (index) {
@@ -63,18 +59,16 @@ internal object PlatformGodotClasses : GodotClassTable() {
         5 -> FileAccessHandle(handle)
         6 -> ImageTexture(handle)
         7 -> InputEventKey(handle)
-        8 -> InputEventMouseButton(handle)
-        9 -> InputEventMouseMotion(handle)
-        10 -> LightmapGI(handle)
-        11 -> MeshDataTool(handle)
-        12 -> NoiseTexture2D(handle)
-        13 -> OpenXRSpatialAnchorCapability(handle)
-        14 -> ParticleProcessMaterial(handle)
-        15 -> ProceduralSkyMaterial(handle)
-        16 -> SceneMultiplayer(handle)
-        17 -> ShaderMaterial(handle)
-        18 -> SurfaceTool(handle)
-        19 -> Tween(handle)
+        8 -> InputEventMouseMotion(handle)
+        9 -> LightmapGI(handle)
+        10 -> MeshDataTool(handle)
+        11 -> NoiseTexture2D(handle)
+        12 -> OpenXRSpatialAnchorCapability(handle)
+        13 -> ParticleProcessMaterial(handle)
+        14 -> ProceduralSkyMaterial(handle)
+        15 -> SceneMultiplayer(handle)
+        16 -> ShaderMaterial(handle)
+        17 -> SurfaceTool(handle)
         else -> throw IndexOutOfBoundsException("PlatformGodotClasses has no class at index $index")
     }
 }

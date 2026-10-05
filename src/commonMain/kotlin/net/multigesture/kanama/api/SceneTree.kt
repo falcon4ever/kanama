@@ -287,6 +287,28 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
     }
 
     /**
+     * Creates and returns a new `Tween` processed in this tree. The Tween will start automatically on
+     * the next process frame or physics frame (depending on its `Tween.TweenProcessMode`). Note: A
+     * `Tween` created using this method is not bound to any `Node`. It may keep working until there is
+     * nothing left to animate. If you want the `Tween` to be automatically killed when the `Node` is
+     * freed, use `Node.create_tween` or `Tween.bind_node`.
+     *
+     * Generated from Godot docs: SceneTree.create_tween
+     */
+    fun createTween(): Tween {
+        return requireGodotReturn(Tween.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, segment)), "SceneTree.create_tween")
+    }
+
+    /**
+     * Returns an `Array` of currently existing `Tween`s in the tree, including paused tweens.
+     *
+     * Generated from Godot docs: SceneTree.get_processed_tweens
+     */
+    fun getProcessedTweens(): List<Tween> {
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getProcessedTweensBind, segment, Tween::wrapBorrowed)
+    }
+
+    /**
      * Returns the number of nodes inside this tree.
      *
      * Generated from Godot docs: SceneTree.get_node_count
@@ -769,7 +791,6 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         // *Handle helpers, which have no instance twin, can stay @JvmStatic.
         private const val GET_MAIN_LOOP_HASH = 1016888095L
         private const val GET_TIME_SCALE_HASH = 191475506L
-        private const val CREATE_TWEEN_HASH = 3426978995L
 
         private val engineSingleton: RawSegment by lazy {
             ObjectCalls.getSingleton("Engine")
@@ -781,10 +802,6 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
         private val getTimeScaleBind by lazy {
             ObjectCalls.getMethodBind("Engine", "get_time_scale", GET_TIME_SCALE_HASH)
-        }
-
-        private val createTweenHandleBind by lazy {
-            ObjectCalls.getMethodBind("SceneTree", "create_tween", CREATE_TWEEN_HASH)
         }
 
         // Engine.get_time_scale through the singleton above: the desktop `Engine` wrapper has
@@ -1149,11 +1166,32 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
             ),
         )
 
+        // The two static Tween entry points of the retired desktop `object SceneTree`. Desktop-only
+        // extensions (`import net.multigesture.kanama.api.createTween`) until task 129 A generated
+        // Tween once; companion members on every platform now, with no import.
+        /**
+         * Creates and returns a new `Tween` processed in this tree. The Tween will start automatically on
+         * the next process frame or physics frame (depending on its `Tween.TweenProcessMode`). Note: A
+         * `Tween` created using this method is not bound to any `Node`. It may keep working until there is
+         * nothing left to animate. If you want the `Tween` to be automatically killed when the `Node` is
+         * freed, use `Node.create_tween` or `Tween.bind_node`.
+         *
+         * Generated from Godot docs: SceneTree.create_tween
+         */
+        fun createTween(): Tween = active().createTween()
+
+        /**
+         * Returns an `Array` of currently existing `Tween`s in the tree, including paused tweens.
+         *
+         * Generated from Godot docs: SceneTree.get_processed_tweens
+         */
+        fun getProcessedTweens(): List<Tween> = active().getProcessedTweens()
+
         // legacy handle-returning form (see createTimerHandle). SceneTree.create_tween, not
         // Node.create_tween: the tree is a MainLoop, not a Node.
         @JvmStatic
         fun createTweenHandle(): GodotHandle =
-            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(createTweenHandleBind, active().segment))
+            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, active().segment))
 
         suspend fun delaySeconds(
             timeSec: Double,
@@ -1385,6 +1423,16 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
         private const val CREATE_TIMER_HASH = 2709170273L
         private val createTimerBind by lazy {
             ObjectCalls.getMethodBind("SceneTree", "create_timer", CREATE_TIMER_HASH)
+        }
+
+        private const val CREATE_TWEEN_HASH = 3426978995L
+        private val createTweenBind by lazy {
+            ObjectCalls.getMethodBind("SceneTree", "create_tween", CREATE_TWEEN_HASH)
+        }
+
+        private const val GET_PROCESSED_TWEENS_HASH = 2915620761L
+        private val getProcessedTweensBind by lazy {
+            ObjectCalls.getMethodBind("SceneTree", "get_processed_tweens", GET_PROCESSED_TWEENS_HASH)
         }
 
         private const val GET_NODE_COUNT_HASH = 3905245786L

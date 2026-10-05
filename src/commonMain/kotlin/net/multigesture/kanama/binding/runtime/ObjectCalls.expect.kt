@@ -34,7 +34,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 138 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 116 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -603,6 +603,16 @@ expect object ObjectCalls {
     text: String,
   ): Long
 
+  fun ptrcallWithCallableVariantVariantDoubleArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    callableObject: RawSegment,
+    callableMethod: String,
+    from: Any?,
+    to: Any?,
+    duration: Double,
+  ): RawSegment
+
   fun ptrcallWithColorArg(methodBind: RawSegment, instance: RawSegment, color: Color)
 
   fun ptrcallWithDictionaryAndBoolArgRetString(
@@ -759,6 +769,12 @@ expect object ObjectCalls {
   ): Transform3D
 
   fun ptrcallWithDoubleArg(methodBind: RawSegment, instance: RawSegment, value: Double)
+
+  fun ptrcallWithDoubleArgRetBool(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    value: Double,
+  ): Boolean
 
   fun ptrcallWithDoubleArgRetByteArray(
     methodBind: RawSegment,
@@ -3365,6 +3381,15 @@ expect object ObjectCalls {
     path: NodePath,
     secondObject: RawSegment,
     intValue: Int,
+  ): RawSegment
+
+  fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    path: NodePath,
+    variantArg: Any?,
+    doubleArg: Double,
   ): RawSegment
 
   fun ptrcallWithObjectObjectIntBoolArgs(
@@ -9925,6 +9950,17 @@ expect object ObjectCalls {
     firstValue: Any?,
     secondValue: Any?,
   ): Map<String, Any?>
+
+  fun ptrcallWithTwoVariantTwoDoubleTwoLongArgsRetVariantScalar(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    initialValue: Any?,
+    deltaValue: Any?,
+    elapsedTime: Double,
+    duration: Double,
+    transition: Long,
+    ease: Long,
+  ): Any?
 
   fun ptrcallWithTwoVector2Args(
     methodBind: RawSegment,

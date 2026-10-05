@@ -39,7 +39,6 @@ import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.RefCounted
-import net.multigesture.kanama.api.createTween
 import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
 import net.multigesture.kanama.ios.KanamaIosRpcConfig
@@ -4054,40 +4053,6 @@ actual object ObjectCalls {
   ): NodePath =
     NodePath(callWithVariantArgs(methodBind, instance, listOf(objectArg, boolArg)) as? String ?: "")
 
-  // Tween.tween_property(object, property: NodePath, final_val: Variant, duration) for the
-  // hand-written iOS Tween (task 128 A review): the Variant final value goes through the general
-  // Variant encoder (packVariantDesc), so every Variant-expressible value -- Double, Long, Vector3,
-  // a typed GodotEnumValue -- reaches Godot as itself. The previous Vector2 / Color C-shim pair
-  // tweened every other value to Vector2(0, 0). Same name and parameters as the desktop helper.
-  fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    objectArg: MemorySegment,
-    path: String,
-    variantArg: Any?,
-    doubleArg: Double,
-  ): MemorySegment = memScoped {
-    val ret = alloc<LongVar>()
-    ret.value = 0
-    val c0 = alloc<LongVar>()
-    c0.value = objectArg.address()
-    val c2 = packVariantDesc(variantArg)
-    val c3 = alloc<DoubleVar>()
-    c3.value = doubleArg
-    val types = allocArray<IntVar>(4)
-    types[0] = PT_OBJECT
-    types[1] = PT_NODE_PATH
-    types[2] = PT_VARIANT
-    types[3] = PT_FLOAT64
-    val ptrs = allocArray<COpaquePointerVar>(4)
-    ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    ptrs[1] = path.cstr.ptr.reinterpret<CPointed>()
-    ptrs[2] = c2.reinterpret<CPointed>()
-    ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
-    MemorySegment.ofAddress(ret.value)
-  }
-
   // ===== BEGIN GENERATED MEMBERS (scripts/generate_api_wrapper.py — do not edit) =====
   /*
    * GENERATED iOS ObjectCalls helper MEMBERS (scripts/generate_api_wrapper.py --ios-*).
@@ -5395,6 +5360,38 @@ actual object ObjectCalls {
     ret.value
   }
 
+  actual fun ptrcallWithCallableVariantVariantDoubleArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    callableObject: MemorySegment,
+    callableMethod: String,
+    from: Any?,
+    to: Any?,
+    duration: Double,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<KanamaIosCallableArgDesc>()
+    c0.object_handle = callableObject.address()
+    c0.method = callableMethod.cstr.ptr
+    val c1 = packVariantDesc(from)
+    val c2 = packVariantDesc(to)
+    val c3 = alloc<DoubleVar>()
+    c3.value = duration
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_CALLABLE
+    types[1] = PT_VARIANT
+    types[2] = PT_VARIANT
+    types[3] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrs[2] = c2.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
+
   actual fun ptrcallWithDictionaryAndBoolArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -5843,6 +5840,22 @@ actual object ObjectCalls {
       ),
       Vector3.raw(ret[9], ret[10], ret[11]),
     )
+  }
+
+  actual fun ptrcallWithDoubleArgRetBool(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Double,
+  ): Boolean = memScoped {
+    val ret = alloc<ByteVar>()
+    val c0 = alloc<DoubleVar>()
+    c0.value = value
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
+    ret.value.toInt() != 0
   }
 
   actual fun ptrcallWithDoubleArgRetByteArray(
@@ -14302,6 +14315,35 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
+
+  actual fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    objectArg: MemorySegment,
+    path: NodePath,
+    variantArg: Any?,
+    doubleArg: Double,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<LongVar>()
+    c0.value = objectArg.address()
+    val c2 = packVariantDesc(variantArg)
+    val c3 = alloc<DoubleVar>()
+    c3.value = doubleArg
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_OBJECT
+    types[1] = PT_NODE_PATH
+    types[2] = PT_VARIANT
+    types[3] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
@@ -35609,6 +35651,43 @@ actual object ObjectCalls {
     ptrs[0] = c0.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
+  }
+
+  actual fun ptrcallWithTwoVariantTwoDoubleTwoLongArgsRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    initialValue: Any?,
+    deltaValue: Any?,
+    elapsedTime: Double,
+    duration: Double,
+    transition: Long,
+    ease: Long,
+  ): Any? = memScoped {
+    val c0 = packVariantDesc(initialValue)
+    val c1 = packVariantDesc(deltaValue)
+    val c2 = alloc<DoubleVar>()
+    c2.value = elapsedTime
+    val c3 = alloc<DoubleVar>()
+    c3.value = duration
+    val c4 = alloc<LongVar>()
+    c4.value = transition
+    val c5 = alloc<LongVar>()
+    c5.value = ease
+    val types = allocArray<IntVar>(6)
+    types[0] = PT_VARIANT
+    types[1] = PT_VARIANT
+    types[2] = PT_FLOAT64
+    types[3] = PT_FLOAT64
+    types[4] = PT_INT64
+    types[5] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(6)
+    ptrs[0] = c0.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrs[4] = c4.ptr.reinterpret<CPointed>()
+    ptrs[5] = c5.ptr.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 6)
   }
 
   actual fun ptrcallWithTwoVector2Args(
