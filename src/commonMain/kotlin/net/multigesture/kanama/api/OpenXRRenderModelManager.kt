@@ -38,6 +38,16 @@ class OpenXRRenderModelManager(handle: GodotHandle) : Node3D(handle) {
         ObjectCalls.ptrcallWithStringArg(setMakeLocalToPoseBind, segment, makeLocalToPose)
     }
 
+    /** Signal `render_model_added(render_model: OpenXRRenderModel)`; see [TypedSignal]. */
+    val renderModelAdded: Signal1<OpenXRRenderModel>
+        @JvmName("renderModelAddedTypedSignal")
+        get() = Signal1(this, "render_model_added", SignalArgType.objectOf("OpenXRRenderModel") { OpenXRRenderModel(it) })
+
+    /** Signal `render_model_removed(render_model: OpenXRRenderModel)`; see [TypedSignal]. */
+    val renderModelRemoved: Signal1<OpenXRRenderModel>
+        @JvmName("renderModelRemovedTypedSignal")
+        get() = Signal1(this, "render_model_removed", SignalArgType.objectOf("OpenXRRenderModel") { OpenXRRenderModel(it) })
+
     object Signals {
         const val renderModelAdded: String = "render_model_added"
         const val renderModelRemoved: String = "render_model_removed"

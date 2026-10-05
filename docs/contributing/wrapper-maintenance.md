@@ -227,6 +227,16 @@ arguments are overloads (`connect(target, method)` + `connect(target, method, fl
 `<Root>.kt` in a platform api directory, or a `class <Root>` declared in any platform api file);
 a non-`actual` platform copy of an `expect` class is a compile error.
 
+Typed engine signals (task 134 D4) are generated beside each class's `Signals` constants by
+`render_signal_accessors` in `scripts/generate_api_wrapper.py`: one property per signal over the
+hand-written `Signal0` … `Signal5` in `src/commonMain/.../api/TypedSignals.kt`, typed by
+`signal_arg_type`, named by `signal_accessor_names` (a `Signal` suffix where a member of the class,
+an ancestor or a descendant already has the name). Each platform decodes the arguments through a
+`SignalArgReader` (`JvmSignalArgReader`, `IosSignalArgReader`). `check_typed_signals` in
+`scripts/check_wrapper_generator.py` fails when an engine signal has no accessor or one with the
+wrong arity; `GodotObject`, `Tween` and `AudioStreamPlayer` carry theirs by hand. Web generates
+`Signal0`/`Signal1` for its policy signals in `scripts/generate_web_wrappers.py`.
+
 `check_single_tree` in `scripts/check_wrapper_generator.py` regenerates the whole tree
 in-process (a few seconds) and fails if any generated file — a shared class, a
 per-platform generated class, a companion, the `GENERATED MEMBERS` region of the iOS

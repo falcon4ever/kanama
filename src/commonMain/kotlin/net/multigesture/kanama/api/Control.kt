@@ -2402,6 +2402,56 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isLocalizingNumeralSystemBind, segment)
     }
 
+    /** Signal `resized()`; see [TypedSignal]. */
+    val resized: Signal0
+        @JvmName("resizedTypedSignal")
+        get() = Signal0(this, "resized")
+
+    /** Signal `gui_input(event: InputEvent)`; see [TypedSignal]. */
+    val guiInput: Signal1<InputEvent>
+        @JvmName("guiInputTypedSignal")
+        get() = Signal1(this, "gui_input", SignalArgType.objectOf("InputEvent") { InputEvent(it) })
+
+    /** Signal `mouse_entered()`; see [TypedSignal]. */
+    val mouseEntered: Signal0
+        @JvmName("mouseEnteredTypedSignal")
+        get() = Signal0(this, "mouse_entered")
+
+    /** Signal `mouse_exited()`; see [TypedSignal]. */
+    val mouseExited: Signal0
+        @JvmName("mouseExitedTypedSignal")
+        get() = Signal0(this, "mouse_exited")
+
+    /** Signal `focus_entered()`; see [TypedSignal]. */
+    val focusEntered: Signal0
+        @JvmName("focusEnteredTypedSignal")
+        get() = Signal0(this, "focus_entered")
+
+    /** Signal `focus_exited()`; see [TypedSignal]. */
+    val focusExited: Signal0
+        @JvmName("focusExitedTypedSignal")
+        get() = Signal0(this, "focus_exited")
+
+    /** Signal `size_flags_changed()`; see [TypedSignal]. */
+    val sizeFlagsChanged: Signal0
+        @JvmName("sizeFlagsChangedTypedSignal")
+        get() = Signal0(this, "size_flags_changed")
+
+    /** Signal `maximum_size_changed()`; see [TypedSignal]. */
+    val maximumSizeChanged: Signal0
+        @JvmName("maximumSizeChangedTypedSignal")
+        get() = Signal0(this, "maximum_size_changed")
+
+    /** Signal `minimum_size_changed()`; see [TypedSignal]. */
+    val minimumSizeChanged: Signal0
+        @JvmName("minimumSizeChangedTypedSignal")
+        get() = Signal0(this, "minimum_size_changed")
+
+    /** Signal `theme_changed()`; see [TypedSignal]. */
+    val themeChanged: Signal0
+        @JvmName("themeChangedTypedSignal")
+        get() = Signal0(this, "theme_changed")
+
     object Signals {
         const val resized: String = "resized"
         const val guiInput: String = "gui_input"

@@ -90,6 +90,10 @@ class AudioStreamPlayer(godotObject: GodotHandle) : Node(godotObject) {
     }
   }
 
+  /** Signal `finished`; see [TypedSignal]. */
+  val finished: Signal0
+    get() = Signal0(this, "finished")
+
   object Signals {
     const val finished: String = "finished"
   }

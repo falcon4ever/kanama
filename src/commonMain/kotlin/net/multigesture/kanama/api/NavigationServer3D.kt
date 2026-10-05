@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -1700,6 +1701,21 @@ object NavigationServer3D {
     fun getProcessInfo(processInfo: NavigationServer3D.ProcessInfo): Int {
         return ObjectCalls.ptrcallWithLongArgRetInt(getProcessInfoBind, singleton, processInfo.value)
     }
+
+    /** Signal `map_changed(map: RID)`; see [TypedSignal]. */
+    val mapChanged: Signal1<RID>
+        @JvmName("mapChangedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "map_changed", SignalArgType.valueOf<RID>("RID", RID::class))
+
+    /** Signal `navigation_debug_changed()`; see [TypedSignal]. */
+    val navigationDebugChanged: Signal0
+        @JvmName("navigationDebugChangedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "navigation_debug_changed")
+
+    /** Signal `avoidance_debug_changed()`; see [TypedSignal]. */
+    val avoidanceDebugChanged: Signal0
+        @JvmName("avoidanceDebugChangedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "avoidance_debug_changed")
 
     object Signals {
         const val mapChanged: String = "map_changed"

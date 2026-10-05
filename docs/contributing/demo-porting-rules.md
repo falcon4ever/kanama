@@ -300,24 +300,21 @@ Signals are instance-scoped. A receiver knows which object emitted the signal
 through the scene connection or explicit `connect` call, not only by the
 signal name.
 
-Use generated signal and method names when connecting or emitting Kanama script
-signals without the generated helper:
+Use the typed signal handles (task 134): the engine signal properties and the
+KSP-generated handles of Kanama script signals, connected with `connect { }`
+inside a script so the lambda is bound to it:
 
 ```kotlin
-events.signal(EventsNames.Signals.flagReached).connect(self, argumentCount = 0) {
-    onFlagReached()
-}
-
-events.signal(EventsNames.Signals.killPlaneTouched).emit(body)
+area.bodyEntered.connect { body -> ... }        // body: Node3D
+timer.timeout.connect { onTimeout() }
+events.flagReached.connect { onFlagReached() }   // events: the Events script object
+events.killPlaneTouched.emit(body)
+launch { animationPlayer.animationFinished.await() }
 ```
 
-Use built-in signal constants for engine signals:
-
-```kotlin
-area.signal(Area3D.Signals.bodyEntered).connectObject(self) { body ->
-    ...
-}
-```
+`EventsNames.Signals` / `Area3D.Signals` constants with `signal(name)` remain
+for the cases the typed handles do not cover (a GDScript-declared signal, or a
+script signal argument without a typed decode).
 
 Avoid raw string signal and method names in demo ports when generated constants
 exist. Raw strings are acceptable only for dynamic GDScript/engine calls that

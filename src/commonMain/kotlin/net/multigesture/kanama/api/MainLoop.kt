@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -11,6 +12,11 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 open class MainLoop(handle: GodotHandle) : GodotObject(handle) {
     // No conservative instance methods emitted yet.
+
+    /** Signal `on_request_permissions_result(permission: String, granted: bool)`; see [TypedSignal]. */
+    val onRequestPermissionsResult: Signal2<String, Boolean>
+        @JvmName("onRequestPermissionsResultTypedSignal")
+        get() = Signal2(this, "on_request_permissions_result", SignalArgType.STRING, SignalArgType.BOOLEAN)
 
     object Signals {
         const val onRequestPermissionsResult: String = "on_request_permissions_result"

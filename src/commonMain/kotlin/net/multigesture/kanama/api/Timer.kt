@@ -220,6 +220,11 @@ class Timer(handle: GodotHandle) : Node(handle) {
         return Timer.TimerProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getTimerProcessCallbackBind, segment))
     }
 
+    /** Signal `timeout()`; see [TypedSignal]. */
+    val timeout: Signal0
+        @JvmName("timeoutTypedSignal")
+        get() = Signal0(this, "timeout")
+
     object Signals {
         const val timeout: String = "timeout"
     }

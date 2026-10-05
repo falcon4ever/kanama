@@ -533,6 +533,41 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
         return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationLibraryBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
+    /** Signal `animation_list_changed()`; see [TypedSignal]. */
+    val animationListChanged: Signal0
+        @JvmName("animationListChangedTypedSignal")
+        get() = Signal0(this, "animation_list_changed")
+
+    /** Signal `animation_libraries_updated()`; see [TypedSignal]. */
+    val animationLibrariesUpdated: Signal0
+        @JvmName("animationLibrariesUpdatedTypedSignal")
+        get() = Signal0(this, "animation_libraries_updated")
+
+    /** Signal `animation_finished(anim_name: StringName)`; see [TypedSignal]. */
+    val animationFinished: Signal1<String>
+        @JvmName("animationFinishedTypedSignal")
+        get() = Signal1(this, "animation_finished", SignalArgType.STRING)
+
+    /** Signal `animation_started(anim_name: StringName)`; see [TypedSignal]. */
+    val animationStarted: Signal1<String>
+        @JvmName("animationStartedTypedSignal")
+        get() = Signal1(this, "animation_started", SignalArgType.STRING)
+
+    /** Signal `caches_cleared()`; see [TypedSignal]. */
+    val cachesCleared: Signal0
+        @JvmName("cachesClearedTypedSignal")
+        get() = Signal0(this, "caches_cleared")
+
+    /** Signal `mixer_applied()`; see [TypedSignal]. */
+    val mixerApplied: Signal0
+        @JvmName("mixerAppliedTypedSignal")
+        get() = Signal0(this, "mixer_applied")
+
+    /** Signal `mixer_updated()`; see [TypedSignal]. */
+    val mixerUpdated: Signal0
+        @JvmName("mixerUpdatedTypedSignal")
+        get() = Signal0(this, "mixer_updated")
+
     object Signals {
         const val animationListChanged: String = "animation_list_changed"
         const val animationLibrariesUpdated: String = "animation_libraries_updated"

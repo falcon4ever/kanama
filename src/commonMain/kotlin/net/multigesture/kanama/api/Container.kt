@@ -60,6 +60,16 @@ open class Container(handle: GodotHandle) : Control(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isAccessibilityRegionBind, segment)
     }
 
+    /** Signal `pre_sort_children()`; see [TypedSignal]. */
+    val preSortChildren: Signal0
+        @JvmName("preSortChildrenTypedSignal")
+        get() = Signal0(this, "pre_sort_children")
+
+    /** Signal `sort_children()`; see [TypedSignal]. */
+    val sortChildren: Signal0
+        @JvmName("sortChildrenTypedSignal")
+        get() = Signal0(this, "sort_children")
+
     object Signals {
         const val preSortChildren: String = "pre_sort_children"
         const val sortChildren: String = "sort_children"

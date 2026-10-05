@@ -202,6 +202,26 @@ open class AnimationNode(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getParameterBind, segment, name)
     }
 
+    /** Signal `tree_changed()`; see [TypedSignal]. */
+    val treeChanged: Signal0
+        @JvmName("treeChangedTypedSignal")
+        get() = Signal0(this, "tree_changed")
+
+    /** Signal `node_updated(object_id: int)`; see [TypedSignal]. */
+    val nodeUpdated: Signal1<Long>
+        @JvmName("nodeUpdatedTypedSignal")
+        get() = Signal1(this, "node_updated", SignalArgType.LONG)
+
+    /** Signal `animation_node_renamed(object_id: int, old_name: String, new_name: String)`; see [TypedSignal]. */
+    val animationNodeRenamed: Signal3<Long, String, String>
+        @JvmName("animationNodeRenamedTypedSignal")
+        get() = Signal3(this, "animation_node_renamed", SignalArgType.LONG, SignalArgType.STRING, SignalArgType.STRING)
+
+    /** Signal `animation_node_removed(object_id: int, node_name: String)`; see [TypedSignal]. */
+    val animationNodeRemoved: Signal2<Long, String>
+        @JvmName("animationNodeRemovedTypedSignal")
+        get() = Signal2(this, "animation_node_removed", SignalArgType.LONG, SignalArgType.STRING)
+
     object Signals {
         const val treeChanged: String = "tree_changed"
         const val nodeUpdated: String = "node_updated"

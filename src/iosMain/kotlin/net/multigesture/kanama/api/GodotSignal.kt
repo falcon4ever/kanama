@@ -46,7 +46,20 @@ internal actual constructor(
         flags: GodotObject.ConnectFlags,
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
-        val callbackId = IosCallableRegistry.register(callback)
+        require(argumentCount >= 0) { "argumentCount must not be negative" }
+        return connectArgs(target, argumentCount, flags, null) { args ->
+            callback(if (argumentCount == 0) emptyList() else List(argumentCount) { args.value(it) })
+        }
+    }
+
+    internal actual fun connectArgs(
+        target: GodotObject,
+        argumentCount: Int,
+        flags: GodotObject.ConnectFlags,
+        onRelease: (() -> Unit)?,
+        dispatch: (SignalArgReader) -> Unit,
+    ): SignalConnection {
+        val callbackId = IosCallableRegistry.register(argumentCount, onRelease, dispatch)
         // Pass the receiver (target) so the Callable is bound to its ObjectID and Godot auto-disconnects
         // it when the receiver is freed. Previously target was ignored, leaving an object-less Callable
         // that survived the receiver's free and fired into freed memory on later emissions.
@@ -99,7 +112,7 @@ actual class SignalConnection internal constructor(
     // receiver so Godot also erases the receiver-side connection entry (task 108).
     private val target: GodotObject? = null,
 ) : AutoCloseable {
-    private var closed = false
+    @kotlin.concurrent.Volatile private var closed = false
 
     // Disconnect the lambda Callable. The C path recreates the identity-equal custom Callable
     // (call_func + callback_id, bound to the same receiver) and Object.disconnects it; the

@@ -495,6 +495,16 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
         ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, segment, disabled)
     }
 
+    /** Signal `item_selected(index: int)`; see [TypedSignal]. */
+    val itemSelected: Signal1<Long>
+        @JvmName("itemSelectedTypedSignal")
+        get() = Signal1(this, "item_selected", SignalArgType.LONG)
+
+    /** Signal `item_focused(index: int)`; see [TypedSignal]. */
+    val itemFocused: Signal1<Long>
+        @JvmName("itemFocusedTypedSignal")
+        get() = Signal1(this, "item_focused", SignalArgType.LONG)
+
     object Signals {
         const val itemSelected: String = "item_selected"
         const val itemFocused: String = "item_focused"

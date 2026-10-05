@@ -160,6 +160,31 @@ open class MultiplayerAPI(handle: GodotHandle) : RefCounted(handle) {
         return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPeersBind, segment)
     }
 
+    /** Signal `peer_connected(id: int)`; see [TypedSignal]. */
+    val peerConnected: Signal1<Long>
+        @JvmName("peerConnectedTypedSignal")
+        get() = Signal1(this, "peer_connected", SignalArgType.LONG)
+
+    /** Signal `peer_disconnected(id: int)`; see [TypedSignal]. */
+    val peerDisconnected: Signal1<Long>
+        @JvmName("peerDisconnectedTypedSignal")
+        get() = Signal1(this, "peer_disconnected", SignalArgType.LONG)
+
+    /** Signal `connected_to_server()`; see [TypedSignal]. */
+    val connectedToServer: Signal0
+        @JvmName("connectedToServerTypedSignal")
+        get() = Signal0(this, "connected_to_server")
+
+    /** Signal `connection_failed()`; see [TypedSignal]. */
+    val connectionFailed: Signal0
+        @JvmName("connectionFailedTypedSignal")
+        get() = Signal0(this, "connection_failed")
+
+    /** Signal `server_disconnected()`; see [TypedSignal]. */
+    val serverDisconnected: Signal0
+        @JvmName("serverDisconnectedTypedSignal")
+        get() = Signal0(this, "server_disconnected")
+
     object Signals {
         const val peerConnected: String = "peer_connected"
         const val peerDisconnected: String = "peer_disconnected"

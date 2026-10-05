@@ -47,7 +47,7 @@ object Signals {
     GodotFFI.lookup("variant_destroy", FunctionDescriptor.ofVoid(ADDRESS))
   }
 
-  private val emitSignalBind: MemorySegment by lazy {
+  internal val emitSignalBind: MemorySegment by lazy {
     val objectClass = GodotStrings.makeStringName("Object")
     val methodName = GodotStrings.makeStringName("emit_signal")
     val bind =

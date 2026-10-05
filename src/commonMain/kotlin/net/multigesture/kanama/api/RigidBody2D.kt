@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -781,6 +782,31 @@ open class RigidBody2D(handle: GodotHandle) : PhysicsBody2D(handle) {
     fun getCollidingBodies(): List<Node2D> {
         return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollidingBodiesBind, segment, Node2D::wrap)
     }
+
+    /** Signal `body_shape_entered(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
+    val bodyShapeEntered: Signal4<RID, Node, Long, Long>
+        @JvmName("bodyShapeEnteredTypedSignal")
+        get() = Signal4(this, "body_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `body_shape_exited(body_rid: RID, body: Node, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
+    val bodyShapeExited: Signal4<RID, Node, Long, Long>
+        @JvmName("bodyShapeExitedTypedSignal")
+        get() = Signal4(this, "body_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `body_entered(body: Node)`; see [TypedSignal]. */
+    val bodyEntered: Signal1<Node>
+        @JvmName("bodyEnteredTypedSignal")
+        get() = Signal1(this, "body_entered", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `body_exited(body: Node)`; see [TypedSignal]. */
+    val bodyExited: Signal1<Node>
+        @JvmName("bodyExitedTypedSignal")
+        get() = Signal1(this, "body_exited", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `sleeping_state_changed()`; see [TypedSignal]. */
+    val sleepingStateChanged: Signal0
+        @JvmName("sleepingStateChangedTypedSignal")
+        get() = Signal0(this, "sleeping_state_changed")
 
     object Signals {
         const val bodyShapeEntered: String = "body_shape_entered"

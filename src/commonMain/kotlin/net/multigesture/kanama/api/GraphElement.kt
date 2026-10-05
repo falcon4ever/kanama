@@ -160,6 +160,46 @@ open class GraphElement(handle: GodotHandle) : Container(handle) {
         return ObjectCalls.ptrcallNoArgsRetVector2(getPositionOffsetBind, segment)
     }
 
+    /** Signal `node_selected()`; see [TypedSignal]. */
+    val nodeSelected: Signal0
+        @JvmName("nodeSelectedTypedSignal")
+        get() = Signal0(this, "node_selected")
+
+    /** Signal `node_deselected()`; see [TypedSignal]. */
+    val nodeDeselected: Signal0
+        @JvmName("nodeDeselectedTypedSignal")
+        get() = Signal0(this, "node_deselected")
+
+    /** Signal `raise_request()`; see [TypedSignal]. */
+    val raiseRequest: Signal0
+        @JvmName("raiseRequestTypedSignal")
+        get() = Signal0(this, "raise_request")
+
+    /** Signal `delete_request()`; see [TypedSignal]. */
+    val deleteRequest: Signal0
+        @JvmName("deleteRequestTypedSignal")
+        get() = Signal0(this, "delete_request")
+
+    /** Signal `resize_request(new_size: Vector2)`; see [TypedSignal]. */
+    val resizeRequest: Signal1<Vector2>
+        @JvmName("resizeRequestTypedSignal")
+        get() = Signal1(this, "resize_request", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `resize_end(new_size: Vector2)`; see [TypedSignal]. */
+    val resizeEnd: Signal1<Vector2>
+        @JvmName("resizeEndTypedSignal")
+        get() = Signal1(this, "resize_end", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `dragged(from: Vector2, to: Vector2)`; see [TypedSignal]. */
+    val dragged: Signal2<Vector2, Vector2>
+        @JvmName("draggedTypedSignal")
+        get() = Signal2(this, "dragged", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class), SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `position_offset_changed()`; see [TypedSignal]. */
+    val positionOffsetChanged: Signal0
+        @JvmName("positionOffsetChangedTypedSignal")
+        get() = Signal0(this, "position_offset_changed")
+
     object Signals {
         const val nodeSelected: String = "node_selected"
         const val nodeDeselected: String = "node_deselected"

@@ -244,6 +244,16 @@ class TouchScreenButton(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, segment)
     }
 
+    /** Signal `pressed()`; see [TypedSignal]. */
+    val pressed: Signal0
+        @JvmName("pressedTypedSignal")
+        get() = Signal0(this, "pressed")
+
+    /** Signal `released()`; see [TypedSignal]. */
+    val released: Signal0
+        @JvmName("releasedTypedSignal")
+        get() = Signal0(this, "released")
+
     object Signals {
         const val pressed: String = "pressed"
         const val released: String = "released"

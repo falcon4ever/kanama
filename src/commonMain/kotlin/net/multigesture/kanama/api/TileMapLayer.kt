@@ -697,6 +697,11 @@ class TileMapLayer(handle: GodotHandle) : Node2D(handle) {
         return TileMapLayer.DebugVisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getNavigationVisibilityModeBind, segment))
     }
 
+    /** Signal `changed()`; see [TypedSignal]. */
+    val changed: Signal0
+        @JvmName("changedTypedSignal")
+        get() = Signal0(this, "changed")
+
     object Signals {
         const val changed: String = "changed"
     }

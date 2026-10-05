@@ -132,6 +132,11 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
         ObjectCalls.ptrcallWithStringFourDoubleArgs(triggerHapticPulseBind, segment, actionName, frequency, amplitude, durationSec, delaySec)
     }
 
+    /** Signal `tracking_changed(tracking: bool)`; see [TypedSignal]. */
+    val trackingChanged: Signal1<Boolean>
+        @JvmName("trackingChangedTypedSignal")
+        get() = Signal1(this, "tracking_changed", SignalArgType.BOOLEAN)
+
     object Signals {
         const val trackingChanged: String = "tracking_changed"
     }

@@ -214,6 +214,21 @@ open class AcceptDialog(handle: GodotHandle) : Window(handle) {
         return ObjectCalls.ptrcallNoArgsRetString(getOkButtonTextBind, segment)
     }
 
+    /** Signal `confirmed()`; see [TypedSignal]. */
+    val confirmed: Signal0
+        @JvmName("confirmedTypedSignal")
+        get() = Signal0(this, "confirmed")
+
+    /** Signal `canceled()`; see [TypedSignal]. */
+    val canceled: Signal0
+        @JvmName("canceledTypedSignal")
+        get() = Signal0(this, "canceled")
+
+    /** Signal `custom_action(action: StringName)`; see [TypedSignal]. */
+    val customAction: Signal1<String>
+        @JvmName("customActionTypedSignal")
+        get() = Signal1(this, "custom_action", SignalArgType.STRING)
+
     object Signals {
         const val confirmed: String = "confirmed"
         const val canceled: String = "canceled"

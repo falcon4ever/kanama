@@ -383,6 +383,21 @@ open class SplitContainer(handle: GodotHandle) : Container(handle) {
         return ObjectCalls.ptrcallNoArgsRetInt(getSplitOffsetBind, segment)
     }
 
+    /** Signal `dragged(offset: int)`; see [TypedSignal]. */
+    val dragged: Signal1<Long>
+        @JvmName("draggedTypedSignal")
+        get() = Signal1(this, "dragged", SignalArgType.LONG)
+
+    /** Signal `drag_started()`; see [TypedSignal]. */
+    val dragStarted: Signal0
+        @JvmName("dragStartedTypedSignal")
+        get() = Signal0(this, "drag_started")
+
+    /** Signal `drag_ended()`; see [TypedSignal]. */
+    val dragEnded: Signal0
+        @JvmName("dragEndedTypedSignal")
+        get() = Signal0(this, "drag_ended")
+
     object Signals {
         const val dragged: String = "dragged"
         const val dragStarted: String = "drag_started"

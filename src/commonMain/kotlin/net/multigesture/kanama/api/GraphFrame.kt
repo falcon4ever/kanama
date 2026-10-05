@@ -172,6 +172,11 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
         return ObjectCalls.ptrcallNoArgsRetColor(getTintColorBind, segment)
     }
 
+    /** Signal `autoshrink_changed()`; see [TypedSignal]. */
+    val autoshrinkChanged: Signal0
+        @JvmName("autoshrinkChangedTypedSignal")
+        get() = Signal0(this, "autoshrink_changed")
+
     object Signals {
         const val autoshrinkChanged: String = "autoshrink_changed"
     }

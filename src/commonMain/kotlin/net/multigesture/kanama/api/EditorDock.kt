@@ -351,6 +351,16 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         return EditorDock.DockLayout(ObjectCalls.ptrcallNoArgsRetLong(getAvailableLayoutsBind, segment))
     }
 
+    /** Signal `opened()`; see [TypedSignal]. */
+    val opened: Signal0
+        @JvmName("openedTypedSignal")
+        get() = Signal0(this, "opened")
+
+    /** Signal `closed()`; see [TypedSignal]. */
+    val closed: Signal0
+        @JvmName("closedTypedSignal")
+        get() = Signal0(this, "closed")
+
     object Signals {
         const val opened: String = "opened"
         const val closed: String = "closed"

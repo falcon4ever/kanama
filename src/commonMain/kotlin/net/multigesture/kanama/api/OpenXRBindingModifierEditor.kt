@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -16,6 +17,11 @@ class OpenXRBindingModifierEditor(handle: GodotHandle) : PanelContainer(handle) 
     fun setup(actionMap: OpenXRActionMap?, bindingModifier: OpenXRBindingModifier?) {
         ObjectCalls.ptrcallWithTwoObjectArgs(setupBind, segment, actionMap?.requireOpenHandle() ?: NULL_SEGMENT, bindingModifier?.requireOpenHandle() ?: NULL_SEGMENT)
     }
+
+    /** Signal `binding_modifier_removed(binding_modifier_editor: Object)`; see [TypedSignal]. */
+    val bindingModifierRemoved: Signal1<GodotObject>
+        @JvmName("bindingModifierRemovedTypedSignal")
+        get() = Signal1(this, "binding_modifier_removed", SignalArgType.objectOf("Object") { GodotObject(it) })
 
     object Signals {
         const val bindingModifierRemoved: String = "binding_modifier_removed"

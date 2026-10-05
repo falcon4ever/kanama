@@ -69,6 +69,16 @@ open class OpenXRSpatialEntityTracker(handle: GodotHandle) : XRPositionalTracker
         ObjectCalls.ptrcallWithObjectArgs(removeNextBind, segment, listOf(next?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /** Signal `next_changed()`; see [TypedSignal]. */
+    val nextChanged: Signal0
+        @JvmName("nextChangedTypedSignal")
+        get() = Signal0(this, "next_changed")
+
+    /** Signal `spatial_tracking_state_changed(spatial_tracking_state: int)`; see [TypedSignal]. */
+    val spatialTrackingStateChanged: Signal1<Long>
+        @JvmName("spatialTrackingStateChangedTypedSignal")
+        get() = Signal1(this, "spatial_tracking_state_changed", SignalArgType.LONG)
+
     object Signals {
         const val nextChanged: String = "next_changed"
         const val spatialTrackingStateChanged: String = "spatial_tracking_state_changed"

@@ -289,6 +289,41 @@ object XRServer {
         ObjectCalls.ptrcallWithObjectArgs(setPrimaryInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /** Signal `reference_frame_changed()`; see [TypedSignal]. */
+    val referenceFrameChanged: Signal0
+        @JvmName("referenceFrameChangedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "reference_frame_changed")
+
+    /** Signal `interface_added(interface_name: StringName)`; see [TypedSignal]. */
+    val interfaceAdded: Signal1<String>
+        @JvmName("interfaceAddedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "interface_added", SignalArgType.STRING)
+
+    /** Signal `interface_removed(interface_name: StringName)`; see [TypedSignal]. */
+    val interfaceRemoved: Signal1<String>
+        @JvmName("interfaceRemovedTypedSignal")
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "interface_removed", SignalArgType.STRING)
+
+    /** Signal `tracker_added(tracker_name: StringName, type: int)`; see [TypedSignal]. */
+    val trackerAdded: Signal2<String, Long>
+        @JvmName("trackerAddedTypedSignal")
+        get() = Signal2(GodotObject(GodotHandle(singleton)), "tracker_added", SignalArgType.STRING, SignalArgType.LONG)
+
+    /** Signal `tracker_updated(tracker_name: StringName, type: int)`; see [TypedSignal]. */
+    val trackerUpdated: Signal2<String, Long>
+        @JvmName("trackerUpdatedTypedSignal")
+        get() = Signal2(GodotObject(GodotHandle(singleton)), "tracker_updated", SignalArgType.STRING, SignalArgType.LONG)
+
+    /** Signal `tracker_removed(tracker_name: StringName, type: int)`; see [TypedSignal]. */
+    val trackerRemoved: Signal2<String, Long>
+        @JvmName("trackerRemovedTypedSignal")
+        get() = Signal2(GodotObject(GodotHandle(singleton)), "tracker_removed", SignalArgType.STRING, SignalArgType.LONG)
+
+    /** Signal `world_origin_changed()`; see [TypedSignal]. */
+    val worldOriginChanged: Signal0
+        @JvmName("worldOriginChangedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "world_origin_changed")
+
     object Signals {
         const val referenceFrameChanged: String = "reference_frame_changed"
         const val interfaceAdded: String = "interface_added"

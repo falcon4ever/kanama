@@ -180,6 +180,11 @@ object ThemeDB {
         return StyleBox.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getFallbackStyleboxBind, singleton))
     }
 
+    /** Signal `fallback_changed()`; see [TypedSignal]. */
+    val fallbackChanged: Signal0
+        @JvmName("fallbackChangedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "fallback_changed")
+
     object Signals {
         const val fallbackChanged: String = "fallback_changed"
     }

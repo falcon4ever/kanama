@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -660,6 +661,46 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
     fun getReverbUniformity(): Double {
         return ObjectCalls.ptrcallNoArgsRetDouble(getReverbUniformityBind, segment)
     }
+
+    /** Signal `body_shape_entered(body_rid: RID, body: Node3D, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
+    val bodyShapeEntered: Signal4<RID, Node3D?, Long, Long>
+        @JvmName("bodyShapeEnteredTypedSignal")
+        get() = Signal4(this, "body_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Node3D") { Node3D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `body_shape_exited(body_rid: RID, body: Node3D, body_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
+    val bodyShapeExited: Signal4<RID, Node3D?, Long, Long>
+        @JvmName("bodyShapeExitedTypedSignal")
+        get() = Signal4(this, "body_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Node3D") { Node3D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `body_entered(body: Node3D)`; see [TypedSignal]. */
+    val bodyEntered: Signal1<Node3D>
+        @JvmName("bodyEnteredTypedSignal")
+        get() = Signal1(this, "body_entered", SignalArgType.objectOf("Node3D") { Node3D(it) })
+
+    /** Signal `body_exited(body: Node3D)`; see [TypedSignal]. */
+    val bodyExited: Signal1<Node3D>
+        @JvmName("bodyExitedTypedSignal")
+        get() = Signal1(this, "body_exited", SignalArgType.objectOf("Node3D") { Node3D(it) })
+
+    /** Signal `area_shape_entered(area_rid: RID, area: Area3D, area_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
+    val areaShapeEntered: Signal4<RID, Area3D?, Long, Long>
+        @JvmName("areaShapeEnteredTypedSignal")
+        get() = Signal4(this, "area_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Area3D") { Area3D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `area_shape_exited(area_rid: RID, area: Area3D, area_shape_index: int, local_shape_index: int)`; see [TypedSignal]. */
+    val areaShapeExited: Signal4<RID, Area3D?, Long, Long>
+        @JvmName("areaShapeExitedTypedSignal")
+        get() = Signal4(this, "area_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Area3D") { Area3D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `area_entered(area: Area3D)`; see [TypedSignal]. */
+    val areaEntered: Signal1<Area3D>
+        @JvmName("areaEnteredTypedSignal")
+        get() = Signal1(this, "area_entered", SignalArgType.objectOf("Area3D") { Area3D(it) })
+
+    /** Signal `area_exited(area: Area3D)`; see [TypedSignal]. */
+    val areaExited: Signal1<Area3D>
+        @JvmName("areaExitedTypedSignal")
+        get() = Signal1(this, "area_exited", SignalArgType.objectOf("Area3D") { Area3D(it) })
 
     object Signals {
         const val bodyShapeEntered: String = "body_shape_entered"

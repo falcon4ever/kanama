@@ -1095,6 +1095,11 @@ object Input {
         return ObjectCalls.ptrcallNoArgsRetBool(isEmulatingTouchFromMouseBind, singleton)
     }
 
+    /** Signal `joy_connection_changed(device: int, connected: bool)`; see [TypedSignal]. */
+    val joyConnectionChanged: Signal2<Long, Boolean>
+        @JvmName("joyConnectionChangedTypedSignal")
+        get() = Signal2(GodotObject(GodotHandle(singleton)), "joy_connection_changed", SignalArgType.LONG, SignalArgType.BOOLEAN)
+
     object Signals {
         const val joyConnectionChanged: String = "joy_connection_changed"
     }

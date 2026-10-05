@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 
@@ -343,6 +344,11 @@ object ProjectSettings {
 
     private fun dictionaryOrDefault(value: Any?, defaultValue: Map<String, Any?>): Map<String, Any?> =
         (value as? Map<*, *>)?.entries?.associate { (key, mapValue) -> key.toString() to mapValue } ?: defaultValue
+
+    /** Signal `settings_changed()`; see [TypedSignal]. */
+    val settingsChanged: Signal0
+        @JvmName("settingsChangedTypedSignal")
+        get() = Signal0(GodotObject(GodotHandle(singleton)), "settings_changed")
 
     object Signals {
         const val settingsChanged: String = "settings_changed"

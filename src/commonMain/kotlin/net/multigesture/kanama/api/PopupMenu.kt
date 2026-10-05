@@ -1157,6 +1157,26 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(getShrinkWidthBind, segment)
     }
 
+    /** Signal `id_pressed(id: int)`; see [TypedSignal]. */
+    val idPressed: Signal1<Long>
+        @JvmName("idPressedTypedSignal")
+        get() = Signal1(this, "id_pressed", SignalArgType.LONG)
+
+    /** Signal `id_focused(id: int)`; see [TypedSignal]. */
+    val idFocused: Signal1<Long>
+        @JvmName("idFocusedTypedSignal")
+        get() = Signal1(this, "id_focused", SignalArgType.LONG)
+
+    /** Signal `index_pressed(index: int)`; see [TypedSignal]. */
+    val indexPressed: Signal1<Long>
+        @JvmName("indexPressedTypedSignal")
+        get() = Signal1(this, "index_pressed", SignalArgType.LONG)
+
+    /** Signal `menu_changed()`; see [TypedSignal]. */
+    val menuChanged: Signal0
+        @JvmName("menuChangedTypedSignal")
+        get() = Signal0(this, "menu_changed")
+
     object Signals {
         const val idPressed: String = "id_pressed"
         const val idFocused: String = "id_focused"

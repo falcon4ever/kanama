@@ -1170,6 +1170,36 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getDebugPathCustomPointSizeBind, segment)
     }
 
+    /** Signal `path_changed()`; see [TypedSignal]. */
+    val pathChanged: Signal0
+        @JvmName("pathChangedTypedSignal")
+        get() = Signal0(this, "path_changed")
+
+    /** Signal `target_reached()`; see [TypedSignal]. */
+    val targetReached: Signal0
+        @JvmName("targetReachedTypedSignal")
+        get() = Signal0(this, "target_reached")
+
+    /** Signal `waypoint_reached(details: Dictionary)`; see [TypedSignal]. On iOS a Dictionary argument is not delivered yet: a connection reports a script error. */
+    val waypointReached: Signal1<Map<Any?, Any?>>
+        @JvmName("waypointReachedTypedSignal")
+        get() = Signal1(this, "waypoint_reached", SignalArgType.valueOf<Map<Any?, Any?>>("Dictionary", Map::class))
+
+    /** Signal `link_reached(details: Dictionary)`; see [TypedSignal]. On iOS a Dictionary argument is not delivered yet: a connection reports a script error. */
+    val linkReached: Signal1<Map<Any?, Any?>>
+        @JvmName("linkReachedTypedSignal")
+        get() = Signal1(this, "link_reached", SignalArgType.valueOf<Map<Any?, Any?>>("Dictionary", Map::class))
+
+    /** Signal `navigation_finished()`; see [TypedSignal]. */
+    val navigationFinished: Signal0
+        @JvmName("navigationFinishedTypedSignal")
+        get() = Signal0(this, "navigation_finished")
+
+    /** Signal `velocity_computed(safe_velocity: Vector3)`; see [TypedSignal]. */
+    val velocityComputed: Signal1<Vector3>
+        @JvmName("velocityComputedTypedSignal")
+        get() = Signal1(this, "velocity_computed", SignalArgType.valueOf<Vector3>("Vector3", Vector3::class))
+
     object Signals {
         const val pathChanged: String = "path_changed"
         const val targetReached: String = "target_reached"

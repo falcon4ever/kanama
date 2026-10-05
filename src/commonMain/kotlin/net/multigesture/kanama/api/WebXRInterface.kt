@@ -136,6 +136,71 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
         return ObjectCalls.ptrcallNoArgsRetArray(getAvailableDisplayRefreshRatesBind, segment)
     }
 
+    /** Signal `session_supported(session_mode: String, supported: bool)`; see [TypedSignal]. */
+    val sessionSupported: Signal2<String, Boolean>
+        @JvmName("sessionSupportedTypedSignal")
+        get() = Signal2(this, "session_supported", SignalArgType.STRING, SignalArgType.BOOLEAN)
+
+    /** Signal `session_started()`; see [TypedSignal]. */
+    val sessionStarted: Signal0
+        @JvmName("sessionStartedTypedSignal")
+        get() = Signal0(this, "session_started")
+
+    /** Signal `session_ended()`; see [TypedSignal]. */
+    val sessionEnded: Signal0
+        @JvmName("sessionEndedTypedSignal")
+        get() = Signal0(this, "session_ended")
+
+    /** Signal `session_failed(message: String)`; see [TypedSignal]. */
+    val sessionFailed: Signal1<String>
+        @JvmName("sessionFailedTypedSignal")
+        get() = Signal1(this, "session_failed", SignalArgType.STRING)
+
+    /** Signal `selectstart(input_source_id: int)`; see [TypedSignal]. */
+    val selectstart: Signal1<Long>
+        @JvmName("selectstartTypedSignal")
+        get() = Signal1(this, "selectstart", SignalArgType.LONG)
+
+    /** Signal `select(input_source_id: int)`; see [TypedSignal]. */
+    val select: Signal1<Long>
+        @JvmName("selectTypedSignal")
+        get() = Signal1(this, "select", SignalArgType.LONG)
+
+    /** Signal `selectend(input_source_id: int)`; see [TypedSignal]. */
+    val selectend: Signal1<Long>
+        @JvmName("selectendTypedSignal")
+        get() = Signal1(this, "selectend", SignalArgType.LONG)
+
+    /** Signal `squeezestart(input_source_id: int)`; see [TypedSignal]. */
+    val squeezestart: Signal1<Long>
+        @JvmName("squeezestartTypedSignal")
+        get() = Signal1(this, "squeezestart", SignalArgType.LONG)
+
+    /** Signal `squeeze(input_source_id: int)`; see [TypedSignal]. */
+    val squeeze: Signal1<Long>
+        @JvmName("squeezeTypedSignal")
+        get() = Signal1(this, "squeeze", SignalArgType.LONG)
+
+    /** Signal `squeezeend(input_source_id: int)`; see [TypedSignal]. */
+    val squeezeend: Signal1<Long>
+        @JvmName("squeezeendTypedSignal")
+        get() = Signal1(this, "squeezeend", SignalArgType.LONG)
+
+    /** Signal `visibility_state_changed()`; see [TypedSignal]. */
+    val visibilityStateChanged: Signal0
+        @JvmName("visibilityStateChangedTypedSignal")
+        get() = Signal0(this, "visibility_state_changed")
+
+    /** Signal `reference_space_reset()`; see [TypedSignal]. */
+    val referenceSpaceReset: Signal0
+        @JvmName("referenceSpaceResetTypedSignal")
+        get() = Signal0(this, "reference_space_reset")
+
+    /** Signal `display_refresh_rate_changed()`; see [TypedSignal]. */
+    val displayRefreshRateChanged: Signal0
+        @JvmName("displayRefreshRateChangedTypedSignal")
+        get() = Signal0(this, "display_refresh_rate_changed")
+
     object Signals {
         const val sessionSupported: String = "session_supported"
         const val sessionStarted: String = "session_started"

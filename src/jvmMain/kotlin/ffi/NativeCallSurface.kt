@@ -84,6 +84,9 @@ object NativeCallSurface {
       // object_get_instance_from_id -- the freed-object check before a wrapper call (task 131);
       // the pointer is returned as a long so the check allocates nothing (task 131 item 16)
       "instance_from_id_probe" to FunctionDescriptor.of(JAVA_LONG, JAVA_LONG),
+      // variant_get_type on a Variant address held as a long: a typed signal reads its emitted
+      // arguments without a MemorySegment per argument (task 134 D4)
+      "variant_type_by_address" to FunctionDescriptor.of(JAVA_INT, JAVA_LONG),
       // object_get_instance_binding -- the liveness flag a wrapper captures at construction
       // (task 132 D7)
       "instance_binding_lookup" to FunctionDescriptor.of(JAVA_LONG, ADDRESS, ADDRESS, ADDRESS),
@@ -94,12 +97,20 @@ object NativeCallSurface {
       "one_pointer_void" to FunctionDescriptor.ofVoid(ADDRESS),
       // variant_new_copy, string[_name]_new_with_utf8_chars, classdb_unregister_extension_class,
       // every variant from/to-type constructor and every builtin ptr constructor
+      // variant_new_nil / variant_destroy on an address held as a long: a typed signal emission
+      // builds its Variants in a per-thread frame (task 134 C review S5)
+      "one_address_void" to FunctionDescriptor.ofVoid(JAVA_LONG),
       "two_pointer_void" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS),
+      // variant-to-type constructors on addresses held as longs (the typed signal reader, task 134)
+      "two_address_void" to FunctionDescriptor.ofVoid(JAVA_LONG, JAVA_LONG),
       // object_set_instance, classdb_register_extension_class_method, builtin keyed setters,
       // and the engine-supplied add-callback in get_property_state_func
       "three_pointer_void" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS),
       // object_method_bind_ptrcall, classdb_register_extension_class6
       "ptrcall" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, ADDRESS),
+      // object_method_bind_call (Object.emit_signal) with every pointer as a long (task 134 C S5)
+      "method_bind_call_by_address" to
+        FunctionDescriptor.ofVoid(JAVA_LONG, JAVA_LONG, JAVA_LONG, JAVA_LONG, JAVA_LONG, JAVA_LONG),
       // classdb_register_extension_class_property
       "register_property" to FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, ADDRESS, ADDRESS, ADDRESS),
       // classdb_register_extension_class_signal

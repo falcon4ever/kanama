@@ -349,6 +349,11 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         return XRInterface.EnvironmentBlendMode(ObjectCalls.ptrcallNoArgsRetLong(getEnvironmentBlendModeBind, segment))
     }
 
+    /** Signal `play_area_changed(mode: int)`; see [TypedSignal]. */
+    val playAreaChanged: Signal1<Long>
+        @JvmName("playAreaChangedTypedSignal")
+        get() = Signal1(this, "play_area_changed", SignalArgType.LONG)
+
     object Signals {
         const val playAreaChanged: String = "play_area_changed"
     }

@@ -2727,6 +2727,41 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionColumnBind, segment, caretIndex)
     }
 
+    /** Signal `text_set()`; see [TypedSignal]. */
+    val textSet: Signal0
+        @JvmName("textSetTypedSignal")
+        get() = Signal0(this, "text_set")
+
+    /** Signal `text_changed()`; see [TypedSignal]. */
+    val textChanged: Signal0
+        @JvmName("textChangedTypedSignal")
+        get() = Signal0(this, "text_changed")
+
+    /** Signal `lines_edited_from(from_line: int, to_line: int)`; see [TypedSignal]. */
+    val linesEditedFrom: Signal2<Long, Long>
+        @JvmName("linesEditedFromTypedSignal")
+        get() = Signal2(this, "lines_edited_from", SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `caret_changed()`; see [TypedSignal]. */
+    val caretChanged: Signal0
+        @JvmName("caretChangedTypedSignal")
+        get() = Signal0(this, "caret_changed")
+
+    /** Signal `gutter_clicked(line: int, gutter: int)`; see [TypedSignal]. */
+    val gutterClicked: Signal2<Long, Long>
+        @JvmName("gutterClickedTypedSignal")
+        get() = Signal2(this, "gutter_clicked", SignalArgType.LONG, SignalArgType.LONG)
+
+    /** Signal `gutter_added()`; see [TypedSignal]. */
+    val gutterAdded: Signal0
+        @JvmName("gutterAddedTypedSignal")
+        get() = Signal0(this, "gutter_added")
+
+    /** Signal `gutter_removed()`; see [TypedSignal]. */
+    val gutterRemoved: Signal0
+        @JvmName("gutterRemovedTypedSignal")
+        get() = Signal0(this, "gutter_removed")
+
     object Signals {
         const val textSet: String = "text_set"
         const val textChanged: String = "text_changed"

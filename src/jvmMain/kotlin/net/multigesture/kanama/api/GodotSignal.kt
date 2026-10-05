@@ -47,9 +47,19 @@ internal actual constructor(
         flags: GodotObject.ConnectFlags,
         callback: (List<Any?>) -> Unit,
     ): SignalConnection {
-        require(argumentCount in 0..3) { "Signal lambda callbacks currently support 0..3 emitted arguments" }
+        require(argumentCount >= 0) { "argumentCount must not be negative" }
+        return connectArgs(target, argumentCount, flags, null, SignalCallbackRegistry.listDispatch(argumentCount, callback))
+    }
+
+    internal actual fun connectArgs(
+        target: GodotObject,
+        argumentCount: Int,
+        flags: GodotObject.ConnectFlags,
+        onRelease: (() -> Unit)?,
+        dispatch: (SignalArgReader) -> Unit,
+    ): SignalConnection {
         val oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags
-        val id = SignalCallbackRegistry.register(argumentCount, callback)
+        val id = SignalCallbackRegistry.register(argumentCount, onRelease, dispatch)
         // A custom Callable bound to the receiver: Godot calls its free_func -- releasing the
         // closure -- whenever it drops the connection (receiver or emitter freed, one-shot fired,
         // disconnected, failed connect). Task 131; the iOS shim works the same way.
@@ -67,7 +77,7 @@ internal actual constructor(
             receiverInstanceId = target.instanceId,
             callbackId = id,
             error = error,
-            disconnectOnClose = !oneShot,
+            oneShot = oneShot,
         )
     }
 
@@ -112,18 +122,24 @@ actual class SignalConnection internal constructor(
     private val receiverInstanceId: Long,
     private val callbackId: Long,
     actual val error: GodotError,
-    private val disconnectOnClose: Boolean,
+    private val oneShot: Boolean,
 ) : AutoCloseable {
-    private var closed = false
+    @Volatile private var closed = false
 
+    /**
+     * Disconnects, whatever the flags (task 134 C review S3: a closed `ONE_SHOT` connection that had
+     * not fired, or a cancelled `await`, used to stay connected). Nothing to do when Godot already
+     * dropped the Callable (its `free_func` released the entry: fired one-shot, receiver or emitter
+     * freed) or the emitter is gone. Godot is asked `is_connected` first only for a one-shot
+     * connection, which Godot disconnects before calling while the entry lives on until the
+     * emission ends.
+     */
     actual override fun close() {
         if (closed) return
         closed = true
+        val live = SignalCallbackRegistry.entry(callbackId) != null
         SignalCallbackRegistry.unregister(callbackId)
-        // A freed emitter already dropped the connection (and must not be called); a one-shot one
-        // may already have fired, and Godot drops it then.
-        if (error == GodotError.OK && disconnectOnClose && GD.isInstanceIdValid(owner.instanceId)) {
-            SignalCallables.disconnect(owner.segment, signal, receiverInstanceId, callbackId)
-        }
+        if (error != GodotError.OK || !live || !owner.isAlive(owner.segment)) return
+        SignalCallables.disconnect(owner.segment, signal, receiverInstanceId, callbackId, checkConnected = oneShot)
     }
 }

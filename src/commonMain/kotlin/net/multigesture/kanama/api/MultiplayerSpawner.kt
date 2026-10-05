@@ -70,6 +70,16 @@ class MultiplayerSpawner(handle: GodotHandle) : Node(handle) {
         ObjectCalls.ptrcallWithCallableArg(setSpawnFunctionBind, segment, spawnFunction.target.segment, spawnFunction.method)
     }
 
+    /** Signal `despawned(node: Node)`; see [TypedSignal]. */
+    val despawned: Signal1<Node>
+        @JvmName("despawnedTypedSignal")
+        get() = Signal1(this, "despawned", SignalArgType.objectOf("Node") { Node(it) })
+
+    /** Signal `spawned(node: Node)`; see [TypedSignal]. */
+    val spawned: Signal1<Node>
+        @JvmName("spawnedTypedSignal")
+        get() = Signal1(this, "spawned", SignalArgType.objectOf("Node") { Node(it) })
+
     object Signals {
         const val despawned: String = "despawned"
         const val spawned: String = "spawned"

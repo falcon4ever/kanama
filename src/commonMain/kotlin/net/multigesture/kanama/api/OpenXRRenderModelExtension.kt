@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -61,6 +62,21 @@ class OpenXRRenderModelExtension(handle: GodotHandle) : OpenXRExtensionWrapper(h
     fun renderModelGetAnimatableNodeTransform(renderModel: RID, index: Long): Transform3D {
         return ObjectCalls.ptrcallWithRIDAndUInt32ArgRetTransform3D(renderModelGetAnimatableNodeTransformBind, segment, renderModel, index)
     }
+
+    /** Signal `render_model_added(render_model: RID)`; see [TypedSignal]. */
+    val renderModelAdded: Signal1<RID>
+        @JvmName("renderModelAddedTypedSignal")
+        get() = Signal1(this, "render_model_added", SignalArgType.valueOf<RID>("RID", RID::class))
+
+    /** Signal `render_model_removed(render_model: RID)`; see [TypedSignal]. */
+    val renderModelRemoved: Signal1<RID>
+        @JvmName("renderModelRemovedTypedSignal")
+        get() = Signal1(this, "render_model_removed", SignalArgType.valueOf<RID>("RID", RID::class))
+
+    /** Signal `render_model_top_level_path_changed(render_model: RID)`; see [TypedSignal]. */
+    val renderModelTopLevelPathChanged: Signal1<RID>
+        @JvmName("renderModelTopLevelPathChangedTypedSignal")
+        get() = Signal1(this, "render_model_top_level_path_changed", SignalArgType.valueOf<RID>("RID", RID::class))
 
     object Signals {
         const val renderModelAdded: String = "render_model_added"

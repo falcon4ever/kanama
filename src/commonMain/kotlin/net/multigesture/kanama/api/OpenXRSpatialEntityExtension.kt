@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -116,6 +117,11 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
     fun freeSpatialEntity(entity: RID) {
         ObjectCalls.ptrcallWithRIDArg(freeSpatialEntityBind, segment, entity)
     }
+
+    /** Signal `spatial_discovery_recommended(spatial_context: RID)`; see [TypedSignal]. */
+    val spatialDiscoveryRecommended: Signal1<RID>
+        @JvmName("spatialDiscoveryRecommendedTypedSignal")
+        get() = Signal1(this, "spatial_discovery_recommended", SignalArgType.valueOf<RID>("RID", RID::class))
 
     object Signals {
         const val spatialDiscoveryRecommended: String = "spatial_discovery_recommended"

@@ -588,6 +588,11 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
         return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getCustomDataByLayerIdBind, segment, layerId)
     }
 
+    /** Signal `changed()`; see [TypedSignal]. */
+    val changed: Signal0
+        @JvmName("changedTypedSignal")
+        get() = Signal0(this, "changed")
+
     object Signals {
         const val changed: String = "changed"
     }

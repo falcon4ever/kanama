@@ -33,6 +33,14 @@ class Viewport(godotObject: GodotHandle) : Node(godotObject) {
     GodotBackendCalls.invokeNoArgsVoid(D.VIEWPORT_SET_INPUT_AS_HANDLED, requireOpenHandle())
   }
 
+  /** Signal `size_changed`; see [TypedSignal]. */
+  val sizeChanged: Signal0
+    get() = Signal0(this, "size_changed")
+
+  object Signals {
+    const val sizeChanged: String = "size_changed"
+  }
+
   value class PositionalShadowAtlasQuadrantSubdiv(override val value: Long) : GodotEnumValue {
     companion object {
       val DISABLED: PositionalShadowAtlasQuadrantSubdiv get() = PositionalShadowAtlasQuadrantSubdiv(0L)

@@ -63,7 +63,9 @@ FINAL_GODOT_OBJECT_METHOD_RE = re.compile(
     r")\s*\(",
     re.MULTILINE,
 )
-GODOT_OBJECT_COLLISION_EXEMPT_FILES = {"GodotObject.kt", "Resource.kt"}
+# TypedSignals.kt (task 134 D4) is not a GodotObject subclass: its `hasConnections()` is Godot's
+# `Signal.has_connections()` on a signal handle, so it cannot shadow the GodotObject member.
+GODOT_OBJECT_COLLISION_EXEMPT_FILES = {"GodotObject.kt", "Resource.kt", "TypedSignals.kt"}
 
 MULTIPLIERS = {
     "Two": 2,

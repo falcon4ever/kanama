@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -38,6 +39,56 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
     fun removeResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(removeResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
+
+    /** Signal `inherit(file: String)`; see [TypedSignal]. */
+    val inherit: Signal1<String>
+        @JvmName("inheritTypedSignal")
+        get() = Signal1(this, "inherit", SignalArgType.STRING)
+
+    /** Signal `instantiate(files: PackedStringArray)`; see [TypedSignal]. On iOS a PackedStringArray argument is not delivered yet: a connection reports a script error. */
+    val instantiate: Signal1<List<String>>
+        @JvmName("instantiateTypedSignal")
+        get() = Signal1(this, "instantiate", SignalArgType.valueOf<List<String>>("PackedStringArray", List::class))
+
+    /** Signal `resource_removed(resource: Resource)`; see [TypedSignal]. */
+    val resourceRemoved: Signal1<Resource?>
+        @JvmName("resourceRemovedTypedSignal")
+        get() = Signal1(this, "resource_removed", SignalArgType.nullableObjectOf("Resource") { Resource(it) })
+
+    /** Signal `file_removed(file: String)`; see [TypedSignal]. */
+    val fileRemoved: Signal1<String>
+        @JvmName("fileRemovedTypedSignal")
+        get() = Signal1(this, "file_removed", SignalArgType.STRING)
+
+    /** Signal `folder_removed(folder: String)`; see [TypedSignal]. */
+    val folderRemoved: Signal1<String>
+        @JvmName("folderRemovedTypedSignal")
+        get() = Signal1(this, "folder_removed", SignalArgType.STRING)
+
+    /** Signal `files_moved(old_file: String, new_file: String)`; see [TypedSignal]. */
+    val filesMoved: Signal2<String, String>
+        @JvmName("filesMovedTypedSignal")
+        get() = Signal2(this, "files_moved", SignalArgType.STRING, SignalArgType.STRING)
+
+    /** Signal `folder_moved(old_folder: String, new_folder: String)`; see [TypedSignal]. */
+    val folderMoved: Signal2<String, String>
+        @JvmName("folderMovedTypedSignal")
+        get() = Signal2(this, "folder_moved", SignalArgType.STRING, SignalArgType.STRING)
+
+    /** Signal `folder_color_changed()`; see [TypedSignal]. */
+    val folderColorChanged: Signal0
+        @JvmName("folderColorChangedTypedSignal")
+        get() = Signal0(this, "folder_color_changed")
+
+    /** Signal `selection_changed()`; see [TypedSignal]. */
+    val selectionChanged: Signal0
+        @JvmName("selectionChangedTypedSignal")
+        get() = Signal0(this, "selection_changed")
+
+    /** Signal `display_mode_changed()`; see [TypedSignal]. */
+    val displayModeChanged: Signal0
+        @JvmName("displayModeChangedTypedSignal")
+        get() = Signal0(this, "display_mode_changed")
 
     object Signals {
         const val inherit: String = "inherit"

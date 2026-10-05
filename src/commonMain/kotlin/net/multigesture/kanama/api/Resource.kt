@@ -333,6 +333,16 @@ open class Resource(handle: GodotHandle) : RefCounted(handle) {
         return GodotError(ObjectCalls.ptrcallWithObjectArgRetLong(copyFromResourceBind, segment, resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
+    /** Signal `changed()`; see [TypedSignal]. */
+    val changed: Signal0
+        @JvmName("changedTypedSignal")
+        get() = Signal0(this, "changed")
+
+    /** Signal `setup_local_to_scene_requested()`; see [TypedSignal]. */
+    val setupLocalToSceneRequested: Signal0
+        @JvmName("setupLocalToSceneRequestedTypedSignal")
+        get() = Signal0(this, "setup_local_to_scene_requested")
+
     object Signals {
         const val changed: String = "changed"
         const val setupLocalToSceneRequested: String = "setup_local_to_scene_requested"

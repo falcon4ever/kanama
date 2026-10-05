@@ -126,6 +126,8 @@ class KanamaScriptTemplateTest {
         "OwnedScriptResource",
         "SignalConnection",
         "GodotSignal",
+        "TypedSignal",
+        "SignalArgType",
       )
     val internalCtor = Regex("""class (\w+)(<[^>]*>)? (@PublishedApi )?internal constructor""")
     val found =

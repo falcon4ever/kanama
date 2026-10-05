@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -11,6 +12,11 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 open class Tweener(handle: GodotHandle) : RefCounted(handle) {
     // No conservative instance methods emitted yet.
+
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
 
     object Signals {
         const val finished: String = "finished"

@@ -249,6 +249,11 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
         ObjectCalls.ptrcallWithObjectArgs(removeTitleBarControlBind, segment, listOf(control.segment))
     }
 
+    /** Signal `folding_changed(is_folded: bool)`; see [TypedSignal]. */
+    val foldingChanged: Signal1<Boolean>
+        @JvmName("foldingChangedTypedSignal")
+        get() = Signal1(this, "folding_changed", SignalArgType.BOOLEAN)
+
     object Signals {
         const val foldingChanged: String = "folding_changed"
     }

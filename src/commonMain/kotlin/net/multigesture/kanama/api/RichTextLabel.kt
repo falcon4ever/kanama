@@ -1600,6 +1600,26 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         ObjectCalls.ptrcallWithIntArg(menuOptionBind, segment, option)
     }
 
+    /** Signal `meta_clicked(meta: Variant)`; see [TypedSignal]. */
+    val metaClicked: Signal1<Any?>
+        @JvmName("metaClickedTypedSignal")
+        get() = Signal1(this, "meta_clicked", SignalArgType.VARIANT)
+
+    /** Signal `meta_hover_started(meta: Variant)`; see [TypedSignal]. */
+    val metaHoverStarted: Signal1<Any?>
+        @JvmName("metaHoverStartedTypedSignal")
+        get() = Signal1(this, "meta_hover_started", SignalArgType.VARIANT)
+
+    /** Signal `meta_hover_ended(meta: Variant)`; see [TypedSignal]. */
+    val metaHoverEnded: Signal1<Any?>
+        @JvmName("metaHoverEndedTypedSignal")
+        get() = Signal1(this, "meta_hover_ended", SignalArgType.VARIANT)
+
+    /** Signal `finished()`; see [TypedSignal]. */
+    val finished: Signal0
+        @JvmName("finishedTypedSignal")
+        get() = Signal0(this, "finished")
+
     object Signals {
         const val metaClicked: String = "meta_clicked"
         const val metaHoverStarted: String = "meta_hover_started"

@@ -244,6 +244,31 @@ class AnimatedSprite3D(handle: GodotHandle) : SpriteBase3D(handle) {
         return ObjectCalls.ptrcallNoArgsRetDouble(getPlayingSpeedBind, segment)
     }
 
+    /** Signal `sprite_frames_changed()`; see [TypedSignal]. */
+    val spriteFramesChanged: Signal0
+        @JvmName("spriteFramesChangedTypedSignal")
+        get() = Signal0(this, "sprite_frames_changed")
+
+    /** Signal `animation_changed()`; see [TypedSignal]. */
+    val animationChanged: Signal0
+        @JvmName("animationChangedTypedSignal")
+        get() = Signal0(this, "animation_changed")
+
+    /** Signal `frame_changed()`; see [TypedSignal]. */
+    val frameChanged: Signal0
+        @JvmName("frameChangedTypedSignal")
+        get() = Signal0(this, "frame_changed")
+
+    /** Signal `animation_looped()`; see [TypedSignal]. */
+    val animationLooped: Signal0
+        @JvmName("animationLoopedTypedSignal")
+        get() = Signal0(this, "animation_looped")
+
+    /** Signal `animation_finished()`; see [TypedSignal]. */
+    val animationFinished: Signal0
+        @JvmName("animationFinishedTypedSignal")
+        get() = Signal0(this, "animation_finished")
+
     object Signals {
         const val spriteFramesChanged: String = "sprite_frames_changed"
         const val animationChanged: String = "animation_changed"

@@ -115,6 +115,60 @@ abstract class KanamaScript<Self : Any>(
     MainThread.awaitNextFrame()
   }
 
+  // ── Signals ─────────────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Connects [callback] to this signal, bound to this script's object: GDScript's
+   * `timer.timeout.connect(func(): …)` is `timer.timeout.connect { … }`. Godot drops the connection
+   * (and Kanama releases the lambda) when this script's object or the emitter is freed; close the
+   * returned [SignalConnection] to disconnect earlier. Task 134.
+   */
+  fun Signal0.connect(callback: () -> Unit): SignalConnection = connect(GodotObject(godotObject), callback)
+
+  /** [Signal0.connect] bound to this script's object, with [flags] (`ConnectFlags.ONE_SHOT`, `DEFERRED`). */
+  fun Signal0.connect(flags: GodotObject.ConnectFlags, callback: () -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), flags, callback)
+
+  /** Connects [callback] bound to this script's object (see `Signal0.connect`). */
+  fun <A> Signal1<A>.connect(callback: (A) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), callback)
+
+  /** Connects [callback] bound to this script's object, with [flags]. */
+  fun <A> Signal1<A>.connect(flags: GodotObject.ConnectFlags, callback: (A) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), flags, callback)
+
+  /** Connects [callback] bound to this script's object (see `Signal0.connect`). */
+  fun <A, B> Signal2<A, B>.connect(callback: (A, B) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), callback)
+
+  /** Connects [callback] bound to this script's object, with [flags]. */
+  fun <A, B> Signal2<A, B>.connect(flags: GodotObject.ConnectFlags, callback: (A, B) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), flags, callback)
+
+  /** Connects [callback] bound to this script's object (see `Signal0.connect`). */
+  fun <A, B, C> Signal3<A, B, C>.connect(callback: (A, B, C) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), callback)
+
+  /** Connects [callback] bound to this script's object, with [flags]. */
+  fun <A, B, C> Signal3<A, B, C>.connect(flags: GodotObject.ConnectFlags, callback: (A, B, C) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), flags, callback)
+
+  /** Connects [callback] bound to this script's object (see `Signal0.connect`). */
+  fun <A, B, C, D> Signal4<A, B, C, D>.connect(callback: (A, B, C, D) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), callback)
+
+  /** Connects [callback] bound to this script's object, with [flags]. */
+  fun <A, B, C, D> Signal4<A, B, C, D>.connect(flags: GodotObject.ConnectFlags, callback: (A, B, C, D) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), flags, callback)
+
+  /** Connects [callback] bound to this script's object (see `Signal0.connect`). */
+  fun <A, B, C, D, E> Signal5<A, B, C, D, E>.connect(callback: (A, B, C, D, E) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), callback)
+
+  /** Connects [callback] bound to this script's object, with [flags]. */
+  fun <A, B, C, D, E> Signal5<A, B, C, D, E>.connect(flags: GodotObject.ConnectFlags, callback: (A, B, C, D, E) -> Unit): SignalConnection =
+    connect(GodotObject(godotObject), flags, callback)
+
   /**
    * Cancels every coroutine this script has running; the scope stays usable, so a later [launch]
    * starts fresh (for example after the node re-enters the tree).

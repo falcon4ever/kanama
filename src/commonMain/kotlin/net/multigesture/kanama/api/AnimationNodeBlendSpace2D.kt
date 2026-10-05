@@ -447,6 +447,11 @@ class AnimationNodeBlendSpace2D(handle: GodotHandle) : AnimationRootNode(handle)
         return ObjectCalls.ptrcallNoArgsRetDouble(getCyclicLengthBind, segment)
     }
 
+    /** Signal `triangles_updated()`; see [TypedSignal]. */
+    val trianglesUpdated: Signal0
+        @JvmName("trianglesUpdatedTypedSignal")
+        get() = Signal0(this, "triangles_updated")
+
     object Signals {
         const val trianglesUpdated: String = "triangles_updated"
     }

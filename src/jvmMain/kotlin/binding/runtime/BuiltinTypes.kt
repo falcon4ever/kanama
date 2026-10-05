@@ -2114,6 +2114,19 @@ object BuiltinTypes {
         }
       }
 
+      // A StringName decodes as its text, as GDScript compares it with a String (it was nil
+      // before task 134 D4, which broke `animation_finished(anim_name)` and every StringName
+      // property or call result read through this decode).
+      VariantType.STRING_NAME -> {
+        val scratch = arena.allocate(8L, 8L)
+        VariantConverters.variantToType(VariantType.STRING_NAME).invoke(scratch, variant)
+        try {
+          GodotStrings.readStringName(scratch)
+        } finally {
+          destroyTyped(VariantType.STRING_NAME, scratch)
+        }
+      }
+
       VariantType.NODE_PATH -> {
         val scratch = arena.allocate(8L, 8L)
         VariantConverters.variantToType(VariantType.NODE_PATH).invoke(scratch, variant)

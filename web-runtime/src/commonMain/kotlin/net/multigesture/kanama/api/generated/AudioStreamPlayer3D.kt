@@ -60,6 +60,10 @@ class AudioStreamPlayer3D(godotObject: GodotHandle) : Node3D(godotObject) {
     get() = getVolumeDb()
     set(newValue) = setVolumeDb(newValue)
 
+  /** Signal `finished`; see [TypedSignal]. */
+  val finished: Signal0
+    get() = Signal0(this, "finished")
+
   object Signals {
     const val finished: String = "finished"
   }

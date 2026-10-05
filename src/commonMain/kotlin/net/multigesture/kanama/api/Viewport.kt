@@ -1878,6 +1878,16 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     fun getCamera2D(): Camera2D? = getCamera2d()
 
+    /** Signal `size_changed()`; see [TypedSignal]. */
+    val sizeChanged: Signal0
+        @JvmName("sizeChangedTypedSignal")
+        get() = Signal0(this, "size_changed")
+
+    /** Signal `gui_focus_changed(node: Control)`; see [TypedSignal]. */
+    val guiFocusChanged: Signal1<Control>
+        @JvmName("guiFocusChangedTypedSignal")
+        get() = Signal1(this, "gui_focus_changed", SignalArgType.objectOf("Control") { Control(it) })
+
     object Signals {
         const val sizeChanged: String = "size_changed"
         const val guiFocusChanged: String = "gui_focus_changed"

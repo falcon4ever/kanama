@@ -299,6 +299,31 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
         return VirtualJoystick.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment))
     }
 
+    /** Signal `pressed()`; see [TypedSignal]. */
+    val pressed: Signal0
+        @JvmName("pressedTypedSignal")
+        get() = Signal0(this, "pressed")
+
+    /** Signal `tapped()`; see [TypedSignal]. */
+    val tapped: Signal0
+        @JvmName("tappedTypedSignal")
+        get() = Signal0(this, "tapped")
+
+    /** Signal `released(input_vector: Vector2)`; see [TypedSignal]. */
+    val released: Signal1<Vector2>
+        @JvmName("releasedTypedSignal")
+        get() = Signal1(this, "released", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `flicked(input_vector: Vector2)`; see [TypedSignal]. */
+    val flicked: Signal1<Vector2>
+        @JvmName("flickedTypedSignal")
+        get() = Signal1(this, "flicked", SignalArgType.valueOf<Vector2>("Vector2", Vector2::class))
+
+    /** Signal `flick_canceled()`; see [TypedSignal]. */
+    val flickCanceled: Signal0
+        @JvmName("flickCanceledTypedSignal")
+        get() = Signal0(this, "flick_canceled")
+
     object Signals {
         const val pressed: String = "pressed"
         const val tapped: String = "tapped"

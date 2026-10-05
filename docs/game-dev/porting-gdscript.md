@@ -43,7 +43,11 @@ The everyday script constructs, inside a `KanamaScript<T>` subclass (see
 | `get_tree()` / `get_viewport()` / `get_parent()` | `self.tree` / `self.viewport` / `self.parentNode` |
 | `await get_tree().create_timer(1.0).timeout` | `launch { wait(1.0); ... }` |
 | `await get_tree().process_frame` | `launch { nextFrame(); ... }` |
-| `await $Timer.timeout` | `launch { timer.signal(Timer.Signals.timeout).await(self); ... }` |
+| `await $Timer.timeout` | `launch { timer.timeout.await(); ... }` |
+| `var body = await area.body_entered` | `launch { val body = area.bodyEntered.await(); ... }` |
+| `area.body_entered.connect(func(body): ...)` | `area.bodyEntered.connect { body -> ... }` (`body: Node3D`, typed from Godot's API) |
+| `timer.timeout.connect(_on_timeout, CONNECT_ONE_SHOT)` | `timer.timeout.connect(GodotObject.ConnectFlags.ONE_SHOT) { onTimeout() }` |
+| `button.pressed.emit()` | `button.pressed.emit()` |
 | `func _ready():` | `@OnReady fun ready()` |
 | `func _input(event):` | `@OnInput fun input(event: InputEvent)` |
 | `func show_message(text):` | `fun showMessage(text: String)` (every public function is registered) |
@@ -168,7 +172,7 @@ aliases; `scripts/migrate_script_annotations.py` rewrites a source tree):
 | `@export var x` | `@Export var x` |
 | `@export_category` / `_group` / `_subgroup` | `@ExportCategory` / `@ExportGroup` / `@ExportSubgroup` |
 | `@export_tool_button("Label")` | `@ExportToolButton("Label")` |
-| `signal hit(damage)` | `@Signal fun hit(damage: Long) = Unit` |
+| `signal hit(damage)` | `@Signal fun hit(damage: Long) = Unit`; typed handle `player.hit` (`hit.emit(5)`, `player.hit.connect { damage -> }`) |
 | `@rpc(...)` | `@Rpc(...)` on a public function |
 | `@tool` | `@Tool` |
 | `class_name Player` | `@GlobalClass` |

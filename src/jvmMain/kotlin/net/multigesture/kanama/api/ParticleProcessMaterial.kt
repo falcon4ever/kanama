@@ -2097,6 +2097,11 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getRotationVelocity3dCurveBind, segment))
     }
 
+    /** Signal `emission_shape_changed()`; see [TypedSignal]. */
+    val emissionShapeChanged: Signal0
+        @JvmName("emissionShapeChangedTypedSignal")
+        get() = Signal0(this, "emission_shape_changed")
+
     object Signals {
         const val emissionShapeChanged: String = "emission_shape_changed"
     }

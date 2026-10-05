@@ -177,6 +177,10 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
         )
     }
 
+  /** Signal `finished`; see [TypedSignal]. */
+  val finished: Signal0
+    get() = Signal0(this, "finished")
+
   object Signals {
     const val finished: String = "finished"
   }

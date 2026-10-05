@@ -75,6 +75,16 @@ open class VisibleOnScreenNotifier2D(handle: GodotHandle) : Node2D(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isOnScreenBind, segment)
     }
 
+    /** Signal `screen_entered()`; see [TypedSignal]. */
+    val screenEntered: Signal0
+        @JvmName("screenEnteredTypedSignal")
+        get() = Signal0(this, "screen_entered")
+
+    /** Signal `screen_exited()`; see [TypedSignal]. */
+    val screenExited: Signal0
+        @JvmName("screenExitedTypedSignal")
+        get() = Signal0(this, "screen_exited")
+
     object Signals {
         const val screenEntered: String = "screen_entered"
         const val screenExited: String = "screen_exited"

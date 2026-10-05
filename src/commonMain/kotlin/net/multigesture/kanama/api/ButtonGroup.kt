@@ -58,6 +58,11 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
         return ObjectCalls.ptrcallNoArgsRetBool(isAllowUnpressBind, segment)
     }
 
+    /** Signal `pressed(button: BaseButton)`; see [TypedSignal]. */
+    val pressed: Signal1<BaseButton>
+        @JvmName("pressedTypedSignal")
+        get() = Signal1(this, "pressed", SignalArgType.objectOf("BaseButton") { BaseButton(it) })
+
     object Signals {
         const val pressed: String = "pressed"
     }

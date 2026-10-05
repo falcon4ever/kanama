@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -76,6 +77,11 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
         checkOpen()
         return ObjectCalls.ptrcallNoArgsRetBool(isMetaStreamBind, segment)
     }
+
+    /** Signal `parameter_list_changed()`; see [TypedSignal]. */
+    val parameterListChanged: Signal0
+        @JvmName("parameterListChangedTypedSignal")
+        get() = Signal0(this, "parameter_list_changed")
 
     object Signals {
         const val parameterListChanged: String = "parameter_list_changed"
