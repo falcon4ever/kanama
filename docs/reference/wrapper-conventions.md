@@ -372,7 +372,7 @@ Kept by: `scripts/check_expect_no_defaults.py` (expect declarations) and the dri
 Godot's own methods of the types Kotlin represents itself are generated too (task 134 D2): String's
 and PackedByteArray's as extension functions on `String` / `ByteArray` in
 `net.multigesture.kanama.builtins` (never under a name the Kotlin standard library already uses
-on that type), NodePath's as `NodePath` members, Callable's and Signal's as `GodotCallable` /
+on that type, except the deprecated `capitalize()`), NodePath's as `NodePath` members, Callable's and Signal's as `GodotCallable` /
 `GodotSignal` members; see [Strings, Node Paths and Bytes](../game-dev/godot-api.md#strings-node-paths-and-bytes).
 
 The table is `SCALAR_KOTLIN_TYPES` in `scripts/generate_api_wrapper.py`; a method whose types

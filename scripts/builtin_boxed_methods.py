@@ -14,7 +14,8 @@ their Godot methods cannot be members of a Kanama class the way the value types'
   the package it adds nothing to `String`. A Godot method whose Kotlin name is already a stdlib
   `String` function (`length`, `split`, `replace`, `toInt`, ...) is NOT generated: importing the
   package must never change what an existing Kotlin call means. It gets a recorded reason naming
-  the Kotlin form instead (STRING_REASONS), as do the ones the stdlib answers identically.
+  the Kotlin form instead (STRING_REASONS), as do the ones the stdlib answers identically. The
+  exception is `capitalize`, whose stdlib namesake is deprecated (`replaceFirstChar`).
   `StringName` is a Kotlin `String` too: its methods are String's.
 * **NodePath** methods are members of the `NodePath` value class (a GENERATED BUILTIN MEMBERS
   region in `types/NodePath.kt`, like the value types').

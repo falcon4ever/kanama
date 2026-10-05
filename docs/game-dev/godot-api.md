@@ -281,7 +281,9 @@ val words = csv.rsplit(",", false)               // Godot's rsplit, allow_empty 
   `parts.joinToString(sep)` (`join`), `removePrefix`/`removeSuffix` (`trim_prefix`/`trim_suffix`)
   and `toLong()`/`toDouble()` (`to_int`/`to_float`, strict where Godot's parse is lenient: check
   with `isValidInt()`/`isValidFloat()` first). `format` takes a `List` or a `Map`, so JVM's
-  `"%d".format(5)` keeps its meaning. `scripts/check_builtin_coverage.py --report` lists every
+  `"%d".format(5)` keeps its meaning. The one generated name the standard library also has is
+  `capitalize()`, whose Kotlin namesake is deprecated (`replaceFirstChar`); imported, Godot's
+  (`"move_local_x"` → `"Move Local X"`) is the one called. `scripts/check_builtin_coverage.py --report` lists every
   Godot method with its Kotlin member or the reason it has none.
 - **`NodePath`** has Godot's NodePath methods as members, parsed by the engine:
   `NodePath("Arm/Hand:position:x").getName(1)` is `"Hand"`, `getSubname(1)` is `"x"`, plus
