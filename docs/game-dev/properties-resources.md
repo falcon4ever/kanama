@@ -107,10 +107,16 @@ parameter or return, a signal argument. So are the other Godot value types:
 `Vector4`, `Vector4i`, `Rect2`, `Rect2i`, `Plane`, `AABB`, `Quaternion`,
 `Basis`, `Transform2D`, `Transform3D` and `Projection`
 (`@Export var area = Rect2(Vector2(0.0, 0.0), Vector2(64.0, 32.0))`,
-`@Export var pose = Transform3D.IDENTITY`). A default is a named constant
-(`Vector4.ZERO`, `Plane.PLANE_XY`, `Basis.FLIP_Y`) or a constructor of literals
-and nested value types; anything else is read when the script is created (and
-is a build error on Web, whose proxy declares the default). On Web, `Vector3i`,
+`@Export var pose = Transform3D.IDENTITY`). The build reads a default it can
+evaluate: a named constant (`Vector3.UP`, `Vector4.ZERO`, `Plane.PLANE_XY`,
+`Basis.FLIP_Y`) or a constructor of literals, nested value types and constant
+expressions (`Vector2(PI / 2, 0.0)`, `Rect2(Vector2.ZERO, Vector2(degToRad(90.0), 1.0))`);
+a decimal written `0.5f` is the decimal 0.5, as everywhere else. That value is
+the inspector default (the revert arrow, `get_property_default_value`). Any
+other initializer (`Transform3D.IDENTITY.translated(Vector3.UP)`) still sets the
+property when the script instance is created, but the property has no editor
+default, and the Web build refuses it (its proxy declares the default). iOS
+reports no editor defaults for any script property. On Web, `Vector3i`,
 `Rect2`, `Rect2i`, `Plane`, `Quaternion`, `Basis` and `Transform3D` are script
 types; `Vector4`, `Vector4i`, `AABB`, `Transform2D` and `Projection` are not
 yet (the Web runtime has no such value type), and a Web method still takes

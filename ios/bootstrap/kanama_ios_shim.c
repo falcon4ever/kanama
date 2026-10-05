@@ -10473,7 +10473,7 @@ typedef struct {
     float fvec[KANAMA_IOS_PTRCALL_MAX_ARGS][4];
     int32_t ivec[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
     // Task 133: the raw bytes of a Vector3i ... Projection argument (up to 16x float32).
-    float raw[KANAMA_IOS_PTRCALL_MAX_ARGS][KANAMA_IOS_RAW_VALUE_MAX_BYTES / sizeof(float)];
+    _Alignas(16) float raw[KANAMA_IOS_PTRCALL_MAX_ARGS][KANAMA_IOS_RAW_VALUE_MAX_BYTES / sizeof(float)];
     char *strs[KANAMA_IOS_PTRCALL_MAX_ARGS];
 } KanamaIosArgCells;
 
@@ -10712,7 +10712,7 @@ static void kanama_ios_script_instance_call(
         // kind (or PT_VOID) and writes its bytes; we then build the engine return Variant.
         int32_t ret_tag = KANAMA_IOS_PT_VOID;
         // Task 133: sized for the widest raw value kind (Projection, 64 bytes).
-        uint8_t ret_buf[KANAMA_IOS_RAW_VALUE_MAX_BYTES];
+        _Alignas(16) uint8_t ret_buf[KANAMA_IOS_RAW_VALUE_MAX_BYTES];
         memset(ret_buf, 0, sizeof(ret_buf));
         int32_t ok = kanama_ios_runtime_script_instance_call_v(
             instance->runtime_handle, method_index, cells.tags, cells.ptrs, argc, &ret_tag, ret_buf);
@@ -11408,7 +11408,7 @@ static GDExtensionBool kanama_ios_script_instance_get_property(
         return 0;
     }
     int32_t ret_tag = KANAMA_IOS_PT_VOID;
-    uint8_t ret_buf[KANAMA_IOS_RAW_VALUE_MAX_BYTES]; // task 133: up to a Projection
+    _Alignas(16) uint8_t ret_buf[KANAMA_IOS_RAW_VALUE_MAX_BYTES]; // task 133: up to a Projection
     memset(ret_buf, 0, sizeof(ret_buf));
     int32_t ok = kanama_ios_runtime_script_instance_get_property(
         instance->runtime_handle, property_index, &ret_tag, ret_buf);

@@ -4,6 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 /**
  * Task 133 value types — Rect2, Rect2i, Vector4, Vector4i, Plane, AABB, Transform2D, Transform3D,
@@ -328,5 +329,145 @@ class ValueTypeScriptTypesTest {
         assertEquals(1, errors.size, "$type")
         assertTrue(errors.single().contains("no full Kanama Web property arm set"))
       }
+  }
+
+  /** Every TypeMapping the registrars hand to `variant_to_type`: the Variant payload sizes. */
+  @Test
+  fun everyScratchHoldsItsVariantPayload() {
+    // extension_api.json builtin_class_sizes, float_64 / double_64 (Godot 4.7.2).
+    val api = java.io.File("../extension_api.json").readText()
+    fun sizes(config: String): Map<String, Int> {
+      val block = api.substringAfter("\"build_configuration\": \"$config\"").substringBefore("]")
+      return Regex("\"name\": \"(\\w+)\",\\s*\"size\": (\\d+)").findAll(block).associate {
+        it.groupValues[1] to it.groupValues[2].toInt()
+      }
+    }
+    val apiName =
+      mapOf(
+        "NIL" to "Variant",
+        "BOOL" to "bool",
+        "INT" to "int",
+        "FLOAT" to "float",
+        "STRING" to "String",
+        "OBJECT" to "Object",
+        "ARRAY" to "Array",
+        "DICTIONARY" to "Dictionary",
+        "RID" to "RID",
+        "AABB" to "AABB",
+      )
+    fun godotName(type: TypeMapping): String =
+      apiName[type.variantTypeEnum]
+        ?: type.variantTypeEnum
+          .split('_')
+          .joinToString("") { part -> part.lowercase().replaceFirstChar { it.uppercase() } }
+          .replace("Vector2i", "Vector2i")
+          .replace(Regex("(\\d)d$"), "$1D")
+    val layoutBytes =
+      mapOf(
+        "JAVA_LONG" to 8,
+        "JAVA_DOUBLE" to 8,
+        "JAVA_BYTE" to 1,
+        "ADDRESS" to 8,
+        "JAVA_INT" to 4,
+        "JAVA_FLOAT" to 4,
+      )
+    for ((config, real) in listOf("float_64" to 4, "double_64" to 8)) {
+      val payload = sizes(config)
+      for (type in TypeMapping.entries) {
+        val expr = type.scratchAllocationExpr
+        val bytes =
+          layoutBytes[expr]
+            ?: Regex("GodotReal\\.SIZE_BYTES \\* (\\d+)L").find(expr)?.let {
+              it.groupValues[1].toInt() * real
+            }
+            ?: expr.substringBefore("L,").trim().toInt()
+        val name = godotName(type)
+        val need = payload[name] ?: error("no Godot size for ${type.name} ($name)")
+        assertTrue(bytes >= need, "${type.name}: scratch $bytes < $name payload $need ($config)")
+      }
+    }
+  }
+
+  @Test
+  fun registerClassMarshalsEveryValueTypeBothWays() {
+    val types =
+      listOf(
+        TypeMapping.VECTOR2,
+        TypeMapping.VECTOR2I,
+        TypeMapping.VECTOR3,
+        TypeMapping.VECTOR3I,
+        TypeMapping.QUATERNION,
+        TypeMapping.BASIS,
+        TypeMapping.COLOR,
+      ) + newTypes
+    val classModel =
+      ClassModel(
+        simpleName = "Shapes",
+        fqName = "net.multigesture.kanama.test.Shapes",
+        parentClassName = "Node",
+        isTool = false,
+        methods =
+          types.map {
+            MethodModel(
+              "echo_${it.name.lowercase()}",
+              "echo_${it.name.lowercase()}",
+              it,
+              listOf(ArgModel("v", it)),
+              MethodKind.REGULAR,
+            )
+          },
+        properties = emptyList(),
+        virtuals = emptyList(),
+        signals = emptyList(),
+      )
+    val source = CodeEmitter(classModel, "ShapesRegistrar").emit()
+    // A brace block right after `arena.allocate(...)` / `val result = ...` parses as a trailing
+    // lambda (the review's 104 compile errors): every write is a `run { }` statement or a call.
+    val lines = source.lines()
+    lines.forEachIndexed { i, line ->
+      if (line.trimStart().startsWith("{")) {
+        fail("line ${i + 1} starts a brace block after `${lines[i - 1].trim()}`")
+      }
+    }
+    types.forEach { type ->
+      val name = type.name.lowercase()
+      assertTrue(source.contains("fun call_echo_$name("), name)
+      assertTrue(source.contains("fun ptrcall_echo_$name("), name)
+      assertTrue(source.contains("arena.allocate(${type.scratchAllocationExpr})"), name)
+    }
+    assertTrue(source.contains("arena.allocate(8L, 4L)"), "Vector2i scratch holds both int32")
+    assertTrue(source.contains("arena.allocate(12L, 4L)"), "Vector3i scratch holds all three int32")
+  }
+
+  @Test
+  fun everyDefaultTheNormalizerAcceptsForAWebTypeIsInTheWebFixture() {
+    val fixture =
+      java.io
+        .File("../web-runtime/src/web3dSmoke/web/kotlin-src/ValueTypeDefaultsFixture.kt")
+        .readText()
+    val exports =
+      Regex("""@Export var \w+: (\w+) = (.+)""")
+        .findAll(fixture)
+        .map { it.groupValues[1] to it.groupValues[2].trim() }
+        .toList()
+    val byName = TypeMapping.entries.associateBy { it.kotlinType.substringAfterLast('.') }
+    val webTypes =
+      WebValueTypes.COMPONENTS.keys +
+        setOf(TypeMapping.VECTOR2, TypeMapping.VECTOR2I, TypeMapping.VECTOR3)
+    for (type in webTypes) {
+      val simple = type.kotlinType.substringAfterLast('.')
+      for (constant in VALUE_TYPE_DEFAULT_CONSTANTS.getValue(type)) {
+        assertTrue(
+          exports.contains(simple to "$simple.$constant"),
+          "fixture lacks $simple.$constant",
+        )
+      }
+    }
+    exports.forEach { (simple, initializer) ->
+      val type = byName.getValue(simple)
+      assertTrue(type in webTypes, simple)
+      val normalized = normalizeScriptPropertyDefaultLiteral(initializer, type)
+      assertTrue(normalized != null, "$simple = $initializer does not normalize")
+    }
   }
 }

@@ -433,8 +433,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         TypeMapping.INT,
         TypeMapping.BOOL -> true
         TypeMapping.OBJECT -> arg.objectWrapperFqName != null
-        // Task 133: a value type's components are written with `String.num_scientific`, which
-        // round-trips exactly — unlike `str()` of a bare float, the reason FLOAT stays out.
+        // Task 133: a value type's components are float32 (`real_t` on Web) written with
+        // `String.num_scientific`, which round-trips them exactly — unlike `str()` of a bare
+        // float, the reason FLOAT (a double) stays out.
         in WebValueTypes.COMPONENTS -> true
         else -> false
       }
@@ -4047,7 +4048,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\treturn \"%s,%s,%s\" % [arg.x, arg.y, arg.z]")
     appendLine("\t\tTYPE_COLOR:")
     appendLine("\t\t\treturn \"%s,%s,%s,%s\" % [arg.r, arg.g, arg.b, arg.a]")
-    // Task 133: the other value types as their exact packed components (Vector3i keeps its arm).
+    // Task 133: the other value types as their packed float32 components (Vector3i keeps its arm).
     appendLine(
       "\t\t${(WebValueTypes.COMPONENTS.keys - TypeMapping.VECTOR3I).joinToString(", ") { WebValueTypes.gdTypeConstant(it) }}:"
     )
@@ -5402,9 +5403,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       TypeMapping.FLOAT -> property.defaultLiteral?.removeSuffix("f")?.removeSuffix("F") ?: "0.0"
       TypeMapping.BOOL -> property.defaultLiteral ?: "false"
       TypeMapping.NODE_PATH -> "NodePath(${nodePathDefaultString(property.defaultLiteral)})"
-      TypeMapping.VECTOR2 -> vectorGdDefault(property.defaultLiteral, "Vector2")
-      TypeMapping.VECTOR2I -> vectorGdDefault(property.defaultLiteral, "Vector2i")
-      TypeMapping.VECTOR3 -> vectorGdDefault(property.defaultLiteral, "Vector3")
+      // Task 133 review: any named constant (`Vector3.UP`) or folded constructor.
+      TypeMapping.VECTOR2,
+      TypeMapping.VECTOR2I,
+      TypeMapping.VECTOR3 ->
+        property.defaultLiteral?.let { gdValueTypeDefault(it, property.type) }
+          ?: "${WebValueTypes.gdName(property.type)}.ZERO"
       TypeMapping.COLOR -> colorGdDefault(property.defaultLiteral)
       in WebValueTypes.COMPONENTS -> gdValueTypeDefault(property.defaultLiteral, property.type)
       TypeMapping.ARRAY -> "[]"

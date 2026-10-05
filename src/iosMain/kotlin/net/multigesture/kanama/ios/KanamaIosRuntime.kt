@@ -1632,6 +1632,11 @@ internal fun decodeIosRawValue(tag: Int, ptr: CPointer<ByteVar>): Any? {
  */
 internal const val IOS_RAW_VALUE_MAX_BYTES = 64
 
+/** A raw-value scratch of [IOS_RAW_VALUE_MAX_BYTES], 8-byte aligned (allocated as longs). */
+@OptIn(ExperimentalForeignApi::class)
+internal fun kotlinx.cinterop.NativePlacement.allocIosRawValue(): CPointer<ByteVar> =
+  allocArray<LongVar>(IOS_RAW_VALUE_MAX_BYTES / 8).reinterpret()
+
 /**
  * Task 133: writes a raw value kind's Godot bytes into [out] (at least 64 bytes) and returns its PT
  * tag, or -1 when [value] is not one. The mirror of [decodeIosRawValue].
@@ -2706,7 +2711,7 @@ internal fun kanamaIosVirtualArrayReturnSelfTest(values: List<Any?>): List<Strin
 internal fun kanamaIosVariantReturnSelfTest(value: Any?): Int = memScoped {
   val tag = alloc<IntVar>()
   // The shim's script return scratch (task 133: a Projection's 64 bytes).
-  val buf = allocArray<ByteVar>(IOS_RAW_VALUE_MAX_BYTES)
+  val buf = allocIosRawValue()
   tag.value = IOS_PT_VOID
   encodeIosReturn(value, tag.ptr, buf)
   tag.value

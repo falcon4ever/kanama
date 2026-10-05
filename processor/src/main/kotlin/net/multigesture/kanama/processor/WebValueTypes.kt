@@ -5,8 +5,10 @@ package net.multigesture.kanama.processor
  * Transform3D as script types (`@Export`, function arguments and returns, signal payloads). Each
  * crosses the text channels as its components, comma-separated, in the order of [COMPONENTS] — the
  * order the runtime's `WebPackedValues` reads and writes on the Kotlin side. Decimals are written
- * by the proxy with `String.num_scientific` (shortest round-trip text, `nan`/`inf`/`-inf`), so no
- * component loses precision on the way in; Kotlin writes them with `WebPackedFloats`.
+ * by the proxy with `String.num_scientific` (shortest round-trip text, `nan`/`inf`/`-inf`); Kotlin
+ * writes them with `WebPackedFloats`. The components are float32 (`real_t` of the single-precision
+ * Web build) and round-trip exactly; Godot's `String.to_float` does not round every double
+ * correctly, so this is no claim for doubles.
  *
  * Vector4, Vector4i, AABB, Transform2D and Projection are script types on desktop, Android and iOS
  * but not on Web: the Web runtime has no value type of that name yet (its value types are the
@@ -59,7 +61,9 @@ internal object WebValueTypes {
   /** The proxy's `_kanama_web_pack_value(value)` and `_kanama_web_unpack_value(type, packed)`. */
   fun gdHelpers(): String = buildString {
     appendLine("func $PACK(value: Variant) -> String:")
-    appendLine("\t# Task 133: a value type as its components; decimals round-trip exactly.")
+    appendLine(
+      "\t# Task 133: a value type as its components; float32 components round-trip exactly."
+    )
     appendLine("\tmatch typeof(value):")
     COMPONENTS.forEach { (type, paths) ->
       appendLine("\t\t${gdTypeConstant(type)}:")

@@ -24,7 +24,9 @@ import net.multigesture.kanama.types.Vector3i
  * Web script types.
  *
  * Decimals use [WebPackedFloats] (Kotlin's shortest round-trip text, `nan`/`inf`/`-inf`); the proxy
- * writes them with `String.num_scientific`, which is round-trip exact too.
+ * writes them with `String.num_scientific`. Both round-trip every float32 component (the Web build
+ * is single precision) exactly; Godot's `String.to_float` is not correctly rounded for every
+ * double.
  */
 internal object WebPackedValues {
   /** [value]'s components in the channel order, or null when it is not one of these types. */

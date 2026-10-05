@@ -40,12 +40,12 @@ import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.RefCounted
 import net.multigesture.kanama.api.createTween
-import net.multigesture.kanama.ios.IOS_RAW_VALUE_MAX_BYTES
 import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
 import net.multigesture.kanama.ios.KanamaIosRpcConfig
 import net.multigesture.kanama.ios.KanamaIosRuntime
 import net.multigesture.kanama.ios.KanamaIosScriptDescriptor
+import net.multigesture.kanama.ios.allocIosRawValue
 import net.multigesture.kanama.ios.cinterop.KanamaIosCallableArgDesc
 import net.multigesture.kanama.ios.cinterop.KanamaIosPackedArgDesc
 import net.multigesture.kanama.ios.cinterop.KanamaIosTypedArrayArgDesc
@@ -2085,7 +2085,7 @@ actual object ObjectCalls {
       }
       // Task 133 value types (Vector3i ... Projection): raw Godot bytes, boxed by the shim.
       else -> {
-        val raw = allocArray<ByteVar>(IOS_RAW_VALUE_MAX_BYTES)
+        val raw = allocIosRawValue()
         val tag = encodeIosRawValue(value, raw)
         if (tag >= 0) {
           desc.tag = tag
@@ -3713,7 +3713,7 @@ actual object ObjectCalls {
         // Task 133 value types (Vector3i ... Projection): raw Godot bytes, boxed by the shim
         // (kanama_ios_pt_arg_to_variant) — e.g. a script signal's emitted arguments.
         else -> {
-          val raw = allocArray<ByteVar>(IOS_RAW_VALUE_MAX_BYTES)
+          val raw = allocIosRawValue()
           val tag = encodeIosRawValue(a, raw)
           if (tag < 0) {
             error(
@@ -41344,7 +41344,7 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     check("value-types(engine emit decoded) seen=$fromEngine", fromEngine == expected)
     check("value-types(Kotlin emit round trip) seen=$fromKotlin", fromKotlin == expected)
     val layoutOk = memScoped {
-      val buf = allocArray<ByteVar>(net.multigesture.kanama.ios.IOS_RAW_VALUE_MAX_BYTES)
+      val buf = allocIosRawValue()
       val roundTrips =
         expected.all { value ->
           val tag = net.multigesture.kanama.ios.encodeIosRawValue(value, buf)
