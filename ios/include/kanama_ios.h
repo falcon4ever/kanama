@@ -153,6 +153,31 @@ int32_t kanama_ios_godot_utility_call(
     int32_t *out_is_refcounted
 );
 
+/*
+ * Task 134 D2 — a builtin method on a boxed base (the String, NodePath and PackedByteArray methods):
+ * method_ptr(base, args, ret, argc). The base is built from base_tag / base_ptr like an argument
+ * (KANAMA_IOS_PT_STRING / _STRING_NAME / _NODE_PATH from a C string, KANAMA_IOS_PT_PACKED_BYTE_ARRAY
+ * from a KanamaIosPackedArgDesc) and destroyed after the call; KANAMA_IOS_PT_VOID passes Godot's NULL
+ * instance (a static method). Arguments (at most 16) and the return are
+ * kanama_ios_godot_utility_call's. Only const methods: a change to the base is destroyed with it.
+ */
+int32_t kanama_ios_godot_builtin_call_boxed(
+    int64_t method_ptr,
+    int32_t base_tag,
+    const void *base_ptr,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_variant_type,
+    void *ret_raw,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
+);
+
 void kanama_ios_godot_ptrcall_string_arg(
     int64_t method_bind,
     int64_t instance,

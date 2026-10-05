@@ -465,7 +465,13 @@ check "BuiltinParity kotlin mathf=n=256 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin mathfedge=n=64 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin gd=n=1 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin rand=n=8 [^ ]+=[0-9a-f]+ "
-for bp_row in pure edge facade const mathf mathfedge gd rand; do
+# task 134 D2 -- the PackedByteArray byte codecs ported to Kotlin over 64 random arrays (`bytes=`:
+# decode/encode/bswap/hex/to_*_array, every packed array's to_byte_array) and every engine-run
+# String / NodePath / PackedByteArray member on fixed samples, Unicode outside the BMP included
+# (`text=`: the boxed builtin call's String, NodePath, packed and Variant conversions).
+check "BuiltinParity kotlin bytes=n=64 [^ ]+=[0-9a-f]+ "
+check "BuiltinParity kotlin text=n=1 [^ ]+=[0-9a-f]+ "
+for bp_row in pure edge facade const mathf mathfedge gd rand bytes text; do
   bp_kotlin="$(grep -o "BuiltinParity kotlin ${bp_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinParity kotlin //')"
   bp_gdscript="$(grep -o "BuiltinParity gdscript ${bp_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinParity gdscript //')"
   if [[ -z "$bp_kotlin" || "$bp_kotlin" != "$bp_gdscript" ]]; then
@@ -494,6 +500,8 @@ check "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true vali
 # A call through the freed wrapper throws IllegalStateException instead of dereferencing the dead
 # pointer (before task 131: a use-after-free, typically a native crash and no line below at all).
 check "FreedObjectSmoke caught=Invalid access to previously freed instance \(Node3D, instance id [0-9]+\)$"
+# task 134 D2 review -- GodotCallable / GodotSignal over a freed node: the stored id, as in Godot.
+check "FreedObjectSmoke callable_id=true signal_id=true callable_valid=false callable_object=null signal_object=null"
 # Uncaught in a script method Godot calls, it is a Godot script error at the game line, and the
 # caller (ready) carries on with a nil result (survived=true above).
 freed_call_line="$(grep -n 'fun callFreed' "$PROJECT_DIR/FreedObjectSmoke.kt" | cut -d: -f1)"
@@ -538,6 +546,7 @@ for pattern in \
   "freed-object checks: on \(KANAMA_FREED_OBJECT_CHECKS=binding: instance binding\)" \
   "FreedObjectSmoke equal=true same_hash=true set_size=2 not_equal=true valid_after_free=false equal_after_free=true to_string=<Freed Object> property_reads=null,null method_return=null survived=true result_null=true" \
   "FreedObjectSmoke caught=Invalid access to previously freed instance \(Node3D, instance id [0-9]+\)$" \
+  "FreedObjectSmoke callable_id=true signal_id=true callable_valid=false callable_object=null signal_object=null" \
   "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"; do
   if ! grep -Eq -- "$pattern" "$FREED_BINDING_LOG"; then
     echo "[runtime_smoke] FAIL -- binding-mode freed-object run is missing: $pattern" >&2
