@@ -249,6 +249,12 @@ abstract class TypedSignal internal constructor(
   /** Whether anything is connected to this signal (Godot `Object.has_connections`). */
   fun hasConnections(): Boolean = emitter.hasConnections(name)
 
+  /**
+   * Godot's `Signal.get_connections` (task 134 D2): one Dictionary per connection (`signal`,
+   * `callable`, `flags`), from the emitter's `Object.get_signal_connection_list`.
+   */
+  fun getConnections(): List<Map<String, Any?>> = emitter.getSignalConnectionList(name)
+
   /** The untyped handle for this signal. */
   fun untyped(): GodotSignal = emitter.signal(name)
 

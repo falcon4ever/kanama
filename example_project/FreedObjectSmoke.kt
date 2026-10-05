@@ -5,6 +5,7 @@ import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
 import net.multigesture.kanama.api.Engine
 import net.multigesture.kanama.api.GD
+import net.multigesture.kanama.api.GodotCallable
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.KanamaScript
@@ -57,6 +58,11 @@ class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
 
     target = view
     victim = node
+    // Task 134 D2 review: a Callable / Signal over the node keeps answering its id once it is
+    // freed.
+    val liveId = node.getInstanceId()
+    val callable = GodotCallable(node, "get_name")
+    val signal = node.signal("tree_entered")
     ObjectCalls.destroyObject(node.handle.segment) // Object.free()
     ObjectCalls.destroyObject(other.handle.segment)
     val valid = GD.isInstanceValid(node)
@@ -83,6 +89,11 @@ class FreedObjectSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
         "survived=true result_null=${result == null}"
     )
     System.err.println("[kanama:kt] FreedObjectSmoke caught=$caught")
+    System.err.println(
+      "[kanama:kt] FreedObjectSmoke callable_id=${callable.getObjectId() == liveId} " +
+        "signal_id=${signal.getObjectId() == liveId} callable_valid=${callable.isValid()} " +
+        "callable_object=${callable.getObject()} signal_object=${signal.getObject()}"
+    )
 
     // Custom-script values whose nodes were freed read back as nil too, decided by the `self`
     // wrapper (KanamaScript) or the owner id captured at script creation (plain class), never by

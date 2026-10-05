@@ -147,6 +147,9 @@ kotlin {
             // the native types (src/commonMain/.../types/shared); WebReal.kt supplies the float32
             // `GodotRealStorage`, `narrowReal` and `widenReal` the native side generates.
             kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/types"))
+            // Task 134 D2: Godot's String / PackedByteArray methods on Kotlin's String and ByteArray,
+            // the same generated source as native; their engine calls cross through WebBuiltinRemote.
+            kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/builtins"))
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(project(":kanama-common-api"))

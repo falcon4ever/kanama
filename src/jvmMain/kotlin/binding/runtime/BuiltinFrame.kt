@@ -156,8 +156,43 @@ internal constructor(private val stack: FrameStack, private val index: Int) {
   }
 
   actual fun putString(slot: Int, value: String) {
-    GodotStrings.initString(slots[slot], value)
+    GodotStrings.initString(slots[slot], value, scratch)
     strings = strings or (1 shl slot)
+  }
+
+  /**
+   * The frame's UTF-8 buffer (task 134 D2 review): a String argument is encoded here and a String
+   * return decoded from here, without a per-call arena. Per frame, so a re-entered call has its
+   * own.
+   */
+  internal val scratch = Utf8Scratch()
+
+  /**
+   * Task 134 D2: the boxed builtin call (`UtilityCalls.callMethod`) builds typed cells (a NodePath,
+   * a PackedByteArray, a Variant) in the slots itself and reads the return slot directly.
+   */
+  internal fun slotSegment(slot: Int): MemorySegment = slots[slot]
+
+  internal fun retSegment(): MemorySegment = ret
+
+  /**
+   * The boxed call's form of [call] / [callStatic]: the frame stays taken after the call, so the
+   * caller can read the return and destroy the cells it built in the slots before any other builtin
+   * call reuses them; [release] gives it back (also when nothing was called).
+   */
+  internal fun callHeld(method: BuiltinMethod, argc: Int, static: Boolean) {
+    val target = method.target()
+    ret.set(JAVA_LONG, 0L, 0L)
+    ret.set(JAVA_LONG, 8L, 0L)
+    callExact(target, if (static) MemorySegment.NULL else base, argc)
+  }
+
+  /**
+   * Release the String arguments and give the frame back to the thread's stack (see [callHeld]).
+   */
+  internal fun release() {
+    if (strings != 0) releaseStrings()
+    stack.depth = index
   }
 
   actual fun call(method: BuiltinMethod, argc: Int) {

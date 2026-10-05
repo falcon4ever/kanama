@@ -425,6 +425,9 @@ case("audit_value_type_wrappers.py", py("audit_value_type_wrappers.py", "--stric
 case("check_builtin_coverage.py", py("check_builtin_coverage.py"),
      [Edit(f"{COMMON}/types/Vector2.kt", "  fun orthogonal(): Vector2 = raw(rawY, -rawX)", "  fun orthogonalVector(): Vector2 = raw(rawY, -rawX)")],
      "Vector2.orthogonal: no Kotlin member", "a value-type method loses its Kotlin member")
+case("check_builtin_coverage.py (stdlib names)", py("check_builtin_coverage.py"),
+     [Edit(f"{COMMON}/builtins/GodotString.kt", "fun String.godotHexToInt(", "fun String.hexToInt(")],
+     "fun String.hexToInt collides with kotlin-stdlib", "a generated String extension takes a kotlin-stdlib name (task 134 D2)")
 case("generate_builtin_ops.py", py("generate_builtin_ops.py", "--check"),
      [Edit(f"{COMMON}/types/Vector2.kt", "  fun orthogonal(): Vector2 = raw(rawY, -rawX)", "  fun orthogonal(): Vector2 = raw(-rawY, rawX)")],
      "generate_builtin_ops] FAIL", "a generated value-type member is edited by hand")

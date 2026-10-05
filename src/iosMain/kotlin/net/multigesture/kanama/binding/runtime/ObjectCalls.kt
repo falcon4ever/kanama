@@ -43170,6 +43170,10 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // Task 129 B: the generated common GD through the iOS utility-call seam, and the common Mathf.
   utilitySelfTestRows(::check)
 
+  // Task 134 D2: Godot's String / NodePath / PackedByteArray methods through the boxed builtin
+  // call.
+  builtinBoxedSelfTestRows(::check)
+
   // Task 124 — THE PERMANENT RED RUN: seven deliberate faults, raised in the sink's probe mode.
   // See runFaultProbes (declared beside SELFTEST_EXPECTED_FAULTS at the top of this section) for
   // what each probe proves and why the five `pending slot drained` rows live there, not inline.

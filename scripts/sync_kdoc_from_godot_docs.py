@@ -23,6 +23,10 @@ DEFAULT_API_DIR = DESKTOP_API_DIR
 # The value types are one shared set under the commonMain tree since task 104 step 2
 # (the root JVM module, :ios-runtime and the Android copy task all compile it).
 DEFAULT_TYPES_DIR = Path("src/commonMain/kotlin/net/multigesture/kanama/types")
+# Task 134 D2: Godot's String / PackedByteArray methods as extensions on Kotlin's String / ByteArray
+# (generate_builtin_ops.py); each file is documented from the Godot class it carries.
+BUILTINS_DIR = Path("src/commonMain/kotlin/net/multigesture/kanama/builtins")
+BUILTINS_DOCS = {"GodotString": "String", "GodotBytes": "PackedByteArray"}
 GENERATED_MARKER = "Generated from Godot docs:"
 
 METHOD_BIND_RE = re.compile(
@@ -205,6 +209,13 @@ def kdoc_block(indent: str, description: str, source: str, *, ktfmt_width: bool 
     for word in words:
         candidate = word if not current else f"{current} {word}"
         if not fits(candidate) and current:
+            if ktfmt_width and re.fullmatch(r"[-+*]|\d+\.", word) and " " in current:
+                # A wrapped line must not start with a Markdown list marker: ktfmt would indent
+                # the lines after it as the item's continuation (task 134 D2, `- For macOS ...`).
+                head, last = current.rsplit(" ", 1)
+                lines.append(f"{indent} * {head}\n")
+                current = f"{last} {word}"
+                continue
             lines.append(f"{indent} * {current}\n")
             current = word
         else:
@@ -634,6 +645,8 @@ def main() -> int:
         targets.extend(("api", path) for path in wrapper_source_files(args.api_dir, companions=True))
     if args.scope in ("all", "types"):
         targets.extend(("types", path) for path in sorted(args.types_dir.glob("*.kt")))
+        if args.types_dir == DEFAULT_TYPES_DIR:
+            targets.extend(("types", BUILTINS_DIR / f"{stem}.kt") for stem in BUILTINS_DOCS)
     changed: list[Path] = []
     total_classes = 0
     classes_with_docs = 0
@@ -642,6 +655,7 @@ def main() -> int:
 
     for scope, path in targets:
         class_name = path.stem.split(".")[0]  # `Time.jvm.kt` documents Time
+        class_name = BUILTINS_DOCS.get(class_name, class_name) if path.parent == BUILTINS_DIR else class_name
         if class_name in (GLOBAL_ENUMS_STEM, GD_STEM):
             class_name = GLOBAL_SCOPE_DOCS
         if class_filter is not None and class_name not in class_filter:

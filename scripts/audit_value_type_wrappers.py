@@ -104,6 +104,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from generate_builtin_ops import PURE_METHODS, kotlin_name  # noqa: E402
 
 REVIEWED_LOCAL_MATH |= {f"{cls}.{kotlin_name(cls, name)}" for cls, names in PURE_METHODS.items() for name in names}
+# Task 134 D2 review: NodePath's members are Godot's NodePath parse ported to Kotlin
+# (builtin_boxed_methods.NODE_PATH_PURE), compared with GDScript by the runtime smoke's `text=` row.
+from builtin_boxed_methods import NODE_PATH_PURE, camel  # noqa: E402
+
+REVIEWED_LOCAL_MATH |= {f"NodePath.{camel(name)}" for name in NODE_PATH_PURE}
 
 
 FUN_RE = re.compile(
@@ -121,7 +126,9 @@ BUILTIN_CALL_RE = re.compile(
     r"\bBuiltinCalls\.(?:call|callNoArgsFloat32|callScalar|callBool|callInt|invoke\w+)\s*\("
     r"|\bBuiltinTypes\.(?:call|construct)\s*\("
     # The task 134 B generated members call the engine through the thread's BuiltinFrame.
-    r"|\bbuiltinFrame\s*\(",
+    r"|\bbuiltinFrame\s*\("
+    # Task 134 D2: NodePath's generated members call the engine through the boxed builtin call.
+    r"|\bUtilityCalls\.callMethod\s*\(",
 )
 # The two BArg encodings a scalar argument can take. Godot's ptr-ABI passes a
 # Variant FLOAT argument as an 8-byte double (BArg.Real) regardless of real_t

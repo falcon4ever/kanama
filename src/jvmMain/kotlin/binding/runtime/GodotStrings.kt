@@ -4,6 +4,7 @@ import java.lang.foreign.Arena
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout.ADDRESS
+import java.lang.foreign.ValueLayout.JAVA_BYTE
 import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.foreign.ValueLayout.JAVA_LONG
 import java.lang.invoke.MethodHandle
@@ -154,6 +155,34 @@ object GodotStrings {
    */
   fun initString(dest: MemorySegment, value: String) {
     Arena.ofConfined().use { arena -> newString(dest, arena.allocateFrom(value)) }
+  }
+
+  /**
+   * [initString] through [scratch] (task 134 D2 review): the UTF-8 bytes and their NUL go into the
+   * caller's reusable buffer instead of a fresh arena. As with [initString], the text ends at an
+   * embedded NUL and a lone surrogate encodes as `?`.
+   */
+  internal fun initString(dest: MemorySegment, value: String, scratch: Utf8Scratch) {
+    val bytes = value.encodeToByteArray()
+    val buffer = scratch.atLeast(bytes.size + 1L)
+    MemorySegment.copy(bytes, 0, buffer, JAVA_BYTE, 0L, bytes.size)
+    buffer.set(JAVA_BYTE, bytes.size.toLong(), 0)
+    newString(dest, buffer)
+  }
+
+  /**
+   * [readString] through [scratch]: one `string_to_utf8_chars` into the reusable buffer, a second
+   * only when the text is longer than the buffer (which then grows to fit).
+   */
+  internal fun readString(strPtr: MemorySegment, scratch: Utf8Scratch): String {
+    var buffer = scratch.current()
+    val length = StringToUtf8.HANDLE.invokeExact(strPtr, buffer, buffer.byteSize()) as Long
+    if (length <= 0L) return ""
+    if (length > buffer.byteSize()) {
+      buffer = scratch.atLeast(length)
+      StringToUtf8.HANDLE.invokeExact(strPtr, buffer, length) as Long
+    }
+    return String(buffer.asSlice(0L, length).toArray(JAVA_BYTE), Charsets.UTF_8)
   }
 
   /**

@@ -369,6 +369,13 @@ Kept by: `scripts/check_expect_no_defaults.py` (expect declarations) and the dri
 | `Signal` | `GodotSignal` |
 | `Variant` | `Any?` |
 
+Godot's own methods of the types Kotlin represents itself are generated too (task 134 D2): String's
+and PackedByteArray's as extension functions on `String` / `ByteArray` in
+`net.multigesture.kanama.builtins` (a name kotlin-stdlib or `java.lang.String` already has for the
+receiver gets a `godot` prefix: `godotFormat`, `godotSplit`; `check_builtin_coverage.py` checks it
+with `javap`), NodePath's as `NodePath` members, Callable's and Signal's as `GodotCallable` /
+`GodotSignal` members; see [Strings, Node Paths and Bytes](../game-dev/godot-api.md#strings-node-paths-and-bytes).
+
 The table is `SCALAR_KOTLIN_TYPES` in `scripts/generate_api_wrapper.py`; a method whose types
 have no audited helper shape is not generated rather than generated with a wider type (`CALL_SHAPES` in
 `scripts/api_wrapper_candidates.py`; the skips are listed in the

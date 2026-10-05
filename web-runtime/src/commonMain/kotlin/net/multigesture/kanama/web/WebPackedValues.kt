@@ -69,6 +69,26 @@ internal object WebPackedValues {
   const val TYPE_NODE_PATH = 22
   const val TYPE_RID = 23
   const val TYPE_OBJECT = 24
+  const val TYPE_PACKED_BYTE_ARRAY = 29
+  const val TYPE_PACKED_FLOAT64_ARRAY = 33
+  const val TYPE_PACKED_STRING_ARRAY = 34
+
+  private const val HEX = "0123456789abcdef"
+
+  /** Lowercase hex, two digits per byte (Godot's `hex_encode`). */
+  fun hexEncode(bytes: ByteArray): String =
+    buildString(bytes.size * 2) {
+      for (b in bytes) {
+        val v = b.toInt() and 0xFF
+        append(HEX[v shr 4]).append(HEX[v and 0xF])
+      }
+    }
+
+  /** [hexEncode]'s inverse. */
+  fun hexDecode(text: String): ByteArray =
+    ByteArray(text.length / 2) {
+      ((HEX.indexOf(text[2 * it]) shl 4) or HEX.indexOf(text[2 * it + 1])).toByte()
+    }
 
   /** Component count of each value type, by `Variant.Type` (5 = Vector2 … 20 = Color). */
   private val COMPONENT_COUNT = intArrayOf(2, 2, 4, 4, 3, 3, 6, 4, 4, 4, 4, 6, 9, 12, 16, 4)
@@ -215,6 +235,8 @@ internal object WebPackedValues {
       is NodePath -> "22:${escapeText(value.path)}"
       is RID -> "23:${value.value}"
       is net.multigesture.kanama.api.GodotEnumValue -> "2:${value.value}"
+      // Task 134 D2: a PackedByteArray as lowercase hex (the proxy's `hex_decode`).
+      is ByteArray -> "29:${hexEncode(value)}"
       else -> {
         val type = variantTypeOf(value::class)
         require(type != 0) { "Kanama Web cannot encode a ${value::class.simpleName} Variant" }
@@ -246,6 +268,15 @@ internal object WebPackedValues {
       TYPE_NODE_PATH -> NodePath(unescapeText(payload))
       TYPE_RID -> RID(payload.toLong())
       in 5..20 -> fromComponents(type, decodeComponents(type, payload))
+      // Task 134 D2: the packed returns of the String / PackedByteArray methods.
+      TYPE_PACKED_BYTE_ARRAY -> hexDecode(payload)
+      TYPE_PACKED_FLOAT64_ARRAY ->
+        if (payload.isEmpty()) emptyList() else payload.split(',').map(WebPackedFloats::decode)
+      TYPE_PACKED_STRING_ARRAY -> {
+        // `<count>` then each element, every one after a unit separator (escaped text).
+        val parts = payload.split('\u001F')
+        List(parts[0].toInt()) { unescapeText(parts[it + 1]) }
+      }
       else -> error("Kanama Web does not deliver a Variant of type $type here")
     }
   }

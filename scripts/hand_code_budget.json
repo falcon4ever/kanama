@@ -8,7 +8,11 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotCallable.kt": {
       "category": "runtime-core",
-      "lines": 15,
+      "lines": 56,
+      "raises": [
+        "15 -> 53: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes",
+        "53 -> 56: task 134 D2 review: rpc's KDoc names the non-Node case; getObjectId answers the stored id after the target is freed"
+      ],
       "reason": "Callable value (target + method), a lifetime-free root"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotHandle.kt": {
@@ -23,9 +27,10 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotSignal.expect.kt": {
       "category": "runtime-core",
-      "lines": 101,
+      "lines": 122,
       "raises": [
-        "98 -> 101: GodotSignal.owner joins the expect so the generated wrappers pass a Signal argument on every platform (task 129 A, Tween.tweenAwait)"
+        "98 -> 101: GodotSignal.owner joins the expect so the generated wrappers pass a Signal argument on every platform (task 129 A, Tween.tweenAwait)",
+        "101 -> 122: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
       ],
       "reason": "signal plumbing expect"
     },
@@ -66,7 +71,10 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/TypedSignals.kt": {
       "category": "runtime-core",
-      "lines": 524,
+      "lines": 530,
+      "raises": [
+        "524 -> 530: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
+      ],
       "reason": "typed signal classes Signal0..Signal5 (task 134 D4)"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/BoxMesh.kt": {
@@ -95,7 +103,10 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
-      "lines": 137,
+      "lines": 148,
+      "raises": [
+        "137 -> 148: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
+      ],
       "reason": "signal plumbing actual"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ImageTexture.kt": {
@@ -210,7 +221,10 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
-      "lines": 145,
+      "lines": 156,
+      "raises": [
+        "145 -> 156: task 134 D2: Godot's Callable / Signal builtin methods on the roots (call, callv, callDeferred, isValid, getObject, getObjectId, getArgumentCount, rpc, rpcId; isConnected, getConnections, hasConnections, getObject, getObjectId), each a one-line delegation to the Object call Godot's own Callable / Signal makes"
+      ],
       "reason": "signal plumbing actual"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/InputEventKey.kt": {

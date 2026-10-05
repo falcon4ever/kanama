@@ -60,6 +60,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+import builtin_boxed_methods as boxed  # noqa: E402
+
 API_PATH = ROOT / "extension_api.json"
 TYPES_DIR = ROOT / "src/commonMain/kotlin/net/multigesture/kanama/types"
 MARSHALLING = TYPES_DIR / "BuiltinMarshalling.kt"
@@ -1351,6 +1354,13 @@ def load_expected() -> dict[str, str]:
     return json.loads(EXPECTED_PATH.read_text(encoding="utf-8"))["pure"]
 
 
+def load_expected_bytes() -> dict[str, str]:
+    """Task 134 D2: GDScript's `bytes=` row (the PackedByteArray codecs the Web build runs too)."""
+    if not EXPECTED_PATH.exists():
+        return {}
+    return json.loads(EXPECTED_PATH.read_text(encoding="utf-8")).get("bytes", {})
+
+
 # Parity entries whose Kotlin formula calls an engine-backed member that the Web build runs over the
 # bridge (no bridge under Node): they run in the browser, not in this test. Each needs a reason.
 WEB_TEST_ENGINE_BOUND: dict[str, str] = {
@@ -1487,6 +1497,7 @@ def render_web_test(pure, facade) -> str:
         "",
         "import kotlin.test.Test",
         "import kotlin.test.assertEquals",
+        "import net.multigesture.kanama.builtins.*",
         "",
         "/**",
         " * Task 134 B/D1: the value types compiled to Wasm run the runtime smoke's builtin parity row (the",
@@ -1519,6 +1530,36 @@ def render_web_test(pure, facade) -> str:
         "        val b = got[i].toFloat()",
         "        (a.isNaN() && b.isNaN()) || kotlin.math.abs(ordered(a).toLong() - ordered(b).toLong()) <= ulps",
         "      }",
+        "",
+        "  /**",
+        "   * Task 134 D2: the PackedByteArray codecs ported to Kotlin (`net.multigesture.kanama.builtins`),",
+        "   * compiled to Wasm, over the runtime smoke's `bytes=` row: Godot's hashes are recorded beside",
+        "   * the others (`bytes` in the fixture).",
+        "   */",
+        "  @Test",
+        "  fun webByteCodecsMatchGodot() {",
+        "    hashes.clear()",
+        "    seed = 2463534242L",
+        f"    repeat({boxed.BYTES_ROUNDS}) {{ bytesRound() }}",
+        "    val wrong = EXPECTED_BYTES.filter { (key, hash) -> hashes[key]?.toString(16) != hash }.keys",
+        "    assertEquals(emptySet(), wrong, \"byte codecs whose hash differs from Godot's\")",
+        "  }",
+        "",
+        "  private fun bytesRound() {",
+        "    val n = 16 + (nextRandom() % 32).toInt()",
+        "    val b = ByteArray(n) { (nextRandom() and 0xFFL).toByte() }",
+        *[f"    bytes{i}(b)" for i in range(len(BYTES_ENTRIES))],
+        "  }",
+        "",
+        *[line for i, (_, kt, _) in enumerate(BYTES_ENTRIES) for line in
+          (f"  private fun bytes{i}(b: ByteArray) {{", *("    " + x for x in kt), "  }", "")],
+        "  private fun mixText(name: String, value: Any?) {",
+        "    when (value) {",
+        "      is String -> mix(name, value.encodeToByteArray())",
+        "      is List<*> -> value.forEach { mixText(name, it) }",
+        "      else -> mix(name, value)",
+        "    }",
+        "  }",
         "",
         "  private fun round() {",
         *calls,
@@ -1582,6 +1623,8 @@ def render_web_test(pure, facade) -> str:
         "      is Long -> mixLong(name, value)",
         "      is Int -> mixLong(name, value.toLong())",
         "      is Boolean -> mixLong(name, if (value) 1L else 0L)",
+        "      is Float -> mix(key, value.toDouble())",
+        "      is ByteArray -> value.forEach { mixLong(name, it.toLong() and 0xFFL) }",
         "      is String -> value.forEach { mixLong(name, it.code.toLong()) }",
         "      is RID -> mixLong(name, value.value)",
         "      is Vector2 -> listOf(value.x, value.y).forEach { mix(key, it) }",
@@ -1619,6 +1662,12 @@ def render_web_test(pure, facade) -> str:
         "    val EXPECTED_FACADE: Map<String, Pair<Int, LongArray>> =",
         "      mapOf(",
         *[f'        "{summary_key(k)}" to ({WEB_LOCAL_FACADE[k][0]} to longArrayOf({", ".join(str(v) + "L" for v in expected_facade[summary_key(k)])})),' for k in facade_checked],
+        "      )",
+        "",
+        "    // Godot 4.7.2's `bytes=` row (task 134 D2).",
+        "    val EXPECTED_BYTES =",
+        "      mapOf(",
+        *[f'        "{k}" to "{v}",' for k, v in load_expected_bytes().items()],
         "      )",
         "  }",
         "}",
@@ -1793,6 +1842,9 @@ def finite_twins(pure, gd: bool) -> list[str]:
 
 
 CONST_ENTRIES: list[tuple[str, str, str]] = []  # (key, kotlin expression, gdscript expression)
+# Task 134 D2: (key, Kotlin lines, GDScript lines) of the `bytes=` and `text=` rows.
+BYTES_ENTRIES: list[tuple[str, list[str], list[str]]] = []
+TEXT_ENTRIES: list[tuple[str, list[str], list[str]]] = []
 
 
 def constant_entries(api: dict, sources: dict[str, str]) -> list[tuple[str, str, str]]:
@@ -1989,6 +2041,7 @@ def render_parity_kt(pure, facade) -> str:
         "import net.multigesture.kanama.api.KanamaScript",
         "import net.multigesture.kanama.api.Mathf",
         "import net.multigesture.kanama.api.Node2D",
+        "import net.multigesture.kanama.builtins.*",
         "import net.multigesture.kanama.types.*",
         "",
         "/**",
@@ -2034,6 +2087,38 @@ def render_parity_kt(pure, facade) -> str:
         f"    GD.seed({RAND_SEED}L)",
         '    mix("GD.seed", GD.randi())',
         f"    report(\"rand=n={RAND_ROUNDS} \" + summary())",
+        "    hashes.clear()",
+        "    seed = 2463534242L",
+        f"    repeat({boxed.BYTES_ROUNDS}) {{ bytesRound() }}",
+        f"    report(\"bytes=n={boxed.BYTES_ROUNDS} \" + summary())",
+        "    hashes.clear()",
+        "    textRow()",
+        "    report(\"text=n=1 \" + summary())",
+        "  }",
+        "",
+        "  // Task 134 D2: the pure byte codecs over a random array per round (`bytes=`).",
+        "  private fun bytesRound() {",
+        "    val n = 16 + (nextRandom() % 32).toInt()",
+        "    val b = ByteArray(n) { (nextRandom() and 0xFFL).toByte() }",
+        *[f"    bytes{i}(b)" for i in range(len(BYTES_ENTRIES))],
+        "  }",
+        "",
+        *[line for i, (_, kt, _) in enumerate(BYTES_ENTRIES) for line in
+          (f"  private fun bytes{i}(b: ByteArray) {{", *("    " + x for x in kt), "  }", "")],
+        "  // Task 134 D2: the engine-run String / NodePath / PackedByteArray members on fixed samples.",
+        "  private fun textRow() {",
+        *[f"    text{i}()" for i in range(len(TEXT_ENTRIES))],
+        "  }",
+        "",
+        *[line for i, (_, kt, _) in enumerate(TEXT_ENTRIES) for line in
+          (f"  private fun text{i}() {{", *("    " + x for x in kt), "  }", "")],
+        "  private fun mixText(name: String, value: Any?) {",
+        "    when (value) {",
+        "      is String -> mix(name, value.encodeToByteArray())",
+        "      is NodePath -> mix(name, value.path.encodeToByteArray())",
+        "      is List<*> -> value.forEach { mixText(name, it) }",
+        "      else -> mix(name, value)",
+        "    }",
         "  }",
         "",
         "  private fun constants() {",
@@ -2124,6 +2209,8 @@ def render_parity_kt(pure, facade) -> str:
             "      is Long -> mixLong(name, value)",
             "      is Int -> mixLong(name, value.toLong())",
             "      is Boolean -> mixLong(name, if (value) 1L else 0L)",
+            "      is Float -> mix(name, value.toDouble())",
+            "      is ByteArray -> value.forEach { mixLong(name, it.toLong() and 0xFFL) }",
             "      is String -> value.forEach { mixLong(name, it.code.toLong()) }",
             "      is RID -> mixLong(name, value.value)",
             "      is Vector2 -> listOf(value.x, value.y).forEach { mix(name, it) }",
@@ -2161,6 +2248,9 @@ def render_parity_kt(pure, facade) -> str:
             "    val EDGE =",
             "      doubleArrayOf(0.0, -0.0, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)",
             "    val EDGE_FINITE = doubleArrayOf(0.0, -0.0, 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0)",
+            f"    val TEXT_SAMPLES = {boxed.TEXT_SAMPLES_KT}",
+            f"    val NODE_PATH_SAMPLES = {boxed.NODE_PATH_SAMPLES_KT}",
+            f"    val ASCII_SAMPLES = {boxed.ASCII_SAMPLES_KT}",
             "  }",
             "}",
         ]
@@ -2177,6 +2267,9 @@ def render_parity_gd(pure, facade) -> str:
         "",
         "const SCALES := [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]",
         "var rng_state := 2463534242",
+        f"var TEXT_SAMPLES := {boxed.TEXT_SAMPLES_GD}",
+        f"var NODE_PATH_SAMPLES := {boxed.NODE_PATH_SAMPLES_GD}",
+        f"var ASCII_SAMPLES := {boxed.ASCII_SAMPLES_GD}",
         "var hashes := {}",
         "var hash_order := []",
         "# Task 134 D1: float components recorded for the Web-local methods (WEB_LOCAL_FACADE).",
@@ -2236,6 +2329,43 @@ def render_parity_gd(pure, facade) -> str:
         f"\tseed({RAND_SEED})",
         '\tmix("GD.seed", randi())',
         f"\treport(\"rand=n={RAND_ROUNDS} \" + summary())",
+        "\thashes.clear()",
+        "\thash_order.clear()",
+        "\trng_state = 2463534242",
+        f"\tfor i in {boxed.BYTES_ROUNDS}:",
+        "\t\tbytes_round()",
+        f"\treport(\"bytes=n={boxed.BYTES_ROUNDS} \" + summary())",
+        "\thashes.clear()",
+        "\thash_order.clear()",
+        "\ttext_row()",
+        "\treport(\"text=n=1 \" + summary())",
+        "",
+        "",
+        "func bytes_round() -> void:",
+        "\tvar n := 16 + next_random() % 32",
+        "\tvar b := PackedByteArray()",
+        "\tb.resize(n)",
+        "\tfor i in n:",
+        "\t\tb[i] = next_random() & 0xFF",
+        *[f"\tbytes{i}(b)" for i in range(len(BYTES_ENTRIES))],
+        "",
+        "",
+        *[line for i, (_, _, gd) in enumerate(BYTES_ENTRIES) for line in
+          (f"func bytes{i}(b: PackedByteArray) -> void:", *("\t" + x for x in gd), "", "")],
+        "func text_row() -> void:",
+        *[f"\ttext{i}()" for i in range(len(TEXT_ENTRIES))],
+        "",
+        "",
+        *[line for i, (_, _, gd) in enumerate(TEXT_ENTRIES) for line in
+          (f"func text{i}() -> void:", *("\t" + x for x in gd), "", "")],
+        "func mix_text(name: String, value) -> void:",
+        "\tif value is String or value is StringName or value is NodePath:",
+        "\t\tmix(name, String(value).to_utf8_buffer())",
+        "\telif value is Array or value is PackedStringArray:",
+        "\t\tfor v in value:",
+        "\t\t\tmix_text(name, v)",
+        "\telse:",
+        "\t\tmix(name, value)",
         "",
         "",
         "func constants() -> void:",
@@ -2383,6 +2513,8 @@ def render_parity_gd(pure, facade) -> str:
             "\t\tfor c in [value.x, value.y, value.z, value.w]: mix(name, c)",
             "\telif value is PackedVector2Array or value is PackedVector3Array or value is PackedInt64Array:",
             "\t\tfor c in value: mix(name, c)",
+            "\telif typeof(value) >= TYPE_PACKED_BYTE_ARRAY and typeof(value) <= TYPE_PACKED_VECTOR4_ARRAY:",
+            "\t\tfor c in value: mix(name, c)",
             "\telse:",
             "\t\tpush_error(\"no parity mix for %s\" % type_string(typeof(value)))",
             "",
@@ -2451,9 +2583,19 @@ def regenerate(api: dict) -> dict[Path, str]:
     outputs[WEB_SIGNATURES] = render_web_signatures(api, members)
     pure, facade = parity_entries(members)
     CONST_ENTRIES[:] = constant_entries(api, {cls: outputs[class_file(cls)] for cls in VALUE_TYPES})
+    BYTES_ENTRIES[:] = boxed.bytes_parity_entries(api)
+    TEXT_ENTRIES[:] = boxed.text_parity_entries(api)
     outputs[PARITY_KT] = ktfmt_lines(render_parity_kt(pure, facade))
     outputs[PARITY_GD] = render_parity_gd(pure, facade)
     outputs[WEB_TEST] = render_web_test(pure, facade)
+    # Task 134 D2: the String / NodePath / PackedByteArray methods (scripts/builtin_boxed_methods.py).
+    boxed.SIGNATURES.clear()
+    outputs[boxed.STRING_KT] = boxed.render_string_kt(api)
+    outputs[boxed.BYTES_KT] = boxed.render_bytes_kt(api)
+    node_path = boxed.NODE_PATH_KT.read_text(encoding="utf-8")
+    region = render_region("NodePath", boxed.node_path_region_sources(api), BEGIN, END, "  ")
+    outputs[boxed.NODE_PATH_KT] = splice(node_path, "NodePath", region, BEGIN, END, class_companion_anchor("NodePath"))
+    outputs[boxed.SIGNATURES_KT] = boxed.render_signatures_kt(api)
     return outputs
 
 
@@ -2512,7 +2654,9 @@ def main() -> int:
         keys = web_parity_keys(pure)
         facade_keys = [summary_key(k) for k in WEB_LOCAL_FACADE]
         if args.record_parity:
+            live_bytes = parse_gdscript_pure(log, "bytes")
             missing = [k for k in keys if k not in live] + [k for k in facade_keys if k not in live_facade]
+            missing += [summary_key(k) for k, _, _ in BYTES_ENTRIES if summary_key(k) not in live_bytes]
             if missing:
                 raise SystemExit(f"[generate_builtin_ops] the log lacks {len(missing)} entries: {missing[:5]}")
             EXPECTED_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -2522,6 +2666,7 @@ def main() -> int:
                 "`scripts/generate_builtin_ops.py --record-parity <runtime smoke log>`.",
                 "pure": {k: live[k] for k in keys},
                 "facade_values": {k: live_facade[k] for k in facade_keys},
+                "bytes": {summary_key(k): live_bytes[summary_key(k)] for k, _, _ in BYTES_ENTRIES},
             }
             EXPECTED_PATH.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
             print(f"[generate_builtin_ops] recorded {len(keys)} Web parity hashes; rerun --write for the Web test")
@@ -2544,6 +2689,11 @@ def main() -> int:
                     f"recorded {v}, GDScript {got}"
                 )
         problems += [f"facade {k}: not recorded (run --record-parity)" for k in facade_keys if k not in recorded_facade]
+        live_bytes = parse_gdscript_pure(log, "bytes")
+        recorded_bytes = load_expected_bytes()
+        problems += [f"bytes {k}: recorded {v}, GDScript {live_bytes.get(k)}" for k, v in recorded_bytes.items() if live_bytes.get(k) != v]
+        problems += [f"bytes {summary_key(k)}: not recorded (run --record-parity)" for k, _, _ in BYTES_ENTRIES
+                     if summary_key(k) not in recorded_bytes]
         if problems:
             print(f"[generate_builtin_ops] FAIL: the recorded Web parity hashes are stale ({len(problems)}):", file=sys.stderr)
             for line in problems[:20]:
