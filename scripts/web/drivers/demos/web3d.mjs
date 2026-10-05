@@ -323,6 +323,21 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   );
   trace(`windowFamilyProbe: mask=${windowFamilyProbe}`);
 
+  // Task 134 D1 (protocol 32): Web parity for signals and value types (see Main.d1_probe). Bits:
+  // 1 = a three-argument @Signal reached its typed lambda intact, 2 = five value-type arguments,
+  // 4 = the engine's five-argument CollisionObject3D.input_event through its generated Signal5,
+  // 8 = builtin methods run by the engine (instance, static, Variant hit/miss, Basis.slerp),
+  // 16 = Vector4/Vector4i/AABB/Transform2D/Projection exports hydrated, 32 = arguments AND a
+  // return through the proxy. Healthy = 63. It also arms two awaits that d1_probe_after reads
+  // after the coroutine section's pumps: 1 = an await on a non-script engine emitter resumed,
+  // 2 = an await whose emitter was freed first was cancelled instead of hanging (healthy = 3).
+  const d1Probe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("d1_probe")}, 0)`,
+    ),
+  );
+  trace(`d1Probe: mask=${d1Probe}`);
+
   // Task 82 coroutine conformance probe. Main.coroutine_probe (method#19) launches ONE coroutine
   // on the script's own scope that awaits both delay shapes gameplay uses -- the wait-one-frame
   // safe point delaySeconds(0.0) and a timed delaySeconds -- then posts to the main thread.
@@ -386,6 +401,17 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ),
   );
   trace(`demoPageProbeAfter: ${demoPageProbeAfter}`);
+  const readD1After = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("d1_probe_after")}, 0)`,
+    ).then(Number);
+  let d1ProbeAfter = await readD1After();
+  const d1Deadline = Math.min(deadline, Date.now() + 10_000);
+  while (d1ProbeAfter !== 3 && Date.now() < d1Deadline) {
+    await delay(150);
+    d1ProbeAfter = await readD1After();
+  }
+  trace(`d1ProbeAfter: ${d1ProbeAfter}`);
 
   // KANAMA_WEB3D_EXTRA_PLAY_MS=<ms>: keep the level running this long before teardown. A timing-dependent
   // defect in the fixture (the Player drifting off its floor, task 118) fires with a small probability per
@@ -462,6 +488,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 64 tps-demo parcel 8: get_window, Control.set_position / set_size round-trips, the
     // narrowed propagate_call, and the nullable object slot clearing a mesh surface material.
     windowFamilyDelivers: windowFamilyProbe === 31,
+    // Task 134 D1: multi-argument and value-type signals, the engine builtin-call path, the five new
+    // script types, arguments + return, an await that resumes on an engine emitter, and an await
+    // cancelled by its emitter's free.
+    webParitySignalsAndValueTypes: d1Probe === 63 && d1ProbeAfter === 3,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

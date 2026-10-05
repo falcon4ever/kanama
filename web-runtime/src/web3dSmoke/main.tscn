@@ -58,6 +58,11 @@ probe_vector2i = Vector2i(6, 7)
 probe_object = NodePath("Spinner")
 probe_string_array = Array[String](["a", "b"])
 probe_curve = SubResource("Curve_probe")
+probe_vector4 = Vector4(1.5, -2, 3.25, 4)
+probe_vector4i = Vector4i(-1, 2, -3, 2147483647)
+probe_aabb = AABB(1, 2, 3, 4, 5, 6)
+probe_transform2d = Transform2D(0, 1, -1, 0, 10, -20)
+probe_projection = Projection(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_1")

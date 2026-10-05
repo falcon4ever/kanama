@@ -2,6 +2,7 @@ package web3d
 
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlinx.coroutines.CancellationException
 import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.ExportRange
 import net.multigesture.kanama.annotations.GodotName
@@ -34,16 +35,25 @@ import net.multigesture.kanama.api.RenderingServer
 import net.multigesture.kanama.api.Resource
 import net.multigesture.kanama.api.ResourceLoader
 import net.multigesture.kanama.api.SceneTree
+import net.multigesture.kanama.api.StaticBody3D
 import net.multigesture.kanama.api.Timer
 import net.multigesture.kanama.api.Window
 import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
 import net.multigesture.kanama.api.lookAt
+import net.multigesture.kanama.generated.MainSignals
+import net.multigesture.kanama.types.AABB
+import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.Plane
+import net.multigesture.kanama.types.Projection
+import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
+import net.multigesture.kanama.types.Vector4
+import net.multigesture.kanama.types.Vector4i
 import net.multigesture.kanama.web.WebExperimentalGenericCall
 
 /**
@@ -126,6 +136,17 @@ class Main(godotObject: GodotHandle) :
    * Kotlin default could never produce by accident.
    */
   @Export var probeCurve: Curve? = null
+
+  /** Task 134 D1: the five value types Web gained, overridden in main.tscn (see [d1Probe]). */
+  @Export var probeVector4: Vector4 = Vector4.ZERO
+
+  @Export var probeVector4i: Vector4i = Vector4i.ZERO
+
+  @Export var probeAabb: AABB = AABB.ZERO
+
+  @Export var probeTransform2d: Transform2D = Transform2D.IDENTITY
+
+  @Export var probeProjection: Projection = Projection.ZERO
 
   private lateinit var spinner: Node3D
   private var angle = 0.0
@@ -1037,6 +1058,131 @@ class Main(godotObject: GodotHandle) :
       "parity: restore left the level at yaw ${self.globalRotation.y}, expected 0"
     }
   }
+
+  // ---------- Task 134 D1: Web parity for signals and value types ----------
+
+  @Signal("d1_moved") fun d1Moved(id: Long, where: Vector3, label: String) = Unit
+
+  @Signal("d1_shapes")
+  fun d1Shapes(box: AABB, view: Projection, tint: Color, flip: Transform2D, w: Vector4) = Unit
+
+  /** Arguments AND a return through the proxy (`callPackedArgs`): reached by [d1Probe]'s generic call. */
+  fun d1ScaleBox(box: AABB, factor: Double): AABB = AABB(box.position * factor, box.size * factor)
+
+  fun d1Describe(tag: String, count: Long, on: Boolean): String = "$tag:$count:$on"
+
+  private var d1AfterMask = 0L
+
+  /**
+   * Task 134 D1 conformance probe (driver `d1_probe`, then `d1_probe_after`). Bits:
+   * - 1: a three-argument `@Signal` (Long, Vector3, String) emitted from Kotlin (the generic
+   *   immediate `emit_signal`) reached a typed lambda with every argument intact;
+   * - 2: a five-argument signal of value types (AABB, Projection, Color, Transform2D, Vector4) did;
+   * - 4: an ENGINE signal with five arguments (`CollisionObject3D.input_event`: Node, InputEvent,
+   *   Vector3, Vector3, int) reached its generated `Signal5` handle;
+   * - 8: builtin methods the engine runs (the bridge's builtin-call crossing) answer like Godot:
+   *   an instance method, a static one, a Variant return (a hit and a miss), a Basis method;
+   * - 16: the five new script types hydrated from main.tscn;
+   * - 32: a method with arguments AND a return value, called through its proxy, returned the value.
+   * It also arms two awaits read back by [d1ProbeAfter]. A healthy run returns 63.
+   */
+  fun d1Probe(value: Long): Long {
+    var mask = 0L
+
+    var moved: Triple<Long, Vector3, String>? = null
+    MainSignals.d1Moved(self).connect(self, GodotObject.ConnectFlags.ONE_SHOT) { id, where, label -> moved = Triple(id, where, label) }
+    MainSignals.d1Moved(self).emit(9_007_199_254_740_993L, Vector3(1.5, -2.25, 1e-3), "d1\u001F%")
+    if (moved == Triple(9_007_199_254_740_993L, Vector3(1.5, -2.25, 1e-3), "d1\u001F%")) mask = mask or 1L
+
+    val box = AABB(Vector3(1.0, -2.0, 3.5), Vector3(0.25, 4.0, 8.0))
+    val view = Projection.createPerspective(70.0, 1.5, 0.1, 50.0)
+    val tint = Color(0.25, 0.5, 0.75, 1.0)
+    val flip = Transform2D(Vector2(0.0, 1.0), Vector2(-1.0, 0.0), Vector2(10.0, -20.0))
+    val w = Vector4(1.0, -0.5, 1e20, Double.NEGATIVE_INFINITY)
+    var shapes: List<Any>? = null
+    MainSignals.d1Shapes(self).connect(self, GodotObject.ConnectFlags.ONE_SHOT) { b, v, t, f, x -> shapes = listOf(b, v, t, f, x) }
+    MainSignals.d1Shapes(self).emit(box, view, tint, flip, w)
+    if (shapes == listOf<Any>(box, view, tint, flip, w)) mask = mask or 2L
+
+    val floor = self.requireAs("Floor", ::StaticBody3D)
+    val camera = self.requireAs("Camera", ::Camera3D)
+    val key = InputEventKey.create()
+    var input: List<Any?>? = null
+    floor.inputEvent.connect(self, GodotObject.ConnectFlags.ONE_SHOT) { cam, event, position, normal, shape ->
+      // An object argument crosses as a handle valid for the callback (its own token, so
+      // isSameInstance against the caller's wrapper is false by design); read it while it lives.
+      input = listOf(cam.getName() == camera.getName(), event.isClass("InputEventKey"), position, normal, shape)
+    }
+    floor.emitSignal("input_event", camera, key, Vector3(1.0, 2.0, 3.0), Vector3.UP, 7L)
+    if (input == listOf<Any?>(true, true, Vector3(1.0, 2.0, 3.0), Vector3.UP, 7L)) mask = mask or 4L
+    key.close()
+
+    val snapped = Vector3(1.26, -0.74, 0.5).snapped(Vector3(0.5, 0.5, 0.5))
+    val perspective = Projection.createPerspective(90.0, 1.0, 0.5, 100.0)
+    val hit = Plane(Vector3.UP, 0.0).intersectsRay(Vector3(0.0, 5.0, 0.0), Vector3(0.0, -1.0, 0.0))
+    val miss = Plane(Vector3.UP, 0.0).intersectsRay(Vector3(0.0, 5.0, 0.0), Vector3(1.0, 0.0, 0.0))
+    val halfway = Basis.IDENTITY.slerp(Basis.fromScale(Vector3.ONE).rotated(Vector3.UP, PI / 2), 0.5)
+    if (
+      snapped == Vector3(1.5, -0.5, 0.5) &&
+        abs(perspective.y.y - 1.0) < 1e-5 &&
+        hit == Vector3.ZERO &&
+        miss == null &&
+        abs(halfway.getEuler().y - PI / 4) < 1e-5
+    ) {
+      mask = mask or 8L
+    }
+
+    if (
+      probeVector4 == Vector4(1.5, -2.0, 3.25, 4.0) &&
+        probeVector4i == Vector4i(-1, 2, -3, 2147483647) &&
+        probeAabb == AABB(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0)) &&
+        probeTransform2d == Transform2D(Vector2(0.0, 1.0), Vector2(-1.0, 0.0), Vector2(10.0, -20.0)) &&
+        probeProjection ==
+          Projection(
+            Vector4(1.0, 2.0, 3.0, 4.0),
+            Vector4(5.0, 6.0, 7.0, 8.0),
+            Vector4(9.0, 10.0, 11.0, 12.0),
+            Vector4(13.0, 14.0, 15.0, 16.0),
+          )
+    ) {
+      mask = mask or 16L
+    }
+
+    val scaled = WebExperimentalGenericCall.callImmediate(self, "d1_scale_box", listOf(box, 2.0)).asValue()
+    val described =
+      WebExperimentalGenericCall.callImmediate(self, "d1_describe", listOf("tag", 5_000_000_000L, true)).asString()
+    if (scaled == AABB(box.position * 2.0, box.size * 2.0) && described == "tag:5000000000:true") {
+      mask = mask or 32L
+    }
+
+    // Async: an await on an engine emitter that is not a script resumes (bit 1), and an await
+    // whose emitter is freed first is cancelled instead of hanging (bit 2).
+    d1AfterMask = 0L
+    launch {
+      floor.inputEvent.await()
+      d1AfterMask = d1AfterMask or 1L
+    }
+    val doomed = Camera3D.create()
+    self.addChild(doomed)
+    launch {
+      try {
+        doomed.renamed.await()
+      } catch (e: CancellationException) {
+        d1AfterMask = d1AfterMask or 2L
+        throw e
+      }
+    }
+    MainThread.postAfterFrames(3) {
+      val later = InputEventKey.create()
+      floor.emitSignal("input_event", camera, later, Vector3.ZERO, Vector3.UP, 0L)
+      later.close()
+      doomed.queueFree()
+    }
+    return mask
+  }
+
+  /** Task 134 D1 readback of [d1Probe]'s awaits: 3 once both have settled. */
+  fun d1ProbeAfter(value: Long): Long = d1AfterMask
 
   /**
    * Connects and fires the scalar-payload signal once. Called from [ready] so the payload has
