@@ -349,8 +349,8 @@ build script on Android. The Web build compiles the same files too (task 134 D1)
 `web-runtime` adds the whole `types` directory as a source directory and supplies its own
 internal `real_t` half (`WebReal.kt`) and its own `BuiltinFrame` (`web-runtime/.../binding/runtime`),
 which runs an engine-backed method over the bridge (one immediate crossing, answered by the
-proxy's `_kanama_web_builtin_call`) or, for the few gameplay calls every tick, in Kotlin
-(`WebLocalBuiltins`, ports of Godot's `core/math`).
+proxy's `_kanama_web_builtin_call`) or, for the few transcendental ones gameplay calls every tick,
+in Kotlin (`WebLocalBuiltins`, ports of Godot's `core/math`).
 
 A value type is a Kotlin `data class` of `Double` components, immutable, with
 `equals`/`hashCode` following GDScript's `==` (signed zero equal, NaN reflexive,

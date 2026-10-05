@@ -269,11 +269,17 @@ supplies only the internal `real_t` half (`types/WebReal.kt`, float32) and its o
 compiler holds the shared types to it). An engine-backed method fills the frame in Godot's
 memory layout and runs:
 
-- **in Kotlin** when `WebLocalBuiltins` has it: the methods gameplay calls every tick
-  (`getRotationQuaternion`, `slerp`, `rotated`, `fromEuler` behind `Node3D.rotation`, …), ported
-  from Godot's `core/math` at float32 width with release semantics, so they cost no crossing (the
-  arithmetic ones are bit-exact, checked by `WebBuiltinParityTest`; the sin/cos/atan2 ones may
-  differ in the last bit from the engine's libm);
+- **in Kotlin** when `WebLocalBuiltins` has it: the few transcendental methods gameplay calls
+  every tick (`slerp`, `rotated`, `getEuler`/`fromEuler` behind `Node3D.rotation`, `lookingAt`,
+  `interpolateWith`, `angle`, `signedAngleTo`), ported from Godot's `core/math` at float32 width
+  with release semantics (Web export templates are release builds: no `MATH_CHECKS`), so they cost
+  no crossing. The arithmetic ones (`inverse`, `transposed`, `determinant`, `getScale`,
+  `orthonormalized`, `getRotationQuaternion`, …) are not Web code: they are shared pure formulas
+  (`BuiltinFormulas.kt`, `generate_builtin_ops.py`) every backend runs, handing the engine only
+  the inputs Godot's debug `MATH_CHECKS` reject. `WebBuiltinParityTest` holds every local port
+  to Godot's recorded values (`facade_values` in `builtin_parity_expected.json`) within a recorded
+  per-method float32 ulp bound (`WEB_LOCAL_FACADE` in the generator: 0 for all but `getEuler`, 1,
+  and `interpolateWith`, 64, where libm's `atan2`/`acos` round differently);
 - **in the engine** otherwise: one immediate crossing (`KanamaWebBridge.immediateBuiltinCall`,
   object-query opcode 1003, any live proxy answers it) carrying
   `<Variant.Type>␟<method>␟<static>␟<base>␟<args…>`, each value `<Variant.Type>:<payload>`; the
@@ -284,7 +290,9 @@ memory layout and runs:
 
 **One Variant text format.** `<Variant.Type>:<payload>` (`WebPackedValues.encodeVariant` /
 `decodeVariant`, the proxy's `_kanama_web_pack_variant` / `_kanama_web_unpack_variant`): bool
-`1`/`0`, int and float as decimals (`String.num_scientific`, shortest round-trip), text
+`1`/`0`, an int as a decimal, a float (and every decimal value-type component) as its IEEE-754
+bits, an int64 decimal (`WebPackedFloats`; the proxy converts through a `PackedByteArray`, so NaN, -0
+and denormals survive and nothing is rounded; review S1), text
 %-escaped, an object as its bridge handle id, a RID as its id, a value type as its components in
 Godot's memory layout (a Basis as its rows; the processor's `WebValueTypes.LAYOUTS`). Signal
 arguments, builtin calls, generic-call value arguments (`v:`) and results use it.
@@ -293,17 +301,25 @@ arguments, builtin calls, generic-call value arguments (`v:`) and results use it
 `_kanama_web_signal_dispatch_args(...args)` with the callback id bound last; the proxy packs every
 emitted argument and Kotlin decodes each with its `SignalArgType` (`Signal0` … `Signal5`, typed
 handles for every signal of every generated class and every `@Signal`). An **await** is bound to
-the emitter instead: `_kanama_connect_await` keeps a small `_KanamaSignalWatcher` (a RefCounted
-inner class of the proxy) in the emitter's metadata and connects the signal to it; the watcher
-delivers through the awaiting script's proxy, and when the emitter is freed first its
-`NOTIFICATION_PREDELETE` calls `releaseSignalCallback`, which cancels the waiting coroutine (as on
-desktop) instead of leaving it suspended. `emitSignal` takes its typed arm for one int32 / String /
+the emitter instead: `_kanama_connect_await` creates a small `_KanamaSignalWatcher` (a RefCounted
+inner class of the proxy) and binds it as an argument of the emitter's own one-shot connection, so
+the connection is all that holds it (no metadata, never `CONNECT_PERSIST`: `Node.duplicate()` and
+`PackedScene.pack` copy neither). The watcher delivers through the awaiting script's proxy; when
+the emitter is freed first its `NOTIFICATION_PREDELETE` calls `releaseSignalCallback`, which
+cancels the waiting coroutine (as on desktop) instead of leaving it suspended; when the awaiting
+script is freed first its proxy's predelete disconnects every watcher it was delivering
+(`KanamaWebHandles.await_watchers`), so none stays on a long-lived emitter. `emitSignal` takes its typed arm for one int32 / String /
 object / Vector2i argument and otherwise one immediate generic `emit_signal` call, so handlers run
 before it returns.
 
 **Arguments and a return.** A registered method that takes arguments AND returns a value rides
 `callPackedArgs` (`WebMethodArm.PACKED_ARGS_RETURN`): the packed argument list in (floats and
-value types now included, as exact decimals), the packed return out.
+value types now included, decimals as their bits), the packed return out.
+
+**A failed builtin call throws.** `callv` answers a wrong argument count or type with an error
+print and `nil`; the proxy checks the count first (`E:<message>`), and Kotlin compares the
+returned Variant type with the declared one (`WebBuiltinSignatures`, generated with each method's
+return type), so a failure throws instead of reading zeros or a pooled frame's earlier result.
 
 ### Coroutine frame scheduler (one advance per engine frame, no demo opt-in)
 

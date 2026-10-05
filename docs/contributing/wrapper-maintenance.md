@@ -998,9 +998,14 @@ and `builtin_parity_ref.gd`): every Kotlin-computed member over 256 fixed-seed r
 every engine-backed one over 8, hashed and compared with GDScript; a changed formula that is not
 Godot's to the bit fails the smoke and names the member. The Web build compiles the same value
 types (task 134 D1), so `WebBuiltinParityTest` runs every Kotlin-computed entry compiled to Wasm
-under Node against Godot's hashes recorded in `scripts/fixtures/builtin_parity_expected.json`
-(the generator also writes `WebBuiltinSignatures.kt`, the argument Variant types the Web
-builtin-call crossing needs for each engine-backed method); after a
+under Node against Godot's hashes recorded in `scripts/fixtures/builtin_parity_expected.json`,
+and every Web-local port (`WebLocalBuiltins`, the transcendental methods Web runs in Kotlin)
+against Godot's values recorded beside them (`facade_values`), within the float32 ulp bound
+`WEB_LOCAL_FACADE` records per method with its reason (the generator also writes
+`WebBuiltinSignatures.kt`, the argument and return Variant types the Web builtin-call crossing
+needs for each engine-backed method). A pure method whose Godot counterpart has a `MATH_CHECKS`
+guard lists the guard's formula in `ENGINE_FALLBACK`: it returns null for exactly the inputs the
+guard rejects, and the generated member then calls the engine; after a
 change to the probe, record them from a runtime smoke log with
 `python3 scripts/generate_builtin_ops.py --record-parity /tmp/kanama_runtime_smoke.log`, then
 `--write` (the runtime smoke re-checks the recording with `--verify-recorded`).

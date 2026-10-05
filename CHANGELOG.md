@@ -97,7 +97,8 @@ classes; the desktop names, overloads and factories are kept.
 
 ### Added — Web parity for signals and value types (task 134 D1)
 
-Web (Kotlin/Wasm), bridge protocol 32. Desktop, Android and iOS are unchanged.
+Web (Kotlin/Wasm), bridge protocol 32. On desktop, Android and iOS only the value-type change
+below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
 
 - **Signals of any arity on Web.** The bridge delivers every argument of an emission (a variadic
   proxy helper packs each as a Variant), so Web has `Signal0` … `Signal5` like desktop: a typed
@@ -107,8 +108,10 @@ Web (Kotlin/Wasm), bridge protocol 32. Desktop, Android and iOS are unchanged.
   object, enum, `NodePath`, `RID`, `Variant` or value-type argument). `SignalArgs2` … `SignalArgs5`
   destructure an `await()`.
 - **`await()` is cancelled when the emitter is freed first**, as on desktop/iOS, instead of never
-  resuming (the proxy keeps an await watcher in the emitter's metadata; its predelete releases the
-  wait). It works on any emitter, scripted or not.
+  resuming (the proxy binds an await watcher to the emitter's own one-shot connection; its
+  predelete releases the wait). It works on any emitter, scripted or not. When the awaiting script
+  is freed first, its pending awaits are disconnected from the emitter; `Node.duplicate()` and
+  `PackedScene.pack` copy none of them.
 - **Emit with any arguments from Kotlin.** `emitSignal(name, …)` with several arguments, a float,
   a bool, a value type or a 64-bit int (and so every typed `emit`) runs as one immediate
   `emit_signal`; handlers still run before it returns. The generic call carries 64-bit ints and
@@ -118,19 +121,33 @@ Web (Kotlin/Wasm), bridge protocol 32. Desktop, Android and iOS are unchanged.
   `Transform2D` and `Projection` exist on Web, are script types (exports, arguments, returns,
   signal arguments), and every value-type member desktop has is there. The engine-backed methods
   run over the bridge (one immediate crossing; the proxy calls the builtin by name with the
-  argument types from the generated `WebBuiltinSignatures.kt`); the ones gameplay calls every tick
-  (`getRotationQuaternion`, `slerp`, `rotated`, `getEuler`/`fromEuler`, `lookingAt`,
-  `interpolateWith`, `inverse`, …) run as Kotlin ports of Godot's `core/math`, at no crossing. The
-  hand-written `WebValueTypes.kt`, `WebScalarOperators.kt` and the Web `NodePath.kt` are gone.
-- **A Web script method can take arguments and return a value** (any type Web carries), and a
-  packed argument list now carries floats and every value type exactly (`String.num_scientific`).
+  argument and return types from the generated `WebBuiltinSignatures.kt`; a call the engine
+  rejects throws instead of returning zeros). The transcendental ones gameplay calls every tick
+  (`slerp`, `rotated`, `getEuler`/`fromEuler`, `lookingAt`, `interpolateWith`, `angle`,
+  `signedAngleTo`) run as Kotlin ports of Godot's `core/math`, at no crossing; they match Godot's
+  recorded results to the bit except `getEuler` (at most 1 float32 ulp) and `interpolateWith` (at
+  most 64), where the math libraries round differently. The hand-written `WebValueTypes.kt`,
+  `WebScalarOperators.kt` and the Web `NodePath.kt` are gone.
+- **`Basis`/`Transform3D` arithmetic runs in Kotlin on every platform.** `Basis.inverse`,
+  `transposed`, `determinant`, `getScale`, `scaled`, `orthonormalized`, `getRotationQuaternion`
+  and `Transform3D.inverse`, `affineInverse`, `orthonormalized` are now shared Kotlin formulas
+  (bit-exact with Godot, checked by the runtime smoke's parity rows) instead of engine calls. The
+  inputs Godot's debug build rejects (a singular basis to invert, a non-rotation to turn into a
+  quaternion) still go to the engine, so the same error is reported.
+- **A Web script method can take arguments and return a value** (any type Web carries). Every
+  decimal crossing the bridge in either direction (signal arguments, method arguments and returns,
+  generic calls, builtin calls, value-type components, `ConfigFile` floats) travels as its
+  IEEE-754 bits, so it arrives exactly: NaN, -0, denormals and the infinities included.
 - Proof: the web3d smoke's `webParitySignalsAndValueTypes` check (a three-argument `@Signal`, five
   value-type arguments, the engine's five-argument `CollisionObject3D.input_event`, engine-run
   builtin methods with a static and a Variant return, the five new exports hydrated from the
-  scene, arguments + return through the proxy, an await on an engine emitter resuming and one
-  cancelled by its emitter's free), Node tests `WebSignalArgsTest`, `WebLocalBuiltinsTest`,
-  `WebPackedValuesTest`, and `WebBuiltinParityTest`, which now runs all 335 Kotlin-computed parity
-  entries compiled to Wasm against Godot's recorded hashes.
+  scene, arguments + return through the proxy, doubles bit-exact through a signal and a method,
+  a rejected builtin call throwing, an await on an engine emitter resuming, one cancelled by its
+  emitter's free, one dropped when its awaiting script is freed first, and `Node.duplicate()` not
+  copying a pending await), Node tests `WebSignalArgsTest`, `WebLocalBuiltinsTest`,
+  `WebPackedValuesTest`, `WebPackedFloatsTest`, `WebBuiltinRemoteTest`, and `WebBuiltinParityTest`,
+  which runs all 345 Kotlin-computed parity entries compiled to Wasm against Godot's recorded
+  hashes and every Web-local port against Godot's recorded values.
 - **Source break:** on Web only, `Basis`, `Transform3D`, `Vector2`, `Vector3` are the shared
   classes: Web's `Basis.getColumn(i)` / `Basis.fromAxisAngle(axis, angle)` are gone (use `basis.x`
   / `basis.y` / `basis.z` and `Basis.IDENTITY.rotated(axis, angle)`), and parameter names follow

@@ -84,7 +84,8 @@ same `Signal0` … `Signal5` handles, on every signal its generated classes decl
 and on every `@Signal`: an object, `int`, `float`, `bool`, `String`/`StringName`,
 `NodePath`, `RID`, a `Variant`, a Godot enum, or any value type. `connect`,
 `await`, `emit` and the script's `connect { }` work as above, and an `await` whose
-emitter is freed before the signal fires is cancelled, as on desktop. Two
+emitter is freed before the signal fires is cancelled, as on desktop (one whose
+awaiting script is freed first is disconnected from the emitter). Two
 differences remain: an object argument is valid while the callback runs (keep
 what you need from it, not the wrapper), and its wrapper is not `==` to another
 wrapper of the same object (Web compares handle tokens). The two
