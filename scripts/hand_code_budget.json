@@ -23,7 +23,10 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotSignal.expect.kt": {
       "category": "runtime-core",
-      "lines": 98,
+      "lines": 101,
+      "raises": [
+        "98 -> 101: GodotSignal.owner joins the expect so the generated wrappers pass a Signal argument on every platform (task 129 A, Tween.tweenAwait)"
+      ],
       "reason": "signal plumbing expect"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/KanamaScript.kt": {
@@ -184,7 +187,7 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/Engine.kt": {
       "category": "transitional",
-      "lines": 884,
+      "lines": 879,
       "parcel": "129 parcel 7 (Engine: registerSingleton guard as a generator hook)",
       "reason": "per-platform hand file the generator should emit"
     },
@@ -213,7 +216,7 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/InputEventKey.kt": {
       "category": "transitional",
-      "lines": 397,
+      "lines": 391,
       "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
       "reason": "per-platform hand file the generator should emit"
     },

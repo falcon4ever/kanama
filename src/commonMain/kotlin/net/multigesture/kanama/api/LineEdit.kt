@@ -700,8 +700,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      * Maximum number of characters that can be entered inside the `LineEdit`. If `0`, there is no
      * limit. When a limit is defined, characters that would exceed `max_length` are truncated. This
      * happens both for existing `text` contents when setting the max length, or for new text inserted
-     * in the `LineEdit`, including pasting. If any input text is truncated, the `text_change_rejected`
-     * signal is emitted with the truncated substring as a parameter:
+     * in the `LineEdit`, including pasting.
      *
      * Generated from Godot docs: LineEdit.set_max_length
      */
@@ -713,8 +712,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
      * Maximum number of characters that can be entered inside the `LineEdit`. If `0`, there is no
      * limit. When a limit is defined, characters that would exceed `max_length` are truncated. This
      * happens both for existing `text` contents when setting the max length, or for new text inserted
-     * in the `LineEdit`, including pasting. If any input text is truncated, the `text_change_rejected`
-     * signal is emitted with the truncated substring as a parameter:
+     * in the `LineEdit`, including pasting.
      *
      * Generated from Godot docs: LineEdit.get_max_length
      */
@@ -821,7 +819,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the `PopupMenu` of this `LineEdit`. By default, this menu is displayed when
      * right-clicking on the `LineEdit`. You can add custom menu items or remove standard ones. Make
-     * sure your IDs don't conflict with the standard ones (see `MenuItems`). For example:
+     * sure your IDs don't conflict with the standard ones (see `MenuItems`).
      *
      * Generated from Godot docs: LineEdit.get_menu
      */

@@ -1848,9 +1848,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * Texture to use when `vrs_mode` is set to `Viewport.VRSMode.TEXTURE`. The texture must use a
-     * lossless compression format so that colors can be matched precisely. The following VRS densities
-     * are mapped to various colors, with brighter colors representing a lower level of shading
-     * precision:
+     * lossless compression format so that colors can be matched precisely.
      *
      * Generated from Godot docs: Viewport.set_vrs_texture
      */
@@ -1860,9 +1858,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * Texture to use when `vrs_mode` is set to `Viewport.VRSMode.TEXTURE`. The texture must use a
-     * lossless compression format so that colors can be matched precisely. The following VRS densities
-     * are mapped to various colors, with brighter colors representing a lower level of shading
-     * precision:
+     * lossless compression format so that colors can be matched precisely.
      *
      * Generated from Godot docs: Viewport.get_vrs_texture
      */

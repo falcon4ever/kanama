@@ -15,6 +15,9 @@ package net.multigesture.kanama.api
  * `GodotObject.ConnectFlags(0L)` (Godot names no zero flag) and `argumentCount` (of [await]) to 0.
  */
 expect class GodotSignal internal constructor(owner: GodotObject, name: String) {
+    /** The object that emits this signal; generated wrappers pass it with [name] as a Signal argument. */
+    internal val owner: GodotObject
+
     /** The signal name. */
     val name: String
 

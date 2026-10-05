@@ -327,8 +327,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
     /**
      * Ensures the given `control` is visible (must be a direct or indirect child of the
      * ScrollContainer). Used by `follow_focus`. Note: This will not work on a node that was just added
-     * during the same frame. If you want to scroll to a newly added child, you must wait until the
-     * next frame using `SceneTree.process_frame`:
+     * during the same frame.
      *
      * Generated from Godot docs: ScrollContainer.ensure_control_visible
      */

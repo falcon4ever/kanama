@@ -81,10 +81,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     /**
      * Represents the physical location of a key on the 101/102-key US QWERTY keyboard, which
      * corresponds to one of the `Key` constants. Physical key codes meant for game input, such as WASD
-     * movement, where only the location of the keys is important. To get a human-readable
-     * representation of the `InputEventKey`, use `OS.get_keycode_string` in combination with
-     * `DisplayServer.keyboard_get_keycode_from_physical` or
-     * `DisplayServer.keyboard_get_label_from_physical`:
+     * movement, where only the location of the keys is important.
      *
      * Generated from Godot docs: InputEventKey.set_physical_keycode
      */
@@ -96,10 +93,7 @@ class InputEventKey(handle: GodotHandle) : InputEventWithModifiers(handle) {
     /**
      * Represents the physical location of a key on the 101/102-key US QWERTY keyboard, which
      * corresponds to one of the `Key` constants. Physical key codes meant for game input, such as WASD
-     * movement, where only the location of the keys is important. To get a human-readable
-     * representation of the `InputEventKey`, use `OS.get_keycode_string` in combination with
-     * `DisplayServer.keyboard_get_keycode_from_physical` or
-     * `DisplayServer.keyboard_get_label_from_physical`:
+     * movement, where only the location of the keys is important.
      *
      * Generated from Godot docs: InputEventKey.get_physical_keycode
      */

@@ -301,8 +301,7 @@ object Engine {
 
     /**
      * Returns the total number of frames passed since the engine started. This number is increased
-     * every physics frame. See also `get_process_frames`. This method can be used to run expensive
-     * logic less often without relying on a `Timer`:
+     * every physics frame. See also `get_process_frames`.
      *
      * Generated from Godot docs: Engine.get_physics_frames
      */
@@ -314,8 +313,7 @@ object Engine {
     /**
      * Returns the total number of frames passed since the engine started. This number is increased
      * every process frame, regardless of whether the render loop is enabled. See also
-     * `get_frames_drawn` and `get_physics_frames`. This method can be used to run expensive logic less
-     * often without relying on a `Timer`:
+     * `get_frames_drawn` and `get_physics_frames`.
      *
      * Generated from Godot docs: Engine.get_process_frames
      */
@@ -348,7 +346,6 @@ object Engine {
      * left to right: one byte for the major, one byte for the minor, one byte for the patch version.
      * For example, "3.1.12" would be `0x03010C`. Note: The `hex` value is still an `int` internally,
      * and printing it will give you its decimal representation, which is not particularly meaningful.
-     * Use hexadecimal literals for quick version comparisons from code:
      *
      * Generated from Godot docs: Engine.get_version_info
      */
@@ -576,8 +573,6 @@ object Engine {
 
     /**
      * Returns `true` if the script is currently running inside the editor, otherwise returns `false`.
-     * This is useful for `@tool` scripts to conditionally draw editor helpers, or prevent accidentally
-     * running "game" code that would affect the scene state while in the editor:
      *
      * Generated from Godot docs: Engine.is_editor_hint
      */

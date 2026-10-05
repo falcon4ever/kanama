@@ -2663,7 +2663,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the `PopupMenu` of this `TextEdit`. By default, this menu is displayed when
      * right-clicking on the `TextEdit`. You can add custom menu items or remove standard ones. Make
-     * sure your IDs don't conflict with the standard ones (see `MenuItems`). For example:
+     * sure your IDs don't conflict with the standard ones (see `MenuItems`).
      *
      * Generated from Godot docs: TextEdit.get_menu
      */

@@ -571,6 +571,8 @@ static GDExtensionVariantFromTypeConstructorFunc g_variant_from_vector2i = NULL;
 static GDExtensionPtrConstructor g_callable_object_method_constructor = NULL;
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_callable = NULL;
 static GDExtensionPtrDestructor g_callable_destructor = NULL;
+static GDExtensionPtrConstructor g_signal_object_name_constructor = NULL;  // Signal(Object, StringName)
+static GDExtensionPtrDestructor g_signal_destructor = NULL;
 static GDExtensionPtrBuiltInMethod g_callable_bindv = NULL;   // Callable.bindv(Array) -> Callable
 static GDExtensionPtrBuiltInMethod g_array_push_back = NULL;  // Array.push_back(Variant)
 static GDExtensionVariantFromTypeConstructorFunc g_variant_from_vector2 = NULL;
@@ -774,6 +776,11 @@ enum {
     // POD passthrough (task 133 value types): 4x int32, the int twin of PT_VECTOR4. Value (40)
     // must match IOS_PT_VECTOR4I in KanamaIosRuntime.kt. Append-only — never renumber.
     KANAMA_IOS_PT_VECTOR4I,             // 40
+    // CONSTRUCT-tagged Signal arg (task 129 A, Tween.tween_await): the arg ptr is the same
+    // KanamaIosCallableArgDesc {object_handle, method} as PT_CALLABLE, `method` holding the signal
+    // name; the dispatch builds Signal(Object, StringName) (constructor index 2) into a cell, passes
+    // it to ptrcall and destroys it after the call. Append-only — never renumber.
+    KANAMA_IOS_PT_SIGNAL,               // 41
 };
 
 // Descriptor for a BUILD-tagged Packed*Array arg (mirrors KanamaIosPackedArgDesc in
@@ -836,6 +843,7 @@ enum {
     KANAMA_IOS_VARIANT_TYPE_RID = 23,
     KANAMA_IOS_VARIANT_TYPE_OBJECT = 24,
     KANAMA_IOS_VARIANT_TYPE_CALLABLE = 25,
+    KANAMA_IOS_VARIANT_TYPE_SIGNAL = 26,
     KANAMA_IOS_VARIANT_TYPE_DICTIONARY = 27,
     KANAMA_IOS_VARIANT_TYPE_ARRAY = 28,
     KANAMA_IOS_VARIANT_TYPE_PACKED_BYTE_ARRAY = 29,
@@ -1086,6 +1094,10 @@ static int kanama_ios_resolve_godot_api(void) {
     g_callable_object_method_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE, 2);
     g_variant_from_callable = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE);
     g_callable_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_CALLABLE);
+    // Optional (only PT_SIGNAL args use them): not in the required list below, so a missing one
+    // faults at the call instead of disabling the whole bridge.
+    g_signal_object_name_constructor = g_variant_get_ptr_constructor(KANAMA_IOS_VARIANT_TYPE_SIGNAL, 2);
+    g_signal_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_SIGNAL);
     g_variant_from_vector2 = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR2);
     g_variant_from_vector3 = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_VECTOR3);
     g_variant_from_color = g_get_variant_from_type_constructor(KANAMA_IOS_VARIANT_TYPE_COLOR);
@@ -1990,6 +2002,30 @@ static void kanama_ios_godot_ptrcall_dispatch(
                 constructed[i] = tag;
                 break;
             }
+            case KANAMA_IOS_PT_SIGNAL: {
+                // arg ptr is a KanamaIosCallableArgDesc {object_handle, method = signal name}; build
+                // Signal(Object, StringName) (constructor index 2) into callable_cells[i] (a Signal is
+                // 16 bytes) with the name StringName in builtin_cells[i]; both are destroyed after the
+                // call. The engine copies the Signal it keeps (an ObjectID + StringName value).
+                const KanamaIosCallableArgDesc *desc =
+                    (arg_ptrs != NULL) ? (const KanamaIosCallableArgDesc *)arg_ptrs[i] : NULL;
+                memset(callable_cells[i], 0, sizeof(callable_cells[i]));
+                builtin_cells[i] = 0;
+                kanama_ios_init_string_name(
+                    &builtin_cells[i],
+                    (desc != NULL && desc->method != NULL) ? desc->method : "");
+                if (g_signal_object_name_constructor == NULL || g_signal_destructor == NULL) {
+                    kanama_ios_fault(__func__, "api-unresolved", "Signal(Object, StringName)");
+                } else {
+                    GDExtensionObjectPtr owner =
+                        (desc != NULL) ? (GDExtensionObjectPtr)(intptr_t)desc->object_handle : NULL;
+                    const void *signal_args[2] = { &owner, &builtin_cells[i] };
+                    g_signal_object_name_constructor(callable_cells[i], signal_args);
+                }
+                args[i] = (const void *)callable_cells[i];
+                constructed[i] = tag;
+                break;
+            }
             default:
                 // POD / struct / object: the caller-laid bytes are the ptrcall value.
                 args[i] = (arg_ptrs != NULL ? arg_ptrs[i] : NULL);
@@ -2060,6 +2096,12 @@ static void kanama_ios_godot_ptrcall_dispatch(
                 // copy-constructs the Callable parameter, so freeing our cell here is safe even
                 // when the engine retains its own copy (callable-args-design.md, Decision 2).
                 g_callable_destructor(callable_cells[i]);
+                kanama_ios_destroy_string_name(&builtin_cells[i]);
+                break;
+            case KANAMA_IOS_PT_SIGNAL:
+                if (g_signal_destructor != NULL) {
+                    g_signal_destructor(callable_cells[i]);
+                }
                 kanama_ios_destroy_string_name(&builtin_cells[i]);
                 break;
             default:

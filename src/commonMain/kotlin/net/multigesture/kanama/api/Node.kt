@@ -153,7 +153,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * parent. The intended usage is to hide the internal nodes from the user, so the user won't
      * accidentally delete or modify them. Used by some GUI nodes, e.g. `ColorPicker`. Note: If `node`
      * already has a parent, this method will fail. Use `remove_child` first to remove `node` from its
-     * current parent. For example:
+     * current parent.
      *
      * Generated from Godot docs: Node.add_child
      */
@@ -453,7 +453,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
      * the order of group names is not guaranteed and may vary between project runs. Therefore, do not
      * rely on the group order. Note: This method may also return some group names starting with an
      * underscore (`_`). These are internally used by the engine. To avoid conflicts, do not use custom
-     * groups starting with underscores. To exclude internal groups, see the following code snippet:
+     * groups starting with underscores.
      *
      * Generated from Godot docs: Node.get_groups
      */
@@ -505,7 +505,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Prints the node and its children to the console, recursively. The node does not have to be
      * inside the tree. This method outputs `NodePath`s relative to this node, and is good for
-     * copy/pasting into `get_node`. See also `print_tree_pretty`. May print, for example:
+     * copy/pasting into `get_node`. See also `print_tree_pretty`.
      *
      * Generated from Godot docs: Node.print_tree
      */
@@ -516,8 +516,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Prints the node and its children to the console, recursively. The node does not have to be
      * inside the tree. Similar to `print_tree`, but the graphical representation looks like what is
-     * displayed in the editor's Scene dock. It is useful for inspecting larger trees. May print, for
-     * example:
+     * displayed in the editor's Scene dock. It is useful for inspecting larger trees.
      *
      * Generated from Godot docs: Node.print_tree_pretty
      */
@@ -528,7 +527,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns the tree as a `String`. Used mainly for debugging purposes. This version displays the
      * path relative to the current node, and is good for copy/pasting into the `get_node` function. It
-     * also can be used in game UI/UX. May print, for example:
+     * also can be used in game UI/UX.
      *
      * Generated from Godot docs: Node.get_tree_string
      */
@@ -539,7 +538,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Similar to `get_tree_string`, this returns the tree as a `String`. This version displays a more
      * graphical representation similar to what is displayed in the Scene Dock. It is useful for
-     * inspecting larger trees. May print, for example:
+     * inspecting larger trees.
      *
      * Generated from Godot docs: Node.get_tree_string_pretty
      */
@@ -1158,7 +1157,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Creates a new `Tween` and binds it to this node. This is the equivalent of doing:
+     * Creates a new `Tween` and binds it to this node.
      *
      * Generated from Godot docs: Node.create_tween
      */

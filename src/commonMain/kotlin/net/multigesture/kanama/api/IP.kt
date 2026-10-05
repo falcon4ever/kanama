@@ -106,7 +106,7 @@ object IP {
     }
 
     /**
-     * Returns all network adapters as an array. Each adapter is a dictionary of the form:
+     * Returns all network adapters as an array.
      *
      * Generated from Godot docs: IP.get_local_interfaces
      */

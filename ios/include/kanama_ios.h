@@ -813,7 +813,8 @@ typedef struct {
 
 /*
  * Descriptor for a Callable argument passed through the generic ptrcall dispatcher
- * (KANAMA_IOS_PT_CALLABLE tag). `object_handle` is the target GodotObject pointer as an
+ * (KANAMA_IOS_PT_CALLABLE tag), and for a Signal argument (KANAMA_IOS_PT_SIGNAL tag, task 129 A:
+ * `method` is the signal name, and the dispatch builds Signal(Object, StringName) instead). `object_handle` is the target GodotObject pointer as an
  * int64 and `method` is its method name as a C string. The dispatch builds an object+method
  * Callable (Callable constructor index 2, the same one BuiltinTypes.initCallable pins on
  * desktop) into a cell, passes it to ptrcall, and destroys the cell after the call. No

@@ -611,6 +611,10 @@ IOS_ARG_KINDS = {
     # retention (callable-args ownership design, Decisions 1-3, 5; record in the internal task repo). Callable
     # *return* and Callable-as-Variant-arg stay unsupported (no emitted iOS method needs them).
     "Callable",
+    # Signal args (task 129 A): the same (object handle, name) pair as Callable; the PT_SIGNAL
+    # dispatch builds Signal(Object, StringName) (constructor index 2) for the call and destroys it
+    # after. Admitted per method by candidate_for (today Tween.tween_await only).
+    "Signal",
     # task 100 parcel 7: Variant / Dictionary / Array ARGS are BUILD-tagged through
     # ObjectCalls.packVariantDesc / packDictionaryBlob / packArrayBlob (scalars, one level of
     # Map / List inside a Variant; strict — an unsupported value throws instead of passing nil).
@@ -5265,6 +5269,9 @@ IOS_PT_TAG_VALUES = {
     # 26 is PT_PLANE (typed-array element selector, not an arg/ret tag). PT_CALLABLE is the
     # object+method Callable arg (KanamaIosCallableArgDesc path); value matches the C enum.
     "PT_CALLABLE": 27,
+    # Signal arg (task 129 A): a KanamaIosCallableArgDesc {object_handle, method = signal name};
+    # appended at the C enum's end (41).
+    "PT_SIGNAL": 41,
     # Rect2i return (4x int32 POD passthrough; the generic dispatch hands ret_out to the
     # engine untyped, so the tag is documentation + self-test selector). Appended at the
     # C enum's end (37) — never renumber existing tags.
@@ -5751,7 +5758,7 @@ IOS_ARRAY_BLOB_RETURNS = {
 # A generated helper's own parameter spelling, before the desktop names are applied: the two engine
 # pointers, then one `a<N>` per logical argument (a Callable argument spends two: `a<N>Object` and
 # `a<N>Method`), then the typed-object-list wrapper. Nothing else may be renamed positionally.
-IOS_GENERATED_PARAM_RE = re.compile(r"methodBind|instance|fromHandle|a\d+(?:Object|Method)?")
+IOS_GENERATED_PARAM_RE = re.compile(r"methodBind|instance|fromHandle|a\d+(?:Object|Method|Name)?")
 
 
 def _desktop_parameter_rename(function: str, generated: list[str]) -> dict[str, str]:
@@ -5854,6 +5861,21 @@ def render_ios_helper(
                 f"c{i}.method = a{i}Method.cstr.ptr"
             )
             arg_tags.append("PT_CALLABLE")
+            arg_ptr_exprs.append(f"c{i}.ptr.reinterpret<CPointed>()")
+            continue
+        if kind == "Signal":
+            # The wrapper call site expands a GodotSignal into (owner.segment, name); the same
+            # {object_handle, name} descriptor as a Callable, read by the PT_SIGNAL dispatch, which
+            # constructs Signal(Object, StringName) for the call and destroys it after.
+            tags_used.add("PT_SIGNAL")
+            params.append(f"a{i}Object: MemorySegment")
+            params.append(f"a{i}Name: String")
+            cell_decls.append(
+                f"val c{i} = alloc<KanamaIosCallableArgDesc>(); "
+                f"c{i}.object_handle = a{i}Object.address(); "
+                f"c{i}.method = a{i}Name.cstr.ptr"
+            )
+            arg_tags.append("PT_SIGNAL")
             arg_ptr_exprs.append(f"c{i}.ptr.reinterpret<CPointed>()")
             continue
         param_type, tag, decls, ptr_expr = ios_arg_layout(kind, i)

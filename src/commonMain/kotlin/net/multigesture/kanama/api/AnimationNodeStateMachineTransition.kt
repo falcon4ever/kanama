@@ -114,9 +114,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     /**
      * Turn on auto advance when this condition is set. The provided name will become a boolean
      * parameter on the `AnimationTree` that can be controlled from code (see Using AnimationTree
-     * ($DOCS_URL/tutorials/animation/animation_tree.html#controlling-from-code)). For example, if
-     * `AnimationTree.tree_root` is an `AnimationNodeStateMachine` and `advance_condition` is set to
-     * `"idle"`:
+     * ($DOCS_URL/tutorials/animation/animation_tree.html#controlling-from-code)).
      *
      * Generated from Godot docs: AnimationNodeStateMachineTransition.set_advance_condition
      */
@@ -128,9 +126,7 @@ class AnimationNodeStateMachineTransition(handle: GodotHandle) : Resource(handle
     /**
      * Turn on auto advance when this condition is set. The provided name will become a boolean
      * parameter on the `AnimationTree` that can be controlled from code (see Using AnimationTree
-     * ($DOCS_URL/tutorials/animation/animation_tree.html#controlling-from-code)). For example, if
-     * `AnimationTree.tree_root` is an `AnimationNodeStateMachine` and `advance_condition` is set to
-     * `"idle"`:
+     * ($DOCS_URL/tutorials/animation/animation_tree.html#controlling-from-code)).
      *
      * Generated from Godot docs: AnimationNodeStateMachineTransition.get_advance_condition
      */

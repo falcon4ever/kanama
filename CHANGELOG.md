@@ -62,14 +62,18 @@ classes; the desktop names, overloads and factories are kept.
   `InputEventMouseButton.from(event)` returns `null` for an `InputEventScreenTouch`; it used to wrap
   the touch as a mouse button. A touch reaches mouse-button code through Godot's
   `input_devices/pointing/emulate_mouse_from_touch` setting (on by default), as on every other
-  platform; code that wants the touch itself handles `InputEventScreenTouch`.
-- **Source break:** `top-level` — remove `import net.multigesture.kanama.api.createTween` and
-  `import net.multigesture.kanama.api.getProcessedTweens` (the functions are members now; the import
-  no longer resolves), and on iOS `import net.multigesture.kanama.api.setExclude` (the
-  `PhysicsRayQueryParameters3D.setExclude(List<RID>)` extension was shadowed by the identical
-  generated member and is gone). `Tween.tweenAwait(signal)` is a desktop/Android-only extension until
-  iOS can pass a `Signal` argument: a script outside the `net.multigesture.kanama.api` package that
-  calls it adds `import net.multigesture.kanama.api.tweenAwait`.
+  platform; code that wants the touch itself reads `event.castOrNull<InputEventScreenTouch>()`.
+- **Source break:** `top-level` `createTween`, `getProcessedTweens` and (iOS) `setExclude` — the
+  top-level extension functions are gone, so delete `import net.multigesture.kanama.api.createTween`,
+  `import net.multigesture.kanama.api.getProcessedTweens` and `import
+  net.multigesture.kanama.api.setExclude`: the calls resolve to the members (`createTween`,
+  `getProcessedTweens`) and to the generated `PhysicsRayQueryParameters3D.setExclude(List<RID>)`
+  member that already shadowed the iOS extension.
+- **`Tween.tweenAwait(signal)` is a member on every native platform**, iOS included: the iOS
+  ptrcall seam gained a `Signal` argument (`PT_SIGNAL`, built from the emitter and the signal name
+  like a `Callable` argument). Web has no `tweenAwait`, no `SceneTree.createTween()` and no
+  `getProcessedTweens()` yet; `Node.createTween()` and the tween methods above it exposes are
+  unchanged there.
 - **Source break:** `Tween` — `setLoops(loops: Int = 0)` and `getLoopsLeft(): Int` take and return
   `Int` (they were `Long` on desktop, as Godot types them `int32`): pass `n.toInt()` or compare with
   an `Int`. `tweenSubtween(subtween: Tween)` takes a non-null `Tween` (Godot marks the parameter

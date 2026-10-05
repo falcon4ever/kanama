@@ -79,6 +79,21 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
+     * Creates and appends an `AwaitTweener`. This method can be used to await a signal to be emitted
+     * and create asynchronous animations or cutscenes. The animation will not progress to the next
+     * step until the awaited signal is emitted or the connection becomes invalid (e.g. as a result of
+     * freeing the target object). If you know that the emission may not happen, use
+     * `AwaitTweener.set_timeout`. Note: The awaited signal should be emitted during the step when
+     * `AwaitTweener` is active.
+     *
+     * Generated from Godot docs: Tween.tween_await
+     */
+    fun tweenAwait(signal: GodotSignal): AwaitTweener {
+        checkOpen()
+        return requireGodotReturn(AwaitTweener.wrapOwned(ObjectCalls.ptrcallWithSignalArgRetObject(tweenAwaitBind, segment, signal.owner.segment, signal.name)), "Tween.tween_await")
+    }
+
+    /**
      * Processes the `Tween` by the given `delta` value, in seconds. This is mostly useful for manual
      * control when the `Tween` is paused. It can also be used to end the `Tween` animation
      * immediately, by setting `delta` longer than the whole duration of the `Tween` animation. Returns
@@ -668,6 +683,11 @@ class Tween(handle: GodotHandle) : RefCounted(handle) {
         private const val TWEEN_SUBTWEEN_HASH = 1567358477L
         private val tweenSubtweenBind by lazy {
             ObjectCalls.getMethodBind("Tween", "tween_subtween", TWEEN_SUBTWEEN_HASH)
+        }
+
+        private const val TWEEN_AWAIT_HASH = 2242837462L
+        private val tweenAwaitBind by lazy {
+            ObjectCalls.getMethodBind("Tween", "tween_await", TWEEN_AWAIT_HASH)
         }
 
         private const val CUSTOM_STEP_HASH = 330693286L

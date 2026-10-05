@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns the absolute path to the user's data folder. This folder should be used for persistent
-     * user data files such as installed export templates. Default paths per platform:
+     * user data files such as installed export templates.
      *
      * Generated from Godot docs: EditorPaths.get_data_dir
      */
@@ -22,7 +22,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
 
     /**
      * Returns the absolute path to the user's configuration folder. This folder should be used for
-     * persistent user configuration files. Default paths per platform:
+     * persistent user configuration files.
      *
      * Generated from Godot docs: EditorPaths.get_config_dir
      */
@@ -33,7 +33,7 @@ class EditorPaths(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Returns the absolute path to the user's cache folder. This folder should be used for temporary
      * data that can be removed safely whenever the editor is closed (such as generated resource
-     * thumbnails). Default paths per platform:
+     * thumbnails).
      *
      * Generated from Godot docs: EditorPaths.get_cache_dir
      */

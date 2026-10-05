@@ -4128,6 +4128,7 @@ actual object ObjectCalls {
   private const val PT_RECT2I = 37
   private const val PT_VARIANT = 38
   private const val PT_TYPED_ARRAY_BLOB = 39
+  private const val PT_SIGNAL = 41
 
   actual fun ptrcallNoArgsRetAABB(methodBind: MemorySegment, instance: MemorySegment): AABB =
     memScoped {
@@ -25244,6 +25245,25 @@ actual object ObjectCalls {
     ptrs[5] = c5.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_VOID, null)
     Unit
+  }
+
+  actual fun ptrcallWithSignalArgRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    signalObject: MemorySegment,
+    signalName: String,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<KanamaIosCallableArgDesc>()
+    c0.object_handle = signalObject.address()
+    c0.method = signalName.cstr.ptr
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_SIGNAL
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
   }
 
   actual fun ptrcallWithStringAndArrayArg(

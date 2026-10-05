@@ -277,8 +277,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
      * timer will be paused when setting `SceneTree.paused` to `true`. If `process_in_physics` is
      * `true`, the timer will update at the end of the physics frame, instead of the process frame. If
      * `ignore_time_scale` is `true`, the timer will ignore `Engine.time_scale` and update with the
-     * real, elapsed time. This method is commonly used to create a one-shot delay timer, as in the
-     * following example:
+     * real, elapsed time.
      *
      * Generated from Godot docs: SceneTree.create_timer
      */
@@ -1134,8 +1133,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
          * timer will be paused when setting `SceneTree.paused` to `true`. If `process_in_physics` is
          * `true`, the timer will update at the end of the physics frame, instead of the process frame. If
          * `ignore_time_scale` is `true`, the timer will ignore `Engine.time_scale` and update with the
-         * real, elapsed time. This method is commonly used to create a one-shot delay timer, as in the
-         * following example:
+         * real, elapsed time.
          *
          * Generated from Godot docs: SceneTree.create_timer
          */

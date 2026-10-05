@@ -23780,7 +23780,7 @@ actual object ObjectCalls {
    * return value. The Signal value is constructed for the call and destroyed after it; the engine
    * keeps its own copy (ObjectID-based, so a freed owner degrades to a no-op rather than dangling).
    */
-  fun ptrcallWithSignalArgRetObject(
+  actual fun ptrcallWithSignalArgRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     signalObject: MemorySegment,

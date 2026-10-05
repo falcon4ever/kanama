@@ -73,7 +73,6 @@ import net.multigesture.kanama.api.Texture2D
 import net.multigesture.kanama.api.Time
 import net.multigesture.kanama.api.Timer
 import net.multigesture.kanama.api.Tween
-import net.multigesture.kanama.api.tweenAwait
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.generated.HelloScriptNames
 import net.multigesture.kanama.generated.HelloScriptSignals

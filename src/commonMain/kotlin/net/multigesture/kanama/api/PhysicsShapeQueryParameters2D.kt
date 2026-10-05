@@ -94,8 +94,7 @@ class PhysicsShapeQueryParameters2D(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * The queried shape's `RID` that will be used for collision/intersection queries. Use this over
-     * `shape` if you want to optimize for performance using the Servers API:
+     * The queried shape's `RID` that will be used for collision/intersection queries.
      *
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.set_shape_rid
      */
@@ -105,8 +104,7 @@ class PhysicsShapeQueryParameters2D(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * The queried shape's `RID` that will be used for collision/intersection queries. Use this over
-     * `shape` if you want to optimize for performance using the Servers API:
+     * The queried shape's `RID` that will be used for collision/intersection queries.
      *
      * Generated from Godot docs: PhysicsShapeQueryParameters2D.get_shape_rid
      */
