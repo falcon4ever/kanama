@@ -216,14 +216,19 @@ of Godot's 28 methods until task 129 A). To generate one once:
    (`check_hand_code_budget.py --write`).
 
 **The hand-code budget.** `scripts/check_hand_code_budget.py` (a `local_ci.sh` stage) lists every
-hand-written `.kt` file under an `api/` directory in `scripts/hand_code_budget.json` with its category:
-`seam` (the platform call mechanism), `runtime-core` (what `extension_api.json` does not describe),
-`sugar` (GDScript-syntax sugar written once) or `transitional` (should be generated; carries the
-task-129 parcel that retires it and a line ratchet). It fails on an unlisted hand file, a listed file
-that is gone or generated, a transitional file that grows, and on growth of the hand Kotlin inside the
-generator tables (each `*_SECTIONS` key here and each Web `CLASS_POLICY` string has a ratchet too).
-"Generated" is the set of `regenerate_tree()` write targets, not a file header. A new hand file is a
-reviewed budget change, not a default.
+hand-written Kotlin file of the API (under an `api/` directory, or declaring the
+`net.multigesture.kanama.api` package anywhere in `src/` or `web-runtime/src/`) in
+`scripts/hand_code_budget.json` with its category: `seam` (the platform call mechanism),
+`runtime-core` (what `extension_api.json` does not describe), `sugar` (GDScript-syntax sugar written
+once) or `transitional` (should be generated; carries the task-129 parcel that retires it). Every
+file has a line ratchet, and so does the hand Kotlin inside the generator tables (each `*_SECTIONS`
+key here and each Web `CLASS_POLICY` string). The gate fails on an unlisted hand file, a listed file
+that is gone or generated, and any growth. Only the GENERATED ENUMS regions a generator really
+splices into a file are left out of its count; a GENERATED marker pair in any other API file fails
+the gate. A legitimate seam, runtime-core or sugar change raises its ratchet with
+`check_hand_code_budget.py --write --reason "<why>"`, which records the reason in the JSON; a
+transitional file never grows, because an API addition is generated. "Generated" is the set of
+`regenerate_tree()` write targets, not a file header.
 
 **The roots are written once (task 117 P3′).** `GodotObject`, `RefCounted` and
 `GodotCallable` are hand-written files in the shared tree

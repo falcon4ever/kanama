@@ -1,52 +1,64 @@
 {
-  "_doc": "Hand-written api/ files and generator-table Kotlin, gated by scripts/check_hand_code_budget.py (task 129). Categories: seam, runtime-core, sugar, transitional (parcel + line ratchet).",
+  "_doc": "Hand-written API files and generator-table Kotlin, gated by scripts/check_hand_code_budget.py (task 129). Categories: seam, runtime-core, sugar, transitional (+ parcel). Every entry has a line ratchet; raise one only with --write --reason.",
   "files": {
     "src/commonMain/kotlin/net/multigesture/kanama/api/AutoloadAccess.kt": {
       "category": "runtime-core",
+      "lines": 91,
       "reason": "lookups behind the generated Autoloads object (task 133 C)"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotCallable.kt": {
       "category": "runtime-core",
+      "lines": 15,
       "reason": "Callable value (target + method), a lifetime-free root"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotHandle.kt": {
       "category": "runtime-core",
+      "lines": 25,
       "reason": "the opaque handle every wrapper holds"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotObject.kt": {
       "category": "runtime-core",
+      "lines": 642,
       "reason": "lifetime root GodotObject (Object); its enum region is generated"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotSignal.expect.kt": {
       "category": "runtime-core",
+      "lines": 98,
       "reason": "signal plumbing expect"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/KanamaScript.kt": {
       "category": "sugar",
+      "lines": 278,
       "reason": "script base class: self, getNode<T>, await (GDScript syntax), written once"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/ListSignalArgReader.kt": {
       "category": "runtime-core",
+      "lines": 46,
       "reason": "signal argument reader for List-based registrars"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/MainThread.expect.kt": {
       "category": "runtime-core",
+      "lines": 37,
       "reason": "main-thread queue expect"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/RefCounted.kt": {
       "category": "runtime-core",
+      "lines": 242,
       "reason": "lifetime root RefCounted (SHARED_HAND_ROOTS)"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/ScriptAccess.kt": {
       "category": "sugar",
+      "lines": 375,
       "reason": "checked casts and node lookup by class token (GDScript `as` / `is`), written once"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.expect.kt": {
       "category": "runtime-core",
+      "lines": 37,
       "reason": "script runtime expect"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/TypedSignals.kt": {
       "category": "runtime-core",
+      "lines": 524,
       "reason": "typed signal classes Signal0..Signal5 (task 134 D4)"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/BoxMesh.kt": {
@@ -75,6 +87,7 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
+      "lines": 137,
       "reason": "signal plumbing actual"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ImageTexture.kt": {
@@ -91,6 +104,7 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt": {
       "category": "runtime-core",
+      "lines": 89,
       "reason": "main-thread queue actual"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ParticleProcessMaterial.kt": {
@@ -113,14 +127,17 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt": {
       "category": "runtime-core",
+      "lines": 99,
       "reason": "iOS device self-test of the script-access paths"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptResources.kt": {
       "category": "runtime-core",
+      "lines": 30,
       "reason": "script resource loading actual"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt": {
       "category": "runtime-core",
+      "lines": 17,
       "reason": "script runtime actual"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/AudioStreamPlayer.kt": {
@@ -191,6 +208,7 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
+      "lines": 145,
       "reason": "signal plumbing actual"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/InputEventKey.kt": {
@@ -207,6 +225,7 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/KanamaCoroutines.kt": {
       "category": "runtime-core",
+      "lines": 65,
       "reason": "coroutine dispatcher on the Godot main thread"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/LightmapGI.kt": {
@@ -217,6 +236,7 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/MainThread.kt": {
       "category": "runtime-core",
+      "lines": 104,
       "reason": "main-thread queue actual"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/ManualGodotLifetimeApi.kt": {
@@ -263,14 +283,17 @@
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptInstances.kt": {
       "category": "runtime-core",
+      "lines": 15,
       "reason": "script instance lookup (until it goes through ObjectRuntime)"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptResources.kt": {
       "category": "runtime-core",
+      "lines": 68,
       "reason": "script resource loading actual"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt": {
       "category": "runtime-core",
+      "lines": 18,
       "reason": "script runtime actual"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/Self.kt": {
@@ -293,24 +316,28 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/GodotHandle.kt": {
       "category": "seam",
+      "lines": 6,
       "reason": "Web object id handle"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebAutoloadAccess.kt": {
       "category": "runtime-core",
+      "lines": 54,
       "reason": "Web lookups behind the generated Autoloads object"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebCoroutines.kt": {
       "category": "runtime-core",
+      "lines": 81,
       "reason": "Web coroutine dispatcher"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt": {
       "category": "transitional",
-      "lines": 295,
+      "lines": 302,
       "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
       "reason": "per-platform hand file the generator should emit"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFrameScheduler.kt": {
       "category": "runtime-core",
+      "lines": 282,
       "reason": "Web frame scheduler (MainThread counterpart)"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebGodotApi.kt": {
@@ -339,57 +366,136 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebScriptResources.kt": {
       "category": "runtime-core",
+      "lines": 54,
       "reason": "Web script resource loading"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebSignals.kt": {
       "category": "runtime-core",
+      "lines": 456,
       "reason": "Web signal plumbing"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebTypedSignals.kt": {
       "category": "runtime-core",
+      "lines": 238,
+      "raises": [
+        "224 -> 238: #306 (Web typed await on engine emitters) adds the Web await plumbing for typed signals"
+      ],
       "reason": "Web typed signal classes"
     },
     "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/api/WebGodotApi.wasmJs.kt": {
       "category": "seam",
+      "lines": 62,
       "reason": "Wasm JS bridge entry points"
     }
   },
   "sections": {
-    "generate_api_wrapper.DESKTOP_EXTENSION_SECTIONS[AnimationMixer]": 16,
-    "generate_api_wrapper.DESKTOP_MEMBER_SECTIONS[ProjectSettings]": 77,
-    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[AnimationMixer]": 19,
-    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsDirectSpaceState3D]": 16,
-    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsRayQueryParameters3D]": 15,
-    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[ShapeCast3D]": 3,
-    "generate_api_wrapper.IOS_MEMBER_SECTIONS[SurfaceTool]": 3,
-    "generate_api_wrapper.SHARED_COMPANION_MEMBER_SECTIONS[SceneTree]": 194,
-    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Node]": 136,
-    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[SceneTree]": 41,
-    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Tween]": 16,
-    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Viewport]": 7,
-    "generate_web_wrappers.CLASS_POLICY[@GlobalScope].custom": 55,
-    "generate_web_wrappers.CLASS_POLICY[@GlobalScope].top_level": 3,
-    "generate_web_wrappers.CLASS_POLICY[AnimationMixer].custom": 14,
-    "generate_web_wrappers.CLASS_POLICY[AnimationMixer].top_level": 9,
-    "generate_web_wrappers.CLASS_POLICY[AnimationNodeStateMachinePlayback].custom": 7,
-    "generate_web_wrappers.CLASS_POLICY[AnimationPlayer].custom": 8,
-    "generate_web_wrappers.CLASS_POLICY[AudioStreamPlayer].custom": 9,
-    "generate_web_wrappers.CLASS_POLICY[CanvasItem].custom": 7,
-    "generate_web_wrappers.CLASS_POLICY[Input].custom": 21,
-    "generate_web_wrappers.CLASS_POLICY[Light3D].custom": 9,
-    "generate_web_wrappers.CLASS_POLICY[Material].custom": 2,
-    "generate_web_wrappers.CLASS_POLICY[Node3D].custom": 53,
-    "generate_web_wrappers.CLASS_POLICY[Node3D].top_level": 50,
-    "generate_web_wrappers.CLASS_POLICY[Node].custom": 54,
-    "generate_web_wrappers.CLASS_POLICY[Node].top_level": 17,
-    "generate_web_wrappers.CLASS_POLICY[OS].custom": 2,
-    "generate_web_wrappers.CLASS_POLICY[Object].custom": 53,
-    "generate_web_wrappers.CLASS_POLICY[PropertyTweener].custom": 10,
-    "generate_web_wrappers.CLASS_POLICY[ResourceLoader].custom": 34,
-    "generate_web_wrappers.CLASS_POLICY[SceneTree].companion": 26,
-    "generate_web_wrappers.CLASS_POLICY[SceneTree].custom": 6,
-    "generate_web_wrappers.CLASS_POLICY[SceneTree].top_level": 3,
-    "generate_web_wrappers.CLASS_POLICY[Tween].custom": 25,
-    "generate_web_wrappers.SUPPORT_FILE": 70
+    "generate_api_wrapper.DESKTOP_EXTENSION_SECTIONS[AnimationMixer]": {
+      "lines": 16
+    },
+    "generate_api_wrapper.DESKTOP_MEMBER_SECTIONS[ProjectSettings]": {
+      "lines": 77
+    },
+    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[AnimationMixer]": {
+      "lines": 19
+    },
+    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsDirectSpaceState3D]": {
+      "lines": 16
+    },
+    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsRayQueryParameters3D]": {
+      "lines": 15
+    },
+    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[ShapeCast3D]": {
+      "lines": 3
+    },
+    "generate_api_wrapper.IOS_MEMBER_SECTIONS[SurfaceTool]": {
+      "lines": 3
+    },
+    "generate_api_wrapper.SHARED_COMPANION_MEMBER_SECTIONS[SceneTree]": {
+      "lines": 194
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Node]": {
+      "lines": 136
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[SceneTree]": {
+      "lines": 41
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Tween]": {
+      "lines": 16
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Viewport]": {
+      "lines": 7
+    },
+    "generate_web_wrappers.CLASS_POLICY[@GlobalScope].custom": {
+      "lines": 55
+    },
+    "generate_web_wrappers.CLASS_POLICY[@GlobalScope].top_level": {
+      "lines": 3
+    },
+    "generate_web_wrappers.CLASS_POLICY[AnimationMixer].custom": {
+      "lines": 14
+    },
+    "generate_web_wrappers.CLASS_POLICY[AnimationMixer].top_level": {
+      "lines": 9
+    },
+    "generate_web_wrappers.CLASS_POLICY[AnimationNodeStateMachinePlayback].custom": {
+      "lines": 7
+    },
+    "generate_web_wrappers.CLASS_POLICY[AnimationPlayer].custom": {
+      "lines": 8
+    },
+    "generate_web_wrappers.CLASS_POLICY[AudioStreamPlayer].custom": {
+      "lines": 9
+    },
+    "generate_web_wrappers.CLASS_POLICY[CanvasItem].custom": {
+      "lines": 7
+    },
+    "generate_web_wrappers.CLASS_POLICY[Input].custom": {
+      "lines": 21
+    },
+    "generate_web_wrappers.CLASS_POLICY[Light3D].custom": {
+      "lines": 9
+    },
+    "generate_web_wrappers.CLASS_POLICY[Material].custom": {
+      "lines": 2
+    },
+    "generate_web_wrappers.CLASS_POLICY[Node3D].custom": {
+      "lines": 53
+    },
+    "generate_web_wrappers.CLASS_POLICY[Node3D].top_level": {
+      "lines": 50
+    },
+    "generate_web_wrappers.CLASS_POLICY[Node].custom": {
+      "lines": 54
+    },
+    "generate_web_wrappers.CLASS_POLICY[Node].top_level": {
+      "lines": 17
+    },
+    "generate_web_wrappers.CLASS_POLICY[OS].custom": {
+      "lines": 2
+    },
+    "generate_web_wrappers.CLASS_POLICY[Object].custom": {
+      "lines": 53
+    },
+    "generate_web_wrappers.CLASS_POLICY[PropertyTweener].custom": {
+      "lines": 10
+    },
+    "generate_web_wrappers.CLASS_POLICY[ResourceLoader].custom": {
+      "lines": 34
+    },
+    "generate_web_wrappers.CLASS_POLICY[SceneTree].companion": {
+      "lines": 26
+    },
+    "generate_web_wrappers.CLASS_POLICY[SceneTree].custom": {
+      "lines": 6
+    },
+    "generate_web_wrappers.CLASS_POLICY[SceneTree].top_level": {
+      "lines": 3
+    },
+    "generate_web_wrappers.CLASS_POLICY[Tween].custom": {
+      "lines": 25
+    },
+    "generate_web_wrappers.SUPPORT_FILE": {
+      "lines": 70
+    }
   }
 }

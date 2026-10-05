@@ -452,7 +452,7 @@ python3 "$ROOT_DIR/scripts/audit_swallowed_failures.py"
 stage "hand-kept copies: iOS annotations, autoload KSP inputs (task 133 C2)"
 python3 "$ROOT_DIR/scripts/check_hand_copies.py"
 
-stage "hand-code budget: every hand-written api/ file listed, transitional files ratcheted (task 129)"
+stage "hand-code budget: every hand-written API file listed and line-ratcheted (task 129)"
 python3 "$ROOT_DIR/scripts/check_hand_code_budget.py"
 
 stage "JDK install-location table parity (kanama#277)"

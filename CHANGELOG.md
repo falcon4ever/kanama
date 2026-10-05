@@ -80,11 +80,13 @@ classes; the desktop names, overloads and factories are kept.
   and 5 globals nothing else used (`clang -Wall` reports no unused static in the shim now); the 53
   matching `IosGodot` facade functions; the inert iOS `java.io.File` shim; and 17 desktop
   `ObjectCalls` helpers no wrapper calls.
-- New gate `scripts/check_hand_code_budget.py` (a `local_ci.sh` stage): every hand-written `.kt`
-  file under an `api/` directory is listed in `scripts/hand_code_budget.json` as seam, runtime-core,
-  sugar, or transitional (with the task-129 parcel that retires it and a line ratchet), and the
-  hand Kotlin inside the generators' section tables is ratcheted too. A new hand file fails the gate
-  until it is listed.
+- New gate `scripts/check_hand_code_budget.py` (a `local_ci.sh` stage): every hand-written Kotlin
+  file of the API package (under an `api/` directory or declaring `net.multigesture.kanama.api`) is
+  listed in `scripts/hand_code_budget.json` as seam, runtime-core, sugar, or transitional (with the
+  task-129 parcel that retires it), every file and every hand Kotlin section of the generators has
+  a line ratchet, and a GENERATED marker pair no generator owns fails. A new hand file fails the
+  gate until it is listed; a seam/runtime-core/sugar file that legitimately grows raises its
+  ratchet with `--write --reason "<why>"`.
 
 ### Fixed — Web: a typed `await()` on an engine object (task 134 C follow-up)
 
