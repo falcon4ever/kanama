@@ -45,8 +45,23 @@ open class BaseButton(godotObject: GodotHandle) : Control(godotObject) {
   val pressed: Signal0
     get() = Signal0(this, "pressed")
 
+  /** Signal `button_up`; see [TypedSignal]. */
+  val buttonUp: Signal0
+    get() = Signal0(this, "button_up")
+
+  /** Signal `button_down`; see [TypedSignal]. */
+  val buttonDown: Signal0
+    get() = Signal0(this, "button_down")
+
+  /** Signal `toggled`; see [TypedSignal]. */
+  val toggled: Signal1<Boolean>
+    get() = Signal1(this, "toggled", SignalArgType.BOOLEAN)
+
   object Signals {
     const val pressed: String = "pressed"
+    const val buttonUp: String = "button_up"
+    const val buttonDown: String = "button_down"
+    const val toggled: String = "toggled"
   }
 
   value class DrawMode(override val value: Long) : GodotEnumValue {

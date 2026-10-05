@@ -64,6 +64,10 @@ export async function collectPerformance(evaluate) {
         appliedCommands: bridge.appliedCommands ?? 0,
         // Rounded to two decimals: this is a budget input, not a benchmark.
         crossingsPerTick: ticks > 0 ? Math.round((crossings / ticks) * 100) / 100 : 0,
+        // Task 134 D1 review N5: value-type methods the engine ran over the bridge (one immediate
+        // crossing each; the per-tick ones run in Kotlin). Reported, not budgeted yet.
+        builtinCalls: bridge.builtinCalls ?? 0,
+        builtinCallsPerTick: ticks > 0 ? Math.round(((bridge.builtinCalls ?? 0) / ticks) * 100) / 100 : 0,
       };
     })()`);
   } catch {

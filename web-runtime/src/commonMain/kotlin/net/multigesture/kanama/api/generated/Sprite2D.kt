@@ -28,6 +28,19 @@ class Sprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
     get() = getTexture()
     set(newValue) = setTexture(newValue)
 
+  /** Signal `frame_changed`; see [TypedSignal]. */
+  val frameChanged: Signal0
+    get() = Signal0(this, "frame_changed")
+
+  /** Signal `texture_changed`; see [TypedSignal]. */
+  val textureChanged: Signal0
+    get() = Signal0(this, "texture_changed")
+
+  object Signals {
+    const val frameChanged: String = "frame_changed"
+    const val textureChanged: String = "texture_changed"
+  }
+
   companion object {
     /** Constructs a new Sprite2D engine-side; the wrapper owns the handle (close what you create). */
     fun create(): Sprite2D =

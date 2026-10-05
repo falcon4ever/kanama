@@ -211,6 +211,64 @@ open class Node(godotObject: GodotHandle) : GodotObject(godotObject) {
     }
   }
 
+  /** Signal `ready`; see [TypedSignal]. */
+  val ready: Signal0
+    get() = Signal0(this, "ready")
+
+  /** Signal `renamed`; see [TypedSignal]. */
+  val renamed: Signal0
+    get() = Signal0(this, "renamed")
+
+  /** Signal `tree_entered`; see [TypedSignal]. */
+  val treeEntered: Signal0
+    get() = Signal0(this, "tree_entered")
+
+  /** Signal `tree_exiting`; see [TypedSignal]. */
+  val treeExiting: Signal0
+    get() = Signal0(this, "tree_exiting")
+
+  /** Signal `tree_exited`; see [TypedSignal]. */
+  val treeExited: Signal0
+    get() = Signal0(this, "tree_exited")
+
+  /** Signal `child_entered_tree`; see [TypedSignal]. */
+  val childEnteredTree: Signal1<Node>
+    get() = Signal1(this, "child_entered_tree", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `child_exiting_tree`; see [TypedSignal]. */
+  val childExitingTree: Signal1<Node>
+    get() = Signal1(this, "child_exiting_tree", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `child_order_changed`; see [TypedSignal]. */
+  val childOrderChanged: Signal0
+    get() = Signal0(this, "child_order_changed")
+
+  /** Signal `replacing_by`; see [TypedSignal]. */
+  val replacingBy: Signal1<Node>
+    get() = Signal1(this, "replacing_by", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `editor_description_changed`; see [TypedSignal]. */
+  val editorDescriptionChanged: Signal1<Node>
+    get() = Signal1(this, "editor_description_changed", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `editor_state_changed`; see [TypedSignal]. */
+  val editorStateChanged: Signal0
+    get() = Signal0(this, "editor_state_changed")
+
+  object Signals {
+    const val ready: String = "ready"
+    const val renamed: String = "renamed"
+    const val treeEntered: String = "tree_entered"
+    const val treeExiting: String = "tree_exiting"
+    const val treeExited: String = "tree_exited"
+    const val childEnteredTree: String = "child_entered_tree"
+    const val childExitingTree: String = "child_exiting_tree"
+    const val childOrderChanged: String = "child_order_changed"
+    const val replacingBy: String = "replacing_by"
+    const val editorDescriptionChanged: String = "editor_description_changed"
+    const val editorStateChanged: String = "editor_state_changed"
+  }
+
   value class ProcessMode(override val value: Long) : GodotEnumValue {
     companion object {
       val INHERIT: ProcessMode get() = ProcessMode(0L)

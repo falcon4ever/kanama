@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.web.WebPackedFloats
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject), AutoCloseable {
@@ -38,7 +39,7 @@ class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject), AutoClosea
         is Long -> "i:$value"
         is Int -> "i:$value"
         is GodotEnumValue -> "i:${value.value}"
-        is Double -> "f:$value"
+        is Double -> "f:${WebPackedFloats.encode(value)}"
         is String -> "s:$value"
         else -> error("Kanama Web ConfigFile does not carry ${value?.let { it::class }} values")
       }
@@ -56,7 +57,7 @@ class ConfigFile(godotObject: GodotHandle) : RefCounted(godotObject), AutoClosea
     return when {
       tagged.startsWith("b:") -> body == "true"
       tagged.startsWith("i:") -> body.toLong()
-      tagged.startsWith("f:") -> body.toDouble()
+      tagged.startsWith("f:") -> WebPackedFloats.decode(body)
       tagged.startsWith("s:") -> body
       else -> null
     }

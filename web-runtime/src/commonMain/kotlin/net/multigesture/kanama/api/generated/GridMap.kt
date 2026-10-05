@@ -66,6 +66,19 @@ class GridMap(godotObject: GodotHandle) : Node3D(godotObject) {
     get() = unsupportedWebGameplayFamily("GridMap.get_mesh_library")
     set(newValue) = setMeshLibrary(newValue)
 
+  /** Signal `cell_size_changed`; see [TypedSignal]. */
+  val cellSizeChanged: Signal1<Vector3>
+    get() = Signal1(this, "cell_size_changed", SignalArgType.valueOf<Vector3>("Vector3", Vector3::class))
+
+  /** Signal `changed`; see [TypedSignal]. */
+  val changed: Signal0
+    get() = Signal0(this, "changed")
+
+  object Signals {
+    const val cellSizeChanged: String = "cell_size_changed"
+    const val changed: String = "changed"
+  }
+
   value class DebugVisibilityMode(override val value: Long) : GodotEnumValue {
     companion object {
       val DEFAULT: DebugVisibilityMode get() = DebugVisibilityMode(0L)

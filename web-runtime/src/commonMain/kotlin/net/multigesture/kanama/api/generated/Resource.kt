@@ -17,6 +17,19 @@ open class Resource(godotObject: GodotHandle) : RefCounted(godotObject) {
       deep,
     )?.let { Resource(it.toWebId()) }
 
+  /** Signal `changed`; see [TypedSignal]. */
+  val changed: Signal0
+    get() = Signal0(this, "changed")
+
+  /** Signal `setup_local_to_scene_requested`; see [TypedSignal]. */
+  val setupLocalToSceneRequested: Signal0
+    get() = Signal0(this, "setup_local_to_scene_requested")
+
+  object Signals {
+    const val changed: String = "changed"
+    const val setupLocalToSceneRequested: String = "setup_local_to_scene_requested"
+  }
+
   value class DeepDuplicateMode(override val value: Long) : GodotEnumValue {
     companion object {
       val NONE: DeepDuplicateMode get() = DeepDuplicateMode(0L)

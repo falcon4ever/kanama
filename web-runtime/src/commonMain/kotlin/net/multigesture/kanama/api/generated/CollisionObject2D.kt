@@ -8,6 +8,34 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class CollisionObject2D(godotObject: GodotHandle) : Node2D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  /** Signal `input_event`; see [TypedSignal]. */
+  val inputEvent: Signal3<Node, InputEvent, Long>
+    get() = Signal3(this, "input_event", SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.objectOf("InputEvent") { InputEvent(it) }, SignalArgType.LONG)
+
+  /** Signal `mouse_entered`; see [TypedSignal]. */
+  val mouseEntered: Signal0
+    get() = Signal0(this, "mouse_entered")
+
+  /** Signal `mouse_exited`; see [TypedSignal]. */
+  val mouseExited: Signal0
+    get() = Signal0(this, "mouse_exited")
+
+  /** Signal `mouse_shape_entered`; see [TypedSignal]. */
+  val mouseShapeEntered: Signal1<Long>
+    get() = Signal1(this, "mouse_shape_entered", SignalArgType.LONG)
+
+  /** Signal `mouse_shape_exited`; see [TypedSignal]. */
+  val mouseShapeExited: Signal1<Long>
+    get() = Signal1(this, "mouse_shape_exited", SignalArgType.LONG)
+
+  object Signals {
+    const val inputEvent: String = "input_event"
+    const val mouseEntered: String = "mouse_entered"
+    const val mouseExited: String = "mouse_exited"
+    const val mouseShapeEntered: String = "mouse_shape_entered"
+    const val mouseShapeExited: String = "mouse_shape_exited"
+  }
+
   value class DisableMode(override val value: Long) : GodotEnumValue {
     companion object {
       val REMOVE: DisableMode get() = DisableMode(0L)

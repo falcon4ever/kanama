@@ -79,13 +79,18 @@ healthChanged.connect { hp -> bar.value = hp.toDouble() }
 `X.Signals` constants (`Area3D.Signals.bodyEntered = "body_entered"`) remain for
 string-based APIs, as does the untyped `signal(name)` handle described below.
 
-**Web.** The Web bridge delivers a signal's first argument only, so Web has
-`Signal0` and `Signal1` (an object, `int`, `float`, `bool`, `String`/`StringName`,
-`Vector2`, `Vector2i`, `Vector3` or a Godot enum), on the signals its wrappers
-expose (`timeout`, `pressed`, `finished`, `body_entered`/`body_exited`,
-`animation_finished`, `size_changed`); `connect`, `await`, `emit` and the script's
-`connect { }` work as above. Signals with two or more arguments and the other
-argument types are not available on Web yet.
+**Web.** The Web bridge delivers every argument of an emission, so Web has the
+same `Signal0` … `Signal5` handles, on every signal its generated classes declare
+and on every `@Signal`: an object, `int`, `float`, `bool`, `String`/`StringName`,
+`NodePath`, `RID`, a `Variant`, a Godot enum, or any value type. `connect`,
+`await`, `emit` and the script's `connect { }` work as above, and an `await` whose
+emitter is freed before the signal fires is cancelled, as on desktop (one whose
+awaiting script is freed first is disconnected from the emitter). Two
+differences remain: an object argument is valid while the callback runs (keep
+what you need from it, not the wrapper), and its wrapper is not `==` to another
+wrapper of the same object (Web compares handle tokens). The two
+`NavigationAgent3D` signals with a `Dictionary` argument have no typed handle on
+Web; connect them by method name.
 
 ## Custom Signals
 

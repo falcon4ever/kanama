@@ -13,6 +13,14 @@ class ButtonGroup(godotObject: GodotHandle) : Resource(godotObject), AutoCloseab
     releaseWebConstructedObject(handle.value)
   }
 
+  /** Signal `pressed`; see [TypedSignal]. */
+  val pressed: Signal1<BaseButton>
+    get() = Signal1(this, "pressed", SignalArgType.objectOf("BaseButton") { BaseButton(it) })
+
+  object Signals {
+    const val pressed: String = "pressed"
+  }
+
   companion object {
     /** Constructs a new ButtonGroup engine-side; the wrapper owns the handle (close what you create). */
     fun create(): ButtonGroup =

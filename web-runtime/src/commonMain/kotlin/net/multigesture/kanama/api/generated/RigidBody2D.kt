@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
@@ -22,6 +23,34 @@ class RigidBody2D(godotObject: GodotHandle) : PhysicsBody2D(godotObject) {
   var linearVelocity: Vector2
     get() = unsupportedWebGameplayFamily("RigidBody2D.get_linear_velocity")
     set(newValue) = setLinearVelocity(newValue)
+
+  /** Signal `body_shape_entered`; see [TypedSignal]. */
+  val bodyShapeEntered: Signal4<RID, Node, Long, Long>
+    get() = Signal4(this, "body_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+  /** Signal `body_shape_exited`; see [TypedSignal]. */
+  val bodyShapeExited: Signal4<RID, Node, Long, Long>
+    get() = Signal4(this, "body_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+  /** Signal `body_entered`; see [TypedSignal]. */
+  val bodyEntered: Signal1<Node>
+    get() = Signal1(this, "body_entered", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `body_exited`; see [TypedSignal]. */
+  val bodyExited: Signal1<Node>
+    get() = Signal1(this, "body_exited", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `sleeping_state_changed`; see [TypedSignal]. */
+  val sleepingStateChanged: Signal0
+    get() = Signal0(this, "sleeping_state_changed")
+
+  object Signals {
+    const val bodyShapeEntered: String = "body_shape_entered"
+    const val bodyShapeExited: String = "body_shape_exited"
+    const val bodyEntered: String = "body_entered"
+    const val bodyExited: String = "body_exited"
+    const val sleepingStateChanged: String = "sleeping_state_changed"
+  }
 
   value class FreezeMode(override val value: Long) : GodotEnumValue {
     companion object {
