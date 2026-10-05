@@ -968,6 +968,31 @@ class Main(godotObject: GodotHandle) :
 
   fun timerProbeMask(value: Long): Long = timerMask
 
+  private var typedAwaitMask = 0L
+
+  /**
+   * A typed `await()` on a plain engine emitter -- an `AudioStreamPlayer` with no Kanama script,
+   * like charactercontroller's `animationPlayer.animationFinished.await()` and third-person's
+   * `destroySound.finished.await()`. The await used to bind its one-shot Callable to the emitter,
+   * which has no `_kanama_web_signal_dispatch*` method, so Godot refused the connection ("the
+   * provided callable is not valid") and the coroutine was cancelled: the flag never reloaded the
+   * level and the box was never freed. Bit 1 = the coroutine resumed past the await once the player
+   * emitted `finished`. Read back through [typedAwaitProbeMask]; a healthy run reads 1.
+   */
+  fun typedAwaitProbe() {
+    typedAwaitMask = 0L
+    val player = AudioStreamPlayer.create()
+    self.addChild(player)
+    launch {
+      player.finished.await()
+      typedAwaitMask = typedAwaitMask or 1L
+      player.queueFree()
+    }
+    MainThread.postAfterFrames(3) { player.emitSignal("finished") }
+  }
+
+  fun typedAwaitProbeMask(value: Long): Long = typedAwaitMask
+
   fun coroutineProbe() {
     coroutineMask = 1L
     launch {

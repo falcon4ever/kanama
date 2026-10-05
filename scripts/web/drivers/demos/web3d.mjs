@@ -342,6 +342,10 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   await evaluate(
     `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("timer_probe")}); true`,
   );
+  // A typed await() on a plain engine emitter (see Main.typed_await_probe), read after the section.
+  await evaluate(
+    `globalThis.KanamaWebBridge.callNoArgs(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("typed_await_probe")}); true`,
+  );
   trace("coroutine_probe");
   const maskBeforeArm = await readCoroutineMask();
   await evaluate(
@@ -360,6 +364,17 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ),
   );
   trace(`timerProbe: mask=${timerMask}`);
+  const readTypedAwait = () =>
+    evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("typed_await_probe_mask")}, 0)`,
+    ).then(Number);
+  let typedAwaitMask = await readTypedAwait();
+  const typedAwaitDeadline = Math.min(deadline, Date.now() + 5_000);
+  while (typedAwaitMask !== 1 && Date.now() < typedAwaitDeadline) {
+    await delay(150);
+    typedAwaitMask = await readTypedAwait();
+  }
+  trace(`typedAwaitProbe: mask=${typedAwaitMask}`);
   trace(
     `coroutine: mask=${coroutineMask} (was ${maskBeforeArm}) pumps=${afterCoroutine.pumps} continuations=${afterCoroutine.continuations}`,
   );
@@ -435,6 +450,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     cameraModeFamilyDelivers: cameraModeProbe === 31,
     // Task 64 tps-demo parcel 7: SceneTree.create_timer handle + its timeout awaited (7).
     sceneTreeTimerDelivers: timerMask === 7,
+    // A typed await() on an engine emitter with no Kanama script (charactercontroller's flag
+    // reload, third-person's box/coin/grenade sounds) resumes instead of failing to connect.
+    typedAwaitOnEngineEmitterResumes: typedAwaitMask === 1,
     // Task 64 tps-demo parcel 6: node lifecycle queries (is_inside_tree, is_queued_for_deletion).
     nodeLifecycleDelivers: nodeLifecycleProbe === 15,
     // Task 64 tps-demo parcel 8: the render-quality family reached the engine (driver name, OS

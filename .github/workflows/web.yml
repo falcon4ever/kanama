@@ -8,7 +8,8 @@ name: web
 # check count -- decides green.
 #
 # Cadence:
-#   - pull_request  -> the PR subset (match3, web3d, dodge) x Chrome + Firefox.
+#   - pull_request  -> the PR subset (match3, web3d, dodge) x Chrome + Firefox, or the full `ci` corpus when the
+#                      PR touches Web code (see the `corpus` output of `changes`).
 #   - push to main  -> the `ci` corpus x Chrome + Firefox: every demo a hosted
 #                      runner can actually build. tpsdemo is excluded because its
 #                      Kotlin/Wasm compile is OOM-killed on a 16 GB runner -- that
@@ -64,6 +65,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       web: ${{ steps.filter.outputs.web }}
+      corpus: ${{ steps.filter.outputs.corpus }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -76,6 +78,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" != "pull_request" ]; then
             echo "web=true" >> "$GITHUB_OUTPUT"
+            echo "corpus=ci" >> "$GITHUB_OUTPUT"
             echo "non-PR event -> running the Web matrix"
             exit 0
           fi
@@ -93,6 +96,16 @@ jobs:
           else
             echo "web=false" >> "$GITHUB_OUTPUT"
           fi
+          # A PR that changes the Web runtime, the bridge, the processor's script emitters, the Web generators or
+          # this workflow (incl. a DEMOS_REF bump) runs the full `ci` corpus like main does: the 3-demo subset let a
+          # broken typed await() on engine emitters through on kanama#303 that only charactercontroller and
+          # thirdperson exercise. Every other PR keeps the cheap subset.
+          if grep -qE '^(web-runtime/|processor/|scripts/web/|scripts/generate_web_[a-z_]*\.py|\.github/workflows/web\.yml)' <<<"$changed"; then
+            echo "corpus=ci" >> "$GITHUB_OUTPUT"
+            echo "Web code changed -> full ci corpus"
+          else
+            echo "corpus=pr" >> "$GITHUB_OUTPUT"
+          fi
 
   matrix:
     name: web matrix (chrome + firefox)
@@ -101,7 +114,7 @@ jobs:
     runs-on: ubuntu-24.04
     # The full corpus is 12 Kotlin/Wasm exports plus 24 driven browser sessions
     # on a software GL; the PR subset is a small fraction of that.
-    timeout-minutes: ${{ github.event_name == 'pull_request' && 90 || 300 }}
+    timeout-minutes: ${{ needs.changes.outputs.corpus == 'pr' && 90 || 300 }}
     steps:
       - name: Checkout Kanama
         uses: actions/checkout@v6
@@ -168,7 +181,7 @@ jobs:
       - name: Run the Web matrix
         shell: bash
         env:
-          DEMO_SET: ${{ github.event.inputs.demo_set || (github.event_name == 'pull_request' && 'pr' || 'ci') }}
+          DEMO_SET: ${{ github.event.inputs.demo_set || needs.changes.outputs.corpus || 'ci' }}
           # Per-sample driver tracing into the uploaded driver logs. A red cell on a
           # host nobody can log into is only as debuggable as what it recorded.
           KANAMA_WEB_SMOKE_DEBUG: "1"
