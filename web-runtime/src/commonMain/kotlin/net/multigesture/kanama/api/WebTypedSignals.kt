@@ -4,6 +4,7 @@ import kotlin.coroutines.resume
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import net.multigesture.kanama.web.WebObjectId
 import net.multigesture.kanama.web.WebPackedFloats
 import net.multigesture.kanama.web.WebPackedValues
 import net.multigesture.kanama.types.Basis
@@ -167,6 +168,17 @@ abstract class TypedSignal internal constructor(
   /** The untyped handle for this signal. */
   fun untyped(): GodotSignal = emitter.signal(name)
 
+  /**
+   * The Kanama script whose proxy receives an await's one-shot connection. The bound Callable needs
+   * the proxy's `_kanama_web_signal_dispatch*` method, which a plain engine emitter (an
+   * `AnimationPlayer`, an `AudioStreamPlayer3D`, a `Timer`) does not have: binding to the emitter
+   * failed to connect ("the provided callable is not valid") and cancelled the await. So it is the
+   * script running the await -- the coroutine's owner -- and the emitter only when no script
+   * callback is on the stack (then the emitter must itself be a Kanama script).
+   */
+  internal fun awaitTarget(): GodotObject =
+    WebFrameScheduler.currentOwnerOrZero().takeIf { it > 0 }?.let { GodotObject(WebObjectId(it)) } ?: emitter
+
   internal suspend fun <R> awaitWith(connect: (GodotObject.ConnectFlags, (R) -> Unit) -> SignalConnection): R =
     suspendCancellableCoroutine { continuation ->
       val connection =
@@ -195,7 +207,9 @@ class Signal0(emitter: GodotObject, name: String) : TypedSignal(emitter, name) {
 
   /** Suspends until the signal fires. */
   suspend fun await() {
-    awaitWith<Unit> { flags, resume -> emitter.signal(name).connectPlainConnection(emitter, 0, flags) { resume(Unit) } }
+    awaitWith<Unit> { flags, resume ->
+      emitter.signal(name).connectPlainConnection(awaitTarget(), 0, flags) { resume(Unit) }
+    }
   }
 
   /** Emits the signal. */
@@ -215,7 +229,7 @@ class Signal1<A>(emitter: GodotObject, name: String, private val a: SignalArgTyp
     a.connect(emitter.signal(name), target, flags, callback)
 
   /** Suspends until the signal fires and returns its argument. */
-  suspend fun await(): A = awaitWith { flags, resume -> a.connect(emitter.signal(name), emitter, flags, resume) }
+  suspend fun await(): A = awaitWith { flags, resume -> a.connect(emitter.signal(name), awaitTarget(), flags, resume) }
 
   /** Emits the signal. */
   fun emit(a: A) {

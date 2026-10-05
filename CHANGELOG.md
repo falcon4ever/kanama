@@ -38,6 +38,17 @@ only `--write`.
 
 ## Unreleased
 
+### Fixed — Web: a typed `await()` on an engine object (task 134 C follow-up)
+
+- On Web, `animationPlayer.animationFinished.await()`, `sound.finished.await()` and every other
+  typed `await()` whose emitter carries no Kanama script failed to connect (Godot: "the provided
+  callable is not valid: 'AnimationPlayer::_kanama_web_signal_dispatch1'") and cancelled the
+  waiting coroutine: the character-controller flag never reloaded the level and third-person's
+  boxes, coins and grenades logged console errors. The await now connects through the script that
+  runs it, as `GodotSignal.await(target)` always did. Proof: the web3d smoke's
+  `typedAwaitOnEngineEmitterResumes` check (an `AudioStreamPlayer.finished.await()`), and the
+  charactercontroller / thirdperson cells of the Web matrix.
+
 ### Added — every Godot value type is a script type (task 133)
 
 - **`Rect2`, `Rect2i`, `Vector4`, `Vector4i`, `Plane`, `AABB`, `Transform2D`, `Transform3D` and
