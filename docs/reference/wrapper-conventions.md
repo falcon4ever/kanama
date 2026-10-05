@@ -419,7 +419,7 @@ generator, and `ClassTokenTableTest` checks that the shared table lists every sh
 
 Every generated class with signals has `X.Signals`, one `const val` per signal holding Godot's
 name (`render_signal_constants`): `Timer.Signals.timeout == "timeout"`,
-`Node.Signals.treeExited == "tree_exited"`. On Web the class carries the signals its policy lists.
+`Node.Signals.treeExited == "tree_exited"`. On Web each generated class carries the same constants and typed handles for the signals it declares.
 
 ```kotlin
 timer.connect(Timer.Signals.timeout, self, "onTimeout")

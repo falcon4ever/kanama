@@ -101,10 +101,18 @@ Where Kotlin and GDScript differ:
   result differs by CPU (x86 and arm64 disagree). Kotlin's conversion is defined
   (NaN gives 0, out-of-range values saturate), which matches Godot on arm64
   (Apple silicon, phones). For finite channels every platform agrees.
-- On Web (Kotlin/Wasm), the methods that run in Kotlin natively run the same
-  Kotlin, with the same results; the engine-computed ones are not all there yet,
-  and `angle()`, `rotated` and `slerp` are Kotlin approximations of Godot's
-  (rounded to `real_t`, not guaranteed to the bit).
+- On Web (Kotlin/Wasm) the value types are the same classes: the methods that
+  run in Kotlin natively run the same Kotlin, with the same results, and the
+  engine-computed ones reach the engine through the Web bridge (one crossing per
+  call, so prefer the Kotlin ones in a hot loop). The ones gameplay calls every
+  tick run in Kotlin on Web, at no crossing, as ports of Godot's own code:
+  `Vector2.angle`/`rotated`, `Vector3.rotated`/`signedAngleTo`,
+  `Quaternion.slerp`, and `Basis`/`Transform3D` `inverse`, `transposed`,
+  `determinant`, `getScale`, `scaled`, `orthonormalized`,
+  `getRotationQuaternion`, `getEuler`/`fromEuler` (YXZ), `lookingAt`, `rotated`,
+  `interpolateWith`. The arithmetic ones give Godot's result to the bit; the ones
+  built on `sin`/`cos`/`atan2` can differ in the last bit from the engine's math
+  library.
 
 Their components are `Double`, like every other decimal in the API (`Vector3.x`,
 `Color.r`, `delta`, scalar arguments), so no `.toFloat()`/`.toDouble()` is

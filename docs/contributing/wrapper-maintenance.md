@@ -996,9 +996,11 @@ python3 scripts/check_builtin_coverage.py --report
 The generator also writes the runtime smoke's probe pair (`example_project/BuiltinParitySmoke.kt`
 and `builtin_parity_ref.gd`): every Kotlin-computed member over 256 fixed-seed random inputs and
 every engine-backed one over 8, hashed and compared with GDScript; a changed formula that is not
-Godot's to the bit fails the smoke and names the member. The Web value types get the same
-component-wise members (`web-runtime/.../types/WebValueTypes.kt`), checked against Godot's hashes
-recorded in `scripts/fixtures/builtin_parity_expected.json` by `WebBuiltinParityTest`; after a
+Godot's to the bit fails the smoke and names the member. The Web build compiles the same value
+types (task 134 D1), so `WebBuiltinParityTest` runs every Kotlin-computed entry compiled to Wasm
+under Node against Godot's hashes recorded in `scripts/fixtures/builtin_parity_expected.json`
+(the generator also writes `WebBuiltinSignatures.kt`, the argument Variant types the Web
+builtin-call crossing needs for each engine-backed method); after a
 change to the probe, record them from a runtime smoke log with
 `python3 scripts/generate_builtin_ops.py --record-parity /tmp/kanama_runtime_smoke.log`, then
 `--write` (the runtime smoke re-checks the recording with `--verify-recorded`).

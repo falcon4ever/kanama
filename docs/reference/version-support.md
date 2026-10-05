@@ -215,7 +215,7 @@ FFM/PanamaPort path. It is a **Kotlin/Wasm** backend: project gameplay compiles
 to WebAssembly and talks to the Godot 4.7 Web export (Emscripten/Wasm) through a
 generated per-call proxy and a versioned JavaScript bridge
 (`web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js`, currently
-protocol 31). <!-- kanama-claim: protocol --> The typed backend seam is shared with the other platforms through
+protocol 32). <!-- kanama-claim: protocol --> The typed backend seam is shared with the other platforms through
 `scripts/platform_backend_calls.json`, and
 `scripts/generate_web_gameplay_coverage.py` fails loudly if a call the demo
 executes has no admitted backend family. See
@@ -229,11 +229,11 @@ City-Builder and tps-demo — each pass an automated, assertion-driven play
 sequence, not a page-load check. Every run asserts gameplay deltas, crossing
 budgets, and handle/callback/scheduler teardown to baseline, and rejects stale
 handles. Gameplay coverage reports zero blocking calls; the families a demo
-calls that the backend does not model (`GodotObject.emit_signal_typed` among
-them) stay listed as explicit nonblocking unsupported entries rather than being
+calls that the backend does not model (getters of write-only properties, for
+example) stay listed as explicit nonblocking unsupported entries rather than being
 pattern-hidden.
 
-Browser floors and the versions the corpus is driven on (protocol 31). <!-- kanama-claim: protocol --> The
+Browser floors and the versions the corpus is driven on (protocol 32). <!-- kanama-claim: protocol --> The
 floors are declared once, machine-readably, in `scripts/web/browser_floors.json`,
 and `web_export_smoke.sh` fails any run below them:
 

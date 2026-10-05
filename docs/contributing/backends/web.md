@@ -72,7 +72,7 @@ see the Backend-dispatch codegen section below.
 
 `web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js` is the seam between
 the Kanama Wasm module and Godot's Web export. It carries a
-`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 31); startup rejects a mismatch <!-- kanama-claim: protocol -->
+`KANAMA_WEB_PROTOCOL_VERSION` (currently protocol 32); startup rejects a mismatch <!-- kanama-claim: protocol -->
 between the bridge constant and the value the Wasm backend reports, so a bridge
 and a backend built from different revisions fail loudly instead of drifting.
 
@@ -94,7 +94,7 @@ implementer is the generated Kotlin/Wasm backend.
 actually executes and **fails if a demo call has no admitted backend
 family**, so coverage metadata cannot be silently erased. The current report has
 zero blocking calls, and the families a demo calls that the backend does not
-model (`GodotObject.emit_signal_typed` among them) stay listed as explicit
+model (getters of write-only properties, for example) stay listed as explicit
 nonblocking unsupported entries rather than being pattern-hidden.
 
 ### Backend-dispatch codegen: generated dispatch + hand-written transport (Task 60a)
@@ -259,6 +259,51 @@ mirrors crossings:
   whenever physics outpaced rendering).
 - **Handle generations** — handles are opaque IDs across the bridge, not live
   pointers, so stale generations are detected and rejected explicitly.
+
+### Value types, builtin calls and signals (task 134 D1, protocol 32)
+
+**One set of value types.** The Web build compiles the shared value types
+(`src/commonMain/.../types`, a source directory of `web-runtime`) instead of a Web copy; it
+supplies only the internal `real_t` half (`types/WebReal.kt`, float32) and its own
+`BuiltinFrame` (`binding/runtime/BuiltinFrame.kt`, same shape as `BuiltinFrame.expect.kt`; the
+compiler holds the shared types to it). An engine-backed method fills the frame in Godot's
+memory layout and runs:
+
+- **in Kotlin** when `WebLocalBuiltins` has it: the methods gameplay calls every tick
+  (`getRotationQuaternion`, `slerp`, `rotated`, `fromEuler` behind `Node3D.rotation`, …), ported
+  from Godot's `core/math` at float32 width with release semantics, so they cost no crossing (the
+  arithmetic ones are bit-exact, checked by `WebBuiltinParityTest`; the sin/cos/atan2 ones may
+  differ in the last bit from the engine's libm);
+- **in the engine** otherwise: one immediate crossing (`KanamaWebBridge.immediateBuiltinCall`,
+  object-query opcode 1003, any live proxy answers it) carrying
+  `<Variant.Type>␟<method>␟<static>␟<base>␟<args…>`, each value `<Variant.Type>:<payload>`; the
+  proxy's `_kanama_web_builtin_call` rebuilds the Variants and calls
+  `Callable.create(base, method).callv(args)`. GDScript cannot reflect a builtin method's
+  parameter types, so the generated `WebBuiltinSignatures.kt` (`generate_builtin_ops.py`) supplies
+  them.
+
+**One Variant text format.** `<Variant.Type>:<payload>` (`WebPackedValues.encodeVariant` /
+`decodeVariant`, the proxy's `_kanama_web_pack_variant` / `_kanama_web_unpack_variant`): bool
+`1`/`0`, int and float as decimals (`String.num_scientific`, shortest round-trip), text
+%-escaped, an object as its bridge handle id, a RID as its id, a value type as its components in
+Godot's memory layout (a Basis as its rows; the processor's `WebValueTypes.LAYOUTS`). Signal
+arguments, builtin calls, generic-call value arguments (`v:`) and results use it.
+
+**Signals of any arity.** A typed lambda connection binds the target script's variadic
+`_kanama_web_signal_dispatch_args(...args)` with the callback id bound last; the proxy packs every
+emitted argument and Kotlin decodes each with its `SignalArgType` (`Signal0` … `Signal5`, typed
+handles for every signal of every generated class and every `@Signal`). An **await** is bound to
+the emitter instead: `_kanama_connect_await` keeps a small `_KanamaSignalWatcher` (a RefCounted
+inner class of the proxy) in the emitter's metadata and connects the signal to it; the watcher
+delivers through the awaiting script's proxy, and when the emitter is freed first its
+`NOTIFICATION_PREDELETE` calls `releaseSignalCallback`, which cancels the waiting coroutine (as on
+desktop) instead of leaving it suspended. `emitSignal` takes its typed arm for one int32 / String /
+object / Vector2i argument and otherwise one immediate generic `emit_signal` call, so handlers run
+before it returns.
+
+**Arguments and a return.** A registered method that takes arguments AND returns a value rides
+`callPackedArgs` (`WebMethodArm.PACKED_ARGS_RETURN`): the packed argument list in (floats and
+value types now included, as exact decimals), the packed return out.
 
 ### Coroutine frame scheduler (one advance per engine frame, no demo opt-in)
 
