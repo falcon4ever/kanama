@@ -80,6 +80,11 @@ classes; the desktop names, overloads and factories are kept.
   and 5 globals nothing else used (`clang -Wall` reports no unused static in the shim now); the 53
   matching `IosGodot` facade functions; the inert iOS `java.io.File` shim; and 17 desktop
   `ObjectCalls` helpers no wrapper calls.
+- New gate `scripts/check_hand_code_budget.py` (a `local_ci.sh` stage): every hand-written `.kt`
+  file under an `api/` directory is listed in `scripts/hand_code_budget.json` as seam, runtime-core,
+  sugar, or transitional (with the task-129 parcel that retires it and a line ratchet), and the
+  hand Kotlin inside the generators' section tables is ratcheted too. A new hand file fails the gate
+  until it is listed.
 
 ### Fixed — Web: a typed `await()` on an engine object (task 134 C follow-up)
 

@@ -307,6 +307,12 @@ case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
 case("check_ios_no_silent_stubs.py", py("check_ios_no_silent_stubs.py"),
      [Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n    fun redRun(): Boolean = false\n}\n")],
      "un-annotated silent stub", "a shared wrapper function whose whole body is a bare default, without a marker")
+case("check_hand_code_budget.py", py("check_hand_code_budget.py"),
+     [Create(f"{IOS}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nfun redRun(): Int = 1\n")],
+     "ZzRedRun.kt: hand-written (3 lines) and not on the budget", "a new hand-written file appears under an api/ directory")
+case("check_hand_code_budget.py (ratchet)", py("check_hand_code_budget.py"),
+     [Append(f"{JVM}/net/multigesture/kanama/api/GD.kt", "\n// red run: a transitional file grows\n")],
+     "transitional file grew", "a transitional hand file (desktop GD.kt) grows past its line ratchet")
 case("check_hand_copies.py", py("check_hand_copies.py"),
      [Edit(f"{IOS}/annotations/Annotations.kt", "annotation class ExportPlaceholder(val placeholder: String)",
            "annotation class ExportPlaceholder(val text: String)")],
