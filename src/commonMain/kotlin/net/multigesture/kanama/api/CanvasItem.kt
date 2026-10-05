@@ -644,8 +644,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
 
     /**
      * Draws a textured rectangle region of the font texture with LCD subpixel anti-aliasing at a given
-     * position, optionally modulated by a color. The `rect` is defined in local space. Texture is
-     * drawn using the following blend operation, blend mode of the `CanvasItemMaterial` is ignored:
+     * position, optionally modulated by a color. The `rect` is defined in local space.
      *
      * Generated from Godot docs: CanvasItem.draw_lcd_texture_rect_region
      */

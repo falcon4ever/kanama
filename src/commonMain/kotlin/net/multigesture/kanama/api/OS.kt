@@ -369,8 +369,7 @@ object OS {
      * is opened. This method returns the exit code of the command, or `-1` if the process fails to
      * execute. Note: The main thread will be blocked until the executed command terminates. Use
      * `Thread` to create a separate thread that will not block the main thread, or use
-     * `create_process` to create a completely independent process. For example, to retrieve a list of
-     * the working directory's contents:
+     * `create_process` to create a completely independent process.
      *
      * Generated from Godot docs: OS.execute
      */

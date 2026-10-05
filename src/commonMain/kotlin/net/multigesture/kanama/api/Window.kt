@@ -519,8 +519,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      * is used by tonemapping and other `Environment` effects to ensure that bright colors are
      * presented in the range that can be displayed by this window. When using this maximum linear
      * value in your project, it should only be used to present colors directly to the screen without
-     * tonemapping and without influencing lighting, post-processing effects, or surrounding color. The
-     * following is an example that produces the brightest purple color that the screen can produce:
+     * tonemapping and without influencing lighting, post-processing effects, or surrounding color.
      *
      * Generated from Godot docs: Window.get_output_max_linear_value
      */

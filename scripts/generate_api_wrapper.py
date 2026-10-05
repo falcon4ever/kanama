@@ -506,9 +506,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "InputEventKey": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "InputEventMouseButton": WrapperHome("hand", "collision",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit; iOS: hand-written cinterop-glue event wrapper in IosGodotApi.kt"),
     "InputEventMouseMotion": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
@@ -544,9 +541,6 @@ PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
     "SurfaceTool": WrapperHome("hand", "generated",
         "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
         "emit"),
-    "Tween": WrapperHome("hand", "collision",
-        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
-        "written Variant tween_property runtime in IosGodotApi.kt"),
 }
 
 # Godot classes whose wrapper is written ONCE, by hand, in the shared tree (task 117 P3', D20):
@@ -617,6 +611,10 @@ IOS_ARG_KINDS = {
     # retention (callable-args ownership design, Decisions 1-3, 5; record in the internal task repo). Callable
     # *return* and Callable-as-Variant-arg stay unsupported (no emitted iOS method needs them).
     "Callable",
+    # Signal args (task 129 A): the same (object handle, name) pair as Callable; the PT_SIGNAL
+    # dispatch builds Signal(Object, StringName) (constructor index 2) for the call and destroys it
+    # after. Admitted per method by candidate_for (today Tween.tween_await only).
+    "Signal",
     # task 100 parcel 7: Variant / Dictionary / Array ARGS are BUILD-tagged through
     # ObjectCalls.packVariantDesc / packDictionaryBlob / packArrayBlob (scalars, one level of
     # Map / List inside a Variant; strict — an unsupported value throws instead of passing nil).
@@ -755,6 +753,10 @@ PARAMETER_NAME_OVERRIDES = {
     ("Time", "get_unix_time_from_datetime_dict", "datetime"): "values",
     ("Time", "get_unix_time_from_datetime_string", "datetime"): "value",
     ("Time", "get_offset_string_from_offset_minutes", "offset_minutes"): "minutes",
+    # Tween.tween_property keeps the names of the retired hand-written Tween (task 129 A), so a
+    # named-argument call (`tweenProperty(target = ..., finalValue = ...)`) keeps compiling.
+    ("Tween", "tween_property", "object"): "target",
+    ("Tween", "tween_property", "final_val"): "finalValue",
 }
 PROPERTY_NAME_OVERRIDES = {
     ("Curve3D", "closed"): "curveClosed",
@@ -1147,6 +1149,24 @@ SHARED_MEMBER_SECTIONS: dict[str, str] = {
         }
     }
 """.strip("\n"),
+    "Tween": """
+    // ── Kanama Tween ergonomics (generator custom-section, not from Godot docs) ───────────────
+    // GDScript writes `tween_property(node, "position", v, 1.0)` and `tween_callback(node.method)`;
+    // these overloads keep that shape. They were the hand-written desktop Tween's signatures and
+    // a subset of the hand-written iOS one until task 129 A generated Tween once: a String property
+    // path ("position", "modulate:a"), and a target object plus method name for the Callable
+    // arguments. No KDoc here: the names are Godot methods, so sync_kdoc_from_godot_docs.py owns
+    // their doc blocks.
+
+    fun tweenProperty(target: GodotObject, property: String, finalValue: Any?, duration: Double): PropertyTweener =
+        this.tweenProperty(target, NodePath(property), finalValue, duration)
+
+    fun tweenCallback(target: GodotObject, method: String): CallbackTweener =
+        this.tweenCallback(GodotCallable(target, method))
+
+    fun tweenMethod(target: GodotObject, method: String, from: Any?, to: Any?, duration: Double): MethodTweener =
+        this.tweenMethod(GodotCallable(target, method), from, to, duration)
+""".strip("\n"),
 }
 # Every `create()` / `from*` helper this table held is a row in FACTORY_HELPERS since task 119
 # item 33. Non-factory shared companion members belong here.
@@ -1166,7 +1186,6 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
         // *Handle helpers, which have no instance twin, can stay @JvmStatic.
         private const val GET_MAIN_LOOP_HASH = 1016888095L
         private const val GET_TIME_SCALE_HASH = 191475506L
-        private const val CREATE_TWEEN_HASH = 3426978995L
 
         private val engineSingleton: RawSegment by lazy {
             ObjectCalls.getSingleton("Engine")
@@ -1178,10 +1197,6 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
 
         private val getTimeScaleBind by lazy {
             ObjectCalls.getMethodBind("Engine", "get_time_scale", GET_TIME_SCALE_HASH)
-        }
-
-        private val createTweenHandleBind by lazy {
-            ObjectCalls.getMethodBind("SceneTree", "create_tween", CREATE_TWEEN_HASH)
         }
 
         // Engine.get_time_scale through the singleton above: the desktop `Engine` wrapper has
@@ -1304,11 +1319,18 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
             ),
         )
 
+        // The two static Tween entry points of the retired desktop `object SceneTree`. Desktop-only
+        // extensions (`import net.multigesture.kanama.api.createTween`) until task 129 A generated
+        // Tween once; companion members on every platform now, with no import.
+        fun createTween(): Tween = active().createTween()
+
+        fun getProcessedTweens(): List<Tween> = active().getProcessedTweens()
+
         // legacy handle-returning form (see createTimerHandle). SceneTree.create_tween, not
         // Node.create_tween: the tree is a MainLoop, not a Node.
         @JvmStatic
         fun createTweenHandle(): GodotHandle =
-            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(createTweenHandleBind, active().segment))
+            GodotHandle(ObjectCalls.ptrcallNoArgsRetObject(createTweenBind, active().segment))
 
         suspend fun delaySeconds(
             timeSec: Double,
@@ -1393,6 +1415,12 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     "ButtonGroup": FactorySpec(True),
     "Camera3D": FactorySpec(True),
     "FastNoiseLite": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
+    # Task 129 A: the hand-written desktop file's only sugar. The iOS hand class extended InputEvent
+    # (not InputEventMouse) and also wrapped an InputEventScreenTouch; it is generated once now.
+    "InputEventMouseButton": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
+    # Task 129 A review: scripts and smokes construct a touch to feed Input.parseInputEvent
+    # (Godot's emulate_mouse_from_touch path), and narrow an event to it.
+    "InputEventScreenTouch": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
     "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
     "Mesh": FactorySpec(False, (Downcast("fromObject", "GodotObject", False),)),
     "MeshLibrary": FactorySpec(True),
@@ -1426,17 +1454,6 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
 
 # Desktop-only sugar on SHARED classes, emitted as extensions into `<Class>.jvm.kt`.
 DESKTOP_EXTENSION_SECTIONS = {
-    "SceneTree": """
-// The two static Tween entry points of the retired desktop `object SceneTree`. They live here, not
-// in the shared companion, because their instance forms are desktop-only too (SceneTree.jvm.kt: iOS
-// hosts no Tween wrapper with a `wrap` helper). Import them by name to call them:
-// `import net.multigesture.kanama.api.createTween`.
-fun SceneTree.Companion.createTween(): Tween =
-    SceneTree.active().createTween()
-
-fun SceneTree.Companion.getProcessedTweens(): List<Tween> =
-    SceneTree.active().getProcessedTweens()
-""".strip("\n"),
     "AnimationMixer": """
 fun AnimationMixer.setParameter(path: String, value: Any?) {
     setIndexed(path, value)
@@ -1461,42 +1478,6 @@ fun AnimationMixer.getStateMachinePlayback(path: String): AnimationNodeStateMach
 # (extra imports, text); ObjectCalls, MemorySegment and the binding.runtime helpers are imported
 # by the companion header.
 IOS_EXTENSION_SECTIONS: dict[str, tuple[tuple[str, ...], str]] = {
-    "Node": ((), """
-// Node.create_tween — the shared tree cannot host it (iOS has no Tween.wrap, the same gap the
-// generated desktop `Node.createTween` extension in Node.jvm.kt documents), and the retired
-// hand-written iOS `Node` carried it as a member, so iOS keeps it as an extension: every
-// `self.createTween()` / `node.createTween()` call site resolves on both platforms
-// (task 117 P1'(b2); mirrors the SceneTree entry above).
-fun Node.createTween(): Tween =
-    requireGodotReturn(
-        ObjectCalls.ptrcallNoArgsRetObject(nodeCreateTweenBind, segment)
-            .takeIf { it.address() != 0L }
-            ?.let { RefCounted.owned(Tween(GodotHandle(it))) },
-        "Node.create_tween",
-    )
-
-private val nodeCreateTweenBind by lazy {
-    ObjectCalls.getMethodBind("Node", "create_tween", 3426978995L)
-}
-""".strip("\n")),
-    "SceneTree": ((), """
-// SceneTree.create_tween through the TREE's own bind. Carried over from the retired hand-written
-// iOS `class SceneTree : Node`, whose `override fun createTween()` existed because Node.create_tween
-// on a tree handle SIGSEGVs (the task-103 "F2 fix"); SceneTree is a MainLoop now, so nothing is
-// inherited and this is plain sugar. Mirrors the generated desktop SceneTree.createTween extension
-// in SceneTree.jvm.kt — iOS hosts no Tween.wrap, so it cannot be a shared member.
-fun SceneTree.createTween(): Tween =
-    requireGodotReturn(
-        ObjectCalls.ptrcallNoArgsRetObject(sceneTreeCreateTweenBind, segment)
-            .takeIf { it.address() != 0L }
-            ?.let { RefCounted.owned(Tween(GodotHandle(it))) },
-        "SceneTree.create_tween",
-    )
-
-private val sceneTreeCreateTweenBind by lazy {
-    ObjectCalls.getMethodBind("SceneTree", "create_tween", 3426978995L)
-}
-""".strip("\n")),
     "AnimationMixer": ((), """
 // AnimationTree parameters are exposed as `parameters/...` engine properties, so route through
 // set()/get() (no NodePath set_indexed needed). Matches the desktop AnimationMixer helpers.
@@ -1537,13 +1518,6 @@ private val intersectRayBind by lazy {
 }
 """.strip("\n")),
     "PhysicsRayQueryParameters3D": (("net.multigesture.kanama.types.RID", "net.multigesture.kanama.types.Vector3"), """
-// The RID list excluded from collisions (e.g. the caster's own body). Marshalled to a Godot
-// Array[RID] by the C-shim. set_exclude takes an Array[RID] arg the generator otherwise skips.
-fun PhysicsRayQueryParameters3D.setExclude(exclude: List<RID>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
-}
-
 // Build a ray query: instantiate and set the scalar/Vector3 properties + the exclude RID-list
 // (marshalled through the Array[RID] C-shim so intersect_ray skips the caster's own collider).
 fun PhysicsRayQueryParameters3D.Companion.create(
@@ -1558,11 +1532,6 @@ fun PhysicsRayQueryParameters3D.Companion.create(
     query.collisionMask = collisionMask
     if (exclude.isNotEmpty()) query.setExclude(exclude)
     return query
-}
-
-private const val SET_EXCLUDE_HASH = 381264803L
-private val setExcludeBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_exclude", SET_EXCLUDE_HASH)
 }
 """.strip("\n")),
     "ShapeCast3D": (("net.multigesture.kanama.types.Vector3",), """
@@ -5303,6 +5272,9 @@ IOS_PT_TAG_VALUES = {
     # 26 is PT_PLANE (typed-array element selector, not an arg/ret tag). PT_CALLABLE is the
     # object+method Callable arg (KanamaIosCallableArgDesc path); value matches the C enum.
     "PT_CALLABLE": 27,
+    # Signal arg (task 129 A): a KanamaIosCallableArgDesc {object_handle, method = signal name};
+    # appended at the C enum's end (41).
+    "PT_SIGNAL": 41,
     # Rect2i return (4x int32 POD passthrough; the generic dispatch hands ret_out to the
     # engine untyped, so the tag is documentation + self-test selector). Appended at the
     # C enum's end (37) — never renumber existing tags.
@@ -5789,7 +5761,7 @@ IOS_ARRAY_BLOB_RETURNS = {
 # A generated helper's own parameter spelling, before the desktop names are applied: the two engine
 # pointers, then one `a<N>` per logical argument (a Callable argument spends two: `a<N>Object` and
 # `a<N>Method`), then the typed-object-list wrapper. Nothing else may be renamed positionally.
-IOS_GENERATED_PARAM_RE = re.compile(r"methodBind|instance|fromHandle|a\d+(?:Object|Method)?")
+IOS_GENERATED_PARAM_RE = re.compile(r"methodBind|instance|fromHandle|a\d+(?:Object|Method|Name)?")
 
 
 def _desktop_parameter_rename(function: str, generated: list[str]) -> dict[str, str]:
@@ -5892,6 +5864,21 @@ def render_ios_helper(
                 f"c{i}.method = a{i}Method.cstr.ptr"
             )
             arg_tags.append("PT_CALLABLE")
+            arg_ptr_exprs.append(f"c{i}.ptr.reinterpret<CPointed>()")
+            continue
+        if kind == "Signal":
+            # The wrapper call site expands a GodotSignal into (owner.segment, name); the same
+            # {object_handle, name} descriptor as a Callable, read by the PT_SIGNAL dispatch, which
+            # constructs Signal(Object, StringName) for the call and destroys it after.
+            tags_used.add("PT_SIGNAL")
+            params.append(f"a{i}Object: MemorySegment")
+            params.append(f"a{i}Name: String")
+            cell_decls.append(
+                f"val c{i} = alloc<KanamaIosCallableArgDesc>(); "
+                f"c{i}.object_handle = a{i}Object.address(); "
+                f"c{i}.method = a{i}Name.cstr.ptr"
+            )
+            arg_tags.append("PT_SIGNAL")
             arg_ptr_exprs.append(f"c{i}.ptr.reinterpret<CPointed>()")
             continue
         param_type, tag, decls, ptr_expr = ios_arg_layout(kind, i)

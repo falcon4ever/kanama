@@ -16,8 +16,7 @@ object Performance {
     }
 
     /**
-     * Returns the value of one of the available built-in monitors. You should provide one of the
-     * `Monitor` constants as the argument, like this:
+     * Returns the value of one of the available built-in monitors.
      *
      * Generated from Godot docs: Performance.get_monitor
      */

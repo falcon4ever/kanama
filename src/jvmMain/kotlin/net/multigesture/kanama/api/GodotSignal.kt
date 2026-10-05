@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
  */
 actual class GodotSignal
 internal actual constructor(
-    internal val owner: GodotObject,
+    internal actual val owner: GodotObject,
     actual val name: String,
 ) {
     actual fun connect(target: GodotObject, method: String): GodotError =

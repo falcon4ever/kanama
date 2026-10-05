@@ -180,6 +180,13 @@ which is KMP common code: it may name only common declarations (the platform cla
 needs are `expect`s with one `actual` per platform, and an `expect` carries no default
 argument).
 
+Hand-written code under `api/` is a budget, not a default: `scripts/check_hand_code_budget.py`
+fails on a hand-written API file `scripts/hand_code_budget.json` does not list (with its category:
+seam, runtime-core, sugar, or transitional) and on any file that grows past its line ratchet; a
+legitimate seam/runtime-core/sugar change raises it with `--write --reason "<why>"`. Sugar for a generated class goes into the
+generator's tables (`FACTORY_HELPERS`, `SHARED_MEMBER_SECTIONS`, ...), not into a hand class; see
+"Retiring a per-platform class" in `docs/contributing/wrapper-maintenance.md`.
+
 ## Porting And Demo Integration
 
 Ported demos are integration pressure for real Kanama consumer code. When a

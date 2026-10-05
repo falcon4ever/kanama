@@ -39,7 +39,6 @@ import net.multigesture.kanama.api.IosCallableRegistry
 import net.multigesture.kanama.api.IosGodot
 import net.multigesture.kanama.api.Material
 import net.multigesture.kanama.api.RefCounted
-import net.multigesture.kanama.api.createTween
 import net.multigesture.kanama.ios.IosReturnContainerScratch
 import net.multigesture.kanama.ios.KanamaIosProjectRegistry
 import net.multigesture.kanama.ios.KanamaIosRpcConfig
@@ -4054,40 +4053,6 @@ actual object ObjectCalls {
   ): NodePath =
     NodePath(callWithVariantArgs(methodBind, instance, listOf(objectArg, boolArg)) as? String ?: "")
 
-  // Tween.tween_property(object, property: NodePath, final_val: Variant, duration) for the
-  // hand-written iOS Tween (task 128 A review): the Variant final value goes through the general
-  // Variant encoder (packVariantDesc), so every Variant-expressible value -- Double, Long, Vector3,
-  // a typed GodotEnumValue -- reaches Godot as itself. The previous Vector2 / Color C-shim pair
-  // tweened every other value to Vector2(0, 0). Same name and parameters as the desktop helper.
-  fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    objectArg: MemorySegment,
-    path: String,
-    variantArg: Any?,
-    doubleArg: Double,
-  ): MemorySegment = memScoped {
-    val ret = alloc<LongVar>()
-    ret.value = 0
-    val c0 = alloc<LongVar>()
-    c0.value = objectArg.address()
-    val c2 = packVariantDesc(variantArg)
-    val c3 = alloc<DoubleVar>()
-    c3.value = doubleArg
-    val types = allocArray<IntVar>(4)
-    types[0] = PT_OBJECT
-    types[1] = PT_NODE_PATH
-    types[2] = PT_VARIANT
-    types[3] = PT_FLOAT64
-    val ptrs = allocArray<COpaquePointerVar>(4)
-    ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    ptrs[1] = path.cstr.ptr.reinterpret<CPointed>()
-    ptrs[2] = c2.reinterpret<CPointed>()
-    ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
-    MemorySegment.ofAddress(ret.value)
-  }
-
   // ===== BEGIN GENERATED MEMBERS (scripts/generate_api_wrapper.py — do not edit) =====
   /*
    * GENERATED iOS ObjectCalls helper MEMBERS (scripts/generate_api_wrapper.py --ios-*).
@@ -4163,6 +4128,7 @@ actual object ObjectCalls {
   private const val PT_RECT2I = 37
   private const val PT_VARIANT = 38
   private const val PT_TYPED_ARRAY_BLOB = 39
+  private const val PT_SIGNAL = 41
 
   actual fun ptrcallNoArgsRetAABB(methodBind: MemorySegment, instance: MemorySegment): AABB =
     memScoped {
@@ -5395,6 +5361,38 @@ actual object ObjectCalls {
     ret.value
   }
 
+  actual fun ptrcallWithCallableVariantVariantDoubleArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    callableObject: MemorySegment,
+    callableMethod: String,
+    from: Any?,
+    to: Any?,
+    duration: Double,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<KanamaIosCallableArgDesc>()
+    c0.object_handle = callableObject.address()
+    c0.method = callableMethod.cstr.ptr
+    val c1 = packVariantDesc(from)
+    val c2 = packVariantDesc(to)
+    val c3 = alloc<DoubleVar>()
+    c3.value = duration
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_CALLABLE
+    types[1] = PT_VARIANT
+    types[2] = PT_VARIANT
+    types[3] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrs[2] = c2.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
+
   actual fun ptrcallWithDictionaryAndBoolArgRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -5843,6 +5841,22 @@ actual object ObjectCalls {
       ),
       Vector3.raw(ret[9], ret[10], ret[11]),
     )
+  }
+
+  actual fun ptrcallWithDoubleArgRetBool(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Double,
+  ): Boolean = memScoped {
+    val ret = alloc<ByteVar>()
+    val c0 = alloc<DoubleVar>()
+    c0.value = value
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_BOOL, ret.ptr)
+    ret.value.toInt() != 0
   }
 
   actual fun ptrcallWithDoubleArgRetByteArray(
@@ -14302,6 +14316,35 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
+
+  actual fun ptrcallWithObjectNodePathVariantDoubleArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    objectArg: MemorySegment,
+    path: NodePath,
+    variantArg: Any?,
+    doubleArg: Double,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<LongVar>()
+    c0.value = objectArg.address()
+    val c2 = packVariantDesc(variantArg)
+    val c3 = alloc<DoubleVar>()
+    c3.value = doubleArg
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_OBJECT
+    types[1] = PT_NODE_PATH
+    types[2] = PT_VARIANT
+    types[3] = PT_FLOAT64
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = path.path.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.reinterpret<CPointed>()
     ptrs[3] = c3.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
@@ -25204,6 +25247,25 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithSignalArgRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    signalObject: MemorySegment,
+    signalName: String,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = alloc<KanamaIosCallableArgDesc>()
+    c0.object_handle = signalObject.address()
+    c0.method = signalName.cstr.ptr
+    val types = allocArray<IntVar>(1)
+    types[0] = PT_SIGNAL
+    val ptrs = allocArray<COpaquePointerVar>(1)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 1, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
+
   actual fun ptrcallWithStringAndArrayArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -35611,6 +35673,43 @@ actual object ObjectCalls {
     ptrcallRetDictionary(methodBind, instance, types, ptrs, 2)
   }
 
+  actual fun ptrcallWithTwoVariantTwoDoubleTwoLongArgsRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    initialValue: Any?,
+    deltaValue: Any?,
+    elapsedTime: Double,
+    duration: Double,
+    transition: Long,
+    ease: Long,
+  ): Any? = memScoped {
+    val c0 = packVariantDesc(initialValue)
+    val c1 = packVariantDesc(deltaValue)
+    val c2 = alloc<DoubleVar>()
+    c2.value = elapsedTime
+    val c3 = alloc<DoubleVar>()
+    c3.value = duration
+    val c4 = alloc<LongVar>()
+    c4.value = transition
+    val c5 = alloc<LongVar>()
+    c5.value = ease
+    val types = allocArray<IntVar>(6)
+    types[0] = PT_VARIANT
+    types[1] = PT_VARIANT
+    types[2] = PT_FLOAT64
+    types[3] = PT_FLOAT64
+    types[4] = PT_INT64
+    types[5] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(6)
+    ptrs[0] = c0.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrs[4] = c4.ptr.reinterpret<CPointed>()
+    ptrs[5] = c5.ptr.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 6)
+  }
+
   actual fun ptrcallWithTwoVector2Args(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -43128,6 +43227,44 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     tween.kill()
     tween.close()
     ObjectCalls.destroyObject(node.segment)
+  }
+
+  // Task 129 A — a Signal ARGUMENT through the generated ptrcallWithSignalArgRetObject (PT_SIGNAL:
+  // the shim builds Signal(Object, StringName) for the call and destroys it after). The sequence
+  // await(node.renamed) -> callback(node.queue_free) must PARK on the await and run the callback
+  // only once the signal fires, so the rows tell a working Signal argument from a Signal the
+  // engine never connected to (callback never runs) and from one it ignored (callback runs at
+  // once). The bounded spin mirrors the desktop HelloScript probe: the await's start() resets its
+  // received flag, so the emission must come after the tween reached it.
+  run {
+    val faultsBefore = ObjectCalls.faultCount()
+    val node = net.multigesture.kanama.api.Node(GodotHandle(ObjectCalls.constructObject("Node")))
+    val tween = net.multigesture.kanama.api.SceneTree.active().createTween()
+    val awaitTweener = tween.tweenAwait(node.signal("renamed"))
+    check("tween-await(Signal arg -> AwaitTweener)", awaitTweener.isClass("AwaitTweener"))
+    tween.tweenCallback(node, "queue_free")
+    var spin = 0
+    while (spin < 8 && tween.customStep(0.05)) spin++
+    check(
+      "tween-await(parks on the await: callback not run before the signal)",
+      !node.isQueuedForDeletion(),
+    )
+    node.emitSignal("renamed")
+    // Two steps, as Godot 4.7.2 runs them (scene/animation/tween.cpp): the first finds the await
+    // received and finishes it, but AwaitTweener::step has set r_delta = 0 (line 976), so
+    // Tween::step's `while (running && rem_delta > 0)` loop (line 384) only starts the next step's
+    // tweeners and exits; the second step runs the CallbackTweener. The first device run stepped
+    // once and read the callback as not run.
+    tween.customStep(0.05)
+    tween.customStep(0.05)
+    val resumed = node.isQueuedForDeletion()
+    check("tween-await(signal fires -> the callback after the await runs)", resumed)
+    check("tween-await(no kanama_ios_fault raised)", ObjectCalls.faultCount() == faultsBefore)
+    awaitTweener.close()
+    tween.kill()
+    tween.close()
+    // queue_free frees the node at the end of this frame; free it here only if it never ran.
+    if (!resumed) ObjectCalls.destroyObject(node.segment)
   }
 
   // task 100 (parcel 10), moved here by task 117 P2' follow-up 4 — Array[Dictionary] ARGUMENT

@@ -29,9 +29,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      * effect, and can output similar random streams given similar seeds. Consider using a hash
      * function to improve your seed quality if they're sourced externally. Note: The default value of
      * this property is pseudo-random, and changes when calling `randomize`. The `0` value documented
-     * here is a placeholder, and not the actual default seed. Note: Setting this property produces a
-     * side effect of changing the internal `state`, so make sure to initialize the seed before
-     * modifying the `state`:
+     * here is a placeholder, and not the actual default seed.
      *
      * Generated from Godot docs: RandomNumberGenerator.set_seed
      */
@@ -46,9 +44,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
      * effect, and can output similar random streams given similar seeds. Consider using a hash
      * function to improve your seed quality if they're sourced externally. Note: The default value of
      * this property is pseudo-random, and changes when calling `randomize`. The `0` value documented
-     * here is a placeholder, and not the actual default seed. Note: Setting this property produces a
-     * side effect of changing the internal `state`, so make sure to initialize the seed before
-     * modifying the `state`:
+     * here is a placeholder, and not the actual default seed.
      *
      * Generated from Godot docs: RandomNumberGenerator.get_seed
      */
@@ -58,8 +54,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * The current state of the random number generator. Save and restore this property to restore the
-     * generator to a previous state:
+     * The current state of the random number generator.
      *
      * Generated from Godot docs: RandomNumberGenerator.set_state
      */
@@ -69,8 +64,7 @@ class RandomNumberGenerator(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * The current state of the random number generator. Save and restore this property to restore the
-     * generator to a previous state:
+     * The current state of the random number generator.
      *
      * Generated from Godot docs: RandomNumberGenerator.get_state
      */

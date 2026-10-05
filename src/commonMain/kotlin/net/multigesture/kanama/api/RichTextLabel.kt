@@ -1573,7 +1573,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the `PopupMenu` of this `RichTextLabel`. By default, this menu is displayed when
      * right-clicking on the `RichTextLabel`. You can add custom menu items or remove standard ones.
-     * Make sure your IDs don't conflict with the standard ones (see `MenuItems`). For example:
+     * Make sure your IDs don't conflict with the standard ones (see `MenuItems`).
      *
      * Generated from Godot docs: RichTextLabel.get_menu
      */

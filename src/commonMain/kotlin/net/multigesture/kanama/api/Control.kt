@@ -1793,7 +1793,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * use either a default implementation, or a custom one that you can provide by overriding
      * `_make_custom_tooltip`. The default tooltip includes a `PopupPanel` and `Label` whose theme
      * properties can be customized using `Theme` methods with the `"TooltipPanel"` and
-     * `"TooltipLabel"` respectively. For example:
+     * `"TooltipLabel"` respectively.
      *
      * Generated from Godot docs: Control.set_tooltip_text
      */
@@ -1811,7 +1811,7 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      * use either a default implementation, or a custom one that you can provide by overriding
      * `_make_custom_tooltip`. The default tooltip includes a `PopupPanel` and `Label` whose theme
      * properties can be customized using `Theme` methods with the `"TooltipPanel"` and
-     * `"TooltipLabel"` respectively. For example:
+     * `"TooltipLabel"` respectively.
      *
      * Generated from Godot docs: Control.get_tooltip_text
      */

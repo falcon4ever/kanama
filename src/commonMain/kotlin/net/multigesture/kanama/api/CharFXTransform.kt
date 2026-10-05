@@ -255,8 +255,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      * their contents match a type such as `bool`, `int` or `float`, they will be converted
      * automatically. Color codes in the form `#rrggbb` or `#rgb` will be converted to an opaque
      * `Color`. String arguments may not contain spaces, even if they're quoted. If present, quotes
-     * will also be present in the final string. For example, the opening BBCode tag `[example
-     * foo=hello bar=true baz=42 color=#ffffff]` will map to the following `Dictionary`:
+     * will also be present in the final string.
      *
      * Generated from Godot docs: CharFXTransform.get_environment
      */
@@ -270,8 +269,7 @@ class CharFXTransform(handle: GodotHandle) : RefCounted(handle) {
      * their contents match a type such as `bool`, `int` or `float`, they will be converted
      * automatically. Color codes in the form `#rrggbb` or `#rgb` will be converted to an opaque
      * `Color`. String arguments may not contain spaces, even if they're quoted. If present, quotes
-     * will also be present in the final string. For example, the opening BBCode tag `[example
-     * foo=hello bar=true baz=42 color=#ffffff]` will map to the following `Dictionary`:
+     * will also be present in the final string.
      *
      * Generated from Godot docs: CharFXTransform.set_environment
      */

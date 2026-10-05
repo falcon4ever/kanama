@@ -335,7 +335,7 @@ check "vret control rid_type=true"
 # OBJECT Variant from the raw pointer and read the freed header). Every RefCounted-derived
 # wrapper — generated (Image, Material) and hand-shaped (BaseMaterial3D) — refuses a call
 # through a closed handle, receiver- and argument-side, with the same IllegalStateException the
-# hand-shaped Tween family raised before (Mesh is generated since task 117 P1'(a)). Removing the guard turns closed_* into "none" (or
+# hand-shaped Tween family raised before (Mesh and Tween are generated since tasks 117 P1'(a) and 129 A). Removing the guard turns closed_* into "none" (or
 # a native fault); removing the id capture turns instance_valid_after_free into UB.
 check "LifetimeSmoke instance_valid_alive=true instance_valid_after_free=false id_after_free_valid=false id_matches_ptrcall=true closed_receiver=IllegalStateException:RefCounted handle is closed closed_inherited=IllegalStateException:RefCounted handle is closed closed_generated=IllegalStateException:RefCounted handle is closed closed_argument=IllegalStateException:RefCounted handle is closed"
 check_absent "Leaked instance: Image"

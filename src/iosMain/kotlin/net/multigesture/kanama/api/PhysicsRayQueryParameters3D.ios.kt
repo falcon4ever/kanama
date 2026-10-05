@@ -10,13 +10,6 @@ import net.multigesture.kanama.binding.runtime.*
 // IOS_EXTENSION_SECTIONS). DO NOT EDIT BY HAND. iOS-only sugar over the shared wrapper: it
 // uses C-shim helpers desktop/Android do not have, so it cannot live in the shared file.
 
-// The RID list excluded from collisions (e.g. the caster's own body). Marshalled to a Godot
-// Array[RID] by the C-shim. set_exclude takes an Array[RID] arg the generator otherwise skips.
-fun PhysicsRayQueryParameters3D.setExclude(exclude: List<RID>) {
-    checkOpen()
-    ObjectCalls.ptrcallWithRIDListArg(setExcludeBind, segment, exclude)
-}
-
 // Build a ray query: instantiate and set the scalar/Vector3 properties + the exclude RID-list
 // (marshalled through the Array[RID] C-shim so intersect_ray skips the caster's own collider).
 fun PhysicsRayQueryParameters3D.Companion.create(
@@ -31,9 +24,4 @@ fun PhysicsRayQueryParameters3D.Companion.create(
     query.collisionMask = collisionMask
     if (exclude.isNotEmpty()) query.setExclude(exclude)
     return query
-}
-
-private const val SET_EXCLUDE_HASH = 381264803L
-private val setExcludeBind by lazy {
-    ObjectCalls.getMethodBind("PhysicsRayQueryParameters3D", "set_exclude", SET_EXCLUDE_HASH)
 }

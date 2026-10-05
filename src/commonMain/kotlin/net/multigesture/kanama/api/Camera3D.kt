@@ -143,8 +143,7 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * Returns the 2D coordinate in the `Viewport` rectangle that maps to the given 3D point in world
-     * space. Note: When using this to position GUI elements over a 3D viewport, use
-     * `is_position_behind` to prevent them from appearing if the 3D point is behind the camera:
+     * space.
      *
      * Generated from Godot docs: Camera3D.unproject_position
      */

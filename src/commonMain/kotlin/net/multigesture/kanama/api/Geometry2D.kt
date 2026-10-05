@@ -272,8 +272,7 @@ object Geometry2D {
      * array if `delta` is negative and the absolute value of it approximately exceeds the minimum
      * bounding rectangle dimensions of the polygon. Each polygon's vertices will be rounded as
      * determined by `join_type`. The operation may result in an outer polygon (boundary) and inner
-     * polygon (hole) produced which could be distinguished by calling `is_polygon_clockwise`. Note: To
-     * translate the polygon's vertices specifically, multiply them to a `Transform2D`:
+     * polygon (hole) produced which could be distinguished by calling `is_polygon_clockwise`.
      *
      * Generated from Godot docs: Geometry2D.offset_polygon
      */
@@ -313,8 +312,7 @@ object Geometry2D {
     /**
      * Returns the Bresenham line (https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm) between
      * the `from` and `to` points. A Bresenham line is a series of pixels that draws a line and is
-     * always 1-pixel thick on every row and column of the drawing (never more, never less). Example
-     * code to draw a line between two `Marker2D` nodes using a series of `CanvasItem.draw_rect` calls:
+     * always 1-pixel thick on every row and column of the drawing (never more, never less).
      *
      * Generated from Godot docs: Geometry2D.bresenham_line
      */

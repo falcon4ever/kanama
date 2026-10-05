@@ -38,6 +38,63 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — `Tween` and `InputEventMouseButton` generated once for every platform (task 129 A) — BREAKING
+
+Desktop, Android and iOS. Both classes were hand-written twice, once per platform, and had drifted:
+iOS `Tween` had 7 of Godot's 28 methods, and iOS `InputEventMouseButton` extended `InputEvent`, so
+its 26 `InputEventMouse` / `InputEventWithModifiers` members (`position`, `globalPosition`,
+`buttonMask`, the modifier keys, ...) and 6 of its own 8 methods did not exist on the phone. Both
+are now generated once into the shared API from `extension_api.json`, like the other 1,010
+classes; the desktop names, overloads and factories are kept.
+
+- **iOS gains the full `Tween`** (`stop`, `pause`, `play`, `customStep`, `isRunning`, `setLoops`,
+  `setTrans`, `setSpeedScale`, `parallel`, `chain`, `tweenInterval`, `tweenSubtween`, the static
+  `Tween.interpolateValue`, ...) and the full `InputEventMouseButton` (`factor`, `doubleClick`,
+  `setPressed`, `setCanceled`, and every `InputEventMouse` / `InputEventWithModifiers` member). Every platform also
+  gains `Tween.hasTweeners()` and the Godot-shaped overloads `tweenProperty(target, NodePath, ...)`,
+  `tweenCallback(GodotCallable)` and `tweenMethod(GodotCallable, ...)` next to the String-path and
+  target-plus-method-name forms scripts already use.
+- **`createTween()` is a member of `Node` and `SceneTree`**, and `SceneTree.createTween()` /
+  `SceneTree.getProcessedTweens()` are companion members, on every platform. They were per-platform
+  extension functions a script had to import by name.
+- **Source break:** `InputEventMouseButton` — one shared class now, and on iOS it extends
+  `InputEventMouse` (it extended `InputEvent`), so every member compiles on every platform. iOS
+  `InputEventMouseButton.from(event)` returns `null` for an `InputEventScreenTouch`; it used to wrap
+  the touch as a mouse button. A touch reaches mouse-button code through Godot's
+  `input_devices/pointing/emulate_mouse_from_touch` setting (on by default), as on every other
+  platform; code that wants the touch itself reads `event.castOrNull<InputEventScreenTouch>()`.
+  `InputEventScreenTouch.create()` and `InputEventScreenTouch.from(event)` are new, so a script or a
+  smoke can feed `Input.parseInputEvent` a touch (kanama-demos' Match3 smoke swipes a tile that
+  way, through the emulation, on desktop and on the phone).
+- **Source break:** `top-level` `createTween`, `getProcessedTweens` and (iOS) `setExclude` — the
+  top-level extension functions are gone, so delete `import net.multigesture.kanama.api.createTween`,
+  `import net.multigesture.kanama.api.getProcessedTweens` and `import
+  net.multigesture.kanama.api.setExclude`: the calls resolve to the members (`createTween`,
+  `getProcessedTweens`) and to the generated `PhysicsRayQueryParameters3D.setExclude(List<RID>)`
+  member that already shadowed the iOS extension.
+- **`Tween.tweenAwait(signal)` is a member on every native platform**, iOS included: the iOS
+  ptrcall seam gained a `Signal` argument (`PT_SIGNAL`, built from the emitter and the signal name
+  like a `Callable` argument). Web has no `tweenAwait`, no `SceneTree.createTween()` and no
+  `getProcessedTweens()` yet; `Node.createTween()` and the tween methods above it exposes are
+  unchanged there.
+- **Source break:** `Tween` — `setLoops(loops: Int = 0)` and `getLoopsLeft(): Int` take and return
+  `Int` (they were `Long` on desktop, as Godot types them `int32`): pass `n.toInt()` or compare with
+  an `Int`. `tweenSubtween(subtween: Tween)` takes a non-null `Tween` (Godot marks the parameter
+  required and fails on null).
+- Dead hand-written code removed: 45 iOS C shim entry points nothing called any more (the per-method
+  Node, Node2D, Node3D, CanvasItem, GPUParticles, Tween and InputEvent helpers of the first iOS
+  backend) with their `kanama_ios.h` declarations and the 16 static helpers, 44 method-bind caches
+  and 5 globals nothing else used (`clang -Wall` reports no unused static in the shim now); the 53
+  matching `IosGodot` facade functions; the inert iOS `java.io.File` shim; and 17 desktop
+  `ObjectCalls` helpers no wrapper calls.
+- New gate `scripts/check_hand_code_budget.py` (a `local_ci.sh` stage): every hand-written Kotlin
+  file of the API package (under an `api/` directory or declaring `net.multigesture.kanama.api`) is
+  listed in `scripts/hand_code_budget.json` as seam, runtime-core, sugar, or transitional (with the
+  task-129 parcel that retires it), every file and every hand Kotlin section of the generators has
+  a line ratchet, and a GENERATED marker pair no generator owns fails. A new hand file fails the
+  gate until it is listed; a seam/runtime-core/sugar file that legitimately grows raises its
+  ratchet with `--write --reason "<why>"`.
+
 ### Fixed — Web: a typed `await()` on an engine object (task 134 C follow-up)
 
 - On Web, `animationPlayer.animationFinished.await()`, `sound.finished.await()` and every other

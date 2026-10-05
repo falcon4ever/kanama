@@ -98,7 +98,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true` and MSAA is enabled, this will trigger a color buffer resolve before the effect is
-     * run. Note: In `_render_callback`, to access the resolved buffer use:
+     * run.
      *
      * Generated from Godot docs: CompositorEffect.set_access_resolved_color
      */
@@ -109,7 +109,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true` and MSAA is enabled, this will trigger a color buffer resolve before the effect is
-     * run. Note: In `_render_callback`, to access the resolved buffer use:
+     * run.
      *
      * Generated from Godot docs: CompositorEffect.get_access_resolved_color
      */
@@ -120,7 +120,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true` and MSAA is enabled, this will trigger a depth buffer resolve before the effect is
-     * run. Note: In `_render_callback`, to access the resolved buffer use:
+     * run.
      *
      * Generated from Godot docs: CompositorEffect.set_access_resolved_depth
      */
@@ -131,7 +131,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true` and MSAA is enabled, this will trigger a depth buffer resolve before the effect is
-     * run. Note: In `_render_callback`, to access the resolved buffer use:
+     * run.
      *
      * Generated from Godot docs: CompositorEffect.get_access_resolved_depth
      */
@@ -141,8 +141,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * If `true` this triggers motion vectors being calculated during the opaque render state. Note: In
-     * `_render_callback`, to access the motion vector buffer use:
+     * If `true` this triggers motion vectors being calculated during the opaque render state.
      *
      * Generated from Godot docs: CompositorEffect.set_needs_motion_vectors
      */
@@ -152,8 +151,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * If `true` this triggers motion vectors being calculated during the opaque render state. Note: In
-     * `_render_callback`, to access the motion vector buffer use:
+     * If `true` this triggers motion vectors being calculated during the opaque render state.
      *
      * Generated from Godot docs: CompositorEffect.get_needs_motion_vectors
      */
@@ -164,8 +162,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true` this triggers normal and roughness data to be output during our depth pre-pass, only
-     * applicable for the Forward+ renderer. Note: In `_render_callback`, to access the roughness
-     * buffer use:
+     * applicable for the Forward+ renderer.
      *
      * Generated from Godot docs: CompositorEffect.set_needs_normal_roughness
      */
@@ -176,8 +173,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
     /**
      * If `true` this triggers normal and roughness data to be output during our depth pre-pass, only
-     * applicable for the Forward+ renderer. Note: In `_render_callback`, to access the roughness
-     * buffer use:
+     * applicable for the Forward+ renderer.
      *
      * Generated from Godot docs: CompositorEffect.get_needs_normal_roughness
      */

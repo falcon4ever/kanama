@@ -1,0 +1,504 @@
+{
+  "_doc": "Hand-written API files and generator-table Kotlin, gated by scripts/check_hand_code_budget.py (task 129). Categories: seam, runtime-core, sugar, transitional (+ parcel). Every entry has a line ratchet; raise one only with --write --reason.",
+  "files": {
+    "src/commonMain/kotlin/net/multigesture/kanama/api/AutoloadAccess.kt": {
+      "category": "runtime-core",
+      "lines": 91,
+      "reason": "lookups behind the generated Autoloads object (task 133 C)"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/GodotCallable.kt": {
+      "category": "runtime-core",
+      "lines": 15,
+      "reason": "Callable value (target + method), a lifetime-free root"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/GodotHandle.kt": {
+      "category": "runtime-core",
+      "lines": 25,
+      "reason": "the opaque handle every wrapper holds"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/GodotObject.kt": {
+      "category": "runtime-core",
+      "lines": 642,
+      "reason": "lifetime root GodotObject (Object); its enum region is generated"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/GodotSignal.expect.kt": {
+      "category": "runtime-core",
+      "lines": 101,
+      "raises": [
+        "98 -> 101: GodotSignal.owner joins the expect so the generated wrappers pass a Signal argument on every platform (task 129 A, Tween.tweenAwait)"
+      ],
+      "reason": "signal plumbing expect"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/KanamaScript.kt": {
+      "category": "sugar",
+      "lines": 278,
+      "reason": "script base class: self, getNode<T>, await (GDScript syntax), written once"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/ListSignalArgReader.kt": {
+      "category": "runtime-core",
+      "lines": 46,
+      "reason": "signal argument reader for List-based registrars"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/MainThread.expect.kt": {
+      "category": "runtime-core",
+      "lines": 37,
+      "reason": "main-thread queue expect"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/RefCounted.kt": {
+      "category": "runtime-core",
+      "lines": 242,
+      "reason": "lifetime root RefCounted (SHARED_HAND_ROOTS)"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/ScriptAccess.kt": {
+      "category": "sugar",
+      "lines": 375,
+      "reason": "checked casts and node lookup by class token (GDScript `as` / `is`), written once"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.expect.kt": {
+      "category": "runtime-core",
+      "lines": 37,
+      "reason": "script runtime expect"
+    },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/TypedSignals.kt": {
+      "category": "runtime-core",
+      "lines": 524,
+      "reason": "typed signal classes Signal0..Signal5 (task 134 D4)"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/BoxMesh.kt": {
+      "category": "transitional",
+      "lines": 132,
+      "parcel": "129 parcel 5 (iOS-hand band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/BoxShape3D.kt": {
+      "category": "transitional",
+      "lines": 54,
+      "parcel": "129 parcel 5 (iOS-hand band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/Engine.kt": {
+      "category": "transitional",
+      "lines": 51,
+      "parcel": "129 parcel 7 (Engine: registerSingleton guard as a generator hook)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/FileAccess.kt": {
+      "category": "transitional",
+      "lines": 99,
+      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
+      "category": "runtime-core",
+      "lines": 137,
+      "reason": "signal plumbing actual"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/ImageTexture.kt": {
+      "category": "transitional",
+      "lines": 64,
+      "parcel": "129 parcel 5 (iOS-hand band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt": {
+      "category": "transitional",
+      "lines": 488,
+      "parcel": "129 parcels B (GD, Mathf), 6 (AudioStreamPlayer, ResourceLoader), 9 (KanamaScope, kotlinScriptInstance); what stays is the IosGodot cinterop seam and IosCallableRegistry",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt": {
+      "category": "runtime-core",
+      "lines": 89,
+      "reason": "main-thread queue actual"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/ParticleProcessMaterial.kt": {
+      "category": "transitional",
+      "lines": 1514,
+      "parcel": "129 parcel 5 (iOS-hand band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/ProceduralSkyMaterial.kt": {
+      "category": "transitional",
+      "lines": 366,
+      "parcel": "129 parcel 5 (iOS-hand band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/ProjectSettings.kt": {
+      "category": "transitional",
+      "lines": 23,
+      "parcel": "129 parcel 5 (iOS-hand band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt": {
+      "category": "runtime-core",
+      "lines": 99,
+      "reason": "iOS device self-test of the script-access paths"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptResources.kt": {
+      "category": "runtime-core",
+      "lines": 30,
+      "reason": "script resource loading actual"
+    },
+    "src/iosMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt": {
+      "category": "runtime-core",
+      "lines": 17,
+      "reason": "script runtime actual"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/AudioStreamPlayer.kt": {
+      "category": "transitional",
+      "lines": 445,
+      "parcel": "129 parcel 6 (AudioStreamPlayer + ResourceLoader)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/BoxMesh.kt": {
+      "category": "transitional",
+      "lines": 137,
+      "parcel": "129 parcel 5 (iOS-hand band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/BoxShape3D.kt": {
+      "category": "transitional",
+      "lines": 55,
+      "parcel": "129 parcel 5 (iOS-hand band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/ConfigFile.kt": {
+      "category": "transitional",
+      "lines": 296,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/DirAccess.kt": {
+      "category": "transitional",
+      "lines": 574,
+      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/DirAccessHandle.kt": {
+      "category": "transitional",
+      "lines": 50,
+      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/ENetMultiplayerPeer.kt": {
+      "category": "transitional",
+      "lines": 90,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/Engine.kt": {
+      "category": "transitional",
+      "lines": 879,
+      "parcel": "129 parcel 7 (Engine: registerSingleton guard as a generator hook)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/FileAccess.kt": {
+      "category": "transitional",
+      "lines": 1007,
+      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/FileAccessHandle.kt": {
+      "category": "transitional",
+      "lines": 102,
+      "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/GD.kt": {
+      "category": "transitional",
+      "lines": 774,
+      "parcel": "129 parcel B (GD from the utility functions, Mathf once in common)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
+      "category": "runtime-core",
+      "lines": 145,
+      "reason": "signal plumbing actual"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/InputEventKey.kt": {
+      "category": "transitional",
+      "lines": 391,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/InputEventMouseMotion.kt": {
+      "category": "transitional",
+      "lines": 331,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/KanamaCoroutines.kt": {
+      "category": "runtime-core",
+      "lines": 65,
+      "reason": "coroutine dispatcher on the Godot main thread"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/LightmapGI.kt": {
+      "category": "transitional",
+      "lines": 902,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/MainThread.kt": {
+      "category": "runtime-core",
+      "lines": 104,
+      "reason": "main-thread queue actual"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/ManualGodotLifetimeApi.kt": {
+      "category": "transitional",
+      "lines": 21,
+      "parcel": "129 parcel 9 (per-platform sugar consolidated into common)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/Mathf.kt": {
+      "category": "transitional",
+      "lines": 265,
+      "parcel": "129 parcel B (GD from the utility functions, Mathf once in common)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/MeshDataTool.kt": {
+      "category": "transitional",
+      "lines": 609,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/NoiseTexture2D.kt": {
+      "category": "transitional",
+      "lines": 322,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/OpenXRSpatialAnchorCapability.kt": {
+      "category": "transitional",
+      "lines": 113,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/ResourceLoader.kt": {
+      "category": "transitional",
+      "lines": 334,
+      "parcel": "129 parcel 6 (AudioStreamPlayer + ResourceLoader)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/SceneMultiplayer.kt": {
+      "category": "transitional",
+      "lines": 293,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptInstances.kt": {
+      "category": "runtime-core",
+      "lines": 15,
+      "reason": "script instance lookup (until it goes through ObjectRuntime)"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptResources.kt": {
+      "category": "runtime-core",
+      "lines": 68,
+      "reason": "script resource loading actual"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/ScriptRuntime.kt": {
+      "category": "runtime-core",
+      "lines": 18,
+      "reason": "script runtime actual"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/Self.kt": {
+      "category": "transitional",
+      "lines": 13,
+      "parcel": "129 parcel 9 (per-platform sugar consolidated into common)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/ShaderMaterial.kt": {
+      "category": "transitional",
+      "lines": 111,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "src/jvmMain/kotlin/net/multigesture/kanama/api/SurfaceTool.kt": {
+      "category": "transitional",
+      "lines": 581,
+      "parcel": "129 parcel 4 (hand/generated easy band: FACTORY_HELPERS rows)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/GodotHandle.kt": {
+      "category": "seam",
+      "lines": 6,
+      "reason": "Web object id handle"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebAutoloadAccess.kt": {
+      "category": "runtime-core",
+      "lines": 54,
+      "reason": "Web lookups behind the generated Autoloads object"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebCoroutines.kt": {
+      "category": "runtime-core",
+      "lines": 81,
+      "reason": "Web coroutine dispatcher"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFacades.kt": {
+      "category": "transitional",
+      "lines": 302,
+      "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebFrameScheduler.kt": {
+      "category": "runtime-core",
+      "lines": 282,
+      "reason": "Web frame scheduler (MainThread counterpart)"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebGodotApi.kt": {
+      "category": "transitional",
+      "lines": 162,
+      "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebMath.kt": {
+      "category": "transitional",
+      "lines": 59,
+      "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebPhysicsQuery.kt": {
+      "category": "transitional",
+      "lines": 86,
+      "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebScriptAccess.kt": {
+      "category": "transitional",
+      "lines": 26,
+      "parcel": "129 parcel 10 (Web: generated Window/Viewport, query shapes, facades)",
+      "reason": "per-platform hand file the generator should emit"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebScriptResources.kt": {
+      "category": "runtime-core",
+      "lines": 54,
+      "reason": "Web script resource loading"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebSignals.kt": {
+      "category": "runtime-core",
+      "lines": 456,
+      "reason": "Web signal plumbing"
+    },
+    "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebTypedSignals.kt": {
+      "category": "runtime-core",
+      "lines": 238,
+      "raises": [
+        "224 -> 238: #306 (Web typed await on engine emitters) adds the Web await plumbing for typed signals"
+      ],
+      "reason": "Web typed signal classes"
+    },
+    "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/api/WebGodotApi.wasmJs.kt": {
+      "category": "seam",
+      "lines": 62,
+      "reason": "Wasm JS bridge entry points"
+    }
+  },
+  "sections": {
+    "generate_api_wrapper.DESKTOP_EXTENSION_SECTIONS[AnimationMixer]": {
+      "lines": 16
+    },
+    "generate_api_wrapper.DESKTOP_MEMBER_SECTIONS[ProjectSettings]": {
+      "lines": 77
+    },
+    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[AnimationMixer]": {
+      "lines": 19
+    },
+    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsDirectSpaceState3D]": {
+      "lines": 16
+    },
+    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[PhysicsRayQueryParameters3D]": {
+      "lines": 15
+    },
+    "generate_api_wrapper.IOS_EXTENSION_SECTIONS[ShapeCast3D]": {
+      "lines": 3
+    },
+    "generate_api_wrapper.IOS_MEMBER_SECTIONS[SurfaceTool]": {
+      "lines": 3
+    },
+    "generate_api_wrapper.SHARED_COMPANION_MEMBER_SECTIONS[SceneTree]": {
+      "lines": 194
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Node]": {
+      "lines": 136
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[SceneTree]": {
+      "lines": 41
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Tween]": {
+      "lines": 16
+    },
+    "generate_api_wrapper.SHARED_MEMBER_SECTIONS[Viewport]": {
+      "lines": 7
+    },
+    "generate_web_wrappers.CLASS_POLICY[@GlobalScope].custom": {
+      "lines": 55
+    },
+    "generate_web_wrappers.CLASS_POLICY[@GlobalScope].top_level": {
+      "lines": 3
+    },
+    "generate_web_wrappers.CLASS_POLICY[AnimationMixer].custom": {
+      "lines": 14
+    },
+    "generate_web_wrappers.CLASS_POLICY[AnimationMixer].top_level": {
+      "lines": 9
+    },
+    "generate_web_wrappers.CLASS_POLICY[AnimationNodeStateMachinePlayback].custom": {
+      "lines": 7
+    },
+    "generate_web_wrappers.CLASS_POLICY[AnimationPlayer].custom": {
+      "lines": 8
+    },
+    "generate_web_wrappers.CLASS_POLICY[AudioStreamPlayer].custom": {
+      "lines": 9
+    },
+    "generate_web_wrappers.CLASS_POLICY[CanvasItem].custom": {
+      "lines": 7
+    },
+    "generate_web_wrappers.CLASS_POLICY[Input].custom": {
+      "lines": 21
+    },
+    "generate_web_wrappers.CLASS_POLICY[Light3D].custom": {
+      "lines": 9
+    },
+    "generate_web_wrappers.CLASS_POLICY[Material].custom": {
+      "lines": 2
+    },
+    "generate_web_wrappers.CLASS_POLICY[Node3D].custom": {
+      "lines": 53
+    },
+    "generate_web_wrappers.CLASS_POLICY[Node3D].top_level": {
+      "lines": 50
+    },
+    "generate_web_wrappers.CLASS_POLICY[Node].custom": {
+      "lines": 54
+    },
+    "generate_web_wrappers.CLASS_POLICY[Node].top_level": {
+      "lines": 17
+    },
+    "generate_web_wrappers.CLASS_POLICY[OS].custom": {
+      "lines": 2
+    },
+    "generate_web_wrappers.CLASS_POLICY[Object].custom": {
+      "lines": 53
+    },
+    "generate_web_wrappers.CLASS_POLICY[PropertyTweener].custom": {
+      "lines": 10
+    },
+    "generate_web_wrappers.CLASS_POLICY[ResourceLoader].custom": {
+      "lines": 34
+    },
+    "generate_web_wrappers.CLASS_POLICY[SceneTree].companion": {
+      "lines": 26
+    },
+    "generate_web_wrappers.CLASS_POLICY[SceneTree].custom": {
+      "lines": 6
+    },
+    "generate_web_wrappers.CLASS_POLICY[SceneTree].top_level": {
+      "lines": 3
+    },
+    "generate_web_wrappers.CLASS_POLICY[Tween].custom": {
+      "lines": 25
+    },
+    "generate_web_wrappers.SUPPORT_FILE": {
+      "lines": 70
+    }
+  }
+}
