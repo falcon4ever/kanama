@@ -63,6 +63,9 @@ classes; the desktop names, overloads and factories are kept.
   the touch as a mouse button. A touch reaches mouse-button code through Godot's
   `input_devices/pointing/emulate_mouse_from_touch` setting (on by default), as on every other
   platform; code that wants the touch itself reads `event.castOrNull<InputEventScreenTouch>()`.
+  `InputEventScreenTouch.create()` and `InputEventScreenTouch.from(event)` are new, so a script or a
+  smoke can feed `Input.parseInputEvent` a touch (kanama-demos' Match3 smoke swipes a tile that
+  way, through the emulation, on desktop and on the phone).
 - **Source break:** `top-level` `createTween`, `getProcessedTweens` and (iOS) `setExclude` — the
   top-level extension functions are gone, so delete `import net.multigesture.kanama.api.createTween`,
   `import net.multigesture.kanama.api.getProcessedTweens` and `import

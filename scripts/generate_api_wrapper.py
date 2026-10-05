@@ -1418,6 +1418,9 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Task 129 A: the hand-written desktop file's only sugar. The iOS hand class extended InputEvent
     # (not InputEventMouse) and also wrapped an InputEventScreenTouch; it is generated once now.
     "InputEventMouseButton": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
+    # Task 129 A review: scripts and smokes construct a touch to feed Input.parseInputEvent
+    # (Godot's emulate_mouse_from_touch path), and narrow an event to it.
+    "InputEventScreenTouch": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
     "Material": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
     "Mesh": FactorySpec(False, (Downcast("fromObject", "GodotObject", False),)),
     "MeshLibrary": FactorySpec(True),
