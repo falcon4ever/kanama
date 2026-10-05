@@ -580,6 +580,11 @@ private constructor(
 data class Rect2(val position: Vector2, val size: Vector2) {
   /** Godot's `str(r)`: `[P: (0.0, 0.0), S: (1.0, 1.0)]`. */
   override fun toString(): String = "[P: $position, S: $size]"
+
+  companion object {
+    /** The zero rect (Kanama's, as on native; GDScript spells it `Rect2()`). */
+    val ZERO: Rect2 = Rect2(Vector2.ZERO, Vector2.ZERO)
+  }
 }
 
 /**
@@ -1193,6 +1198,11 @@ private constructor(
 
   constructor(normal: Vector3, d: Int) : this(normal, d.toDouble())
 
+  /** Godot's `Plane(a, b, c, d)`, as on native (task 133: a script default may spell it). */
+  constructor(x: Double, y: Double, z: Double, d: Double) : this(Vector3(x, y, z), d)
+
+  constructor(x: Int, y: Int, z: Int, d: Int) : this(Vector3(x, y, z), d.toDouble())
+
   val d: Double
     get() = rawD.toDouble()
 
@@ -1256,6 +1266,9 @@ private constructor(
     val PLANE_XY: Plane = Plane(Vector3(0.0, 0.0, 1.0), 0.0)
 
     // ===== END GENERATED BUILTIN STATICS: Plane =====
+
+    /** The zero plane (Kanama's, as on native; GDScript spells it `Plane()`). */
+    val ZERO: Plane = Plane(Vector3.ZERO, 0.0)
 
     /** A plane from a distance already at the storage width (no conversion). */
     internal fun raw(normal: Vector3, d: Float): Plane = Plane(normal, d, RawStorage)
@@ -1755,6 +1768,18 @@ class Basis internal constructor(private val stored: FloatArray) {
   }
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Basis (generate_builtin_ops.py) =====
+    val FLIP_X: Basis =
+      Basis(Vector3(-1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0))
+
+    val FLIP_Y: Basis =
+      Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, -1.0, 0.0), Vector3(0.0, 0.0, 1.0))
+
+    val FLIP_Z: Basis =
+      Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, -1.0))
+
+    // ===== END GENERATED BUILTIN STATICS: Basis =====
+
     val IDENTITY = Basis(doubleArrayOf(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0))
 
     /** Godot's default Euler order YXZ: R = Ry * Rx * Rz. */
@@ -1837,6 +1862,27 @@ data class Transform3D(val basis: Basis, val origin: Vector3) {
   }
 
   companion object {
+    // ===== BEGIN GENERATED BUILTIN STATICS: Transform3D (generate_builtin_ops.py) =====
+    val FLIP_X: Transform3D =
+      Transform3D(
+        Basis(Vector3(-1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0)),
+        Vector3(0.0, 0.0, 0.0),
+      )
+
+    val FLIP_Y: Transform3D =
+      Transform3D(
+        Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, -1.0, 0.0), Vector3(0.0, 0.0, 1.0)),
+        Vector3(0.0, 0.0, 0.0),
+      )
+
+    val FLIP_Z: Transform3D =
+      Transform3D(
+        Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, -1.0)),
+        Vector3(0.0, 0.0, 0.0),
+      )
+
+    // ===== END GENERATED BUILTIN STATICS: Transform3D =====
+
     val IDENTITY = Transform3D(Basis.IDENTITY, Vector3.ZERO)
   }
 }
