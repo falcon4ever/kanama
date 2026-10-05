@@ -1954,7 +1954,10 @@
     // any live proxy answers it: the running script's, else the active owner, else the first
     // installed one (a builtin call made before any script callback still works).
     immediateBuiltinCall(handle, packed) {
-      let owner = handle && this.objectQueryCallbacks.has(this.ownerForHandle(handle)) ? handle : 0;
+      // A stale or unowned handle (a script freed while a coroutine still runs) falls back like
+      // the other calls do, instead of throwing in ownerForHandle (review N4).
+      const handleOwner = handle ? this.handleOwners.get(handle) : undefined;
+      let owner = handleOwner && this.objectQueryCallbacks.has(handleOwner) ? handle : 0;
       if (!owner && this.activeOwnerHandle && this.objectQueryCallbacks.has(this.activeOwnerHandle)) {
         owner = this.activeOwnerHandle;
       }

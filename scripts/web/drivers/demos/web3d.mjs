@@ -328,9 +328,12 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   // 4 = the engine's five-argument CollisionObject3D.input_event through its generated Signal5,
   // 8 = builtin methods run by the engine (instance, static, Variant hit/miss, Basis.slerp),
   // 16 = Vector4/Vector4i/AABB/Transform2D/Projection exports hydrated, 32 = arguments AND a
-  // return through the proxy. Healthy = 63. It also arms two awaits that d1_probe_after reads
-  // after the coroutine section's pumps: 1 = an await on a non-script engine emitter resumed,
-  // 2 = an await whose emitter was freed first was cancelled instead of hanging (healthy = 3).
+  // return through the proxy, 64 = doubles bit-exact both ways (signal, argument, return), 128 =
+  // a builtin call the engine rejects throws in Kotlin. Healthy = 255. It also arms awaits that
+  // d1_probe_after reads after the coroutine section's pumps: 1 = an await on a non-script engine
+  // emitter resumed, 2 = an await whose emitter was freed first was cancelled instead of hanging,
+  // 4 = another script's await is a connection on D1Emitter, 16 = Node.duplicate() did not copy
+  // it, 8 = freeing that script first disconnected it (healthy = 31).
   const d1Probe = Number(
     await evaluate(
       `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("d1_probe")}, 0)`,
@@ -407,7 +410,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     ).then(Number);
   let d1ProbeAfter = await readD1After();
   const d1Deadline = Math.min(deadline, Date.now() + 10_000);
-  while (d1ProbeAfter !== 3 && Date.now() < d1Deadline) {
+  while (d1ProbeAfter !== 31 && Date.now() < d1Deadline) {
     await delay(150);
     d1ProbeAfter = await readD1After();
   }
@@ -491,7 +494,7 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // Task 134 D1: multi-argument and value-type signals, the engine builtin-call path, the five new
     // script types, arguments + return, an await that resumes on an engine emitter, and an await
     // cancelled by its emitter's free.
-    webParitySignalsAndValueTypes: d1Probe === 63 && d1ProbeAfter === 3,
+    webParitySignalsAndValueTypes: d1Probe === 255 && d1ProbeAfter === 31,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

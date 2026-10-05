@@ -2,6 +2,7 @@ package web3d
 
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.random.Random
 import kotlinx.coroutines.CancellationException
 import net.multigesture.kanama.annotations.Export
 import net.multigesture.kanama.annotations.ExportRange
@@ -38,6 +39,8 @@ import net.multigesture.kanama.api.SceneTree
 import net.multigesture.kanama.api.StaticBody3D
 import net.multigesture.kanama.api.Timer
 import net.multigesture.kanama.api.Window
+import net.multigesture.kanama.binding.runtime.BuiltinMethod
+import net.multigesture.kanama.binding.runtime.builtinFrame
 import net.multigesture.kanama.api.WorldEnvironment
 import net.multigesture.kanama.api.genericWebGameplayFallback
 import net.multigesture.kanama.api.lookAt
@@ -890,15 +893,9 @@ class Main(godotObject: GodotHandle) :
     if (probeBoolArgument) mask = mask or 2L
     if (probeImpactSum == PROBE_IMPACT + PROBE_FORCE) mask = mask or 4L
 
-    // The generic tier tags a Vector3 return "v3" with its three components as the payload.
+    // The generic tier tags a Vector3 return "v3" with its three components (as IEEE bits).
     val vector = generic.callImmediate(self, "dispatch_probe_vector")
-    if (
-      vector.tag == "v3" &&
-        vector.payload.size == 3 &&
-        vector.payload[0].toDouble() == PROBE_VECTOR.x &&
-        vector.payload[1].toDouble() == PROBE_VECTOR.y &&
-        vector.payload[2].toDouble() == PROBE_VECTOR.z
-    ) {
+    if (vector.tag == "v3" && vector.payload.size == 3 && vector.asValue() == PROBE_VECTOR) {
       mask = mask or 8L
     }
 
@@ -1071,6 +1068,11 @@ class Main(godotObject: GodotHandle) :
 
   fun d1Describe(tag: String, count: Long, on: Boolean): String = "$tag:$count:$on"
 
+  @Signal("d1_exact") fun d1Exact(value: Double) = Unit
+
+  /** A Double argument and return through the proxy, for [d1Probe]'s exact round trip. */
+  fun d1Echo(value: Double): Double = value
+
   private var d1AfterMask = 0L
 
   /**
@@ -1083,8 +1085,13 @@ class Main(godotObject: GodotHandle) :
    * - 8: builtin methods the engine runs (the bridge's builtin-call crossing) answer like Godot:
    *   an instance method, a static one, a Variant return (a hit and a miss), a Basis method;
    * - 16: the five new script types hydrated from main.tscn;
-   * - 32: a method with arguments AND a return value, called through its proxy, returned the value.
-   * It also arms two awaits read back by [d1ProbeAfter]. A healthy run returns 63.
+   * - 32: a method with arguments AND a return value, called through its proxy, returned the value;
+   * - 64: doubles cross bit-exactly both ways (review S1): random values, -0.0, denormals, the
+   *   extremes, NaN and the infinities, through a `@Signal` (Kotlin -> Godot -> Kotlin) and a
+   *   method argument plus return (the generic call);
+   * - 128: a builtin call the engine rejects (a wrong argument count) throws in Kotlin with the
+   *   proxy's message instead of reading zeros (review S2), and the frame pool still works after.
+   * It also arms the awaits read back by [d1ProbeAfter]. A healthy run returns 255.
    */
   fun d1Probe(value: Long): Long {
     var mask = 0L
@@ -1155,8 +1162,59 @@ class Main(godotObject: GodotHandle) :
       mask = mask or 32L
     }
 
+    val doubles =
+      listOf(
+        0.0,
+        -0.0,
+        Double.MIN_VALUE,
+        2.3e-308,
+        -4.9e-320,
+        Double.MAX_VALUE,
+        -Double.MAX_VALUE,
+        0.1,
+        1.0 / 3.0,
+        Double.NaN,
+        Double.POSITIVE_INFINITY,
+        Double.NEGATIVE_INFINITY,
+      ) + Random(134).let { random -> List(24) { Double.fromBits(random.nextLong()) } }
+    val signalled = ArrayList<Double>()
+    val connection = MainSignals.d1Exact(self).connect(self) { signalled += it }
+    for (value in doubles) MainSignals.d1Exact(self).emit(value)
+    connection.close()
+    val echoed = doubles.map { WebExperimentalGenericCall.callImmediate(self, "d1_echo", listOf(it)).asDouble() }
+    val sameBits = { values: List<Double> -> values.map { it.toRawBits() } == doubles.map { it.toRawBits() } }
+    if (sameBits(signalled) && sameBits(echoed)) mask = mask or 64L
+
+    val rejected =
+      runCatching {
+          // Vector3.snapped with its argument left out: the proxy refuses the call.
+          val frame = builtinFrame()
+          frame.putReal(0, 0, 1f)
+          frame.call(BuiltinMethod(9, "snapped", 0L), 0)
+        }
+        .exceptionOrNull()
+        ?.message
+    if (
+      rejected?.contains("snapped takes 1 argument(s), the call passed 0") == true &&
+        Vector3(1.26, -0.74, 0.5).snapped(Vector3(0.5, 0.5, 0.5)) == Vector3(1.5, -0.5, 0.5)
+    ) {
+      mask = mask or 128L
+    }
+
     // Async: an await on an engine emitter that is not a script resumes (bit 1), and an await
-    // whose emitter is freed first is cancelled instead of hanging (bit 2).
+    // whose emitter is freed first is cancelled instead of hanging (bit 2). Review S3: D1Router
+    // (another script) awaits D1Emitter's `renamed`; the await is a connection on the emitter
+    // (bit 4), and freeing the router first disconnects it from the emitter that lives on (bit 8).
+    // Review N6: Node.duplicate() of an emitter with a pending await does not copy it (bit 16).
+    // D1Emitter is scripted so both scripts address it by its script handle: a plain node's
+    // looked-up handle is released with the first of its lookers to be freed (a separate,
+    // pre-existing Web handle-ownership limit this probe stays clear of).
+    val router = self.requireAs("D1Router", ::Node)
+    val emitter = self.requireAs("D1Emitter", ::Node)
+    val says = { target: Node, method: String ->
+      WebExperimentalGenericCall.callImmediate(target, method, listOf(0L)).asLong() == 1L
+    }
+    val armed = says(router, "d1_arm")
     d1AfterMask = 0L
     launch {
       floor.inputEvent.await()
@@ -1176,12 +1234,25 @@ class Main(godotObject: GodotHandle) :
       val later = InputEventKey.create()
       floor.emitSignal("input_event", camera, later, Vector3.ZERO, Vector3.UP, 0L)
       later.close()
+      val awaits = { node: Node ->
+        WebExperimentalGenericCall.callImmediate(node, "has_connections", listOf("renamed")).asBoolean()
+      }
+      val copy = doomed.duplicate()
+      if (copy != null) {
+        if (awaits(doomed) && !awaits(copy)) d1AfterMask = d1AfterMask or 16L
+        copy.queueFree()
+      }
       doomed.queueFree()
+      if (armed && says(emitter, "d1_awaited")) d1AfterMask = d1AfterMask or 4L
+      router.queueFree()
+      MainThread.postAfterFrames(3) {
+        if (!says(emitter, "d1_awaited")) d1AfterMask = d1AfterMask or 8L
+      }
     }
     return mask
   }
 
-  /** Task 134 D1 readback of [d1Probe]'s awaits: 3 once both have settled. */
+  /** Task 134 D1 readback of [d1Probe]'s awaits: 31 once all have settled. */
   fun d1ProbeAfter(value: Long): Long = d1AfterMask
 
   /**
