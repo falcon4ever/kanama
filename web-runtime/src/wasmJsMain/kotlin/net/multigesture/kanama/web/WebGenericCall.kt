@@ -127,7 +127,7 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
 
   fun asDouble(): Double {
     check(tag == "f") { "Generic call returned tag '$tag', not a float" }
-    return payload[0].toDouble()
+    return WebPackedFloats.decode(payload[0])
   }
 
   fun asString(): String {
@@ -141,12 +141,16 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
    */
   fun asValue(): Any =
     when (tag) {
-      "v2" -> net.multigesture.kanama.types.Vector2(payload[0].toDouble(), payload[1].toDouble())
+      "v2" ->
+        net.multigesture.kanama.types.Vector2(
+          WebPackedFloats.decode(payload[0]),
+          WebPackedFloats.decode(payload[1]),
+        )
       "v3" ->
         net.multigesture.kanama.types.Vector3(
-          payload[0].toDouble(),
-          payload[1].toDouble(),
-          payload[2].toDouble(),
+          WebPackedFloats.decode(payload[0]),
+          WebPackedFloats.decode(payload[1]),
+          WebPackedFloats.decode(payload[2]),
         )
       "v" ->
         checkNotNull(WebPackedValues.decodeVariant(payload[0])) {

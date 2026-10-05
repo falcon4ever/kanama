@@ -1467,10 +1467,24 @@ class WebScriptCodeEmitterTest {
       proxy.contains("var _kanama_packed := String(_kanama_bridge.callPacked(_kanama_handle, 6))"),
       proxy,
     )
-    // Task 133 C3: decimals parse through the proxy's NaN/INF-aware helper.
+    // Task 134 D1 review S1: decimals cross as their IEEE-754 bits, exact both ways.
     assertTrue(proxy.contains("return _kanama_web_float(_kanama_packed)"), proxy)
     assertTrue(proxy.contains("var _kanama_parts := _kanama_web_floats(_kanama_packed)"), proxy)
-    assertTrue(proxy.contains("\t\t\"inf\":\n\t\t\treturn INF"), proxy)
+    assertTrue(
+      proxy.contains(
+        "func _kanama_web_float(text: String) -> float:\n" +
+          "\t_kanama_bits.encode_s64(0, int(text))\n\treturn _kanama_bits.decode_double(0)"
+      ),
+      proxy,
+    )
+    assertTrue(
+      proxy.contains(
+        "func _kanama_web_float_text(value: float) -> String:\n" +
+          "\t_kanama_bits.encode_double(0, value)\n\treturn str(_kanama_bits.decode_s64(0))"
+      ),
+      proxy,
+    )
+    assertFalse(proxy.contains("to_float()"), "no decimal text parsing on the text channels")
     // An integer return stays an integer; only decimals go through the NaN/INF encoder.
     assertEquals("x.toString()", WebScriptCodeEmitter.packedReturnExpression("x", TypeMapping.INT))
     assertEquals(
@@ -1608,8 +1622,11 @@ class WebScriptCodeEmitterTest {
     // The packer must agree with the property/return encoding for every scalar it claims.
     assertTrue(proxy.contains("func _kanama_web_pack_signal_arg(arg: Variant) -> String:"), proxy)
     assertTrue(proxy.contains("\t\t\treturn \"1\" if arg else \"0\""), proxy)
-    assertTrue(proxy.contains("\t\t\treturn \"%s,%s\" % [arg.x, arg.y]"), proxy)
-    assertTrue(proxy.contains("\t\t\treturn \"%s,%s,%s\" % [arg.x, arg.y, arg.z]"), proxy)
+    // Task 134 D1 review N2: a float and every value type pack through the exact helpers, never
+    // through `str()` / "%s" text.
+    assertTrue(proxy.contains("\t\tTYPE_FLOAT:\n\t\t\treturn _kanama_web_float_text(arg)"), proxy)
+    assertTrue(proxy.contains("\t\t\treturn _kanama_web_pack_value(arg)"), proxy)
+    assertFalse(proxy.contains("\"%s,%s\" % [arg.x, arg.y]"), proxy)
   }
 
   // ---------- Task 80 slice 3: the mixed-channel packed argument list ----------
@@ -1695,7 +1712,7 @@ class WebScriptCodeEmitterTest {
   @Test
   fun carriesExactDecimalsOnThePackedArgumentCrossing() {
     // Task 134 D1: floats and float-backed value types ride the packed list as
-    // `String.num_scientific` text (shortest round-trip, unlike `str()`'s 14 digits), so a float
+    // text of their IEEE-754 bits (exact, unlike `str()`'s 14 digits), so a float
     // mixed with text or an object has an arm now; an unwrapped object still does not.
     fun armFor(vararg args: ArgModel) =
       WebScriptCodeEmitter.methodArm(
@@ -1720,7 +1737,7 @@ class WebScriptCodeEmitterTest {
       )
     assertEquals(WebMethodArm.PACKED_ARGS, WebScriptCodeEmitter.methodArm(mixed))
     assertEquals(
-      listOf("_kanama_web_pack_text(tag)", "String.num_scientific(amount)"),
+      listOf("_kanama_web_pack_text(tag)", "_kanama_web_float_text(amount)"),
       WebScriptCodeEmitter.packedArgGdExpressions(mixed.args),
     )
     assertEquals(

@@ -4,6 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
+import net.multigesture.kanama.web.WebPackedFloats
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Vector3
@@ -14,8 +15,11 @@ import net.multigesture.kanama.types.Vector4
  * (`<Variant.Type>:<payload>`, unit-separated) read by the typed argument decoders.
  */
 class WebSignalArgsTest {
+  /** A decimal as the proxy writes it: the text of its IEEE-754 bits (task 134 D1 review S1). */
+  private fun b(vararg values: Double) = values.joinToString(",") { WebPackedFloats.encode(it) }
+
   private val packed =
-    listOf("2:-5", "3:0.5", "1:1", "4:hi%1Fthere", "24:0", "9:1.0,2.0,3.0", "20:0.25,0.5,1.0,1.0")
+    listOf("2:-5", "3:${b(0.5)}", "1:1", "4:hi%1Fthere", "24:0", "9:${b(1.0, 2.0, 3.0)}", "20:${b(0.25, 0.5, 1.0, 1.0)}")
       .joinToString("\u001F")
 
   @Test
@@ -40,7 +44,7 @@ class WebSignalArgsTest {
     assertFailsWith<IllegalArgumentException> { SignalArgType.objectOf("Node") { GodotObject(it) }.read(args, 4) }
     assertFailsWith<IllegalArgumentException> { SignalArgType.valueOf<Vector4>("Vector4", Vector4::class).read(args, 5) }
     assertFailsWith<IllegalArgumentException> { SignalArgType.LONG.read(args, 7) }
-    val projection = WebSignalArgs("19:" + (1..16).joinToString(",") { "$it" })
+    val projection = WebSignalArgs("19:" + b(*DoubleArray(16) { it + 1.0 }))
     assertEquals(
       Projection(Vector4(1.0, 2.0, 3.0, 4.0), Vector4(5.0, 6.0, 7.0, 8.0), Vector4(9.0, 10.0, 11.0, 12.0), Vector4(13.0, 14.0, 15.0, 16.0)),
       SignalArgType.valueOf<Projection>("Projection", Projection::class).read(args = projection, index = 0),

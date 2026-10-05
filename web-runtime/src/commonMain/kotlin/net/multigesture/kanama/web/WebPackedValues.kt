@@ -50,15 +50,14 @@ import net.multigesture.kanama.types.retVector4i
  * - Basis its three ROWS (`x.x,y.x,z.x, x.y,y.y,z.y, x.z,y.z,z.z`); Transform3D the basis rows then
  *   `origin.xyz`; Transform2D `x.xy,y.xy,origin.xy`; Projection its columns `x.xyzw … w.xyzw`
  *
- * Decimals use [WebPackedFloats] (Kotlin's shortest round-trip text, `nan`/`inf`/`-inf`); the proxy
- * writes them with `String.num_scientific`. Both round-trip every float32 component (the Web build
- * is single precision) exactly; Godot's `String.to_float` is not correctly rounded for every
- * double.
+ * A decimal is the text of its IEEE-754 bits ([WebPackedFloats], the proxy's
+ * `_kanama_web_float_text` / `_kanama_web_float`), exact both ways (task 134 D1 review S1); an int
+ * component is its decimal.
  *
  * A **Variant** crosses as `<Variant.Type>:<payload>` ([encodeVariant] / [decodeVariant], the
- * proxy's `_kanama_web_pack_variant` / `_kanama_web_unpack_variant`): bool `1`/`0`, int and float
- * as decimals, String/StringName/NodePath %-escaped text, an object as its bridge handle id, a
- * value type as above, a RID as its id.
+ * proxy's `_kanama_web_pack_variant` / `_kanama_web_unpack_variant`): bool `1`/`0`, an int as its
+ * decimal, a float as its IEEE-754 bits, String/StringName/NodePath %-escaped text, an object as
+ * its bridge handle id, a value type as above, a RID as its id.
  */
 internal object WebPackedValues {
   const val TYPE_NIL = 0
@@ -164,7 +163,9 @@ internal object WebPackedValues {
       c,
     )
 
-  /** [value] as its packed text (decimals through [WebPackedFloats.encode], ints as written). */
+  /**
+   * [value] as its packed text (decimals as their bits through [WebPackedFloats], ints as written).
+   */
   fun encode(value: Any): String {
     val c = components(value) ?: error("no Web packed layout for ${value::class.simpleName}")
     return encodeComponents(variantTypeOf(value::class), c, c.size)
@@ -178,10 +179,20 @@ internal object WebPackedValues {
   }
 
   /** The [type] value packed as [packed] (what the proxy or [encode] wrote). */
-  fun decode(packed: String, type: KClass<*>): Any = fromComponents(type, decodeComponents(packed))
+  fun decode(packed: String, type: KClass<*>): Any {
+    val variantType =
+      variantTypeOf(type).takeIf { it != 0 } ?: error("no Web packed layout for ${type.simpleName}")
+    return fromComponents(variantType, decodeComponents(variantType, packed))
+  }
 
-  internal fun decodeComponents(packed: String): DoubleArray =
-    packed.split(',').map(WebPackedFloats::decode).toDoubleArray()
+  /**
+   * The components of a packed value of `Variant.Type` [type]: ints as written, decimals as bits.
+   */
+  internal fun decodeComponents(type: Int, packed: String): DoubleArray {
+    val parts = packed.split(',')
+    return if (isWhole(type)) DoubleArray(parts.size) { parts[it].trim().toLong().toDouble() }
+    else DoubleArray(parts.size) { WebPackedFloats.decode(parts[it]) }
+  }
 
   /**
    * `%`-escapes text so it cannot split a unit-separated list (the proxy's
@@ -234,7 +245,7 @@ internal object WebPackedValues {
       TYPE_STRING_NAME -> unescapeText(payload)
       TYPE_NODE_PATH -> NodePath(unescapeText(payload))
       TYPE_RID -> RID(payload.toLong())
-      in 5..20 -> fromComponents(type, decodeComponents(payload))
+      in 5..20 -> fromComponents(type, decodeComponents(type, payload))
       else -> error("Kanama Web does not deliver a Variant of type $type here")
     }
   }

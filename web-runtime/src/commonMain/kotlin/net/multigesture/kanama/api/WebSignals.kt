@@ -34,7 +34,7 @@ internal object WebSignalCallbackRegistry {
      * script or (for an await) its emitter was freed -- so an `await` is cancelled instead of
      * never resuming.
      */
-    val onRelease: (() -> Unit)? = null,
+    val onRelease: ((String) -> Unit)? = null,
   )
 
   private var nextId = 1
@@ -85,7 +85,7 @@ internal object WebSignalCallbackRegistry {
     ownerHandle: Int,
     sourceHandle: Int,
     oneShot: Boolean,
-    onRelease: (() -> Unit)? = null,
+    onRelease: ((String) -> Unit)? = null,
     callback: (WebSignalArgs) -> Unit,
   ): Int {
     check(nextId > 0) { "Kanama Web signal callback registry exhausted" }
@@ -103,17 +103,19 @@ internal object WebSignalCallbackRegistry {
 
   /** The proxy's await watcher saw its emitter freed before the signal fired (task 134 D1). */
   fun release(id: Int) {
-    entries.remove(id)?.onRelease?.invoke()
+    entries.remove(id)?.onRelease?.invoke("the emitting object was freed before it fired")
   }
 
-  fun releaseOwner(ownerHandle: Int) = releaseWhere { it.ownerHandle == ownerHandle }
+  fun releaseOwner(ownerHandle: Int) =
+    releaseWhere("the awaiting script was freed") { it.ownerHandle == ownerHandle }
 
-  fun releaseSource(sourceHandle: Int) = releaseWhere { it.sourceHandle == sourceHandle }
+  fun releaseSource(sourceHandle: Int) =
+    releaseWhere("the emitting object was released before it fired") { it.sourceHandle == sourceHandle }
 
-  private fun releaseWhere(predicate: (Entry) -> Boolean) {
+  private fun releaseWhere(reason: String, predicate: (Entry) -> Boolean) {
     val released = entries.filterValues(predicate)
     released.keys.forEach(entries::remove)
-    released.values.forEach { it.onRelease?.invoke() }
+    released.values.forEach { it.onRelease?.invoke(reason) }
   }
 
   /** Delivers every emitted argument, packed by the proxy (task 134 D1). */
@@ -355,73 +357,9 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
     return SignalConnection(owner, name, target, callbackId)
   }
 
-  // ── The typed signals' plumbing (task 134 D4): the same bridge paths, returning a
-  // SignalConnection that can be closed. ──
 
-  internal fun connectPlainConnection(
-    target: GodotObject,
-    argumentCount: Int,
-    flags: GodotObject.ConnectFlags,
-    callback: () -> Unit,
-  ): SignalConnection {
-    val callbackId =
-      WebSignalCallbackRegistry.register(
-        target.handle.value,
-        owner.handle.value,
-        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
-        callback,
-      )
-    val dispatchMethod =
-      if (argumentCount == 0) "_kanama_web_signal_dispatch0" else "_kanama_web_signal_dispatch1"
-    val result = owner.connectBound(name, target, dispatchMethod, callbackId.toLong(), flags)
-    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
-    return SignalConnection(owner, name, target, callbackId, dispatchMethod, result)
-  }
 
-  internal fun <T> connectScalarConnection(
-    target: GodotObject,
-    flags: GodotObject.ConnectFlags,
-    parse: (String) -> T,
-    callback: (T) -> Unit,
-  ): SignalConnection {
-    val callbackId =
-      WebSignalCallbackRegistry.registerScalar(
-        target.handle.value,
-        owner.handle.value,
-        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
-      ) { packed ->
-        callback(parse(packed))
-      }
-    val result =
-      owner.connectBound(name, target, "_kanama_web_signal_dispatch1", callbackId.toLong(), flags)
-    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
-    return SignalConnection(owner, name, target, callbackId, "_kanama_web_signal_dispatch1", result)
-  }
 
-  internal fun connectObjectConnection(
-    target: GodotObject,
-    flags: GodotObject.ConnectFlags,
-    callback: (GodotHandle?) -> Unit,
-  ): SignalConnection {
-    val callbackId =
-      WebSignalCallbackRegistry.registerObject(
-        target.handle.value,
-        owner.handle.value,
-        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
-      ) { argHandle ->
-        callback(if (argHandle == 0) null else WebObjectId(argHandle))
-      }
-    val result =
-      owner.connectBound(
-        name,
-        target,
-        "_kanama_web_signal_dispatch_object",
-        callbackId.toLong(),
-        flags,
-      )
-    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
-    return SignalConnection(owner, name, target, callbackId, "_kanama_web_signal_dispatch_object", result)
-  }
 
   /**
    * Task 134 D1: a connection that receives every emitted argument (`_kanama_web_signal_dispatch_args`,
@@ -446,13 +384,14 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
 
   /**
    * Task 134 D1: a one-shot connection for an `await`, delivered through [router]'s proxy but held
-   * by the EMITTER: the proxy connects a small watcher object kept in the emitter's metadata, so
-   * the watcher dies with the emitter and reports it ([onRelease]) instead of the await never
-   * resuming. Works for any emitter, scripted or not.
+   * by the EMITTER: the proxy binds a small watcher object to the emitter's own one-shot
+   * connection (no metadata, not persisted), so the watcher dies with the emitter and reports it
+   * ([onRelease]) instead of the await never resuming, and a freed [router] drops it. Works for any
+   * emitter, scripted or not.
    */
   internal fun connectAwait(
     router: GodotObject,
-    onRelease: () -> Unit,
+    onRelease: (String) -> Unit,
     callback: (WebSignalArgs) -> Unit,
   ): SignalConnection {
     val callbackId =
@@ -480,13 +419,9 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
       val connection =
         connectAwait(
           target,
-          onRelease = {
+          onRelease = { reason ->
             if (continuation.isActive) {
-              continuation.cancel(
-                kotlinx.coroutines.CancellationException(
-                  "signal $name: the emitting object was freed before it fired"
-                )
-              )
+              continuation.cancel(kotlinx.coroutines.CancellationException("signal $name: $reason"))
             }
           },
         ) {

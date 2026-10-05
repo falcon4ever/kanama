@@ -7,10 +7,10 @@ package net.multigesture.kanama.processor
  * function arguments and returns, signal payloads). Each crosses the text channels as its
  * components, comma-separated, in **Godot's memory layout** (the order of [LAYOUTS]) -- the order
  * the runtime's `WebPackedValues` reads and writes on the Kotlin side, which is also the order the
- * builtin-call frame holds. Decimals are written by the proxy with `String.num_scientific`
- * (shortest round-trip text, `nan`/`inf`/`-inf`); Kotlin writes them with `WebPackedFloats`. The
- * components are float32 (`real_t` of the single-precision Web build) and round-trip exactly;
- * Godot's `String.to_float` does not round every double correctly, so this is no claim for doubles.
+ * builtin-call frame holds. A decimal crosses as the text of its IEEE-754 bits (the int64 of the
+ * double; the proxy's `_kanama_web_float_text` / `_kanama_web_float`, Kotlin's `WebPackedFloats`),
+ * so every value -- NaN, ±INF, -0, denormals -- round-trips exactly in both directions (task 134 D1
+ * review S1: decimal text did not; Godot's `String.to_float` is not correctly rounded).
  *
  * Vector2, Vector2i, Vector3 and Color keep their older dedicated arms for members and returns
  * ([COMPONENTS] leaves them out); the generic Variant helpers ([gdHelpers]) cover them too.
@@ -104,24 +104,26 @@ internal object WebValueTypes {
    */
   fun gdHelpers(): String = buildString {
     appendLine("func $PACK(value: Variant) -> String:")
-    appendLine("\t# A value type as its components in Godot's memory layout; float32 components")
-    appendLine("\t# round-trip exactly (String.num_scientific is shortest round-trip text).")
+    appendLine("\t# A value type as its components in Godot's memory layout, each decimal as its")
+    appendLine("\t# IEEE-754 bits (exact both ways).")
     appendLine("\tmatch typeof(value):")
     LAYOUTS.forEach { (type, paths) ->
       appendLine("\t\t${gdTypeConstant(type)}:")
       val parts =
         paths.joinToString(", ") {
-          if (type in WHOLE) "str(value.$it)" else "String.num_scientific(value.$it)"
+          if (type in WHOLE) "str(value.$it)" else "_kanama_web_float_text(value.$it)"
         }
       appendLine("\t\t\treturn \",\".join(PackedStringArray([$parts]))")
     }
     appendLine("\treturn str(value)")
     appendLine()
     appendLine("func $UNPACK(type: int, packed: String) -> Variant:")
-    appendLine("\tvar p := _kanama_web_floats(packed)")
     appendLine("\tmatch type:")
     LAYOUTS.keys.forEach { type ->
       appendLine("\t\t${gdTypeConstant(type)}:")
+      // Ints as written, decimals as their IEEE-754 bits.
+      if (type in WHOLE) appendLine("\t\t\tvar p := packed.split(\",\")")
+      else appendLine("\t\t\tvar p := _kanama_web_floats(packed)")
       appendLine("\t\t\treturn ${gdConstruct(type) { "p[$it]" }}")
     }
     appendLine("\treturn null")
@@ -138,7 +140,7 @@ internal object WebValueTypes {
     appendLine("\t\tTYPE_INT:")
     appendLine("\t\t\treturn \"2:\" + str(value)")
     appendLine("\t\tTYPE_FLOAT:")
-    appendLine("\t\t\treturn \"3:\" + String.num_scientific(value)")
+    appendLine("\t\t\treturn \"3:\" + _kanama_web_float_text(value)")
     appendLine("\t\tTYPE_STRING, TYPE_STRING_NAME, TYPE_NODE_PATH:")
     appendLine("\t\t\treturn \"%d:%s\" % [type, _kanama_web_pack_text(String(value))]")
     appendLine("\t\tTYPE_RID:")

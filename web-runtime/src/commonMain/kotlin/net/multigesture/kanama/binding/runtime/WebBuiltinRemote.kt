@@ -9,6 +9,9 @@ import net.multigesture.kanama.web.WebPackedValues
  */
 internal expect fun webBuiltinTransport(packed: String): String
 
+/** A test seam: when set, builtin calls go here instead of the bridge (Node has no bridge). */
+internal var webBuiltinTransportForTests: ((String) -> String)? = null
+
 private const val US = '\u001F'
 
 /**
@@ -35,7 +38,7 @@ internal fun webRemoteBuiltinCall(
     if (!static) append(encodeSlot(frame, 0, method.variantType))
     for (i in 1..argc) append(US).append(encodeSlot(frame, i, types[i - 1]))
   }
-  val result = webBuiltinTransport(packed)
+  val result = webBuiltinTransportForTests?.invoke(packed) ?: webBuiltinTransport(packed)
   if (result.startsWith("E:")) {
     error(
       "Godot builtin ${method.name} (Variant type ${method.variantType}) failed on Web: ${result.substring(2)}"
@@ -43,6 +46,15 @@ internal fun webRemoteBuiltinCall(
   }
   val type = WebPackedValues.variantType(result)
   val payload = WebPackedValues.variantPayload(result)
+  // Task 134 D1 review S2: `callv` answers a wrong arity or argument type with an error print and
+  // null, and a Variant of an unexpected type would be read as zeros: both fail loud here.
+  val expected = method.returnType
+  if (expected != WebBuiltinSignatures.VARIANT_RETURN && type != expected) {
+    error(
+      "Godot builtin ${method.name} (Variant type ${method.variantType}) returned Variant type $type " +
+        "on Web, expected $expected (a wrong argument count or type makes the engine answer nil)"
+    )
+  }
   frame.retType = type
   when (type) {
     WebPackedValues.TYPE_NIL -> Unit
@@ -53,7 +65,7 @@ internal fun webRemoteBuiltinCall(
       check(WebPackedValues.isValueType(type)) {
         "Godot builtin ${method.name} returned Variant type $type, which the Web frame cannot hold"
       }
-      WebPackedValues.decodeComponents(payload).copyInto(frame.ret)
+      WebPackedValues.decodeComponents(type, payload).copyInto(frame.ret)
     }
   }
 }

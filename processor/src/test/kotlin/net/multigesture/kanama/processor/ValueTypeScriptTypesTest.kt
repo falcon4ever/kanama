@@ -282,7 +282,7 @@ class ValueTypeScriptTypesTest {
     assertTrue(proxy.contains("rect2 = _kanama_web_unpack_value(TYPE_RECT2, _kanama_packed_2)"))
     // Exact decimals in, ints as ints, and the unpack constructors in Godot's memory layout (a
     // Basis as its rows, so column x is components 0, 3, 6).
-    assertTrue(proxy.contains("String.num_scientific(value.basis.z.z)"), proxy)
+    assertTrue(proxy.contains("_kanama_web_float_text(value.basis.z.z)"), proxy)
     assertTrue(proxy.contains("str(value.position.x)"), "Rect2i packs ints")
     assertTrue(
       proxy.contains(
@@ -300,7 +300,10 @@ class ValueTypeScriptTypesTest {
       proxy,
     )
     assertTrue(proxy.contains("return AABB(Vector3(p[0], p[1], p[2]), Vector3(p[3], p[4], p[5]))"))
-    assertTrue(proxy.contains("TYPE_RECT2, TYPE_RECT2I, TYPE_TRANSFORM2D"), "signal payloads pack")
+    assertTrue(
+      proxy.contains("TYPE_VECTOR2, TYPE_VECTOR2I, TYPE_RECT2, TYPE_RECT2I, TYPE_VECTOR3"),
+      "signal payloads pack",
+    )
     val registry = emitter.registrySource()
     assertTrue(registry.contains("fun setPackedValueProperty("), registry)
     assertTrue(

@@ -202,6 +202,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     internal const val SIGNAL_AWAIT = "_kanama_web_signal_await"
     internal const val CONNECT_AWAIT = "_kanama_connect_await"
     internal const val SIGNAL_WATCHER = "_KanamaSignalWatcher"
+    /** Task 134 D1 review S3: close one await, and every await a freed script was delivering. */
+    internal const val DROP_AWAIT = "_kanama_drop_await"
+    internal const val DROP_ROUTED_AWAITS = "_kanama_drop_routed_awaits"
     /** Task 134 D1: the object-query arm and helper that run one builtin (value-type) method. */
     internal const val BUILTIN_CALL_OPCODE = 1003
     internal const val BUILTIN_CALL = "_kanama_web_builtin_call"
@@ -211,6 +214,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     internal const val WEB_FLOAT = "_kanama_web_float"
     /** Task 133 C3: [WEB_FLOAT] over a comma-separated list (replaces `split_floats`). */
     internal const val WEB_FLOATS = "_kanama_web_floats"
+    /**
+     * Task 134 D1 review S1: a decimal as the text of its IEEE-754 bits (the [WEB_FLOAT] mirror).
+     */
+    internal const val WEB_FLOAT_TEXT = "_kanama_web_float_text"
 
     /**
      * The dispatch arm the proxy emits for a registered `@ScriptFunction`. The emitter's method
@@ -435,12 +442,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     /**
      * Whether [arg] can ride the packed argument list.
      *
-     * The list is decimal TEXT, so every decimal must round-trip exactly: floats and the float
-     * components of the value types are written with `String.num_scientific` (Godot's grisu2,
-     * shortest round-trip text) and read back by Kotlin's correctly rounded parser (task 133 for
-     * the value types; task 134 D1 for a bare FLOAT and Vector2/Vector3/Color, which earlier rode
-     * `str()`, rounded to 14 digits, and were kept out). Whole numbers, booleans, text and object
-     * handle ids round-trip as written.
+     * The list is TEXT, so every decimal must round-trip exactly: floats and the float components
+     * of the value types cross as the text of their IEEE-754 bits ([WEB_FLOAT_TEXT], task 134 D1
+     * review S1 -- `str()` rounds to 14 digits and `String.to_float` is not correctly rounded).
+     * Whole numbers, booleans, text and object handle ids round-trip as written.
      */
     private fun isPackedArgType(arg: ArgModel): Boolean =
       when (arg.type) {
@@ -471,7 +476,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           TypeMapping.NODE_PATH -> "$PACKED_ARG_PACK_TEXT(String(${arg.name}))"
           TypeMapping.INT -> "str(${arg.name})"
           TypeMapping.BOOL -> "(\"1\" if ${arg.name} else \"0\")"
-          TypeMapping.FLOAT -> "String.num_scientific(${arg.name})"
+          TypeMapping.FLOAT -> "$WEB_FLOAT_TEXT(${arg.name})"
           TypeMapping.OBJECT -> "str($PACKED_ARG_PACK_OBJECT(${arg.name}, $PACKED_ARG_TRANSIENT))"
           in WebValueTypes.LAYOUTS -> WebValueTypes.gdPack(arg.name)
           else -> error("no packed argument encoding for ${arg.type.name}")
@@ -851,6 +856,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("# One handle dictionary shared by every Kanama Web proxy: a handle")
             appendLine("# minted by any proxy resolves in all of them.")
             appendLine("static var handles: Dictionary = {}")
+            appendLine()
+            appendLine("# Task 134 D1: the live await watchers by callback id (weak: the emitter's")
+            appendLine("# connection owns each one), so any proxy can close an await.")
+            appendLine("static var await_watchers: Dictionary = {}")
             appendLine()
             appendLine("# Proxy script path per Kanama script class (simple name), so a proxy can")
             appendLine("# instantiate a scripted resource for the runtime factory crossing.")
@@ -2596,6 +2605,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_clear_callbacks()")
     appendLine("\t\treturn")
     appendLine("\tvar freed_handle := _kanama_handle")
+    appendLine("\t$DROP_ROUTED_AWAITS(freed_handle)")
     appendLine("\t_kanama_bridge.free(_kanama_handle)")
     appendLine("\t_kanama_clear_callbacks()")
     appendLine("\t_kanama_handle = 0")
@@ -3401,7 +3411,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tif config_tagged.begins_with(\"i:\"):")
     appendLine("\t\t\t\tconfig_value = int(config_tagged.substr(2))")
     appendLine("\t\t\telif config_tagged.begins_with(\"f:\"):")
-    appendLine("\t\t\t\tconfig_value = float(config_tagged.substr(2))")
+    appendLine("\t\t\t\tconfig_value = $WEB_FLOAT(config_tagged.substr(2))")
     appendLine("\t\t\telif config_tagged.begins_with(\"b:\"):")
     appendLine("\t\t\t\tconfig_value = config_tagged.substr(2) == \"true\"")
     appendLine("\t\t\telse:")
@@ -4024,55 +4034,81 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "func $CONNECT_AWAIT(source: Object, signal_name: StringName, target: Object, target_handle: int, callback_id: int, flags: int) -> int:"
     )
     appendLine(
-      "\t# Task 134 D1: an await is held by the EMITTER -- a watcher kept in its metadata --"
+      "\t# Task 134 D1: an await is held by the EMITTER. The watcher rides as a bound argument of"
+    )
+    appendLine("\t# the emitter's own one-shot connection, so it lives exactly as long as that")
+    appendLine(
+      "\t# connection: freeing the emitter releases it, and it tells Kotlin, which cancels the"
     )
     appendLine(
-      "\t# so the watcher dies with it and tells Kotlin, which cancels the wait instead of"
+      "\t# wait instead of leaving it suspended. Works whatever the emitter is. No metadata and"
     )
     appendLine(
-      "\t# leaving it suspended. Works whatever the emitter is (a Timer, a sound, a script)."
+      "\t# no CONNECT_PERSIST: Node.duplicate() and PackedScene.pack copy and save neither."
     )
-    appendLine("\tvar key := \"_kanama_await_%d\" % callback_id")
     appendLine("\tif flags == -1:")
-    appendLine("\t\tvar existing: Variant = source.get_meta(key, null)")
-    appendLine("\t\tif existing != null:")
-    appendLine("\t\t\texisting.done = true")
-    appendLine("\t\t\tif source.is_connected(signal_name, Callable(existing, \"fire\")):")
-    appendLine("\t\t\t\tsource.disconnect(signal_name, Callable(existing, \"fire\"))")
-    appendLine("\t\t\tsource.remove_meta(key)")
+    appendLine("\t\t$DROP_AWAIT(callback_id)")
     appendLine("\t\treturn OK")
     appendLine("\tvar watcher := $SIGNAL_WATCHER.new()")
     appendLine("\twatcher.bridge = _kanama_bridge")
     appendLine("\twatcher.router_handle = target_handle")
     appendLine("\twatcher.router_id = target.get_instance_id()")
     appendLine("\twatcher.source_id = source.get_instance_id()")
-    appendLine("\twatcher.key = key")
+    appendLine("\twatcher.signal_name = signal_name")
     appendLine("\twatcher.callback_id = callback_id")
-    appendLine("\tsource.set_meta(key, watcher)")
     appendLine(
-      "\tvar connected := source.connect(signal_name, Callable(watcher, \"fire\"), flags | CONNECT_ONE_SHOT)"
+      "\tvar connected := source.connect(signal_name, Callable(watcher, \"fire\").bind(watcher), (flags | CONNECT_ONE_SHOT) & ~CONNECT_PERSIST)"
     )
     appendLine("\tif connected != OK:")
     appendLine("\t\twatcher.done = true")
-    appendLine("\t\tsource.remove_meta(key)")
-    appendLine("\treturn connected")
+    appendLine("\t\treturn connected")
+    appendLine("\tKanamaWebHandles.await_watchers[callback_id] = weakref(watcher)")
+    appendLine("\treturn OK")
+    appendLine()
+    appendLine("func $DROP_AWAIT(callback_id: int) -> void:")
+    appendLine(
+      "\t# Close an await: mark its watcher done (so it reports nothing) and disconnect it,"
+    )
+    appendLine("\t# which releases it. Kotlin's close() and a freed router script both come here.")
+    appendLine("\tvar ref: WeakRef = KanamaWebHandles.await_watchers.get(callback_id)")
+    appendLine("\tKanamaWebHandles.await_watchers.erase(callback_id)")
+    appendLine("\tif ref == null:")
+    appendLine("\t\treturn")
+    appendLine("\tvar watcher = ref.get_ref()")
+    appendLine("\tif watcher == null:")
+    appendLine("\t\treturn")
+    appendLine("\twatcher.done = true")
+    appendLine("\tvar source := instance_from_id(watcher.source_id)")
+    appendLine("\tvar callable := Callable(watcher, \"fire\").bind(watcher)")
+    appendLine("\tif source != null and source.is_connected(watcher.signal_name, callable):")
+    appendLine("\t\tsource.disconnect(watcher.signal_name, callable)")
+    appendLine()
+    appendLine("func $DROP_ROUTED_AWAITS(router_handle: int) -> void:")
+    appendLine(
+      "\t# This script is being freed: drop every await it was delivering (review S3), so no"
+    )
+    appendLine("\t# watcher stays connected to a long-lived emitter.")
+    appendLine("\tfor callback_id in KanamaWebHandles.await_watchers.keys():")
+    appendLine("\t\tvar ref: WeakRef = KanamaWebHandles.await_watchers[callback_id]")
+    appendLine("\t\tvar watcher = ref.get_ref()")
+    appendLine("\t\tif watcher == null or watcher.router_handle == router_handle:")
+    appendLine("\t\t\t$DROP_AWAIT(callback_id)")
     appendLine()
     appendLine("class $SIGNAL_WATCHER extends RefCounted:")
     appendLine("\tvar bridge: Variant")
     appendLine("\tvar router_handle := 0")
     appendLine("\tvar router_id := 0")
     appendLine("\tvar source_id := 0")
-    appendLine("\tvar key := \"\"")
+    appendLine("\tvar signal_name := &\"\"")
     appendLine("\tvar callback_id := 0")
     appendLine("\tvar done := false")
     appendLine()
     appendLine("\tfunc fire(...args: Array) -> void:")
+    appendLine("\t\targs.pop_back() # the bound watcher itself")
     appendLine("\t\tif done:")
     appendLine("\t\t\treturn")
     appendLine("\t\tdone = true")
-    appendLine("\t\tvar source := instance_from_id(source_id)")
-    appendLine("\t\tif source != null:")
-    appendLine("\t\t\tsource.remove_meta.call_deferred(key)")
+    appendLine("\t\tKanamaWebHandles.await_watchers.erase(callback_id)")
     appendLine("\t\tvar router := instance_from_id(router_id)")
     appendLine("\t\tif router != null:")
     appendLine("\t\t\trouter.$SIGNAL_DELIVER(args, callback_id)")
@@ -4080,6 +4116,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tfunc _notification(what: int) -> void:")
     appendLine("\t\tif what == NOTIFICATION_PREDELETE and not done:")
     appendLine("\t\t\tdone = true")
+    appendLine("\t\t\tKanamaWebHandles.await_watchers.erase(callback_id)")
     appendLine("\t\t\tbridge.releaseSignalCallback(router_handle, callback_id)")
     appendLine()
     appendLine("func $SIGNAL_DISPATCH_ARGS(...args: Array) -> void:")
@@ -4115,17 +4152,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t_kanama_bridge.dispatchSignal1(_kanama_handle, callback_id, $SIGNAL_PACK_ARG(arg))"
     )
     appendLine()
-    // Task 133 C3: the text channels' decimals, NaN and the infinities included (Kotlin sends
-    // `nan`/`inf`/`-inf`, see WebPackedFloats; `split_floats` alone reads them as 0.0).
+    // Task 134 D1 review S1: a decimal crosses the text channels as its IEEE-754 bits (the int64
+    // of the double, see WebPackedFloats). Decimal text is not exact: Godot's `String.to_float` is
+    // not correctly rounded (about half of random doubles came back wrong, -0 became +0, 2.3e-308
+    // became 0), and Kotlin/Wasm's `toDouble` is off by an ulp in rare cases.
+    appendLine("var _kanama_bits := PackedByteArray([0, 0, 0, 0, 0, 0, 0, 0])")
+    appendLine()
     appendLine("func $WEB_FLOAT(text: String) -> float:")
-    appendLine("\tmatch text:")
-    appendLine("\t\t\"nan\", \"-nan\":")
-    appendLine("\t\t\treturn NAN")
-    appendLine("\t\t\"inf\":")
-    appendLine("\t\t\treturn INF")
-    appendLine("\t\t\"-inf\":")
-    appendLine("\t\t\treturn -INF")
-    appendLine("\treturn text.to_float()")
+    appendLine("\t_kanama_bits.encode_s64(0, int(text))")
+    appendLine("\treturn _kanama_bits.decode_double(0)")
+    appendLine()
+    appendLine("func $WEB_FLOAT_TEXT(value: float) -> String:")
+    appendLine("\t_kanama_bits.encode_double(0, value)")
+    appendLine("\treturn str(_kanama_bits.decode_s64(0))")
     appendLine()
     appendLine("func $WEB_FLOATS(packed: String) -> PackedFloat64Array:")
     appendLine("\tvar values := PackedFloat64Array()")
@@ -4140,15 +4179,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\treturn \"\"")
     appendLine("\t\tTYPE_BOOL:")
     appendLine("\t\t\treturn \"1\" if arg else \"0\"")
-    appendLine("\t\tTYPE_VECTOR2, TYPE_VECTOR2I:")
-    appendLine("\t\t\treturn \"%s,%s\" % [arg.x, arg.y]")
-    appendLine("\t\tTYPE_VECTOR3, TYPE_VECTOR3I:")
-    appendLine("\t\t\treturn \"%s,%s,%s\" % [arg.x, arg.y, arg.z]")
-    appendLine("\t\tTYPE_COLOR:")
-    appendLine("\t\t\treturn \"%s,%s,%s,%s\" % [arg.r, arg.g, arg.b, arg.a]")
-    // Task 133: the other value types as their packed float32 components (Vector3i keeps its arm).
+    appendLine("\t\tTYPE_FLOAT:")
+    appendLine("\t\t\treturn $WEB_FLOAT_TEXT(arg)")
+    // Every value type as its components (task 134 D1 review N2: decimals as their bits, never
+    // `str()` text).
     appendLine(
-      "\t\t${(WebValueTypes.COMPONENTS.keys - TypeMapping.VECTOR3I).joinToString(", ") { WebValueTypes.gdTypeConstant(it) }}:"
+      "\t\t${WebValueTypes.LAYOUTS.keys.joinToString(", ") { WebValueTypes.gdTypeConstant(it) }}:"
     )
     appendLine("\t\t\treturn ${WebValueTypes.gdPack("arg")}")
     appendLine("\t\t_:")
@@ -4841,7 +4877,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\telif config_read is int:")
     appendLine("\t\t\t\tconfig_read_tagged = \"i:%d\" % config_read")
     appendLine("\t\t\telif config_read is float:")
-    appendLine("\t\t\t\tconfig_read_tagged = \"f:%s\" % config_read")
+    appendLine("\t\t\t\tconfig_read_tagged = \"f:\" + $WEB_FLOAT_TEXT(config_read)")
     appendLine("\t\t\telif config_read != null:")
     appendLine("\t\t\t\tconfig_read_tagged = \"s:%s\" % config_read")
     appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(config_read_tagged)")
@@ -4937,6 +4973,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tvar method := Callable.create(base, StringName(parts[1]))")
     appendLine("\tif not method.is_valid():")
     appendLine("\t\treturn \"E:no builtin method %s on Variant type %s\" % [parts[1], parts[0]]")
+    appendLine("\tif call_args.size() != method.get_argument_count():")
+    appendLine(
+      "\t\treturn \"E:%s takes %d argument(s), the call passed %d\" % [parts[1], method.get_argument_count(), call_args.size()]"
+    )
     appendLine("\tvar no_handles: Array[int] = []")
     appendLine("\treturn ${WebValueTypes.PACK_VARIANT}(method.callv(call_args), no_handles)")
     appendLine()
@@ -4985,7 +5025,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif generic_value is int:")
     appendLine("\t\treturn \"i\\u001f%d\" % generic_value")
     appendLine("\tif generic_value is float:")
-    appendLine("\t\treturn \"f\\u001f%s\" % generic_value")
+    appendLine("\t\treturn \"f\\u001f\" + $WEB_FLOAT_TEXT(generic_value)")
     appendLine("\tif generic_value is String or generic_value is StringName:")
     appendLine("\t\t# Escape so payload separators survive the packed transport: % first.")
     appendLine(
@@ -4993,11 +5033,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\tif generic_value is Vector2:")
     appendLine("\t\tvar generic_v2 := generic_value as Vector2")
-    appendLine("\t\treturn \"v2\\u001f%s\\u001f%s\" % [generic_v2.x, generic_v2.y]")
+    appendLine(
+      "\t\treturn \"v2\\u001f%s\\u001f%s\" % [$WEB_FLOAT_TEXT(generic_v2.x), $WEB_FLOAT_TEXT(generic_v2.y)]"
+    )
     appendLine("\tif generic_value is Vector3:")
     appendLine("\t\tvar generic_v3 := generic_value as Vector3")
     appendLine(
-      "\t\treturn \"v3\\u001f%s\\u001f%s\\u001f%s\" % [generic_v3.x, generic_v3.y, generic_v3.z]"
+      "\t\treturn \"v3\\u001f%s\\u001f%s\\u001f%s\" % [$WEB_FLOAT_TEXT(generic_v3.x), " +
+        "$WEB_FLOAT_TEXT(generic_v3.y), $WEB_FLOAT_TEXT(generic_v3.z)]"
     )
     appendLine(
       "\tif typeof(generic_value) >= TYPE_VECTOR2I and typeof(generic_value) <= TYPE_COLOR:"

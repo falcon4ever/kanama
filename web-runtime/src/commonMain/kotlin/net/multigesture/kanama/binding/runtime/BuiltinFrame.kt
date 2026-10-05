@@ -25,6 +25,12 @@ internal class BuiltinMethod(val variantType: Int, val name: String, val hash: L
     WebBuiltinSignatures.argumentTypes(variantType, name)
       ?: error("Kanama Web has no signature for builtin $variantType.$name")
   }
+
+  /** The declared return's `Variant.Type` ([WebBuiltinSignatures.VARIANT_RETURN] for a Variant). */
+  internal val returnType: Int by lazy {
+    WebBuiltinSignatures.returnType(variantType, name)
+      ?: error("Kanama Web has no signature for builtin $variantType.$name")
+  }
 }
 
 private val frames = ArrayList<BuiltinFrame>()
@@ -81,7 +87,10 @@ internal class BuiltinFrame {
 
   private fun dispatch(method: BuiltinMethod, argc: Int, static: Boolean) {
     try {
+      // A pooled frame: nothing a previous call returned may be read as this call's result.
       retType = 0
+      retLongValue = 0L
+      ret.fill(0.0)
       if (method.local?.invoke(this, argc) != true) webRemoteBuiltinCall(this, method, argc, static)
     } finally {
       for (i in 0..argc) strings[i] = null

@@ -215,12 +215,9 @@ abstract class TypedSignal internal constructor(
           .signal(name)
           .connectAwait(
             awaitRouter(),
-            onRelease = {
-              if (continuation.isActive) {
-                continuation.cancel(
-                  CancellationException("signal $name: the emitting object was freed before it fired")
-                )
-              }
+            onRelease = { reason ->
+              // The emitter freed first, or the awaiting script (the router) freed first.
+              if (continuation.isActive) continuation.cancel(CancellationException("signal $name: $reason"))
             },
           ) { args ->
             val value = runCatching { decode(args) }
