@@ -375,10 +375,11 @@ gameplay and full scene teardown; stale handle use after teardown fails.
 **A handle several scripts hold is counted, not duplicated.** When a lookup (`getNode` /
 `requireAs`, `getChild`, an indexed hit, a property object read, a generic call's object return)
 finds the object already tracked, the GDScript arm answers with the *existing* handle, and the
-bridge records the asking script as one more owner (`retainSharedHandle`; per handle a set of
-owners, so a script holds it once however often it looks it up). The handle is released with its
-last owner. Freeing the script that allocated it hands it to a remaining owner (`handleOwners` names
-the routing owner), so the others keep calling it. Retiring a handle also erases its entry in the
+bridge records the asking script as one more holder (`retainSharedHandle`; per handle a set of
+holders, so a script holds it once however often it looks it up). The asking script is the holder,
+not the instantiator a spawned scripted child routes through (`handleOwners` names that routing
+owner). The handle is released with its last holder; freeing the script that routed it re-routes it
+to a remaining holder, so the others keep calling it. Retiring a handle also erases its entry in the
 proxies' shared `_kanama_object_handles` dictionary (through any installed proxy's release
 callback), so a later lookup of the same object mints a fresh handle instead of finding a dead one.
 A node freed from Kotlin (`queueFree`) stays a script error for every holder (`IllegalStateException:

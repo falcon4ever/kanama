@@ -242,11 +242,15 @@
     browserNodeHandlesByScript: new Map(),
     // Owner counting for a browser handle several scripts obtained (the GDScript arm answers a
     // lookup of an already-tracked object with the EXISTING handle). handle -> the set of scripts
-    // holding it (the allocating script included once a second one joins), and the reverse index
-    // script -> its shared handles. A handle is released only with its last owner; freeing the
-    // allocating script hands it to a remaining one (handleOwners names the routing owner).
+    // holding it (the first holder included once a second one joins), and the reverse index
+    // script -> its shared handles. A handle is released only with its last holder; handleOwners
+    // stays the ROUTING owner (the script whose callbacks run the handle's calls), which is the
+    // holder, or the instantiator a spawned scripted child routes through. firstHolderByHandle
+    // names the holder of a handle looked up by a routed script (holder != routing owner) until
+    // a second holder joins.
     sharedHandleOwners: new Map(),
     sharedHandlesByOwner: new Map(),
+    firstHolderByHandle: new Map(),
     tweenChildren: new Map(),
     sceneTreeHandlesByOwner: new Map(),
     viewportHandlesByOwner: new Map(),
@@ -1133,15 +1137,14 @@
       if (result === 1 && handle === this.match3MainHandle) this.match3MainHandle = 0;
       if (result === 1 && handle === this.match3AudioHandle) this.match3AudioHandle = 0;
       if (result === 1) {
-        // Shared handles first: this script stops owning every one it shared, and the handles it
-        // allocated that another script still holds move to that script instead of dying here.
-        this.releaseSharedHandleOwnership(handle);
+        // Shared handles first: this script stops holding every one it shared; those another
+        // script still holds survive (re-routed to that script when this one was their router).
+        const stillHeld = this.releaseSharedHandleOwnership(handle);
         const childNodeHandles = this.browserNodeHandlesByScript.get(handle);
         if (childNodeHandles) {
           for (const childHandle of childNodeHandles) {
             if (this.browserHandleSlot(childHandle)?.kind !== "Node") continue;
-            // Handed to a remaining owner above: not this script's to release.
-            if (this.handleOwners.get(childHandle) !== handle) continue;
+            if (stillHeld.has(childHandle)) continue;
             this.eraseObjectHandleEntry(childHandle, handle);
             this.api.kanamaWebDiscardNodeHandle(childHandle);
             this.releaseBrowserHandle(childHandle, "Node");
@@ -1318,20 +1321,21 @@
       this.liveBrowserHandleCount -= 1;
       this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
     },
-    retainSharedHandle(handle, owner) {
-      // A lookup answered with an EXISTING tracked handle instead of its proposed one: `owner`
+    retainSharedHandle(handle, holder) {
+      // A lookup answered with an EXISTING tracked handle instead of its proposed one: `holder`
       // now holds it too. A script handle (not a browser handle) has its own lifetime.
-      if (!owner || !this.browserHandleSlot(handle)) return;
-      const primary = this.handleOwners.get(handle);
-      if (primary === undefined || primary === owner) return;
-      let owners = this.sharedHandleOwners.get(handle);
-      if (!owners) {
-        owners = new Set([primary]);
-        this.sharedHandleOwners.set(handle, owners);
-        this.sharedHandlesOf(primary).add(handle);
+      if (!holder || !this.browserHandleSlot(handle)) return;
+      let holders = this.sharedHandleOwners.get(handle);
+      if (!holders) {
+        const first = this.firstHolderByHandle.get(handle) ?? this.handleOwners.get(handle);
+        if (first === undefined || first === holder) return;
+        holders = new Set([first]);
+        this.sharedHandleOwners.set(handle, holders);
+        this.sharedHandlesOf(first).add(handle);
       }
-      owners.add(owner);
-      this.sharedHandlesOf(owner).add(handle);
+      if (holders.has(holder)) return;
+      holders.add(holder);
+      this.sharedHandlesOf(holder).add(handle);
     },
     sharedHandlesOf(owner) {
       let handles = this.sharedHandlesByOwner.get(owner);
@@ -1342,43 +1346,54 @@
       return handles;
     },
     forgetSharedHandle(handle) {
-      const owners = this.sharedHandleOwners.get(handle);
-      if (!owners) return;
+      this.firstHolderByHandle.delete(handle);
+      const holders = this.sharedHandleOwners.get(handle);
+      if (!holders) return;
       this.sharedHandleOwners.delete(handle);
-      for (const owner of owners) {
-        const handles = this.sharedHandlesByOwner.get(owner);
+      for (const holder of holders) {
+        const handles = this.sharedHandlesByOwner.get(holder);
         if (!handles) continue;
         handles.delete(handle);
-        if (handles.size === 0) this.sharedHandlesByOwner.delete(owner);
+        if (handles.size === 0) this.sharedHandlesByOwner.delete(holder);
       }
     },
     releaseSharedHandleOwnership(leaving) {
+      // `leaving` (a script being freed) stops holding every handle it shared. Returns the
+      // handles another script still holds; one that was routed through `leaving` is re-routed
+      // to a remaining holder so its calls keep a live owner.
+      const stillHeld = new Set();
       const handles = this.sharedHandlesByOwner.get(leaving);
-      if (!handles) return;
+      if (!handles) return stillHeld;
       this.sharedHandlesByOwner.delete(leaving);
       for (const handle of handles) {
-        const owners = this.sharedHandleOwners.get(handle);
-        if (!owners) continue;
-        owners.delete(leaving);
-        if (this.handleOwners.get(handle) === leaving && owners.size > 0) {
-          // The allocating script leaves while another still holds the handle: route it there.
-          const next = owners.values().next().value;
+        const holders = this.sharedHandleOwners.get(handle);
+        if (!holders) continue;
+        holders.delete(leaving);
+        if (holders.size === 0) {
+          this.sharedHandleOwners.delete(handle);
+          continue;
+        }
+        stillHeld.add(handle);
+        if (this.handleOwners.get(handle) === leaving) {
           if (this.sceneTreeHandlesByOwner.get(leaving) === handle) {
             this.sceneTreeHandlesByOwner.delete(leaving);
           }
-          this.handleOwners.set(handle, next);
-        }
-        if (owners.size <= 1) {
-          // One owner left: no longer shared.
-          this.sharedHandleOwners.delete(handle);
-          for (const owner of owners) {
-            const remaining = this.sharedHandlesByOwner.get(owner);
-            if (!remaining) continue;
-            remaining.delete(handle);
-            if (remaining.size === 0) this.sharedHandlesByOwner.delete(owner);
-          }
+          this.handleOwners.set(handle, holders.values().next().value);
         }
       }
+      return stillHeld;
+    },
+    rerouteSharedHandle(handle, router) {
+      // `router` (a script being freed) is only the ROUTING owner of `handle`, not a holder:
+      // when a holder remains, the handle moves to it instead of dying with the router.
+      const holders = this.sharedHandleOwners.get(handle);
+      if (!holders) return false;
+      for (const holder of holders) {
+        if (holder === router) continue;
+        this.handleOwners.set(handle, holder);
+        return true;
+      }
+      return false;
     },
     eraseObjectHandleEntry(handle, viaOwner) {
       // The proxies share one handle -> object dictionary. Retiring a handle without erasing its
@@ -1386,8 +1401,11 @@
       // with a handle the bridge no longer knows. Any installed proxy can erase it.
       const callback = this.resourceReleaseCallbacks.get(viaOwner);
       if (!callback) return;
+      // The callback's result recorder counts a RESOURCE release: this erase is not one.
+      const resourceReleases = this.resourceReleases;
       this.immediateResourceReleaseResult = null;
       callback(handle);
+      this.resourceReleases = resourceReleases;
     },
     releaseBrowserHandlesOwnedBy(owner) {
       for (const tweenHandle of [...this.tweenChildren.keys()]) {
@@ -1397,6 +1415,7 @@
         if (handleOwner !== owner || (handle & BROWSER_HANDLE_NAMESPACE) === 0) continue;
         const slot = this.browserHandleSlot(handle);
         if (!slot) continue;
+        if (this.rerouteSharedHandle(handle, owner)) continue;
         if (slot.kind === "Sprite2D") this.objectFrees += 1;
         if (slot.kind === "AudioStreamPlayer") {
           this.audioPlayerStates.delete(handle);
@@ -1795,6 +1814,9 @@
     },
     immediateNodeLookup(handle, path) {
       const owner = this.ownerForHandle(handle);
+      // The holder is the script that asked; the routing owner is the instantiator for a spawned
+      // scripted child, which is not the one that must keep the handle alive.
+      const lookupHolder = this.api.kanamaWebIsLive(handle) === 1 ? handle : owner;
       const callback = this.callbackFor(this.nodeLookupCallbacks, handle, "Godot node lookup");
       const resultHandle = this.allocateBrowserHandle("Node", owner);
       this.api.kanamaWebAdoptNodeHandle(resultHandle);
@@ -1808,8 +1830,8 @@
         }
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
-        // The node is already tracked: this lookup holds the existing handle too.
-        this.retainSharedHandle(result, owner);
+        // The node is already tracked: the script that looked it up holds the handle too.
+        this.retainSharedHandle(result, lookupHolder);
         if (this.mode === "match3") {
           if (scriptHandle) this.match3ScriptNodeLookups += 1;
           else this.match3ReusedNodeLookups += 1;
@@ -1826,6 +1848,9 @@
         const childHandles = this.browserNodeHandlesByScript.get(handle) ?? new Set();
         childHandles.add(result);
         this.browserNodeHandlesByScript.set(handle, childHandles);
+        if (result === resultHandle && lookupHolder !== owner) {
+          this.firstHolderByHandle.set(result, lookupHolder);
+        }
       }
       if (this.mode === "match3" && path === "Sprite2D" && result !== 0) {
         const previousSprite = this.match3TileSpriteByRoot.get(handle);
