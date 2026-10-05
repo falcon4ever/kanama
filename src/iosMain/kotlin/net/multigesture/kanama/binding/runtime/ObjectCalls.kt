@@ -3473,9 +3473,10 @@ actual object ObjectCalls {
   }
 
   // Shared scalar decode for a Variant return delivered through the (out_int, out_double,
-  // out_str) triple — by kanama_ios_godot_object_call ([callWithVariantArgs]) and by
-  // kanama_ios_godot_ptrcall_ret_variant_scalar ([ptrcallRetVariantScalar], task 100 parcel 2).
-  private fun MemScope.decodeVariantScalarReturn(
+  // out_str) triple — by kanama_ios_godot_object_call ([callWithVariantArgs]), by
+  // kanama_ios_godot_ptrcall_ret_variant_scalar ([ptrcallRetVariantScalar], task 100 parcel 2) and
+  // by kanama_ios_godot_utility_call ([UtilityCalls], task 129 B).
+  internal fun MemScope.decodeVariantScalarReturn(
     retType: Int,
     outInt: LongVar,
     outDouble: DoubleVar,
@@ -3573,7 +3574,11 @@ actual object ObjectCalls {
             Float.fromBits(i32LE(b, 12)),
           )
         } else null
-      else -> null
+      // The raw value kinds (Vector3i ... Projection) arrive as their Godot bytes in out_str (task
+      // 129 B review); zero length = the C side could not decode.
+      else ->
+        if (outStrLen.value > 0L) net.multigesture.kanama.ios.decodeIosRawVariant(retType, outStr)
+        else null
     }
 
   // Generic Variant Object.call dispatch (mirrors desktop ObjectCalls.callWithVariantArgs):
@@ -43161,6 +43166,9 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     if (rootSeg.address() != 0L) ObjectCalls.destroyObject(rootSeg)
     if (targetSeg.address() != 0L) ObjectCalls.destroyObject(targetSeg)
   }
+
+  // Task 129 B: the generated common GD through the iOS utility-call seam, and the common Mathf.
+  utilitySelfTestRows(::check)
 
   // Task 124 — THE PERMANENT RED RUN: seven deliberate faults, raised in the sink's probe mode.
   // See runFaultProbes (declared beside SELFTEST_EXPECTED_FAULTS at the top of this section) for

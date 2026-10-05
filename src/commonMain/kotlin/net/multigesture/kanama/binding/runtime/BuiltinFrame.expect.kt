@@ -61,6 +61,12 @@ internal expect class BuiltinFrame {
   /** Call the static [method] (Godot's NULL instance) with the first [argc] argument slots. */
   fun callStatic(method: BuiltinMethod, argc: Int)
 
+  /**
+   * Call the utility function [fn] (task 129 B, see [UtilityFunction]) with the first [argc]
+   * argument slots; slot 0 is unused. Only `float` / `int` / `bool` arguments and returns.
+   */
+  fun callUtility(fn: UtilityFunction, argc: Int)
+
   /** Component [index] of a returned `real_t` struct. */
   fun retReal(index: Int): GodotRealStorage
 

@@ -5073,6 +5073,242 @@ internal object {object_name} : GodotClassTable() {{
 """
 
 
+# --- GD: Godot's utility functions, generated once (task 129 B) -----------------------------------
+# `extension_api.json`'s `utility_functions` (114: print, randf, lerpf, str, typeof, ...) render as
+# ONE common `object GD` every platform compiles (src/commonMain/.../api/GD.kt). Only the call
+# mechanism is per platform, behind the `UtilityCalls` / `BuiltinFrame.callUtility` seam
+# (binding/runtime/UtilityCalls.expect.kt): a utility whose arguments and return are float / int /
+# bool writes them into the thread's builtin frame (no allocation); every other one (a Variant or
+# String argument, the vararg ones, a String / Variant / Object / packed return) goes through
+# `UtilityCalls.call`, which converts each argument to the parameter's Variant type and decodes the
+# return. KDoc comes from @GlobalScope.xml through sync_kdoc_from_godot_docs.py.
+GD_PATH = SHARED_API_DIR / "GD.kt"
+
+# Kotlin spellings that differ from the camel-cased Godot name: the names the hand-written desktop
+# GD used before task 129 B (kept, so callers do not change) and Kotlin's `typeof` keyword.
+GD_NAME_OVERRIDES: dict[str, str] = {
+    "printerr": "printErr",
+    "prints": "printS",
+    "printt": "printT",
+    "printraw": "printRaw",
+    "typeof": "typeOf",
+    "is_nan": "isNaN",
+}
+
+# Godot's text utilities: Godot formats the scalars itself; any other Kotlin value is passed as its
+# `toString()` (the desktop behaviour since task 78), so a value with no Variant form still prints.
+GD_TEXT_UTILITIES = frozenset(
+    {"print", "print_rich", "printerr", "printt", "prints", "printraw", "print_verbose", "push_error", "push_warning", "str"}
+)
+
+# Hand-written GD members (budgeted by check_hand_code_budget.py). A utility-name key REPLACES that
+# utility's generated member; the "GD" key adds members. Plain comments, not KDoc, on members named
+# like a utility: sync_kdoc_from_godot_docs.py owns their doc block.
+GD_MEMBER_SECTIONS: dict[str, str] = {
+    "is_instance_valid": """\
+    // Typed on purpose (task 78): Godot answers false for every non-object Variant, so an id or a
+    // string would compile and always return false; isInstanceIdValid takes a raw id. It never
+    // dereferences the wrapper: it asks is_instance_id_valid about the id the wrapper captured at
+    // construction, as GDScript does with the id its Variant cached, so it is safe on a wrapper
+    // whose object was freed (task 98).
+    fun isInstanceValid(instance: GodotObject?): Boolean =
+        instance != null && isInstanceIdValid(instance.instanceId)""",
+    "GD": """\
+    // The text utilities' arguments: Godot formats null, String, Boolean and the numbers itself;
+    // any other value is passed as its toString(), so a value with no Variant form still prints.
+    private fun display(values: Array<out Any?>): Array<Any?> =
+        Array(values.size) { i ->
+            when (val value = values[i]) {
+                null, is String, is Boolean, is Int, is Long, is Float, is Double -> value
+                else -> value.toString()
+            }
+        }""",
+}
+
+# Typed overloads of the Variant-form utilities (task 129 B review): GDScript's `max(a, b)` on two
+# floats is a float, so `GD.max(1.5, 2.0)` should be a `Double`, not an `Any?`. Each listed utility
+# also gets a `Double` overload delegating to its float form and, where Godot has one, `Long` and
+# `Int` overloads delegating to its int form (the frame path: no allocation). The `Any?` member stays
+# for vectors and mixed types. Value: (float form, int form or None).
+GD_TYPED_OVERLOADS: dict[str, tuple[str, str | None]] = {
+    "abs": ("absf", "absi"),
+    "sign": ("signf", "signi"),
+    "max": ("maxf", "maxi"),
+    "min": ("minf", "mini"),
+    "clamp": ("clampf", "clampi"),
+    "wrap": ("wrapf", "wrapi"),
+    "snapped": ("snappedf", None),
+    "floor": ("floorf", None),
+    "ceil": ("ceilf", None),
+    "round": ("roundf", None),
+    "lerp": ("lerpf", None),
+}
+
+
+def _gd_typed_overloads(name: str, by_name: dict[str, dict]) -> list[str]:
+    """`fun max(a: Double, b: Double): Double = maxf(a, b)` and its Long / Int twins."""
+    float_form, int_form = GD_TYPED_OVERLOADS[name]
+    kotlin = gd_kotlin_name(name)
+    out = []
+    for delegate, kind in ((float_form, "float"), (int_form, "int")):
+        if delegate is None:
+            continue
+        fn = by_name[delegate]
+        args = fn.get("arguments", [])
+        if any(a["type"] != kind for a in args) or fn.get("return_type") != kind:
+            raise SystemExit(f"[generate_api_wrapper] GD_TYPED_OVERLOADS[{name!r}]: {delegate} is not all-{kind}")
+        names = [camel_name(a["name"]) for a in args]
+        call = f"{gd_kotlin_name(delegate)}({', '.join(names)})"
+        if kind == "float":
+            out.append(f"    fun {kotlin}({', '.join(f'{n}: Double' for n in names)}): Double = {call}")
+        else:
+            out.append(f"    fun {kotlin}({', '.join(f'{n}: Long' for n in names)}): Long = {call}")
+            widened = f"{gd_kotlin_name(delegate)}({', '.join(f'{n}.toLong()' for n in names)})"
+            out.append(f"    fun {kotlin}({', '.join(f'{n}: Int' for n in names)}): Int = {widened}.toInt()")
+    return out
+
+
+# Godot type -> (Kotlin type, Variant type id). `Variant` is 0 (passed / returned as a Variant).
+_GD_TYPES: dict[str, tuple[str, int]] = {
+    "Variant": ("Any?", 0),
+    "bool": ("Boolean", 1),
+    "int": ("Long", 2),
+    "float": ("Double", 3),
+    "String": ("String", 4),
+    "RID": ("RID", 23),
+    "Object": ("GodotObject?", 24),
+    "PackedByteArray": ("ByteArray", 29),
+    "PackedInt64Array": ("List<Long>", 31),
+}
+_GD_FRAME_PUT = {"float": "putDouble", "int": "putLong", "bool": "putBool"}
+_GD_FRAME_RET = {"float": "retDouble", "int": "retLong", "bool": "retBool"}
+_GD_RET_CONST = {-1: "VOID", 0: "VARIANT", 1: "BOOL", 2: "INT", 3: "FLOAT", 4: "STRING", 23: "RID",
+                 24: "OBJECT", 29: "PACKED_BYTE_ARRAY", 31: "PACKED_INT64_ARRAY"}
+_GD_FRAME_MAX_ARGS = 8  # BuiltinFrame's argument slots
+
+
+def gd_kotlin_name(name: str) -> str:
+    return GD_NAME_OVERRIDES.get(name, camel_name(name))
+
+
+def _gd_type(godot: str, where: str) -> tuple[str, int]:
+    if godot not in _GD_TYPES:
+        raise SystemExit(f"[generate_api_wrapper] GD: {where} has type {godot}, which has no utility-call form")
+    return _GD_TYPES[godot]
+
+
+def _gd_frame_path(fn: dict) -> bool:
+    args = fn.get("arguments", [])
+    return (
+        not fn["is_vararg"]
+        and len(args) <= _GD_FRAME_MAX_ARGS
+        and all(a["type"] in _GD_FRAME_PUT for a in args)
+        and fn.get("return_type", "void") in ("void", *_GD_FRAME_PUT)
+    )
+
+
+def render_gd(api_path: Path) -> str:
+    """The common `object GD`: one member per utility function (see the section comment)."""
+    import json
+
+    functions = json.loads(api_path.read_text(encoding="utf-8"))["utility_functions"]
+    by_name = {f["name"]: f for f in functions}
+    unknown = sorted(set(GD_MEMBER_SECTIONS) - {f["name"] for f in functions} - {"GD"})
+    if unknown:
+        raise SystemExit(f"[generate_api_wrapper] GD_MEMBER_SECTIONS keys that are not utility functions: {unknown}")
+    handles: list[str] = []
+    signatures: dict[str, list[int]] = {}
+    members: list[str] = []
+    for fn in sorted(functions, key=lambda f: f["name"]):
+        name = fn["name"]
+        kotlin = gd_kotlin_name(name)
+        handles.append(f'        val {kotlin} = UtilityFunction("{name}", {fn["hash"]}L)')
+        if name in GD_MEMBER_SECTIONS:
+            members.append(GD_MEMBER_SECTIONS[name])
+            continue
+        args = fn.get("arguments", [])
+        ret = fn.get("return_type", "void")
+        params = [(camel_name(a["name"]), *_gd_type(a["type"], f"{name}({a['name']})"), a["type"]) for a in args]
+        ret_kotlin, ret_id = ("Unit", -1) if ret == "void" else _gd_type(ret, f"{name} return")
+        if _gd_frame_path(fn):
+            lines = [f"    fun {kotlin}({', '.join(f'{p}: {t}' for p, t, _, _ in params)}): {ret_kotlin} {{",
+                     "        val frame = builtinFrame()"]
+            for slot, (p, _, _, godot) in enumerate(params, start=1):
+                lines.append(f"        frame.{_GD_FRAME_PUT[godot]}({slot}, {p})")
+            lines.append(f"        frame.callUtility(Fn.{kotlin}, {len(params)})")
+            if ret != "void":
+                lines.append(f"        return frame.{_GD_FRAME_RET[ret]}()")
+            lines.append("    }")
+            members.append("\n".join(lines))
+            continue
+        if fn["is_vararg"]:
+            # Every argument of a vararg utility is a Variant. One fixed argument (print, str): any
+            # number of values, as the desktop GD had it; more (max, min): the fixed ones, then more.
+            if len(params) == 1:
+                decl = "vararg values: Any?"
+                values = "values"
+            else:
+                decl = ", ".join(f"{p}: {t}" for p, t, _, _ in params) + ", vararg values: Any?"
+                values = f"arrayOf({', '.join(p for p, _, _, _ in params)}, *values)"
+            ids: list[int] = []
+        else:
+            decl = ", ".join(f"{p}: {t}" for p, t, _, _ in params)
+            values = f"arrayOf({', '.join(p for p, _, _, _ in params)})" if params else "emptyArray()"
+            ids = [i for _, _, i, _ in params]
+            while ids and ids[-1] == 0:
+                ids.pop()
+        if name in GD_TEXT_UTILITIES:
+            values = f"display({values})"
+        sig = "_".join(_GD_RET_CONST[i] for i in ids) or "VARIANTS"
+        signatures[sig] = ids
+        call = f"UtilityCalls.call(Fn.{kotlin}, Sig.{sig}, {values}, {_GD_RET_CONST[ret_id]})"
+        if ret == "void":
+            members.append(f"    fun {kotlin}({decl}) {{\n        {call}\n    }}")
+        else:
+            cast = "" if ret_kotlin == "Any?" else f" as {ret_kotlin}"
+            suppress = '    @Suppress("UNCHECKED_CAST")\n' if "<" in ret_kotlin else ""
+            members.append(f"{suppress}    fun {kotlin}({decl}): {ret_kotlin} =\n        {call}{cast}")
+        if name in GD_TYPED_OVERLOADS:
+            members.extend(_gd_typed_overloads(name, by_name))
+    if "GD" in GD_MEMBER_SECTIONS:
+        members.append(GD_MEMBER_SECTIONS["GD"])
+    sig_lines = [f"        val {k} = intArrayOf({', '.join(str(i) for i in v)})" for k, v in sorted(signatures.items())]
+    ret_lines = [f"    private const val {v} = {k}" for k, v in sorted(_GD_RET_CONST.items())]
+    return "\n".join(
+        [
+            "package net.multigesture.kanama.api",
+            "",
+            "import net.multigesture.kanama.binding.runtime.UtilityCalls",
+            "import net.multigesture.kanama.binding.runtime.UtilityFunction",
+            "import net.multigesture.kanama.binding.runtime.builtinFrame",
+            "import net.multigesture.kanama.types.RID",
+            "",
+            "// GENERATED by scripts/generate_api_wrapper.py --write-tree from extension_api.json's",
+            "// utility_functions -- do not edit (task 129 B). Member KDoc: sync_kdoc_from_godot_docs.py.",
+            "/**",
+            " * Godot's global utility functions (GDScript's `@GlobalScope` functions: `print`, `randf`,",
+            " * `lerpf`, `str`, `typeof`, ...), one member each, the same on every platform.",
+            " */",
+            "object GD {",
+            "\n\n".join(members),
+            "",
+            "    // Variant types of the returns UtilityCalls decodes (-1: none, 0: a Variant).",
+            *ret_lines,
+            "",
+            "    // Variant types of the fixed arguments UtilityCalls converts (0 or none listed: a Variant).",
+            "    private object Sig {",
+            *sig_lines,
+            "    }",
+            "",
+            "    private object Fn {",
+            *handles,
+            "    }",
+            "}",
+            "",
+        ]
+    )
+
+
 def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
     """Render the whole generated wrapper tree into memory, keyed by repository-relative path."""
     global RENDER_TARGET, EXPECT_ENUM_OWNERS
@@ -5130,6 +5366,8 @@ def regenerate_tree(api_path: Path, only: set[str] | None = None) -> TreeResult:
     for owner in sorted(EXPECT_ENUM_OWNERS):
         files[_rel(SHARED_API_DIR / f"{_kotlin_owner_name(owner)}.expect.kt")] = render_enum_expect(owner)
     files[_rel(GLOBAL_ENUMS_PATH)] = render_global_enums()
+    # Godot's utility functions (task 129 B): one common `GD` object.
+    files[_rel(GD_PATH)] = render_gd(api_path)
     files[_rel(LOCK_PATH)] = render_lock(lock)
     files[_rel(PROCESSOR_ENUM_TABLE_PATH)] = render_processor_enum_table(_enum_state()[0], lock)
     region_files: dict[Path, str] = {}

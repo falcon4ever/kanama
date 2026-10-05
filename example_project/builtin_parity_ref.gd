@@ -4,17 +4,18 @@ extends Node2D
 # BuiltinParitySmoke.kt; scripts/runtime_smoke.sh requires the two to be identical.
 
 const SCALES := [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
-var seed := 2463534242
+var rng_state := 2463534242
 var hashes := {}
 var hash_order := []
 # Task 134 D1: float components recorded for the Web-local methods (WEB_LOCAL_FACADE).
 var recorded := {"Vector2.angle": [], "Vector2.rotated": [], "Vector3.signed_angle_to": [], "Vector3.rotated": [], "Quaternion.slerp": [], "Basis.rotated": [], "Basis.get_euler": [], "Basis.from_euler": [], "Basis.looking_at": [], "Transform3D.looking_at": [], "Transform3D.interpolate_with": []}
 # The edge row's decimals: ±0 (-0.0 built from bytes: GDScript merges the 0.0 and -0.0
-# literals), NaN, ±INF, .5 ties, a tiny normal.
+# literals), NaN, ±INF, .5 ties, a tiny normal (1e-30 built from bytes too: GDScript parses the
+# literal one ulp away from the correctly rounded double Kotlin's 1e-30 is).
 var edge := false
 var edge_values := [PackedByteArray([0, 0, 0, 0, 0, 0, 0, 0]).decode_double(0),
 	PackedByteArray([0, 0, 0, 0, 0, 0, 0, 0x80]).decode_double(0), NAN, INF, -INF, 0.5, -0.5, 1.5, 2.5, -2.5,
-	1e-30, 3.0]
+	PackedByteArray([0xA0, 0xC2, 0xEB, 0xFE, 0x4B, 0x48, 0xB4, 0x39]).decode_double(0), 3.0]
 
 
 func _ready() -> void:
@@ -39,6 +40,30 @@ func _ready() -> void:
 	hash_order.clear()
 	constants()
 	report("const=n=1 " + summary())
+	hashes.clear()
+	hash_order.clear()
+	for i in 256:
+		mathf_round()
+	report("mathf=n=256 " + summary())
+	hashes.clear()
+	hash_order.clear()
+	edge = true
+	for i in 64:
+		mathf_round()
+	edge = false
+	report("mathfedge=n=64 " + summary())
+	hashes.clear()
+	hash_order.clear()
+	utilities()
+	report("gd=n=1 " + summary())
+	hashes.clear()
+	hash_order.clear()
+	seed(12345)
+	for i in 8:
+		rand_round()
+	seed(12345)
+	mix("GD.seed", randi())
+	report("rand=n=8 " + summary())
 
 
 func constants() -> void:
@@ -276,6 +301,437 @@ func constants() -> void:
 	mix("Vector4i.AXIS_Y", Vector4i.AXIS_Y)
 	mix("Vector4i.AXIS_Z", Vector4i.AXIS_Z)
 	mix("Vector4i.AXIS_W", Vector4i.AXIS_W)
+
+
+func mathf_round() -> void:
+	mathf0()
+	mathf1()
+	mathf2()
+	mathf3()
+	mathf4()
+	mathf5()
+	mathf6()
+	mathf7()
+	mathf8()
+	mathf9()
+	mathf10()
+	mathf11()
+	mathf12()
+	mathf13()
+	mathf14()
+	mathf15()
+	mathf16()
+	mathf17()
+	mathf18()
+	mathf19()
+	mathf20()
+	mathf21()
+	mathf22()
+	mathf23()
+	mathf24()
+	mathf25()
+	mathf26()
+	mathf27()
+	mathf28()
+	mathf29()
+	mathf30()
+	mathf31()
+	mathf32()
+	mathf33()
+	mathf34()
+	mathf35()
+	mathf36()
+	mathf37()
+	mathf38()
+	mathf39()
+	mathf40()
+	mathf41()
+	mathf42()
+	mathf43()
+	mathf44()
+	mathf45()
+	mathf46()
+	mathf47()
+	mathf48()
+	mathf49()
+	mathf50()
+	mathf51()
+	mathf52()
+	mathf53()
+	mathf54()
+	mathf55()
+	mathf56()
+	mathf57()
+	mathf58()
+
+
+func mathf0() -> void:
+	var a0 = nv()
+	mix("Mathf.degToRad/deg_to_rad", deg_to_rad(a0))
+
+
+func mathf1() -> void:
+	var a0 = nv()
+	mix("Mathf.radToDeg/rad_to_deg", rad_to_deg(a0))
+
+
+func mathf2() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	mix("Mathf.lerp/lerpf", lerpf(a0, a1, a2))
+
+
+func mathf3() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	mix("Mathf.inverseLerp/inverse_lerp", inverse_lerp(a0, a1, a2))
+
+
+func mathf4() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	mix("Mathf.lerpAngle/lerp_angle", lerp_angle(a0, a1, a2))
+
+
+func mathf5() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	mix("Mathf.moveToward/move_toward", move_toward(a0, a1, a2))
+
+
+func mathf6() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	mix("Mathf.rotateToward/rotate_toward", rotate_toward(a0, a1, a2))
+
+
+func mathf7() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	mix("Mathf.smoothStep/smoothstep", smoothstep(a0, a1, a2))
+
+
+func mathf8() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.ease/ease", ease(a0, a1))
+
+
+func mathf9() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	var a3 = nv()
+	var a4 = nv()
+	mix("Mathf.remap/remap", remap(a0, a1, a2, a3, a4))
+
+
+func mathf10() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	mix("Mathf.clamp/clampf", clampf(a0, a1, a2))
+
+
+func mathf11() -> void:
+	var a0 = ri()
+	var a1 = ri()
+	var a2 = ri()
+	mix("Mathf.clamp/clampi", clampi(a0, a1, a2))
+
+
+func mathf12() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.min/minf", minf(a0, a1))
+
+
+func mathf13() -> void:
+	var a0 = ri()
+	var a1 = ri()
+	mix("Mathf.min/mini", mini(a0, a1))
+
+
+func mathf14() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.max/maxf", maxf(a0, a1))
+
+
+func mathf15() -> void:
+	var a0 = ri()
+	var a1 = ri()
+	mix("Mathf.max/maxi", maxi(a0, a1))
+
+
+func mathf16() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.snapped/snappedf", snappedf(a0, a1))
+
+
+func mathf17() -> void:
+	var a0 = nv()
+	var a1 = ri()
+	mix("Mathf.snapped/snappedi", snappedi(a0, a1))
+
+
+func mathf18() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	var a2 = nv()
+	mix("Mathf.wrap/wrapf", wrapf(a0, a1, a2))
+
+
+func mathf19() -> void:
+	var a0 = ri()
+	var a1 = ri()
+	var a2 = ri()
+	mix("Mathf.wrap/wrapi", wrapi(a0, a1, a2))
+
+
+func mathf20() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.isEqualApprox/is_equal_approx", is_equal_approx(a0, a1))
+
+
+func mathf21() -> void:
+	var a0 = nv()
+	mix("Mathf.isZeroApprox/is_zero_approx", is_zero_approx(a0))
+
+
+func mathf22() -> void:
+	var a0 = nv()
+	mix("Mathf.isFinite/is_finite", is_finite(a0))
+
+
+func mathf23() -> void:
+	var a0 = nv()
+	mix("Mathf.isNaN/is_nan", is_nan(a0))
+
+
+func mathf24() -> void:
+	var a0 = nv()
+	mix("Mathf.isInf/is_inf", is_inf(a0))
+
+
+func mathf25() -> void:
+	var a0 = nv()
+	mix("Mathf.sin/sin", sin(a0))
+
+
+func mathf26() -> void:
+	var a0 = nv()
+	mix("Mathf.cos/cos", cos(a0))
+
+
+func mathf27() -> void:
+	var a0 = nv()
+	mix("Mathf.tan/tan", tan(a0))
+
+
+func mathf28() -> void:
+	var a0 = nv()
+	mix("Mathf.asin/asin", asin(a0))
+
+
+func mathf29() -> void:
+	var a0 = nv()
+	mix("Mathf.acos/acos", acos(a0))
+
+
+func mathf30() -> void:
+	var a0 = nv()
+	mix("Mathf.atan/atan", atan(a0))
+
+
+func mathf31() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.atan2/atan2", atan2(a0, a1))
+
+
+func mathf32() -> void:
+	var a0 = nv()
+	mix("Mathf.sqrt/sqrt", sqrt(a0))
+
+
+func mathf33() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.pow/pow", pow(a0, a1))
+
+
+func mathf34() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.fmod/fmod", fmod(a0, a1))
+
+
+func mathf35() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.fposmod/fposmod", fposmod(a0, a1))
+
+
+func mathf36() -> void:
+	var a0 = ri()
+	var a1 = rnz()
+	mix("Mathf.posmod/posmod", posmod(a0, a1))
+
+
+func mathf37() -> void:
+	var a0 = nv()
+	mix("Mathf.log/log", log(a0))
+
+
+func mathf38() -> void:
+	var a0 = nv()
+	mix("Mathf.exp/exp", exp(a0))
+
+
+func mathf39() -> void:
+	var a0 = nv()
+	mix("Mathf.floor/floorf", floorf(a0))
+
+
+func mathf40() -> void:
+	var a0 = nv()
+	mix("Mathf.floorToInt/floori", floori(a0))
+
+
+func mathf41() -> void:
+	var a0 = nv()
+	mix("Mathf.ceil/ceilf", ceilf(a0))
+
+
+func mathf42() -> void:
+	var a0 = nv()
+	mix("Mathf.ceilToInt/ceili", ceili(a0))
+
+
+func mathf43() -> void:
+	var a0 = nv()
+	mix("Mathf.round/roundf", roundf(a0))
+
+
+func mathf44() -> void:
+	var a0 = nv()
+	mix("Mathf.roundToInt/roundi", roundi(a0))
+
+
+func mathf45() -> void:
+	var a0 = nv()
+	mix("Mathf.abs/absf", absf(a0))
+
+
+func mathf46() -> void:
+	var a0 = ri()
+	mix("Mathf.abs/absi", absi(a0))
+
+
+func mathf47() -> void:
+	var a0 = nv()
+	mix("Mathf.sign/signf", signf(a0))
+
+
+func mathf48() -> void:
+	var a0 = ri()
+	mix("Mathf.sign/signi", signi(a0))
+
+
+func mathf49() -> void:
+	var a0 = nv()
+	mix("Mathf.dbToLinear/db_to_linear", db_to_linear(a0))
+
+
+func mathf50() -> void:
+	var a0 = nv()
+	mix("Mathf.linearToDb/linear_to_db", linear_to_db(a0))
+
+
+func mathf51() -> void:
+	var a0 = ri()
+	mix("Mathf.nearestPo2/nearest_po2", nearest_po2(a0))
+
+
+func mathf52() -> void:
+	var a0 = nv()
+	var a1 = nv()
+	mix("Mathf.pingPong/pingpong", pingpong(a0, a1))
+
+
+func mathf53() -> void:
+	var a0 = nv()
+	mix("Mathf.sinh/sinh", sinh(a0))
+
+
+func mathf54() -> void:
+	var a0 = nv()
+	mix("Mathf.cosh/cosh", cosh(a0))
+
+
+func mathf55() -> void:
+	var a0 = nv()
+	mix("Mathf.tanh/tanh", tanh(a0))
+
+
+func mathf56() -> void:
+	var a0 = nv()
+	mix("Mathf.asinh/asinh", asinh(a0))
+
+
+func mathf57() -> void:
+	var a0 = nv()
+	mix("Mathf.acosh/acosh", acosh(a0))
+
+
+func mathf58() -> void:
+	var a0 = nv()
+	mix("Mathf.atanh/atanh", atanh(a0))
+
+
+func utilities() -> void:
+	mix("GD.str", str(1, "a", 2.5, true, null))
+	mix("GD.typeString", type_string(4))
+	mix("GD.typeOf", typeof(Vector2(1.0, 2.0)))
+	mix("GD.max", max(1, 5, 3))
+	mix("GD.min", min(2.5, -1.0, 7.0))
+	mix("GD.lerp", lerp(Vector2(0.0, 0.0), Vector2(2.0, 4.0), 0.25))
+	mix("GD.clamp", clamp(7, 0, 5))
+	mix("GD.abs", abs(-3))
+	mix("GD.abs(Vector3i)", abs(Vector3i(-1, 2, -3)))
+	mix("GD.max(Double)", max(1.5, 2.0))
+	mix("GD.sign", sign(-2.5))
+	mix("GD.floor", floor(Vector2(1.5, -1.5)))
+	mix("GD.round", round(2.5))
+	mix("GD.snapped", snapped(7.3, 0.5))
+	mix("GD.wrap", wrap(7, 0, 5))
+	mix("GD.hash", hash("kanama"))
+	mix("GD.isSame", is_same(1, 1))
+	mix("GD.varToStr", var_to_str(Vector2(1.0, 2.0)))
+	mix("GD.strToVar", str_to_var("Vector2(1, 2)"))
+	mix("GD.bytesToVar", bytes_to_var(var_to_bytes(42)))
+	mix("GD.typeConvert", type_convert("12", 2))
+	mix("GD.errorString", error_string(0))
+	mix("GD.randFromSeed", rand_from_seed(42))
+	mix("GD.instanceFromId", instance_from_id(get_instance_id()) == self)
+	mix("GD.isInstanceIdValid", is_instance_id_valid(get_instance_id()))
+
+
+func rand_round() -> void:
+	mix("GD.randi", randi())
+	mix("GD.randf", randf())
+	mix("GD.randiRange", randi_range(-10, 10))
+	mix("GD.randfRange", randf_range(-1.0, 1.0))
+	mix("GD.randfn", randfn(0.0, 1.0))
 
 
 func pure_round() -> void:
@@ -4066,10 +4522,10 @@ func edge_finite242() -> void:
 
 
 func next_random() -> int:
-	seed = seed ^ ((seed << 13) & 0xFFFFFFFF)
-	seed = seed ^ (seed >> 17)
-	seed = seed ^ ((seed << 5) & 0xFFFFFFFF)
-	return seed
+	rng_state = rng_state ^ ((rng_state << 13) & 0xFFFFFFFF)
+	rng_state = rng_state ^ (rng_state >> 17)
+	rng_state = rng_state ^ ((rng_state << 5) & 0xFFFFFFFF)
+	return rng_state
 
 
 func nv() -> float:
@@ -4080,7 +4536,7 @@ func nv() -> float:
 
 
 func nvf() -> float:
-	var finite := [edge_values[0], edge_values[1], 0.5, -0.5, 1.5, 2.5, -2.5, 1e-30, 3.0]
+	var finite := [edge_values[0], edge_values[1], 0.5, -0.5, 1.5, 2.5, -2.5, edge_values[10], 3.0]
 	return finite[next_random() % finite.size()]
 
 
@@ -4164,7 +4620,7 @@ func mix(name: String, value) -> void:
 		for c in [value.basis, value.origin]: mix(name, c)
 	elif value is Projection:
 		for c in [value.x, value.y, value.z, value.w]: mix(name, c)
-	elif value is PackedVector2Array or value is PackedVector3Array:
+	elif value is PackedVector2Array or value is PackedVector3Array or value is PackedInt64Array:
 		for c in value: mix(name, c)
 	else:
 		push_error("no parity mix for %s" % type_string(typeof(value)))

@@ -491,7 +491,7 @@ per declaration, one file per surface (every source directory is read recursivel
 |---|---|---|
 | `common.txt` | `src/commonMain/.../api` | the shared native tree: generated classes, `GlobalEnums.kt`, the hand roots `GodotObject`, `RefCounted`, `GodotCallable`, `GodotHandle`, the `expect` declarations |
 | `types.txt` | `src/commonMain/.../types` | the builtin value types (`Vector3`, `Color`, `Basis`, ...) |
-| `jvm.txt`, `ios.txt` | `src/jvmMain/.../api`, `src/iosMain/.../api` | what each native platform declares on its own: the per-platform classes, the `<Class>.jvm.kt` / `<Class>.ios.kt` companions, the `actual`s, `GD`, and on desktop the name constants |
+| `jvm.txt`, `ios.txt` | `src/jvmMain/.../api`, `src/iosMain/.../api` | what each native platform declares on its own: the per-platform classes, the `<Class>.jvm.kt` / `<Class>.ios.kt` companions, the `actual`s, and on desktop the name constants (`GD` and `Mathf` are common since task 129 B) |
 | `web.txt` | `web-runtime/.../api` | the Web wrappers, generated and hand-written |
 | `web-types.txt` | `web-runtime/.../types` | the Web value types |
 

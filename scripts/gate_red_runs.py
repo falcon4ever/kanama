@@ -311,8 +311,8 @@ case("check_hand_code_budget.py", py("check_hand_code_budget.py"),
      [Create(f"{IOS}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nfun redRun(): Int = 1\n")],
      "ZzRedRun.kt: hand-written (3 lines) and not on the budget", "a new hand-written file appears under an api/ directory")
 case("check_hand_code_budget.py (ratchet)", py("check_hand_code_budget.py"),
-     [Append(f"{JVM}/net/multigesture/kanama/api/GD.kt", "\n// red run: a transitional file grows\n")],
-     "transitional file grew", "a transitional hand file (desktop GD.kt) grows past its line ratchet")
+     [Append(f"{JVM}/net/multigesture/kanama/api/MeshDataTool.kt", "\n// red run: a transitional file grows\n")],
+     "transitional file grew", "a transitional hand file (desktop MeshDataTool.kt) grows past its line ratchet")
 case("check_hand_code_budget.py (package outside api/)", py("check_hand_code_budget.py"),
      [Create(f"{JVM}/net/multigesture/kanama/ZzRedRunPkg.kt", "package net.multigesture.kanama.api\n\nfun redRunPkg(): Int = 1\n")],
      "ZzRedRunPkg.kt: hand-written (3 lines) and not on the budget",

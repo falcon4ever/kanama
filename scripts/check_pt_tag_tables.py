@@ -455,12 +455,29 @@ def compare(tables: dict[str, dict[str, int]]) -> list[str]:
     return findings
 
 
+VARIANT_TYPE_KT = ROOT / "src/jvmMain/kotlin/binding/runtime/VariantType.kt"
+
+
+def check_variant_types() -> list[str]:
+    """Task 129 B: the common `VT_*` constants of BuiltinTags.kt equal the VariantType enum ids."""
+    enum = {m.group(1): int(m.group(2)) for m in re.finditer(r"^\s*([A-Z0-9_]+)\((\d+)\),", VARIANT_TYPE_KT.read_text(encoding="utf-8"), re.M)}
+    findings = []
+    for m in re.finditer(r"^const val VT_([A-Z0-9_]+) = (\d+)$", BUILTIN_TAGS.read_text(encoding="utf-8"), re.M):
+        name, value = m.group(1), int(m.group(2))
+        if name not in enum:
+            findings.append(f"{rel(BUILTIN_TAGS)}: VT_{name} has no VariantType.{name} in {rel(VARIANT_TYPE_KT)}")
+        elif enum[name] != value:
+            findings.append(f"{rel(BUILTIN_TAGS)}: VT_{name} = {value}, but VariantType.{name} is {enum[name]}")
+    return findings
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--json", action="store_true", help="print the parsed tables and findings as JSON")
     args = parser.parse_args()
 
     tables, findings = load_tables()
+    findings += check_variant_types()
     # Always compare, even when a copy failed to parse: `compare` works from whatever parsed, and
     # gating it on all five made one unreadable file hide every real disagreement among the other
     # four -- one defect masking the rest is how a five-way table stays broken for a week.

@@ -44,6 +44,11 @@
       "lines": 37,
       "reason": "main-thread queue expect"
     },
+    "src/commonMain/kotlin/net/multigesture/kanama/api/Mathf.kt": {
+      "category": "sugar",
+      "lines": 316,
+      "reason": "Godot/C#-style math helpers written once in common: Godot's formula where it is plain arithmetic, GD otherwise (task 129 B)"
+    },
     "src/commonMain/kotlin/net/multigesture/kanama/api/RefCounted.kt": {
       "category": "runtime-core",
       "lines": 242,
@@ -101,8 +106,8 @@
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt": {
       "category": "transitional",
-      "lines": 488,
-      "parcel": "129 parcels B (GD, Mathf), 6 (AudioStreamPlayer, ResourceLoader), 9 (KanamaScope, kotlinScriptInstance); what stays is the IosGodot cinterop seam and IosCallableRegistry",
+      "lines": 335,
+      "parcel": "129 parcels 6 (AudioStreamPlayer, ResourceLoader), 9 (KanamaScope, kotlinScriptInstance); what stays is the IosGodot cinterop seam and IosCallableRegistry",
       "reason": "per-platform hand file the generator should emit"
     },
     "src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt": {
@@ -203,12 +208,6 @@
       "parcel": "129 parcel 8 (FileAccess + DirAccess handle model)",
       "reason": "per-platform hand file the generator should emit"
     },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/GD.kt": {
-      "category": "transitional",
-      "lines": 774,
-      "parcel": "129 parcel B (GD from the utility functions, Mathf once in common)",
-      "reason": "per-platform hand file the generator should emit"
-    },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt": {
       "category": "runtime-core",
       "lines": 145,
@@ -246,12 +245,6 @@
       "category": "transitional",
       "lines": 21,
       "parcel": "129 parcel 9 (per-platform sugar consolidated into common)",
-      "reason": "per-platform hand file the generator should emit"
-    },
-    "src/jvmMain/kotlin/net/multigesture/kanama/api/Mathf.kt": {
-      "category": "transitional",
-      "lines": 265,
-      "parcel": "129 parcel B (GD from the utility functions, Mathf once in common)",
       "reason": "per-platform hand file the generator should emit"
     },
     "src/jvmMain/kotlin/net/multigesture/kanama/api/MeshDataTool.kt": {
@@ -404,6 +397,12 @@
     },
     "generate_api_wrapper.DESKTOP_MEMBER_SECTIONS[ProjectSettings]": {
       "lines": 77
+    },
+    "generate_api_wrapper.GD_MEMBER_SECTIONS[GD]": {
+      "lines": 9
+    },
+    "generate_api_wrapper.GD_MEMBER_SECTIONS[is_instance_valid]": {
+      "lines": 7
     },
     "generate_api_wrapper.IOS_EXTENSION_SECTIONS[AnimationMixer]": {
       "lines": 19

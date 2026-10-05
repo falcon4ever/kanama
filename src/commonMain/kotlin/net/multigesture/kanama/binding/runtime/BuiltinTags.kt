@@ -14,6 +14,42 @@ package net.multigesture.kanama.binding.runtime
  * dispatches on them. The desktop ptr-ABI is positional and untyped — the callee knows the layout —
  * so desktop carries the tags for the shared call sites and the shim's benefit.
  */
+// Task 129 B: the Variant types a utility call converts its arguments to and decodes its return
+// from
+// (UtilityCalls), and the raw value kinds a decoded Variant return can carry (iOS). Held to the
+// VariantType enum by scripts/check_pt_tag_tables.py.
+const val VT_NIL = 0
+
+const val VT_BOOL = 1
+
+const val VT_INT = 2
+
+const val VT_FLOAT = 3
+
+const val VT_STRING = 4
+
+const val VT_RECT2 = 7
+
+const val VT_RECT2I = 8
+
+const val VT_VECTOR3I = 10
+
+const val VT_TRANSFORM2D = 11
+
+const val VT_VECTOR4 = 12
+
+const val VT_VECTOR4I = 13
+
+const val VT_PLANE = 14
+
+const val VT_AABB = 16
+
+const val VT_PROJECTION = 19
+
+const val VT_RID = 23
+
+const val VT_PACKED_BYTE_ARRAY = 29
+
 const val VT_VECTOR2 = 5
 
 const val VT_VECTOR3 = 9
@@ -44,3 +80,9 @@ const val PT_QUATERNION = 20
 const val PT_INT32 = 2
 
 const val PT_STRING = 16
+
+// Task 129 B: the utility call (`kanama_ios_godot_utility_call`) builds a PackedByteArray argument
+// from a KanamaIosPackedArgDesc and boxes a Variant argument from a KanamaIosVariantArgDesc.
+const val PT_PACKED_BYTE_ARRAY = 31
+
+const val PT_VARIANT = 38

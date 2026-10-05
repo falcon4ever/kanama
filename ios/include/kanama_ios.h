@@ -121,6 +121,38 @@ void kanama_ios_godot_builtin_call(
     void *ret_out
 );
 
+/*
+ * Task 129 B — the utility-call seam behind the generated common `GD` object (Godot's
+ * @GlobalScope utility functions). Resolve a utility function pointer
+ * (variant_get_ptr_utility_function); returns it as int64 (0 on failure, reported).
+ */
+int64_t kanama_ios_godot_get_utility_function(const char *name, int64_t hash);
+
+/*
+ * Call a utility function: fn(ret, args, argc). Arguments use the kanama_ios_godot_ptrcall tags a
+ * utility signature needs: POD passthrough (bool, int64, double), KANAMA_IOS_PT_STRING (a C string),
+ * KANAMA_IOS_PT_PACKED_BYTE_ARRAY (a KanamaIosPackedArgDesc) and KANAMA_IOS_PT_VARIANT (a
+ * KanamaIosVariantArgDesc; every argument of a vararg utility). No argument cap. ret_variant_type
+ * is the Variant type of the return: -1 void; BOOL/INT/FLOAT/RID write the raw value to ret_raw
+ * (when non-NULL) and to out_int / out_double; any other type (0 = a Variant return) is decoded
+ * like kanama_ios_godot_object_call's return, an Object owned (*out_is_refcounted set). Returns
+ * the delivered Variant type (NIL for void), or -1 when the call did not run.
+ */
+int32_t kanama_ios_godot_utility_call(
+    int64_t utility_fn,
+    const int32_t *arg_types,
+    const void *const *arg_ptrs,
+    int32_t arg_count,
+    int32_t ret_variant_type,
+    void *ret_raw,
+    int64_t *out_int,
+    double *out_double,
+    char *out_str,
+    int64_t out_str_size,
+    int64_t *out_str_len,
+    int32_t *out_is_refcounted
+);
+
 void kanama_ios_godot_ptrcall_string_arg(
     int64_t method_bind,
     int64_t instance,
