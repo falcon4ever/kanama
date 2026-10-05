@@ -77,6 +77,29 @@ open class CanvasItem(godotObject: GodotHandle) : Node(godotObject) {
     visible = false
   }
 
+  /** Signal `draw`; see [TypedSignal]. */
+  val draw: Signal0
+    get() = Signal0(this, "draw")
+
+  /** Signal `visibility_changed`; see [TypedSignal]. */
+  val visibilityChanged: Signal0
+    get() = Signal0(this, "visibility_changed")
+
+  /** Signal `hidden`; see [TypedSignal]. */
+  val hidden: Signal0
+    get() = Signal0(this, "hidden")
+
+  /** Signal `item_rect_changed`; see [TypedSignal]. */
+  val itemRectChanged: Signal0
+    get() = Signal0(this, "item_rect_changed")
+
+  object Signals {
+    const val draw: String = "draw"
+    const val visibilityChanged: String = "visibility_changed"
+    const val hidden: String = "hidden"
+    const val itemRectChanged: String = "item_rect_changed"
+  }
+
   value class TextureFilter(override val value: Long) : GodotEnumValue {
     companion object {
       val PARENT_NODE: TextureFilter get() = TextureFilter(0L)

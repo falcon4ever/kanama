@@ -22,6 +22,14 @@ class GPUParticles3D(godotObject: GodotHandle) : GeometryInstance3D(godotObject)
     get() = unsupportedWebGameplayFamily("GPUParticles3D.is_emitting")
     set(newValue) = setEmitting(newValue)
 
+  /** Signal `finished`; see [TypedSignal]. */
+  val finished: Signal0
+    get() = Signal0(this, "finished")
+
+  object Signals {
+    const val finished: String = "finished"
+  }
+
   value class DrawOrder(override val value: Long) : GodotEnumValue {
     companion object {
       val INDEX: DrawOrder get() = DrawOrder(0L)

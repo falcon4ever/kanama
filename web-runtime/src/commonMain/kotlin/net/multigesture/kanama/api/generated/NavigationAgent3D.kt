@@ -34,6 +34,31 @@ class NavigationAgent3D(godotObject: GodotHandle) : Node(godotObject) {
   var targetPosition: Vector3
     get() = unsupportedWebGameplayFamily("NavigationAgent3D.get_target_position")
     set(newValue) = setTargetPosition(newValue)
+
+  /** Signal `path_changed`; see [TypedSignal]. */
+  val pathChanged: Signal0
+    get() = Signal0(this, "path_changed")
+
+  /** Signal `target_reached`; see [TypedSignal]. */
+  val targetReached: Signal0
+    get() = Signal0(this, "target_reached")
+
+  /** Signal `navigation_finished`; see [TypedSignal]. */
+  val navigationFinished: Signal0
+    get() = Signal0(this, "navigation_finished")
+
+  /** Signal `velocity_computed`; see [TypedSignal]. */
+  val velocityComputed: Signal1<Vector3>
+    get() = Signal1(this, "velocity_computed", SignalArgType.valueOf<Vector3>("Vector3", Vector3::class))
+
+  object Signals {
+    const val pathChanged: String = "path_changed"
+    const val targetReached: String = "target_reached"
+    const val waypointReached: String = "waypoint_reached"
+    const val linkReached: String = "link_reached"
+    const val navigationFinished: String = "navigation_finished"
+    const val velocityComputed: String = "velocity_computed"
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

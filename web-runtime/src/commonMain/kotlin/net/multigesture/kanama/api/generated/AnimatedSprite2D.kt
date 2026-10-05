@@ -57,6 +57,34 @@ class AnimatedSprite2D(godotObject: GodotHandle) : Node2D(godotObject) {
 
   val spriteFrames: SpriteFrames?
     get() = getSpriteFrames()
+
+  /** Signal `sprite_frames_changed`; see [TypedSignal]. */
+  val spriteFramesChanged: Signal0
+    get() = Signal0(this, "sprite_frames_changed")
+
+  /** Signal `animation_changed`; see [TypedSignal]. */
+  val animationChanged: Signal0
+    get() = Signal0(this, "animation_changed")
+
+  /** Signal `frame_changed`; see [TypedSignal]. */
+  val frameChanged: Signal0
+    get() = Signal0(this, "frame_changed")
+
+  /** Signal `animation_looped`; see [TypedSignal]. */
+  val animationLooped: Signal0
+    get() = Signal0(this, "animation_looped")
+
+  /** Signal `animation_finished`; see [TypedSignal]. */
+  val animationFinished: Signal0
+    get() = Signal0(this, "animation_finished")
+
+  object Signals {
+    const val spriteFramesChanged: String = "sprite_frames_changed"
+    const val animationChanged: String = "animation_changed"
+    const val frameChanged: String = "frame_changed"
+    const val animationLooped: String = "animation_looped"
+    const val animationFinished: String = "animation_finished"
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

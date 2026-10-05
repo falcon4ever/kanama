@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 31"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 32"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -772,7 +772,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 31"))
+    assertTrue(protocol.contains("\"protocolVersion\": 32"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -783,7 +783,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=31\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=32\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1106,8 +1106,8 @@ class WebScriptCodeEmitterTest {
     val unsupported =
       listOf(
         task64Property("stats", "stats", TypeMapping.DICTIONARY, defaultLiteral = "emptyMap()"),
-        // Task 133: Vector4 has no Web value type (Vector3i is a Web script type now).
-        task64Property("edge", "edge", TypeMapping.VECTOR4, defaultLiteral = "x"),
+        // Task 134 D1: every value type is a Web script type now; a packed array is not.
+        task64Property("edge", "edge", TypeMapping.PACKED_INT32_ARRAY, defaultLiteral = "x"),
         task64Property(
           "mode",
           "mode",
@@ -1281,14 +1281,14 @@ class WebScriptCodeEmitterTest {
               ),
             kind = MethodKind.REGULAR,
           ),
-          // A shape no arm covers: a FLOAT argument WITH a value return. The numeric crossing is
-          // void-only, the packed return takes no arguments, and the packed argument list refuses
-          // floats (they do not round-trip through GDScript's decimal text).
+          // A shape no arm covers: a packed-array argument. Neither the numeric crossing nor the
+          // packed argument list carries one (task 134 D1 gave arguments + return an arm, so the
+          // older `(FLOAT) -> INT` example now dispatches; see dispatchesArgumentsAndAReturn).
           MethodModel(
             kotlinName = "reload",
             godotName = "reload",
             returnType = TypeMapping.INT,
-            args = listOf(ArgModel("seconds", TypeMapping.FLOAT)),
+            args = listOf(ArgModel("magazine", TypeMapping.PACKED_BYTE_ARRAY)),
             kind = MethodKind.REGULAR,
           ),
         ),
@@ -1296,9 +1296,13 @@ class WebScriptCodeEmitterTest {
         listOf(
           SignalModel("died", emptyList()),
           SignalModel("hurt", listOf(ArgModel("amount", TypeMapping.FLOAT))),
+          // Task 134 D1: several arguments are delivered; a packed array still is not.
           SignalModel(
             "scored",
-            listOf(ArgModel("points", TypeMapping.INT), ArgModel("combo", TypeMapping.INT)),
+            listOf(
+              ArgModel("points", TypeMapping.INT),
+              ArgModel("history", TypeMapping.PACKED_INT32_ARRAY),
+            ),
           ),
         ),
     )
@@ -1319,8 +1323,8 @@ class WebScriptCodeEmitterTest {
 
   @Test
   fun declaresUnsupportedDispatchForAMethodArgumentWithNoArm() {
-    // `(FLOAT) -> INT` falls between every arm: the numeric crossing is void-only, the packed
-    // return takes no arguments, and the packed argument list refuses floats on purpose.
+    // `(PACKED_BYTE_ARRAY) -> INT` falls between every arm: neither the numeric crossing nor
+    // the packed argument list carries a packed array.
     val method = task80Model().methods.single { it.godotName == "reload" }
     val dispatch = WebScriptCodeEmitter.methodDispatch(method)
 
@@ -1328,7 +1332,7 @@ class WebScriptCodeEmitterTest {
     assertEquals(WebDispatchStatus.UNSUPPORTED, dispatch.status)
     assertEquals("unsupported", dispatch.status.json)
     // The reason must name the shape that has no arm, not just say "unsupported".
-    assertTrue(dispatch.reason!!.contains("(FLOAT) -> INT"), dispatch.reason!!)
+    assertTrue(dispatch.reason!!.contains("(PACKED_BYTE_ARRAY) -> INT"), dispatch.reason!!)
     assertTrue(dispatch.reason!!.contains("throws"), dispatch.reason!!)
 
     // The claim behind the status: this is exactly the arm that emits the throwing stub.
@@ -1418,8 +1422,9 @@ class WebScriptCodeEmitterTest {
   }
 
   @Test
-  fun rejectsAnArgumentListWiderThanTheNumericSlots() {
-    // Seven components is one past the six-slot crossing: no arm, and the census says why.
+  fun carriesAnArgumentListWiderThanTheNumericSlotsPacked() {
+    // Seven components is one past the six-slot crossing; since task 134 D1 the exact packed list
+    // carries it instead of leaving the shape without an arm.
     val wide =
       MethodModel(
         kotlinName = "wide",
@@ -1434,12 +1439,8 @@ class WebScriptCodeEmitterTest {
         kind = MethodKind.REGULAR,
       )
     assertEquals(null, WebScriptCodeEmitter.numericArgSlots(wide.args))
-    assertEquals(WebMethodArm.NONE, WebScriptCodeEmitter.methodArm(wide))
-    assertTrue(
-      WebScriptCodeEmitter.methodDispatch(wide)
-        .reason!!
-        .contains("(VECTOR3, VECTOR3, FLOAT) -> void")
-    )
+    assertEquals(WebMethodArm.PACKED_ARGS, WebScriptCodeEmitter.methodArm(wide))
+    assertEquals(WebDispatchStatus.TYPED, WebScriptCodeEmitter.methodDispatch(wide).status)
   }
 
   // ---------- Task 80 slice 2: value-returning methods ----------
@@ -1556,26 +1557,36 @@ class WebScriptCodeEmitterTest {
         .status,
     )
 
-    // Multi-argument payloads cannot reach a lambda at all (connect requires 0..1), but a named
-    // registered-method connect can still carry them -- so they are dropped, not unsupported.
+    // Task 134 D1: several arguments reach a lambda too (`_kanama_web_signal_dispatch_args`
+    // packs each as a Variant), value types and Variants included.
     val multi =
       WebScriptCodeEmitter.signalDispatch(
         SignalModel(
           "scored",
-          listOf(ArgModel("points", TypeMapping.INT), ArgModel("combo", TypeMapping.INT)),
+          listOf(
+            ArgModel("points", TypeMapping.INT),
+            ArgModel("where", TypeMapping.VECTOR3),
+            ArgModel("box", TypeMapping.AABB),
+            ArgModel("extra", TypeMapping.VARIANT),
+            ArgModel("by", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject"),
+          ),
         )
       )
-    assertEquals(WebDispatchStatus.ARGUMENT_DROPPED, multi.status)
-    assertEquals("argument-dropped", multi.status.json)
-    assertTrue(multi.reason!!.contains("at most 1 emitted argument"), multi.reason!!)
+    assertEquals(WebDispatchStatus.TYPED, multi.status)
 
-    // A single payload outside the scalar set still drops, and says which type.
+    // A payload the proxy does not pack still drops, a named registered-method connect can still
+    // carry it -- so it is dropped, not unsupported -- and the reason says which type.
     val array =
       WebScriptCodeEmitter.signalDispatch(
-        SignalModel("loaded", listOf(ArgModel("items", TypeMapping.ARRAY)))
+        SignalModel(
+          "loaded",
+          listOf(ArgModel("count", TypeMapping.INT), ArgModel("items", TypeMapping.ARRAY)),
+        )
       )
     assertEquals(WebDispatchStatus.ARGUMENT_DROPPED, array.status)
-    assertTrue(array.reason!!.contains("(ARRAY)"), array.reason!!)
+    assertEquals("argument-dropped", array.status.json)
+    assertTrue(array.reason!!.contains("does not pack ARRAY"), array.reason!!)
+    assertTrue(array.reason!!.contains("(INT, ARRAY)"), array.reason!!)
   }
 
   @Test
@@ -1682,16 +1693,16 @@ class WebScriptCodeEmitterTest {
   }
 
   @Test
-  fun refusesFloatArgumentsOnThePackedArgumentCrossing() {
-    // The boundary that keeps the packed list honest: GDScript's str() rounds a double to 14
-    // significant digits, so a float here would arrive slightly WRONG. It has no arm and says so.
+  fun carriesExactDecimalsOnThePackedArgumentCrossing() {
+    // Task 134 D1: floats and float-backed value types ride the packed list as
+    // `String.num_scientific` text (shortest round-trip, unlike `str()`'s 14 digits), so a float
+    // mixed with text or an object has an arm now; an unwrapped object still does not.
     fun armFor(vararg args: ArgModel) =
       WebScriptCodeEmitter.methodArm(
         MethodModel("probe", "probe", null, args.toList(), MethodKind.REGULAR)
       )
     val objectArg = ArgModel("node", TypeMapping.OBJECT, "net.multigesture.kanama.api.GodotObject")
 
-    // Exactly-representable argument types ride the crossing...
     assertEquals(WebMethodArm.PACKED_ARGS, armFor(ArgModel("tag", TypeMapping.STRING), objectArg))
     assertEquals(WebMethodArm.PACKED_ARGS, armFor(ArgModel("id", TypeMapping.INT), objectArg))
     assertEquals(WebMethodArm.PACKED_ARGS, armFor(ArgModel("on", TypeMapping.BOOL), objectArg))
@@ -1699,8 +1710,7 @@ class WebScriptCodeEmitterTest {
       WebMethodArm.PACKED_ARGS,
       armFor(ArgModel("path", TypeMapping.NODE_PATH), ArgModel("tag", TypeMapping.STRING)),
     )
-    // ... a float mixed with them does not, and neither does an unwrapped object.
-    val lossy =
+    val mixed =
       MethodModel(
         "probe",
         "probe",
@@ -1708,13 +1718,17 @@ class WebScriptCodeEmitterTest {
         listOf(ArgModel("tag", TypeMapping.STRING), ArgModel("amount", TypeMapping.FLOAT)),
         MethodKind.REGULAR,
       )
-    assertEquals(WebMethodArm.NONE, WebScriptCodeEmitter.methodArm(lossy))
-    assertTrue(
-      WebScriptCodeEmitter.methodDispatch(lossy).reason!!.contains("(STRING, FLOAT) -> void"),
-      WebScriptCodeEmitter.methodDispatch(lossy).reason!!,
+    assertEquals(WebMethodArm.PACKED_ARGS, WebScriptCodeEmitter.methodArm(mixed))
+    assertEquals(
+      listOf("_kanama_web_pack_text(tag)", "String.num_scientific(amount)"),
+      WebScriptCodeEmitter.packedArgGdExpressions(mixed.args),
     )
     assertEquals(
-      WebMethodArm.NONE,
+      "net.multigesture.kanama.web.WebPackedFloats.decode(packedArgs[1])",
+      WebScriptCodeEmitter.packedArgKotlinExpressions(mixed.args)[1],
+    )
+    assertEquals(
+      WebMethodArm.PACKED_ARGS,
       armFor(ArgModel("tag", TypeMapping.STRING), ArgModel("v", TypeMapping.VECTOR3)),
     )
     assertEquals(
@@ -1729,6 +1743,63 @@ class WebScriptCodeEmitterTest {
     assertFalse(WebScriptCodeEmitter.isPackedArgList(emptyList()))
   }
 
+  @Test
+  fun dispatchesArgumentsAndAReturn() {
+    // Task 134 D1: a method taking arguments AND returning a value -- any packable types -- rides
+    // `callPackedArgs`: the packed list in, the packed return out.
+    val method =
+      MethodModel(
+        "scaleBy",
+        "scale_by",
+        TypeMapping.VECTOR3,
+        listOf(ArgModel("v", TypeMapping.VECTOR3), ArgModel("factor", TypeMapping.FLOAT)),
+        MethodKind.REGULAR,
+      )
+    assertEquals(WebMethodArm.PACKED_ARGS_RETURN, WebScriptCodeEmitter.methodArm(method))
+    val model = task80TypedModel().copy(methods = listOf(method))
+    val emitter = WebScriptCodeEmitter(listOf(WebScriptInput(model, "res://Enemy.kt")))
+    val proxy = emitter.proxySources().single { it.sourceResourcePath.isNotEmpty() }.source
+    assertTrue(proxy.contains("func scale_by(v: Variant, factor: float) -> Variant:"), proxy)
+    assertTrue(
+      proxy.contains(
+        "var _kanama_packed := String(_kanama_bridge.callPackedArgs(_kanama_handle, 1, " +
+          "\"\\u001f\".join(_kanama_packed_args)))"
+      ),
+      proxy,
+    )
+    assertTrue(
+      proxy.contains("return Vector3(_kanama_parts[0], _kanama_parts[1], _kanama_parts[2])")
+    )
+    val registry = emitter.registrySource()
+    assertTrue(
+      registry.contains(
+        "fun callPackedArgs(scriptId: Int, methodId: Int, script: KanamaWebScript, value: String): String ="
+      ),
+      registry,
+    )
+    assertTrue(
+      registry.contains(
+        "(script as Enemy).scaleBy((net.multigesture.kanama.web.WebPackedValues.decode(packedArgs[0], " +
+          "net.multigesture.kanama.types.Vector3::class) as net.multigesture.kanama.types.Vector3), " +
+          "net.multigesture.kanama.web.WebPackedFloats.decode(packedArgs[1]))"
+      ),
+      registry,
+    )
+    // The old `(FLOAT) -> INT` gap is closed.
+    assertEquals(
+      WebMethodArm.PACKED_ARGS_RETURN,
+      WebScriptCodeEmitter.methodArm(
+        MethodModel(
+          "reload",
+          "reload",
+          TypeMapping.INT,
+          listOf(ArgModel("seconds", TypeMapping.FLOAT)),
+          MethodKind.REGULAR,
+        )
+      ),
+    )
+  }
+
   // ---------- Task 80 slice 3: the gate ----------
 
   @Test
@@ -1740,14 +1811,14 @@ class WebScriptCodeEmitterTest {
     assertEquals(2, errors.size, errors.toString())
     val method = errors.single { it.contains("(registered function)") }
     assertTrue(method.startsWith("Enemy.reload (registered function):"), method)
-    assertTrue(method.contains("(FLOAT) -> INT"), method)
+    assertTrue(method.contains("(PACKED_BYTE_ARRAY) -> INT"), method)
     assertTrue(method.contains("the proxy emits a stub that throws"), method)
     // Naming the fix is the difference between a gate and a wall.
     assertTrue(method.contains("all-numeric argument list up to 6 scalar slots"), method)
 
     val signal = errors.single { it.contains("(signal)") }
     assertTrue(signal.startsWith("Enemy.scored (signal):"), signal)
-    assertTrue(signal.contains("at most 1 emitted argument"), signal)
+    assertTrue(signal.contains("does not pack PACKED_INT32_ARRAY"), signal)
 
     // The gate is Web-only: the same declarations dispatch normally everywhere else.
     assertTrue(WebScriptCodeEmitter.undispatchedMemberErrors(task80Model(), emptyMap()).isEmpty())
@@ -1814,7 +1885,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 31"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 32"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(
@@ -1891,7 +1962,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(
       protocol.contains(
         "\"dispatch\": \"unsupported\", \"dispatchReason\": \"no arm for the registered-method " +
-          "shape (FLOAT) -> INT; the proxy emits a stub that throws\""
+          "shape (PACKED_BYTE_ARRAY) -> INT; the proxy emits a stub that throws\""
       ),
       protocol,
     )

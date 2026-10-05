@@ -3,22 +3,29 @@ package net.multigesture.kanama.web
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Plane
+import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Rect2i
+import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.types.Vector3i
+import net.multigesture.kanama.types.Vector4
+import net.multigesture.kanama.types.Vector4i
 
 /**
- * Task 133: the Web value types cross the text channels as their components in a fixed order (the
- * proxy's `_kanama_web_pack_value` / `_kanama_web_unpack_value`, from the processor's
- * `WebValueTypes.COMPONENTS`). The decode reads what the proxy writes (`String.num_scientific`:
- * shortest round-trip decimals, `nan` / `inf` / `-inf`), and every value survives encode + decode.
+ * Task 133 / 134 D1: the value types cross the text channels as their components in Godot's memory
+ * layout (the proxy's `_kanama_web_pack_value` / `_kanama_web_unpack_value`, from the processor's
+ * `WebValueTypes.LAYOUTS`), and a Variant as `<Variant.Type>:<payload>`. The decode reads what the
+ * proxy writes (`String.num_scientific`: shortest round-trip decimals, `nan` / `inf` / `-inf`), and
+ * every value survives encode + decode.
  */
 class WebPackedValuesTest {
   @Test
@@ -52,21 +59,44 @@ class WebPackedValuesTest {
   }
 
   @Test
-  fun basisAndTransformAreColumnsThenOrigin() {
+  fun basisAndTransformAreRowsThenOrigin() {
     val basis = Basis(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0), Vector3(7.0, 8.0, 9.0))
-    // Columns x, y, z in order: GDScript's Basis(x_axis, y_axis, z_axis).
-    assertEquals("1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0", WebPackedValues.encode(basis))
+    // Task 134 D1: Godot's memory layout, the rows (x.x, y.x, z.x, …), as the builtin frame holds
+    // them.
+    assertEquals("1.0,4.0,7.0,2.0,5.0,8.0,3.0,6.0,9.0", WebPackedValues.encode(basis))
     val transform = Transform3D(basis, Vector3(10.0, 11.0, 12.0))
     assertEquals(
-      "1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0",
+      "1.0,4.0,7.0,2.0,5.0,8.0,3.0,6.0,9.0,10.0,11.0,12.0",
       WebPackedValues.encode(transform),
     )
     assertEquals(
       transform,
-      WebPackedValues.decode("1,2,3,4,5,6,7,8,9,10,11,12", Transform3D::class),
+      WebPackedValues.decode("1,4,7,2,5,8,3,6,9,10,11,12", Transform3D::class),
     )
     assertEquals("-7,8,9", WebPackedValues.encode(Vector3i(-7, 8, 9)))
     assertEquals("1,2,3,4", WebPackedValues.encode(Rect2i(Vector2i(1, 2), Vector2i(3, 4))))
+    assertEquals(
+      "1.0,2.0,3.0,4.0,5.0,6.0",
+      WebPackedValues.encode(Transform2D(Vector2(1.0, 2.0), Vector2(3.0, 4.0), Vector2(5.0, 6.0))),
+    )
+    assertEquals(
+      "1.0,2.0,3.0,4.0,5.0,6.0",
+      WebPackedValues.encode(AABB(Vector3(1.0, 2.0, 3.0), Vector3(4.0, 5.0, 6.0))),
+    )
+  }
+
+  @Test
+  fun variantsCarryTheirType() {
+    assertEquals("2:-9007199254740993", WebPackedValues.encodeVariant(-9007199254740993L))
+    assertEquals("3:nan", WebPackedValues.encodeVariant(Double.NaN))
+    assertEquals("1:1", WebPackedValues.encodeVariant(true))
+    assertEquals("4:a%1Fb%25", WebPackedValues.encodeVariant("a\u001Fb%"))
+    assertEquals("12:1.0,2.0,3.0,4.0", WebPackedValues.encodeVariant(Vector4(1.0, 2.0, 3.0, 4.0)))
+    assertEquals(-9007199254740993L, WebPackedValues.decodeVariant("2:-9007199254740993"))
+    assertEquals("a\u001Fb%", WebPackedValues.decodeVariant("4:a%1Fb%25"))
+    assertEquals("n", WebPackedValues.decodeVariant("21:n"))
+    assertEquals(null, WebPackedValues.decodeVariant("0:"))
+    assertEquals(Vector4i(1, -2, 3, -4), WebPackedValues.decodeVariant("13:1,-2,3,-4"))
   }
 
   @Test
@@ -80,6 +110,20 @@ class WebPackedValuesTest {
         Quaternion(0.1, 0.2, 0.3, 0.9),
         Basis(Vector3(0.1, 0.2, 0.3), Vector3(0.4, 0.5, 0.6), Vector3(0.7, 0.8, 0.9)),
         Transform3D(Basis.IDENTITY, Vector3(1e-7, -2.5, 1e20)),
+        Vector2(0.1, -0.0),
+        Vector2i(Int.MIN_VALUE, 7),
+        Vector3(1.0 / 3.0, 2.0, 3.0),
+        Color(0.25, 0.5, 1.5, -1.0),
+        Vector4(0.1, 0.2, 0.3, Double.POSITIVE_INFINITY),
+        Vector4i(1, -2, Int.MAX_VALUE, Int.MIN_VALUE),
+        AABB(Vector3(-1.0, 2.0, 0.5), Vector3(3.0, 4.0, 1e-30)),
+        Transform2D(Vector2(0.6, 0.8), Vector2(-0.8, 0.6), Vector2(10.0, -20.0)),
+        Projection(
+          Vector4(1.0, 2.0, 3.0, 4.0),
+          Vector4(5.0, 6.0, 7.0, 8.0),
+          Vector4(9.0, 10.0, 11.0, 12.0),
+          Vector4(13.0, 14.0, 15.0, 0.1),
+        ),
       )
     for (value in values) {
       assertEquals(

@@ -29,6 +29,29 @@ class LineEdit(godotObject: GodotHandle) : Control(godotObject) {
     get() = unsupportedWebGameplayFamily("LineEdit.is_editable")
     set(newValue) = setEditable(newValue)
 
+  /** Signal `text_changed`; see [TypedSignal]. */
+  val textChanged: Signal1<String>
+    get() = Signal1(this, "text_changed", SignalArgType.STRING)
+
+  /** Signal `text_change_rejected`; see [TypedSignal]. */
+  val textChangeRejected: Signal1<String>
+    get() = Signal1(this, "text_change_rejected", SignalArgType.STRING)
+
+  /** Signal `text_submitted`; see [TypedSignal]. */
+  val textSubmitted: Signal1<String>
+    get() = Signal1(this, "text_submitted", SignalArgType.STRING)
+
+  /** Signal `editing_toggled`; see [TypedSignal]. */
+  val editingToggled: Signal1<Boolean>
+    get() = Signal1(this, "editing_toggled", SignalArgType.BOOLEAN)
+
+  object Signals {
+    const val textChanged: String = "text_changed"
+    const val textChangeRejected: String = "text_change_rejected"
+    const val textSubmitted: String = "text_submitted"
+    const val editingToggled: String = "editing_toggled"
+  }
+
   value class MenuItems(override val value: Long) : GodotEnumValue {
     companion object {
       val CUT: MenuItems get() = MenuItems(0L)

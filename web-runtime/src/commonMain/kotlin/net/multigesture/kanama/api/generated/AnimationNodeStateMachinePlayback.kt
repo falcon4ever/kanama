@@ -30,6 +30,19 @@ class AnimationNodeStateMachinePlayback(godotObject: GodotHandle) : Resource(god
    * mid-transition; the corpus only compares against its own travel targets).
    */
   fun getCurrentNode(): String = lastTravelled
+
+  /** Signal `state_started`; see [TypedSignal]. */
+  val stateStarted: Signal1<String>
+    get() = Signal1(this, "state_started", SignalArgType.STRING)
+
+  /** Signal `state_finished`; see [TypedSignal]. */
+  val stateFinished: Signal1<String>
+    get() = Signal1(this, "state_finished", SignalArgType.STRING)
+
+  object Signals {
+    const val stateStarted: String = "state_started"
+    const val stateFinished: String = "state_finished"
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

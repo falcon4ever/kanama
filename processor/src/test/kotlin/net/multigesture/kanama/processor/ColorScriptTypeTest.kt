@@ -176,12 +176,13 @@ class ColorScriptTypeTest {
       WebDispatchStatus.TYPED,
       WebScriptCodeEmitter.signalDispatch(model.signals.single()).status,
     )
-    // Web has no arm for a method taking arguments AND returning a value, whatever the types
-    // (pre-existing, Vector3 alike); a Color return and Color arguments each ride an arm.
-    model.methods
-      .filter { it.kotlinName != "darker" }
-      .forEach { method ->
-        assertTrue(WebScriptCodeEmitter.methodDispatch(method).isTyped, method.kotlinName)
-      }
+    // Every Color shape rides an arm, including arguments AND a return (task 134 D1).
+    model.methods.forEach { method ->
+      assertTrue(WebScriptCodeEmitter.methodDispatch(method).isTyped, method.kotlinName)
+    }
+    assertEquals(
+      WebMethodArm.PACKED_ARGS_RETURN,
+      WebScriptCodeEmitter.methodArm(model.methods.single { it.kotlinName == "darker" }),
+    )
   }
 }

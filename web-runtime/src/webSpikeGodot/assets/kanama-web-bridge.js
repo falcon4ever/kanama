@@ -9,7 +9,9 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 31;
+  const KANAMA_WEB_PROTOCOL_VERSION = 32;
+  // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
+  const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
   function commandWordCount(opcode) {
     if (
@@ -287,6 +289,8 @@
     // driver can otherwise only see the SIDE EFFECT of a dispatched method, never the dispatch.
     doubleArgCalls: 0,
     packedReturnCalls: 0,
+    builtinCalls: 0,
+    releasedSignalWaits: 0,
     addBunnyCalls: 0,
     removeBunnyCalls: 0,
     finishCalls: 0,
@@ -1064,6 +1068,18 @@
         "registered_function",
         `method#${methodId}`,
         () => this.api.kanamaWebCallPacked(handle, methodId),
+        "",
+      );
+    },
+    // Task 134 D1: a registered method with arguments AND a return value: the packed argument
+    // list in (as callString's packed form), the packed return out (as callPacked's).
+    callPackedArgs(handle, methodId, value) {
+      this.packedReturnCalls += 1;
+      return this.invoke(
+        handle,
+        "registered_function",
+        `method#${methodId}`,
+        () => this.api.kanamaWebCallPackedArgs(handle, methodId, String(value)),
         "",
       );
     },
@@ -1934,6 +1950,19 @@
       }
       return this.immediateStringResult;
     },
+    // Task 134 D1: one value-type (builtin) method run by the engine. The call is stateless, so
+    // any live proxy answers it: the running script's, else the active owner, else the first
+    // installed one (a builtin call made before any script callback still works).
+    immediateBuiltinCall(handle, packed) {
+      let owner = handle && this.objectQueryCallbacks.has(this.ownerForHandle(handle)) ? handle : 0;
+      if (!owner && this.activeOwnerHandle && this.objectQueryCallbacks.has(this.activeOwnerHandle)) {
+        owner = this.activeOwnerHandle;
+      }
+      if (!owner) owner = this.objectQueryCallbacks.keys().next().value ?? 0;
+      if (!owner) throw new Error("Kanama Web builtin call: no proxy is installed to run it");
+      this.builtinCalls += 1;
+      return this.immediateStringQuery(KANAMA_WEB_OPCODE_BUILTIN_CALL, owner, String(packed));
+    },
     recordImmediateStringResult(value) {
       this.immediateStringResult = String(value);
     },
@@ -2194,6 +2223,26 @@
         () => this.api.kanamaWebDispatchSignalObject(handle, callbackId, argHandle),
         0,
       );
+    },
+    // Task 134 D1: every emitted argument, packed by the proxy as `<Variant.Type>:<payload>`
+    // parts -- the one delivery path of the typed signals, whatever their arity.
+    dispatchSignalArgs(handle, callbackId, packed) {
+      const result = this.invoke(
+        handle,
+        "_kanama_web_signal_dispatch_args",
+        `callback#${callbackId}`,
+        () => this.api.kanamaWebDispatchSignalArgs(handle, callbackId, String(packed)),
+        0,
+      );
+      if (result === 1 && this.mode === "match3") this.match3LambdaCallbacks += 1;
+      return result;
+    },
+    // Task 134 D1: an await watcher was freed with its emitter before the signal fired. Called
+    // from the watcher's NOTIFICATION_PREDELETE, so it bypasses `invoke`: the owner may be
+    // gone, which Kotlin treats as nothing left to cancel.
+    releaseSignalCallback(handle, callbackId) {
+      this.releasedSignalWaits += 1;
+      return this.api.kanamaWebReleaseSignalCallback(handle, callbackId);
     },
     dispatchSignal0(handle, callbackId) {
       const result = this.invoke(
@@ -2879,6 +2928,7 @@
         noArgCalls: this.noArgCalls,
         doubleArgCalls: this.doubleArgCalls,
         packedReturnCalls: this.packedReturnCalls,
+        builtinCalls: this.builtinCalls,
         addBunnyCalls: this.addBunnyCalls,
         removeBunnyCalls: this.removeBunnyCalls,
         finishCalls: this.finishCalls,

@@ -50,6 +50,11 @@ from godot_enum_model import (  # noqa: E402  (task 128 C: the ONE enum model, s
     render_enum_class,
 )
 from platform_backend_contract import INITIAL_BACKEND_CALLS, BackendCallPolicy  # noqa: E402
+from generate_api_wrapper import (  # noqa: E402  (task 134 D1: desktop's typed-signal facts, one source)
+    SIGNAL_ARG_TYPE_OVERRIDES,
+    SIGNAL_NON_NULL_RESOURCE_ARGS,
+    SIGNAL_NULLABLE_OBJECT_ARGS,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 API_PATH = ROOT / "extension_api.json"
@@ -104,8 +109,8 @@ class Api:
         spec = self.enums.get(key)
         if spec is None:
             raise GenerationError(f"enum {key} not in API")
-        if spec.builtin:
-            raise GenerationError(f"builtin-owned enum {key} has no Web value type yet")
+        # Task 134 D1: a builtin-owned enum (`Vector3.Axis`) is fine too -- the Web build compiles
+        # the shared value types, which carry their enums.
         return spec
 
     def class_enums(self, godot_class: str) -> list[EnumSpec]:
@@ -824,29 +829,25 @@ CLASS_POLICY: dict[str, dict] = {
   fun signal(name: String): GodotSignal = GodotSignal(this, name)
 
   /**
-   * Variant-style emit over the typed arms the Web backend admits: Web models desktop's variadic
-   * `emit_signal` as the typed argument shapes the corpus dispatches.
+   * Variant-style emit, as desktop's variadic `emit_signal`: one argument of the shapes the typed
+   * arms carry (an int32, a String, an object, a Vector2i) takes its arm; any other argument list
+   * -- several arguments, a float, a bool, a value type, a wider int (task 134 D1) -- rides one
+   * immediate generic `emit_signal` call, so handlers still run before this returns.
    */
   fun emitSignal(signal: String, vararg args: Any?) {
     if (args.isEmpty()) return emitSignal(signal)
-    when (val value = args.singleOrNull()) {
-      is Int -> emitSignal(signal, value)
-      is Long -> emitSignal(signal, int32Argument(signal, value))
-      // A typed Godot enum crosses as the INT it stands for (task 128: GodotEnumValue).
-      is GodotEnumValue -> emitSignal(signal, int32Argument(signal, value.value))
-      is String -> emitSignal(signal, value)
-      is GodotObject -> emitSignal(signal, value)
-      is Vector2i -> emitSignal(signal, value)
-      else -> unsupportedWebGameplayFamily("GodotObject.emit_signal_typed")
+    if (args.size == 1) {
+      when (val value = args[0]) {
+        is Int -> return emitSignal(signal, value)
+        is Long -> if (value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) return emitSignal(signal, value.toInt())
+        // A typed Godot enum crosses as the INT it stands for (task 128: GodotEnumValue).
+        is GodotEnumValue -> if (value.value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) return emitSignal(signal, value.value.toInt())
+        is String -> return emitSignal(signal, value)
+        is GodotObject -> return emitSignal(signal, value)
+        is Vector2i -> return emitSignal(signal, value)
+      }
     }
-  }
-
-  /** The typed int arm carries Godot's int32 transport: a wider value fails loud, never truncates. */
-  private fun int32Argument(signal: String, value: Long): Int {
-    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
-      "Web emitSignal('$signal') int argument $value does not fit the int32 transport"
-    }
-    return value.toInt()
+    webEmitSignalGeneric(this, signal, args)
   }
 
   /**
@@ -994,7 +995,7 @@ fun Node.setProcessUnhandledInput(enable: Boolean) = setProcessUnhandledInput(en
 
   /** Godot's rotate_object_local: right-multiply the local basis by an axis-angle rotation. */
   fun rotateObjectLocal(axis: Vector3, angle: Double) {
-    basis = basis * Basis.fromAxisAngle(axis, angle)
+    basis = basis * Basis.IDENTITY.rotated(axis, angle)
   }
 
   /** Godot's Node3D.orthonormalize: re-orthonormalize the local basis in place. */
@@ -1007,9 +1008,9 @@ private fun composeBasis(rotation: Vector3, scale: Vector3): Basis {
   val rotationBasis = Basis.fromEuler(rotation)
   // Node basis = R * S: columns scaled (Godot composes scale on the right of rotation).
   return Basis(
-    rotationBasis.getColumn(0) * scale.x,
-    rotationBasis.getColumn(1) * scale.y,
-    rotationBasis.getColumn(2) * scale.z,
+    rotationBasis.x * scale.x,
+    rotationBasis.y * scale.y,
+    rotationBasis.z * scale.z,
   )
 }
 
@@ -1061,7 +1062,6 @@ fun Node3D.rotateObjectLocal(axis: Vector3, angle: Double) = rotateObjectLocal(a
     "AudioStream": {"release": "resource"},
     "PackedScene": {"release": "resource"},
     "Tween": {
-        "signals": ["finished"],
         "custom": """
   /**
    * Variant-style final value over the typed arms; a component path such as `"position:y"` takes a
@@ -1154,7 +1154,6 @@ val SceneTree.root: Viewport
     },
     "AudioStreamPlayer": {
         "instantiable": True,
-        "signals": ["finished"],
         "custom": """
   /** Load-assign-release: the engine takes its reference before the temporary handle is dropped. */
   fun setStreamFromPath(path: String) {
@@ -1167,14 +1166,7 @@ val SceneTree.root: Viewport
   }
 """,
     },
-    "AudioStreamPlayer3D": {"signals": ["finished"]},
-    "Timer": {"signals": ["timeout"]},
-    # Task 134 D4: Match3's shared Main.kt connects `viewport.sizeChanged` to a method by name.
-    "Viewport": {"signals": ["size_changed"]},
-    "Area3D": {"signals": ["body_entered", "body_exited"]},
-    "BaseButton": {"signals": ["pressed"]},
     "AnimationMixer": {
-        "signals": ["animation_finished"],
         "custom": """
   /** Resolve the playback object behind a `parameters/.../playback` property. */
   fun getStateMachinePlayback(path: String): AnimationNodeStateMachinePlayback =
@@ -1510,6 +1502,15 @@ PACKAGE_IMPORTS = {
     "Transform3D": "net.multigesture.kanama.types.Transform3D",
     "Quaternion": "net.multigesture.kanama.types.Quaternion",
     "NodePath": "net.multigesture.kanama.types.NodePath",
+    # Task 134 D1: every value type can be a typed signal's argument.
+    "Rect2i": "net.multigesture.kanama.types.Rect2i",
+    "Transform2D": "net.multigesture.kanama.types.Transform2D",
+    "Vector4": "net.multigesture.kanama.types.Vector4",
+    "Vector4i": "net.multigesture.kanama.types.Vector4i",
+    "Plane": "net.multigesture.kanama.types.Plane",
+    "AABB": "net.multigesture.kanama.types.AABB",
+    "Projection": "net.multigesture.kanama.types.Projection",
+    "RID": "net.multigesture.kanama.types.RID",
 }
 
 
@@ -1721,25 +1722,29 @@ def emit_constants(api: Api, godot_name: str, class_policy: dict) -> list[str]:
     return lines
 
 
-# Task 134 D4: the Web bridge delivers a signal's first argument as an object handle or a packed
-# scalar, so a policy signal with no argument is a `Signal0` and one with one argument of these types
-# a `Signal1<T>`; any other shape fails generation rather than produce a handle that cannot deliver.
+# Task 134 C/D1: a policy signal is a typed handle (`Signal0` … `Signal5`) whose arguments the Web
+# bridge delivers: the proxy packs every emitted argument as a Variant, so each argument is one of
+# these types or an object; any other shape (a packed array, a Dictionary, six arguments) fails
+# generation rather than produce a handle that cannot deliver.
 WEB_SIGNAL_SCALARS = {
     "int": ("Long", "SignalArgType.LONG"),
     "float": ("Double", "SignalArgType.DOUBLE"),
     "bool": ("Boolean", "SignalArgType.BOOLEAN"),
     "String": ("String", "SignalArgType.STRING"),
     "StringName": ("String", "SignalArgType.STRING"),
-    "Vector2": ("Vector2", 'SignalArgType.valueOf<Vector2>("Vector2", Vector2::class)'),
-    "Vector2i": ("Vector2i", 'SignalArgType.valueOf<Vector2i>("Vector2i", Vector2i::class)'),
-    "Vector3": ("Vector3", 'SignalArgType.valueOf<Vector3>("Vector3", Vector3::class)'),
-    "Color": ("Color", 'SignalArgType.valueOf<Color>("Color", Color::class)'),
-    # Task 133: the Web value types that cross as packed components (WebPackedValues).
+    "Variant": ("Any?", "SignalArgType.VARIANT"),
+    "RID": ("RID", 'SignalArgType.valueOf<RID>("RID", RID::class)'),
+    "NodePath": ("NodePath", 'SignalArgType.valueOf<NodePath>("NodePath", NodePath::class)'),
+    # Every value type crosses as its packed components (WebPackedValues).
     **{
         name: (name, f'SignalArgType.valueOf<{name}>("{name}", {name}::class)')
-        for name in ("Vector3i", "Rect2", "Rect2i", "Plane", "Quaternion", "Basis", "Transform3D")
+        for name in (
+            "Vector2", "Vector2i", "Rect2", "Rect2i", "Vector3", "Vector3i", "Transform2D", "Vector4",
+            "Vector4i", "Plane", "Quaternion", "AABB", "Basis", "Transform3D", "Projection", "Color",
+        )
     },
 }
+WEB_SIGNAL_MAX_ARGUMENTS = 5
 
 
 def signal_declaration(api: Api, godot_name: str, signal: str) -> dict:
@@ -1750,55 +1755,83 @@ def signal_declaration(api: Api, godot_name: str, signal: str) -> dict:
     raise GenerationError(f"{godot_name} has no signal {signal}")
 
 
-def web_signal_object_wrapper(api: Api, type_name: str) -> str:
+def web_signal_object_wrapper(api: Api, type_name: str, generated: set[str]) -> str:
     """The Web wrapper for an emitted object: the class itself when Web generates it, else its
     nearest generated ancestor."""
     current: str | None = type_name
     while current:
         if current == "Object":
             return "GodotObject"
-        if current in CLASS_POLICY:
+        if current in generated:
             return kotlin_class_name(current)
         current = api.parent(current) if current in api.classes else None
     return "GodotObject"
 
 
-def emit_typed_signal(api: Api, godot_name: str, signal: str) -> list[str]:
+def emit_typed_signal(api: Api, godot_name: str, signal: str, generated: set[str]) -> list[str]:
     args = list(signal_declaration(api, godot_name, signal).get("arguments") or [])
     prop = camel(signal)
-    if not args:
-        signal_type, ctor = "Signal0", f'Signal0(this, "{signal}")'
-    elif len(args) == 1:
-        arg_type = args[0]["type"]
+    if len(args) > WEB_SIGNAL_MAX_ARGUMENTS:
+        raise GenerationError(f"{godot_name}.{signal}: typed signals take at most {WEB_SIGNAL_MAX_ARGUMENTS} arguments")
+    kotlin_types: list[str] = []
+    exprs: list[str] = []
+    owner = next(o for o in api.chain(godot_name) if any(d["name"] == signal for d in api.classes[o].get("signals", ())))
+    for index, arg in enumerate(args):
+        key = (owner, signal, index)
+        arg_type = SIGNAL_ARG_TYPE_OVERRIDES.get(key, arg["type"])
         if arg_type in WEB_SIGNAL_SCALARS:
             kotlin, expr = WEB_SIGNAL_SCALARS[arg_type]
         elif arg_type in api.classes:
-            wrapper = web_signal_object_wrapper(api, arg_type)
-            kotlin, expr = wrapper, f'SignalArgType.objectOf("{arg_type}") {{ {wrapper}(it) }}'
+            # Desktop's nullability (task 134 C review S2): Resource-like objects may be null unless
+            # Godot never emits null, and the scanned emit sites that pass a null node.
+            wrapper = web_signal_object_wrapper(api, arg_type, generated)
+            nullable = (
+                arg_type in ("Resource", "RefCounted")
+                or any(a in ("Resource", "RefCounted") for a in api.chain(arg_type))
+            ) and key not in SIGNAL_NON_NULL_RESOURCE_ARGS
+            nullable = nullable or key in SIGNAL_NULLABLE_OBJECT_ARGS
+            if nullable:
+                kotlin, expr = f"{wrapper}?", f'SignalArgType.nullableObjectOf("{arg_type}") {{ {wrapper}(it) }}'
+            else:
+                kotlin, expr = wrapper, f'SignalArgType.objectOf("{arg_type}") {{ {wrapper}(it) }}'
         else:
             raise GenerationError(f"{godot_name}.{signal}: a {arg_type} argument is not delivered on Web")
-        signal_type, ctor = f"Signal1<{kotlin}>", f'Signal1(this, "{signal}", {expr})'
-    else:
-        raise GenerationError(f"{godot_name}.{signal}: the Web bridge delivers at most one argument")
+        kotlin_types.append(kotlin)
+        exprs.append(expr)
+    generics = f"<{', '.join(kotlin_types)}>" if kotlin_types else ""
+    ctor_args = ", ".join([f'this, "{signal}"', *exprs])
     return [
         f"  /** Signal `{signal}`; see [TypedSignal]. */",
-        f"  val {prop}: {signal_type}",
-        f'    get() = {ctor}',
+        f"  val {prop}: Signal{len(args)}{generics}",
+        f"    get() = Signal{len(args)}({ctor_args})",
     ]
 
 
-def emit_signals(api: Api, godot_name: str, class_policy: dict) -> list[str]:
-    names = class_policy.get("signals", ())
+# Task 134 D1: the engine signals a generated class declares that get no typed handle on Web, with
+# why (an argument the proxy does not pack). Filled while rendering; the names stay in `Signals`.
+UNDELIVERED_SIGNALS: dict[str, str] = {}
+
+
+def emit_signals(api: Api, godot_name: str, generated: set[str]) -> list[str]:
+    """Every signal the class declares (task 134 D1; desktop's set), typed where Web delivers it."""
+    if godot_name not in api.classes or godot_name in api.singletons:
+        return []
+    names = [declared["name"] for declared in api.classes[godot_name].get("signals", ())]
     if not names:
         return []
     lines: list[str] = []
     for signal in names:
-        lines += emit_typed_signal(api, godot_name, signal)
+        try:
+            typed = emit_typed_signal(api, godot_name, signal, generated)
+        except GenerationError as error:
+            # justified: a signal whose argument Web cannot pack gets no typed handle (its name stays
+            # in `Signals`, and a named connect still works); recorded, not hidden.
+            UNDELIVERED_SIGNALS[f"{godot_name}.{signal}"] = str(error)
+            continue
+        lines += typed
         lines.append("")
     lines.append("  object Signals {")
     for signal in names:
-        if not api.has_signal(godot_name, signal):
-            raise GenerationError(f"{godot_name} has no signal {signal}")
         lines.append(f'    const val {camel(signal)}: String = "{signal}"')
     lines.append("  }")
     return lines
@@ -1931,7 +1964,7 @@ def render_class(tree: Tree, godot_name: str, calls: list[BackendCallPolicy]) ->
     if class_policy.get("custom"):
         sections.append(class_policy["custom"].strip("\n").split("\n"))
     sections.append(emit_release(godot_name, class_policy))
-    sections.append(emit_signals(api, godot_name, class_policy))
+    sections.append(emit_signals(api, godot_name, set(tree.classes)))
     sections.append(emit_class_enums(api, godot_name) if godot_name in api.classes else [])
     constants = emit_constants(api, godot_name, class_policy)
     if singleton:

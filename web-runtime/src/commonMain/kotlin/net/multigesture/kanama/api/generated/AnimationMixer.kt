@@ -61,12 +61,42 @@ open class AnimationMixer(godotObject: GodotHandle) : Node(godotObject) {
     set(path, value.toDouble())
   }
 
+  /** Signal `animation_list_changed`; see [TypedSignal]. */
+  val animationListChanged: Signal0
+    get() = Signal0(this, "animation_list_changed")
+
+  /** Signal `animation_libraries_updated`; see [TypedSignal]. */
+  val animationLibrariesUpdated: Signal0
+    get() = Signal0(this, "animation_libraries_updated")
+
   /** Signal `animation_finished`; see [TypedSignal]. */
   val animationFinished: Signal1<String>
     get() = Signal1(this, "animation_finished", SignalArgType.STRING)
 
+  /** Signal `animation_started`; see [TypedSignal]. */
+  val animationStarted: Signal1<String>
+    get() = Signal1(this, "animation_started", SignalArgType.STRING)
+
+  /** Signal `caches_cleared`; see [TypedSignal]. */
+  val cachesCleared: Signal0
+    get() = Signal0(this, "caches_cleared")
+
+  /** Signal `mixer_applied`; see [TypedSignal]. */
+  val mixerApplied: Signal0
+    get() = Signal0(this, "mixer_applied")
+
+  /** Signal `mixer_updated`; see [TypedSignal]. */
+  val mixerUpdated: Signal0
+    get() = Signal0(this, "mixer_updated")
+
   object Signals {
+    const val animationListChanged: String = "animation_list_changed"
+    const val animationLibrariesUpdated: String = "animation_libraries_updated"
     const val animationFinished: String = "animation_finished"
+    const val animationStarted: String = "animation_started"
+    const val cachesCleared: String = "caches_cleared"
+    const val mixerApplied: String = "mixer_applied"
+    const val mixerUpdated: String = "mixer_updated"
   }
 
   value class AnimationCallbackModeProcess(override val value: Long) : GodotEnumValue {

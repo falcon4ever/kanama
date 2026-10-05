@@ -8,4 +8,11 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class MainLoop(godotObject: GodotHandle) : GodotObject(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  /** Signal `on_request_permissions_result`; see [TypedSignal]. */
+  val onRequestPermissionsResult: Signal2<String, Boolean>
+    get() = Signal2(this, "on_request_permissions_result", SignalArgType.STRING, SignalArgType.BOOLEAN)
+
+  object Signals {
+    const val onRequestPermissionsResult: String = "on_request_permissions_result"
+  }
 }

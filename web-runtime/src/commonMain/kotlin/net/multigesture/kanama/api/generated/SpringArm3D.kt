@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class SpringArm3D(godotObject: GodotHandle) : Node3D(godotObject) {

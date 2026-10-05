@@ -27,6 +27,14 @@ internal object WebSignalCallbackRegistry {
      * `GodotSignal.connect*` overloads parse it back into the declared type.
      */
     val scalarCallback: ((String) -> Unit)? = null,
+    /** Task 134 D1: receives every emitted argument (`_kanama_web_signal_dispatch_args`). */
+    val argsCallback: ((WebSignalArgs) -> Unit)? = null,
+    /**
+     * Task 134 D1: runs when the entry goes away without being closed from Kotlin -- its owner
+     * script or (for an await) its emitter was freed -- so an `await` is cancelled instead of
+     * never resuming.
+     */
+    val onRelease: (() -> Unit)? = null,
   )
 
   private var nextId = 1
@@ -72,16 +80,49 @@ internal object WebSignalCallbackRegistry {
     return id
   }
 
+  /** Registers a callback that receives every emitted argument (task 134 D1). */
+  fun registerArgs(
+    ownerHandle: Int,
+    sourceHandle: Int,
+    oneShot: Boolean,
+    onRelease: (() -> Unit)? = null,
+    callback: (WebSignalArgs) -> Unit,
+  ): Int {
+    check(nextId > 0) { "Kanama Web signal callback registry exhausted" }
+    val id = nextId++
+    entries[id] = Entry(ownerHandle, sourceHandle, oneShot, argsCallback = callback, onRelease = onRelease)
+    return id
+  }
+
+  /** Whether [id] is still registered (a fired one-shot or a released entry is not). */
+  fun contains(id: Int): Boolean = id in entries
+
   fun unregister(id: Int) {
     entries.remove(id)
   }
 
-  fun releaseOwner(ownerHandle: Int) {
-    entries.entries.removeAll { it.value.ownerHandle == ownerHandle }
+  /** The proxy's await watcher saw its emitter freed before the signal fired (task 134 D1). */
+  fun release(id: Int) {
+    entries.remove(id)?.onRelease?.invoke()
   }
 
-  fun releaseSource(sourceHandle: Int) {
-    entries.entries.removeAll { it.value.sourceHandle == sourceHandle }
+  fun releaseOwner(ownerHandle: Int) = releaseWhere { it.ownerHandle == ownerHandle }
+
+  fun releaseSource(sourceHandle: Int) = releaseWhere { it.sourceHandle == sourceHandle }
+
+  private fun releaseWhere(predicate: (Entry) -> Boolean) {
+    val released = entries.filterValues(predicate)
+    released.keys.forEach(entries::remove)
+    released.values.forEach { it.onRelease?.invoke() }
+  }
+
+  /** Delivers every emitted argument, packed by the proxy (task 134 D1). */
+  fun dispatchArgs(ownerHandle: Int, id: Int, packed: String) {
+    val entry = requireEntry(ownerHandle, id)
+    val callback =
+      entry.argsCallback ?: error("Kanama Web signal callback id=$id does not take the argument list")
+    if (entry.oneShot) entries.remove(id)
+    callback(WebSignalArgs(packed))
   }
 
   fun dispatch(ownerHandle: Int, id: Int) {
@@ -136,28 +177,17 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
   ): GodotError =
     owner.connect(name, target, method, flags)
 
+  /**
+   * Connects [callback], ignoring whatever the signal emits. [argumentCount] is kept for source
+   * compatibility: since task 134 D1 any number of emitted arguments is accepted.
+   */
+  @Suppress("UNUSED_PARAMETER")
   fun connect(
     target: GodotObject,
     argumentCount: Int = 0,
     flags: GodotObject.ConnectFlags = GodotObject.ConnectFlags(0L),
     callback: () -> Unit,
-  ): GodotError {
-    require(argumentCount in 0..1) {
-      "Kanama Web signal lambda callbacks currently support at most one emitted argument"
-    }
-    val callbackId =
-      WebSignalCallbackRegistry.register(
-        target.handle.value,
-        owner.handle.value,
-        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
-        callback,
-      )
-    val dispatchMethod =
-      if (argumentCount == 0) "_kanama_web_signal_dispatch0" else "_kanama_web_signal_dispatch1"
-    val result = owner.connectBound(name, target, dispatchMethod, callbackId.toLong(), flags)
-    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
-    return result
-  }
+  ): GodotError = connectArgsConnection(target, flags) { callback() }.error
 
   /**
    * Connects a one-argument scalar signal and DELIVERS the payload (task 80 slice 2).
@@ -393,14 +423,82 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
     return SignalConnection(owner, name, target, callbackId, "_kanama_web_signal_dispatch_object", result)
   }
 
-  /** Suspends until this signal fires once (a one-shot connection resumes the coroutine). */
+  /**
+   * Task 134 D1: a connection that receives every emitted argument (`_kanama_web_signal_dispatch_args`,
+   * a variadic proxy method with the callback id bound last), whatever the signal's arity.
+   */
+  internal fun connectArgsConnection(
+    target: GodotObject,
+    flags: GodotObject.ConnectFlags,
+    callback: (WebSignalArgs) -> Unit,
+  ): SignalConnection {
+    val callbackId =
+      WebSignalCallbackRegistry.registerArgs(
+        target.handle.value,
+        owner.handle.value,
+        oneShot = GodotObject.ConnectFlags.ONE_SHOT in flags,
+        callback = callback,
+      )
+    val result = owner.connectBound(name, target, SIGNAL_DISPATCH_ARGS, callbackId.toLong(), flags)
+    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
+    return SignalConnection(owner, name, target, callbackId, SIGNAL_DISPATCH_ARGS, result)
+  }
+
+  /**
+   * Task 134 D1: a one-shot connection for an `await`, delivered through [router]'s proxy but held
+   * by the EMITTER: the proxy connects a small watcher object kept in the emitter's metadata, so
+   * the watcher dies with the emitter and reports it ([onRelease]) instead of the await never
+   * resuming. Works for any emitter, scripted or not.
+   */
+  internal fun connectAwait(
+    router: GodotObject,
+    onRelease: () -> Unit,
+    callback: (WebSignalArgs) -> Unit,
+  ): SignalConnection {
+    val callbackId =
+      WebSignalCallbackRegistry.registerArgs(
+        router.handle.value,
+        owner.handle.value,
+        oneShot = true,
+        onRelease = onRelease,
+        callback = callback,
+      )
+    val result =
+      owner.connectBound(name, router, SIGNAL_AWAIT, callbackId.toLong(), GodotObject.ConnectFlags.ONE_SHOT)
+    if (result != GodotError.OK) WebSignalCallbackRegistry.unregister(callbackId)
+    return SignalConnection(owner, name, router, callbackId, SIGNAL_AWAIT, result)
+  }
+
+  /**
+   * Suspends until this signal fires once. [target] is the script whose proxy delivers it; the wait
+   * is bound to the emitter (task 134 D1: an emitter freed first cancels it). [argumentCount] is
+   * kept for source compatibility: any number of arguments is accepted and ignored.
+   */
+  @Suppress("UNUSED_PARAMETER")
   suspend fun await(target: GodotObject, argumentCount: Int = 0) {
-    require(argumentCount in 0..1) {
-      "Kanama Web signal await currently supports at most one emitted argument"
-    }
     suspendCancellableCoroutine { continuation ->
-      connect(target, argumentCount, GodotObject.ConnectFlags.ONE_SHOT) {
-        if (continuation.isActive) continuation.resume(Unit)
+      val connection =
+        connectAwait(
+          target,
+          onRelease = {
+            if (continuation.isActive) {
+              continuation.cancel(
+                kotlinx.coroutines.CancellationException(
+                  "signal $name: the emitting object was freed before it fired"
+                )
+              )
+            }
+          },
+        ) {
+          if (continuation.isActive) continuation.resume(Unit)
+        }
+      if (connection.error != GodotError.OK) {
+        connection.close()
+        continuation.cancel(
+          kotlinx.coroutines.CancellationException("connect($name) failed: error=${connection.error}")
+        )
+      } else {
+        continuation.invokeOnCancellation { connection.close() }
       }
     }
   }
@@ -447,10 +545,19 @@ internal constructor(
   fun close() {
     if (closed) return
     closed = true
+    // A fired one-shot, or an entry released because its owner or emitter was freed, has nothing
+    // left to disconnect (task 134 D1) -- and a freed emitter must not be called.
+    if (!WebSignalCallbackRegistry.contains(callbackId)) return
     source.disconnectBound(name, target, dispatchMethod, callbackId.toLong())
     WebSignalCallbackRegistry.unregister(callbackId)
   }
 }
+
+/** The proxy's variadic all-arguments delivery helper (task 134 D1). */
+internal const val SIGNAL_DISPATCH_ARGS = "_kanama_web_signal_dispatch_args"
+
+/** The proxy's await marker: connect a watcher held by the emitter (task 134 D1). */
+internal const val SIGNAL_AWAIT = "_kanama_web_signal_await"
 
 inline fun <reified T : Any> GodotObject.kotlinScriptInstance(): T? =
   webScriptInstance(handle.value) as? T

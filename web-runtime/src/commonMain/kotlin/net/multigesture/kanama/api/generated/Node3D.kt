@@ -186,12 +186,20 @@ open class Node3D(godotObject: GodotHandle) : Node(godotObject) {
 
   /** Godot's rotate_object_local: right-multiply the local basis by an axis-angle rotation. */
   fun rotateObjectLocal(axis: Vector3, angle: Double) {
-    basis = basis * Basis.fromAxisAngle(axis, angle)
+    basis = basis * Basis.IDENTITY.rotated(axis, angle)
   }
 
   /** Godot's Node3D.orthonormalize: re-orthonormalize the local basis in place. */
   fun orthonormalize() {
     basis = basis.orthonormalized()
+  }
+
+  /** Signal `visibility_changed`; see [TypedSignal]. */
+  val visibilityChanged: Signal0
+    get() = Signal0(this, "visibility_changed")
+
+  object Signals {
+    const val visibilityChanged: String = "visibility_changed"
   }
 
   value class RotationEditMode(override val value: Long) : GodotEnumValue {
@@ -309,9 +317,9 @@ private fun composeBasis(rotation: Vector3, scale: Vector3): Basis {
   val rotationBasis = Basis.fromEuler(rotation)
   // Node basis = R * S: columns scaled (Godot composes scale on the right of rotation).
   return Basis(
-    rotationBasis.getColumn(0) * scale.x,
-    rotationBasis.getColumn(1) * scale.y,
-    rotationBasis.getColumn(2) * scale.z,
+    rotationBasis.x * scale.x,
+    rotationBasis.y * scale.y,
+    rotationBasis.z * scale.z,
   )
 }
 

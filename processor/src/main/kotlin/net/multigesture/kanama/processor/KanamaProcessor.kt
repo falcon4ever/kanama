@@ -2668,9 +2668,9 @@ internal fun signalArgTypeExpr(arg: ArgModel): String? {
 }
 
 /**
- * Whether the Web bridge delivers [arg] to a typed lambda: it carries one argument, an object or a
- * packed scalar (`int`, `float`, `bool`, `String`, `Vector2`, `Vector2i`, `Vector3`, `Color`, an
- * enum).
+ * Whether the Web bridge delivers [arg] to a typed lambda (task 134 D1: every argument of the
+ * emission, each packed as a Variant): an object, an enum, `int`, `float`, `bool`, `String`, a
+ * `Variant`, a RID, a NodePath, or any value type.
  */
 internal fun webDeliversSignalArg(arg: ArgModel): Boolean =
   arg.godotEnum != null ||
@@ -2682,12 +2682,11 @@ internal fun webDeliversSignalArg(arg: ArgModel): Boolean =
         TypeMapping.FLOAT,
         TypeMapping.BOOL,
         TypeMapping.STRING,
-        TypeMapping.VECTOR2,
-        TypeMapping.VECTOR2I,
-        TypeMapping.VECTOR3,
-        TypeMapping.COLOR,
+        TypeMapping.VARIANT,
+        TypeMapping.RID,
+        TypeMapping.NODE_PATH,
       ) ||
-    WebValueTypes.isWebValueType(arg.type)
+    arg.type in WebValueTypes.LAYOUTS
 
 /** One `@Signal` with a typed decode for every argument (task 134 D4). */
 internal class TypedSignalSpec(
@@ -2711,7 +2710,7 @@ internal fun typedSignalSpecs(
   val seen = mutableSetOf<String>()
   val out = mutableListOf<TypedSignalSpec>()
   for (s in signals) {
-    if (s.args.size > (if (web) 1 else 5)) continue
+    if (s.args.size > 5) continue
     if (web && s.args.any { !webDeliversSignalArg(it) }) continue
     val types = s.args.map { signalArgTypeExpr(it) }
     if (types.any { it == null }) continue
