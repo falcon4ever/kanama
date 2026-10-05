@@ -374,20 +374,27 @@
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebSignals.kt": {
       "category": "runtime-core",
-      "lines": 456,
+      "lines": 505,
+      "raises": [
+        "456 -> 505: task 134 D1: callback registry for any-arity delivery (dispatchArgs), await watcher release reasons (router vs emitter freed), connectAwait, and the webEmitSignalGeneric expect moved here from the transitional WebGodotApi.kt"
+      ],
       "reason": "Web signal plumbing"
     },
     "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/api/WebTypedSignals.kt": {
       "category": "runtime-core",
-      "lines": 238,
+      "lines": 428,
       "raises": [
-        "224 -> 238: #306 (Web typed await on engine emitters) adds the Web await plumbing for typed signals"
+        "224 -> 238: #306 (Web typed await on engine emitters) adds the Web await plumbing for typed signals",
+        "238 -> 428: task 134 D1: Signal2..Signal5 and SignalArgs2..5 (Web had Signal0 and Signal1), the SignalArgType decoders for every argument type a signal carries (object, enum, NodePath, RID, Variant, value types), and awaitArgs with release-reason cancellation"
       ],
       "reason": "Web typed signal classes"
     },
     "web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/api/WebGodotApi.wasmJs.kt": {
       "category": "seam",
-      "lines": 62,
+      "lines": 70,
+      "raises": [
+        "62 -> 70: task 134 D1: the webEmitSignalGeneric actual (emit_signal with any arguments as one immediate generic call)"
+      ],
       "reason": "Wasm JS bridge entry points"
     }
   },
@@ -477,7 +484,7 @@
       "lines": 2
     },
     "generate_web_wrappers.CLASS_POLICY[Object].custom": {
-      "lines": 53
+      "lines": 49
     },
     "generate_web_wrappers.CLASS_POLICY[PropertyTweener].custom": {
       "lines": 10

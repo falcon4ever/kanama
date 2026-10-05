@@ -15,7 +15,9 @@ surface itself to checked-in snapshots, one file per surface under `api-snapshot
     `src/iosMain/.../api`: per-platform wrappers, `<Class>.jvm.kt` / `<Class>.ios.kt` companions, the
     actuals, GD, the desktop name constants);
   * `web.txt` -- the Web wrappers, generated and hand-written (`web-runtime/.../api`, recursively);
-  * `web-types.txt` -- the Web value types (`web-runtime/.../types`).
+  * `web-types.txt` -- the value types as the Web build compiles them (task 134 D1: the shared
+    `src/commonMain/.../types` sources plus `web-runtime/.../types`, which holds only the internal
+    `real_t` storage half).
 
 Every source directory is read recursively.
 
@@ -144,8 +146,13 @@ SURFACES = (
     ),
     Surface(
         "web-types",
-        ("web-runtime/src/commonMain/kotlin/net/multigesture/kanama/types",),
-        "the Web value types (Vector2/3, Color, NodePath, ...)",
+        # Task 134 D1: the Web build compiles the shared value types, plus its own `real_t` storage
+        # half (`WebReal.kt`, internal) in place of the generated Real.kt.
+        (
+            "src/commonMain/kotlin/net/multigesture/kanama/types",
+            "web-runtime/src/commonMain/kotlin/net/multigesture/kanama/types",
+        ),
+        "the value types as the Web build compiles them: the shared sources and the Web real_t half",
         TYPES_PACKAGE,
     ),
 )

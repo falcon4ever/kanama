@@ -1,5 +1,7 @@
 package net.multigesture.kanama.types
 
+import kotlin.math.sqrt
+
 // Godot's own formulas for the value-type operators that are more than one component-wise
 // operation (task 134 B): ported from core/math (transform_2d.h/.cpp, transform_3d.h/.cpp,
 // basis.h, quaternion.h, projection.h/.cpp, rect2.h, aabb.h) with Godot's operand order and
@@ -355,3 +357,177 @@ private class BoxAccumulator(val position: GodotRealArray, val size: GodotRealAr
     }
   }
 }
+
+// ---- Task 134 D1 review S4: the Basis methods the Web build used to compute on its own, ported
+// once
+// for every backend. Natively they were engine calls; the parity rows prove them bit-for-bit. ----
+
+/** `Basis::determinant`, Godot's expansion along column 0. */
+internal fun basisDeterminant(b: Basis): GodotRealStorage =
+  basisRows(b) { r00, r01, r02, r10, r11, r12, r20, r21, r22 ->
+    r00 * (r11 * r22 - r21 * r12) - r10 * (r01 * r22 - r21 * r02) + r20 * (r01 * r12 - r11 * r02)
+  }
+
+/**
+ * `Basis::invert`, or null when the determinant is 0: Godot's debug build then reports an error and
+ * keeps the basis (`MATH_CHECKS`), so the caller lets the engine answer that case.
+ */
+internal fun basisInverse(b: Basis): Basis? =
+  basisRows(b) { r00, r01, r02, r10, r11, r12, r20, r21, r22 ->
+    // cofac(row1, col1, row2, col2) = rows[row1][col1] * rows[row2][col2] - rows[row1][col2] *
+    // rows[row2][col1]
+    val co0 = r11 * r22 - r12 * r21
+    val co1 = r12 * r20 - r10 * r22
+    val co2 = r10 * r21 - r11 * r20
+    val det = r00 * co0 + r01 * co1 + r02 * co2
+    if (det == zeroReal()) {
+      null
+    } else {
+      val s = narrowReal(1.0) / det
+      basisFromRows(
+        co0 * s,
+        (r02 * r21 - r01 * r22) * s,
+        (r01 * r12 - r02 * r11) * s,
+        co1 * s,
+        (r00 * r22 - r02 * r20) * s,
+        (r02 * r10 - r00 * r12) * s,
+        co2 * s,
+        (r01 * r20 - r00 * r21) * s,
+        (r00 * r11 - r01 * r10) * s,
+      )
+    }
+  }
+
+/**
+ * `Basis::get_scale`: the column lengths, signed by `SIGN(determinant())` (0 for a singular basis).
+ */
+internal fun basisGetScale(b: Basis): Vector3 {
+  val det = basisDeterminant(b)
+  val zero = zeroReal()
+  val sign = if (det > zero) narrowReal(1.0) else if (det < zero) narrowReal(-1.0) else zero
+  return Vector3.raw(
+    sign * sqrt(realDot(b.x.rawX, b.x.rawY, b.x.rawZ, b.x.rawX, b.x.rawY, b.x.rawZ)),
+    sign * sqrt(realDot(b.y.rawX, b.y.rawY, b.y.rawZ, b.y.rawX, b.y.rawY, b.y.rawZ)),
+    sign * sqrt(realDot(b.z.rawX, b.z.rawY, b.z.rawZ, b.z.rawX, b.z.rawY, b.z.rawZ)),
+  )
+}
+
+// `Vector3::normalize`: a non-finite or zero vector becomes zero (the shared pure member).
+private fun normalizedVector(v: Vector3): Vector3 = v.normalized()
+
+/** `Basis::orthonormalize` (Gram-Schmidt on the columns, Godot's operation order). */
+internal fun basisOrthonormalized(b: Basis): Basis {
+  val x = normalizedVector(b.x)
+  val xy = realDot(x.rawX, x.rawY, x.rawZ, b.y.rawX, b.y.rawY, b.y.rawZ)
+  val y =
+    normalizedVector(
+      Vector3.raw(b.y.rawX - x.rawX * xy, b.y.rawY - x.rawY * xy, b.y.rawZ - x.rawZ * xy)
+    )
+  val xz = realDot(x.rawX, x.rawY, x.rawZ, b.z.rawX, b.z.rawY, b.z.rawZ)
+  val yz = realDot(y.rawX, y.rawY, y.rawZ, b.z.rawX, b.z.rawY, b.z.rawZ)
+  val z =
+    normalizedVector(
+      Vector3.raw(
+        b.z.rawX - x.rawX * xz - y.rawX * yz,
+        b.z.rawY - x.rawY * xz - y.rawY * yz,
+        b.z.rawZ - x.rawZ * xz - y.rawZ * yz,
+      )
+    )
+  return Basis(x, y, z)
+}
+
+private fun realIsEqualApprox(a: GodotRealStorage, b: GodotRealStorage): Boolean {
+  if (a == b) return true
+  val epsilon = narrowReal(0.00001)
+  var tolerance = epsilon * kotlin.math.abs(a)
+  if (tolerance < epsilon) tolerance = epsilon
+  return kotlin.math.abs(a - b) < tolerance
+}
+
+private fun realIsZeroApprox(a: GodotRealStorage): Boolean =
+  kotlin.math.abs(a) < narrowReal(0.00001)
+
+/** `Basis::is_rotation`: conformal with determinant 1 (`UNIT_EPSILON` 0.001). */
+private fun basisIsRotation(b: Basis): Boolean {
+  val xx = realDot(b.x.rawX, b.x.rawY, b.x.rawZ, b.x.rawX, b.x.rawY, b.x.rawZ)
+  val conformal =
+    realIsEqualApprox(xx, realDot(b.y.rawX, b.y.rawY, b.y.rawZ, b.y.rawX, b.y.rawY, b.y.rawZ)) &&
+      realIsEqualApprox(xx, realDot(b.z.rawX, b.z.rawY, b.z.rawZ, b.z.rawX, b.z.rawY, b.z.rawZ)) &&
+      realIsZeroApprox(realDot(b.x.rawX, b.x.rawY, b.x.rawZ, b.y.rawX, b.y.rawY, b.y.rawZ)) &&
+      realIsZeroApprox(realDot(b.x.rawX, b.x.rawY, b.x.rawZ, b.z.rawX, b.z.rawY, b.z.rawZ)) &&
+      realIsZeroApprox(realDot(b.y.rawX, b.y.rawY, b.y.rawZ, b.z.rawX, b.z.rawY, b.z.rawZ))
+  val det = basisDeterminant(b)
+  return conformal &&
+    (det == narrowReal(1.0) || kotlin.math.abs(det - narrowReal(1.0)) < narrowReal(0.001))
+}
+
+/**
+ * `Basis::get_rotation_quaternion`: orthonormalize, flip a reflection, then `get_quaternion` -- or
+ * null when the result is not a rotation (a degenerate basis): Godot's debug build reports an error
+ * there (`MATH_CHECKS`), so the caller lets the engine answer that case.
+ */
+internal fun basisGetRotationQuaternion(b: Basis): Quaternion? {
+  var m = basisOrthonormalized(b)
+  if (basisDeterminant(m) < zeroReal()) m = basisMap(m) { -it }
+  if (!basisIsRotation(m)) return null
+  return basisRows(m) { r00, r01, r02, r10, r11, r12, r20, r21, r22 ->
+    val rows = arrayOf(reals(r00, r01, r02), reals(r10, r11, r12), reals(r20, r21, r22))
+    val one = narrowReal(1.0)
+    val half = narrowReal(0.5)
+    val trace = r00 + r11 + r22
+    val temp = reals(zeroReal(), zeroReal(), zeroReal(), zeroReal())
+    if (trace > zeroReal()) {
+      var s = sqrt(trace + one)
+      temp[3] = s * half
+      s = half / s
+      temp[0] = (r21 - r12) * s
+      temp[1] = (r02 - r20) * s
+      temp[2] = (r10 - r01) * s
+    } else {
+      val i = if (r00 < r11) (if (r11 < r22) 2 else 1) else (if (r00 < r22) 2 else 0)
+      val j = (i + 1) % 3
+      val k = (i + 2) % 3
+      var s = sqrt(rows[i][i] - rows[j][j] - rows[k][k] + one)
+      temp[i] = s * half
+      s = half / s
+      temp[3] = (rows[k][j] - rows[j][k]) * s
+      temp[j] = (rows[j][i] + rows[i][j]) * s
+      temp[k] = (rows[k][i] + rows[i][k]) * s
+    }
+    Quaternion.raw(temp[0], temp[1], temp[2], temp[3])
+  }
+}
+
+/** `Transform3D::affine_inverse`, or null when the basis is singular (see [basisInverse]). */
+internal fun transform3DAffineInverse(t: Transform3D): Transform3D? {
+  val inverse = basisInverse(t.basis) ?: return null
+  return Transform3D(
+    inverse,
+    basisXform(inverse, Vector3.raw(-t.origin.rawX, -t.origin.rawY, -t.origin.rawZ)),
+  )
+}
+
+/** `Transform3D::inverse` (the transposed basis; exact for an orthonormal one). */
+internal fun transform3DInverse(t: Transform3D): Transform3D {
+  val inverse = basisTransposed(t.basis)
+  return Transform3D(
+    inverse,
+    basisXform(inverse, Vector3.raw(-t.origin.rawX, -t.origin.rawY, -t.origin.rawZ)),
+  )
+}
+
+/** `Basis::scaled`: row i times component i of [scale] (the scale applied on the left). */
+internal fun basisScaled(b: Basis, scale: Vector3): Basis =
+  basisRows(b) { r00, r01, r02, r10, r11, r12, r20, r21, r22 ->
+    basisFromRows(
+      r00 * scale.rawX,
+      r01 * scale.rawX,
+      r02 * scale.rawX,
+      r10 * scale.rawY,
+      r11 * scale.rawY,
+      r12 * scale.rawY,
+      r20 * scale.rawZ,
+      r21 * scale.rawZ,
+      r22 * scale.rawZ,
+    )
+  }

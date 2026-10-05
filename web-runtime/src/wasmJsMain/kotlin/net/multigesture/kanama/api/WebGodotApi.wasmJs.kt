@@ -60,3 +60,11 @@ internal actual fun releaseWebTrackedObject(handle: Int) {
 
 internal actual fun webGenericImmediateStringCall(target: GodotObject, method: String): String =
   net.multigesture.kanama.web.WebExperimentalGenericCall.callImmediate(target, method).asString()
+
+internal actual fun webEmitSignalGeneric(target: GodotObject, signal: String, args: Array<out Any?>) {
+  net.multigesture.kanama.web.WebExperimentalGenericCall.callImmediate(
+    target,
+    "emit_signal",
+    listOf<Any?>(signal) + args,
+  )
+}

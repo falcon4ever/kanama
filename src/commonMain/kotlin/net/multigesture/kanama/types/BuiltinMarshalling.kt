@@ -388,19 +388,9 @@ internal object AABBMethods {
 internal object BasisMethods {
   @JvmField val inverse = BuiltinMethod(17, "inverse", 594669093L)
 
-  @JvmField val transposed = BuiltinMethod(17, "transposed", 594669093L)
-
-  @JvmField val orthonormalized = BuiltinMethod(17, "orthonormalized", 594669093L)
-
-  @JvmField val determinant = BuiltinMethod(17, "determinant", 466405837L)
-
   @JvmField val rotated = BuiltinMethod(17, "rotated", 1998708965L)
 
-  @JvmField val scaled = BuiltinMethod(17, "scaled", 3934786792L)
-
   @JvmField val scaledLocal = BuiltinMethod(17, "scaled_local", 3934786792L)
-
-  @JvmField val getScale = BuiltinMethod(17, "get_scale", 1776574132L)
 
   @JvmField val getEuler = BuiltinMethod(17, "get_euler", 1394941017L)
 
@@ -429,11 +419,7 @@ internal object BasisMethods {
 
 /** Transform3D's engine-backed builtin methods. */
 internal object Transform3DMethods {
-  @JvmField val inverse = BuiltinMethod(18, "inverse", 3816817146L)
-
   @JvmField val affineInverse = BuiltinMethod(18, "affine_inverse", 3816817146L)
-
-  @JvmField val orthonormalized = BuiltinMethod(18, "orthonormalized", 3816817146L)
 
   @JvmField val rotated = BuiltinMethod(18, "rotated", 1563203923L)
 

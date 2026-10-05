@@ -37,8 +37,13 @@ class Viewport(godotObject: GodotHandle) : Node(godotObject) {
   val sizeChanged: Signal0
     get() = Signal0(this, "size_changed")
 
+  /** Signal `gui_focus_changed`; see [TypedSignal]. */
+  val guiFocusChanged: Signal1<Control>
+    get() = Signal1(this, "gui_focus_changed", SignalArgType.objectOf("Control") { Control(it) })
+
   object Signals {
     const val sizeChanged: String = "size_changed"
+    const val guiFocusChanged: String = "gui_focus_changed"
   }
 
   value class PositionalShadowAtlasQuadrantSubdiv(override val value: Long) : GodotEnumValue {

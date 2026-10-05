@@ -177,11 +177,21 @@ class Tween(godotObject: GodotHandle) : RefCounted(godotObject) {
         )
     }
 
+  /** Signal `step_finished`; see [TypedSignal]. */
+  val stepFinished: Signal1<Long>
+    get() = Signal1(this, "step_finished", SignalArgType.LONG)
+
+  /** Signal `loop_finished`; see [TypedSignal]. */
+  val loopFinished: Signal1<Long>
+    get() = Signal1(this, "loop_finished", SignalArgType.LONG)
+
   /** Signal `finished`; see [TypedSignal]. */
   val finished: Signal0
     get() = Signal0(this, "finished")
 
   object Signals {
+    const val stepFinished: String = "step_finished"
+    const val loopFinished: String = "loop_finished"
     const val finished: String = "finished"
   }
 

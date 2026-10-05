@@ -101,7 +101,9 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.inverse
    */
-  fun inverse(): Basis {
+  fun inverse(): Basis = basisInverse(this) ?: inverseInEngine()
+
+  private fun inverseInEngine(): Basis {
     val f = builtinFrame()
     f.put(0, this)
     f.call(BasisMethods.inverse, 0)
@@ -114,12 +116,7 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.transposed
    */
-  fun transposed(): Basis {
-    val f = builtinFrame()
-    f.put(0, this)
-    f.call(BasisMethods.transposed, 0)
-    return f.retBasis()
-  }
+  fun transposed(): Basis = basisTransposed(this)
 
   /**
    * Returns the orthonormalized version of this basis. An orthonormal basis is both orthogonal (the
@@ -128,12 +125,7 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.orthonormalized
    */
-  fun orthonormalized(): Basis {
-    val f = builtinFrame()
-    f.put(0, this)
-    f.call(BasisMethods.orthonormalized, 0)
-    return f.retBasis()
-  }
+  fun orthonormalized(): Basis = basisOrthonormalized(this)
 
   /**
    * Returns the determinant (https://en.wikipedia.org/wiki/Determinant) of this basis's matrix. For
@@ -144,12 +136,7 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.determinant
    */
-  fun determinant(): Double {
-    val f = builtinFrame()
-    f.put(0, this)
-    f.call(BasisMethods.determinant, 0)
-    return f.retDouble()
-  }
+  fun determinant(): Double = widenReal(basisDeterminant(this))
 
   /**
    * Returns a copy of this basis rotated around the given `axis` by the given `angle` (in radians).
@@ -174,13 +161,7 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.scaled
    */
-  fun scaled(scale: Vector3): Basis {
-    val f = builtinFrame()
-    f.put(0, this)
-    f.put(1, scale)
-    f.call(BasisMethods.scaled, 1)
-    return f.retBasis()
-  }
+  fun scaled(scale: Vector3): Basis = basisScaled(this, scale)
 
   /**
    * Returns this basis with each axis scaled by the corresponding component in the given `scale`.
@@ -203,12 +184,7 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.get_scale
    */
-  fun getScale(): Vector3 {
-    val f = builtinFrame()
-    f.put(0, this)
-    f.call(BasisMethods.getScale, 0)
-    return f.retVector3()
-  }
+  fun getScale(): Vector3 = basisGetScale(this)
 
   /**
    * Returns this basis's rotation as a `Vector3` of Euler angles
@@ -341,7 +317,10 @@ data class Basis(
    *
    * Generated from Godot docs: Basis.get_rotation_quaternion
    */
-  fun getRotationQuaternion(): Quaternion {
+  fun getRotationQuaternion(): Quaternion =
+    basisGetRotationQuaternion(this) ?: getRotationQuaternionInEngine()
+
+  private fun getRotationQuaternionInEngine(): Quaternion {
     val f = builtinFrame()
     f.put(0, this)
     f.call(BasisMethods.getRotationQuaternion, 0)

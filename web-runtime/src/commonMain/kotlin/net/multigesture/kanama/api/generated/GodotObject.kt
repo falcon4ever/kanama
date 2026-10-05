@@ -257,29 +257,25 @@ open class GodotObject(godotObject: GodotHandle) {
   fun signal(name: String): GodotSignal = GodotSignal(this, name)
 
   /**
-   * Variant-style emit over the typed arms the Web backend admits: Web models desktop's variadic
-   * `emit_signal` as the typed argument shapes the corpus dispatches.
+   * Variant-style emit, as desktop's variadic `emit_signal`: one argument of the shapes the typed
+   * arms carry (an int32, a String, an object, a Vector2i) takes its arm; any other argument list
+   * -- several arguments, a float, a bool, a value type, a wider int (task 134 D1) -- rides one
+   * immediate generic `emit_signal` call, so handlers still run before this returns.
    */
   fun emitSignal(signal: String, vararg args: Any?) {
     if (args.isEmpty()) return emitSignal(signal)
-    when (val value = args.singleOrNull()) {
-      is Int -> emitSignal(signal, value)
-      is Long -> emitSignal(signal, int32Argument(signal, value))
-      // A typed Godot enum crosses as the INT it stands for (task 128: GodotEnumValue).
-      is GodotEnumValue -> emitSignal(signal, int32Argument(signal, value.value))
-      is String -> emitSignal(signal, value)
-      is GodotObject -> emitSignal(signal, value)
-      is Vector2i -> emitSignal(signal, value)
-      else -> unsupportedWebGameplayFamily("GodotObject.emit_signal_typed")
+    if (args.size == 1) {
+      when (val value = args[0]) {
+        is Int -> return emitSignal(signal, value)
+        is Long -> if (value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) return emitSignal(signal, value.toInt())
+        // A typed Godot enum crosses as the INT it stands for (task 128: GodotEnumValue).
+        is GodotEnumValue -> if (value.value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) return emitSignal(signal, value.value.toInt())
+        is String -> return emitSignal(signal, value)
+        is GodotObject -> return emitSignal(signal, value)
+        is Vector2i -> return emitSignal(signal, value)
+      }
     }
-  }
-
-  /** The typed int arm carries Godot's int32 transport: a wider value fails loud, never truncates. */
-  private fun int32Argument(signal: String, value: Long): Int {
-    require(value in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
-      "Web emitSignal('$signal') int argument $value does not fit the int32 transport"
-    }
-    return value.toInt()
+    webEmitSignalGeneric(this, signal, args)
   }
 
   /**
@@ -288,6 +284,19 @@ open class GodotObject(godotObject: GodotHandle) {
    */
   fun set(propertyPath: String, value: GodotEnumValue) {
     set(propertyPath, value.value)
+  }
+
+  /** Signal `script_changed`; see [TypedSignal]. */
+  val scriptChanged: Signal0
+    get() = Signal0(this, "script_changed")
+
+  /** Signal `property_list_changed`; see [TypedSignal]. */
+  val propertyListChanged: Signal0
+    get() = Signal0(this, "property_list_changed")
+
+  object Signals {
+    const val scriptChanged: String = "script_changed"
+    const val propertyListChanged: String = "property_list_changed"
   }
 
   value class ConnectFlags(override val value: Long) : GodotEnumValue {

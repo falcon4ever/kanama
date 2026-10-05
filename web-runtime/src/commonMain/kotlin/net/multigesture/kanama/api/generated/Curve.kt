@@ -13,6 +13,19 @@ class Curve(godotObject: GodotHandle) : Resource(godotObject) {
   fun sample(offset: Double): Double =
     GodotBackendCalls.invokeDoubleRetDouble(D.CURVE_SAMPLE, requireOpenHandle(), offset)
 
+  /** Signal `range_changed`; see [TypedSignal]. */
+  val rangeChanged: Signal0
+    get() = Signal0(this, "range_changed")
+
+  /** Signal `domain_changed`; see [TypedSignal]. */
+  val domainChanged: Signal0
+    get() = Signal0(this, "domain_changed")
+
+  object Signals {
+    const val rangeChanged: String = "range_changed"
+    const val domainChanged: String = "domain_changed"
+  }
+
   value class TangentMode(override val value: Long) : GodotEnumValue {
     companion object {
       val FREE: TangentMode get() = TangentMode(0L)

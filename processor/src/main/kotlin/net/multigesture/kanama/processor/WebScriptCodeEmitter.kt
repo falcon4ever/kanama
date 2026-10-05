@@ -79,6 +79,11 @@ internal enum class WebMethodArm(val dispatch: WebDispatch) {
    * handle id, which is why this arm reaches shapes [NUMERIC_VOID] and [STRING_VOID] cannot.
    */
   PACKED_ARGS(WebDispatch(WebDispatchStatus.TYPED)),
+  /**
+   * Arguments AND a return value (task 134 D1): the packed argument list of [PACKED_ARGS] in, the
+   * packed return of [PACKED_RETURN] out, over one `callPackedArgs` crossing.
+   */
+  PACKED_ARGS_RETURN(WebDispatch(WebDispatchStatus.TYPED)),
   /** No arm matches: the proxy emits a stub that throws through `unsupportedGameplayMethod`. */
   NONE(WebDispatch(WebDispatchStatus.UNSUPPORTED));
 
@@ -154,7 +159,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * types) adds `kanamaWebSetPackedValueProperty`: the push arm of a Vector3i, Rect2, Rect2i,
      * Plane, Quaternion, Basis or Transform3D export, carried as its packed components.
      */
-    const val PROTOCOL_VERSION = 31
+    const val PROTOCOL_VERSION = 32
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -190,12 +195,29 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     internal const val SIGNAL_DISPATCH_ZERO = "_kanama_web_signal_dispatch0"
     internal const val SIGNAL_DISPATCH_ONE = "_kanama_web_signal_dispatch1"
     internal const val SIGNAL_DISPATCH_OBJECT = "_kanama_web_signal_dispatch_object"
+    /** Task 134 D1: the variadic all-arguments delivery helper and its shared body. */
+    internal const val SIGNAL_DISPATCH_ARGS = "_kanama_web_signal_dispatch_args"
+    internal const val SIGNAL_DELIVER = "_kanama_web_signal_deliver"
+    /** Task 134 D1: the await marker method name, its connect helper and the watcher class. */
+    internal const val SIGNAL_AWAIT = "_kanama_web_signal_await"
+    internal const val CONNECT_AWAIT = "_kanama_connect_await"
+    internal const val SIGNAL_WATCHER = "_KanamaSignalWatcher"
+    /** Task 134 D1 review S3: close one await, and every await a freed script was delivering. */
+    internal const val DROP_AWAIT = "_kanama_drop_await"
+    internal const val DROP_ROUTED_AWAITS = "_kanama_drop_routed_awaits"
+    /** Task 134 D1: the object-query arm and helper that run one builtin (value-type) method. */
+    internal const val BUILTIN_CALL_OPCODE = 1003
+    internal const val BUILTIN_CALL = "_kanama_web_builtin_call"
     /** Packs one emitted scalar payload for [SIGNAL_DISPATCH_ONE] (task 80 slice 2). */
     internal const val SIGNAL_PACK_ARG = "_kanama_web_pack_signal_arg"
     /** Task 133 C3: the proxy's parser of one text-channel decimal (`nan`/`inf`/`-inf` too). */
     internal const val WEB_FLOAT = "_kanama_web_float"
     /** Task 133 C3: [WEB_FLOAT] over a comma-separated list (replaces `split_floats`). */
     internal const val WEB_FLOATS = "_kanama_web_floats"
+    /**
+     * Task 134 D1 review S1: a decimal as the text of its IEEE-754 bits (the [WEB_FLOAT] mirror).
+     */
+    internal const val WEB_FLOAT_TEXT = "_kanama_web_float_text"
 
     /**
      * The dispatch arm the proxy emits for a registered `@ScriptFunction`. The emitter's method
@@ -233,6 +255,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           WebMethodArm.NUMERIC_VOID
         method.args.isEmpty() && isPackedReturn(method.returnType) -> WebMethodArm.PACKED_RETURN
         method.returnType == null && isPackedArgList(method.args) -> WebMethodArm.PACKED_ARGS
+        isPackedReturn(method.returnType) && isPackedArgList(method.args) ->
+          WebMethodArm.PACKED_ARGS_RETURN
         else -> WebMethodArm.NONE
       }
 
@@ -418,25 +442,20 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     /**
      * Whether [arg] can ride the packed argument list.
      *
-     * Deliberately NOT floats or float-backed vectors: the packed list is decimal TEXT produced by
-     * GDScript's `str()`, which rounds a double to 14 significant digits, so a float carried here
-     * would arrive slightly wrong — the silent-wrong-VALUE class this whole task exists to kill.
-     * Whole numbers, booleans, text, and object handle ids all round-trip exactly. An all-numeric
-     * shape has the exact [WebMethodArm.NUMERIC_VOID] crossing anyway; what is left over is a float
-     * MIXED with text or an object, and that shape has no arm and fails the build rather than
-     * losing precision in silence.
+     * The list is TEXT, so every decimal must round-trip exactly: floats and the float components
+     * of the value types cross as the text of their IEEE-754 bits ([WEB_FLOAT_TEXT], task 134 D1
+     * review S1 -- `str()` rounds to 14 digits and `String.to_float` is not correctly rounded).
+     * Whole numbers, booleans, text and object handle ids round-trip as written.
      */
     private fun isPackedArgType(arg: ArgModel): Boolean =
       when (arg.type) {
         TypeMapping.STRING,
         TypeMapping.NODE_PATH,
         TypeMapping.INT,
+        TypeMapping.FLOAT,
         TypeMapping.BOOL -> true
         TypeMapping.OBJECT -> arg.objectWrapperFqName != null
-        // Task 133: a value type's components are float32 (`real_t` on Web) written with
-        // `String.num_scientific`, which round-trips them exactly — unlike `str()` of a bare
-        // float, the reason FLOAT (a double) stays out.
-        in WebValueTypes.COMPONENTS -> true
+        in WebValueTypes.LAYOUTS -> true
         else -> false
       }
 
@@ -457,8 +476,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           TypeMapping.NODE_PATH -> "$PACKED_ARG_PACK_TEXT(String(${arg.name}))"
           TypeMapping.INT -> "str(${arg.name})"
           TypeMapping.BOOL -> "(\"1\" if ${arg.name} else \"0\")"
+          TypeMapping.FLOAT -> "$WEB_FLOAT_TEXT(${arg.name})"
           TypeMapping.OBJECT -> "str($PACKED_ARG_PACK_OBJECT(${arg.name}, $PACKED_ARG_TRANSIENT))"
-          in WebValueTypes.COMPONENTS -> WebValueTypes.gdPack(arg.name)
+          in WebValueTypes.LAYOUTS -> WebValueTypes.gdPack(arg.name)
           else -> error("no packed argument encoding for ${arg.type.name}")
         }
       }
@@ -477,6 +497,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           TypeMapping.NODE_PATH -> "net.multigesture.kanama.types.NodePath($text)"
           TypeMapping.INT -> webLongArg(arg, "$part.toLong()")
           TypeMapping.BOOL -> "($part == \"1\")"
+          TypeMapping.FLOAT -> "net.multigesture.kanama.web.WebPackedFloats.decode($part)"
           TypeMapping.OBJECT -> {
             val wrapper =
               checkNotNull(arg.objectWrapperFqName) { "packed object argument needs a wrapper" }
@@ -484,7 +505,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             if (arg.nullable) "$handle?.let { $wrapper(it) }"
             else "$wrapper(checkNotNull($handle) { \"Argument ${arg.name} is not nullable\" })"
           }
-          in WebValueTypes.COMPONENTS -> WebValueTypes.kotlinUnpack(arg.type, part)
+          in WebValueTypes.LAYOUTS -> WebValueTypes.kotlinUnpack(arg.type, part)
           else -> error("no packed argument decoding for ${arg.type.name}")
         }
       }
@@ -505,63 +526,24 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     }
 
     /**
-     * Scalar signal payload types [SIGNAL_DISPATCH_ONE] packs and delivers to a Kotlin lambda (task
-     * 80 slice 2). Same packing as the property/return channel: one string, parsed by the typed
-     * `GodotSignal.connect*` overload the consumer chose.
-     */
-    fun isScalarSignalPayload(type: TypeMapping): Boolean =
-      when (type) {
-        TypeMapping.STRING,
-        TypeMapping.INT,
-        TypeMapping.FLOAT,
-        TypeMapping.BOOL,
-        TypeMapping.VECTOR2,
-        TypeMapping.VECTOR2I,
-        TypeMapping.VECTOR3,
-        TypeMapping.COLOR -> true
-        in WebValueTypes.COMPONENTS -> true
-        else -> false
-      }
-
-    /**
-     * How a declared `@ScriptSignal` payload reaches a Kotlin callback.
+     * How a declared `@Signal` payload reaches a Kotlin callback.
      *
-     * A proxy emits three delivery helpers ([SIGNAL_DISPATCH_ZERO], [SIGNAL_DISPATCH_ONE],
-     * [SIGNAL_DISPATCH_OBJECT]) and `GodotSignal.connect`/`connectObject` pick between them: zero
-     * arguments, one scalar carried packed by [SIGNAL_DISPATCH_ONE], or one object handle. Two or
-     * more emitted arguments, and single payloads outside [isScalarSignalPayload], still ride
-     * [SIGNAL_DISPATCH_ONE] with the payload dropped.
-     *
-     * A payload the lambda path drops would still be deliverable by connecting the signal to a
-     * **named** registered method (`connect(target, "method")`), where it rides that method's own
-     * arm — which is why the status is `argument-dropped` rather than `unsupported`.
-     *
-     * **That escape hatch is not reachable today.** Task 80 slice 3 made any non-`typed` member a
-     * BUILD ERROR, so a signal with such a payload cannot be declared at all: the task-80 slice-4
-     * conformance fixture failed to COMPILE when it tried to cover the two-argument shape. The
-     * status name is still right — the limitation is the lambda transport, not the signal — but
-     * read "reaches Kotlin only through a named connect" as *what would happen if the build allowed
-     * it*, not as advice anyone can currently follow. Either widen the lambda transport or let the
-     * build admit the shape; until then this branch is unreachable by construction.
+     * Task 134 D1: a typed lambda connection rides [SIGNAL_DISPATCH_ARGS], a variadic proxy method
+     * that packs EVERY emitted argument as a Variant (`<Variant.Type>:<payload>`), so any arity is
+     * delivered as long as each argument is one the proxy packs: an object, an enum, `int`,
+     * `float`, `bool`, `String`, a `Variant` or a value type ([webDeliversSignalArg]). Anything
+     * else (a packed array, a Dictionary) is `argument-dropped`: it reaches Kotlin only through a
+     * named registered-method connect.
      */
     fun signalDispatch(signal: SignalModel): WebDispatch {
-      val args = signal.args
-      if (args.isEmpty()) return WebDispatch(WebDispatchStatus.TYPED)
-      if (args.size == 1 && args.single().type == TypeMapping.OBJECT) {
-        return WebDispatch(WebDispatchStatus.TYPED)
-      }
-      if (args.size == 1 && isScalarSignalPayload(args.single().type)) {
-        return WebDispatch(WebDispatchStatus.TYPED)
-      }
-      val limit =
-        if (args.size == 1)
-          "Kotlin lambda callbacks take 0 arguments, 1 packed scalar, or 1 object handle"
-        else "Kotlin lambda callbacks accept at most 1 emitted argument"
+      val dropped = signal.args.filterNot(::webDeliversSignalArg)
+      if (dropped.isEmpty()) return WebDispatch(WebDispatchStatus.TYPED)
       return WebDispatch(
         WebDispatchStatus.ARGUMENT_DROPPED,
-        "signal payload dropped: $limit, so the declared " +
-          "(${args.joinToString(", ") { it.type.name }}) payload reaches Kotlin only through a " +
-          "named registered-method connect",
+        "signal payload dropped: the Web signal transport does not pack " +
+          "${dropped.joinToString(", ") { it.type.name }}, so the declared " +
+          "(${signal.args.joinToString(", ") { it.type.name }}) payload reaches Kotlin only " +
+          "through a named registered-method connect",
       )
     }
 
@@ -678,8 +660,9 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             "${dispatch.reason ?: dispatch.status.json}. Declare a shape the Web backend " +
             "dispatches — no arguments; any all-numeric argument list up to $NUMERIC_ARG_SLOTS " +
             "scalar slots; a single String or object argument; a mixed list of String/NodePath/" +
-            "Long/Boolean/object arguments; or a zero-argument value return — or add the arm for " +
-            "this shape to WebMethodArm and its emitter branch."
+            "Long/Double/Boolean/object/value-type arguments, with or without a value return; or " +
+            "a zero-argument value return — or add the arm for this shape to WebMethodArm and its " +
+            "emitter branch."
       }
       model.signals.forEach { signal ->
         val dispatch = signalDispatch(signal)
@@ -687,9 +670,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
         errors +=
           "${model.simpleName}.${signal.godotName} (signal): " +
             "${dispatch.reason ?: dispatch.status.json}. Declare a payload the Web backend " +
-            "delivers — no arguments, one packed scalar (String/Long/Double/Boolean/Vector2/" +
-            "Vector2i/Vector3), or one object — or add the wider delivery to the signal dispatch " +
-            "helpers."
+            "delivers — any number of String/Long/Double/Boolean/Variant/value-type/enum/object " +
+            "arguments — or add the wider delivery to the proxy's Variant packer."
       }
       // Properties and virtuals already have their own guards; a non-typed entry here means one of
       // those has a hole, so say exactly that instead of repeating their advice.
@@ -874,6 +856,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             appendLine("# One handle dictionary shared by every Kanama Web proxy: a handle")
             appendLine("# minted by any proxy resolves in all of them.")
             appendLine("static var handles: Dictionary = {}")
+            appendLine()
+            appendLine("# Task 134 D1: the live await watchers by callback id (weak: the emitter's")
+            appendLine("# connection owns each one), so any proxy can close an await.")
+            appendLine("static var await_watchers: Dictionary = {}")
             appendLine()
             appendLine("# Proxy script path per Kanama script class (simple name), so a proxy can")
             appendLine("# instantiate a scripted resource for the runtime factory crossing.")
@@ -1290,6 +1276,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendObjectObjectLongMethodDispatcher()
     appendNumericMethodDispatcher()
     appendPackedReturnMethodDispatcher()
+    appendPackedArgsReturnMethodDispatcher()
     appendLine("  private fun unknown(kind: String, id: Int): Nothing =")
     appendLine("    error(\"Unknown Kanama Web \$kind id=\$id\")")
     appendLine("}")
@@ -1753,6 +1740,41 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
             )
           val returnType = checkNotNull(method.returnType) { "PACKED_RETURN needs a return type" }
           appendLine("        ${methodIndex + 1} -> ${packedReturnExpression(access, returnType)}")
+        }
+      }
+      appendLine("        else -> unknown(\"method\", methodId)")
+      appendLine("      }")
+    }
+    appendLine("      else -> unknown(\"script\", scriptId)")
+    appendLine("    }")
+    appendLine()
+  }
+
+  /**
+   * Task 134 D1: every [WebMethodArm.PACKED_ARGS_RETURN] method -- the packed argument list in (as
+   * [WebMethodArm.PACKED_ARGS]), the packed return out (as [WebMethodArm.PACKED_RETURN]).
+   */
+  private fun StringBuilder.appendPackedArgsReturnMethodDispatcher() {
+    appendLine(
+      "  fun callPackedArgs(scriptId: Int, methodId: Int, script: KanamaWebScript, value: String): String ="
+    )
+    appendLine("    when (scriptId) {")
+    scripts.forEachIndexed { scriptIndex, input ->
+      appendLine("      ${scriptIndex + 1} -> when (methodId) {")
+      input.model.methods.forEachIndexed { methodIndex, method ->
+        if (methodArm(method) == WebMethodArm.PACKED_ARGS_RETURN) {
+          val arguments = packedArgKotlinExpressions(method.args).joinToString(", ")
+          val access =
+            webLongValue(
+              "(script as ${input.model.simpleName}).${method.kotlinName}($arguments)",
+              method.returnGodotEnum,
+            )
+          val returnType =
+            checkNotNull(method.returnType) { "PACKED_ARGS_RETURN needs a return type" }
+          appendLine("        ${methodIndex + 1} -> {")
+          appendLine("          val packedArgs = value.split('\\u001F')")
+          appendLine("          ${packedReturnExpression(access, returnType)}")
+          appendLine("        }")
         }
       }
       appendLine("        else -> unknown(\"method\", methodId)")
@@ -2583,6 +2605,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_clear_callbacks()")
     appendLine("\t\treturn")
     appendLine("\tvar freed_handle := _kanama_handle")
+    appendLine("\t$DROP_ROUTED_AWAITS(freed_handle)")
     appendLine("\t_kanama_bridge.free(_kanama_handle)")
     appendLine("\t_kanama_clear_callbacks()")
     appendLine("\t_kanama_handle = 0")
@@ -3388,7 +3411,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tif config_tagged.begins_with(\"i:\"):")
     appendLine("\t\t\t\tconfig_value = int(config_tagged.substr(2))")
     appendLine("\t\t\telif config_tagged.begins_with(\"f:\"):")
-    appendLine("\t\t\t\tconfig_value = float(config_tagged.substr(2))")
+    appendLine("\t\t\t\tconfig_value = $WEB_FLOAT(config_tagged.substr(2))")
     appendLine("\t\t\telif config_tagged.begins_with(\"b:\"):")
     appendLine("\t\t\t\tconfig_value = config_tagged.substr(2) == \"true\"")
     appendLine("\t\t\telse:")
@@ -3990,7 +4013,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\tvar target: Object = self if target_handle == _kanama_handle else _kanama_object_handles.get(target_handle)"
     )
     appendLine("\tvar result := ERR_INVALID_PARAMETER")
-    appendLine("\tif source != null and target != null:")
+    appendLine("\tif source != null and target != null and String(args[3]) == \"$SIGNAL_AWAIT\":")
+    appendLine(
+      "\t\tresult = $CONNECT_AWAIT(source, StringName(String(args[1])), target, target_handle, int(args[5]), int(args[4]))"
+    )
+    appendLine("\telif source != null and target != null:")
     appendLine("\t\tvar callable := Callable(target, StringName(String(args[3])))")
     appendLine("\t\tif args.size() > 5:")
     appendLine("\t\t\tcallable = callable.bind(int(args[5]))")
@@ -4002,6 +4029,114 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\tresult = source.connect(StringName(String(args[1])), callable, int(args[4]))")
     appendLine("\t_kanama_bridge.recordImmediateConnectResult(result)")
     appendLine("\treturn result")
+    appendLine()
+    appendLine(
+      "func $CONNECT_AWAIT(source: Object, signal_name: StringName, target: Object, target_handle: int, callback_id: int, flags: int) -> int:"
+    )
+    appendLine(
+      "\t# Task 134 D1: an await is held by the EMITTER. The watcher rides as a bound argument of"
+    )
+    appendLine("\t# the emitter's own one-shot connection, so it lives exactly as long as that")
+    appendLine(
+      "\t# connection: freeing the emitter releases it, and it tells Kotlin, which cancels the"
+    )
+    appendLine(
+      "\t# wait instead of leaving it suspended. Works whatever the emitter is. No metadata and"
+    )
+    appendLine(
+      "\t# no CONNECT_PERSIST: Node.duplicate() and PackedScene.pack copy and save neither."
+    )
+    appendLine("\tif flags == -1:")
+    appendLine("\t\t$DROP_AWAIT(callback_id)")
+    appendLine("\t\treturn OK")
+    appendLine("\tvar watcher := $SIGNAL_WATCHER.new()")
+    appendLine("\twatcher.bridge = _kanama_bridge")
+    appendLine("\twatcher.router_handle = target_handle")
+    appendLine("\twatcher.router_id = target.get_instance_id()")
+    appendLine("\twatcher.source_id = source.get_instance_id()")
+    appendLine("\twatcher.signal_name = signal_name")
+    appendLine("\twatcher.callback_id = callback_id")
+    appendLine(
+      "\tvar connected := source.connect(signal_name, Callable(watcher, \"fire\").bind(watcher), (flags | CONNECT_ONE_SHOT) & ~CONNECT_PERSIST)"
+    )
+    appendLine("\tif connected != OK:")
+    appendLine("\t\twatcher.done = true")
+    appendLine("\t\treturn connected")
+    appendLine("\tKanamaWebHandles.await_watchers[callback_id] = weakref(watcher)")
+    appendLine("\treturn OK")
+    appendLine()
+    appendLine("func $DROP_AWAIT(callback_id: int) -> void:")
+    appendLine(
+      "\t# Close an await: mark its watcher done (so it reports nothing) and disconnect it,"
+    )
+    appendLine("\t# which releases it. Kotlin's close() and a freed router script both come here.")
+    appendLine("\tvar ref: WeakRef = KanamaWebHandles.await_watchers.get(callback_id)")
+    appendLine("\tKanamaWebHandles.await_watchers.erase(callback_id)")
+    appendLine("\tif ref == null:")
+    appendLine("\t\treturn")
+    appendLine("\tvar watcher = ref.get_ref()")
+    appendLine("\tif watcher == null:")
+    appendLine("\t\treturn")
+    appendLine("\twatcher.done = true")
+    appendLine("\tvar source := instance_from_id(watcher.source_id)")
+    appendLine("\tvar callable := Callable(watcher, \"fire\").bind(watcher)")
+    appendLine("\tif source != null and source.is_connected(watcher.signal_name, callable):")
+    appendLine("\t\tsource.disconnect(watcher.signal_name, callable)")
+    appendLine()
+    appendLine("func $DROP_ROUTED_AWAITS(router_handle: int) -> void:")
+    appendLine(
+      "\t# This script is being freed: drop every await it was delivering (review S3), so no"
+    )
+    appendLine("\t# watcher stays connected to a long-lived emitter.")
+    appendLine("\tfor callback_id in KanamaWebHandles.await_watchers.keys():")
+    appendLine("\t\tvar ref: WeakRef = KanamaWebHandles.await_watchers[callback_id]")
+    appendLine("\t\tvar watcher = ref.get_ref()")
+    appendLine("\t\tif watcher == null or watcher.router_handle == router_handle:")
+    appendLine("\t\t\t$DROP_AWAIT(callback_id)")
+    appendLine()
+    appendLine("class $SIGNAL_WATCHER extends RefCounted:")
+    appendLine("\tvar bridge: Variant")
+    appendLine("\tvar router_handle := 0")
+    appendLine("\tvar router_id := 0")
+    appendLine("\tvar source_id := 0")
+    appendLine("\tvar signal_name := &\"\"")
+    appendLine("\tvar callback_id := 0")
+    appendLine("\tvar done := false")
+    appendLine()
+    appendLine("\tfunc fire(...args: Array) -> void:")
+    appendLine("\t\targs.pop_back() # the bound watcher itself")
+    appendLine("\t\tif done:")
+    appendLine("\t\t\treturn")
+    appendLine("\t\tdone = true")
+    appendLine("\t\tKanamaWebHandles.await_watchers.erase(callback_id)")
+    appendLine("\t\tvar router := instance_from_id(router_id)")
+    appendLine("\t\tif router != null:")
+    appendLine("\t\t\trouter.$SIGNAL_DELIVER(args, callback_id)")
+    appendLine()
+    appendLine("\tfunc _notification(what: int) -> void:")
+    appendLine("\t\tif what == NOTIFICATION_PREDELETE and not done:")
+    appendLine("\t\t\tdone = true")
+    appendLine("\t\t\tKanamaWebHandles.await_watchers.erase(callback_id)")
+    appendLine("\t\t\tbridge.releaseSignalCallback(router_handle, callback_id)")
+    appendLine()
+    appendLine("func $SIGNAL_DISPATCH_ARGS(...args: Array) -> void:")
+    appendLine(
+      "\t# Task 134 D1: any number of emitted arguments; the bound callback id comes last."
+    )
+    appendLine("\tvar callback_id := int(args.pop_back())")
+    appendLine("\t$SIGNAL_DELIVER(args, callback_id)")
+    appendLine()
+    appendLine("func $SIGNAL_DELIVER(args: Array, callback_id: int) -> void:")
+    appendLine("\tvar transient: Array[int] = []")
+    appendLine("\tvar parts := PackedStringArray()")
+    appendLine("\tfor arg in args:")
+    appendLine("\t\tparts.append(${WebValueTypes.PACK_VARIANT}(arg, transient))")
+    appendLine(
+      "\t_kanama_bridge.dispatchSignalArgs(_kanama_handle, callback_id, \"\\u001f\".join(parts))"
+    )
+    appendLine("\tfor handle in transient:")
+    appendLine("\t\t_kanama_object_handles.erase(handle)")
+    appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(handle)")
     appendLine()
     appendLine("func $SIGNAL_DISPATCH_ZERO(callback_id: int) -> void:")
     appendLine("\t_kanama_bridge.dispatchSignal0(_kanama_handle, callback_id)")
@@ -4017,17 +4152,19 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t_kanama_bridge.dispatchSignal1(_kanama_handle, callback_id, $SIGNAL_PACK_ARG(arg))"
     )
     appendLine()
-    // Task 133 C3: the text channels' decimals, NaN and the infinities included (Kotlin sends
-    // `nan`/`inf`/`-inf`, see WebPackedFloats; `split_floats` alone reads them as 0.0).
+    // Task 134 D1 review S1: a decimal crosses the text channels as its IEEE-754 bits (the int64
+    // of the double, see WebPackedFloats). Decimal text is not exact: Godot's `String.to_float` is
+    // not correctly rounded (about half of random doubles came back wrong, -0 became +0, 2.3e-308
+    // became 0), and Kotlin/Wasm's `toDouble` is off by an ulp in rare cases.
+    appendLine("var _kanama_bits := PackedByteArray([0, 0, 0, 0, 0, 0, 0, 0])")
+    appendLine()
     appendLine("func $WEB_FLOAT(text: String) -> float:")
-    appendLine("\tmatch text:")
-    appendLine("\t\t\"nan\", \"-nan\":")
-    appendLine("\t\t\treturn NAN")
-    appendLine("\t\t\"inf\":")
-    appendLine("\t\t\treturn INF")
-    appendLine("\t\t\"-inf\":")
-    appendLine("\t\t\treturn -INF")
-    appendLine("\treturn text.to_float()")
+    appendLine("\t_kanama_bits.encode_s64(0, int(text))")
+    appendLine("\treturn _kanama_bits.decode_double(0)")
+    appendLine()
+    appendLine("func $WEB_FLOAT_TEXT(value: float) -> String:")
+    appendLine("\t_kanama_bits.encode_double(0, value)")
+    appendLine("\treturn str(_kanama_bits.decode_s64(0))")
     appendLine()
     appendLine("func $WEB_FLOATS(packed: String) -> PackedFloat64Array:")
     appendLine("\tvar values := PackedFloat64Array()")
@@ -4042,15 +4179,12 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\treturn \"\"")
     appendLine("\t\tTYPE_BOOL:")
     appendLine("\t\t\treturn \"1\" if arg else \"0\"")
-    appendLine("\t\tTYPE_VECTOR2, TYPE_VECTOR2I:")
-    appendLine("\t\t\treturn \"%s,%s\" % [arg.x, arg.y]")
-    appendLine("\t\tTYPE_VECTOR3, TYPE_VECTOR3I:")
-    appendLine("\t\t\treturn \"%s,%s,%s\" % [arg.x, arg.y, arg.z]")
-    appendLine("\t\tTYPE_COLOR:")
-    appendLine("\t\t\treturn \"%s,%s,%s,%s\" % [arg.r, arg.g, arg.b, arg.a]")
-    // Task 133: the other value types as their packed float32 components (Vector3i keeps its arm).
+    appendLine("\t\tTYPE_FLOAT:")
+    appendLine("\t\t\treturn $WEB_FLOAT_TEXT(arg)")
+    // Every value type as its components (task 134 D1 review N2: decimals as their bits, never
+    // `str()` text).
     appendLine(
-      "\t\t${(WebValueTypes.COMPONENTS.keys - TypeMapping.VECTOR3I).joinToString(", ") { WebValueTypes.gdTypeConstant(it) }}:"
+      "\t\t${WebValueTypes.LAYOUTS.keys.joinToString(", ") { WebValueTypes.gdTypeConstant(it) }}:"
     )
     appendLine("\t\t\treturn ${WebValueTypes.gdPack("arg")}")
     appendLine("\t\t_:")
@@ -4743,7 +4877,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t\telif config_read is int:")
     appendLine("\t\t\t\tconfig_read_tagged = \"i:%d\" % config_read")
     appendLine("\t\t\telif config_read is float:")
-    appendLine("\t\t\t\tconfig_read_tagged = \"f:%s\" % config_read")
+    appendLine("\t\t\t\tconfig_read_tagged = \"f:\" + $WEB_FLOAT_TEXT(config_read)")
     appendLine("\t\t\telif config_read != null:")
     appendLine("\t\t\t\tconfig_read_tagged = \"s:%s\" % config_read")
     appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult(config_read_tagged)")
@@ -4811,8 +4945,40 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\t\t_kanama_bridge.recordImmediateStringResult(_kanama_generic_encode_result(generic_call_result))"
     )
     appendLine("\t\t\tresult = 1")
+    appendLine("\t\telif opcode == $BUILTIN_CALL_OPCODE:")
+    appendLine("\t\t\t# Task 134 D1: one value-type (builtin) method run by the engine.")
+    appendLine("\t\t\t_kanama_bridge.recordImmediateStringResult($BUILTIN_CALL(String(args[2])))")
+    appendLine("\t\t\tresult = 1")
     appendLine("\t_kanama_bridge.recordImmediateLongResult(result)")
     appendLine("\treturn result")
+    appendLine()
+    appendLine("func $BUILTIN_CALL(packed: String) -> String:")
+    appendLine(
+      "\t# Task 134 D1: `<Variant.Type>\\u001f<method>\\u001f<static 0/1>\\u001f<base>\\u001f<args...>`,"
+    )
+    appendLine("\t# each value `<Variant.Type>:<payload>`; the result is one such Variant, or")
+    appendLine("\t# `E:<reason>` so Kotlin fails loud instead of reading zeros.")
+    appendLine("\tvar parts := packed.split(\"\\u001f\")")
+    appendLine("\tvar base: Variant")
+    appendLine("\tif parts[2] == \"1\":")
+    appendLine(
+      "\t\t# A static method: Variant::callp ignores the instance, any value of the type works."
+    )
+    appendLine("\t\tbase = type_convert(null, int(parts[0]))")
+    appendLine("\telse:")
+    appendLine("\t\tbase = ${WebValueTypes.UNPACK_VARIANT}(parts[3])")
+    appendLine("\tvar call_args: Array = []")
+    appendLine("\tfor index in range(4, parts.size()):")
+    appendLine("\t\tcall_args.append(${WebValueTypes.UNPACK_VARIANT}(parts[index]))")
+    appendLine("\tvar method := Callable.create(base, StringName(parts[1]))")
+    appendLine("\tif not method.is_valid():")
+    appendLine("\t\treturn \"E:no builtin method %s on Variant type %s\" % [parts[1], parts[0]]")
+    appendLine("\tif call_args.size() != method.get_argument_count():")
+    appendLine(
+      "\t\treturn \"E:%s takes %d argument(s), the call passed %d\" % [parts[1], method.get_argument_count(), call_args.size()]"
+    )
+    appendLine("\tvar no_handles: Array[int] = []")
+    appendLine("\treturn ${WebValueTypes.PACK_VARIANT}(method.callv(call_args), no_handles)")
     appendLine()
     appendLine("func _kanama_generic_decode_arg(generic_packed_arg: String) -> Variant:")
     appendLine("\t# EXPERIMENTAL (task 76 spike): one `typeTag:value` generic-call argument.")
@@ -4826,7 +4992,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif generic_arg_tag == \"i\":")
     appendLine("\t\treturn int(generic_arg_payload)")
     appendLine("\tif generic_arg_tag == \"d\":")
-    appendLine("\t\treturn float(generic_arg_payload)")
+    appendLine("\t\treturn $WEB_FLOAT(generic_arg_payload)")
+    appendLine("\tif generic_arg_tag == \"v\":")
+    appendLine("\t\t# Task 134 D1: a value type or NodePath as `<Variant.Type>:<payload>`.")
+    appendLine("\t\treturn ${WebValueTypes.UNPACK_VARIANT}(generic_arg_payload)")
     appendLine("\tif generic_arg_tag == \"s\":")
     appendLine("\t\t# Unescape (reverse of the Kotlin encoder): %1F -> unit separator, %25 -> %.")
     appendLine(
@@ -4856,7 +5025,7 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\tif generic_value is int:")
     appendLine("\t\treturn \"i\\u001f%d\" % generic_value")
     appendLine("\tif generic_value is float:")
-    appendLine("\t\treturn \"f\\u001f%s\" % generic_value")
+    appendLine("\t\treturn \"f\\u001f\" + $WEB_FLOAT_TEXT(generic_value)")
     appendLine("\tif generic_value is String or generic_value is StringName:")
     appendLine("\t\t# Escape so payload separators survive the packed transport: % first.")
     appendLine(
@@ -4864,11 +5033,22 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     )
     appendLine("\tif generic_value is Vector2:")
     appendLine("\t\tvar generic_v2 := generic_value as Vector2")
-    appendLine("\t\treturn \"v2\\u001f%s\\u001f%s\" % [generic_v2.x, generic_v2.y]")
+    appendLine(
+      "\t\treturn \"v2\\u001f%s\\u001f%s\" % [$WEB_FLOAT_TEXT(generic_v2.x), $WEB_FLOAT_TEXT(generic_v2.y)]"
+    )
     appendLine("\tif generic_value is Vector3:")
     appendLine("\t\tvar generic_v3 := generic_value as Vector3")
     appendLine(
-      "\t\treturn \"v3\\u001f%s\\u001f%s\\u001f%s\" % [generic_v3.x, generic_v3.y, generic_v3.z]"
+      "\t\treturn \"v3\\u001f%s\\u001f%s\\u001f%s\" % [$WEB_FLOAT_TEXT(generic_v3.x), " +
+        "$WEB_FLOAT_TEXT(generic_v3.y), $WEB_FLOAT_TEXT(generic_v3.z)]"
+    )
+    appendLine(
+      "\tif typeof(generic_value) >= TYPE_VECTOR2I and typeof(generic_value) <= TYPE_COLOR:"
+    )
+    appendLine("\t\t# Task 134 D1: any other value type as one `<Variant.Type>:<payload>` Variant.")
+    appendLine("\t\tvar generic_no_handles: Array[int] = []")
+    appendLine(
+      "\t\treturn \"v\\u001f%s\" % ${WebValueTypes.PACK_VARIANT}(generic_value, generic_no_handles)"
     )
     appendLine("\tif generic_value is Object:")
     appendLine("\t\tvar generic_object := generic_value as Object")
@@ -5098,6 +5278,24 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
           appendLine("\tfor _kanama_packed_handle in $PACKED_ARG_TRANSIENT:")
           appendLine("\t\t_kanama_object_handles.erase(_kanama_packed_handle)")
           appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(_kanama_packed_handle)")
+        }
+        WebMethodArm.PACKED_ARGS_RETURN -> {
+          // Task 134 D1: the packed argument list in, the packed return out, one crossing.
+          val returnType =
+            checkNotNull(method.returnType) { "PACKED_ARGS_RETURN needs a return type" }
+          appendLine("\tvar $PACKED_ARG_TRANSIENT: Array[int] = []")
+          appendLine("\tvar $PACKED_ARG_PARTS: PackedStringArray = PackedStringArray()")
+          packedArgGdExpressions(method.args).forEach {
+            appendLine("\t$PACKED_ARG_PARTS.append($it)")
+          }
+          appendLine(
+            "\tvar _kanama_packed := String(_kanama_bridge.callPackedArgs(_kanama_handle, ${index + 1}, " +
+              "\"\\u001f\".join($PACKED_ARG_PARTS)))"
+          )
+          appendLine("\tfor _kanama_packed_handle in $PACKED_ARG_TRANSIENT:")
+          appendLine("\t\t_kanama_object_handles.erase(_kanama_packed_handle)")
+          appendLine("\t\t_kanama_bridge.releaseTransientObjectHandle(_kanama_packed_handle)")
+          appendPackedReturnParse(returnType)
         }
         // Task 80: this stub throws at runtime, and the manifest + build report now say so.
         WebMethodArm.NONE -> {

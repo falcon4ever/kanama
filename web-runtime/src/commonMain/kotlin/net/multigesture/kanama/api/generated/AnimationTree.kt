@@ -8,6 +8,14 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class AnimationTree(godotObject: GodotHandle) : AnimationMixer(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  /** Signal `animation_player_changed`; see [TypedSignal]. */
+  val animationPlayerChanged: Signal0
+    get() = Signal0(this, "animation_player_changed")
+
+  object Signals {
+    const val animationPlayerChanged: String = "animation_player_changed"
+  }
+
   value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
     companion object {
       val PHYSICS: AnimationProcessCallback get() = AnimationProcessCallback(0L)

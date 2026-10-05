@@ -12,4 +12,12 @@ class AudioStream(godotObject: GodotHandle) : Resource(godotObject), AutoCloseab
   override fun close() {
     releaseWebResource(handle.value)
   }
+
+  /** Signal `parameter_list_changed`; see [TypedSignal]. */
+  val parameterListChanged: Signal0
+    get() = Signal0(this, "parameter_list_changed")
+
+  object Signals {
+    const val parameterListChanged: String = "parameter_list_changed"
+  }
 }

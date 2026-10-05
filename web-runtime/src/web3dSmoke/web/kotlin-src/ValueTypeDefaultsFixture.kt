@@ -8,21 +8,26 @@ import net.multigesture.kanama.api.GD.degToRad
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Plane
+import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Rect2i
+import net.multigesture.kanama.types.Transform2D
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.types.Vector3i
+import net.multigesture.kanama.types.Vector4
+import net.multigesture.kanama.types.Vector4i
 
 private const val TAU = 2 * PI
 
 /**
- * Task 133 compile fixture for the Web value types: one `@Export` per default the processor
+ * Task 133 compile fixture for the Web value types (every value type since task 134 D1): one `@Export` per default the processor
  * normalizes for a Web script type (every named constant, and each constructor with nested
  * constants and folded `PI` / `TAU` / `degToRad`), plus value-type arguments, returns and a signal.
  * `ValueTypeScriptTypesTest` holds this file to the normalizer's constant table, and the web3d
@@ -98,7 +103,27 @@ class ValueTypeDefaultsFixture(godotObject: GodotHandle) : KanamaScript<Node>(go
   @Export var c64: Basis = Basis(Vector3.RIGHT, Vector3(0.0, 1.0, 0.0), Vector3.BACK)
   @Export var c65: Transform3D = Transform3D(Basis.FLIP_Y, Vector3(1.0, 2.0, PI))
 
+  @Export var c66: Vector4 = Vector4.ZERO
+  @Export var c67: Vector4 = Vector4.ONE
+  @Export var c68: Vector4 = Vector4.INF
+  @Export var c69: Vector4i = Vector4i.ZERO
+  @Export var c70: Vector4i = Vector4i.ONE
+  @Export var c71: Vector4i = Vector4i.MIN
+  @Export var c72: Vector4i = Vector4i.MAX
+  @Export var c73: AABB = AABB.ZERO
+  @Export var c74: Transform2D = Transform2D.IDENTITY
+  @Export var c75: Transform2D = Transform2D.FLIP_X
+  @Export var c76: Transform2D = Transform2D.FLIP_Y
+  @Export var c77: Projection = Projection.IDENTITY
+  @Export var c78: Projection = Projection.ZERO
+  @Export var c79: Vector4 = Vector4(1.0, 2.0, PI, -0.5)
+  @Export var c80: Vector4i = Vector4i(1, -2, 3, 60 * 5)
+  @Export var c81: AABB = AABB(Vector3.UP, Vector3(0.5, 1.0, TAU))
+  @Export var c82: Transform2D = Transform2D(Vector2.RIGHT, Vector2.DOWN, Vector2(3.0, 4.0))
+
   @Signal fun moved(transform: Transform3D) = Unit
+
+  @Signal fun reshaped(box: AABB, view: Projection, count: Long) = Unit
 
   fun takeRect(rect: Rect2) {
     c65 = Transform3D(Basis.IDENTITY, Vector3(rect.position.x, rect.size.y, 0.0))
@@ -109,4 +134,6 @@ class ValueTypeDefaultsFixture(godotObject: GodotHandle) : KanamaScript<Node>(go
   }
 
   fun currentTransform(): Transform3D = c65
+
+  fun scaledBox(box: AABB, factor: Double): AABB = AABB(box.position * factor, box.size * factor)
 }

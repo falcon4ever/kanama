@@ -238,6 +238,7 @@ class ValueTypeScriptTypesTest {
 
   @Test
   fun webProxyAndRegistryMarshalTheWebValueTypes() {
+    // Task 134 D1: the Web build compiles the shared value types, so every one is a script type.
     val webTypes =
       listOf(
         TypeMapping.VECTOR3I,
@@ -247,6 +248,11 @@ class ValueTypeScriptTypesTest {
         TypeMapping.QUATERNION,
         TypeMapping.BASIS,
         TypeMapping.TRANSFORM3D,
+        TypeMapping.VECTOR4,
+        TypeMapping.VECTOR4I,
+        TypeMapping.AABB,
+        TypeMapping.TRANSFORM2D,
+        TypeMapping.PROJECTION,
       )
     assertEquals(webTypes.toSet(), WebValueTypes.COMPONENTS.keys)
     val defaults =
@@ -274,18 +280,30 @@ class ValueTypeScriptTypesTest {
       proxy,
     )
     assertTrue(proxy.contains("rect2 = _kanama_web_unpack_value(TYPE_RECT2, _kanama_packed_2)"))
-    // Exact decimals in, ints as ints, and the unpack constructors in the channel order.
-    assertTrue(proxy.contains("String.num_scientific(value.basis.z.z)"), proxy)
+    // Exact decimals in, ints as ints, and the unpack constructors in Godot's memory layout (a
+    // Basis as its rows, so column x is components 0, 3, 6).
+    assertTrue(proxy.contains("_kanama_web_float_text(value.basis.z.z)"), proxy)
     assertTrue(proxy.contains("str(value.position.x)"), "Rect2i packs ints")
     assertTrue(
       proxy.contains(
-        "return Transform3D(Basis(Vector3(p[0], p[1], p[2]), Vector3(p[3], p[4], p[5]), " +
-          "Vector3(p[6], p[7], p[8])), Vector3(p[9], p[10], p[11]))"
+        "return Transform3D(Basis(Vector3(p[0], p[3], p[6]), Vector3(p[1], p[4], p[7]), " +
+          "Vector3(p[2], p[5], p[8])), Vector3(p[9], p[10], p[11]))"
       ),
       proxy,
     )
     assertTrue(proxy.contains("return Rect2i(int(p[0]), int(p[1]), int(p[2]), int(p[3]))"))
-    assertTrue(proxy.contains("TYPE_RECT2, TYPE_RECT2I, TYPE_PLANE"), "signal payloads pack")
+    assertTrue(
+      proxy.contains(
+        "return Projection(Vector4(p[0], p[1], p[2], p[3]), Vector4(p[4], p[5], p[6], p[7]), " +
+          "Vector4(p[8], p[9], p[10], p[11]), Vector4(p[12], p[13], p[14], p[15]))"
+      ),
+      proxy,
+    )
+    assertTrue(proxy.contains("return AABB(Vector3(p[0], p[1], p[2]), Vector3(p[3], p[4], p[5]))"))
+    assertTrue(
+      proxy.contains("TYPE_VECTOR2, TYPE_VECTOR2I, TYPE_RECT2, TYPE_RECT2I, TYPE_VECTOR3"),
+      "signal payloads pack",
+    )
     val registry = emitter.registrySource()
     assertTrue(registry.contains("fun setPackedValueProperty("), registry)
     assertTrue(
@@ -300,10 +318,21 @@ class ValueTypeScriptTypesTest {
       )
     )
     model.methods.forEach { method ->
-      val typed = WebScriptCodeEmitter.methodDispatch(method).isTyped
-      // An argument AND a return has no Web arm whatever the types (pre-existing).
-      assertEquals(!method.kotlinName.startsWith("echo_"), typed, method.kotlinName)
+      assertTrue(WebScriptCodeEmitter.methodDispatch(method).isTyped, method.kotlinName)
+      // Task 134 D1: an argument AND a return rides the packed list in and the packed return out.
+      if (method.kotlinName.startsWith("echo_")) {
+        assertEquals(WebMethodArm.PACKED_ARGS_RETURN, WebScriptCodeEmitter.methodArm(method))
+      }
     }
+    assertTrue(registry.contains("fun callPackedArgs("), registry)
+    assertTrue(
+      registry.contains(
+        "net.multigesture.kanama.web.WebPackedValues.encode((script as Shapes).echo_projection(" +
+          "(net.multigesture.kanama.web.WebPackedValues.decode(packedArgs[0], $t.Projection::class) as $t.Projection)))"
+      ),
+      registry,
+    )
+    assertTrue(proxy.contains("_kanama_bridge.callPackedArgs(_kanama_handle, "), proxy)
     // Small values ride the six numeric slots; Basis and Transform3D the exact packed list.
     val takeRect = model.methods.single { it.kotlinName == "take_rect2" }
     assertEquals(WebMethodArm.NUMERIC_VOID, WebScriptCodeEmitter.methodArm(takeRect))
@@ -315,7 +344,8 @@ class ValueTypeScriptTypesTest {
   }
 
   @Test
-  fun webRefusesTheTypesItHasNoValueTypeFor() {
+  fun webAcceptsTheValueTypesItOnceRefused() {
+    // Task 134 D1: the five types Web had no value type for are script types there too now.
     val options = mapOf("kanamaRuntimeTarget" to "web")
     listOf(
         TypeMapping.VECTOR4,
@@ -326,8 +356,7 @@ class ValueTypeScriptTypesTest {
       )
       .forEach { type ->
         val errors = WebScriptCodeEmitter.unsupportedWebPropertyErrors(model(listOf(type)), options)
-        assertEquals(1, errors.size, "$type")
-        assertTrue(errors.single().contains("no full Kanama Web property arm set"))
+        assertEquals(emptyList(), errors, "$type")
       }
   }
 

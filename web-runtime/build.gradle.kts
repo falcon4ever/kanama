@@ -146,7 +146,7 @@ kotlin {
             // Task 134 A2: the value types' storage, printing and real_t formulas are ONE source with
             // the native types (src/commonMain/.../types/shared); WebReal.kt supplies the float32
             // `GodotRealStorage`, `narrowReal` and `widenReal` the native side generates.
-            kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/types/shared"))
+            kotlin.srcDir(rootProject.file("src/commonMain/kotlin/net/multigesture/kanama/types"))
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(project(":kanama-common-api"))
@@ -1325,6 +1325,8 @@ tasks.register("stageWebWeb3dProject") {
                 "res://kotlin-src/SmokeQuit.kt",
                 "res://kotlin-src/Player.kt",
                 "res://kotlin-src/Coin.kt",
+                "res://kotlin-src/D1Router.kt",
+                "res://kotlin-src/D1Emitter.kt",
             )
         val mappings =
             manifest

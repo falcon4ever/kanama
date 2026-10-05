@@ -20,6 +20,19 @@ open class Range(godotObject: GodotHandle) : Control(godotObject) {
   var value: Double
     get() = getValue()
     set(newValue) = setValue(newValue)
+
+  /** Signal `value_changed`; see [TypedSignal]. */
+  val valueChanged: Signal1<Double>
+    get() = Signal1(this, "value_changed", SignalArgType.DOUBLE)
+
+  /** Signal `changed`; see [TypedSignal]. */
+  val changed: Signal0
+    get() = Signal0(this, "changed")
+
+  object Signals {
+    const val valueChanged: String = "value_changed"
+    const val changed: String = "changed"
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

@@ -92,7 +92,11 @@ Where Kotlin and GDScript differ:
   `quaternion * vector` and `vector * quaternion` with a non-normalized
   quaternion). These are Kotlin math and compute the formula without the check,
   which is what an exported (release) game does. Engine-computed methods
-  (`slerp`, `rotated`, ...) report the same error as GDScript.
+  (`slerp`, `rotated`, ...) report the same error as GDScript, and so do
+  `Basis.inverse` of a singular basis, `Basis.getRotationQuaternion` of a basis
+  that is not a rotation and `Transform3D.affineInverse` of a singular one: they
+  compute in Kotlin and hand exactly the input Godot's check rejects to the
+  engine.
 - Comparing vectors with a NaN component: Godot answers `false` to all of `<`,
   `<=`, `>` and `>=`. Kotlin's comparisons go through one `compareTo`, which sorts
   a NaN component last, so `<` and `<=` are `false` but `>` and `>=` are `true`.
@@ -101,10 +105,23 @@ Where Kotlin and GDScript differ:
   result differs by CPU (x86 and arm64 disagree). Kotlin's conversion is defined
   (NaN gives 0, out-of-range values saturate), which matches Godot on arm64
   (Apple silicon, phones). For finite channels every platform agrees.
-- On Web (Kotlin/Wasm), the methods that run in Kotlin natively run the same
-  Kotlin, with the same results; the engine-computed ones are not all there yet,
-  and `angle()`, `rotated` and `slerp` are Kotlin approximations of Godot's
-  (rounded to `real_t`, not guaranteed to the bit).
+- On Web (Kotlin/Wasm) the value types are the same classes: the methods that
+  run in Kotlin natively (on every platform that includes `Basis`/`Transform3D`
+  `inverse`, `affineInverse`, `transposed`, `determinant`, `getScale`, `scaled`,
+  `orthonormalized` and `getRotationQuaternion`) run the same Kotlin, with the
+  same results, and the engine-computed ones reach the engine through the Web
+  bridge (one crossing per call, so prefer the Kotlin ones in a hot loop). A few
+  engine-computed ones that gameplay calls every tick run in Kotlin on Web, at no
+  crossing, as ports of Godot's own code: `Vector2.angle`/`rotated`,
+  `Vector3.rotated`/`signedAngleTo`, `Quaternion.slerp`, `Basis.rotated`/
+  `getEuler`/`fromEuler`/`lookingAt` and `Transform3D.lookingAt`/
+  `interpolateWith`. Those built on `sin`/`cos`/`atan2` match the engine except
+  where math libraries round differently in the last bit (they also differ
+  between the engine's own builds on different CPUs): by at most one float32
+  step, and `interpolateWith` by at most 64 (measured against Godot on every
+  build); the two `lookingAt` use no such function and match to the bit. Web
+  exports are release builds, so these ports skip the debug-only checks above,
+  as the engine does there.
 
 Their components are `Double`, like every other decimal in the API (`Vector3.x`,
 `Color.r`, `delta`, scalar arguments), so no `.toFloat()`/`.toDouble()` is

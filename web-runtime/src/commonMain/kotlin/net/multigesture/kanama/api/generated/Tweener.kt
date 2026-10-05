@@ -8,4 +8,11 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class Tweener(godotObject: GodotHandle) : RefCounted(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  /** Signal `finished`; see [TypedSignal]. */
+  val finished: Signal0
+    get() = Signal0(this, "finished")
+
+  object Signals {
+    const val finished: String = "finished"
+  }
 }

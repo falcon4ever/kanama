@@ -601,6 +601,17 @@ fun kanamaWebCallPacked(objectId: Int, methodId: Int): String {
   }
 }
 
+/** Task 134 D1: a registered method taking arguments and returning a value, both packed. */
+@JsExport
+fun kanamaWebCallPackedArgs(objectId: Int, methodId: Int, value: String): String {
+  return webCallbackBoundary(objectId, "registered_function", "method", methodId) { record ->
+    val packed =
+      KanamaWebProjectRegistry.callPackedArgs(record.scriptId, methodId, record.script, value)
+    commands.flush()
+    packed
+  }
+}
+
 /**
  * Task 88 (finding 3): dispatch the script's `@OnExitTree` WITHOUT destroying it.
  *
@@ -713,6 +724,34 @@ fun kanamaWebDispatchSignal0(objectId: Int, callbackId: Int): Int {
 fun kanamaWebDispatchSignal1(objectId: Int, callbackId: Int, packed: String): Int {
   return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch1") {
     WebSignalCallbackRegistry.dispatchScalar(objectId, callbackId, packed)
+    commands.flush()
+    1
+  }
+}
+
+/**
+ * Task 134 D1: every emitted argument of a signal, packed by the proxy's
+ * `_kanama_web_signal_dispatch_args` (or an await watcher) as `<Variant.Type>:<payload>` parts.
+ */
+@JsExport
+fun kanamaWebDispatchSignalArgs(objectId: Int, callbackId: Int, packed: String): Int {
+  return webCallbackBoundary(objectId, "_kanama_web_signal_dispatch_args") {
+    WebSignalCallbackRegistry.dispatchArgs(objectId, callbackId, packed)
+    commands.flush()
+    1
+  }
+}
+
+/**
+ * Task 134 D1: an await watcher died with its emitter before the signal fired. The awaiting
+ * coroutine is cancelled (as on desktop/iOS). The owner may be gone already (its free released the
+ * entry first), so this is a no-op then rather than a boundary failure.
+ */
+@JsExport
+fun kanamaWebReleaseSignalCallback(objectId: Int, callbackId: Int): Int {
+  if (!instances.isLive(objectId) || !WebSignalCallbackRegistry.contains(callbackId)) return 0
+  return webCallbackBoundary(objectId, "_kanama_web_signal_release") {
+    WebSignalCallbackRegistry.release(callbackId)
     commands.flush()
     1
   }

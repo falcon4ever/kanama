@@ -15,3 +15,6 @@ internal inline fun narrowReal(value: Double): Float = value.toFloat()
 /** A stored `real_t` widened to `Double` (exact): what a value type's property returns. */
 @Suppress("NOTHING_TO_INLINE")
 internal inline fun widenReal(value: Float): Double = value.toDouble()
+
+/** A flat `real_t` buffer (the native `GodotRealArray`); the shared builtin formulas use it. */
+internal typealias GodotRealArray = FloatArray

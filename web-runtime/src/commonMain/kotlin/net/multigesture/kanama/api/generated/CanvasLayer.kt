@@ -17,6 +17,14 @@ class CanvasLayer(godotObject: GodotHandle) : Node(godotObject) {
   var visible: Boolean
     get() = unsupportedWebGameplayFamily("CanvasLayer.is_visible")
     set(newValue) = setVisible(newValue)
+
+  /** Signal `visibility_changed`; see [TypedSignal]. */
+  val visibilityChanged: Signal0
+    get() = Signal0(this, "visibility_changed")
+
+  object Signals {
+    const val visibilityChanged: String = "visibility_changed"
+  }
 }
 
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER")

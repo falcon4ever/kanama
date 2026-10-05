@@ -116,11 +116,8 @@ the inspector default (the revert arrow, `get_property_default_value`). Any
 other initializer (`Transform3D.IDENTITY.translated(Vector3.UP)`) still sets the
 property when the script instance is created, but the property has no editor
 default, and the Web build refuses it (its proxy declares the default). iOS
-reports no editor defaults for any script property. On Web, `Vector3i`,
-`Rect2`, `Rect2i`, `Plane`, `Quaternion`, `Basis` and `Transform3D` are script
-types; `Vector4`, `Vector4i`, `AABB`, `Transform2D` and `Projection` are not
-yet (the Web runtime has no such value type), and a Web method still takes
-arguments or returns a value, not both. Enum-typed properties need no hint: a Kotlin
+reports no editor defaults for any script property. On Web every value type is
+a script type too, and a method can take arguments and return a value. Enum-typed properties need no hint: a Kotlin
 `enum class` or a Godot enum exports as a dropdown (a bitfield as flag
 checkboxes) automatically (see below).
 

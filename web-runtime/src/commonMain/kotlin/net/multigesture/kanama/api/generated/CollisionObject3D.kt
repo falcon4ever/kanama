@@ -6,6 +6,7 @@ package net.multigesture.kanama.api
 import net.multigesture.kanama.backend.GodotBackendCalls
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
 import net.multigesture.kanama.backend.InitialGodotCallDescriptors as D
+import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 open class CollisionObject3D(godotObject: GodotHandle) : Node3D(godotObject) {
@@ -51,6 +52,24 @@ open class CollisionObject3D(godotObject: GodotHandle) : Node3D(godotObject) {
   var collisionMask: Long
     get() = unsupportedWebGameplayFamily("CollisionObject3D.get_collision_mask")
     set(newValue) = setCollisionMask(newValue)
+
+  /** Signal `input_event`; see [TypedSignal]. */
+  val inputEvent: Signal5<Node, InputEvent, Vector3, Vector3, Long>
+    get() = Signal5(this, "input_event", SignalArgType.objectOf("Node") { Node(it) }, SignalArgType.objectOf("InputEvent") { InputEvent(it) }, SignalArgType.valueOf<Vector3>("Vector3", Vector3::class), SignalArgType.valueOf<Vector3>("Vector3", Vector3::class), SignalArgType.LONG)
+
+  /** Signal `mouse_entered`; see [TypedSignal]. */
+  val mouseEntered: Signal0
+    get() = Signal0(this, "mouse_entered")
+
+  /** Signal `mouse_exited`; see [TypedSignal]. */
+  val mouseExited: Signal0
+    get() = Signal0(this, "mouse_exited")
+
+  object Signals {
+    const val inputEvent: String = "input_event"
+    const val mouseEntered: String = "mouse_entered"
+    const val mouseExited: String = "mouse_exited"
+  }
 
   value class DisableMode(override val value: Long) : GodotEnumValue {
     companion object {

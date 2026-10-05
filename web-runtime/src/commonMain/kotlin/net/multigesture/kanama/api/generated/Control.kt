@@ -46,6 +46,59 @@ open class Control(godotObject: GodotHandle) : CanvasItem(godotObject) {
   val size: Vector2
     get() = getSize()
 
+  /** Signal `resized`; see [TypedSignal]. */
+  val resized: Signal0
+    get() = Signal0(this, "resized")
+
+  /** Signal `gui_input`; see [TypedSignal]. */
+  val guiInput: Signal1<InputEvent>
+    get() = Signal1(this, "gui_input", SignalArgType.objectOf("InputEvent") { InputEvent(it) })
+
+  /** Signal `mouse_entered`; see [TypedSignal]. */
+  val mouseEntered: Signal0
+    get() = Signal0(this, "mouse_entered")
+
+  /** Signal `mouse_exited`; see [TypedSignal]. */
+  val mouseExited: Signal0
+    get() = Signal0(this, "mouse_exited")
+
+  /** Signal `focus_entered`; see [TypedSignal]. */
+  val focusEntered: Signal0
+    get() = Signal0(this, "focus_entered")
+
+  /** Signal `focus_exited`; see [TypedSignal]. */
+  val focusExited: Signal0
+    get() = Signal0(this, "focus_exited")
+
+  /** Signal `size_flags_changed`; see [TypedSignal]. */
+  val sizeFlagsChanged: Signal0
+    get() = Signal0(this, "size_flags_changed")
+
+  /** Signal `maximum_size_changed`; see [TypedSignal]. */
+  val maximumSizeChanged: Signal0
+    get() = Signal0(this, "maximum_size_changed")
+
+  /** Signal `minimum_size_changed`; see [TypedSignal]. */
+  val minimumSizeChanged: Signal0
+    get() = Signal0(this, "minimum_size_changed")
+
+  /** Signal `theme_changed`; see [TypedSignal]. */
+  val themeChanged: Signal0
+    get() = Signal0(this, "theme_changed")
+
+  object Signals {
+    const val resized: String = "resized"
+    const val guiInput: String = "gui_input"
+    const val mouseEntered: String = "mouse_entered"
+    const val mouseExited: String = "mouse_exited"
+    const val focusEntered: String = "focus_entered"
+    const val focusExited: String = "focus_exited"
+    const val sizeFlagsChanged: String = "size_flags_changed"
+    const val maximumSizeChanged: String = "maximum_size_changed"
+    const val minimumSizeChanged: String = "minimum_size_changed"
+    const val themeChanged: String = "theme_changed"
+  }
+
   value class FocusMode(override val value: Long) : GodotEnumValue {
     companion object {
       val NONE: FocusMode get() = FocusMode(0L)

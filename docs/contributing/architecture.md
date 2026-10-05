@@ -345,10 +345,12 @@ The 19 Godot builtin value types (`Vector2`, `Vector3`, `Basis`, `Transform3D`,
 fragment beside the generated wrapper tree: the JVM target, the two iOS targets and the Android copy
 task all compile those files (task 104 step 2). Only `Real.kt` is per platform —
 generated at build time on desktop, hand-written on iOS, written by the plugin
-build script on Android. The Web backend keeps its
-own `WebValueTypes.kt`, which shares the pure-Kotlin bodies (`types/shared`, and the members
-`scripts/generate_builtin_ops.py` emits into both) but has no engine-call path yet (task 134
-parcel D).
+build script on Android. The Web build compiles the same files too (task 134 D1):
+`web-runtime` adds the whole `types` directory as a source directory and supplies its own
+internal `real_t` half (`WebReal.kt`) and its own `BuiltinFrame` (`web-runtime/.../binding/runtime`),
+which runs an engine-backed method over the bridge (one immediate crossing, answered by the
+proxy's `_kanama_web_builtin_call`) or, for the few transcendental ones gameplay calls every tick,
+in Kotlin (`WebLocalBuiltins`, ports of Godot's `core/math`).
 
 A value type is a Kotlin `data class` of `Double` components, immutable, with
 `equals`/`hashCode` following GDScript's `==` (signed zero equal, NaN reflexive,

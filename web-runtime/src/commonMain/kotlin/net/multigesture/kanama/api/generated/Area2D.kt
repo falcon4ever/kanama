@@ -4,10 +4,54 @@
 package net.multigesture.kanama.api
 
 import net.multigesture.kanama.backend.GodotHandle as BackendGodotHandle
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.backend.InternalKanamaBackendApi
 
 class Area2D(godotObject: GodotHandle) : CollisionObject2D(godotObject) {
   internal constructor(backendHandle: BackendGodotHandle) : this(backendHandle.toWebId())
+  /** Signal `body_shape_entered`; see [TypedSignal]. */
+  val bodyShapeEntered: Signal4<RID, Node2D?, Long, Long>
+    get() = Signal4(this, "body_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Node2D") { Node2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+  /** Signal `body_shape_exited`; see [TypedSignal]. */
+  val bodyShapeExited: Signal4<RID, Node2D?, Long, Long>
+    get() = Signal4(this, "body_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Node2D") { Node2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+  /** Signal `body_entered`; see [TypedSignal]. */
+  val bodyEntered: Signal1<Node2D>
+    get() = Signal1(this, "body_entered", SignalArgType.objectOf("Node2D") { Node2D(it) })
+
+  /** Signal `body_exited`; see [TypedSignal]. */
+  val bodyExited: Signal1<Node2D>
+    get() = Signal1(this, "body_exited", SignalArgType.objectOf("Node2D") { Node2D(it) })
+
+  /** Signal `area_shape_entered`; see [TypedSignal]. */
+  val areaShapeEntered: Signal4<RID, Area2D?, Long, Long>
+    get() = Signal4(this, "area_shape_entered", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Area2D") { Area2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+  /** Signal `area_shape_exited`; see [TypedSignal]. */
+  val areaShapeExited: Signal4<RID, Area2D?, Long, Long>
+    get() = Signal4(this, "area_shape_exited", SignalArgType.valueOf<RID>("RID", RID::class), SignalArgType.nullableObjectOf("Area2D") { Area2D(it) }, SignalArgType.LONG, SignalArgType.LONG)
+
+  /** Signal `area_entered`; see [TypedSignal]. */
+  val areaEntered: Signal1<Area2D>
+    get() = Signal1(this, "area_entered", SignalArgType.objectOf("Area2D") { Area2D(it) })
+
+  /** Signal `area_exited`; see [TypedSignal]. */
+  val areaExited: Signal1<Area2D>
+    get() = Signal1(this, "area_exited", SignalArgType.objectOf("Area2D") { Area2D(it) })
+
+  object Signals {
+    const val bodyShapeEntered: String = "body_shape_entered"
+    const val bodyShapeExited: String = "body_shape_exited"
+    const val bodyEntered: String = "body_entered"
+    const val bodyExited: String = "body_exited"
+    const val areaShapeEntered: String = "area_shape_entered"
+    const val areaShapeExited: String = "area_shape_exited"
+    const val areaEntered: String = "area_entered"
+    const val areaExited: String = "area_exited"
+  }
+
   value class SpaceOverride(override val value: Long) : GodotEnumValue {
     companion object {
       val DISABLED: SpaceOverride get() = SpaceOverride(0L)

@@ -23,9 +23,10 @@ import net.multigesture.kanama.api.releaseWebTrackedObject
  *
  * Argument encoding: each argument crosses as `typeTag:value`, arguments joined with the unit
  * separator (the established packed-string transport). Supported tags: `n` (null), `b` (bool), `i`
- * (int; a typed Godot enum / bitfield -- a `GodotEnumValue` -- crosses as its number), `d`
- * (double), `s` (string; `%` and separator payload bytes are percent-escaped), and `h` (an
- * already-tracked object handle, resolved through `_kanama_object_handles` in the GDScript arm).
+ * (int, 64-bit; a typed Godot enum / bitfield -- a `GodotEnumValue` -- crosses as its number), `d`
+ * (double), `s` (string; `%` and separator payload bytes are percent-escaped), `h` (an
+ * already-tracked object handle, resolved through `_kanama_object_handles` in the GDScript arm) and
+ * `v` (task 134 D1: a value type or NodePath as `<Variant.Type>:<payload>`, see `WebPackedValues`).
  *
  * Return encoding (immediate calls): `typeTag<US>payload...`. Object returns resolve to an
  * already-tracked handle first (`_kanama_ensure_created` for script-backed objects, `is_same` scan
@@ -94,19 +95,18 @@ object WebExperimentalGenericCall {
       null -> "n:"
       is Boolean -> if (arg) "b:true" else "b:false"
       is Int -> "i:$arg"
-      is Long -> {
-        require(arg in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
-          "Kanama Web generic call int argument must fit Godot's int32 ABI"
-        }
-        "i:$arg"
-      }
-      is Double -> "d:$arg"
-      is Float -> "d:${arg.toDouble()}"
+      // The text carries a full 64-bit int (GDScript's `int()` reads it exactly); task 134 D1
+      // lifted the old int32 limit, which only the typed int arms have.
+      is Long -> "i:$arg"
+      // Decimals as the proxy's `_kanama_web_float` reads them (NaN and the infinities too).
+      is Double -> "d:${WebPackedFloats.encode(arg)}"
+      is Float -> "d:${WebPackedFloats.encode(arg.toDouble())}"
       is String -> "s:${escapeStringPayload(arg)}"
       is GodotObject -> "h:${arg.handle.value}"
       // Task 128: a typed Godot enum / bitfield crosses as the INT it stands for.
       is GodotEnumValue -> encodeArg(arg.value)
-      else -> error("Kanama Web generic call cannot encode argument type ${arg::class.simpleName}")
+      // Task 134 D1: a value type or NodePath as a Variant (`v:<Variant.Type>:<payload>`).
+      else -> "v:${WebPackedValues.encodeVariant(arg)}"
     }
 }
 
@@ -127,13 +127,37 @@ class WebGenericCallResult internal constructor(val tag: String, val payload: Li
 
   fun asDouble(): Double {
     check(tag == "f") { "Generic call returned tag '$tag', not a float" }
-    return payload[0].toDouble()
+    return WebPackedFloats.decode(payload[0])
   }
 
   fun asString(): String {
     check(tag == "s") { "Generic call returned tag '$tag', not a string" }
     return WebExperimentalGenericCall.unescapeStringPayload(payload[0])
   }
+
+  /**
+   * A value-type result (task 134 D1): `Vector2`/`Vector3` (their older `v2`/`v3` tags) or any
+   * other value type (`v`, a `<Variant.Type>:<payload>` Variant).
+   */
+  fun asValue(): Any =
+    when (tag) {
+      "v2" ->
+        net.multigesture.kanama.types.Vector2(
+          WebPackedFloats.decode(payload[0]),
+          WebPackedFloats.decode(payload[1]),
+        )
+      "v3" ->
+        net.multigesture.kanama.types.Vector3(
+          WebPackedFloats.decode(payload[0]),
+          WebPackedFloats.decode(payload[1]),
+          WebPackedFloats.decode(payload[2]),
+        )
+      "v" ->
+        checkNotNull(WebPackedValues.decodeVariant(payload[0])) {
+          "Generic call returned a null value"
+        }
+      else -> error("Generic call returned tag '$tag', not a value type")
+    }
 
   /** The tracked handle an object return resolved (or minted) to. */
   fun asObjectHandle(): Int {

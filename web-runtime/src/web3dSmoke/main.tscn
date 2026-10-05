@@ -1,9 +1,11 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
 [ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
 [ext_resource type="Script" path="res://kotlin-src/Player.kt" id="3_player"]
 [ext_resource type="Script" path="res://kotlin-src/Coin.kt" id="4_coin"]
+[ext_resource type="Script" path="res://kotlin-src/D1Router.kt" id="5_d1router"]
+[ext_resource type="Script" path="res://kotlin-src/D1Emitter.kt" id="6_d1emitter"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 
@@ -58,6 +60,11 @@ probe_vector2i = Vector2i(6, 7)
 probe_object = NodePath("Spinner")
 probe_string_array = Array[String](["a", "b"])
 probe_curve = SubResource("Curve_probe")
+probe_vector4 = Vector4(1.5, -2, 3.25, 4)
+probe_vector4i = Vector4i(-1, 2, -3, 2147483647)
+probe_aabb = AABB(1, 2, 3, 4, 5, 6)
+probe_transform2d = Transform2D(0, 1, -1, 0, 10, -20)
+probe_projection = Projection(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env_1")
@@ -143,6 +150,12 @@ focus_mode = 2
 
 [node name="SmokeQuit" type="Node" parent="."]
 script = ExtResource("2_smoke")
+
+[node name="D1Emitter" type="Node" parent="."]
+script = ExtResource("6_d1emitter")
+
+[node name="D1Router" type="Node" parent="."]
+script = ExtResource("5_d1router")
 
 [connection signal="body_entered" from="Coin1" to="Coin1" method="_on_body_entered"]
 [connection signal="body_entered" from="Coin2" to="Coin2" method="_on_body_entered"]

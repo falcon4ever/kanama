@@ -69,6 +69,19 @@ class AnimationPlayer(godotObject: GodotHandle) : AnimationMixer(godotObject) {
     return webGenericImmediateStringCall(this, "get_current_animation")
   }
 
+  /** Signal `current_animation_changed`; see [TypedSignal]. */
+  val currentAnimationChanged: Signal1<String>
+    get() = Signal1(this, "current_animation_changed", SignalArgType.STRING)
+
+  /** Signal `animation_changed`; see [TypedSignal]. */
+  val animationChanged: Signal2<String, String>
+    get() = Signal2(this, "animation_changed", SignalArgType.STRING, SignalArgType.STRING)
+
+  object Signals {
+    const val currentAnimationChanged: String = "current_animation_changed"
+    const val animationChanged: String = "animation_changed"
+  }
+
   value class AnimationProcessCallback(override val value: Long) : GodotEnumValue {
     companion object {
       val PHYSICS: AnimationProcessCallback get() = AnimationProcessCallback(0L)

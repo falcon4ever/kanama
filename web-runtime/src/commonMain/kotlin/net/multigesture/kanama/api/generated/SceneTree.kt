@@ -90,6 +90,54 @@ class SceneTree(godotObject: GodotHandle) : MainLoop(godotObject) {
   /** Instance form of [Companion.delaySeconds] for `getTree().delaySeconds(...)` call sites. */
   suspend fun delaySeconds(seconds: Double): Unit = SceneTree.delaySeconds(seconds)
 
+  /** Signal `tree_changed`; see [TypedSignal]. */
+  val treeChanged: Signal0
+    get() = Signal0(this, "tree_changed")
+
+  /** Signal `scene_changed`; see [TypedSignal]. */
+  val sceneChanged: Signal0
+    get() = Signal0(this, "scene_changed")
+
+  /** Signal `tree_process_mode_changed`; see [TypedSignal]. */
+  val treeProcessModeChanged: Signal0
+    get() = Signal0(this, "tree_process_mode_changed")
+
+  /** Signal `node_added`; see [TypedSignal]. */
+  val nodeAdded: Signal1<Node>
+    get() = Signal1(this, "node_added", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `node_removed`; see [TypedSignal]. */
+  val nodeRemoved: Signal1<Node>
+    get() = Signal1(this, "node_removed", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `node_renamed`; see [TypedSignal]. */
+  val nodeRenamed: Signal1<Node>
+    get() = Signal1(this, "node_renamed", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `node_configuration_warning_changed`; see [TypedSignal]. */
+  val nodeConfigurationWarningChanged: Signal1<Node>
+    get() = Signal1(this, "node_configuration_warning_changed", SignalArgType.objectOf("Node") { Node(it) })
+
+  /** Signal `process_frame`; see [TypedSignal]. */
+  val processFrame: Signal0
+    get() = Signal0(this, "process_frame")
+
+  /** Signal `physics_frame`; see [TypedSignal]. */
+  val physicsFrame: Signal0
+    get() = Signal0(this, "physics_frame")
+
+  object Signals {
+    const val treeChanged: String = "tree_changed"
+    const val sceneChanged: String = "scene_changed"
+    const val treeProcessModeChanged: String = "tree_process_mode_changed"
+    const val nodeAdded: String = "node_added"
+    const val nodeRemoved: String = "node_removed"
+    const val nodeRenamed: String = "node_renamed"
+    const val nodeConfigurationWarningChanged: String = "node_configuration_warning_changed"
+    const val processFrame: String = "process_frame"
+    const val physicsFrame: String = "physics_frame"
+  }
+
   value class GroupCallFlags(override val value: Long) : GodotEnumValue {
     companion object {
       val DEFAULT: GroupCallFlags get() = GroupCallFlags(0L)
