@@ -1628,6 +1628,32 @@ internal fun decodeIosRawValue(tag: Int, ptr: CPointer<ByteVar>): Any? {
 }
 
 /**
+ * Task 129 B review: [decodeIosRawValue] keyed by the Variant type a decoded Variant return reports
+ * (kanama_ios_decode_variant_scalar ships a raw value kind's bytes through out_str), or null.
+ */
+@OptIn(ExperimentalForeignApi::class)
+internal fun decodeIosRawVariant(variantType: Int, ptr: CPointer<ByteVar>): Any? =
+  when (variantType) {
+    net.multigesture.kanama.binding.runtime.VT_RECT2 -> decodeIosRawValue(IOS_PT_RECT2, ptr)
+    net.multigesture.kanama.binding.runtime.VT_RECT2I -> decodeIosRawValue(IOS_PT_RECT2I, ptr)
+    net.multigesture.kanama.binding.runtime.VT_VECTOR3I -> decodeIosRawValue(IOS_PT_VECTOR3I, ptr)
+    net.multigesture.kanama.binding.runtime.VT_TRANSFORM2D ->
+      decodeIosRawValue(IOS_PT_TRANSFORM2D, ptr)
+    net.multigesture.kanama.binding.runtime.VT_VECTOR4 -> decodeIosRawValue(IOS_PT_VECTOR4, ptr)
+    net.multigesture.kanama.binding.runtime.VT_VECTOR4I -> decodeIosRawValue(IOS_PT_VECTOR4I, ptr)
+    net.multigesture.kanama.binding.runtime.VT_PLANE -> decodeIosRawValue(IOS_PT_PLANE, ptr)
+    net.multigesture.kanama.binding.runtime.VT_QUATERNION ->
+      decodeIosRawValue(IOS_PT_QUATERNION, ptr)
+    net.multigesture.kanama.binding.runtime.VT_AABB -> decodeIosRawValue(IOS_PT_AABB, ptr)
+    net.multigesture.kanama.binding.runtime.VT_BASIS -> decodeIosRawValue(IOS_PT_BASIS, ptr)
+    net.multigesture.kanama.binding.runtime.VT_TRANSFORM3D ->
+      decodeIosRawValue(IOS_PT_TRANSFORM3D, ptr)
+    net.multigesture.kanama.binding.runtime.VT_PROJECTION ->
+      decodeIosRawValue(IOS_PT_PROJECTION, ptr)
+    else -> null
+  }
+
+/**
  * The widest raw value kind (Projection, 16x float32); the shim's KANAMA_IOS_RAW_VALUE_MAX_BYTES.
  */
 internal const val IOS_RAW_VALUE_MAX_BYTES = 64

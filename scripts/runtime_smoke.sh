@@ -457,7 +457,15 @@ check "BuiltinParity kotlin pure=n=256 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin edge=n=64 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin facade=n=8 [^ ]+=[0-9a-f]+ "
 check "BuiltinParity kotlin const=n=1 [^ ]+=[0-9a-f]+ "
-for bp_row in pure edge facade const; do
+# task 129 B -- Mathf (written once in common) against GDScript's global functions over the same
+# draws (`mathf=`) and the edge decimals (`mathfedge=`), GD's boxed utility calls (`gd=`: Variant,
+# String, vararg, packed and Object arguments and returns) and the seeded RNG (`rand=`: seed() then
+# the same sequence as GDScript, and the same first value again after a second seed()).
+check "BuiltinParity kotlin mathf=n=256 [^ ]+=[0-9a-f]+ "
+check "BuiltinParity kotlin mathfedge=n=64 [^ ]+=[0-9a-f]+ "
+check "BuiltinParity kotlin gd=n=1 [^ ]+=[0-9a-f]+ "
+check "BuiltinParity kotlin rand=n=8 [^ ]+=[0-9a-f]+ "
+for bp_row in pure edge facade const mathf mathfedge gd rand; do
   bp_kotlin="$(grep -o "BuiltinParity kotlin ${bp_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinParity kotlin //')"
   bp_gdscript="$(grep -o "BuiltinParity gdscript ${bp_row}=.*" "$LOG_FILE" | head -n 1 | sed 's/^BuiltinParity gdscript //')"
   if [[ -z "$bp_kotlin" || "$bp_kotlin" != "$bp_gdscript" ]]; then

@@ -286,7 +286,15 @@ def find_insertion_index(lines: list[str], declaration_index: int) -> int:
     return index
 
 
+# The generated common GD (task 129 B) names each utility function in its `Fn` table:
+# `val printErr = UtilityFunction("printerr", ...)` -- the Kotlin name and the @GlobalScope one.
+UTILITY_FUNCTION_RE = re.compile(r'\bval\s+(\w+)\s*=\s*UtilityFunction\(\s*"([^"]+)"')
+GD_STEM = "GD"
+
+
 def scan_wrapper_methods(content: str, class_name: str) -> set[str]:
+    if class_name == GLOBAL_SCOPE_DOCS:
+        return {godot for _kotlin, godot in UTILITY_FUNCTION_RE.findall(content)}
     return {
         method_name
         for bind_class, method_name, _token in METHOD_BIND_RE.findall(content)
@@ -299,6 +307,13 @@ def collect_api_replacements(path: Path, docs: GodotClassDocs) -> tuple[list[Rep
     wrapped_methods = scan_wrapper_methods("".join(lines), docs.class_name)
     method_docs = {snake_to_camel(name): (name, doc) for name, doc in docs.methods.items()}
     method_docs.update({snake_to_camel(name): (name, doc) for name, doc in docs.accessors.items()})
+    if docs.class_name == GLOBAL_SCOPE_DOCS:
+        # GD: the file's own table maps each Kotlin member to its utility function.
+        method_docs = {
+            kotlin: (godot, docs.methods[godot])
+            for kotlin, godot in UTILITY_FUNCTION_RE.findall("".join(lines))
+            if godot in docs.methods
+        }
     replacements: list[Replacement] = []
     documented_methods = 0
     missing_methods = 0
@@ -627,7 +642,7 @@ def main() -> int:
 
     for scope, path in targets:
         class_name = path.stem.split(".")[0]  # `Time.jvm.kt` documents Time
-        if class_name == GLOBAL_ENUMS_STEM:
+        if class_name in (GLOBAL_ENUMS_STEM, GD_STEM):
             class_name = GLOBAL_SCOPE_DOCS
         if class_filter is not None and class_name not in class_filter:
             continue

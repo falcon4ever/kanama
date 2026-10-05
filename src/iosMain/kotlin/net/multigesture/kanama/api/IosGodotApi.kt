@@ -37,9 +37,6 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_is_instance_id_vali
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_object_get_instance_id
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_resource_loader_load
 import kotlin.coroutines.CoroutineContext
-import kotlin.math.PI
-import kotlin.math.pow
-import kotlin.random.Random
 
 /**
  * Deprecated, no longer applied to any Kanama API (task 97; the generated iOS `RefCounted.close()`
@@ -152,74 +149,6 @@ class AudioStreamPlayer(handle: GodotHandle) : Node(handle) {
         fun create(): AudioStreamPlayer =
             AudioStreamPlayer(GodotHandle(MemorySegment.ofAddress(IosGodot.constructObject("AudioStreamPlayer"))))
     }
-}
-
-// KANAMA-IOS-HANDWRITTEN: [platform] pure-Kotlin math helpers (no Godot call). Bespoke utility,
-// matching the desktop Mathf facade (which is hand-authored, not generated).
-object Mathf {
-    const val PI: Double = kotlin.math.PI
-    const val TAU: Double = kotlin.math.PI * 2.0
-
-    fun abs(value: Double): Double = kotlin.math.abs(value)
-
-    fun abs(value: Float): Float = kotlin.math.abs(value)
-
-    fun min(a: Double, b: Double): Double = kotlin.math.min(a, b)
-
-    fun max(a: Double, b: Double): Double = kotlin.math.max(a, b)
-
-    fun min(a: Long, b: Long): Long = kotlin.math.min(a, b)
-
-    fun max(a: Long, b: Long): Long = kotlin.math.max(a, b)
-
-    fun cos(value: Double): Double = kotlin.math.cos(value)
-
-    fun sin(value: Double): Double = kotlin.math.sin(value)
-
-    fun sqrt(value: Double): Double = kotlin.math.sqrt(value)
-
-    fun log(value: Double): Double = kotlin.math.ln(value)
-
-    // Godot's @GlobalScope.inverse_lerp: the weight that lerp(from, to, w) == value.
-    fun inverseLerp(from: Double, to: Double, value: Double): Double =
-        if (to == from) 0.0 else (value - from) / (to - from)
-
-    fun lerp(from: Double, to: Double, weight: Double): Double =
-        from + (to - from) * weight
-
-    // Godot's @GlobalScope.atan2 / pow — pure math, matching the desktop Mathf helpers.
-    fun atan2(y: Double, x: Double): Double = kotlin.math.atan2(y, x)
-
-    fun pow(x: Double, y: Double): Double = x.pow(y)
-
-    // Godot's @GlobalScope.move_toward: step [from] toward [to] by at most [delta].
-    fun moveToward(from: Double, to: Double, delta: Double): Double =
-        if (kotlin.math.abs(to - from) <= delta) to
-        else from + (if (to > from) 1.0 else -1.0) * delta
-
-    // Godot's @GlobalScope.is_equal_approx (CMP_EPSILON fuzzy compare), via the shared iOS helper.
-    fun isEqualApprox(a: Double, b: Double): Boolean =
-        if (a == b) {
-            true
-        } else {
-            val epsilon = 0.00001
-            val tolerance = kotlin.math.max(epsilon * kotlin.math.abs(a), epsilon)
-            kotlin.math.abs(a - b) < tolerance
-        }
-
-    fun lerpAngle(from: Double, to: Double, weight: Double): Double {
-        val difference = ((to - from + PI) % (PI * 2.0)) - PI
-        return from + difference * weight
-    }
-
-    fun clamp(value: Double, min: Double, max: Double): Double =
-        value.coerceIn(min, max)
-
-    // Godot's @GlobalScope.roundi (half away from zero, matching the desktop
-    // Mathf.roundToInt -> GD.roundi path; kotlin.math.round ties-to-even would diverge on .5).
-    fun roundToInt(value: Double): Long =
-        if (value >= 0.0) kotlin.math.floor(value + 0.5).toLong()
-        else kotlin.math.ceil(value - 0.5).toLong()
 }
 
 // KANAMA-IOS-HANDWRITTEN: [glue] ResourceLoader singleton. Not retired to the generated wrapper:
@@ -382,88 +311,6 @@ object ResourceLoader {
     private val loadThreadedRequestBind by lazy { ObjectCalls.getMethodBind("ResourceLoader", "load_threaded_request", 3614384323L) }
     private val loadThreadedGetStatusBind by lazy { ObjectCalls.getMethodBind("ResourceLoader", "load_threaded_get_status", 4137685479L) }
     private val loadThreadedGetBind by lazy { ObjectCalls.getMethodBind("ResourceLoader", "load_threaded_get", 1748875256L) }
-}
-
-// KANAMA-IOS-HANDWRITTEN: [platform] GD global helpers (rand*, print) — Kotlin/native impls, bespoke.
-object GD {
-    fun randomize() {
-    }
-
-    fun randi(): Long =
-        Random.nextLong().let { if (it == Long.MIN_VALUE) 0L else kotlin.math.abs(it) }
-
-    fun randf(): Double =
-        Random.nextDouble()
-
-    fun randiRange(from: Long, to: Long): Long =
-        if (to <= from) from else Random.nextLong(from, to + 1)
-
-    fun randfRange(from: Double, to: Double): Double =
-        if (to <= from) from else Random.nextDouble(from, to)
-
-    // Godot's @GlobalScope.randfn: normally-distributed pseudo-random via Box-Muller.
-    fun randfn(mean: Double, deviation: Double): Double {
-        val u1 = Random.nextDouble().coerceAtLeast(Double.MIN_VALUE)
-        val u2 = Random.nextDouble()
-        val standard = kotlin.math.sqrt(-2.0 * kotlin.math.ln(u1)) * kotlin.math.cos(2.0 * Mathf.PI * u2)
-        return mean + deviation * standard
-    }
-
-    // @GlobalScope print facade. iOS has no utility-function call path (see the isInstanceValid note
-    // + roadmap), so these route to the Kotlin/Native console (device log / xcrun devicectl --console)
-    // instead of Godot's print stream. Output is APPROXIMATE — right text, different sink — matching
-    // the demos' debug-logging use. Godot's print() concatenates its args with no separator.
-    private fun joinValues(values: Array<out Any?>): String =
-        values.joinToString("") { it?.toString() ?: "<null>" }
-
-    fun print(vararg values: Any?): Unit = println(joinValues(values))
-
-    fun printRich(vararg values: Any?): Unit = println(joinValues(values))
-
-    fun printErr(vararg values: Any?): Unit = println(joinValues(values))
-
-    fun printS(vararg values: Any?): Unit = println(values.joinToString(" ") { it?.toString() ?: "<null>" })
-
-    fun printRaw(vararg values: Any?): Unit = kotlin.io.print(joinValues(values))
-
-    fun printVerbose(vararg values: Any?): Unit = println(joinValues(values))
-
-    fun pushWarning(vararg values: Any?): Unit = println("WARNING: " + joinValues(values))
-
-    fun pushError(vararg values: Any?): Unit = println("ERROR: " + joinValues(values))
-
-    // @GlobalScope math facade (pure-Kotlin, matching the desktop GD utility helpers).
-    fun signf(value: Double): Double = kotlin.math.sign(value)
-
-    fun lerpf(from: Double, to: Double, weight: Double): Double =
-        from + (to - from) * weight
-
-    fun clampf(value: Double, min: Double, max: Double): Double =
-        value.coerceIn(min, max)
-
-    fun lerpAngle(from: Double, to: Double, weight: Double): Double =
-        Mathf.lerpAngle(from, to, weight)
-
-    fun remap(value: Double, istart: Double, istop: Double, ostart: Double, ostop: Double): Double =
-        ostart + (ostop - ostart) * ((value - istart) / (istop - istart))
-
-    fun degToRad(degrees: Double): Double = degrees * (Mathf.PI / 180.0)
-
-    fun radToDeg(radians: Double): Double = radians * (180.0 / Mathf.PI)
-
-    // @GlobalScope.is_instance_valid (task 98 mirror). Answered by the ObjectDB lookup of the
-    // instance id the wrapper captured at construction (shim object_get_instance_from_id), so a
-    // wrapper whose object was freed reports false without dereferencing the dead pointer —
-    // the same contract as desktop GD.isInstanceValid. Non-object values are simply non-null.
-    fun isInstanceValid(value: Any?): Boolean =
-        when (value) {
-            null -> false
-            is GodotObject -> IosGodot.isInstanceIdValid(value.instanceId)
-            else -> true
-        }
-
-    // @GlobalScope.is_instance_id_valid: the id-shaped counterpart of isInstanceValid.
-    fun isInstanceIdValid(id: Long): Boolean = IosGodot.isInstanceIdValid(id)
 }
 
 inline fun <reified T> GodotObject.kotlinScriptInstance(): T? =

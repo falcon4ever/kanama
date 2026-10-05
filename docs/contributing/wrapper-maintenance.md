@@ -185,7 +185,7 @@ inside `IosGodotApi.kt` or a bespoke file, or `unsupported`). `DESKTOP_HANDSHAPE
 views of that table. A class is per-platform only when the platforms genuinely host it
 differently, and a `hand` cell is the only thing the gate exempts; a class joins that
 table only when the generator genuinely cannot reproduce it on both platforms. Non-API
-files (`GD`, `DirAccessHandle`, …) are auto-excluded, and so are the hand-written roots
+files (`Mathf`, `DirAccessHandle`, …) are auto-excluded, and so are the hand-written roots
 described next.
 
 **Retiring a per-platform class: a table row, not a hand class (task 129).** Every
@@ -214,6 +214,30 @@ of Godot's 28 methods until task 129 A). To generate one once:
 5. Run `check_public_signature_changes.py`; announce any break in the CHANGELOG, fix the demos in a
    paired change, then `--write`. Drop the files from `scripts/hand_code_budget.json`
    (`check_hand_code_budget.py --write`).
+
+**`GD` is generated from the utility functions (task 129 B).** `render_gd` in
+`scripts/generate_api_wrapper.py` writes `src/commonMain/.../api/GD.kt` at `--write-tree`: one
+member per entry of `extension_api.json`'s `utility_functions`, each calling the seam in
+`binding/runtime/UtilityCalls.expect.kt` through a `UtilityFunction(name, hash)` handle. A function
+whose arguments and return are all `float` / `int` / `bool` writes them into the thread's
+`BuiltinFrame` and calls `callUtility` (no allocation); every other one goes through
+`UtilityCalls.call(fn, argTypes, args, retType)`, which converts each argument to its parameter's
+Variant type and decodes the return like a `GodotObject.call` result. The platforms implement only
+the mechanism: desktop/Android `src/jvmMain/kotlin/binding/runtime/UtilityCalls.kt` (FFM, the
+pointer `variant_get_ptr_utility_function` returns), iOS `src/iosMain/.../UtilityCalls.kt` over the
+C shim's `kanama_ios_godot_get_utility_function` / `kanama_ios_godot_utility_call` (no argument
+cap: vararg cells past 16 live on the heap). The data is in the generator: `GD_NAME_OVERRIDES`
+(the Kotlin names that differ from Godot's camel case), `GD_TEXT_UTILITIES` (the print family and
+`str`, whose non-Variant arguments are passed as `toString()`), `GD_TYPED_OVERLOADS` (the
+`Double` / `Long` / `Int` overloads of the Variant-form `max`, `abs`, `clamp`, ..., each delegating
+to the typed function), and `GD_MEMBER_SECTIONS`
+(budgeted hand members: the typed `isInstanceValid`, the text helper). `sync_kdoc_from_godot_docs.py`
+documents each member from `@GlobalScope.xml` through the file's `Fn` table. `Mathf` is hand-written
+once in common (`sugar`): Godot's formula where it is plain arithmetic, a `GD` call otherwise (its
+`Float` overloads stay hand-written: generated ones would have to be extension functions, which a
+script importing only `Mathf` would not see); the
+runtime smoke's parity pair (`generate_builtin_ops.py`, rows `mathf=` / `mathfedge=` / `gd=` /
+`rand=`) holds both to GDScript.
 
 **The hand-code budget.** `scripts/check_hand_code_budget.py` (a `local_ci.sh` stage) lists every
 hand-written Kotlin file of the API (under an `api/` directory, or declaring the

@@ -22,6 +22,7 @@ import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.set
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_builtin_call
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_builtin_method
+import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_utility_call
 import net.multigesture.kanama.types.GodotRealStorage
 import net.multigesture.kanama.types.GodotRealVar
 
@@ -166,6 +167,32 @@ internal constructor(private val stack: FrameStack, private val index: Int) {
     invoke(method, slot(0), argc)
   }
 
+  actual fun callUtility(fn: UtilityFunction, argc: Int) {
+    try {
+      val pointer = fn.pointer()
+      ret.reinterpret<LongVar>()[0] = 0L
+      // The frame path carries float / int / bool only: ask for the raw 8 return bytes (INT), which
+      // retDouble / retLong / retBool then read as the type the utility returns.
+      kanama_ios_godot_utility_call(
+        pointer,
+        if (argc > 0) tags else null,
+        if (argc > 0) pointers else null,
+        argc,
+        UTILITY_RAW_RETURN,
+        ret,
+        null,
+        null,
+        null,
+        0L,
+        null,
+        null,
+      )
+    } finally {
+      if (strings != 0) releaseStrings()
+      stack.depth = index
+    }
+  }
+
   private fun invoke(method: BuiltinMethod, base: COpaquePointer, argc: Int) {
     try {
       // Resolved inside the try: a failed resolution still frees the C strings and the frame.
@@ -225,5 +252,7 @@ internal constructor(private val stack: FrameStack, private val index: Int) {
     const val RET_OFFSET = SLOTS * SLOT_BYTES
     const val TOTAL_BYTES = RET_OFFSET + 128
     const val VARIANT_PAYLOAD = 8
+    // Variant::Type INT: kanama_ios_godot_utility_call copies the raw 8 return bytes to ret_raw.
+    const val UTILITY_RAW_RETURN = VT_INT
   }
 }
