@@ -92,12 +92,7 @@ data class Transform3D(
    *
    * Generated from Godot docs: Transform3D.inverse
    */
-  fun inverse(): Transform3D {
-    val f = builtinFrame()
-    f.put(0, this)
-    f.call(Transform3DMethods.inverse, 0)
-    return f.retTransform3D()
-  }
+  fun inverse(): Transform3D = transform3DInverse(this)
 
   /**
    * Returns the inverted version of this transform. Unlike `inverse`, this method works with almost
@@ -107,7 +102,9 @@ data class Transform3D(
    *
    * Generated from Godot docs: Transform3D.affine_inverse
    */
-  fun affineInverse(): Transform3D {
+  fun affineInverse(): Transform3D = transform3DAffineInverse(this) ?: affineInverseInEngine()
+
+  private fun affineInverseInEngine(): Transform3D {
     val f = builtinFrame()
     f.put(0, this)
     f.call(Transform3DMethods.affineInverse, 0)
@@ -121,12 +118,7 @@ data class Transform3D(
    *
    * Generated from Godot docs: Transform3D.orthonormalized
    */
-  fun orthonormalized(): Transform3D {
-    val f = builtinFrame()
-    f.put(0, this)
-    f.call(Transform3DMethods.orthonormalized, 0)
-    return f.retTransform3D()
-  }
+  fun orthonormalized(): Transform3D = Transform3D(basisOrthonormalized(basis), origin)
 
   /**
    * Returns a copy of this transform rotated around the given `axis` by the given `angle` (in

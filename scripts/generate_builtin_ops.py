@@ -189,9 +189,25 @@ PURE_METHODS: dict[str, set[str]] = {
     "AABB": {"get_center", "has_volume", "has_surface", "intersects", "encloses", "merge", "has_point"},
     "Plane": {"get_center", "is_point_over", "has_point", "project"},
     "Transform2D": {"translated", "translated_local", "basis_xform", "basis_xform_inv", "inverse"},
-    "Transform3D": {"translated", "translated_local"},
+    "Transform3D": {"translated", "translated_local", "orthonormalized", "inverse", "affine_inverse"},
+    # Task 134 D1 review S4: the Basis methods the Web build computed on its own, one port for all.
+    "Basis": {"transposed", "determinant", "get_scale", "scaled", "orthonormalized", "inverse", "get_rotation_quaternion"},
     "RID": {"get_id"},
 }
+
+# Pure methods whose Godot body has a debug-only MATH_CHECKS early return (an error print and a
+# fallback value): the Kotlin formula answers null in exactly that case and the member asks the
+# engine instead, so both builds behave as the engine does (task 134 D1 review S4).
+ENGINE_FALLBACK = {
+    ("Basis", "inverse"): "basisInverse(this)",
+    ("Basis", "get_rotation_quaternion"): "basisGetRotationQuaternion(this)",
+    ("Transform3D", "affine_inverse"): "transform3DAffineInverse(this)",
+}
+
+
+def engine_backed(member: "Member") -> bool:
+    """A member that may call the engine: a facade member or a pure one with an engine fallback."""
+    return member.impl == "facade" or (member.impl == "pure" and (member.cls, member.godot.get("name")) in ENGINE_FALLBACK)
 
 # Pure methods whose vector arguments the parity row feeds normalized: Godot's debug build
 # rejects a non-normalized normal there (MATH_CHECKS), so only normalized inputs are comparable.
@@ -658,7 +674,31 @@ def pure_extra(cls: str, m: dict) -> str | None:
                 "  val oy = -origin.rawY",
                 "  return Transform2D(ix, iy, Vector2.raw(ix.rawX * ox + iy.rawX * oy, ix.rawY * ox + iy.rawY * oy))",
                 "}"])
+    if cls == "Basis":
+        if (cls, name) in ENGINE_FALLBACK:
+            kn = kotlin_name(cls, name)
+            engine = facade_method(cls, m).replace(f"fun {kn}(", f"private fun {kn}InEngine(", 1)
+            rtype = {"inverse": "Basis", "get_rotation_quaternion": "Quaternion"}[name]
+            return f"fun {kn}(): {rtype} = {ENGINE_FALLBACK[(cls, name)]} ?: {kn}InEngine()\n\n{engine}"
+        if name == "transposed":
+            return "fun transposed(): Basis = basisTransposed(this)"
+        if name == "determinant":
+            return "fun determinant(): Double = widenReal(basisDeterminant(this))"
+        if name == "get_scale":
+            return "fun getScale(): Vector3 = basisGetScale(this)"
+        if name == "scaled":
+            return "fun scaled(scale: Vector3): Basis = basisScaled(this, scale)"
+        if name == "orthonormalized":
+            return "fun orthonormalized(): Basis = basisOrthonormalized(this)"
     if cls == "Transform3D":
+        if (cls, name) in ENGINE_FALLBACK:
+            kn = kotlin_name(cls, name)
+            engine = facade_method(cls, m).replace(f"fun {kn}(", f"private fun {kn}InEngine(", 1)
+            return f"fun {kn}(): Transform3D = {ENGINE_FALLBACK[(cls, name)]} ?: {kn}InEngine()\n\n{engine}"
+        if name == "orthonormalized":
+            return "fun orthonormalized(): Transform3D = Transform3D(basisOrthonormalized(basis), origin)"
+        if name == "inverse":
+            return "fun inverse(): Transform3D = transform3DInverse(this)"
         if name == "translated":
             return "fun translated(offset: Vector3): Transform3D = Transform3D(basis, origin + offset)"
         if name == "translated_local":
@@ -1083,7 +1123,7 @@ def render_marshalling(api: dict, members: list[Member]) -> str:
         out.append("")
     by_class: dict[str, list[Member]] = {}
     for member in members:
-        if member.impl == "facade":
+        if engine_backed(member):
             by_class.setdefault(member.cls, []).append(member)
     for cls, facade in by_class.items():
         vid = variant_ids[cls.upper()]
@@ -1311,40 +1351,44 @@ def load_expected() -> dict[str, str]:
 # Parity entries whose Kotlin formula calls an engine-backed member that the Web build runs over the
 # bridge (no bridge under Node): they run in the browser, not in this test. Each needs a reason.
 WEB_TEST_ENGINE_BOUND: dict[str, str] = {
-    "Plane * Transform3D": "Transform3D::xform_inv(Plane) goes through affine_inverse(), an engine call",
+    "Basis.get_rotation_quaternion": "some random bases stay non-rotations after orthonormalization (nearly "
+    "parallel columns); Godot answers those with its MATH_CHECKS path, which the member asks the engine "
+    "for -- the runtime smoke's pure row checks every input, engine fallback included",
 }
 
 
-# The engine-backed methods the Web build runs in Kotlin (web-runtime/.../WebLocalBuiltins.kt) that
-# the Web test checks against GDScript's facade row: the facade inputs reach every one of them on
-# its Kotlin path (get_euler / from_euler draw a random Euler order and looking_at a random
-# use_model_front, which may take the engine path instead, so they are checked by
-# WebLocalBuiltinsTest's identities). The arithmetic ones are Godot's bits by construction; the
-# ones on sin/cos/atan2/acos match Godot's hashes on these inputs, but Kotlin's functions and the
-# engine's libm may differ in the last bit elsewhere -- Transform3D.interpolate_with is left out
-# for that reason (its slerp at weight 2.5 differs from macOS libm's sinf in the last bit).
-WEB_LOCAL_FACADE = (
-    "Vector2.angle",
-    "Vector2.rotated",
-    "Vector3.signed_angle_to",
-    "Vector3.rotated",
-    "Quaternion.slerp",
-    "Basis.inverse",
-    "Basis.transposed",
-    "Basis.determinant",
-    "Basis.get_scale",
-    "Basis.scaled",
-    "Basis.orthonormalized",
-    "Basis.get_rotation_quaternion",
-    "Basis.rotated",
-    "Transform3D.orthonormalized",
-)
+# The engine-backed methods the Web build runs in Kotlin (web-runtime/.../WebLocalBuiltins.kt: the
+# ones whose Godot formula needs sin/cos/atan2/asin/acos, or a debug-only check). WebBuiltinParityTest
+# runs each on the runtime smoke's facade inputs and compares every float component with the value
+# GDScript printed (the `facadevals` line), allowing at most this many float32 ulps: 0 is bit-exact.
+# A nonzero bound is a recorded last-bit difference between Kotlin/Wasm's transcendental functions
+# and the engine's libm, with its reason -- never a silent skip.
+WEB_LOCAL_FACADE: dict[str, tuple[int, str]] = {
+    "Vector2.angle": (0, ""),
+    "Vector2.rotated": (0, ""),
+    "Vector3.signed_angle_to": (0, ""),
+    "Vector3.rotated": (0, ""),
+    "Quaternion.slerp": (0, ""),
+    "Basis.rotated": (0, ""),
+    "Basis.get_euler": (1, "1 of 24 components 1 ulp off: Kotlin/Wasm's atan2/asin vs the engine's libm"),
+    "Basis.from_euler": (0, ""),
+    "Basis.looking_at": (0, ""),
+    "Transform3D.looking_at": (0, ""),
+    "Transform3D.interpolate_with": (
+        64,
+        "8 of 96 components differ, by up to 64 ulps on small components: the parity weights reach "
+        "±1000, so slerp's sin((1 - weight) * omega) takes large arguments, where Kotlin/Wasm's sin and the "
+        "engine's libm round differently in the last bit; Basis(q) * scale then amplifies it on "
+        "components near zero (weights in [0, 1] matched exactly in a separate probe)",
+    ),
+}
 
 
-def load_expected_facade() -> dict[str, str]:
+def load_expected_facade() -> dict[str, list[int]]:
+    """GDScript's facade-row values (float64 bits, component by component) for WEB_LOCAL_FACADE."""
     if not EXPECTED_PATH.exists():
         return {}
-    return json.loads(EXPECTED_PATH.read_text(encoding="utf-8")).get("facade", {})
+    return json.loads(EXPECTED_PATH.read_text(encoding="utf-8")).get("facade_values", {})
 
 
 def render_web_test(pure, facade) -> str:
@@ -1406,10 +1450,25 @@ def render_web_test(pure, facade) -> str:
         "  fun webMembersMatchGodot() {",
         f"    repeat({PARITY_INPUTS}) {{ round() }}",
         f"    skip({EDGE_INPUTS * edge_draws}) // the edge row",
+        "    recordValues = true",
         f"    repeat({FACADE_INPUTS}) {{ facadeRound() }}",
-        "    val wrong = (EXPECTED + EXPECTED_FACADE).filter { (key, hash) -> hashes[key]?.toString(16) != hash }.keys",
+        "    val wrong = EXPECTED.filter { (key, hash) -> hashes[key]?.toString(16) != hash }.keys",
         "    assertEquals(emptySet(), wrong, \"entries whose hash differs from Godot's\")",
+        "    val outOfBound =",
+        "      EXPECTED_FACADE.filter { (key, expected) -> !withinUlps(values[key], expected.second, expected.first) }.keys",
+        "    assertEquals(emptySet(), outOfBound, \"Web-local methods beyond their recorded ulp bound\")",
         "  }",
+        "",
+        "  private fun ordered(f: Float): Int = f.toRawBits().let { if (it < 0) Int.MIN_VALUE - it else it }",
+        "",
+        "  /** Every component within [ulps] float32 ulps of Godot's (NaN matches NaN). */",
+        "  private fun withinUlps(got: List<Double>?, expected: LongArray, ulps: Int): Boolean =",
+        "    got != null && got.size == expected.size &&",
+        "      expected.indices.all { i ->",
+        "        val a = Double.fromBits(expected[i]).toFloat()",
+        "        val b = got[i].toFloat()",
+        "        (a.isNaN() && b.isNaN()) || kotlin.math.abs(ordered(a).toLong() - ordered(b).toLong()) <= ulps",
+        "      }",
         "",
         "  private fun round() {",
         *calls,
@@ -1452,6 +1511,10 @@ def render_web_test(pure, facade) -> str:
         "",
         "  private val hashes = linkedMapOf<String, Long>()",
         "",
+        "  // The facade row records the Web-local methods' float components for the ulp comparison.",
+        "  private var recordValues = false",
+        "  private val values = linkedMapOf<String, MutableList<Double>>()",
+        "",
         "  private fun mixLong(name: String, value: Long) {",
         "    for (bits in longArrayOf(value and 0xFFFFFFFFL, (value ushr 32) and 0xFFFFFFFFL)) {",
         "      hashes[name] = ((hashes[name] ?: 2166136261L) xor bits) * 16777619L and 0xFFFFFFFFL",
@@ -1462,7 +1525,10 @@ def render_web_test(pure, facade) -> str:
         "    val name = key.replace(' ', '_')",
         "    when (value) {",
         "      null -> mixLong(name, -1L)",
-        "      is Double -> mixLong(name, if (value.isNaN()) 0x7FF8000000000000L else value.toRawBits())",
+        "      is Double -> {",
+        "        if (recordValues) values.getOrPut(name) { mutableListOf() }.add(value)",
+        "        mixLong(name, if (value.isNaN()) 0x7FF8000000000000L else value.toRawBits())",
+        "      }",
         "      is Long -> mixLong(name, value)",
         "      is Int -> mixLong(name, value.toLong())",
         "      is Boolean -> mixLong(name, if (value) 1L else 0L)",
@@ -1498,10 +1564,11 @@ def render_web_test(pure, facade) -> str:
         *[f'        "{summary_key(k)}" to "{expected[summary_key(k)]}",' for k in checked],
         "      )",
         "",
-        "    // Godot's facade-row hashes for the Web-local methods (task 134 D1).",
-        "    val EXPECTED_FACADE =",
+        "    // GDScript's facade-row values (float64 bits) for the Web-local methods and the ulp bound",
+        "    // recorded for each (WEB_LOCAL_FACADE in scripts/generate_builtin_ops.py; task 134 D1).",
+        "    val EXPECTED_FACADE: Map<String, Pair<Int, LongArray>> =",
         "      mapOf(",
-        *[f'        "{summary_key(k)}" to "{expected_facade[summary_key(k)]}",' for k in facade_checked],
+        *[f'        "{summary_key(k)}" to ({WEB_LOCAL_FACADE[k][0]} to longArrayOf({", ".join(str(v) + "L" for v in expected_facade[summary_key(k)])})),' for k in facade_checked],
         "      )",
         "  }",
         "}",
@@ -1538,22 +1605,28 @@ def render_web_signatures(api: dict, members: list[Member]) -> str:
 
     entries = []
     for member in members:
-        if member.impl != "facade":
+        if not engine_backed(member):
             continue
         m = member.godot
         vid = ids[member.cls.upper()]
         args = ",".join(str(type_id(a["type"])) for a in m.get("arguments", []))
-        entries.append(f'      "{vid}:{m["name"]}" to "{args}",')
+        returns = m.get("return_type", "Nil")
+        ret = -1 if returns == "Variant" else type_id(returns) if returns != "Nil" else 0
+        entries.append(f'      "{vid}:{m["name"]}" to "{args}|{ret}",')
     out = [
         f"// GENERATED by {GENERATOR} from extension_api.json — do not edit.",
         "package net.multigesture.kanama.binding.runtime",
         "",
         "/**",
-        " * The Godot `Variant.Type` of each argument of every builtin method the value types run in the",
-        " * engine (task 134 D1). The Web builtin-call crossing sends each argument with its type so the",
-        " * proxy can rebuild the Variant; GDScript has no reflection over builtin method signatures.",
+        " * The Godot `Variant.Type` of each argument and of the return of every builtin method the value",
+        " * types run in the engine (task 134 D1; `<args>|<return>`, -1 for a `Variant` return). The Web",
+        " * builtin-call crossing sends each argument with its type so the proxy can rebuild the Variant",
+        " * (GDScript has no reflection over builtin method signatures), and checks the result's type.",
         " */",
         "internal object WebBuiltinSignatures {",
+        "  /** A `Variant` return: any type, NIL included. */",
+        "  const val VARIANT_RETURN = -1",
+        "",
         "  private val TABLE: Map<String, String> by lazy {",
         "    mapOf(",
         *entries,
@@ -1562,12 +1635,28 @@ def render_web_signatures(api: dict, members: list[Member]) -> str:
         "",
         "  /** The argument types of [name] on the value type [variantType], or null when unknown. */",
         "  fun argumentTypes(variantType: Int, name: String): IntArray? =",
-        "    TABLE[\"$variantType:$name\"]?.let { types ->",
+        "    TABLE[\"$variantType:$name\"]?.substringBefore('|')?.let { types ->",
         "      if (types.isEmpty()) IntArray(0) else types.split(',').map(String::toInt).toIntArray()",
         "    }",
+        "",
+        "  /** The return type of [name] on [variantType] ([VARIANT_RETURN] for a Variant), or null. */",
+        "  fun returnType(variantType: Int, name: String): Int? =",
+        "    TABLE[\"$variantType:$name\"]?.substringAfter('|')?.toInt()",
         "}",
     ]
     return "\n".join(out) + "\n"
+
+
+def parse_gdscript_values(log: str) -> dict[str, list[int]]:
+    """The `facadevals=` line: per Web-local method, every float component's float64 bits."""
+    match = re.search(r"BuiltinParity gdscript facadevals=n=\d+ (.*)", log)
+    if not match:
+        raise SystemExit("[generate_builtin_ops] the log has no `BuiltinParity gdscript facadevals=` line")
+    out = {}
+    for item in match.group(1).split():
+        key, bits = item.rsplit("=", 1)
+        out[key] = [int(b) for b in bits.split(";") if b]
+    return out
 
 
 def parse_gdscript_pure(log: str, row: str = "pure") -> dict[str, str]:
@@ -1853,6 +1942,8 @@ def render_parity_gd(pure, facade) -> str:
         "var seed := 2463534242",
         "var hashes := {}",
         "var hash_order := []",
+        "# Task 134 D1: float components recorded for the Web-local methods (WEB_LOCAL_FACADE).",
+        "var recorded := {" + ", ".join(f'\"{k}\": []' for k in WEB_LOCAL_FACADE) + "}",
         "# The edge row's decimals: ±0 (-0.0 built from bytes: GDScript merges the 0.0 and -0.0",
         "# literals), NaN, ±INF, .5 ties, a tiny normal.",
         "var edge := false",
@@ -1877,6 +1968,8 @@ def render_parity_gd(pure, facade) -> str:
         f"\tfor i in {FACADE_INPUTS}:",
         "\t\tfacade_round()",
         f"\treport(\"facade=n={FACADE_INPUTS} \" + summary())",
+        "\t# Task 134 D1: the Web-local methods' components, for the Web build's ulp comparison.",
+        f"\treport(\"facadevals=n={FACADE_INPUTS} \" + values_summary())",
         "\thashes.clear()",
         "\thash_order.clear()",
         "\tconstants()",
@@ -1977,6 +2070,8 @@ def render_parity_gd(pure, facade) -> str:
             "\tif value == null:",
             "\t\tmix_long(name, -1)",
             "\telif value is float:",
+            "\t\tif recorded.has(name):",
+            "\t\t\trecorded[name].append(PackedFloat64Array([value]).to_byte_array().decode_s64(0))",
             "\t\tif is_nan(value):",
             "\t\t\tmix_long(name, 0x7FF8000000000000)",
             "\t\telse:",
@@ -2014,6 +2109,13 @@ def render_parity_gd(pure, facade) -> str:
             "\t\tfor c in value: mix(name, c)",
             "\telse:",
             "\t\tpush_error(\"no parity mix for %s\" % type_string(typeof(value)))",
+            "",
+            "",
+            "func values_summary() -> String:",
+            "\tvar parts := []",
+            "\tfor name in recorded:",
+            "\t\tparts.append(\"%s=%s\" % [name.replace(\" \", \"_\"), \";\".join(PackedStringArray(recorded[name].map(func(b): return str(b))))])",
+            "\treturn \" \".join(parts)",
             "",
             "",
             "func summary() -> String:",
@@ -2117,7 +2219,7 @@ def main() -> int:
     if args.record_parity or args.verify_recorded:
         log = (args.record_parity or args.verify_recorded).read_text(encoding="utf-8", errors="replace")
         live = parse_gdscript_pure(log)
-        live_facade = parse_gdscript_pure(log, "facade")
+        live_facade = parse_gdscript_values(log)
         sources = {cls: class_file(cls).read_text(encoding="utf-8") for cls in OWNED_CLASSES}
         members = build_members(api, {cls: class_body(src, cls) for cls, src in sources.items()})
         pure, _ = parity_entries(members)
@@ -2133,7 +2235,7 @@ def main() -> int:
                 "entries the Web value types run (WebBuiltinParityTest). Written by "
                 "`scripts/generate_builtin_ops.py --record-parity <runtime smoke log>`.",
                 "pure": {k: live[k] for k in keys},
-                "facade": {k: live_facade[k] for k in facade_keys},
+                "facade_values": {k: live_facade[k] for k in facade_keys},
             }
             EXPECTED_PATH.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
             print(f"[generate_builtin_ops] recorded {len(keys)} Web parity hashes; rerun --write for the Web test")
