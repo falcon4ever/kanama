@@ -258,6 +258,17 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   desktop (`Basis(x, y, z)`, `withX(value)`, `lookingAt(target, up, useModelFront)`,
   `interpolateWith(xform, weight)`, `withBasis(value)`, `bounce(n)`, `times(scale)`).
 
+### Fixed — Web: a node looked up by two scripts survives the first script's free
+
+- On Web, when two scripts looked up the same plain node (`requireAs("../Target", ::Node)` in both),
+  freeing the first script released the shared handle for the second too: its next call on that node
+  failed with `Stale Kanama Web browser handle` (a fatal at its callback boundary), and a later lookup
+  of the same node failed with "Godot node lookup callback returned neither its proposed nor a live
+  object handle" because the proxies' shared handle dictionary still held the dead handle. A handle
+  several scripts obtained is now counted per owning script and released with its last owner; the
+  dictionary entry goes with it. Nothing changes for scripts that never share a node. Proof: the
+  web3d smoke's `sharedNodeHandleSurvivesFirstFree` check (red on main, green with the fix).
+
 ### Fixed — Web: a typed `await()` on an engine object (task 134 C follow-up)
 
 - On Web, `animationPlayer.animationFinished.await()`, `sound.finished.await()` and every other

@@ -240,6 +240,13 @@
     tweenCallbacks: new Map(),
     handleOwners: new Map(),
     browserNodeHandlesByScript: new Map(),
+    // Owner counting for a browser handle several scripts obtained (the GDScript arm answers a
+    // lookup of an already-tracked object with the EXISTING handle). handle -> the set of scripts
+    // holding it (the allocating script included once a second one joins), and the reverse index
+    // script -> its shared handles. A handle is released only with its last owner; freeing the
+    // allocating script hands it to a remaining one (handleOwners names the routing owner).
+    sharedHandleOwners: new Map(),
+    sharedHandlesByOwner: new Map(),
     tweenChildren: new Map(),
     sceneTreeHandlesByOwner: new Map(),
     viewportHandlesByOwner: new Map(),
@@ -1126,10 +1133,16 @@
       if (result === 1 && handle === this.match3MainHandle) this.match3MainHandle = 0;
       if (result === 1 && handle === this.match3AudioHandle) this.match3AudioHandle = 0;
       if (result === 1) {
+        // Shared handles first: this script stops owning every one it shared, and the handles it
+        // allocated that another script still holds move to that script instead of dying here.
+        this.releaseSharedHandleOwnership(handle);
         const childNodeHandles = this.browserNodeHandlesByScript.get(handle);
         if (childNodeHandles) {
           for (const childHandle of childNodeHandles) {
             if (this.browserHandleSlot(childHandle)?.kind !== "Node") continue;
+            // Handed to a remaining owner above: not this script's to release.
+            if (this.handleOwners.get(childHandle) !== handle) continue;
+            this.eraseObjectHandleEntry(childHandle, handle);
             this.api.kanamaWebDiscardNodeHandle(childHandle);
             this.releaseBrowserHandle(childHandle, "Node");
           }
@@ -1301,8 +1314,80 @@
       slot.live = false;
       slot.kind = null;
       this.handleOwners.delete(handle);
+      this.forgetSharedHandle(handle);
       this.liveBrowserHandleCount -= 1;
       this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
+    },
+    retainSharedHandle(handle, owner) {
+      // A lookup answered with an EXISTING tracked handle instead of its proposed one: `owner`
+      // now holds it too. A script handle (not a browser handle) has its own lifetime.
+      if (!owner || !this.browserHandleSlot(handle)) return;
+      const primary = this.handleOwners.get(handle);
+      if (primary === undefined || primary === owner) return;
+      let owners = this.sharedHandleOwners.get(handle);
+      if (!owners) {
+        owners = new Set([primary]);
+        this.sharedHandleOwners.set(handle, owners);
+        this.sharedHandlesOf(primary).add(handle);
+      }
+      owners.add(owner);
+      this.sharedHandlesOf(owner).add(handle);
+    },
+    sharedHandlesOf(owner) {
+      let handles = this.sharedHandlesByOwner.get(owner);
+      if (!handles) {
+        handles = new Set();
+        this.sharedHandlesByOwner.set(owner, handles);
+      }
+      return handles;
+    },
+    forgetSharedHandle(handle) {
+      const owners = this.sharedHandleOwners.get(handle);
+      if (!owners) return;
+      this.sharedHandleOwners.delete(handle);
+      for (const owner of owners) {
+        const handles = this.sharedHandlesByOwner.get(owner);
+        if (!handles) continue;
+        handles.delete(handle);
+        if (handles.size === 0) this.sharedHandlesByOwner.delete(owner);
+      }
+    },
+    releaseSharedHandleOwnership(leaving) {
+      const handles = this.sharedHandlesByOwner.get(leaving);
+      if (!handles) return;
+      this.sharedHandlesByOwner.delete(leaving);
+      for (const handle of handles) {
+        const owners = this.sharedHandleOwners.get(handle);
+        if (!owners) continue;
+        owners.delete(leaving);
+        if (this.handleOwners.get(handle) === leaving && owners.size > 0) {
+          // The allocating script leaves while another still holds the handle: route it there.
+          const next = owners.values().next().value;
+          if (this.sceneTreeHandlesByOwner.get(leaving) === handle) {
+            this.sceneTreeHandlesByOwner.delete(leaving);
+          }
+          this.handleOwners.set(handle, next);
+        }
+        if (owners.size <= 1) {
+          // One owner left: no longer shared.
+          this.sharedHandleOwners.delete(handle);
+          for (const owner of owners) {
+            const remaining = this.sharedHandlesByOwner.get(owner);
+            if (!remaining) continue;
+            remaining.delete(handle);
+            if (remaining.size === 0) this.sharedHandlesByOwner.delete(owner);
+          }
+        }
+      }
+    },
+    eraseObjectHandleEntry(handle, viaOwner) {
+      // The proxies share one handle -> object dictionary. Retiring a handle without erasing its
+      // entry leaves a stale one: the next lookup of the same (live) object finds it and answers
+      // with a handle the bridge no longer knows. Any installed proxy can erase it.
+      const callback = this.resourceReleaseCallbacks.get(viaOwner);
+      if (!callback) return;
+      this.immediateResourceReleaseResult = null;
+      callback(handle);
     },
     releaseBrowserHandlesOwnedBy(owner) {
       for (const tweenHandle of [...this.tweenChildren.keys()]) {
@@ -1324,10 +1409,12 @@
         ) {
           this.sceneTreeHandlesByOwner.delete(handleOwner);
         }
+        this.eraseObjectHandleEntry(handle, owner);
         this.api.kanamaWebDiscardBrowserHandle(handle);
         slot.live = false;
         slot.kind = null;
         this.handleOwners.delete(handle);
+        this.forgetSharedHandle(handle);
         this.freeBrowserHandleSlots.push(handle & BROWSER_HANDLE_SLOT_MASK);
         this.liveBrowserHandleCount -= 1;
       }
@@ -1700,7 +1787,10 @@
       if (!Number.isInteger(result)) {
         throw new Error("Godot property object query callback did not publish a result");
       }
-      if (result !== resultHandle) this.releaseBrowserHandle(resultHandle, "Object");
+      if (result !== resultHandle) {
+        this.releaseBrowserHandle(resultHandle, "Object");
+        this.retainSharedHandle(result, owner);
+      }
       return result;
     },
     immediateNodeLookup(handle, path) {
@@ -1718,6 +1808,8 @@
         }
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
+        // The node is already tracked: this lookup holds the existing handle too.
+        this.retainSharedHandle(result, owner);
         if (this.mode === "match3") {
           if (scriptHandle) this.match3ScriptNodeLookups += 1;
           else this.match3ReusedNodeLookups += 1;
@@ -1877,6 +1969,7 @@
         }
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, kind);
+        this.retainSharedHandle(result, owner);
       }
       if (result === 0) {
         if (isObjectResult) this.api.kanamaWebDiscardBrowserHandle(resultHandle);
@@ -1947,6 +2040,12 @@
       callback(opcode, handle, value);
       if (typeof this.immediateStringResult !== "string") {
         throw new Error("Godot string query callback did not publish a string result");
+      }
+      // A generic call's object return that resolved to an already-tracked handle ("o", id,
+      // "tracked"): the calling script holds that handle too.
+      if (this.immediateStringResult.startsWith("o\u001f")) {
+        const tracked = /^o\u001f(-?\d+)\u001ftracked$/.exec(this.immediateStringResult);
+        if (tracked) this.retainSharedHandle(Number(tracked[1]), this.ownerForHandle(handle));
       }
       return this.immediateStringResult;
     },
@@ -2038,6 +2137,7 @@
         }
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
+        this.retainSharedHandle(result, owner);
       }
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
@@ -2079,6 +2179,7 @@
         }
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
         this.releaseBrowserHandle(resultHandle, "Node");
+        this.retainSharedHandle(result, owner);
       }
       if (result === 0) {
         this.api.kanamaWebDiscardNodeHandle(resultHandle);
