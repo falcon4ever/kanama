@@ -278,8 +278,11 @@ memory layout and runs:
   (`BuiltinFormulas.kt`, `generate_builtin_ops.py`) every backend runs, handing the engine only
   the inputs Godot's debug `MATH_CHECKS` reject. `WebBuiltinParityTest` holds every local port
   to Godot's recorded values (`facade_values` in `builtin_parity_expected.json`) within a recorded
-  per-method float32 ulp bound (`WEB_LOCAL_FACADE` in the generator: 0 for all but `getEuler`, 1,
-  and `interpolateWith`, 64, where libm's `atan2`/`acos` round differently);
+  per-method float32 ulp bound (`WEB_LOCAL_FACADE` in the generator: 1 for every method built on
+  sin/cos/atan2/asin/acos, 64 for `interpolateWith`, 0 only for the two `lookingAt`), the same
+  bound the runtime smoke's `--verify-recorded` gives the engine on the machine it runs on, since
+  libm's last bit differs between CPUs too (the engine's `Vector3.rotated` on Linux x86_64 is 1
+  ulp off the macOS arm64 recording);
 - **in the engine** otherwise: one immediate crossing (`KanamaWebBridge.immediateBuiltinCall`,
   object-query opcode 1003, any live proxy answers it) carrying
   `<Variant.Type>␟<method>␟<static>␟<base>␟<args…>`, each value `<Variant.Type>:<payload>`; the

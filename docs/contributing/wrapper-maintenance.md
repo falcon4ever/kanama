@@ -1001,7 +1001,11 @@ types (task 134 D1), so `WebBuiltinParityTest` runs every Kotlin-computed entry 
 under Node against Godot's hashes recorded in `scripts/fixtures/builtin_parity_expected.json`,
 and every Web-local port (`WebLocalBuiltins`, the transcendental methods Web runs in Kotlin)
 against Godot's values recorded beside them (`facade_values`), within the float32 ulp bound
-`WEB_LOCAL_FACADE` records per method with its reason (the generator also writes
+`WEB_LOCAL_FACADE` records per method with its reason. The runtime smoke's `--verify-recorded`
+compares the engine on the machine it runs on with the same recording through the same bound: a
+transcendental result's last bit depends on the platform's libm (Linux x86_64 and macOS arm64
+differ), so a method built on sin/cos/atan2/asin/acos may not have bound 0, and the pure (hash)
+entries may not call one at all; the generator fails on either (the generator also writes
 `WebBuiltinSignatures.kt`, the argument and return Variant types the Web builtin-call crossing
 needs for each engine-backed method). A pure method whose Godot counterpart has a `MATH_CHECKS`
 guard lists the guard's formula in `ENGINE_FALLBACK`: it returns null for exactly the inputs the

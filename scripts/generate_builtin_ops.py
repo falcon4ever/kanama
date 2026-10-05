@@ -52,6 +52,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import struct
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -1358,20 +1359,26 @@ WEB_TEST_ENGINE_BOUND: dict[str, str] = {
 
 
 # The engine-backed methods the Web build runs in Kotlin (web-runtime/.../WebLocalBuiltins.kt: the
-# ones whose Godot formula needs sin/cos/atan2/asin/acos, or a debug-only check). WebBuiltinParityTest
-# runs each on the runtime smoke's facade inputs and compares every float component with the value
-# GDScript printed (the `facadevals` line), allowing at most this many float32 ulps: 0 is bit-exact.
-# A nonzero bound is a recorded last-bit difference between Kotlin/Wasm's transcendental functions
-# and the engine's libm, with its reason -- never a silent skip.
+# ones whose Godot formula needs sin/cos/atan2/asin/acos, or a debug-only check), with ONE float32 ulp
+# bound per method that both checks of them use: WebBuiltinParityTest (Kotlin/Wasm against the values
+# GDScript printed when they were recorded, the `facadevals` line) and the runtime smoke's
+# `--verify-recorded` (the engine on THIS machine against the same recording). 0 is bit-exact, and is
+# only allowed for a method with no transcendental function (`check_transcendental_bounds` enforces
+# it): libm's sin/cos/atan2/asin/acos are not correctly rounded, so their last bit differs between
+# libm implementations and CPUs (measured: the engine's Vector3.rotated on Linux x86_64 is 1 ulp off
+# the macOS arm64 recording) as well as between Kotlin/Wasm and the engine. Each bound carries its
+# reason -- never a silent skip. The pure (hash) entries need no bound: they are arithmetic, sqrt and
+# fmod only (`check_pure_is_portable`), which IEEE-754 rounds the same everywhere.
+LIBM = "libm's last bit differs by platform and from Kotlin/Wasm's (Linux x86_64 vs macOS arm64: 1 ulp)"
 WEB_LOCAL_FACADE: dict[str, tuple[int, str]] = {
-    "Vector2.angle": (0, ""),
-    "Vector2.rotated": (0, ""),
-    "Vector3.signed_angle_to": (0, ""),
-    "Vector3.rotated": (0, ""),
-    "Quaternion.slerp": (0, ""),
-    "Basis.rotated": (0, ""),
-    "Basis.get_euler": (1, "1 of 24 components 1 ulp off: Kotlin/Wasm's atan2/asin vs the engine's libm"),
-    "Basis.from_euler": (0, ""),
+    "Vector2.angle": (1, "atan2: " + LIBM),
+    "Vector2.rotated": (1, "sin/cos: " + LIBM),
+    "Vector3.signed_angle_to": (1, "atan2: " + LIBM),
+    "Vector3.rotated": (1, "sin/cos: " + LIBM),
+    "Quaternion.slerp": (1, "acos/sin: " + LIBM),
+    "Basis.rotated": (1, "sin/cos: " + LIBM),
+    "Basis.get_euler": (1, "atan2/asin: " + LIBM + "; Kotlin/Wasm is 1 ulp off in 1 of 24 components"),
+    "Basis.from_euler": (1, "sin/cos: " + LIBM),
     "Basis.looking_at": (0, ""),
     "Transform3D.looking_at": (0, ""),
     "Transform3D.interpolate_with": (
@@ -1382,6 +1389,47 @@ WEB_LOCAL_FACADE: dict[str, tuple[int, str]] = {
         "components near zero (weights in [0, 1] matched exactly in a separate probe)",
     ),
 }
+
+TRANSCENDENTAL = re.compile(r"\b(sin|cos|tan|asin|acos|atan|atan2|sinh|cosh|tanh|exp|expm1|pow|ln|ln1p|log|log2|log10|cbrt|hypot)\(|\.pow\(")
+# The Godot C++ functions each Web-local method computes with (core/math), for the bound check.
+WEB_LOCAL_TRANSCENDENTAL = {
+    "Vector2.angle", "Vector2.rotated", "Vector3.signed_angle_to", "Vector3.rotated", "Quaternion.slerp",
+    "Basis.rotated", "Basis.get_euler", "Basis.from_euler", "Transform3D.interpolate_with",
+}
+
+
+def check_transcendental_bounds() -> list[str]:
+    """A Web-local method built on a transcendental function must not demand bit equality."""
+    problems = [f"WEB_LOCAL_FACADE {k}: bound 0 on a method that uses libm transcendentals"
+                for k in WEB_LOCAL_TRANSCENDENTAL if WEB_LOCAL_FACADE.get(k, (1, ""))[0] == 0]
+    problems += [f"WEB_LOCAL_FACADE {k}: nonzero bound without a reason" for k, (u, r) in WEB_LOCAL_FACADE.items() if u and not r]
+    problems += [f"WEB_LOCAL_TRANSCENDENTAL {k}: not in WEB_LOCAL_FACADE" for k in WEB_LOCAL_TRANSCENDENTAL if k not in WEB_LOCAL_FACADE]
+    return problems
+
+
+def check_pure_is_portable(members: list["Member"]) -> list[str]:
+    """The recorded pure hashes are compared bit for bit on every CPU: no transcendental may feed them."""
+    problems = [f"pure member {m.key} calls a transcendental function" for m in members
+                if m.impl == "pure" and TRANSCENDENTAL.search(m.code)]
+    formulas = (ROOT / "src/commonMain/kotlin/net/multigesture/kanama/types/BuiltinFormulas.kt").read_text(encoding="utf-8")
+    problems += [f"BuiltinFormulas.kt calls {m.group(0)} (pure formulas are compared bit for bit)"
+                 for m in TRANSCENDENTAL.finditer(formulas)]
+    return problems
+
+
+def float32_ulps_apart(a_bits: int, b_bits: int) -> int:
+    """float32 ulps between two float64-bit values (WebBuiltinParityTest's `withinUlps`); NaN = NaN."""
+    def ordered(bits: int) -> int | None:
+        value = struct.unpack("<d", struct.pack("<q", bits))[0]
+        if value != value:
+            return None
+        raw = struct.unpack("<i", struct.pack("<f", value))[0] if abs(value) <= 3.4028234663852886e38 else (
+            0x7F800000 if value > 0 else -0x00800000)
+        return -2**31 - raw if raw < 0 else raw
+    a, b = ordered(a_bits), ordered(b_bits)
+    if a is None or b is None:
+        return 0 if a is None and b is None else 2**40
+    return abs(a - b)
 
 
 def load_expected_facade() -> dict[str, list[int]]:
@@ -2216,12 +2264,18 @@ def main() -> int:
     args = parser.parse_args()
     api = load_api()
     outputs = regenerate(api)
+    sources = {cls: class_file(cls).read_text(encoding="utf-8") for cls in OWNED_CLASSES}
+    members = build_members(api, {cls: class_body(src, cls) for cls, src in sources.items()})
+    portability = check_transcendental_bounds() + check_pure_is_portable(members)
+    if portability:
+        print("[generate_builtin_ops] FAIL: a parity check would depend on the CPU's libm:", file=sys.stderr)
+        for line in portability:
+            print(f"    {line}", file=sys.stderr)
+        return 1
     if args.record_parity or args.verify_recorded:
         log = (args.record_parity or args.verify_recorded).read_text(encoding="utf-8", errors="replace")
         live = parse_gdscript_pure(log)
         live_facade = parse_gdscript_values(log)
-        sources = {cls: class_file(cls).read_text(encoding="utf-8") for cls in OWNED_CLASSES}
-        members = build_members(api, {cls: class_body(src, cls) for cls, src in sources.items()})
         pure, _ = parity_entries(members)
         keys = web_parity_keys(pure)
         facade_keys = [summary_key(k) for k in WEB_LOCAL_FACADE]
@@ -2244,11 +2298,19 @@ def main() -> int:
         recorded_facade = load_expected_facade()
         problems = [f"{k}: recorded {v}, GDScript {live.get(k)}" for k, v in recorded.items() if live.get(k) != v]
         problems += [f"{k}: not recorded (run --record-parity)" for k in keys if k not in recorded]
-        problems += [
-            f"facade {k}: recorded {v}, GDScript {live_facade.get(k)}"
-            for k, v in recorded_facade.items()
-            if live_facade.get(k) != v
-        ]
+        bounds = {summary_key(k): ulps for k, (ulps, _) in WEB_LOCAL_FACADE.items()}
+        for k, v in recorded_facade.items():
+            got = live_facade.get(k)
+            ulps = bounds.get(k, 0)
+            if got is None or len(got) != len(v):
+                problems.append(f"facade {k}: recorded {len(v)} components, GDScript {got}")
+                continue
+            worst = max((float32_ulps_apart(a, b) for a, b in zip(v, got)), default=0)
+            if worst > ulps:
+                problems.append(
+                    f"facade {k}: GDScript is {worst} float32 ulps off the recording (bound {ulps}, WEB_LOCAL_FACADE): "
+                    f"recorded {v}, GDScript {got}"
+                )
         problems += [f"facade {k}: not recorded (run --record-parity)" for k in facade_keys if k not in recorded_facade]
         if problems:
             print(f"[generate_builtin_ops] FAIL: the recorded Web parity hashes are stale ({len(problems)}):", file=sys.stderr)
@@ -2256,8 +2318,8 @@ def main() -> int:
                 print(f"    {line}", file=sys.stderr)
             return 1
         print(
-            f"[generate_builtin_ops] PASS: {len(recorded)} + {len(recorded_facade)} recorded Web parity hashes "
-            "match GDScript"
+            f"[generate_builtin_ops] PASS: {len(recorded)} recorded Web parity hashes match GDScript bit for bit, "
+            f"{len(recorded_facade)} Web-local methods within their WEB_LOCAL_FACADE ulp bounds"
         )
         return 0
     stale = [path for path, content in outputs.items() if not same(path, content)]

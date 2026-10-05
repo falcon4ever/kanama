@@ -3143,7 +3143,7 @@ class WebBuiltinParityTest {
     val EXPECTED_FACADE: Map<String, Pair<Int, LongArray>> =
       mapOf(
         "Vector2.angle" to
-          (0 to
+          (1 to
             longArrayOf(
               -4609320015433302016L,
               -4613618976512016384L,
@@ -3155,7 +3155,7 @@ class WebBuiltinParityTest {
               -4609116017371643904L,
             )),
         "Vector2.rotated" to
-          (0 to
+          (1 to
             longArrayOf(
               4607149502170660864L,
               4590819222614966272L,
@@ -3175,7 +3175,7 @@ class WebBuiltinParityTest {
               -4657657644335497216L,
             )),
         "Vector3.signed_angle_to" to
-          (0 to
+          (1 to
             longArrayOf(
               -4613691264569704448L,
               4607745874485837824L,
@@ -3187,7 +3187,7 @@ class WebBuiltinParityTest {
               -4613604033247051776L,
             )),
         "Vector3.rotated" to
-          (0 to
+          (1 to
             longArrayOf(
               4539807439700099072L,
               -4616189688921718784L,
@@ -3215,7 +3215,7 @@ class WebBuiltinParityTest {
               -4654419771570257920L,
             )),
         "Quaternion.slerp" to
-          (0 to
+          (1 to
             longArrayOf(
               4601181763224469504L,
               -4618699551308513280L,
@@ -3251,7 +3251,7 @@ class WebBuiltinParityTest {
               -4636229841505484800L,
             )),
         "Basis.rotated" to
-          (0 to
+          (1 to
             longArrayOf(
               4607182416652533760L,
               4551744937300852736L,
@@ -3431,7 +3431,7 @@ class WebBuiltinParityTest {
               4604865117513842688L,
             )),
         "Basis.from_euler" to
-          (0 to
+          (1 to
             longArrayOf(
               4603046904849235968L,
               4605746185494331392L,

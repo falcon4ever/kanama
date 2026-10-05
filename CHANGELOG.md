@@ -125,8 +125,9 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   rejects throws instead of returning zeros). The transcendental ones gameplay calls every tick
   (`slerp`, `rotated`, `getEuler`/`fromEuler`, `lookingAt`, `interpolateWith`, `angle`,
   `signedAngleTo`) run as Kotlin ports of Godot's `core/math`, at no crossing; they match Godot's
-  recorded results to the bit except `getEuler` (at most 1 float32 ulp) and `interpolateWith` (at
-  most 64), where the math libraries round differently. The hand-written `WebValueTypes.kt`,
+  recorded results within 1 float32 ulp (`interpolateWith` within 64), the last-bit rounding by
+  which math libraries differ (the engine's own results differ that much between CPUs), and the
+  two `lookingAt` to the bit. The hand-written `WebValueTypes.kt`,
   `WebScalarOperators.kt` and the Web `NodePath.kt` are gone.
 - **`Basis`/`Transform3D` arithmetic runs in Kotlin on every platform.** `Basis.inverse`,
   `transposed`, `determinant`, `getScale`, `scaled`, `orthonormalized`, `getRotationQuaternion`

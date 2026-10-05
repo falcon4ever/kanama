@@ -115,11 +115,13 @@ Where Kotlin and GDScript differ:
   crossing, as ports of Godot's own code: `Vector2.angle`/`rotated`,
   `Vector3.rotated`/`signedAngleTo`, `Quaternion.slerp`, `Basis.rotated`/
   `getEuler`/`fromEuler`/`lookingAt` and `Transform3D.lookingAt`/
-  `interpolateWith`. Built on `sin`/`cos`/`atan2`, they match the engine except
-  where its math library rounds differently: `getEuler` by at most one float32
-  step and `interpolateWith` by at most 64 (measured against Godot on every
-  build); the others match to the bit. Web exports are release builds, so these
-  ports skip the debug-only checks above, as the engine does there.
+  `interpolateWith`. Those built on `sin`/`cos`/`atan2` match the engine except
+  where math libraries round differently in the last bit (they also differ
+  between the engine's own builds on different CPUs): by at most one float32
+  step, and `interpolateWith` by at most 64 (measured against Godot on every
+  build); the two `lookingAt` use no such function and match to the bit. Web
+  exports are release builds, so these ports skip the debug-only checks above,
+  as the engine does there.
 
 Their components are `Double`, like every other decimal in the API (`Vector3.x`,
 `Color.r`, `delta`, scalar arguments), so no `.toFloat()`/`.toDouble()` is
