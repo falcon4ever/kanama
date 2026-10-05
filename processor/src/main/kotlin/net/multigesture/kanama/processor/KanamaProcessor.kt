@@ -1955,6 +1955,15 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         "net.multigesture.kanama.types.Quaternion" -> TypeMapping.QUATERNION
         "net.multigesture.kanama.types.Basis" -> TypeMapping.BASIS
         "net.multigesture.kanama.types.Color" -> TypeMapping.COLOR
+        "net.multigesture.kanama.types.Rect2" -> TypeMapping.RECT2
+        "net.multigesture.kanama.types.Rect2i" -> TypeMapping.RECT2I
+        "net.multigesture.kanama.types.Vector4" -> TypeMapping.VECTOR4
+        "net.multigesture.kanama.types.Vector4i" -> TypeMapping.VECTOR4I
+        "net.multigesture.kanama.types.Plane" -> TypeMapping.PLANE
+        "net.multigesture.kanama.types.AABB" -> TypeMapping.AABB
+        "net.multigesture.kanama.types.Transform2D" -> TypeMapping.TRANSFORM2D
+        "net.multigesture.kanama.types.Transform3D" -> TypeMapping.TRANSFORM3D
+        "net.multigesture.kanama.types.Projection" -> TypeMapping.PROJECTION
         "net.multigesture.kanama.types.NodePath" -> TypeMapping.NODE_PATH
         "net.multigesture.kanama.api.GodotObject" -> TypeMapping.OBJECT
         else -> null
@@ -2677,7 +2686,8 @@ internal fun webDeliversSignalArg(arg: ArgModel): Boolean =
         TypeMapping.VECTOR2I,
         TypeMapping.VECTOR3,
         TypeMapping.COLOR,
-      )
+      ) ||
+    WebValueTypes.isWebValueType(arg.type)
 
 /** One `@Signal` with a typed decode for every argument (task 134 D4). */
 internal class TypedSignalSpec(
@@ -3167,50 +3177,18 @@ internal fun normalizeScriptPropertyDefaultLiteral(
     TypeMapping.PACKED_VECTOR2_ARRAY,
     TypeMapping.PACKED_VECTOR3_ARRAY,
     TypeMapping.PACKED_COLOR_ARRAY,
-    TypeMapping.RID,
-    TypeMapping.RECT2,
-    TypeMapping.AABB,
-    TypeMapping.TRANSFORM2D,
-    TypeMapping.TRANSFORM3D,
-    TypeMapping.PROJECTION -> null
+    TypeMapping.RID -> null
     TypeMapping.NODE_PATH ->
       nodePathLiteral.matchEntire(initializer)?.groupValues?.get(1)?.let {
         "net.multigesture.kanama.types.NodePath($it)"
       }
-    TypeMapping.VECTOR2 ->
-      normalizeVectorDefaultLiteral(
-        initializer = initializer,
-        packageClass = "net.multigesture.kanama.types.Vector2",
-        simpleClass = "Vector2",
-        components = 2,
-        componentPattern = numberLiteral,
-      )
-    TypeMapping.VECTOR2I ->
-      normalizeVectorDefaultLiteral(
-        initializer = initializer,
-        packageClass = "net.multigesture.kanama.types.Vector2i",
-        simpleClass = "Vector2i",
-        components = 2,
-        componentPattern = intLiteral,
-      )
-    TypeMapping.VECTOR3 ->
-      normalizeVectorDefaultLiteral(
-        initializer = initializer,
-        packageClass = "net.multigesture.kanama.types.Vector3",
-        simpleClass = "Vector3",
-        components = 3,
-        componentPattern = numberLiteral,
-      )
-    TypeMapping.VECTOR3I ->
-      normalizeVectorDefaultLiteral(
-        initializer = initializer,
-        packageClass = "net.multigesture.kanama.types.Vector3i",
-        simpleClass = "Vector3i",
-        components = 3,
-        componentPattern = intLiteral,
-      )
+    // Task 133 review: the vectors take every named constant (`Vector3.UP`) and fold `PI`,
+    // `TAU`, `degToRad(...)` inside the constructor, like the other value types.
+    TypeMapping.VECTOR2,
+    TypeMapping.VECTOR2I,
+    TypeMapping.VECTOR3 -> normalizeValueTypeDefault(initializer, type)
     // Task 133 C2: `Color.RED` (Kotlin's named colors are Godot's) and `Color(r, g, b)` /
-    // `Color(r, g, b, a)` literals; anything else is read at runtime.
+    // `Color(r, g, b, a)` literals; anything else has no editor default.
     TypeMapping.COLOR ->
       colorNamedConstant.matchEntire(initializer)?.let {
         "net.multigesture.kanama.types.Color.${it.groupValues[1]}"
@@ -3229,9 +3207,182 @@ internal fun normalizeScriptPropertyDefaultLiteral(
           components = 4,
           componentPattern = numberLiteral,
         )
+    // Task 133 value types: a named constant (`Transform3D.IDENTITY`, `Vector4.ZERO`) or a
+    // constructor of literals, folded constants and nested value types. Anything else has no
+    // editor default (the registrar reports none; the property still starts at its Kotlin value).
+    TypeMapping.VECTOR3I,
+    TypeMapping.VECTOR4,
+    TypeMapping.VECTOR4I,
+    TypeMapping.RECT2,
+    TypeMapping.RECT2I,
+    TypeMapping.PLANE,
+    TypeMapping.AABB,
+    TypeMapping.TRANSFORM2D,
+    TypeMapping.TRANSFORM3D,
+    TypeMapping.PROJECTION,
     TypeMapping.QUATERNION,
-    TypeMapping.BASIS -> null
+    TypeMapping.BASIS -> normalizeValueTypeDefault(initializer, type)
   }
+}
+
+private const val VALUE_TYPES_PACKAGE = "net.multigesture.kanama.types"
+
+/**
+ * The named constants a value-type default may spell: Godot's own, plus Kotlin's `ZERO` for the
+ * four types GDScript spells `Type()` (Rect2, Rect2i, AABB, Plane; see [gdValueTypeDefault]).
+ */
+internal val VALUE_TYPE_DEFAULT_CONSTANTS: Map<TypeMapping, Set<String>> =
+  mapOf(
+    TypeMapping.VECTOR2 to setOf("ZERO", "ONE", "INF", "UP", "DOWN", "LEFT", "RIGHT"),
+    TypeMapping.VECTOR2I to setOf("ZERO", "ONE", "MIN", "MAX", "UP", "DOWN", "LEFT", "RIGHT"),
+    TypeMapping.VECTOR3 to
+      setOf(
+        "ZERO",
+        "ONE",
+        "INF",
+        "UP",
+        "DOWN",
+        "LEFT",
+        "RIGHT",
+        "FORWARD",
+        "BACK",
+        "MODEL_LEFT",
+        "MODEL_RIGHT",
+        "MODEL_TOP",
+        "MODEL_BOTTOM",
+        "MODEL_FRONT",
+        "MODEL_REAR",
+      ),
+    TypeMapping.VECTOR3I to
+      setOf("ZERO", "ONE", "MIN", "MAX", "UP", "DOWN", "LEFT", "RIGHT", "FORWARD", "BACK"),
+    TypeMapping.VECTOR4 to setOf("ZERO", "ONE", "INF"),
+    TypeMapping.VECTOR4I to setOf("ZERO", "ONE", "MIN", "MAX"),
+    TypeMapping.RECT2 to setOf("ZERO"),
+    TypeMapping.RECT2I to setOf("ZERO"),
+    TypeMapping.AABB to setOf("ZERO"),
+    TypeMapping.PLANE to setOf("ZERO", "PLANE_YZ", "PLANE_XZ", "PLANE_XY"),
+    TypeMapping.QUATERNION to setOf("IDENTITY"),
+    TypeMapping.BASIS to setOf("IDENTITY", "FLIP_X", "FLIP_Y", "FLIP_Z"),
+    TypeMapping.TRANSFORM2D to setOf("IDENTITY", "FLIP_X", "FLIP_Y"),
+    TypeMapping.TRANSFORM3D to setOf("IDENTITY", "FLIP_X", "FLIP_Y", "FLIP_Z"),
+    TypeMapping.PROJECTION to setOf("IDENTITY", "ZERO"),
+  )
+
+/** A constructor parameter of a value-type default: a decimal, an int, or a nested value type. */
+private sealed interface DefaultSlot {
+  data object Decimal : DefaultSlot
+
+  data object Whole : DefaultSlot
+
+  data class Value(val type: TypeMapping) : DefaultSlot
+}
+
+/** The constructors a value-type default may call (each one exists in Kotlin and in GDScript). */
+private val VALUE_TYPE_DEFAULT_CONSTRUCTORS: Map<TypeMapping, List<List<DefaultSlot>>> = run {
+  val d = DefaultSlot.Decimal
+  val n = DefaultSlot.Whole
+  fun v(type: TypeMapping) = DefaultSlot.Value(type)
+  mapOf(
+    TypeMapping.VECTOR2 to listOf(listOf(d, d)),
+    TypeMapping.VECTOR2I to listOf(listOf(n, n)),
+    TypeMapping.VECTOR3 to listOf(listOf(d, d, d)),
+    TypeMapping.VECTOR3I to listOf(listOf(n, n, n)),
+    TypeMapping.VECTOR4 to listOf(listOf(d, d, d, d)),
+    TypeMapping.VECTOR4I to listOf(listOf(n, n, n, n)),
+    TypeMapping.RECT2 to listOf(listOf(v(TypeMapping.VECTOR2), v(TypeMapping.VECTOR2))),
+    TypeMapping.RECT2I to listOf(listOf(v(TypeMapping.VECTOR2I), v(TypeMapping.VECTOR2I))),
+    TypeMapping.AABB to listOf(listOf(v(TypeMapping.VECTOR3), v(TypeMapping.VECTOR3))),
+    TypeMapping.PLANE to listOf(listOf(v(TypeMapping.VECTOR3), d), listOf(d, d, d, d)),
+    TypeMapping.QUATERNION to listOf(listOf(d, d, d, d)),
+    TypeMapping.BASIS to listOf(List(3) { v(TypeMapping.VECTOR3) }),
+    TypeMapping.TRANSFORM2D to listOf(List(3) { v(TypeMapping.VECTOR2) }),
+    TypeMapping.TRANSFORM3D to listOf(listOf(v(TypeMapping.BASIS), v(TypeMapping.VECTOR3))),
+    TypeMapping.PROJECTION to listOf(List(4) { v(TypeMapping.VECTOR4) }),
+  )
+}
+
+/**
+ * Task 133 value types: [initializer] as a fully qualified Kotlin literal when it is a named
+ * constant of [type] or one of its [VALUE_TYPE_DEFAULT_CONSTRUCTORS] over literals (nested value
+ * types allowed; a component may be a constant expression [ConstantFolding] folds, `PI / 2`), else
+ * null: the property then has no editor default (`get_property_default_value` is null, no revert)
+ * and the Web build refuses it. A decimal written `0.5f` is read as the Double 0.5, as for every
+ * vector component (task 134: decimal components are Double).
+ */
+internal fun normalizeValueTypeDefault(initializer: String, type: TypeMapping): String? {
+  val simple = type.kotlinType.substringAfterLast('.')
+  val prefix = """(?:${Regex.escape(VALUE_TYPES_PACKAGE)}\.)?${Regex.escape(simple)}"""
+  val text = initializer.trim()
+  Regex("""$prefix\.([A-Z][A-Z0-9_]*)""").matchEntire(text)?.let { match ->
+    val name = match.groupValues[1]
+    return if (name in VALUE_TYPE_DEFAULT_CONSTANTS[type].orEmpty()) {
+      "$VALUE_TYPES_PACKAGE.$simple.$name"
+    } else null
+  }
+  val body =
+    Regex("""$prefix\((.*)\)""", RegexOption.DOT_MATCHES_ALL).matchEntire(text)?.groupValues?.get(1)
+      ?: return null
+  val args = splitTopLevelArguments(body) ?: return null
+  val decimal = Regex("""[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?[fFdD]?""")
+  val whole = Regex("""[-+]?\d+""")
+  for (signature in VALUE_TYPE_DEFAULT_CONSTRUCTORS[type].orEmpty()) {
+    if (signature.size != args.size) continue
+    val rendered =
+      signature.zip(args).map { (slot, arg) ->
+        when (slot) {
+          // A literal, or a constant expression folded as Kotlin evaluates it (`PI / 2`,
+          // `degToRad(90.0)`, `60 * 5`): ConstantFolding, task 133 C.
+          DefaultSlot.Decimal ->
+            (arg.takeIf { decimal.matches(it) } ?: ConstantFolding.foldDoubleLiteral(arg))?.let(
+              ::doubleComponentLiteral
+            )
+          DefaultSlot.Whole ->
+            arg.takeIf { whole.matches(it) } ?: ConstantFolding.foldIntLiteral(arg)
+          is DefaultSlot.Value -> normalizeValueTypeDefault(arg, slot.type)
+        }
+      }
+    if (rendered.all { it != null }) {
+      return "$VALUE_TYPES_PACKAGE.$simple(${rendered.joinToString(", ")})"
+    }
+  }
+  return null
+}
+
+/**
+ * `a, Vector2(b, c)` -> `[a, Vector2(b, c)]` (commas inside parentheses kept); null if unbalanced.
+ */
+private fun splitTopLevelArguments(body: String): List<String>? {
+  if (body.isBlank()) return emptyList()
+  val out = mutableListOf<String>()
+  var depth = 0
+  var start = 0
+  for ((i, c) in body.withIndex()) {
+    when (c) {
+      '(' -> depth++
+      ')' -> if (--depth < 0) return null
+      ',' ->
+        if (depth == 0) {
+          out += body.substring(start, i).trim()
+          start = i + 1
+        }
+    }
+  }
+  if (depth != 0) return null
+  out += body.substring(start).trim()
+  return out
+}
+
+/**
+ * The GDScript spelling of a value-type default normalized by [normalizeValueTypeDefault] (the Web
+ * proxy declaration): the package dropped, and `ZERO` of the four types without that constant in
+ * GDScript spelled `Type()`. Null -> `Type()`, Godot's default of the type.
+ */
+internal fun gdValueTypeDefault(defaultLiteral: String?, type: TypeMapping): String {
+  val simple = type.kotlinType.substringAfterLast('.')
+  if (defaultLiteral == null) return "$simple()"
+  return defaultLiteral
+    .replace("$VALUE_TYPES_PACKAGE.", "")
+    .replace(Regex("""\b(Rect2i?|AABB|Plane)\.ZERO\b"""), "$1()")
 }
 
 private fun normalizeVectorDefaultLiteral(
@@ -3265,6 +3416,69 @@ private fun doubleComponentLiteral(literal: String): String {
     "$bare.0"
   }
 }
+
+/**
+ * The Kotlin expression reading a [TypeMapping.COMPOSITE_VALUE_TYPES] value out of the raw engine
+ * buffer [s] (Godot's memory order). real_t components go through `GodotRealSegment.readIndex` (the
+ * engine's width, widened to Double exactly), int32 components through `JAVA_INT`.
+ */
+internal fun compositeValueRead(type: TypeMapping, s: String): String {
+  val t = "net.multigesture.kanama.types"
+  fun r(i: Int) = "$t.GodotRealSegment.readIndex($s, $i)"
+  fun n(i: Int) = "$s.get(JAVA_INT, ${i * 4}L)"
+  fun v2(a: Int) = "$t.Vector2(${r(a)}, ${r(a + 1)})"
+  fun v3(a: Int, b: Int, c: Int) = "$t.Vector3(${r(a)}, ${r(b)}, ${r(c)})"
+  fun v4(a: Int) = "$t.Vector4(${r(a)}, ${r(a + 1)}, ${r(a + 2)}, ${r(a + 3)})"
+  return when (type) {
+    TypeMapping.RECT2 -> "$t.Rect2(${v2(0)}, ${v2(2)})"
+    TypeMapping.RECT2I -> "$t.Rect2i($t.Vector2i(${n(0)}, ${n(1)}), $t.Vector2i(${n(2)}, ${n(3)}))"
+    TypeMapping.VECTOR4 -> v4(0)
+    TypeMapping.VECTOR4I -> "$t.Vector4i(${n(0)}, ${n(1)}, ${n(2)}, ${n(3)})"
+    TypeMapping.PLANE -> "$t.Plane(${v3(0, 1, 2)}, ${r(3)})"
+    TypeMapping.AABB -> "$t.AABB(${v3(0, 1, 2)}, ${v3(3, 4, 5)})"
+    TypeMapping.TRANSFORM2D -> "$t.Transform2D(${v2(0)}, ${v2(2)}, ${v2(4)})"
+    // Godot stores a Basis as three ROWS; Kotlin's Basis(x, y, z) takes the columns.
+    TypeMapping.TRANSFORM3D ->
+      "$t.Transform3D($t.Basis(${v3(0, 3, 6)}, ${v3(1, 4, 7)}, ${v3(2, 5, 8)}), ${v3(9, 10, 11)})"
+    TypeMapping.PROJECTION -> "$t.Projection(${v4(0)}, ${v4(4)}, ${v4(8)}, ${v4(12)})"
+    else -> error("${type.name} is not a composite value type")
+  }
+}
+
+/**
+ * The statements writing [v] into the raw engine buffer [s]; the mirror of [compositeValueRead].
+ */
+internal fun compositeValueWrite(type: TypeMapping, s: String, v: String): String {
+  fun real(fields: List<String>) =
+    fields.withIndex().joinToString("; ") { (i, f) ->
+      "net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, $i, $v.$f)"
+    }
+  fun ints(fields: List<String>) =
+    fields.withIndex().joinToString("; ") { (i, f) -> "$s.set(JAVA_INT, ${i * 4}L, $v.$f)" }
+  return when (type) {
+    TypeMapping.RECT2 -> real(listOf("position.x", "position.y", "size.x", "size.y"))
+    TypeMapping.RECT2I -> ints(listOf("position.x", "position.y", "size.x", "size.y"))
+    TypeMapping.VECTOR4 -> real(listOf("x", "y", "z", "w"))
+    TypeMapping.VECTOR4I -> ints(listOf("x", "y", "z", "w"))
+    TypeMapping.PLANE -> real(listOf("normal.x", "normal.y", "normal.z", "d"))
+    TypeMapping.AABB ->
+      real(listOf("position.x", "position.y", "position.z", "size.x", "size.y", "size.z"))
+    TypeMapping.TRANSFORM2D -> real(listOf("x.x", "x.y", "y.x", "y.y", "origin.x", "origin.y"))
+    TypeMapping.TRANSFORM3D ->
+      real(
+        listOf("x", "y", "z").flatMap { row -> listOf("x", "y", "z").map { "basis.$it.$row" } } +
+          listOf("origin.x", "origin.y", "origin.z")
+      )
+    TypeMapping.PROJECTION ->
+      real(
+        listOf("x", "y", "z", "w").flatMap { col -> listOf("x", "y", "z", "w").map { "$col.$it" } }
+      )
+    else -> error("${type.name} is not a composite value type")
+  }
+}
+
+/** A Packed*Array's opaque storage (16 bytes on 64-bit, any real_t). */
+private const val PACKED_ARRAY_SCRATCH = "16L, 8L"
 
 internal enum class TypeMapping(
   val variantTypeEnum: String,
@@ -3302,6 +3516,8 @@ internal enum class TypeMapping(
     8,
     "net.multigesture.kanama.types.Vector2i(0, 0)",
     "net.multigesture.kanama.types.Vector2i",
+    // Two int32: the Variant writes 8 bytes (the bare JAVA_INT layout held 4).
+    scratchAllocationExpr = "8L, 4L",
   ),
   VECTOR3(
     "VECTOR3",
@@ -3319,6 +3535,7 @@ internal enum class TypeMapping(
     12,
     "net.multigesture.kanama.types.Vector3i(0, 0, 0)",
     "net.multigesture.kanama.types.Vector3i",
+    scratchAllocationExpr = "12L, 4L",
   ),
   QUATERNION(
     "QUATERNION",
@@ -3373,13 +3590,20 @@ internal enum class TypeMapping(
   // Variant-only (like ARRAY): it is not a ptrcall scratch/arg shape, so the scratch/ptrcall
   // helpers below fall through to the ARRAY-style safe defaults; the real marshalling is the
   // dedicated PACKED_STRING_ARRAY case in variantWriteRetExpr (desktop) and the iOS encode path.
-  PACKED_STRING_ARRAY("PACKED_STRING_ARRAY", "JAVA_LONG", 8, "emptyList<String>()", "List<String>"),
+  PACKED_STRING_ARRAY(
+    "PACKED_STRING_ARRAY",
+    "JAVA_LONG",
+    8,
+    "emptyList<String>()",
+    "List<String>",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
+  ),
   // task 13 — non-POD virtual return: a Variant, mapped to Kotlin `Any?`. Variant-only, boxed on
   // desktop via BuiltinTypes.initVariantFromAny (broad inner-type set) and on iOS via the existing
   // per-runtime-type encodeIosReturn dispatch (audited inner types; unaudited -> nil).
   // variantTypeEnum
   // NIL is the method-info return type for a Variant ("any").
-  VARIANT("NIL", "JAVA_LONG", 8, "null", "Any?"),
+  VARIANT("NIL", "JAVA_LONG", 8, "null", "Any?", scratchAllocationExpr = "40L, 8L"),
   // task 29 — remaining virtual-return families. All Variant-only return shapes like
   // PACKED_STRING_ARRAY: never validated as args/properties, the scratch/ptrcall helpers below
   // fall through to the safe defaults, and the real marshalling is the per-family case in
@@ -3387,17 +3611,53 @@ internal enum class TypeMapping(
   //
   // Fixed-element packed arrays map to Kotlin primitive arrays (width-unambiguous: IntArray is
   // int32, LongArray int64, FloatArray float32, DoubleArray float64) or List<value type>.
-  PACKED_BYTE_ARRAY("PACKED_BYTE_ARRAY", "JAVA_LONG", 8, "ByteArray(0)", "ByteArray"),
-  PACKED_INT32_ARRAY("PACKED_INT32_ARRAY", "JAVA_LONG", 8, "IntArray(0)", "IntArray"),
-  PACKED_INT64_ARRAY("PACKED_INT64_ARRAY", "JAVA_LONG", 8, "LongArray(0)", "LongArray"),
-  PACKED_FLOAT32_ARRAY("PACKED_FLOAT32_ARRAY", "JAVA_LONG", 8, "FloatArray(0)", "FloatArray"),
-  PACKED_FLOAT64_ARRAY("PACKED_FLOAT64_ARRAY", "JAVA_LONG", 8, "DoubleArray(0)", "DoubleArray"),
+  PACKED_BYTE_ARRAY(
+    "PACKED_BYTE_ARRAY",
+    "JAVA_LONG",
+    8,
+    "ByteArray(0)",
+    "ByteArray",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
+  ),
+  PACKED_INT32_ARRAY(
+    "PACKED_INT32_ARRAY",
+    "JAVA_LONG",
+    8,
+    "IntArray(0)",
+    "IntArray",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
+  ),
+  PACKED_INT64_ARRAY(
+    "PACKED_INT64_ARRAY",
+    "JAVA_LONG",
+    8,
+    "LongArray(0)",
+    "LongArray",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
+  ),
+  PACKED_FLOAT32_ARRAY(
+    "PACKED_FLOAT32_ARRAY",
+    "JAVA_LONG",
+    8,
+    "FloatArray(0)",
+    "FloatArray",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
+  ),
+  PACKED_FLOAT64_ARRAY(
+    "PACKED_FLOAT64_ARRAY",
+    "JAVA_LONG",
+    8,
+    "DoubleArray(0)",
+    "DoubleArray",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
+  ),
   PACKED_VECTOR2_ARRAY(
     "PACKED_VECTOR2_ARRAY",
     "JAVA_LONG",
     8,
     "emptyList<net.multigesture.kanama.types.Vector2>()",
     "List<net.multigesture.kanama.types.Vector2>",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
   ),
   PACKED_VECTOR3_ARRAY(
     "PACKED_VECTOR3_ARRAY",
@@ -3405,6 +3665,7 @@ internal enum class TypeMapping(
     8,
     "emptyList<net.multigesture.kanama.types.Vector3>()",
     "List<net.multigesture.kanama.types.Vector3>",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
   ),
   PACKED_COLOR_ARRAY(
     "PACKED_COLOR_ARRAY",
@@ -3412,6 +3673,7 @@ internal enum class TypeMapping(
     8,
     "emptyList<net.multigesture.kanama.types.Color>()",
     "List<net.multigesture.kanama.types.Color>",
+    scratchAllocationExpr = PACKED_ARRAY_SCRATCH,
   ),
   // Dictionary return, Kotlin Map<String, Any?> (String keys only — the same audited policy as
   // the non-virtual Dictionary helpers; values box via initVariantFromAny's inner-type set).
@@ -3424,40 +3686,100 @@ internal enum class TypeMapping(
     "net.multigesture.kanama.types.RID.EMPTY",
     "net.multigesture.kanama.types.RID",
   ),
+  /** Task 133 value types: position + size, 4 real_t (task 134 A width). */
   RECT2(
     "RECT2",
-    "JAVA_LONG",
-    8,
+    "JAVA_FLOAT",
+    16,
     "net.multigesture.kanama.types.Rect2.ZERO",
     "net.multigesture.kanama.types.Rect2",
+    scratchAllocationExpr =
+      "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 4L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+    ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 4L",
   ),
+  /** position + size, 4 int32 (16 B in every build). */
+  RECT2I(
+    "RECT2I",
+    "JAVA_INT",
+    16,
+    "net.multigesture.kanama.types.Rect2i.ZERO",
+    "net.multigesture.kanama.types.Rect2i",
+    scratchAllocationExpr = "16L, 4L",
+  ),
+  /** 4 real_t. */
+  VECTOR4(
+    "VECTOR4",
+    "JAVA_FLOAT",
+    16,
+    "net.multigesture.kanama.types.Vector4.ZERO",
+    "net.multigesture.kanama.types.Vector4",
+    scratchAllocationExpr =
+      "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 4L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+    ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 4L",
+  ),
+  /** 4 int32 (16 B in every build). */
+  VECTOR4I(
+    "VECTOR4I",
+    "JAVA_INT",
+    16,
+    "net.multigesture.kanama.types.Vector4i.ZERO",
+    "net.multigesture.kanama.types.Vector4i",
+    scratchAllocationExpr = "16L, 4L",
+  ),
+  /** normal xyz + d, 4 real_t. */
+  PLANE(
+    "PLANE",
+    "JAVA_FLOAT",
+    16,
+    "net.multigesture.kanama.types.Plane.ZERO",
+    "net.multigesture.kanama.types.Plane",
+    scratchAllocationExpr =
+      "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 4L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+    ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 4L",
+  ),
+  /** position xyz + size xyz, 6 real_t. */
   AABB(
     "AABB",
-    "JAVA_LONG",
-    8,
+    "JAVA_FLOAT",
+    24,
     "net.multigesture.kanama.types.AABB.ZERO",
     "net.multigesture.kanama.types.AABB",
+    scratchAllocationExpr =
+      "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 6L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+    ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 6L",
   ),
+  /** columns x, y, origin (each a Vector2), 6 real_t. */
   TRANSFORM2D(
     "TRANSFORM2D",
-    "JAVA_LONG",
-    8,
+    "JAVA_FLOAT",
+    24,
     "net.multigesture.kanama.types.Transform2D.IDENTITY",
     "net.multigesture.kanama.types.Transform2D",
+    scratchAllocationExpr =
+      "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 6L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+    ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 6L",
   ),
+  /** basis rows (as BASIS) + origin, 12 real_t. */
   TRANSFORM3D(
     "TRANSFORM3D",
-    "JAVA_LONG",
-    8,
+    "JAVA_FLOAT",
+    48,
     "net.multigesture.kanama.types.Transform3D.IDENTITY",
     "net.multigesture.kanama.types.Transform3D",
+    scratchAllocationExpr =
+      "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 12L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+    ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 12L",
   ),
+  /** columns x, y, z, w (each a Vector4), 16 real_t. */
   PROJECTION(
     "PROJECTION",
-    "JAVA_LONG",
-    8,
+    "JAVA_FLOAT",
+    64,
     "net.multigesture.kanama.types.Projection.IDENTITY",
     "net.multigesture.kanama.types.Projection",
+    scratchAllocationExpr =
+      "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 16L, net.multigesture.kanama.types.GodotReal.ALIGN_BYTES",
+    ptrcallSizeBytesExpr = "net.multigesture.kanama.types.GodotReal.SIZE_BYTES * 16L",
   );
 
   /** Expression to read a Kotlin value from a scratch MemorySegment named [s]. */
@@ -3480,6 +3802,7 @@ internal enum class TypeMapping(
         "net.multigesture.kanama.types.Color($s.get(JAVA_FLOAT, 0).toDouble(), $s.get(JAVA_FLOAT, 4).toDouble(), $s.get(JAVA_FLOAT, 8).toDouble(), $s.get(JAVA_FLOAT, 12).toDouble())"
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($s))"
       OBJECT -> "net.multigesture.kanama.api.GodotObject($s.get(ADDRESS, 0))"
+      in COMPOSITE_VALUE_TYPES -> compositeValueRead(this, s)
       in VARIANT_ONLY_RETURN_SHAPES -> kotlinLiteralZero
       else -> "$s.get($valueLayout, 0)"
     }
@@ -3490,23 +3813,24 @@ internal enum class TypeMapping(
       BOOL -> "$s.set(JAVA_BYTE, 0, if ($v) 1.toByte() else 0.toByte())"
       STRING -> "GodotStrings.initString($s, $v)"
       VECTOR2 ->
-        "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y) }"
-      VECTOR2I -> "{ $s.set(JAVA_INT, 0, $v.x); $s.set(JAVA_INT, 4, $v.y) }"
+        "run { net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y) }"
+      VECTOR2I -> "run { $s.set(JAVA_INT, 0, $v.x); $s.set(JAVA_INT, 4, $v.y) }"
       VECTOR3 ->
-        "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z) }"
+        "run { net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z) }"
       VECTOR3I ->
-        "{ $s.set(JAVA_INT, 0, $v.x); $s.set(JAVA_INT, 4, $v.y); $s.set(JAVA_INT, 8, $v.z) }"
+        "run { $s.set(JAVA_INT, 0, $v.x); $s.set(JAVA_INT, 4, $v.y); $s.set(JAVA_INT, 8, $v.z) }"
       QUATERNION ->
-        "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.w) }"
+        "run { net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.w) }"
       BASIS ->
-        "{ net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 8, $v.z.z) }"
+        "run { net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex($s, 8, $v.z.z) }"
       COLOR ->
-        "{ $s.set(JAVA_FLOAT, 0, $v.r.toFloat()); $s.set(JAVA_FLOAT, 4, $v.g.toFloat()); $s.set(JAVA_FLOAT, 8, $v.b.toFloat()); $s.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
+        "run { $s.set(JAVA_FLOAT, 0, $v.r.toFloat()); $s.set(JAVA_FLOAT, 4, $v.g.toFloat()); $s.set(JAVA_FLOAT, 8, $v.b.toFloat()); $s.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
       NODE_PATH -> "GodotStrings.initString($s, $v.path)"
       // Task 131 item 2: a freed wrapper is written as NULL (nil), never as its dangling pointer.
       OBJECT ->
         "$s.set(ADDRESS, 0, net.multigesture.kanama.binding.runtime.BuiltinTypes.objectValueSegment($v))"
-      in VARIANT_ONLY_RETURN_SHAPES -> "{}"
+      in COMPOSITE_VALUE_TYPES -> "run { ${compositeValueWrite(this, s, v)} }"
+      in VARIANT_ONLY_RETURN_SHAPES -> "Unit"
       else -> "$s.set($valueLayout, 0, $v)"
     }
 
@@ -3536,6 +3860,8 @@ internal enum class TypeMapping(
       NODE_PATH -> "net.multigesture.kanama.types.NodePath(GodotStrings.readString($ptr))"
       OBJECT ->
         "net.multigesture.kanama.api.GodotObject($ptr.reinterpret($ptrcallSizeBytesExpr).get(ADDRESS, 0))"
+      in COMPOSITE_VALUE_TYPES ->
+        "run { val p = $ptr.reinterpret($ptrcallSizeBytesExpr); ${compositeValueRead(this, "p")} }"
       in VARIANT_ONLY_RETURN_SHAPES -> kotlinLiteralZero
       else -> "$ptr.reinterpret($ptrcallSizeBytesExpr).get($valueLayout, 0)"
     }
@@ -3550,24 +3876,26 @@ internal enum class TypeMapping(
         "rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_BYTE, 0, if ($v) 1.toByte() else 0.toByte())"
       STRING -> "GodotStrings.initString(rRet, $v)"
       VECTOR2 ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y) }"
+        "run { val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y) }"
       VECTOR2I ->
-        "{ rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 4, $v.y) }"
+        "run { rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 4, $v.y) }"
       VECTOR3 ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z) }"
+        "run { val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z) }"
       VECTOR3I ->
-        "{ rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 4, $v.y); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 8, $v.z) }"
+        "run { rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 0, $v.x); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 4, $v.y); rRet.reinterpret($ptrcallSizeBytesExpr).set(JAVA_INT, 8, $v.z) }"
       QUATERNION ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.w) }"
+        "run { val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.w) }"
       BASIS ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 8, $v.z.z) }"
+        "run { val p = rRet.reinterpret($ptrcallSizeBytesExpr); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 0, $v.x.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 1, $v.y.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 2, $v.z.x); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 3, $v.x.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 4, $v.y.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 5, $v.z.y); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 6, $v.x.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 7, $v.y.z); net.multigesture.kanama.types.GodotRealSegment.writeIndex(p, 8, $v.z.z) }"
       COLOR ->
-        "{ val p = rRet.reinterpret($ptrcallSizeBytesExpr); p.set(JAVA_FLOAT, 0, $v.r.toFloat()); p.set(JAVA_FLOAT, 4, $v.g.toFloat()); p.set(JAVA_FLOAT, 8, $v.b.toFloat()); p.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
+        "run { val p = rRet.reinterpret($ptrcallSizeBytesExpr); p.set(JAVA_FLOAT, 0, $v.r.toFloat()); p.set(JAVA_FLOAT, 4, $v.g.toFloat()); p.set(JAVA_FLOAT, 8, $v.b.toFloat()); p.set(JAVA_FLOAT, 12, $v.a.toFloat()) }"
       NODE_PATH -> "GodotStrings.initString(rRet, $v.path)"
       // Task 131 item 2: a freed wrapper returns NULL (nil), never its dangling pointer.
       OBJECT ->
         "rRet.reinterpret($ptrcallSizeBytesExpr).set(ADDRESS, 0, net.multigesture.kanama.binding.runtime.BuiltinTypes.objectValueSegment($v))"
-      in VARIANT_ONLY_RETURN_SHAPES -> "{}"
+      in COMPOSITE_VALUE_TYPES ->
+        "run { val p = rRet.reinterpret($ptrcallSizeBytesExpr); ${compositeValueWrite(this, "p", v)} }"
+      in VARIANT_ONLY_RETURN_SHAPES -> "Unit"
       else -> "rRet.reinterpret($ptrcallSizeBytesExpr).set($valueLayout, 0, $v)"
     }
 
@@ -3592,12 +3920,14 @@ internal enum class TypeMapping(
         PACKED_COLOR_ARRAY,
         DICTIONARY,
         RID,
-        RECT2,
-        AABB,
-        TRANSFORM2D,
-        TRANSFORM3D,
-        PROJECTION,
       )
+
+    /**
+     * The value types laid out component by component in Godot's memory order (task 133 value
+     * types): real_t components at the engine's width (task 134 A), int32 for the `i` types.
+     */
+    val COMPOSITE_VALUE_TYPES: Set<TypeMapping> =
+      setOf(RECT2, RECT2I, VECTOR4, VECTOR4I, PLANE, AABB, TRANSFORM2D, TRANSFORM3D, PROJECTION)
   }
 }
 
@@ -5116,6 +5446,12 @@ internal class ScriptCodeEmitter(
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Transform3D ?: net.multigesture.kanama.types.Transform3D.IDENTITY }"
       TypeMapping.PROJECTION ->
         "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? net.multigesture.kanama.types.Projection ?: net.multigesture.kanama.types.Projection.IDENTITY }"
+      // Task 133 value types: decoded by the runtime's Variant reader, like Quaternion / Basis.
+      TypeMapping.RECT2I,
+      TypeMapping.VECTOR4,
+      TypeMapping.VECTOR4I,
+      TypeMapping.PLANE ->
+        "val $localName = Arena.ofConfined().use { a -> BuiltinTypes.readVariantScalar($variantPtr, a) as? ${type.kotlinType} ?: ${type.kotlinLiteralZero} }"
     }
 
   /**
@@ -5408,6 +5744,10 @@ internal class ScriptCodeEmitter(
       TypeMapping.DICTIONARY,
       TypeMapping.RID,
       TypeMapping.RECT2,
+      TypeMapping.RECT2I,
+      TypeMapping.VECTOR4,
+      TypeMapping.VECTOR4I,
+      TypeMapping.PLANE,
       TypeMapping.AABB,
       TypeMapping.TRANSFORM2D,
       TypeMapping.TRANSFORM3D,

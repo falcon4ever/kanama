@@ -56,15 +56,16 @@ class IosExportSkipTest {
 
   @Test
   fun aValueTypeWithoutAnIosPathIsABuildError() {
-    val r = emit(false, prop("cell", TypeMapping.VECTOR3I))
+    // Task 133: every Variant value type but RID has an iOS @Export path now.
+    val r = emit(false, prop("cell", TypeMapping.RID))
 
     assertEquals(1, r.errors.size, "${r.errors}")
-    assertTrue(r.errors.single().contains("SkipFixture.cell (VECTOR3I)"), r.errors.single())
+    assertTrue(r.errors.single().contains("SkipFixture.cell (RID)"), r.errors.single())
   }
 
   @Test
   fun theOptInTurnsEachSkipBackIntoOneWarning() {
-    val r = emit(true, prop("regions", TypeMapping.DICTIONARY), prop("cell", TypeMapping.VECTOR3I))
+    val r = emit(true, prop("regions", TypeMapping.DICTIONARY), prop("cell", TypeMapping.RID))
 
     assertEquals(emptyList(), r.errors)
     assertEquals(2, r.warnings.size, "${r.warnings}")
@@ -82,6 +83,8 @@ class IosExportSkipTest {
         // Task 133 C2: Vector2i (task 131 item 15) and Color are delivered on iOS now.
         prop("cell", TypeMapping.VECTOR2I),
         prop("tint", TypeMapping.COLOR),
+        // Task 133: the remaining value types, as raw Godot bytes.
+        *IOS_RAW_VALUE_TYPES.map { prop(it.name.lowercase(), it) }.toTypedArray(),
       )
 
     assertEquals(emptyList(), r.errors)

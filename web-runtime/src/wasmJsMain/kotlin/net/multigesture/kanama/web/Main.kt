@@ -359,6 +359,23 @@ fun kanamaWebSetVector3Property(
   }
 }
 
+/**
+ * Task 133: the push arm of a Vector3i, Rect2, Rect2i, Plane, Quaternion, Basis or Transform3D
+ * export: its components packed as text (exact decimals; see WebPackedValues), protocol 31.
+ */
+@JsExport
+fun kanamaWebSetPackedValueProperty(objectId: Int, propertyId: Int, packed: String): Int {
+  return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
+    KanamaWebProjectRegistry.setPackedValueProperty(
+      record.scriptId,
+      propertyId,
+      record.script,
+      packed,
+    )
+    1
+  }
+}
+
 /** Task 133 C2: a `Color` export's push arm; float32 channels widen to Double exactly. */
 @JsExport
 fun kanamaWebSetColorProperty(

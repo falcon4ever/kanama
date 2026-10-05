@@ -100,6 +100,9 @@ def _v(prefix: str, names: str) -> tuple[str, ...]:
     return tuple(f"{prefix}raw{c}" for c in names)
 
 
+# Web value types that keep their own storage (so no generated members) but take Godot's constants.
+WEB_CONSTANTS_ONLY = ("Basis", "Transform3D")
+
 VALUE_TYPES: dict[str, ValueType] = {
     "Vector2": ValueType("Vector2", "real", _v("v.", "XY"), "Vector2.raw(c[0], c[1])", "PT_VECTOR2", ("rawX", "rawY"), web=True),
     "Vector3": ValueType("Vector3", "real", _v("v.", "XYZ"), "Vector3.raw(c[0], c[1], c[2])", "PT_VECTOR3", ("rawX", "rawY", "rawZ"), web=True),
@@ -1996,6 +1999,13 @@ def regenerate(api: dict) -> dict[Path, str]:
         if codes:
             region = render_region(cls, codes, BEGIN, END, "  ")
             web_source = splice(web_source, cls, region, BEGIN, END, class_companion_anchor(cls, True))
+        consts = constant_sources(api, cls, class_body(web_source, cls))
+        if consts:
+            region = render_region(cls, consts, SBEGIN, SEND, "    ")
+            web_source = splice(web_source, cls, region, SBEGIN, SEND, companion_open_anchor(cls))
+    # Task 133 review: the Web classes with their own storage (no generated members) still get
+    # every Godot constant, so a script default such as `Basis.FLIP_Y` compiles on Web too.
+    for cls in WEB_CONSTANTS_ONLY:
         consts = constant_sources(api, cls, class_body(web_source, cls))
         if consts:
             region = render_region(cls, consts, SBEGIN, SEND, "    ")

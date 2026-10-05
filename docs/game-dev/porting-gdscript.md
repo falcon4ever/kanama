@@ -170,6 +170,7 @@ aliases; `scripts/migrate_script_annotations.py` rewrites a source tree):
 |---|---|
 | `func f()` (callable from Godot) | a public `fun f()`; `@GodotName("...")` for another name |
 | `@export var x` | `@Export var x` |
+| `@export var area: Rect2`, `var pose: Transform3D = Transform3D.IDENTITY`, `func f(p: Plane) -> AABB`, `signal moved(t: Transform2D)` | the same types: every Godot value type (`Vector4`/`4i`, `Rect2`/`2i`, `Plane`, `AABB`, `Quaternion`, `Basis`, `Transform2D`/`3D`, `Projection`) is an export, parameter, return and signal type; on Web all but `Vector4`/`4i`, `AABB`, `Transform2D` and `Projection` ([Exports](properties-resources.md#export-hints)) |
 | `@export_category` / `_group` / `_subgroup` | `@ExportCategory` / `@ExportGroup` / `@ExportSubgroup` |
 | `@export_tool_button("Label")` | `@ExportToolButton("Label")` |
 | `signal hit(damage)` | `@Signal fun hit(damage: Long) = Unit`; typed handle `player.hit` (`hit.emit(5)`, `player.hit.connect { damage -> }`) |

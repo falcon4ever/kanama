@@ -82,6 +82,30 @@ private val iosReturnTypes =
     TypeMapping.ARRAY,
   )
 
+/**
+ * Task 133 value types: every one travels as its raw Godot bytes (single precision on iOS)
+ * PT-tagged, in all four directions — property set (`kanama_ios_script_instance_set_property` ->
+ * decodeIosPropertyValue), property get and returns (encodeIosReturn ->
+ * kanama_ios_pt_return_to_variant), call and signal arguments (kanama_ios_marshal_variant_args ->
+ * decodeIosCallArg) and emitted signal arguments (encodeVariantArgs ->
+ * kanama_ios_pt_arg_to_variant).
+ */
+internal val IOS_RAW_VALUE_TYPES: Set<TypeMapping> =
+  setOf(
+    TypeMapping.VECTOR3I,
+    TypeMapping.VECTOR4,
+    TypeMapping.VECTOR4I,
+    TypeMapping.RECT2,
+    TypeMapping.RECT2I,
+    TypeMapping.PLANE,
+    TypeMapping.AABB,
+    TypeMapping.QUATERNION,
+    TypeMapping.BASIS,
+    TypeMapping.TRANSFORM2D,
+    TypeMapping.TRANSFORM3D,
+    TypeMapping.PROJECTION,
+  )
+
 internal data class IosMethod(
   val godotName: String,
   val kotlinName: String,
@@ -821,7 +845,7 @@ internal class IosScriptCodeEmitter(
       godotName = godotName,
       kotlinName = kotlinName,
       args = args,
-      returnType = returnType?.takeIf { it in iosReturnTypes },
+      returnType = returnType?.takeIf { it in iosReturnTypes || it in IOS_RAW_VALUE_TYPES },
       returnGodotEnum = returnGodotEnum,
     )
 
@@ -838,7 +862,7 @@ internal class IosScriptCodeEmitter(
       TypeMapping.VECTOR3,
       // Task 133 C2: the C call path tags a Color Variant PT_COLOR; decodeIosCallArg builds it.
       TypeMapping.COLOR,
-    )
+    ) + IOS_RAW_VALUE_TYPES
 
   /**
    * The invocation of [callee] for a decoded `args` list. A method whose trailing parameters have
@@ -947,12 +971,13 @@ internal class IosScriptCodeEmitter(
             TypeMapping.VECTOR2,
             TypeMapping.VECTOR2I,
             TypeMapping.VECTOR3,
-            TypeMapping.COLOR -> {
+            TypeMapping.COLOR,
+            in IOS_RAW_VALUE_TYPES -> {
               valueTypeClassName = type.kotlinType
               ""
             }
-            // Remaining value types (Vector3i/Quaternion/Basis/…) still lack a C
-            // marshalling case: emit no setProperty case, keep the Kotlin default.
+            // Remaining types still lack a C marshalling case: emit no setProperty case, keep
+            // the Kotlin default.
             else -> {
               exportSkip(
                 className,
@@ -1002,6 +1027,7 @@ internal class IosScriptCodeEmitter(
           type == TypeMapping.VECTOR2I ||
           type == TypeMapping.VECTOR3 ||
           type == TypeMapping.COLOR ||
+          type in IOS_RAW_VALUE_TYPES ||
           type == TypeMapping.NODE_PATH ||
           type == TypeMapping.STRING -> "script.$kotlinName"
         else -> ""
@@ -1086,7 +1112,11 @@ internal class IosScriptCodeEmitter(
       // task 29 return-only shapes (never @Export types, but the when must be
       // exhaustive) — the engine Variant::Type values, matching VariantType.kt.
       TypeMapping.RECT2 -> 7
+      TypeMapping.RECT2I -> 8
       TypeMapping.TRANSFORM2D -> 11
+      TypeMapping.VECTOR4 -> 12
+      TypeMapping.VECTOR4I -> 13
+      TypeMapping.PLANE -> 14
       TypeMapping.AABB -> 16
       TypeMapping.TRANSFORM3D -> 18
       TypeMapping.PROJECTION -> 19

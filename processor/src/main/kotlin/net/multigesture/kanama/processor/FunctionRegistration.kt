@@ -293,6 +293,7 @@ internal object FunctionRegistration {
 
   /** The types a registered function's parameters and return take, as the message lists them. */
   const val SUPPORTED_FUNCTION_TYPES: String =
-    "Long, Double, Boolean, String, NodePath, Vector2, Vector2i, Vector3, Vector3i, Quaternion, " +
-      "Basis, Color, a Godot enum, a node or GodotObject wrapper"
+    "Long, Double, Boolean, String, NodePath, Vector2, Vector2i, Vector3, Vector3i, Vector4, " +
+      "Vector4i, Rect2, Rect2i, Plane, AABB, Quaternion, Basis, Transform2D, Transform3D, " +
+      "Projection, Color, a Godot enum, a node or GodotObject wrapper"
 }

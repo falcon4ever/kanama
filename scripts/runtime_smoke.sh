@@ -62,6 +62,10 @@ KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_storage_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 133 C2 -- Color as a script type, beside its GDScript twin (color_script_smoke.tscn).
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://color_script_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
+# task 133 -- the remaining value types as script types, beside their GDScript twin.
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://value_type_script_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
+# task 133 review -- every value type as a @RegisterClass argument and return (call + ptrcall).
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://register_class_value_type_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
 # task 134 B -- every value-type operator and method against GDScript (builtin_parity_ref.gd).
 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://builtin_parity_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 # task 134 B -- builtin calls re-entered from an engine error print (a GDScript logger calling Kotlin).
@@ -426,6 +430,24 @@ color_hdr_gdscript="$(grep -o "ColorScript gdscript hdr=.*" "$LOG_FILE" | head -
 if [[ -z "$color_hdr_kotlin" || "$color_hdr_kotlin" != "$color_hdr_gdscript" ]]; then
   smoke_fail "Kotlin/GDScript HDR/NaN Color mismatch" "kotlin: ${color_hdr_kotlin:-<missing>} gdscript: ${color_hdr_gdscript:-<missing>}"
 fi
+# task 133 -- Rect2, Rect2i, Vector4, Vector4i, Plane, AABB, Transform2D, Transform3D, Projection,
+# Vector3i, Quaternion and Basis as script types: each stored in a .tscn, its property row (type /
+# hint) and default, set/get through Object, a function argument and return, a GDScript emit
+# received by Kotlin's typed connections and a Kotlin emit received by GDScript. Every Kotlin line
+# must equal the GDScript twin's line from the same run (exact components via var_to_str).
+check "ValueTypeScript kotlin props rect\{scene=Rect2\(0\.5, 1\.5, 2\.25, 3\.125\) type=7 row=7/0/ default=Rect2\(1, 2, 3, 4\)\}"
+check "ValueTypeScript kotlin props .* proj\{scene=Projection\(1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0\.5, 0, 0, 4, 1\) type=19 row=19/0/ default=Projection\(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1\)\}"
+for vts_step in props set received emitted; do
+  vt_kotlin="$(grep -o "ValueTypeScript kotlin ${vts_step} .*" "$LOG_FILE" | head -n 1 | sed 's/^ValueTypeScript kotlin //')"
+  vt_gdscript="$(grep -o "ValueTypeScript gdscript ${vts_step} .*" "$LOG_FILE" | head -n 1 | sed 's/^ValueTypeScript gdscript //')"
+  if [[ -z "$vt_kotlin" || "$vt_kotlin" != "$vt_gdscript" ]]; then
+    smoke_fail "Kotlin/GDScript value-type script type mismatch (${vts_step})" "kotlin: ${vt_kotlin:-<missing>} gdscript: ${vt_gdscript:-<missing>}"
+  fi
+done
+# task 133 review -- a @RegisterClass method echoes all sixteen value types over Object.call and a
+# statically typed (ptrcall) call; Kotlin decodes a Transform3D argument's columns and origin.
+check "RegisterClassValueTypes call=16/16 typed=16/16 describe=\\(1\\.0, 2\\.0, 3\\.0\\)\\|\\(4\\.0, 5\\.0, 6\\.0\\)\\|\\(7\\.0, 8\\.0, 9\\.0\\)\\|\\(10\\.0, 11\\.0, 12\\.0\\) bad=\\[\\]"
+check_absent "RegisterClassValueTypeProbeRegistrar\\.(ptrcall|call)_[a-z0-9_]+ threw"
 # task 134 B -- the generated probe pair (scripts/generate_builtin_ops.py): `pure=` hashes every
 # value-type operator and every Kotlin-implemented method over 256 fixed-seed random inputs,
 # `edge=` the same members over ±0, NaN, ±INF, .5 ties and 1e-30 (where Godot's result is

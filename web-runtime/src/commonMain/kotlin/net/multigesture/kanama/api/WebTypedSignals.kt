@@ -5,10 +5,18 @@ import kotlin.reflect.KClass
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import net.multigesture.kanama.web.WebPackedFloats
+import net.multigesture.kanama.web.WebPackedValues
+import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Plane
+import net.multigesture.kanama.types.Quaternion
+import net.multigesture.kanama.types.Rect2
+import net.multigesture.kanama.types.Rect2i
+import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
+import net.multigesture.kanama.types.Vector3i
 
 /** Wraps an emitted object handle in its Kotlin wrapper class. */
 fun interface SignalObjectWrapper<out T> {
@@ -18,7 +26,8 @@ fun interface SignalObjectWrapper<out T> {
 /**
  * The Web counterpart of the native `SignalArgType` (task 134 D4): how a typed signal's argument
  * arrives. The Web bridge delivers at most one argument, as an object handle or a packed scalar
- * (`int`, `float`, `bool`, `String`/`StringName`, `Vector2`, `Vector2i`, `Vector3`, `Color`, a Godot enum);
+ * (`int`, `float`, `bool`, `String`/`StringName`, `Vector2`, `Vector2i`, `Vector3`, `Color`, the task 133
+ * value types `Vector3i`, `Rect2`, `Rect2i`, `Plane`, `Quaternion`, `Basis`, `Transform3D`, a Godot enum);
  * any other type throws [UnsupportedOperationException] when connected, never a silent default.
  */
 abstract class SignalArgType<T> internal constructor(
@@ -101,7 +110,11 @@ abstract class SignalArgType<T> internal constructor(
         override fun write(value: E): Any? = raw(value)
       }
 
-    /** A value type: `Vector2`, `Vector2i`, `Vector3` and `Color` are delivered on Web; others throw on connect. */
+    /**
+     * A value type: `Vector2`, `Vector2i`, `Vector3`, `Color` and (task 133) `Vector3i`, `Rect2`,
+     * `Rect2i`, `Plane`, `Quaternion`, `Basis` and `Transform3D` are delivered on Web; others throw
+     * on connect.
+     */
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> valueOf(godotType: String, type: KClass<*>): SignalArgType<T> =
       when (type) {
@@ -109,6 +122,13 @@ abstract class SignalArgType<T> internal constructor(
         Vector2i::class -> Scalar(godotType) { packed -> GodotSignal.parseVector2iPacked(packed) as T }
         Vector3::class -> Scalar(godotType) { packed -> GodotSignal.parseVector3Packed(packed) as T }
         Color::class -> Scalar(godotType) { packed -> GodotSignal.parseColorPacked(packed) as T }
+        Vector3i::class,
+        Rect2::class,
+        Rect2i::class,
+        Plane::class,
+        Quaternion::class,
+        Basis::class,
+        Transform3D::class -> Scalar(godotType) { packed -> WebPackedValues.decode(packed, type) as T }
         else ->
           object : SignalArgType<T>(godotType) {
             override fun connect(

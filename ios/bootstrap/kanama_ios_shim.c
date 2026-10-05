@@ -820,6 +820,9 @@ enum {
     // Array after the call. Value (39) must match IOS_PT_TAG_VALUES / KanamaIosRuntime.kt
     // (38 is PT_VARIANT, parcel 7; both were appended the same day).
     KANAMA_IOS_PT_TYPED_ARRAY_BLOB,     // 39
+    // POD passthrough (task 133 value types): 4x int32, the int twin of PT_VECTOR4. Value (40)
+    // must match IOS_PT_VECTOR4I in KanamaIosRuntime.kt. Append-only — never renumber.
+    KANAMA_IOS_PT_VECTOR4I,             // 40
 };
 
 // Descriptor for a BUILD-tagged Packed*Array arg (mirrors KanamaIosPackedArgDesc in
@@ -866,10 +869,16 @@ enum {
     KANAMA_IOS_VARIANT_TYPE_VECTOR2 = 5,
     KANAMA_IOS_VARIANT_TYPE_VECTOR2I = 6,
     KANAMA_IOS_VARIANT_TYPE_RECT2 = 7,
+    KANAMA_IOS_VARIANT_TYPE_RECT2I = 8,
     KANAMA_IOS_VARIANT_TYPE_VECTOR3 = 9,
     KANAMA_IOS_VARIANT_TYPE_VECTOR3I = 10,
+    KANAMA_IOS_VARIANT_TYPE_TRANSFORM2D = 11,
+    KANAMA_IOS_VARIANT_TYPE_VECTOR4 = 12,
+    KANAMA_IOS_VARIANT_TYPE_VECTOR4I = 13,
     KANAMA_IOS_VARIANT_TYPE_PLANE = 14,
     KANAMA_IOS_VARIANT_TYPE_QUATERNION = 15,
+    KANAMA_IOS_VARIANT_TYPE_AABB = 16,
+    KANAMA_IOS_VARIANT_TYPE_PROJECTION = 19,
     KANAMA_IOS_VARIANT_TYPE_COLOR = 20,
     KANAMA_IOS_VARIANT_TYPE_STRING_NAME = 21,
     KANAMA_IOS_VARIANT_TYPE_NODE_PATH = 22,
@@ -1815,6 +1824,74 @@ static void kanama_ios_cache_return_family_converters(void);
 static void kanama_ios_build_dictionary_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
 static void kanama_ios_build_array_from_blob(const uint8_t *blob, GDExtensionTypePtr out_cell);
 static void kanama_ios_pt_arg_to_variant(int32_t tag, const void *p, uint8_t out_variant[24], uint64_t *out_cell, int *out_cell_kind);
+
+// Task 133 value types as script types: each one crosses as its raw Godot bytes (real_t is
+// float32 on iOS) PT-tagged, through the engine's own to/from-Variant constructors, in every
+// direction a script uses them (property set/get, call arguments and returns, signal arguments
+// both ways). One table instead of a converter global per type.
+#define KANAMA_IOS_RAW_VALUE_MAX_BYTES 64 // Projection: 16x float32
+typedef struct {
+    int32_t pt;
+    int32_t variant_type;
+    int32_t bytes;
+} KanamaIosRawValueKind;
+
+static const KanamaIosRawValueKind k_kanama_ios_raw_value_kinds[] = {
+    { KANAMA_IOS_PT_VECTOR3I, KANAMA_IOS_VARIANT_TYPE_VECTOR3I, 3 * 4 },
+    { KANAMA_IOS_PT_VECTOR4, KANAMA_IOS_VARIANT_TYPE_VECTOR4, 4 * (int32_t)sizeof(float) },
+    { KANAMA_IOS_PT_VECTOR4I, KANAMA_IOS_VARIANT_TYPE_VECTOR4I, 4 * 4 },
+    { KANAMA_IOS_PT_RECT2, KANAMA_IOS_VARIANT_TYPE_RECT2, 4 * (int32_t)sizeof(float) },
+    { KANAMA_IOS_PT_RECT2I, KANAMA_IOS_VARIANT_TYPE_RECT2I, 4 * 4 },
+    { KANAMA_IOS_PT_PLANE, KANAMA_IOS_VARIANT_TYPE_PLANE, 4 * (int32_t)sizeof(float) },
+    { KANAMA_IOS_PT_AABB, KANAMA_IOS_VARIANT_TYPE_AABB, 6 * (int32_t)sizeof(float) },
+    { KANAMA_IOS_PT_QUATERNION, KANAMA_IOS_VARIANT_TYPE_QUATERNION, 4 * (int32_t)sizeof(float) },
+    { KANAMA_IOS_PT_BASIS, KANAMA_IOS_VARIANT_TYPE_BASIS, 9 * (int32_t)sizeof(float) },
+    { KANAMA_IOS_PT_TRANSFORM2D, KANAMA_IOS_VARIANT_TYPE_TRANSFORM2D, 6 * (int32_t)sizeof(float) },
+    { KANAMA_IOS_PT_TRANSFORM3D, KANAMA_IOS_VARIANT_TYPE_TRANSFORM3D, 12 * (int32_t)sizeof(float) },
+    { KANAMA_IOS_PT_PROJECTION, KANAMA_IOS_VARIANT_TYPE_PROJECTION, 16 * (int32_t)sizeof(float) },
+};
+#define KANAMA_IOS_RAW_VALUE_KIND_COUNT \
+    ((int32_t)(sizeof(k_kanama_ios_raw_value_kinds) / sizeof(k_kanama_ios_raw_value_kinds[0])))
+
+static GDExtensionTypeFromVariantConstructorFunc g_raw_value_to[KANAMA_IOS_RAW_VALUE_KIND_COUNT];
+static GDExtensionVariantFromTypeConstructorFunc g_raw_value_from[KANAMA_IOS_RAW_VALUE_KIND_COUNT];
+
+static int32_t kanama_ios_raw_value_index_by_pt(int32_t pt) {
+    for (int32_t i = 0; i < KANAMA_IOS_RAW_VALUE_KIND_COUNT; i++) {
+        if (k_kanama_ios_raw_value_kinds[i].pt == pt) return i;
+    }
+    return -1;
+}
+
+static int32_t kanama_ios_raw_value_index_by_variant_type(int32_t variant_type) {
+    for (int32_t i = 0; i < KANAMA_IOS_RAW_VALUE_KIND_COUNT; i++) {
+        if (k_kanama_ios_raw_value_kinds[i].variant_type == variant_type) return i;
+    }
+    return -1;
+}
+
+// Reads the Variant [v] of a raw value kind into [out] (KANAMA_IOS_RAW_VALUE_MAX_BYTES). 0 when
+// the engine has no converter (never on 4.7: every builtin has one).
+static int kanama_ios_raw_value_from_variant(int32_t index, GDExtensionConstVariantPtr v, void *out) {
+    if (g_raw_value_to[index] == NULL && g_get_variant_to_type_constructor != NULL) {
+        g_raw_value_to[index] = g_get_variant_to_type_constructor(
+            (GDExtensionVariantType)k_kanama_ios_raw_value_kinds[index].variant_type);
+    }
+    if (g_raw_value_to[index] == NULL) return 0;
+    g_raw_value_to[index]((GDExtensionUninitializedTypePtr)out, (GDExtensionVariantPtr)(intptr_t)v);
+    return 1;
+}
+
+// Boxes the raw bytes [p] of a raw value kind into [out_variant]. 0 when there is no converter.
+static int kanama_ios_raw_value_to_variant(int32_t index, const void *p, uint8_t out_variant[24]) {
+    if (g_raw_value_from[index] == NULL && g_get_variant_from_type_constructor != NULL) {
+        g_raw_value_from[index] = g_get_variant_from_type_constructor(
+            (GDExtensionVariantType)k_kanama_ios_raw_value_kinds[index].variant_type);
+    }
+    if (g_raw_value_from[index] == NULL || p == NULL) return 0;
+    g_raw_value_from[index]((GDExtensionUninitializedVariantPtr)out_variant, (GDExtensionTypePtr)(intptr_t)p);
+    return 1;
+}
 
 static int kanama_ios_build_typed_array_arg(const KanamaIosTypedArrayArgDesc *desc, uint64_t *cell);
 static int32_t kanama_ios_blob_read_int32(const uint8_t *p);
@@ -7157,6 +7234,11 @@ static void kanama_ios_pt_arg_to_variant(
             }
             break;
         default: {
+            // Task 133: the raw value kinds (Vector3i ... Projection) box from their bytes.
+            int32_t raw_index = kanama_ios_raw_value_index_by_pt(tag);
+            if (raw_index >= 0 && kanama_ios_raw_value_to_variant(raw_index, p, out_variant)) {
+                break;
+            }
             // Task 124: an unknown PT tag boxed as nil used to warn without counting. It is the
             // one type-tag switch reachable from the dispatch bodies that can silently produce a
             // wrong VALUE, so it reports like every guarded early return does.
@@ -10390,6 +10472,8 @@ typedef struct {
     double f64[KANAMA_IOS_PTRCALL_MAX_ARGS];
     float fvec[KANAMA_IOS_PTRCALL_MAX_ARGS][4];
     int32_t ivec[KANAMA_IOS_PTRCALL_MAX_ARGS][2];
+    // Task 133: the raw bytes of a Vector3i ... Projection argument (up to 16x float32).
+    _Alignas(16) float raw[KANAMA_IOS_PTRCALL_MAX_ARGS][KANAMA_IOS_RAW_VALUE_MAX_BYTES / sizeof(float)];
     char *strs[KANAMA_IOS_PTRCALL_MAX_ARGS];
 } KanamaIosArgCells;
 
@@ -10529,12 +10613,20 @@ static void kanama_ios_marshal_variant_args(
                 break;
             case KANAMA_IOS_VARIANT_TYPE_NIL:
                 break;
-            default:
+            default: {
+                // Task 133: the raw value kinds (Vector3i ... Projection) cross as their bytes.
+                int32_t raw_index = kanama_ios_raw_value_index_by_variant_type((int32_t)vt);
+                if (raw_index >= 0 && kanama_ios_raw_value_from_variant(raw_index, v, cells->raw[i])) {
+                    tags[i] = k_kanama_ios_raw_value_kinds[raw_index].pt;
+                    ptrs[i] = cells->raw[i];
+                    break;
+                }
                 // Unaudited arg type: no cell. The tag names the Variant type (above every PT kind)
                 // so a typed signal can say which type iOS does not marshal yet; the script-call
                 // decode yields null for it, as for PT_VOID, and the emitter skip+warns the method.
                 tags[i] = KANAMA_IOS_ARG_UNMARSHALLED_BASE + (int32_t)vt;
                 break;
+            }
         }
     }
 }
@@ -10619,7 +10711,8 @@ static void kanama_ios_script_instance_call(
         // Phase 5.3b: provide a PT-tagged return scratch. Kotlin sets ret_tag to the return's PT
         // kind (or PT_VOID) and writes its bytes; we then build the engine return Variant.
         int32_t ret_tag = KANAMA_IOS_PT_VOID;
-        uint8_t ret_buf[32];
+        // Task 133: sized for the widest raw value kind (Projection, 64 bytes).
+        _Alignas(16) uint8_t ret_buf[KANAMA_IOS_RAW_VALUE_MAX_BYTES];
         memset(ret_buf, 0, sizeof(ret_buf));
         int32_t ok = kanama_ios_runtime_script_instance_call_v(
             instance->runtime_handle, method_index, cells.tags, cells.ptrs, argc, &ret_tag, ret_buf);
@@ -11035,6 +11128,18 @@ static GDExtensionBool kanama_ios_script_instance_set_property(
         GDExtensionObjectPtr obj = kanama_ios_variant_to_object(value);
         arg = (int64_t)(intptr_t)obj;
         object_set = 1;
+    } else if (kanama_ios_raw_value_index_by_variant_type((int32_t)type) >= 0) {
+        // Task 133 value types (Vector3i ... Projection): the raw bytes, decoded by the runtime
+        // (decodeIosPropertyValue) and assigned through setPropertyValue.
+        int32_t raw_index = kanama_ios_raw_value_index_by_variant_type((int32_t)type);
+        float raw[KANAMA_IOS_RAW_VALUE_MAX_BYTES / sizeof(float)] = { 0 };
+        if (!kanama_ios_raw_value_from_variant(raw_index, value, raw)) {
+            return 0;
+        }
+        int32_t ok = kanama_ios_runtime_script_instance_set_property_value(
+            instance->runtime_handle, property_index, k_kanama_ios_raw_value_kinds[raw_index].pt,
+            (const uint8_t *)raw, k_kanama_ios_raw_value_kinds[raw_index].bytes);
+        return (GDExtensionBool)ok;
     } else if (type == KANAMA_IOS_VARIANT_TYPE_INT) {
         arg = kanama_ios_variant_to_int64(value);
     } else if (type == KANAMA_IOS_VARIANT_TYPE_BOOL && g_variant_to_bool != NULL) {
@@ -11303,7 +11408,7 @@ static GDExtensionBool kanama_ios_script_instance_get_property(
         return 0;
     }
     int32_t ret_tag = KANAMA_IOS_PT_VOID;
-    uint8_t ret_buf[32];
+    _Alignas(16) uint8_t ret_buf[KANAMA_IOS_RAW_VALUE_MAX_BYTES]; // task 133: up to a Projection
     memset(ret_buf, 0, sizeof(ret_buf));
     int32_t ok = kanama_ios_runtime_script_instance_get_property(
         instance->runtime_handle, property_index, &ret_tag, ret_buf);

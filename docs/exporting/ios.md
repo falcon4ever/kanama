@@ -142,11 +142,11 @@ each converted scene there keyed by the source file's md5 and mtime and reuses
 a stripped conversion until the `.tscn` itself changes.
 
 An exported property (`@Export`) that the iOS backend cannot deliver —
-a typed `Map`, or a value type without an iOS path such as `Vector3i`,
-`Quaternion` or `Basis` — fails this build and names the property:
+a typed `Map`, or a value type without an iOS path such as `RID` — fails this
+build and names the property:
 
 ```text
-e: [ksp] [kanama:ksp] [kanama-ios] Grid.cell (VECTOR3I) — no iOS @Export
+e: [ksp] [kanama:ksp] [kanama-ios] Grid.cell (RID) — no iOS @Export
 path for this value type, would keep its Kotlin default. On iOS the scene and inspector value of
 this property would be dropped. ...
 ```
@@ -154,9 +154,12 @@ this property would be dropped. ...
 Before task 131 this was a warning and the property silently kept its Kotlin
 default on the phone. Change the property's type, or accept the skip by adding
 `-PkanamaIosAllowExportSkips=true` (`1` also works) to the `installIosAddon`
-command; each skipped property is then a warning again. `Vector2`, `Vector2i`,
-`Vector3`, `Color`, `NodePath`, the scalars, `String`, object references and
-`List<String>` exports reach iOS (`Vector2i` and `Color` since task 133 C2).
+command; each skipped property is then a warning again. Every Godot value type
+(`Vector2`/`2i`, `Vector3`/`3i`, `Vector4`/`4i`, `Rect2`/`2i`, `Plane`, `AABB`,
+`Quaternion`, `Basis`, `Transform2D`/`3D`, `Projection`, `Color`), `NodePath`, the
+scalars, `String`, object references and `List<String>` exports reach iOS
+(`Vector2i` and `Color` since task 133 C2, the others since task 133's value-type
+parcel).
 
 To verify an export directly, run the parity check from the exported project
 (it needs the Kanama addon loaded, so run it where the export ran):

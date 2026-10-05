@@ -44,13 +44,26 @@ import net.multigesture.kanama.binding.runtime.ScriptPropertyRetains
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_get_method_bind
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_ptrcall_string_arg
 import net.multigesture.kanama.ios.cinterop.kanama_ios_godot_set_first_node_in_group_text
+import net.multigesture.kanama.types.AABB
+import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.GodotRealVar
 import net.multigesture.kanama.types.NodePath
+import net.multigesture.kanama.types.Plane
+import net.multigesture.kanama.types.Projection
+import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.RID
+import net.multigesture.kanama.types.Rect2
+import net.multigesture.kanama.types.Rect2i
+import net.multigesture.kanama.types.Transform2D
+import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
+import net.multigesture.kanama.types.Vector3i
+import net.multigesture.kanama.types.Vector4
+import net.multigesture.kanama.types.Vector4i
+import net.multigesture.kanama.types.basisFromRows
 
 internal data class KanamaIosScriptMethod(val name: String, val argumentCount: Int = 0)
 
@@ -1524,6 +1537,20 @@ private const val IOS_PT_VECTOR2 = 6
 private const val IOS_PT_VECTOR2I = 7
 private const val IOS_PT_VECTOR3 = 8
 private const val IOS_PT_COLOR = 11
+// Task 133 value types: raw Godot bytes (float32 real_t), see kanama_ios_raw_value_kinds in the
+// shim. Values must match the C PT enum.
+private const val IOS_PT_VECTOR3I = 9
+private const val IOS_PT_VECTOR4 = 10
+private const val IOS_PT_RECT2 = 12
+private const val IOS_PT_BASIS = 18
+private const val IOS_PT_TRANSFORM3D = 19
+private const val IOS_PT_QUATERNION = 20
+private const val IOS_PT_AABB = 21
+private const val IOS_PT_TRANSFORM2D = 22
+private const val IOS_PT_PROJECTION = 25
+private const val IOS_PT_PLANE = 26
+private const val IOS_PT_RECT2I = 37
+private const val IOS_PT_VECTOR4I = 40
 private const val IOS_PT_OBJECT = 13
 private const val IOS_PT_STRING = 16
 private const val IOS_PT_NODE_PATH = 17
@@ -1560,6 +1587,138 @@ private const val IOS_PT_PACKED_FLOAT32_ARRAY = 34
 private const val IOS_PT_PACKED_FLOAT64_ARRAY = 35
 private const val IOS_PT_PACKED_VECTOR3_ARRAY = 36
 
+/**
+ * Task 133: the Kotlin value of a raw value kind (Vector3i ... Projection) from its Godot bytes, or
+ * null for any other tag. Godot stores a Basis (and a Transform3D's basis) as rows.
+ */
+@OptIn(ExperimentalForeignApi::class)
+internal fun decodeIosRawValue(tag: Int, ptr: CPointer<ByteVar>): Any? {
+  val f = ptr.reinterpret<GodotRealVar>()
+  val n = ptr.reinterpret<IntVar>()
+  fun v2(i: Int) = Vector2.raw(f[i], f[i + 1])
+  fun v3(i: Int) = Vector3.raw(f[i], f[i + 1], f[i + 2])
+  fun v4(i: Int) = Vector4.raw(f[i], f[i + 1], f[i + 2], f[i + 3])
+  fun basis(i: Int) =
+    basisFromRows(
+      f[i],
+      f[i + 1],
+      f[i + 2],
+      f[i + 3],
+      f[i + 4],
+      f[i + 5],
+      f[i + 6],
+      f[i + 7],
+      f[i + 8],
+    )
+  return when (tag) {
+    IOS_PT_VECTOR3I -> Vector3i(n[0], n[1], n[2])
+    IOS_PT_VECTOR4 -> v4(0)
+    IOS_PT_VECTOR4I -> Vector4i(n[0], n[1], n[2], n[3])
+    IOS_PT_RECT2 -> Rect2(v2(0), v2(2))
+    IOS_PT_RECT2I -> Rect2i(Vector2i(n[0], n[1]), Vector2i(n[2], n[3]))
+    IOS_PT_PLANE -> Plane.raw(v3(0), f[3])
+    IOS_PT_AABB -> AABB(v3(0), v3(3))
+    IOS_PT_QUATERNION -> Quaternion.raw(f[0], f[1], f[2], f[3])
+    IOS_PT_BASIS -> basis(0)
+    IOS_PT_TRANSFORM2D -> Transform2D(v2(0), v2(2), v2(4))
+    IOS_PT_TRANSFORM3D -> Transform3D(basis(0), v3(9))
+    IOS_PT_PROJECTION -> Projection(v4(0), v4(4), v4(8), v4(12))
+    else -> null
+  }
+}
+
+/**
+ * The widest raw value kind (Projection, 16x float32); the shim's KANAMA_IOS_RAW_VALUE_MAX_BYTES.
+ */
+internal const val IOS_RAW_VALUE_MAX_BYTES = 64
+
+/** A raw-value scratch of [IOS_RAW_VALUE_MAX_BYTES], 8-byte aligned (allocated as longs). */
+@OptIn(ExperimentalForeignApi::class)
+internal fun kotlinx.cinterop.NativePlacement.allocIosRawValue(): CPointer<ByteVar> =
+  allocArray<LongVar>(IOS_RAW_VALUE_MAX_BYTES / 8).reinterpret()
+
+/**
+ * Task 133: writes a raw value kind's Godot bytes into [out] (at least 64 bytes) and returns its PT
+ * tag, or -1 when [value] is not one. The mirror of [decodeIosRawValue].
+ */
+@OptIn(ExperimentalForeignApi::class)
+internal fun encodeIosRawValue(value: Any?, out: CPointer<ByteVar>): Int {
+  val f = out.reinterpret<GodotRealVar>()
+  val n = out.reinterpret<IntVar>()
+  fun put(i: Int, v: Vector2) {
+    f[i] = v.rawX
+    f[i + 1] = v.rawY
+  }
+  fun put(i: Int, v: Vector3) {
+    f[i] = v.rawX
+    f[i + 1] = v.rawY
+    f[i + 2] = v.rawZ
+  }
+  fun put(i: Int, v: Vector4) {
+    f[i] = v.rawX
+    f[i + 1] = v.rawY
+    f[i + 2] = v.rawZ
+    f[i + 3] = v.rawW
+  }
+  fun putRows(i: Int, b: Basis) {
+    put(i, Vector3.raw(b.x.rawX, b.y.rawX, b.z.rawX))
+    put(i + 3, Vector3.raw(b.x.rawY, b.y.rawY, b.z.rawY))
+    put(i + 6, Vector3.raw(b.x.rawZ, b.y.rawZ, b.z.rawZ))
+  }
+  fun ints(vararg values: Int) = values.forEachIndexed { i, v -> n[i] = v }
+  return when (value) {
+    is Vector3i -> ints(value.x, value.y, value.z).let { IOS_PT_VECTOR3I }
+    is Vector4 -> put(0, value).let { IOS_PT_VECTOR4 }
+    is Vector4i -> ints(value.x, value.y, value.z, value.w).let { IOS_PT_VECTOR4I }
+    is Rect2 -> {
+      put(0, value.position)
+      put(2, value.size)
+      IOS_PT_RECT2
+    }
+    is Rect2i -> {
+      ints(value.position.x, value.position.y, value.size.x, value.size.y)
+      IOS_PT_RECT2I
+    }
+    is Plane -> {
+      put(0, value.normal)
+      f[3] = value.rawD
+      IOS_PT_PLANE
+    }
+    is AABB -> {
+      put(0, value.position)
+      put(3, value.size)
+      IOS_PT_AABB
+    }
+    is Quaternion -> {
+      f[0] = value.rawX
+      f[1] = value.rawY
+      f[2] = value.rawZ
+      f[3] = value.rawW
+      IOS_PT_QUATERNION
+    }
+    is Basis -> putRows(0, value).let { IOS_PT_BASIS }
+    is Transform2D -> {
+      put(0, value.x)
+      put(2, value.y)
+      put(4, value.origin)
+      IOS_PT_TRANSFORM2D
+    }
+    is Transform3D -> {
+      putRows(0, value.basis)
+      put(9, value.origin)
+      IOS_PT_TRANSFORM3D
+    }
+    is Projection -> {
+      put(0, value.x)
+      put(4, value.y)
+      put(8, value.z)
+      put(12, value.w)
+      IOS_PT_PROJECTION
+    }
+    else -> -1
+  }
+}
+
 // Decodes one PT-tagged inbound call arg (see kanama_ios_script_instance_call). OBJECT yields the
 // raw int64 handle; the generated callV branch wraps it in the declared GodotObject subtype.
 @OptIn(ExperimentalForeignApi::class)
@@ -1590,7 +1749,7 @@ internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
     }
     IOS_PT_STRING -> ptr.toKString()
     IOS_PT_NODE_PATH -> NodePath(ptr.toKString())
-    else -> null
+    else -> decodeIosRawValue(tag, ptr)
   }
 }
 
@@ -1726,7 +1885,7 @@ internal fun decodeIosPropertyValue(ptTag: Int, bytes: CPointer<ByteVar>?, lengt
       val f = bytes.reinterpret<FloatVar>()
       Color.raw(f[0], f[1], f[2], f[3])
     }
-    else -> null
+    else -> decodeIosRawValue(ptTag, bytes)
   }
 }
 
@@ -1874,6 +2033,29 @@ private fun encodeIosReturn(value: Any?, retTag: CPointer<IntVar>?, retBuf: CPoi
       f[2] = value.rawZ
       retTag[0] = IOS_PT_VECTOR3
     }
+    // Task 133 C2 follow-up: a Color property / return (4x float32). Without this arm an iOS
+    // `Object.get` of a Color @Export answered "no property".
+    is Color -> {
+      val f = retBuf.reinterpret<FloatVar>()
+      f[0] = value.rawR
+      f[1] = value.rawG
+      f[2] = value.rawB
+      f[3] = value.rawA
+      retTag[0] = IOS_PT_COLOR
+    }
+    // Task 133 value types: raw Godot bytes, up to a Projection's 64 (the shim's return scratch).
+    is Vector3i,
+    is Vector4,
+    is Vector4i,
+    is Rect2,
+    is Rect2i,
+    is Plane,
+    is AABB,
+    is Quaternion,
+    is Basis,
+    is Transform2D,
+    is Transform3D,
+    is Projection -> retTag[0] = encodeIosRawValue(value, retBuf)
     // task 29 — RID passthrough return (a single uint64 inline in the scratch).
     is RID -> {
       retBuf.reinterpret<LongVar>()[0] = value.value
@@ -2528,7 +2710,8 @@ internal fun kanamaIosVirtualArrayReturnSelfTest(values: List<Any?>): List<Strin
 @OptIn(ExperimentalForeignApi::class)
 internal fun kanamaIosVariantReturnSelfTest(value: Any?): Int = memScoped {
   val tag = alloc<IntVar>()
-  val buf = allocArray<ByteVar>(32)
+  // The shim's script return scratch (task 133: a Projection's 64 bytes).
+  val buf = allocIosRawValue()
   tag.value = IOS_PT_VOID
   encodeIosReturn(value, tag.ptr, buf)
   tag.value
