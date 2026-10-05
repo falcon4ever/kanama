@@ -5,8 +5,10 @@ package net.multigesture.kanama.example
 
 import net.multigesture.kanama.annotations.OnReady
 import net.multigesture.kanama.annotations.ScriptClass
+import net.multigesture.kanama.api.GD
 import net.multigesture.kanama.api.GodotHandle
 import net.multigesture.kanama.api.KanamaScript
+import net.multigesture.kanama.api.Mathf
 import net.multigesture.kanama.api.Node2D
 import net.multigesture.kanama.types.*
 
@@ -36,6 +38,23 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     hashes.clear()
     constants()
     report("const=n=1 " + summary())
+    hashes.clear()
+    repeat(256) { mathfRound() }
+    report("mathf=n=256 " + summary())
+    hashes.clear()
+    edge = true
+    repeat(64) { mathfRound() }
+    edge = false
+    report("mathfedge=n=64 " + summary())
+    hashes.clear()
+    utilities()
+    report("gd=n=1 " + summary())
+    hashes.clear()
+    GD.seed(12345L)
+    repeat(8) { randRound() }
+    GD.seed(12345L)
+    mix("GD.seed", GD.randi())
+    report("rand=n=8 " + summary())
   }
 
   private fun constants() {
@@ -273,6 +292,438 @@ class BuiltinParitySmoke(godotObject: GodotHandle) : KanamaScript<Node2D>(godotO
     mix("Vector4i.AXIS_Y", Vector4i.Axis.Y.value)
     mix("Vector4i.AXIS_Z", Vector4i.Axis.Z.value)
     mix("Vector4i.AXIS_W", Vector4i.Axis.W.value)
+  }
+
+  private fun mathfRound() {
+    mathf0()
+    mathf1()
+    mathf2()
+    mathf3()
+    mathf4()
+    mathf5()
+    mathf6()
+    mathf7()
+    mathf8()
+    mathf9()
+    mathf10()
+    mathf11()
+    mathf12()
+    mathf13()
+    mathf14()
+    mathf15()
+    mathf16()
+    mathf17()
+    mathf18()
+    mathf19()
+    mathf20()
+    mathf21()
+    mathf22()
+    mathf23()
+    mathf24()
+    mathf25()
+    mathf26()
+    mathf27()
+    mathf28()
+    mathf29()
+    mathf30()
+    mathf31()
+    mathf32()
+    mathf33()
+    mathf34()
+    mathf35()
+    mathf36()
+    mathf37()
+    mathf38()
+    mathf39()
+    mathf40()
+    mathf41()
+    mathf42()
+    mathf43()
+    mathf44()
+    mathf45()
+    mathf46()
+    mathf47()
+    mathf48()
+    mathf49()
+    mathf50()
+    mathf51()
+    mathf52()
+    mathf53()
+    mathf54()
+    mathf55()
+    mathf56()
+    mathf57()
+    mathf58()
+  }
+
+  private fun mathf0() {
+    val a0 = nv()
+    mix("Mathf.degToRad/deg_to_rad", Mathf.degToRad(a0))
+  }
+
+  private fun mathf1() {
+    val a0 = nv()
+    mix("Mathf.radToDeg/rad_to_deg", Mathf.radToDeg(a0))
+  }
+
+  private fun mathf2() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    mix("Mathf.lerp/lerpf", Mathf.lerp(a0, a1, a2))
+  }
+
+  private fun mathf3() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    mix("Mathf.inverseLerp/inverse_lerp", Mathf.inverseLerp(a0, a1, a2))
+  }
+
+  private fun mathf4() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    mix("Mathf.lerpAngle/lerp_angle", Mathf.lerpAngle(a0, a1, a2))
+  }
+
+  private fun mathf5() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    mix("Mathf.moveToward/move_toward", Mathf.moveToward(a0, a1, a2))
+  }
+
+  private fun mathf6() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    mix("Mathf.rotateToward/rotate_toward", Mathf.rotateToward(a0, a1, a2))
+  }
+
+  private fun mathf7() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    mix("Mathf.smoothStep/smoothstep", Mathf.smoothStep(a0, a1, a2))
+  }
+
+  private fun mathf8() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.ease/ease", Mathf.ease(a0, a1))
+  }
+
+  private fun mathf9() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    val a3 = nv()
+    val a4 = nv()
+    mix("Mathf.remap/remap", Mathf.remap(a0, a1, a2, a3, a4))
+  }
+
+  private fun mathf10() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    mix("Mathf.clamp/clampf", Mathf.clamp(a0, a1, a2))
+  }
+
+  private fun mathf11() {
+    val a0 = ri().toLong()
+    val a1 = ri().toLong()
+    val a2 = ri().toLong()
+    mix("Mathf.clamp/clampi", Mathf.clamp(a0, a1, a2))
+  }
+
+  private fun mathf12() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.min/minf", Mathf.min(a0, a1))
+  }
+
+  private fun mathf13() {
+    val a0 = ri().toLong()
+    val a1 = ri().toLong()
+    mix("Mathf.min/mini", Mathf.min(a0, a1))
+  }
+
+  private fun mathf14() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.max/maxf", Mathf.max(a0, a1))
+  }
+
+  private fun mathf15() {
+    val a0 = ri().toLong()
+    val a1 = ri().toLong()
+    mix("Mathf.max/maxi", Mathf.max(a0, a1))
+  }
+
+  private fun mathf16() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.snapped/snappedf", Mathf.snapped(a0, a1))
+  }
+
+  private fun mathf17() {
+    val a0 = nv()
+    val a1 = ri().toLong()
+    mix("Mathf.snapped/snappedi", Mathf.snapped(a0, a1))
+  }
+
+  private fun mathf18() {
+    val a0 = nv()
+    val a1 = nv()
+    val a2 = nv()
+    mix("Mathf.wrap/wrapf", Mathf.wrap(a0, a1, a2))
+  }
+
+  private fun mathf19() {
+    val a0 = ri().toLong()
+    val a1 = ri().toLong()
+    val a2 = ri().toLong()
+    mix("Mathf.wrap/wrapi", Mathf.wrap(a0, a1, a2))
+  }
+
+  private fun mathf20() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.isEqualApprox/is_equal_approx", Mathf.isEqualApprox(a0, a1))
+  }
+
+  private fun mathf21() {
+    val a0 = nv()
+    mix("Mathf.isZeroApprox/is_zero_approx", Mathf.isZeroApprox(a0))
+  }
+
+  private fun mathf22() {
+    val a0 = nv()
+    mix("Mathf.isFinite/is_finite", Mathf.isFinite(a0))
+  }
+
+  private fun mathf23() {
+    val a0 = nv()
+    mix("Mathf.isNaN/is_nan", Mathf.isNaN(a0))
+  }
+
+  private fun mathf24() {
+    val a0 = nv()
+    mix("Mathf.isInf/is_inf", Mathf.isInf(a0))
+  }
+
+  private fun mathf25() {
+    val a0 = nv()
+    mix("Mathf.sin/sin", Mathf.sin(a0))
+  }
+
+  private fun mathf26() {
+    val a0 = nv()
+    mix("Mathf.cos/cos", Mathf.cos(a0))
+  }
+
+  private fun mathf27() {
+    val a0 = nv()
+    mix("Mathf.tan/tan", Mathf.tan(a0))
+  }
+
+  private fun mathf28() {
+    val a0 = nv()
+    mix("Mathf.asin/asin", Mathf.asin(a0))
+  }
+
+  private fun mathf29() {
+    val a0 = nv()
+    mix("Mathf.acos/acos", Mathf.acos(a0))
+  }
+
+  private fun mathf30() {
+    val a0 = nv()
+    mix("Mathf.atan/atan", Mathf.atan(a0))
+  }
+
+  private fun mathf31() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.atan2/atan2", Mathf.atan2(a0, a1))
+  }
+
+  private fun mathf32() {
+    val a0 = nv()
+    mix("Mathf.sqrt/sqrt", Mathf.sqrt(a0))
+  }
+
+  private fun mathf33() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.pow/pow", Mathf.pow(a0, a1))
+  }
+
+  private fun mathf34() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.fmod/fmod", Mathf.fmod(a0, a1))
+  }
+
+  private fun mathf35() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.fposmod/fposmod", Mathf.fposmod(a0, a1))
+  }
+
+  private fun mathf36() {
+    val a0 = ri().toLong()
+    val a1 = rnz().toLong()
+    mix("Mathf.posmod/posmod", Mathf.posmod(a0, a1))
+  }
+
+  private fun mathf37() {
+    val a0 = nv()
+    mix("Mathf.log/log", Mathf.log(a0))
+  }
+
+  private fun mathf38() {
+    val a0 = nv()
+    mix("Mathf.exp/exp", Mathf.exp(a0))
+  }
+
+  private fun mathf39() {
+    val a0 = nv()
+    mix("Mathf.floor/floorf", Mathf.floor(a0))
+  }
+
+  private fun mathf40() {
+    val a0 = nv()
+    mix("Mathf.floorToInt/floori", Mathf.floorToInt(a0))
+  }
+
+  private fun mathf41() {
+    val a0 = nv()
+    mix("Mathf.ceil/ceilf", Mathf.ceil(a0))
+  }
+
+  private fun mathf42() {
+    val a0 = nv()
+    mix("Mathf.ceilToInt/ceili", Mathf.ceilToInt(a0))
+  }
+
+  private fun mathf43() {
+    val a0 = nv()
+    mix("Mathf.round/roundf", Mathf.round(a0))
+  }
+
+  private fun mathf44() {
+    val a0 = nv()
+    mix("Mathf.roundToInt/roundi", Mathf.roundToInt(a0))
+  }
+
+  private fun mathf45() {
+    val a0 = nv()
+    mix("Mathf.abs/absf", Mathf.abs(a0))
+  }
+
+  private fun mathf46() {
+    val a0 = ri().toLong()
+    mix("Mathf.abs/absi", Mathf.abs(a0))
+  }
+
+  private fun mathf47() {
+    val a0 = nv()
+    mix("Mathf.sign/signf", Mathf.sign(a0))
+  }
+
+  private fun mathf48() {
+    val a0 = ri().toLong()
+    mix("Mathf.sign/signi", Mathf.sign(a0))
+  }
+
+  private fun mathf49() {
+    val a0 = nv()
+    mix("Mathf.dbToLinear/db_to_linear", Mathf.dbToLinear(a0))
+  }
+
+  private fun mathf50() {
+    val a0 = nv()
+    mix("Mathf.linearToDb/linear_to_db", Mathf.linearToDb(a0))
+  }
+
+  private fun mathf51() {
+    val a0 = ri().toLong()
+    mix("Mathf.nearestPo2/nearest_po2", Mathf.nearestPo2(a0))
+  }
+
+  private fun mathf52() {
+    val a0 = nv()
+    val a1 = nv()
+    mix("Mathf.pingPong/pingpong", Mathf.pingPong(a0, a1))
+  }
+
+  private fun mathf53() {
+    val a0 = nv()
+    mix("Mathf.sinh/sinh", Mathf.sinh(a0))
+  }
+
+  private fun mathf54() {
+    val a0 = nv()
+    mix("Mathf.cosh/cosh", Mathf.cosh(a0))
+  }
+
+  private fun mathf55() {
+    val a0 = nv()
+    mix("Mathf.tanh/tanh", Mathf.tanh(a0))
+  }
+
+  private fun mathf56() {
+    val a0 = nv()
+    mix("Mathf.asinh/asinh", Mathf.asinh(a0))
+  }
+
+  private fun mathf57() {
+    val a0 = nv()
+    mix("Mathf.acosh/acosh", Mathf.acosh(a0))
+  }
+
+  private fun mathf58() {
+    val a0 = nv()
+    mix("Mathf.atanh/atanh", Mathf.atanh(a0))
+  }
+
+  private fun utilities() {
+    mix("GD.str", GD.str(1L, "a", 2.5, true, null))
+    mix("GD.typeString", GD.typeString(4L))
+    mix("GD.typeOf", GD.typeOf(Vector2(1.0, 2.0)))
+    mix("GD.max", GD.max(1L, 5L, 3L))
+    mix("GD.min", GD.min(2.5, -1.0, 7.0))
+    mix("GD.lerp", GD.lerp(Vector2(0.0, 0.0), Vector2(2.0, 4.0), 0.25))
+    mix("GD.clamp", GD.clamp(7L, 0L, 5L))
+    mix("GD.abs", GD.abs(-3L))
+    mix("GD.sign", GD.sign(-2.5))
+    mix("GD.floor", GD.floor(Vector2(1.5, -1.5)))
+    mix("GD.round", GD.round(2.5))
+    mix("GD.snapped", GD.snapped(7.3, 0.5))
+    mix("GD.wrap", GD.wrap(7L, 0L, 5L))
+    mix("GD.hash", GD.hash("kanama"))
+    mix("GD.isSame", GD.isSame(1L, 1L))
+    mix("GD.varToStr", GD.varToStr(Vector2(1.0, 2.0)))
+    mix("GD.strToVar", GD.strToVar("Vector2(1, 2)"))
+    mix("GD.bytesToVar", GD.bytesToVar(GD.varToBytes(42L)))
+    mix("GD.typeConvert", GD.typeConvert("12", 2L))
+    mix("GD.errorString", GD.errorString(0L))
+    mix("GD.randFromSeed", GD.randFromSeed(42L))
+    mix(
+      "GD.instanceFromId",
+      GD.instanceFromId(self.getInstanceId())?.getInstanceId() == self.getInstanceId(),
+    )
+    mix("GD.isInstanceIdValid", GD.isInstanceIdValid(self.getInstanceId()))
+  }
+
+  private fun randRound() {
+    mix("GD.randi", GD.randi())
+    mix("GD.randf", GD.randf())
+    mix("GD.randiRange", GD.randiRange(-10L, 10L))
+    mix("GD.randfRange", GD.randfRange(-1.0, 1.0))
+    mix("GD.randfn", GD.randfn(0.0, 1.0))
   }
 
   private fun pureRound() {

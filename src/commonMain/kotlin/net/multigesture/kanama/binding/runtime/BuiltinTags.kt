@@ -44,3 +44,9 @@ const val PT_QUATERNION = 20
 const val PT_INT32 = 2
 
 const val PT_STRING = 16
+
+// Task 129 B: the utility call (`kanama_ios_godot_utility_call`) builds a PackedByteArray argument
+// from a KanamaIosPackedArgDesc and boxes a Variant argument from a KanamaIosVariantArgDesc.
+const val PT_PACKED_BYTE_ARRAY = 31
+
+const val PT_VARIANT = 38

@@ -38,6 +38,52 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — `GD` generated once from Godot's utility functions, `Mathf` written once (task 129 B) — BREAKING
+
+Desktop, Android and iOS. `GD` (Godot's global functions: `print`, `randf`, `lerpf`, `str`,
+`typeof`, ...) was hand-written per platform: desktop called 84 of Godot's 114 utility functions,
+and iOS had a 23-member pure-Kotlin imitation whose `print` went to stdout instead of Godot's log
+and whose random numbers came from `kotlin.random` (so `GD.seed` did not exist and nothing was
+reproducible). `Mathf` was written three times (desktop 55 members, iOS 18, Web 18); iOS had no
+`Mathf.wrap`, `sign` or `degToRad`.
+
+- **`GD` is generated once** into the shared API from `extension_api.json`'s `utility_functions`:
+  all 114 functions, the same on every native platform, with Godot's KDoc. Only the call mechanism
+  is per platform: desktop/Android call the engine's utility function pointer through FFM, iOS
+  through one new C shim entry (`kanama_ios_godot_utility_call`, with
+  `kanama_ios_godot_get_utility_function`). Float/int/bool functions (the math, `randf`, `seed`, ...)
+  allocate nothing. New on every platform: `angleDifference`, `cubicInterpolate*`,
+  `bezierInterpolate` / `bezierDerivative`, `stepDecimals`, `randFromSeed`, `typeConvert`,
+  `varToStr` / `strToVar`, `varToBytes` / `bytesToVar` (and `*WithObjects`), `instanceFromId`,
+  `isSame`, `weakref`, `ridAllocateId` / `ridFromInt64`, and the Variant forms `abs`, `sign`,
+  `floor`, `ceil`, `round`, `snapped`, `lerp`, `wrap`, `clamp`, `max(a, b, ...)`, `min(a, b, ...)`
+  (they return `Any?`, like GDScript's).
+- **iOS `GD` behaves like desktop and GDScript now**: `GD.print` and the other print functions
+  write to Godot's log, as on desktop (they wrote to stdout), random numbers come from
+  the engine's global generator, so `GD.seed(n)` reproduces GDScript's `seed(n)` sequence on the
+  phone, and the 91 members iOS lacked exist.
+- **`Mathf` is common code**, compiled by every native platform: where Godot's function is plain
+  arithmetic (`lerp`, `inverseLerp`, `remap`, `clamp`, `min`/`max`, `wrap`, `snapped`, `moveToward`,
+  `rotateToward`, `lerpAngle`, `smoothStep`, `fposmod`, `pingPong`, `round`, `sign`, ...) the body is
+  Godot's formula and gives the same double, bit for bit, as GDScript (the runtime smoke's parity
+  pair checks every member against GDScript over 256 random and 64 edge inputs); the rest
+  (`sin`, `pow`, `exp`, the float-to-int conversions, ...) calls `GD`. iOS gains every member it
+  lacked, `Mathf.wrap` among them, so City-Builder builds for iOS without
+  `-PkanamaIosAllowExportSkips=true`. On iOS `Mathf.clamp` no longer throws when `min > max`,
+  `Mathf.inverseLerp(a, a, x)` divides by zero as Godot does (it returned 0), and `Mathf.lerpAngle`
+  takes the shortest way round as Godot's does (iOS used a different formula).
+- **Source break:** `GD` — parameter names follow Godot's (`GD.sin(angleRad)`, `GD.degToRad(deg)`,
+  `GD.seed(base)`, `GD.typeOf(variant)`, `GD.hash(variable)`, ...), which matters only to a call
+  that names its arguments; `GD.typeString` and `GD.errorString` take a `Long` (they took an `Int`:
+  pass `n.toLong()`, a literal still compiles); `GD.randfn` has no default arguments (Godot's has
+  none: write `GD.randfn(0.0, 1.0)`). On iOS, `GD.isInstanceValid` takes a `GodotObject?` (it took
+  `Any?`; Godot answers false for every non-object, so a non-object argument was always false), and
+  `GD.degToRad(degrees)` / `GD.radToDeg(radians)` name their parameter `deg` / `rad`.
+- **Source break:** `Mathf` — on iOS, `Mathf.inverseLerp(from, to, value)` names its third
+  parameter `weight`, as desktop and Godot do. Desktop's `Mathf` keeps its members and names.
+- Web is unchanged: its `GD` and `Mathf` are still the Web runtime's own subset (task 129 parcel 10
+  generates them through the Web bridge, whose utility path covers the no-argument calls today).
+
 ### Changed — `Tween` and `InputEventMouseButton` generated once for every platform (task 129 A) — BREAKING
 
 Desktop, Android and iOS. Both classes were hand-written twice, once per platform, and had drifted:

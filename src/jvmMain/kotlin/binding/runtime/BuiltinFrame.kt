@@ -184,10 +184,25 @@ internal constructor(private val stack: FrameStack, private val index: Int) {
     }
   }
 
+  actual fun callUtility(fn: UtilityFunction, argc: Int) {
+    try {
+      val target = fn.target()
+      ret.set(JAVA_LONG, 0L, 0L)
+      callUtilityExact(target, argc)
+    } finally {
+      stack.depth = index
+    }
+  }
+
   // Block-bodied, so the invokeExact is a statement and compiles to the handle's exact
   // `(MemorySegment, MemorySegment, MemorySegment, MemorySegment, int)void` type.
   private fun callExact(target: MemorySegment, self: MemorySegment, argc: Int) {
     Call.HANDLE.invokeExact(target, self, args, ret, argc)
+  }
+
+  // `(MemorySegment, MemorySegment, MemorySegment, int)void`: the utility pointer, ret, args, argc.
+  private fun callUtilityExact(target: MemorySegment, argc: Int) {
+    UtilityCall.HANDLE.invokeExact(target, ret, args, argc)
   }
 
   private fun releaseStrings() {
@@ -225,9 +240,20 @@ internal constructor(private val stack: FrameStack, private val index: Int) {
       )
   }
 
+  /** `GDExtensionPtrUtilityFunction(ret, args, argc)`, unbound: the function is argument 0. */
+  private object UtilityCall {
+    @JvmField
+    val HANDLE: MethodHandle =
+      GodotFFI.unboundDowncallHandle(
+        FunctionDescriptor.ofVoid(ADDRESS, ADDRESS, JAVA_INT),
+        "variant_ptr_utility_function",
+      )
+  }
+
   private companion object {
-    // The widest builtin method takes 8 arguments (Projection.create_for_hmd); the widest value is
-    // a float64 Projection (128 bytes); a Variant is 24 bytes (40 in a float64 build).
+    // The widest builtin method takes 8 arguments (Projection.create_for_hmd), as does the widest
+    // frame-path utility (cubic_interpolate_in_time); the widest value is a float64 Projection
+    // (128 bytes); a Variant is 24 bytes (40 in a float64 build).
     const val MAX_ARGS = 8
     const val SLOTS = MAX_ARGS + 1
     const val SLOT_BYTES = 128L

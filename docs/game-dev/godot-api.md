@@ -561,6 +561,46 @@ script data, see [Exports and Resources](properties-resources.md). For custom
 signals, scene connections, and lambda callbacks, see
 [Signals and Callbacks](signals.md).
 
+## Global Functions: `GD` and `Mathf`
+
+GDScript's global functions (`print`, `randf`, `lerpf`, `str`, `typeof`, ...) are members of
+`GD`, one per Godot utility function. `GD` is generated from `extension_api.json` like the
+classes, so it has all 114 of them, with Godot's documentation, and it is the same on desktop,
+Android and iOS:
+
+```kotlin
+GD.print("score: ", score)        // Godot's print, into Godot's output on every platform
+GD.seed(42)                       // the engine's global generator: GDScript's seed(42) sequence
+val roll = GD.randiRange(1, 6)
+val label = GD.str("hp=", hp)     // Godot formats the values, like GDScript's str()
+val t = GD.inverseLerp(0.0, 10.0, 2.5)
+```
+
+- Names are Godot's in camelCase (`deg_to_rad` is `degToRad`), except `printErr`, `printS`,
+  `printT`, `printRaw`, `typeOf` (`typeof` is a Kotlin keyword) and `isNaN`. Parameter names are
+  Godot's.
+- `float` is `Double`, `int` is `Long`, `bool` is `Boolean`. A `Variant` parameter or return is
+  `Any?`: GDScript's generic `abs`, `sign`, `floor`, `lerp`, `clamp`, `wrap`, `snapped`,
+  `max(a, b, ...)` and `min(a, b, ...)` return whatever Godot returns for the arguments; the typed
+  forms (`absf`, `lerpf`, `clampi`, `maxf`, ...) return a typed value.
+- `print`, `printErr`, `printS`, `printT`, `printRaw`, `printRich`, `printVerbose`, `pushError`,
+  `pushWarning` and `str` take any number of values. Godot formats `null`, strings, booleans and
+  numbers itself; any other value is passed as its `toString()`.
+- `isInstanceValid` takes a `GodotObject?`: it answers from the instance id the wrapper captured,
+  so it is safe on a wrapper whose object was freed. `isInstanceIdValid` takes a raw id.
+
+`Mathf` is the C#-style math helper, written once for every platform: `Mathf.lerp`, `clamp`,
+`wrap`, `snapped`, `moveToward`, `smoothStep`, `pingPong`, `degToRad`, `PI`, `TAU`, ... Where
+Godot's function is plain arithmetic, `Mathf` runs Godot's formula in Kotlin, with no engine call,
+and returns the same double as GDScript, bit for bit; the transcendental functions (`sin`, `pow`,
+`exp`, ...) and the float-to-int conversions (`roundToInt`, `floorToInt`) call `GD`. Each member
+also has a `Float` overload that computes in `Double`.
+
+On Web, `GD` and `Mathf` are still the Web runtime's own subset: `GD` has the random functions,
+`print`, `pushError`, `lerpf`, `clampf`, `remap`, `signf`, `lerpAngle`, `degToRad`, `radToDeg` and
+`isInstanceValid`; `Mathf` has `abs`, `min`, `max`, `clamp`, `lerp`, `inverseLerp`, `lerpAngle`,
+`wrap`, `sqrt`, `pow`, `log`, `sin`, `cos`, `atan2`, `isEqualApprox` and `roundToInt`.
+
 ## Global Classes
 
 Kanama supports globally named classes with `@GlobalClass` (GDScript `class_name`).
