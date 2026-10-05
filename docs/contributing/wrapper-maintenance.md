@@ -188,6 +188,48 @@ table only when the generator genuinely cannot reproduce it on both platforms. N
 files (`GD`, `DirAccessHandle`, …) are auto-excluded, and so are the hand-written roots
 described next.
 
+**Retiring a per-platform class: a table row, not a hand class (task 129).** Every
+`PER_PLATFORM_WRAPPERS` entry is a class written twice, and the two copies drift (iOS `Tween` had 7
+of Godot's 28 methods until task 129 A). To generate one once:
+
+1. Delete its entry and both hand copies (the desktop file, the iOS file or its block in
+   `IosGodotApi.kt`), and create `src/commonMain/kotlin/.../api/<Class>.kt` holding only the
+   `package` line: the tree universe is the set of committed wrapper files, so the placeholder is
+   what puts the class in it.
+2. Run `generate_api_wrapper.py --write-tree` twice (the first pass writes the class; the second sees
+   its declaration, so the members that return the class itself, such as fluent setters, render
+   too), then `sync_kdoc_from_godot_docs.py --write` and `./gradlew ktfmtFormat`.
+3. Carry the hand copies' sugar over as data, keeping the desktop names and signatures:
+   - `create()` / `from*` downcasts: a `FACTORY_HELPERS` row;
+   - parameter names Godot spells differently: `PARAMETER_NAME_OVERRIDES`;
+   - overloads and helpers both platforms can compile: `SHARED_MEMBER_SECTIONS[<Class>]` (member
+     text) or `SHARED_COMPANION_MEMBER_SECTIONS` (companion text); `Tween`'s String-path
+     `tweenProperty` and target-plus-method `tweenCallback` / `tweenMethod` are the example;
+   - sugar only one platform can compile: `DESKTOP_EXTENSION_SECTIONS` / `IOS_EXTENSION_SECTIONS`.
+   A member the iOS helper set cannot call yet lands in the class's generated `<Class>.jvm.kt`
+   companion by itself (listed in `ios-shape-gap.md`); do not hand-write it.
+4. If a desktop helper the shared tree now calls is missing `actual`, add the modifier (the expect is
+   generated from the helpers the tree references). Delete what the old copies called and nothing
+   else does: `IosGodot` functions, C shim entry points and their `kanama_ios.h` declarations.
+5. Run `check_public_signature_changes.py`; announce any break in the CHANGELOG, fix the demos in a
+   paired change, then `--write`. Drop the files from `scripts/hand_code_budget.json`
+   (`check_hand_code_budget.py --write`).
+
+**The hand-code budget.** `scripts/check_hand_code_budget.py` (a `local_ci.sh` stage) lists every
+hand-written Kotlin file of the API (under an `api/` directory, or declaring the
+`net.multigesture.kanama.api` package anywhere in `src/` or `web-runtime/src/`) in
+`scripts/hand_code_budget.json` with its category: `seam` (the platform call mechanism),
+`runtime-core` (what `extension_api.json` does not describe), `sugar` (GDScript-syntax sugar written
+once) or `transitional` (should be generated; carries the task-129 parcel that retires it). Every
+file has a line ratchet, and so does the hand Kotlin inside the generator tables (each `*_SECTIONS`
+key here and each Web `CLASS_POLICY` string). The gate fails on an unlisted hand file, a listed file
+that is gone or generated, and any growth. Only the GENERATED ENUMS regions a generator really
+splices into a file are left out of its count; a GENERATED marker pair in any other API file fails
+the gate. A legitimate seam, runtime-core or sugar change raises its ratchet with
+`check_hand_code_budget.py --write --reason "<why>"`, which records the reason in the JSON; a
+transitional file never grows, because an API addition is generated. "Generated" is the set of
+`regenerate_tree()` write targets, not a file header.
+
 **The roots are written once (task 117 P3′).** `GodotObject`, `RefCounted` and
 `GodotCallable` are hand-written files in the shared tree
 (`src/commonMain/kotlin/.../api/{GodotObject,RefCounted,GodotCallable}.kt`), compiled by every
@@ -325,8 +367,7 @@ gate all import it.
 - **Required object returns.** A Godot object return marked `meta: "required"` renders non-null and
   goes through `binding.runtime.requireGodotReturn`, which throws
   `IllegalStateException("Godot returned null from required <Class>.<method>")`; every other object
-  return stays nullable. The hand-written `Tween` fluent path (`wrapOrThis`, iOS
-  `releaseIosFluentSelf`) calls the same helper.
+  return stays nullable.
 - **Gates.** `scripts/check_typed_enums.py` (a local_ci stage) reads the committed sources: every
   enum slot of every method tied to its Godot method through its `getMethodBind` uses its value class,
   required returns are non-null (others nullable), no generated top-level name equals a Kotlin
@@ -413,8 +454,8 @@ The wrapper convention on desktop/Android:
   and returns `this` instead of minting a second owning wrapper (chained calls
   such as `tweenAwait(...).setTimeout(...)` stay reference-neutral). The
   generator emits this pattern whenever the receiver class conforms to the
-  method's return class; it is the same policy the hand-shaped `Tween` still
-  uses (`wrapOrThis`). The `Tweener` fluent setters are `meta: "required"` in
+  method's return class (`Tween.setParallel(...)`, generated since task 129 A, is
+  one). The `Tweener` fluent setters are `meta: "required"` in
   Godot, so since task 128 they return the **non-null** self type
   (`setTrans(...): PropertyTweener`) and a null engine return throws through
   `requireGodotReturn` (see "Required object returns" below); other generated
@@ -554,9 +595,8 @@ in `scripts/check_wrapper_generator.py`:
   the override stops compiling. The standing example was `Node.createTween()`, opened for the
   hand-written iOS `SceneTree`, which overrode it with the correct `SceneTree.create_tween` bind
   (the FPS F2 fix). Both halves are gone now: `SceneTree` is a generated `MainLoop` since task 117
-  P1'(b1), and `Node` is generated into the shared tree since P1'(b2), where `createTween` is not a
-  member at all — iOS cannot host a `Tween` return, so it is an extension in `Node.jvm.kt` /
-  `Node.ios.kt` and nothing can override it. Add a real case to the class's `IOS_MEMBER_SECTIONS`
+  P1'(b1), and `Node` is generated into the shared tree since P1'(b2), where `createTween` is a
+  plain generated member since task 129 A generated `Tween` once. Add a real case to the class's `IOS_MEMBER_SECTIONS`
   entry (or `IOS_EXTENSION_SECTIONS` for a shared class), not by hand-editing the generated file.
 
 - **A custom section that REPLACES a generated member.** A section normally adds members the

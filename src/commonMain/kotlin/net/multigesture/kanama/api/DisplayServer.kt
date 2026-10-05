@@ -88,7 +88,7 @@ object DisplayServer {
      * Adds an item that will act as a submenu of the global menu `menu_root`. The `submenu` argument
      * is the ID of the global menu root that will be shown when the item is clicked. Returns index of
      * the inserted item, it's not guaranteed to be the same as `index` value. Note: This method is
-     * implemented only on macOS. Supported system menu IDs:
+     * implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_submenu_item
      */
@@ -105,7 +105,7 @@ object DisplayServer {
      * `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A` (Ctrl + A). Note:
      * The `callback` and `key_callback` Callables need to accept exactly one Variant parameter, the
      * parameter passed to the Callables will be the value passed to `tag`. Note: This method is
-     * implemented only on macOS. Supported system menu IDs:
+     * implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_item
      */
@@ -122,7 +122,7 @@ object DisplayServer {
      * combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A`
      * (Ctrl + A). Note: The `callback` and `key_callback` Callables need to accept exactly one Variant
      * parameter, the parameter passed to the Callables will be the value passed to `tag`. Note: This
-     * method is implemented only on macOS. Supported system menu IDs:
+     * method is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_check_item
      */
@@ -139,7 +139,7 @@ object DisplayServer {
      * combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL | KEY_A`
      * (Ctrl + A). Note: The `callback` and `key_callback` Callables need to accept exactly one Variant
      * parameter, the parameter passed to the Callables will be the value passed to `tag`. Note: This
-     * method is implemented only on macOS. Supported system menu IDs:
+     * method is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_icon_item
      */
@@ -156,7 +156,7 @@ object DisplayServer {
      * generally a combination of `KeyModifierMask`s and `Key`s using bitwise OR such as `KEY_MASK_CTRL
      * | KEY_A` (Ctrl + A). Note: The `callback` and `key_callback` Callables need to accept exactly
      * one Variant parameter, the parameter passed to the Callables will be the value passed to `tag`.
-     * Note: This method is implemented only on macOS. Supported system menu IDs:
+     * Note: This method is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_icon_check_item
      */
@@ -175,7 +175,7 @@ object DisplayServer {
      * checking behavior and must be checked/unchecked manually. See `global_menu_set_item_checked` for
      * more info on how to control it. Note: The `callback` and `key_callback` Callables need to accept
      * exactly one Variant parameter, the parameter passed to the Callables will be the value passed to
-     * `tag`. Note: This method is implemented only on macOS. Supported system menu IDs:
+     * `tag`. Note: This method is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_radio_check_item
      */
@@ -195,7 +195,6 @@ object DisplayServer {
      * `global_menu_set_item_checked` for more info on how to control it. Note: The `callback` and
      * `key_callback` Callables need to accept exactly one Variant parameter, the parameter passed to
      * the Callables will be the value passed to `tag`. Note: This method is implemented only on macOS.
-     * Supported system menu IDs:
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_icon_radio_check_item
      */
@@ -215,7 +214,7 @@ object DisplayServer {
      * | KEY_A` (Ctrl + A). Note: By default, there's no indication of the current item state, it
      * should be changed manually. Note: The `callback` and `key_callback` Callables need to accept
      * exactly one Variant parameter, the parameter passed to the Callables will be the value passed to
-     * `tag`. Note: This method is implemented only on macOS. Supported system menu IDs:
+     * `tag`. Note: This method is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_multistate_item
      */
@@ -227,7 +226,7 @@ object DisplayServer {
     /**
      * Adds a separator between items to the global menu with ID `menu_root`. Separators also occupy an
      * index. Returns index of the inserted item, it's not guaranteed to be the same as `index` value.
-     * Note: This method is implemented only on macOS. Supported system menu IDs:
+     * Note: This method is implemented only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_add_separator
      */
@@ -656,7 +655,7 @@ object DisplayServer {
 
     /**
      * Removes all items from the global menu with ID `menu_root`. Note: This method is implemented
-     * only on macOS. Supported system menu IDs:
+     * only on macOS.
      *
      * Generated from Godot docs: DisplayServer.global_menu_clear
      */
@@ -1063,8 +1062,6 @@ object DisplayServer {
     /**
      * Returns the screen's top-left corner position in pixels. Returns `Vector2i.ZERO` if `screen` is
      * invalid. On multi-monitor setups, the screen position is relative to the virtual desktop area.
-     * On multi-monitor setups with different screen resolutions or orientations, the origin might be
-     * located outside any display like this:
      *
      * Generated from Godot docs: DisplayServer.screen_get_position
      */
@@ -1106,8 +1103,7 @@ object DisplayServer {
      * value if `screen` is invalid. Note: One of the following constants can be used as `screen`:
      * `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or
      * `SCREEN_WITH_KEYBOARD_FOCUS`. Note: On macOS, returned value is inaccurate if fractional display
-     * scaling mode is used. Note: On Android devices, the actual screen densities are grouped into six
-     * generalized densities:
+     * scaling mode is used.
      *
      * Generated from Godot docs: DisplayServer.screen_get_dpi
      */
@@ -1160,8 +1156,7 @@ object DisplayServer {
     /**
      * Returns the current refresh rate of the specified screen. When V-Sync is enabled, this returns
      * the maximum framerate the project can effectively reach. Returns `-1.0` if `screen` is invalid
-     * or the `DisplayServer` fails to find the refresh rate for the specified screen. To fallback to a
-     * default refresh rate if the method fails, try:
+     * or the `DisplayServer` fails to find the refresh rate for the specified screen.
      *
      * Generated from Godot docs: DisplayServer.screen_get_refresh_rate
      */
@@ -1280,9 +1275,7 @@ object DisplayServer {
 
     /**
      * Returns the ID of the window at the specified screen `position` (in pixels). On multi-monitor
-     * setups, the screen position is relative to the virtual desktop area. On multi-monitor setups
-     * with different screen resolutions or orientations, the origin may be located outside any display
-     * like this:
+     * setups, the screen position is relative to the virtual desktop area.
      *
      * Generated from Godot docs: DisplayServer.get_window_at_screen_position
      */
@@ -1421,8 +1414,7 @@ object DisplayServer {
 
     /**
      * Sets the position of the given window to `position`. On multi-monitor setups, the screen
-     * position is relative to the virtual desktop area. On multi-monitor setups with different screen
-     * resolutions or orientations, the origin may be located outside any display like this:
+     * position is relative to the virtual desktop area.
      *
      * Generated from Godot docs: DisplayServer.window_set_position
      */
@@ -3024,8 +3016,7 @@ object DisplayServer {
      * filesystem path. This URI can be passed directly to `FileAccess` to perform read/write
      * operations. When using `FileDialogMode.OPEN_DIR`, it returns a tree URI that grants full access
      * to the selected directory. File operations inside this directory can be performed by passing a
-     * path on the form `treeUri#relative/path/to/file` to `FileAccess`. To avoid opening the file
-     * picker again after each app restart, you can take persistable URI permission as follows:
+     * path on the form `treeUri#relative/path/to/file` to `FileAccess`.
      *
      * Generated from Godot docs: DisplayServer.file_dialog_show
      */

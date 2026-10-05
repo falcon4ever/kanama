@@ -112,10 +112,10 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/audit_stale_blockers.py:249` | `except UnicodeDecodeError:` | justified: not text, so it declares no Kotlin symbol |
 | `scripts/audit_stale_blockers.py:489` | `except ValueError:` | justified: --list display of the marker age; the audit verdict is already decided |
 | `scripts/audit_wrapper_abi_policy.py:84` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/audit_wrapper_signatures.py:309` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_actual_public_surface.py:123` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
-| `scripts/check_actual_public_surface.py:460` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_actual_public_surface.py:481` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/audit_wrapper_signatures.py:311` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_actual_public_surface.py:122` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
+| `scripts/check_actual_public_surface.py:459` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_actual_public_surface.py:480` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_bootstrap_jdk_resolution.sh:23` | `if ! command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/check_bootstrap_jdk_resolution.sh:31` | `REAL_JDK="$(/usr/libexec/java_home -v 25 2>/dev/null \|\| true)"` | justified: no JDK 25 leaves REAL_JDK empty, which the "need a real JDK 25+" check just below turns into exit 2. |
 | `scripts/check_expect_no_defaults.py:155` | `except (Unparsed, ValueError):` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -155,10 +155,10 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:199` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:241` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:243` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/generate_api_wrapper.py:1825` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1830` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1835` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1870` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1794` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1799` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1804` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1839` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_gates_index.py:376` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_gates_index.py:420` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
 | `scripts/generate_gates_index.py:438` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
@@ -199,19 +199,19 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:2622` | `wait "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
 | `scripts/ios_visual_smoke.sh:2670` | `kill "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
 | `scripts/ios_visual_smoke.sh:2672` | `wait "$launch_pid" >/dev/null 2>&1 \|\| true` | justified: stopping our own console stream after the capture window; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2708` | `rg 'SELFTEST FAIL:\|SELFTEST( MATRIX)?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 \|\| true` | justified: printing the evidence; the exit 1 on the next line is the verdict. |
-| `scripts/ios_visual_smoke.sh:2755` | `rg 'SELFTEST FAIL:\|SELFTEST( MATRIX)?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$stdout_log" >&2 \|\| true` | justified: printing the evidence; the exit 1 on the next line is the verdict. |
-| `scripts/ios_visual_smoke.sh:2839` | `rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" \|\| true` | justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict. |
-| `scripts/ios_visual_smoke.sh:2977` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl terminate "$device_udid" "$bundle_id" >/dev/null 2>&1 \|\| tru` | justified: closing the app after the verdict; it may already have exited. |
-| `scripts/ios_visual_smoke.sh:2979` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/ios_visual_smoke.sh:2710` | `rg 'SELFTEST( \([^)]*\))? FAIL:\|SELFTEST( MATRIX\| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$s` | justified: printing the evidence; the exit 1 on the next line is the verdict. |
+| `scripts/ios_visual_smoke.sh:2757` | `rg 'SELFTEST( \([^)]*\))? FAIL:\|SELFTEST( MATRIX\| \([^)]*\))?: [0-9]+ passed, [0-9]+ failed' "$stderr_log" "$s` | justified: printing the evidence; the exit 1 on the next line is the verdict. |
+| `scripts/ios_visual_smoke.sh:2841` | `rg -h 'project script method call.*method=add_bunny' "$stderr_log" "$stdout_log" \|\| true` | justified: no match exits 1 and the count is 0; the `-lt 25` check right after is the verdict. |
+| `scripts/ios_visual_smoke.sh:2979` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl terminate "$device_udid" "$bundle_id" >/dev/null 2>&1 \|\| tru` | justified: closing the app after the verdict; it may already have exited. |
+| `scripts/ios_visual_smoke.sh:2981` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:48` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:207` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:672` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:675` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:677` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:715` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:731` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:744` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:675` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:678` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:680` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:718` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:734` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:747` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:114` | `rm -rf "$work_dir" 2>/dev/null \|\| true` | justified: scratch-dir cleanup after the verdict |
 | `scripts/package_install_smoke.sh:130` | `if command -v xattr >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/package_install_smoke.sh:132` | `xattr -dr com.apple.quarantine "$project_dir" 2>/dev/null \|\| true` | justified: clearing quarantine is best effort; a quarantined binary that cannot load fails the Godot launch below. |
@@ -219,7 +219,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:20` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:27` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:472` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
+| `scripts/runtime_smoke.sh:497` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/tool_smoke.sh:18` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:25` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -273,9 +273,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `.github/workflows/package.yml:313` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
 | `.github/workflows/package.yml:330` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
 | `.github/workflows/package.yml:420` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
-| `.github/workflows/web.yml:228` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
-| `.github/workflows/web.yml:281` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
-| `.github/workflows/web.yml:296` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
+| `.github/workflows/web.yml:241` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
+| `.github/workflows/web.yml:294` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
+| `.github/workflows/web.yml:309` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
 
 <!-- audit-table:end -->
 
@@ -386,6 +386,11 @@ every pull request that touches `scripts/` or `.github/workflows/` (gated by the
 | `check_expect_no_defaults.py` | an `expect fun` declares a default argument | `[expect_defaults] FAIL 1 default argument(s) on an 'expect' declaration. The Android lane skips *.expect.kt, so the default would not exist there; declare an overload per omitted argument instead (tas` | green |
 | `check_gate_evidence.py` | the evidence ledger carries a wrong schema version | `[check_gate_evidence] FAIL ledger must be an object with schemaVersion 1: evidence/gates.json` | green |
 | `check_godot_version_pin.py` | gradle.properties pins a different Godot than CI | `[check_godot_version_pin] FAIL — Godot version pins drifted: / - .github/workflows/package.yml: GODOT_VERSION=4.7.2-stable but expected 4.7.1-stable (from kanamaGodotVersion=4.7.1.stable)` | green |
+| `check_hand_code_budget.py` | a new hand-written file appears under an api/ directory | `src/iosMain/kotlin/net/multigesture/kanama/api/ZzRedRun.kt: hand-written (3 lines) and not on the budget -- generate it, or add it to scripts/hand_code_budget.json with a category (seam, runtime-core,` | green |
+| `check_hand_code_budget.py (ratchet)` | a transitional hand file (desktop GD.kt) grows past its line ratchet | `src/jvmMain/kotlin/net/multigesture/kanama/api/GD.kt: transitional file grew to 776 hand lines (ratchet 774); it is due to be generated, so generate the addition instead` | green |
+| `check_hand_code_budget.py (package outside api/)` | a hand-written file outside any api/ directory declares the API package | `src/jvmMain/kotlin/net/multigesture/kanama/ZzRedRunPkg.kt: hand-written (3 lines) and not on the budget -- generate it, or add it to scripts/hand_code_budget.json with a category (seam, runtime-core, ` | green |
+| `check_hand_code_budget.py (fake GENERATED markers)` | hand code in a sugar file is wrapped in a GENERATED marker pair to hide it from the count | `src/commonMain/kotlin/net/multigesture/kanama/api/KanamaScript.kt: carries a BEGIN/END GENERATED marker, but no generator owns a region in it -- markers do not exempt hand code from the budget; remove` | green |
+| `check_hand_code_budget.py (sugar ratchet)` | a sugar file (KanamaScript.kt) grows past its line ratchet | `src/commonMain/kotlin/net/multigesture/kanama/api/KanamaScript.kt: sugar file grew to 281 hand lines (ratchet 278); if this is a legitimate seam/runtime-core/sugar change, raise the ratchet with `pyth` | green |
 | `check_hand_copies.py` | the iOS copy of an annotation renames a parameter | `- @ExportPlaceholder parameters differ: annotations/ (val placeholder: String) vs iOS (val text: String)` | green |
 | `check_ios_no_silent_stubs.py` | a shared wrapper function whose whole body is a bare default, without a marker | `[check_ios_no_silent_stubs] FAIL — un-annotated silent stub(s): / src/commonMain/kotlin/net/multigesture/kanama/api/ZzRedRun.kt:4: fun redRun(): Boolean = false` | green |
 | `check_ios_shim_faults.py` | a guarded early return in the iOS shim stops reporting its fault | `[check-ios-shim-faults] FAIL silent-return kanama_ios_shim.c:1758 kanama_ios_godot_get_method_bind: if (!kanama_ios_resolve_godot_api()) returns without calling kanama_ios_fault( / [check-ios-shim-fau` | green |

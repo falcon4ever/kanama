@@ -103,7 +103,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
             val FILESYSTEM_CREATE: ContextMenuSlot get() = ContextMenuSlot(3L)
             /**
              * Context menu of Script editor's code editor. `_popup_menu` will be called with the path to the
-             * `CodeEdit` node. You can fetch it using this code:
+             * `CodeEdit` node.
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_SCRIPT_EDITOR_CODE
              */
@@ -118,7 +118,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
             val SCENE_TABS: ContextMenuSlot get() = ContextMenuSlot(5L)
             /**
              * Context menu of 2D editor's basic right-click menu. `_popup_menu` will be called with paths to
-             * all `CanvasItem` nodes under the cursor. You can fetch them using this code:
+             * all `CanvasItem` nodes under the cursor.
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_2D_EDITOR
              */

@@ -206,8 +206,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Puts a zero-terminated ASCII string into the stream prepended by a 32-bit unsigned integer
-     * representing its size. Note: To put an ASCII string without prepending its size, you can use
-     * `put_data`:
+     * representing its size.
      *
      * Generated from Godot docs: StreamPeer.put_string
      */
@@ -218,8 +217,7 @@ open class StreamPeer(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Puts a zero-terminated UTF-8 string into the stream prepended by a 32 bits unsigned integer
-     * representing its size. Note: To put a UTF-8 string without prepending its size, you can use
-     * `put_data`:
+     * representing its size.
      *
      * Generated from Godot docs: StreamPeer.put_utf8_string
      */

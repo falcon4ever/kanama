@@ -65,6 +65,8 @@ KNOWN_UNWRAPPABLE_PROPERTIES: frozenset[tuple[str, str]] = frozenset(
         ("ImageTexture", "image"),
         ("InputEventAction", "pressed"),
         ("InputEventJoypadButton", "pressed"),
+        ("InputEventMouseButton", "canceled"),
+        ("InputEventMouseButton", "pressed"),
         ("InputEventScreenTouch", "canceled"),
         ("InputEventScreenTouch", "pressed"),
         ("IterateIK3D", "setting_count"),

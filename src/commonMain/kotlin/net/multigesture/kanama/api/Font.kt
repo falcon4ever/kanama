@@ -257,8 +257,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Returns the size of a bounding box of a single-line string, taking kerning, advance and subpixel
-     * positioning into account. See also `get_multiline_string_size` and `draw_string`. For example,
-     * to get the string size as displayed by a single-line Label, use:
+     * positioning into account. See also `get_multiline_string_size` and `draw_string`.
      *
      * Generated from Godot docs: Font.get_string_size
      */
@@ -436,7 +435,7 @@ open class Font(handle: GodotHandle) : Resource(handle) {
      * (https://docs.microsoft.com/en-us/typography/opentype/spec/dvaraxisreg), each coordinate is
      * returned as `tag: Vector3i(min_value,max_value,default_value)`. Font variations allow for
      * continuous change of glyph characteristics along some given design axis, such as weight, width
-     * or slant. To print available variation axes of a variable font:
+     * or slant.
      *
      * Generated from Godot docs: Font.get_supported_variation_list
      */

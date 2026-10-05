@@ -113,8 +113,25 @@ def normalize_godot_text(text: str) -> str | None:
     text = first_paragraph(text)
     text = re.sub(r"\s+", " ", text).strip()
     text = re.sub(r"\s+Example:.*$", "", text).strip()
+    text = drop_dangling_lead_in(text)
     text = text.replace("/*", "/\\*").replace("*/", "* /")
     return text or None
+
+
+def drop_dangling_lead_in(text: str) -> str:
+    """Drop a trailing sentence that introduces content the KDoc does not carry.
+
+    The KDoc keeps the first paragraph and drops code blocks, so a description whose first
+    paragraph ends "This is the equivalent of doing:" (the code block followed) or "Note:" (the
+    note is the next paragraph) used to end mid-thought. The lead-in sentence goes; a description
+    that is only the lead-in keeps it, with a full stop.
+    """
+    if not text.endswith(":"):
+        return text
+    boundary = max(text.rfind(". "), text.rfind("! "), text.rfind("? "))
+    if boundary == -1:
+        return text[:-1].rstrip() + "."
+    return text[: boundary + 1]
 
 
 def load_godot_docs(docs_dir: Path, class_name: str) -> GodotClassDocs | None:

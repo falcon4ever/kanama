@@ -640,8 +640,7 @@ object RenderingServer {
 
     /**
      * Creates a new surface on the given `mesh`. Equivalent to `mesh_add_surface_from_arrays`, but
-     * takes a single `Dictionary` argument instead of separate arguments. The dictionary must follow
-     * this structure:
+     * takes a single `Dictionary` argument instead of separate arguments.
      *
      * Generated from Godot docs: RenderingServer.mesh_add_surface
      */
@@ -1089,8 +1088,7 @@ object RenderingServer {
      * Set the entire data to use for drawing the `multimesh` at once to `buffer` (such as instance
      * transforms and colors). `buffer`'s size must match the number of instances multiplied by the
      * per-instance data size (which depends on the enabled MultiMesh fields). Otherwise, an error
-     * message is printed and nothing is rendered. See also `multimesh_get_buffer`. The per-instance
-     * data size and expected data order is:
+     * message is printed and nothing is rendered. See also `multimesh_get_buffer`.
      *
      * Generated from Godot docs: RenderingServer.multimesh_set_buffer
      */
@@ -1104,8 +1102,7 @@ object RenderingServer {
      * valid if `use_indirect` is set to `true` when allocating data through `multimesh_allocate_data`.
      * It can be used to directly modify the instance count via buffer. The data structure is dependent
      * on both how many surfaces the mesh contains and whether it is indexed or not, the buffer has 5
-     * integers in it, with the last unused if the mesh is not indexed. Each of the values in the
-     * buffer correspond to these options:
+     * integers in it, with the last unused if the mesh is not indexed.
      *
      * Generated from Godot docs: RenderingServer.multimesh_get_command_buffer_rd_rid
      */
@@ -3057,7 +3054,6 @@ object RenderingServer {
      * and the contents of the viewport are rendered directly to screen. However, note that the root
      * viewport is drawn last, therefore it will draw over the screen. Accordingly, you must set the
      * root viewport to an area that does not cover the area that you have attached this viewport to.
-     * For example, you can set the root viewport to not render at all with the following code:
      *
      * Generated from Godot docs: RenderingServer.viewport_attach_to_screen
      */
@@ -3550,8 +3546,7 @@ object RenderingServer {
      * (different passes will return different values). See also `get_rendering_info`, which returns
      * global information across all viewports. Note: Viewport rendering information is not available
      * until at least 2 frames have been rendered by the engine. If rendering information is not
-     * available, `viewport_get_render_info` returns `0`. To print rendering information in `_ready()`
-     * successfully, use the following:
+     * available, `viewport_get_render_info` returns `0`.
      *
      * Generated from Godot docs: RenderingServer.viewport_get_render_info
      */
@@ -4220,7 +4215,7 @@ object RenderingServer {
     /**
      * Sets the exposure values that will be used by the renderers. The normalization amount is used to
      * bake a given Exposure Value (EV) into rendering calculations to reduce the dynamic range of the
-     * scene. The normalization factor can be calculated from exposure value (EV100) as follows:
+     * scene.
      *
      * Generated from Godot docs: RenderingServer.camera_attributes_set_exposure
      */
@@ -5917,8 +5912,7 @@ object RenderingServer {
      * also `viewport_get_render_info`, which returns information specific to a viewport. Note: Only 3D
      * rendering is currently taken into account by some of these values, such as the number of draw
      * calls. Note: Rendering information is not available until at least 2 frames have been rendered
-     * by the engine. If rendering information is not available, `get_rendering_info` returns `0`. To
-     * print rendering information in `_ready()` successfully, use the following:
+     * by the engine. If rendering information is not available, `get_rendering_info` returns `0`.
      *
      * Generated from Godot docs: RenderingServer.get_rendering_info
      */

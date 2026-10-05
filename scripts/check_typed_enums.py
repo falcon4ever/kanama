@@ -18,8 +18,8 @@ compiler cannot tell a raw `Long` from a forgotten enum. This gate reads the COM
       Kanama's `types.Vector3`). A property must have its getter's type.
   (b) required returns -- a function tied to a Godot method returning an object is non-null exactly
       when Godot marks the return `meta: "required"` (nullable otherwise), and a required one goes
-      through the shared `requireGodotReturn` helper (or the Tween fluent `wrapOrThis` / iOS
-      `releaseIosFluentSelf`, which call it, or a delegation to the same-named non-null member).
+      through the shared `requireGodotReturn` helper (or a delegation to the same-named non-null
+      member, e.g. the String-path `Tween.tweenProperty` overload).
       Bind-less hand functions are held to the required rule only (an iOS sugar factory that
       constructs the object itself is not Godot's return).
   (c) names -- no generated top-level name equals a Kotlin default-import classifier (the `Error`
@@ -352,7 +352,7 @@ def main() -> int:
                                 "`meta: \"required\"`: the return must be non-null (decision 9)"
                             )
                         elif not re.search(
-                            rf"requireGodotReturn|wrapOrThis|releaseIosFluentSelf|return this\b|\.{fun.name}\(", fun.body
+                            rf"requireGodotReturn|return this\b|\.{fun.name}\(", fun.body
                         ):
                             # (a delegation to the same-named non-null member counts: SceneTree.Companion.createTween)
                             failures.append(

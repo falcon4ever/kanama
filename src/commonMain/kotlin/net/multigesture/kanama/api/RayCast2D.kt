@@ -136,8 +136,7 @@ class RayCast2D(handle: GodotHandle) : Node2D(handle) {
 
     /**
      * Returns the shape ID of the first object that the ray intersects, or `0` if no object is
-     * intersecting the ray (i.e. `is_colliding` returns `false`). To get the intersected shape node,
-     * for a `CollisionObject2D` target, use:
+     * intersecting the ray (i.e. `is_colliding` returns `false`).
      *
      * Generated from Godot docs: RayCast2D.get_collider_shape
      */

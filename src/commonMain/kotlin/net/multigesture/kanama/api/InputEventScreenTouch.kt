@@ -121,6 +121,16 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
         internal fun wrapBorrowed(handle: RawSegment): InputEventScreenTouch? =
             if (handle.address() == 0L) null else InputEventScreenTouch(GodotHandle(handle))
 
+        // Instantiate an InputEventScreenTouch.
+        @JvmStatic
+        fun create(): InputEventScreenTouch =
+            RefCounted.owned(InputEventScreenTouch(GodotHandle(ObjectCalls.constructObject("InputEventScreenTouch"))))
+
+        // Downcast a GodotObject to InputEventScreenTouch (null if not).
+        @JvmStatic
+        fun from(value: GodotObject): InputEventScreenTouch? =
+            if (value.isClass("InputEventScreenTouch")) RefCounted.retained(InputEventScreenTouch(value.handle)) else null
+
         private const val SET_INDEX_HASH = 1286410249L
         private val setIndexBind by lazy {
             ObjectCalls.getMethodBind("InputEventScreenTouch", "set_index", SET_INDEX_HASH)

@@ -29,7 +29,7 @@ class PropertyTweener(handle: GodotHandle) : Tweener(handle) {
     /**
      * Makes the `PropertyTweener` use the current property value (i.e. at the time of creating this
      * `PropertyTweener`) as a starting point. This is equivalent of using `from` with the current
-     * value. These two calls will do the same:
+     * value.
      *
      * Generated from Godot docs: PropertyTweener.from_current
      */

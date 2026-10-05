@@ -909,7 +909,7 @@ def _positive_return_problems(roots: tuple[Path, ...], refcounted: set[str]) -> 
             name = method_function_name(cls["name"], method["name"])
             for path, text in texts:
                 spans = _function_spans(text)
-                # A file-local helper that adopts the +1 (Tween's wrapOrThis) counts as adopting.
+                # A file-local helper that adopts the +1 counts as adopting.
                 adopters = {
                     fname
                     for fname, start, end in spans

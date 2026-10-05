@@ -8,7 +8,7 @@ without being listed here, so we don't repeat the deep-dive bugs from unwired
 annotations/signals. `scripts/check_ios_no_silent_stubs.py` fails CI on an
 un-annotated bare-default return.
 
-Totals: **0 STUB** · **13 HANDWRITTEN** · **5 SUGAR** (18 marked sites).
+Totals: **0 STUB** · **12 HANDWRITTEN** · **5 SUGAR** (17 marked sites).
 
 ## STUB
 
@@ -25,12 +25,11 @@ _Intentionally bespoke — not generatable from extension_api.json; correct as-i
 | `src/iosMain/kotlin/net/multigesture/kanama/api/Engine.kt:6` | [glue] Engine singleton. Not retired to the generated wrapper because |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/FileAccess.kt:7` | [glue] FileAccess static facade. The desktop shape is hand-shaped |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/GodotSignal.kt:5` | [runtime] signal/connect/emitSignal/await use the custom GDExtension |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:110` | [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json. |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:206` | [runtime] Tween uses the Variant tween_property path (final-value is a |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:529` | [platform] pure-Kotlin math helpers (no Godot call). Bespoke utility, |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:597` | [glue] ResourceLoader singleton. Not retired to the generated wrapper: |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:760` | [platform] GD global helpers (rand*, print) — Kotlin/native impls, bespoke. |
-| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:849` | [glue] thin cinterop facade over the C shim helpers used by the bespoke |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:56` | [platform] KanamaScope bridges Godot's main thread to Kotlin coroutines; not generatable from extension_api.json. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:157` | [platform] pure-Kotlin math helpers (no Godot call). Bespoke utility, |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:225` | [glue] ResourceLoader singleton. Not retired to the generated wrapper: |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:387` | [platform] GD global helpers (rand*, print) — Kotlin/native impls, bespoke. |
+| `src/iosMain/kotlin/net/multigesture/kanama/api/IosGodotApi.kt:476` | [seam] thin cinterop facade over the C shim entry points the runtime and |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/MainThread.kt:9` | [platform] MainThread.post/runOnMainThread run inline (Kotlin/Native scripts already run on the engine main thread); the frame queues are pumped by KanamaIosRuntime.frame(), not a JVM executor. |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ProjectSettings.kt:6` | [glue] ProjectSettings singleton. Not retired to the generated wrapper: |
 | `src/iosMain/kotlin/net/multigesture/kanama/api/ScriptAccessSelfTest.kt:6` | [selftest] task 133 rows of the OBJECTCALLS SELFTEST frame-1 phase: class tokens, checked casts, script checks, tree accessors, preload errors and the script scope on the device runtime. |

@@ -69,9 +69,7 @@ object Input {
      * non-game applications. If in doubt, use `is_physical_key_pressed`. Note: Due to keyboard
      * ghosting, `is_key_pressed` may return `false` even if one of the action's keys is pressed. See
      * Input examples ($DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events) in the
-     * documentation for more information. Note: If you want to check if a key was just pressed by
-     * using its keycode, use Godot's input action system with `is_action_just_pressed` or use the
-     * `Node._input` method like this instead:
+     * documentation for more information.
      *
      * Generated from Godot docs: Input.is_key_pressed
      */
@@ -88,9 +86,7 @@ object Input {
      * work on any keyboard layout. If in doubt, use `is_physical_key_pressed`. Note: Due to keyboard
      * ghosting, `is_physical_key_pressed` may return `false` even if one of the action's keys is
      * pressed. See Input examples ($DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events) in
-     * the documentation for more information. Note: If you want to check if a key was just pressed by
-     * using its physical keycode, use Godot's input action system with `is_action_just_pressed` or use
-     * the `Node._input` method like this instead:
+     * the documentation for more information.
      *
      * Generated from Godot docs: Input.is_physical_key_pressed
      */
@@ -101,9 +97,7 @@ object Input {
 
     /**
      * Returns `true` if you are pressing the key with the `keycode` printed on it. You can pass a
-     * `Key` constant or any Unicode character code. Note: If you want to check if a key was just
-     * pressed by using its label, use Godot's input action system with `is_action_just_pressed` or use
-     * the `Node._input` method like this instead:
+     * `Key` constant or any Unicode character code.
      *
      * Generated from Godot docs: Input.is_key_label_pressed
      */
@@ -113,9 +107,7 @@ object Input {
     }
 
     /**
-     * Returns `true` if you are pressing the mouse button specified with `MouseButton`. Note: If you
-     * want to check if a mouse button was just pressed, use Godot's input action system with
-     * `is_action_just_pressed` or use the `Node._input` method like this instead:
+     * Returns `true` if you are pressing the mouse button specified with `MouseButton`.
      *
      * Generated from Godot docs: Input.is_mouse_button_pressed
      */
@@ -125,9 +117,7 @@ object Input {
     }
 
     /**
-     * Returns `true` if you are pressing the joypad button at index `button`. Note: If you want to
-     * check if a joypad button was just pressed, use Godot's input action system with
-     * `is_action_just_pressed` or use the `Node._input` method like this instead:
+     * Returns `true` if you are pressing the joypad button at index `button`.
      *
      * Generated from Godot docs: Input.is_joy_button_pressed
      */
@@ -694,8 +684,7 @@ object Input {
      * Starts the process of calibrating the specified joypad's gyroscope, if it has one. Once a
      * joypad's gyroscope has been calibrated correctly (e.g. laying still on a table without being
      * rotated), `get_joy_gyroscope` will return values close or equal to `Vector3.ZERO` when the
-     * joypad is not being rotated. Here's an example of how to use joypad gyroscope and gyroscope
-     * calibration in your games:
+     * joypad is not being rotated.
      *
      * Generated from Godot docs: Input.start_joy_motion_sensors_calibration
      */

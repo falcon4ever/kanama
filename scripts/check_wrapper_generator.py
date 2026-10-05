@@ -377,11 +377,10 @@ def check_ios_policies(output_dir: Path) -> int:
 
     1. bare-`Object` returns are emitted on iOS (GodotObject wrap policy) — else regen
        silently drops get_collider()-style methods.
-    2. Node.create_tween stays reachable on iOS. It was an `open` member of the hand-written
-       iOS Node (so the hand-written SceneTree subclass could override it — the FPS F2 fix);
-       since task 117 P1'(b2) Node is generated once into the shared tree, which cannot host a
-       Tween return on iOS, so the call lives in IOS_EXTENSION_SECTIONS['Node'] and is emitted
-       into Node.ios.kt — else iOS scripts lose createTween() entirely.
+    2. createTween() is a MEMBER of the shared Node and SceneTree on every platform. Until task
+       129 A, Tween was hand-written per platform, so the call was a per-platform extension
+       (Node.jvm.kt / Node.ios.kt, SceneTree.*.kt) a script had to import by name; Tween is
+       generated once now, and a per-platform createTween extension must not come back.
     3. a hand-written class (SceneTree) requested for emission is reported as a collision and
        NOT written — else a duplicate-class file breaks the compile.
     """
@@ -394,12 +393,17 @@ def check_ios_policies(output_dir: Path) -> int:
         print("[wrapper_generator] FAIL bare-Object return getCollider() dropped on iOS "
               "(GodotObject wrap policy regressed)", file=sys.stderr)
         return 1
-    from generate_api_wrapper import IOS_EXTENSION_SECTIONS  # the section table, not a regex over its source
-
-    if "fun Node.createTween(): Tween =" not in IOS_EXTENSION_SECTIONS.get("Node", ((), ""))[1]:
-        print("[wrapper_generator] FAIL IOS_EXTENSION_SECTIONS['Node'] no longer carries "
-              "createTween() — iOS scripts lose Node.create_tween (task 117 P1'(b2))", file=sys.stderr)
-        return 1
+    for owner in ("Node", "SceneTree"):
+        if "    fun createTween(): Tween {" not in (SHARED_API_DIR / f"{owner}.kt").read_text(encoding="utf-8"):
+            print(f"[wrapper_generator] FAIL the shared {owner} no longer declares createTween() as a member "
+                  "(task 129 A generated Tween once)", file=sys.stderr)
+            return 1
+    for directory in (DESKTOP_API_DIR, IOS_API_DIR):
+        for path in sorted(directory.glob("*.kt")):
+            if re.search(r"\bfun (Node|SceneTree)(\.Companion)?\.createTween\(", path.read_text(encoding="utf-8")):
+                print(f"[wrapper_generator] FAIL {_rel(path)} declares a per-platform createTween extension; "
+                      "it is a shared member since task 129 A", file=sys.stderr)
+                return 1
 
     # Composite default-value override: Node3D.lookAt(up = Vector3.UP) — demos call the 1-arg
     # lookAt(target) form and rely on this default; a regen must not drop it.

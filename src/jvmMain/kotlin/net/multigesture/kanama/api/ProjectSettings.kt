@@ -192,8 +192,7 @@ object ProjectSettings {
      * `res://` or `user://`). The returned path will vary depending on the operating system and user
      * preferences. See File paths in Godot projects ($DOCS_URL/tutorials/io/data_paths.html) to see
      * what those paths convert to. See also `localize_path`. Note: `globalize_path` with `res://` will
-     * not work in an exported project. Instead, prepend the executable's base directory to the path
-     * when running from an exported project:
+     * not work in an exported project.
      *
      * Generated from Godot docs: ProjectSettings.globalize_path
      */

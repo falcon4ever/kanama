@@ -294,8 +294,7 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
 
     /**
      * See also `AnimationMixer.capture`. You can use this method to use more detailed options for
-     * capture than those performed by `playback_auto_capture`. When `playback_auto_capture` is
-     * `false`, this method is almost the same as the following:
+     * capture than those performed by `playback_auto_capture`.
      *
      * Generated from Godot docs: AnimationPlayer.play_with_capture
      */

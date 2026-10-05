@@ -57,7 +57,6 @@ EXCLUDED = {
 # only the public members the expect does not declare are scoped out -- and listed, per platform, as
 # the cross-platform gap task 129 closes.
 HAND_SURFACE_SCOPED = {
-    "Tween": "hand-written per-platform API; removed by task 129 (generated once)",
     "FileAccess": "hand-written per-platform API; removed by task 129 (generated once)",
 }
 # Expect classifiers whose actual is a `typealias` to an existing type: the aliased type's

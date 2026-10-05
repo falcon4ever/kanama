@@ -19,7 +19,7 @@ object JavaClassWrapper {
      * interact with. When wrapping inner (nested) classes, use `$` instead of `.` to separate them.
      * For example, `JavaClassWrapper.wrap("android.view.WindowManager$LayoutParams")` wraps the
      * WindowManager.LayoutParams class. Note: To invoke a constructor, call a method with the same
-     * name as the class. For example:
+     * name as the class.
      *
      * Generated from Godot docs: JavaClassWrapper.wrap
      */

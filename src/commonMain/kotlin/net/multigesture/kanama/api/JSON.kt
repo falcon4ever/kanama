@@ -101,7 +101,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
          * with `-1e99999`, but they will be interpreted correctly as infinity by most JSON parsers.
          * `@GDScript.NAN` will be replaced with `null`, and it will not be interpreted as NaN in JSON
          * parsers. If you expect non-finite numbers, consider passing your data through `from_native`
-         * first. Example output:
+         * first.
          *
          * Generated from Godot docs: JSON.stringify
          */
@@ -121,8 +121,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
 
         /**
          * Converts a native engine type to a JSON-compliant value. By default, objects are ignored for
-         * security reasons, unless `full_objects` is `true`. You can convert a native value to a JSON
-         * string like this:
+         * security reasons, unless `full_objects` is `true`.
          *
          * Generated from Godot docs: JSON.from_native
          */
@@ -132,8 +131,7 @@ class JSON(handle: GodotHandle) : Resource(handle) {
 
         /**
          * Converts a JSON-compliant value that was created with `from_native` back to native engine types.
-         * By default, objects are ignored for security reasons, unless `allow_objects` is `true`. You can
-         * convert a JSON string back to a native value like this:
+         * By default, objects are ignored for security reasons, unless `allow_objects` is `true`.
          *
          * Generated from Godot docs: JSON.to_native
          */

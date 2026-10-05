@@ -124,8 +124,7 @@ data class Basis(
   /**
    * Returns the orthonormalized version of this basis. An orthonormal basis is both orthogonal (the
    * axes are perpendicular to each other) and normalized (the axes have a length of `1.0`), which
-   * also means it can only represent a rotation. It is often useful to call this method to avoid
-   * rounding errors on a rotating basis:
+   * also means it can only represent a rotation.
    *
    * Generated from Godot docs: Basis.orthonormalized
    */

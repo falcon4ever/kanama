@@ -78,7 +78,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
 
     /**
      * Adds `library` to the animation player, under the key `name`. AnimationMixer has a global
-     * library by default with an empty string as key. For adding an animation to the global library:
+     * library by default with an empty string as key.
      *
      * Generated from Godot docs: AnimationMixer.add_animation_library
      */
@@ -380,7 +380,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Retrieve the motion delta of position with the `root_motion_track` as a `Vector3` that can be
      * used elsewhere. If `root_motion_track` is not a path to a track of type
      * `Animation.TrackType.POSITION_3D`, returns `Vector3(0, 0, 0)`. See also `root_motion_track` and
-     * `RootMotionView`. The most basic example is applying position to `CharacterBody3D`:
+     * `RootMotionView`.
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_position
      */
@@ -392,8 +392,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Retrieve the motion delta of rotation with the `root_motion_track` as a `Quaternion` that can be
      * used elsewhere. If `root_motion_track` is not a path to a track of type
      * `Animation.TrackType.ROTATION_3D`, returns `Quaternion(0, 0, 0, 1)`. See also
-     * `root_motion_track` and `RootMotionView`. The most basic example is applying rotation to
-     * `CharacterBody3D`:
+     * `root_motion_track` and `RootMotionView`.
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_rotation
      */
@@ -405,7 +404,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Retrieve the motion delta of scale with the `root_motion_track` as a `Vector3` that can be used
      * elsewhere. If `root_motion_track` is not a path to a track of type
      * `Animation.TrackType.SCALE_3D`, returns `Vector3(0, 0, 0)`. See also `root_motion_track` and
-     * `RootMotionView`. The most basic example is applying scale to `CharacterBody3D`:
+     * `RootMotionView`.
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_scale
      */
@@ -416,9 +415,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
     /**
      * Retrieve the blended value of the position tracks with the `root_motion_track` as a `Vector3`
      * that can be used elsewhere. This is useful in cases where you want to respect the initial key
-     * values of the animation. For example, if an animation with only one key `Vector3(0, 0, 0)` is
-     * played in the previous frame and then an animation with only one key `Vector3(1, 0, 1)` is
-     * played in the next frame, the difference can be calculated as follows:
+     * values of the animation.
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_position_accumulator
      */
@@ -430,10 +427,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Retrieve the blended value of the rotation tracks with the `root_motion_track` as a `Quaternion`
      * that can be used elsewhere. This is necessary to apply the root motion position correctly,
      * taking rotation into account. See also `get_root_motion_position`. Also, this is useful in cases
-     * where you want to respect the initial key values of the animation. For example, if an animation
-     * with only one key `Quaternion(0, 0, 0, 1)` is played in the previous frame and then an animation
-     * with only one key `Quaternion(0, 0.707, 0, 0.707)` is played in the next frame, the difference
-     * can be calculated as follows:
+     * where you want to respect the initial key values of the animation.
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_rotation_accumulator
      */
@@ -443,9 +437,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
 
     /**
      * Retrieve the blended value of the scale tracks with the `root_motion_track` as a `Vector3` that
-     * can be used elsewhere. For example, if an animation with only one key `Vector3(1, 1, 1)` is
-     * played in the previous frame and then an animation with only one key `Vector3(2, 2, 2)` is
-     * played in the next frame, the difference can be calculated as follows:
+     * can be used elsewhere.
      *
      * Generated from Godot docs: AnimationMixer.get_root_motion_scale_accumulator
      */

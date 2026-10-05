@@ -86,7 +86,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
      * `/index.php`. When sending requests to an HTTP proxy server, it should be an absolute URL. For
      * `HTTPClient.Method.OPTIONS` requests, `*` is also allowed. For `HTTPClient.Method.CONNECT`
      * requests, it should be the authority component (`host:port`). `headers` are HTTP request
-     * headers. To create a POST request with query strings to push to the server, do:
+     * headers.
      *
      * Generated from Godot docs: HTTPClient.request
      */
@@ -261,7 +261,7 @@ class HTTPClient(handle: GodotHandle) : RefCounted(handle) {
 
     /**
      * Generates a GET/POST application/x-www-form-urlencoded style query string from a provided
-     * dictionary, e.g.:
+     * dictionary, e.g..
      *
      * Generated from Godot docs: HTTPClient.query_string_from_dict
      */

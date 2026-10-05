@@ -1,8 +1,9 @@
 package net.multigesture.kanama.api
 
-import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmStatic
+import net.multigesture.kanama.binding.runtime.ObjectCalls
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Represents a mouse button being pressed or released.
@@ -118,22 +119,21 @@ class InputEventMouseButton(handle: GodotHandle) : InputEventMouse(handle) {
         fun fromHandle(handle: GodotHandle): InputEventMouseButton? =
             wrapBorrowed(handle.segment)
 
-        @JvmStatic
-        fun from(value: GodotObject): InputEventMouseButton? =
-            if (value.isClass("InputEventMouseButton")) RefCounted.retained(InputEventMouseButton(value.handle)) else null
+        internal fun wrapOwned(handle: RawSegment): InputEventMouseButton? =
+            if (handle.address() == 0L) null else RefCounted.owned(InputEventMouseButton(GodotHandle(handle)))
 
-        // Instantiate an InputEventMouseButton (owned: close() it, or `use { }`; task 128 C -- the same
-        // create() on desktop, iOS and Web, for registering mouse-button input actions portably).
+        internal fun wrapBorrowed(handle: RawSegment): InputEventMouseButton? =
+            if (handle.address() == 0L) null else InputEventMouseButton(GodotHandle(handle))
+
+        // Instantiate an InputEventMouseButton.
         @JvmStatic
         fun create(): InputEventMouseButton =
             RefCounted.owned(InputEventMouseButton(GodotHandle(ObjectCalls.constructObject("InputEventMouseButton"))))
 
-        internal fun wrapOwned(handle: MemorySegment): InputEventMouseButton? =
-            if (handle.address() == 0L) null else RefCounted.owned(InputEventMouseButton(GodotHandle(handle)))
-
-        internal fun wrapBorrowed(handle: MemorySegment): InputEventMouseButton? =
-            if (handle.address() == 0L) null else InputEventMouseButton(GodotHandle(handle))
-
+        // Downcast a GodotObject to InputEventMouseButton (null if not).
+        @JvmStatic
+        fun from(value: GodotObject): InputEventMouseButton? =
+            if (value.isClass("InputEventMouseButton")) RefCounted.retained(InputEventMouseButton(value.handle)) else null
 
         private const val SET_FACTOR_HASH = 373806689L
         private val setFactorBind by lazy {

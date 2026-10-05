@@ -459,27 +459,27 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
         companion object {
             /**
              * The Euclidean heuristic (https://en.wikipedia.org/wiki/Euclidean_distance) to be used for the
-             * pathfinding using the following formula:
+             * pathfinding using the following formula.
              *
              * Generated from Godot docs: AStarGrid2D.HEURISTIC_EUCLIDEAN
              */
             val EUCLIDEAN: Heuristic get() = Heuristic(0L)
             /**
              * The Manhattan heuristic (https://en.wikipedia.org/wiki/Taxicab_geometry) to be used for the
-             * pathfinding using the following formula:
+             * pathfinding using the following formula.
              *
              * Generated from Godot docs: AStarGrid2D.HEURISTIC_MANHATTAN
              */
             val MANHATTAN: Heuristic get() = Heuristic(1L)
             /**
-             * The Octile heuristic to be used for the pathfinding using the following formula:
+             * The Octile heuristic to be used for the pathfinding using the following formula.
              *
              * Generated from Godot docs: AStarGrid2D.HEURISTIC_OCTILE
              */
             val OCTILE: Heuristic get() = Heuristic(2L)
             /**
              * The Chebyshev heuristic (https://en.wikipedia.org/wiki/Chebyshev_distance) to be used for the
-             * pathfinding using the following formula:
+             * pathfinding using the following formula.
              *
              * Generated from Godot docs: AStarGrid2D.HEURISTIC_CHEBYSHEV
              */

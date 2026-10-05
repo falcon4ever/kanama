@@ -135,8 +135,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      * The velocity of the MIDI message. This value ranges from `0` to `127`. For a musical keyboard,
      * this corresponds to how quickly the key was pressed, and is rarely above `110` in practice.
      * Note: Some MIDI devices may send a `MIDIMessage.NOTE_ON` message with `0` velocity and expect it
-     * to be treated the same as a `MIDIMessage.NOTE_OFF` message. If necessary, this can be handled
-     * with a few lines of code:
+     * to be treated the same as a `MIDIMessage.NOTE_OFF` message.
      *
      * Generated from Godot docs: InputEventMIDI.set_velocity
      */
@@ -149,8 +148,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      * The velocity of the MIDI message. This value ranges from `0` to `127`. For a musical keyboard,
      * this corresponds to how quickly the key was pressed, and is rarely above `110` in practice.
      * Note: Some MIDI devices may send a `MIDIMessage.NOTE_ON` message with `0` velocity and expect it
-     * to be treated the same as a `MIDIMessage.NOTE_OFF` message. If necessary, this can be handled
-     * with a few lines of code:
+     * to be treated the same as a `MIDIMessage.NOTE_OFF` message.
      *
      * Generated from Godot docs: InputEventMIDI.get_velocity
      */

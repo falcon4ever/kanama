@@ -208,8 +208,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * The connections between `GraphNode`s. A connection is represented as a `Dictionary` in the form
-     * of:
+     * The connections between `GraphNode`s.
      *
      * Generated from Godot docs: GraphEdit.set_connections
      */
@@ -218,8 +217,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * The connections between `GraphNode`s. A connection is represented as a `Dictionary` in the form
-     * of:
+     * The connections between `GraphNode`s.
      *
      * Generated from Godot docs: GraphEdit.get_connection_list
      */
@@ -238,8 +236,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
 
     /**
      * Returns the closest connection to the given point in screen space. If no connection is found
-     * within `max_distance` pixels, an empty `Dictionary` is returned. A connection is represented as
-     * a `Dictionary` in the form of:
+     * within `max_distance` pixels, an empty `Dictionary` is returned.
      *
      * Generated from Godot docs: GraphEdit.get_closest_connection_at_point
      */
@@ -248,8 +245,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns an `Array` containing a list of all connections for `node`. A connection is represented
-     * as a `Dictionary` in the form of:
+     * Returns an `Array` containing a list of all connections for `node`.
      *
      * Generated from Godot docs: GraphEdit.get_connection_list_from_node
      */
@@ -258,8 +254,7 @@ class GraphEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns an `Array` containing the list of connections that intersect with the given `Rect2`. A
-     * connection is represented as a `Dictionary` in the form of:
+     * Returns an `Array` containing the list of connections that intersect with the given `Rect2`.
      *
      * Generated from Godot docs: GraphEdit.get_connections_intersecting_with_rect
      */

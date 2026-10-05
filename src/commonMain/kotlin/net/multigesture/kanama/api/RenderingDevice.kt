@@ -847,8 +847,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Starts a list of raster drawing commands created with the `draw_*` methods. The returned value
      * should be passed to other `draw_list_*` functions. Multiple draw lists cannot be created at the
-     * same time; you must finish the previous draw list first using `draw_list_end`. A simple drawing
-     * operation might look like this (code is not a complete example):
+     * same time; you must finish the previous draw list first using `draw_list_end`.
      *
      * Generated from Godot docs: RenderingDevice.draw_list_begin
      */
@@ -1008,8 +1007,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Starts a list of compute commands created with the `compute_*` methods. The returned value
      * should be passed to other `compute_list_*` functions. Multiple compute lists cannot be created
-     * at the same time; you must finish the previous compute list first using `compute_list_end`. A
-     * simple compute operation might look like this (code is not a complete example):
+     * at the same time; you must finish the previous compute list first using `compute_list_end`.
      *
      * Generated from Godot docs: RenderingDevice.compute_list_begin
      */
@@ -1091,8 +1089,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Starts a list of raytracing commands. The returned value should be passed to other
      * `raytracing_list_*` functions. Multiple raytracing lists cannot be created at the same time; you
-     * must finish the previous raytracing list first using `raytracing_list_end`. A simple raytracing
-     * operation might look like this (code is not a complete example):
+     * must finish the previous raytracing list first using `raytracing_list_end`.
      *
      * Generated from Godot docs: RenderingDevice.raytracing_list_begin
      */
@@ -3830,8 +3827,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
 
         companion object {
             /**
-             * Optionally, set this flag if you wish to use `buffer_get_device_address` functionality. You must
-             * first check the GPU supports it:
+             * Optionally, set this flag if you wish to use `buffer_get_device_address` functionality.
              *
              * Generated from Godot docs: RenderingDevice.BUFFER_CREATION_DEVICE_ADDRESS_BIT
              */
@@ -3846,8 +3842,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
              */
             val AS_STORAGE_BIT: BufferCreationBits get() = BufferCreationBits(2L)
             /**
-             * Allows usage of this buffer as input data for an acceleration structure build operation. You
-             * must first check that the GPU supports it:
+             * Allows usage of this buffer as input data for an acceleration structure build operation.
              *
              * Generated from Godot docs: RenderingDevice.BUFFER_CREATION_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT
              */

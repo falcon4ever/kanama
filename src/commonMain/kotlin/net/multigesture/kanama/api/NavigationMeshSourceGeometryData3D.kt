@@ -183,7 +183,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
 
     /**
      * Sets the projected obstructions with an Array of Dictionaries with the following key value
-     * pairs:
+     * pairs.
      *
      * Generated from Godot docs: NavigationMeshSourceGeometryData3D.set_projected_obstructions
      */
