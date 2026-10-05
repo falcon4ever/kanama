@@ -75,7 +75,9 @@ Desktop, Android and iOS; Web gets `Signal0`/`Signal1` for the signals its wrapp
   GDScript `emit_signal` is unchecked) is reported as a script error naming the signal and the
   lambda is not called. `SignalArgType` (`LONG`, `DOUBLE`, `STRING`, `objectOf`, `enumOf`,
   `valueOf`, …) gives a runtime-declared signal the same handle:
-  `Signal1(events, "health_changed", SignalArgType.LONG)`.
+  `Signal1(events, "health_changed", SignalArgType.LONG)`. A `Color` argument (a script type since task 133 C)
+  is typed on desktop, Android, iOS and Web (`SignalArgType.valueOf<Color>`, `@Signal fun
+  tinted(color: Color)`); Web reads it, like every Web float, in the protocol-30 packing.
 - A property that would collide with a member of its class, an ancestor or a descendant gets a
   `Signal` suffix (decided by the generator, `signal_accessor_names`); no Godot 4.7.2 signal
   collides, so none is renamed. `X.Signals` string constants stay.

@@ -588,7 +588,7 @@ check "TypedSignalSmoke sync typed_connect=true one_shot=1 receiver_freed_fired=
 check "signal 'kanama_typed': argument 1: expected Vector2, got Long"
 # task 134 C review: P1 a RefCounted argument kept past its emission / returned by await is owned;
 # P2 a closed one-shot and cancelled awaits leave no connection; P6 a null body reaches the lambda.
-check "TypedSignalSmoke review kept_event_alive=true awaited_event_alive=true one_shot_closed_left=0 awaits_connected=5 awaits_cancelled_left=0 null_body_hits=1 null_body=true"
+check "TypedSignalSmoke review kept_event_alive=true awaited_event_alive=true one_shot_closed_left=0 awaits_connected=5 awaits_cancelled_left=0 null_body_hits=1 null_body=true color=\\(1\\.0, 0\\.5, 0\\.25, 1\\.0\\)"
 check "TypedSignalSmoke async deferred_later=1 await_signal0=true await_pair=7,seven await_cancelled_on_free=true released=true"
 # task 133 -- script authoring like GDScript (script_access_smoke.tscn)
 check "ScriptAccessSmoke sync before_ready=true node=true wrong_type=true missing=true script=true no_script=true is_script=true as_script=true cast=true require_as=true preload=true preload_wrong=true instantiate=true tree=true orphan_tree=true"

@@ -10,12 +10,14 @@ import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.InputEvent
 import net.multigesture.kanama.api.KanamaScript
 import net.multigesture.kanama.api.Node
+import net.multigesture.kanama.api.Signal1
 import net.multigesture.kanama.api.Signal2
 import net.multigesture.kanama.api.Signal3
 import net.multigesture.kanama.api.SignalArgType
 import net.multigesture.kanama.api.tree
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.SignalCallbackRegistry
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 
 /**
@@ -152,6 +154,11 @@ class TypedSignalSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
       nullBody = body == null
     }
     probe.call("emit_null_shape", area)
+    // Color (task 133 C made it a script type): a typed handle delivers and emits it.
+    owner.addUserSignal("kanama_color")
+    val tinted = Signal1(owner, "kanama_color", SignalArgType.valueOf<Color>("Color", Color::class))
+    var tint = ""
+    tinted.connect { c -> tint = c.toString() }.use { tinted.emit(Color(1.0, 0.5, 0.25, 1.0)) }
 
     launch {
       nextFrame()
@@ -168,7 +175,7 @@ class TypedSignalSmoke(godotObject: GodotHandle) : KanamaScript<Node>(godotObjec
       System.err.println(
         "[kanama:kt] TypedSignalSmoke review kept_event_alive=$keptAlive awaited_event_alive=$awaitedAlive " +
           "one_shot_closed_left=$oneShotLeft awaits_connected=$awaitsConnected awaits_cancelled_left=$awaitsLeft " +
-          "null_body_hits=$shapeHits null_body=$nullBody"
+          "null_body_hits=$shapeHits null_body=$nullBody color=$tint"
       )
       ObjectCalls.destroyObject(stale.handle.segment)
       ObjectCalls.destroyObject(area.handle.segment)

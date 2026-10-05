@@ -406,15 +406,29 @@ class GodotSignal internal constructor(private val owner: GodotObject, internal 
   }
 
   internal companion object {
+    // Floats arrive in the protocol-30 packing (`WebPackedFloats`: NaN and the infinities kept).
     fun parseVector2Packed(packed: String): Vector2 =
-      packed.split(',').let { Vector2(it[0].toDouble(), it[1].toDouble()) }
+      packed.split(',').let { Vector2(WebPackedFloats.decode(it[0]), WebPackedFloats.decode(it[1])) }
 
     fun parseVector2iPacked(packed: String): Vector2i =
       packed.split(',').let { Vector2i(it[0].trim().toInt(), it[1].trim().toInt()) }
 
     fun parseVector3Packed(packed: String): Vector3 =
-      packed.split(',').let { Vector3(it[0].toDouble(), it[1].toDouble(), it[2].toDouble()) }
+      packed.split(',').let {
+        Vector3(WebPackedFloats.decode(it[0]), WebPackedFloats.decode(it[1]), WebPackedFloats.decode(it[2]))
+      }
+
+    fun parseColorPacked(packed: String): Color =
+      packed.split(',').let {
+        Color(
+          WebPackedFloats.decode(it[0]),
+          WebPackedFloats.decode(it[1]),
+          WebPackedFloats.decode(it[2]),
+          WebPackedFloats.decode(it[3]),
+        )
+      }
   }
+
 }
 
 /** A live bound connection; [close] disconnects and releases the Kotlin callback. */

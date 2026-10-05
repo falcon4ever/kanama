@@ -32,6 +32,7 @@ class TypedSignalAccessorsTest {
         listOf(ArgModel("res", TypeMapping.OBJECT, "$api.Resource", nullable = true)),
       ),
       // No typed decode for a primitive packed array: the signal keeps only its helpers.
+      SignalModel("tinted", listOf(ArgModel("color", TypeMapping.COLOR))),
       SignalModel("raw", listOf(ArgModel("ints", TypeMapping.PACKED_INT32_ARRAY))),
     )
 
@@ -66,6 +67,9 @@ class TypedSignalAccessorsTest {
     )
     has("$api.SignalArgType.objectOf(\"Node3D\") { $api.Node3D(it) }")
     has("val demo.Player.maybe: $api.Signal1<$api.Resource?>")
+    has(
+      "$api.SignalArgType.valueOf<net.multigesture.kanama.types.Color>(\"Color\", net.multigesture.kanama.types.Color::class)"
+    )
     has("$api.SignalArgType.nullableObjectOf(\"Resource\") { $api.Resource(it) }")
     assertFalse(
       source.contains("val demo.Player.raw:"),

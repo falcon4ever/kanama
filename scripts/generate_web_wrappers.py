@@ -1733,6 +1733,7 @@ WEB_SIGNAL_SCALARS = {
     "Vector2": ("Vector2", 'SignalArgType.valueOf<Vector2>("Vector2", Vector2::class)'),
     "Vector2i": ("Vector2i", 'SignalArgType.valueOf<Vector2i>("Vector2i", Vector2i::class)'),
     "Vector3": ("Vector3", 'SignalArgType.valueOf<Vector3>("Vector3", Vector3::class)'),
+    "Color": ("Color", 'SignalArgType.valueOf<Color>("Color", Color::class)'),
 }
 
 

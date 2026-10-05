@@ -2660,7 +2660,8 @@ internal fun signalArgTypeExpr(arg: ArgModel): String? {
 
 /**
  * Whether the Web bridge delivers [arg] to a typed lambda: it carries one argument, an object or a
- * packed scalar (`int`, `float`, `bool`, `String`, `Vector2`, `Vector2i`, `Vector3`, an enum).
+ * packed scalar (`int`, `float`, `bool`, `String`, `Vector2`, `Vector2i`, `Vector3`, `Color`, an
+ * enum).
  */
 internal fun webDeliversSignalArg(arg: ArgModel): Boolean =
   arg.godotEnum != null ||
@@ -2675,6 +2676,7 @@ internal fun webDeliversSignalArg(arg: ArgModel): Boolean =
         TypeMapping.VECTOR2,
         TypeMapping.VECTOR2I,
         TypeMapping.VECTOR3,
+        TypeMapping.COLOR,
       )
 
 /** One `@Signal` with a typed decode for every argument (task 134 D4). */

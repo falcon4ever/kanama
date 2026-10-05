@@ -4,6 +4,8 @@ import kotlin.coroutines.resume
 import kotlin.reflect.KClass
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import net.multigesture.kanama.web.WebPackedFloats
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector2i
 import net.multigesture.kanama.types.Vector3
@@ -16,7 +18,7 @@ fun interface SignalObjectWrapper<out T> {
 /**
  * The Web counterpart of the native `SignalArgType` (task 134 D4): how a typed signal's argument
  * arrives. The Web bridge delivers at most one argument, as an object handle or a packed scalar
- * (`int`, `float`, `bool`, `String`/`StringName`, `Vector2`, `Vector2i`, `Vector3`, a Godot enum);
+ * (`int`, `float`, `bool`, `String`/`StringName`, `Vector2`, `Vector2i`, `Vector3`, `Color`, a Godot enum);
  * any other type throws [UnsupportedOperationException] when connected, never a silent default.
  */
 abstract class SignalArgType<T> internal constructor(
@@ -50,7 +52,7 @@ abstract class SignalArgType<T> internal constructor(
     val LONG: SignalArgType<Long> = Scalar("int") { it.trim().toLong() }
 
     /** Godot `float`. */
-    val DOUBLE: SignalArgType<Double> = Scalar("float") { it.trim().toDouble() }
+    val DOUBLE: SignalArgType<Double> = Scalar("float") { WebPackedFloats.decode(it) }
 
     /** Godot `bool`. */
     val BOOLEAN: SignalArgType<Boolean> = Scalar("bool") { it == "1" }
@@ -99,13 +101,14 @@ abstract class SignalArgType<T> internal constructor(
         override fun write(value: E): Any? = raw(value)
       }
 
-    /** A value type: `Vector2`, `Vector2i` and `Vector3` are delivered on Web; others throw on connect. */
+    /** A value type: `Vector2`, `Vector2i`, `Vector3` and `Color` are delivered on Web; others throw on connect. */
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> valueOf(godotType: String, type: KClass<*>): SignalArgType<T> =
       when (type) {
         Vector2::class -> Scalar(godotType) { packed -> GodotSignal.parseVector2Packed(packed) as T }
         Vector2i::class -> Scalar(godotType) { packed -> GodotSignal.parseVector2iPacked(packed) as T }
         Vector3::class -> Scalar(godotType) { packed -> GodotSignal.parseVector3Packed(packed) as T }
+        Color::class -> Scalar(godotType) { packed -> GodotSignal.parseColorPacked(packed) as T }
         else ->
           object : SignalArgType<T>(godotType) {
             override fun connect(
