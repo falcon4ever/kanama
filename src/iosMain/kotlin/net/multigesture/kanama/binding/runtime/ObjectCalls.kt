@@ -43229,6 +43229,38 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     ObjectCalls.destroyObject(node.segment)
   }
 
+  // Task 129 A — a Signal ARGUMENT through the generated ptrcallWithSignalArgRetObject (PT_SIGNAL:
+  // the shim builds Signal(Object, StringName) for the call and destroys it after). The sequence
+  // await(node.renamed) -> callback(node.queue_free) must PARK on the await and run the callback
+  // only once the signal fires, so the rows tell a working Signal argument from a Signal the
+  // engine never connected to (callback never runs) and from one it ignored (callback runs at
+  // once). The bounded spin mirrors the desktop HelloScript probe: the await's start() resets its
+  // received flag, so the emission must come after the tween reached it.
+  run {
+    val faultsBefore = ObjectCalls.faultCount()
+    val node = net.multigesture.kanama.api.Node(GodotHandle(ObjectCalls.constructObject("Node")))
+    val tween = net.multigesture.kanama.api.SceneTree.active().createTween()
+    val awaitTweener = tween.tweenAwait(node.signal("renamed"))
+    check("tween-await(Signal arg -> AwaitTweener)", awaitTweener.isClass("AwaitTweener"))
+    tween.tweenCallback(node, "queue_free")
+    var spin = 0
+    while (spin < 8 && tween.customStep(0.05)) spin++
+    check(
+      "tween-await(parks on the await: callback not run before the signal)",
+      !node.isQueuedForDeletion(),
+    )
+    node.emitSignal("renamed")
+    tween.customStep(0.05)
+    val resumed = node.isQueuedForDeletion()
+    check("tween-await(signal fires -> the callback after the await runs)", resumed)
+    check("tween-await(no kanama_ios_fault raised)", ObjectCalls.faultCount() == faultsBefore)
+    awaitTweener.close()
+    tween.kill()
+    tween.close()
+    // queue_free frees the node at the end of this frame; free it here only if it never ran.
+    if (!resumed) ObjectCalls.destroyObject(node.segment)
+  }
+
   // task 100 (parcel 10), moved here by task 117 P2' follow-up 4 — Array[Dictionary] ARGUMENT
   // through the GENERATED helper (packTypedDictionaryArrayDesc -> PT_TYPED_ARRAY_BLOB -> nested
   // blobs the boxer rebuilds), against a REAL RenderingServer instance: the typed Array[Dictionary]
