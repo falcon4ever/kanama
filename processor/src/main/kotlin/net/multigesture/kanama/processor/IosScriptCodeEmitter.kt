@@ -41,47 +41,6 @@ private val lifecycleIosVirtuals =
     "_unhandled_key_input",
   )
 
-// Return types the iOS callVReturning encode + C kanama_ios_pt_return_to_variant can marshal.
-// POD/value returns (Bool/Int/Float/Vector2/Vector2i) landed in Phase 5.3b; STRING is the first
-// non-POD (variable-length, destroy-after-read) virtual return, task 13. Task 29 adds Vector3 and
-// RID (POD/inline), the fixed-element Packed*Array families (desc + flat element buffer),
-// Dictionary and generic Array (tagged-entry blobs). NOT mirrored on iOS (by design, see
-// wrapper-maintenance.md): RECT2/AABB/TRANSFORM2D/TRANSFORM3D/PROJECTION — Transform3D/Projection
-// exceed the 32-byte PT return scratch and none has a 4.7 virtual whose args are declarable, so
-// the C boxing for those four waits for the iOS wrapper-family follow-up slice.
-private val iosReturnTypes =
-  setOf(
-    TypeMapping.BOOL,
-    TypeMapping.INT,
-    TypeMapping.FLOAT,
-    TypeMapping.VECTOR2,
-    TypeMapping.VECTOR2I,
-    TypeMapping.VECTOR3,
-    // Task 133 C2: Color returns ride encodeIosReturn's PT_COLOR (4x float32).
-    TypeMapping.COLOR,
-    TypeMapping.STRING,
-    TypeMapping.PACKED_STRING_ARRAY,
-    // Variant returns reuse the per-runtime-type encodeIosReturn dispatch (audited inner types;
-    // an unaudited inner value serializes as nil — a valid Variant). task 13.
-    TypeMapping.VARIANT,
-    // Object returns: encodeIosReturn ships the owner handle PT_OBJECT-tagged (task 115; before, a
-    // `fun target(): GodotObject?` was warned as unmarshalled and dropped). Only `GodotObject?`
-    // resolves to OBJECT in the shared processor (fqToTypeMapping); typed wrapper returns such as
-    // `Node?` are still rejected at model time on every platform.
-    TypeMapping.OBJECT,
-    TypeMapping.RID,
-    TypeMapping.PACKED_BYTE_ARRAY,
-    TypeMapping.PACKED_INT32_ARRAY,
-    TypeMapping.PACKED_INT64_ARRAY,
-    TypeMapping.PACKED_FLOAT32_ARRAY,
-    TypeMapping.PACKED_FLOAT64_ARRAY,
-    TypeMapping.PACKED_VECTOR2_ARRAY,
-    TypeMapping.PACKED_VECTOR3_ARRAY,
-    TypeMapping.PACKED_COLOR_ARRAY,
-    TypeMapping.DICTIONARY,
-    TypeMapping.ARRAY,
-  )
-
 /**
  * Task 133 value types: every one travels as its raw Godot bytes (single precision on iOS)
  * PT-tagged, in all four directions — property set (`kanama_ios_script_instance_set_property` ->
@@ -106,6 +65,51 @@ internal val IOS_RAW_VALUE_TYPES: Set<TypeMapping> =
     TypeMapping.PROJECTION,
   )
 
+// Return types the iOS callVReturning encode + C kanama_ios_pt_return_to_variant can marshal.
+// POD/value returns (Bool/Int/Float/Vector2/Vector2i) landed in Phase 5.3b; STRING is the first
+// non-POD (variable-length, destroy-after-read) virtual return, task 13. Task 29 adds Vector3 and
+// RID (POD/inline), the fixed-element Packed*Array families (desc + flat element buffer),
+// Dictionary and generic Array (tagged-entry blobs). NOT mirrored on iOS (by design, see
+// wrapper-maintenance.md): RECT2/AABB/TRANSFORM2D/TRANSFORM3D/PROJECTION — Transform3D/Projection
+// exceed the 32-byte PT return scratch and none has a 4.7 virtual whose args are declarable, so
+// the C boxing for those four waits for the iOS wrapper-family follow-up slice. Task 133 then
+// shipped every value type as its raw bytes (IOS_RAW_VALUE_TYPES), up to a Projection's 64 bytes,
+// and task 131 N7 put them and NodePath (encodeIosReturn's PT_NODE_PATH) in this one set, which
+// methods and virtuals share: every TypeMapping returns on iOS today (IosSkipTest pins that).
+internal val IOS_RETURN_TYPES: Set<TypeMapping> =
+  setOf(
+    TypeMapping.BOOL,
+    TypeMapping.INT,
+    TypeMapping.FLOAT,
+    TypeMapping.VECTOR2,
+    TypeMapping.VECTOR2I,
+    TypeMapping.VECTOR3,
+    // Task 133 C2: Color returns ride encodeIosReturn's PT_COLOR (4x float32).
+    TypeMapping.COLOR,
+    TypeMapping.STRING,
+    TypeMapping.NODE_PATH,
+    TypeMapping.PACKED_STRING_ARRAY,
+    // Variant returns reuse the per-runtime-type encodeIosReturn dispatch (audited inner types;
+    // an unaudited inner value serializes as nil — a valid Variant). task 13.
+    TypeMapping.VARIANT,
+    // Object returns: encodeIosReturn ships the owner handle PT_OBJECT-tagged (task 115; before, a
+    // `fun target(): GodotObject?` was warned as unmarshalled and dropped). Only `GodotObject?`
+    // resolves to OBJECT in the shared processor (fqToTypeMapping); typed wrapper returns such as
+    // `Node?` are still rejected at model time on every platform.
+    TypeMapping.OBJECT,
+    TypeMapping.RID,
+    TypeMapping.PACKED_BYTE_ARRAY,
+    TypeMapping.PACKED_INT32_ARRAY,
+    TypeMapping.PACKED_INT64_ARRAY,
+    TypeMapping.PACKED_FLOAT32_ARRAY,
+    TypeMapping.PACKED_FLOAT64_ARRAY,
+    TypeMapping.PACKED_VECTOR2_ARRAY,
+    TypeMapping.PACKED_VECTOR3_ARRAY,
+    TypeMapping.PACKED_COLOR_ARRAY,
+    TypeMapping.DICTIONARY,
+    TypeMapping.ARRAY,
+  ) + IOS_RAW_VALUE_TYPES
+
 internal data class IosMethod(
   val godotName: String,
   val kotlinName: String,
@@ -114,7 +118,7 @@ internal data class IosMethod(
   val args: List<ArgModel>,
   // Phase 5.3b: return type for value-returning methods/virtuals. `null` => void (callV path).
   // A supported non-null type routes to `callVReturning`, which encodes the result PT-tagged for
-  // the engine. Unsupported return types are skipped + warned (return dropped, as before 5.3b).
+  // the engine. A return type outside IOS_RETURN_TYPES is an iOS skip (task 131 N7: a build error).
   val returnType: TypeMapping? = null,
   // Task 128 B: a Godot enum return is encoded as its raw `.value` (INT64), not the boxed class.
   val returnGodotEnum: GodotEnumRef? = null,
@@ -205,11 +209,11 @@ internal data class IosScript(
 )
 
 /**
- * KSP option (Gradle property `-PkanamaIosAllowExportSkips=true`) that turns the iOS
- *
- * @Export skips back into warnings (task 131 item 9).
+ * KSP option (Gradle property `-PkanamaIosAllowSkips=true`) that turns every iOS skip -- a @Export
+ * iOS cannot deliver (task 131 item 9), a method or virtual iOS cannot dispatch (task 131 N7) --
+ * from a build error back into a warning.
  */
-internal const val ALLOW_EXPORT_SKIPS_OPTION = "kanamaIosAllowExportSkips"
+internal const val ALLOW_IOS_SKIPS_OPTION = "kanamaIosAllowSkips"
 
 internal class IosScriptCodeEmitter(
   inputs: List<IosScriptInput>,
@@ -218,34 +222,63 @@ internal class IosScriptCodeEmitter(
   // @Export the engine can set but not read back — the exact get/set asymmetry that shipped
   // write-only value types in the iOS backend and broke multiplayer replication on device.
   private val error: (String) -> Unit = {},
-  // Task 131 item 9 (F25): a @Export iOS cannot deliver used to be a warning, and the
-  // property silently kept its Kotlin default on iOS (the inspector value vanished on a Supported
-  // platform). It is now a build error unless the project opts in with
-  // -PkanamaIosAllowExportSkips=true, which turns each one back into the warning.
-  private val allowExportSkips: Boolean = false,
+  // Task 131 item 9 (F25) and N7: a declaration iOS cannot serve -- a @Export it cannot deliver,
+  // a method whose argument it cannot pass, a virtual whose return it cannot marshal -- used to be
+  // a warning, and the property kept its Kotlin default or the method silently never ran on iOS
+  // while it worked on desktop. Each is now a build error unless the project opts in with
+  // -PkanamaIosAllowSkips=true, which turns each one back into the warning.
+  private val allowSkips: Boolean = false,
 ) {
-  /** `<Class>.<kotlinName>` of every property already reported by [exportSkip]. */
-  private val reportedExportSkips = mutableSetOf<String>()
+  /** Every declaration already reported by [iosSkip], keyed `<kind>:<Class>.<member>`. */
+  private val reportedSkips = mutableSetOf<String>()
 
   // Sort by resourcePath to match the old task's `.sortedBy { it.resourcePath }`.
   private val scripts: List<IosScript> =
     inputs.sortedBy { it.resourcePath }.map { it.toIosScript() }
 
   /**
-   * Reports a @Export iOS does not deliver: a build error, or with the opt-in a warning. Each
-   * property is reported once (the specific reason first, the delivery guardrail after).
+   * Reports a declaration iOS does not serve: a build error naming [consequence] and [fix], or with
+   * the opt-in a warning. Each [key] is reported once (the specific reason first; a later guardrail
+   * on the same declaration is dropped).
    */
-  private fun exportSkip(className: String, kotlinName: String, reason: String) {
-    if (!reportedExportSkips.add("$className.$kotlinName")) return
-    if (allowExportSkips) {
-      warn("$reason (allowed by $ALLOW_EXPORT_SKIPS_OPTION)")
+  private fun iosSkip(key: String, reason: String, consequence: String, fix: String) {
+    if (!reportedSkips.add(key)) return
+    if (allowSkips) {
+      warn("$reason (allowed by $ALLOW_IOS_SKIPS_OPTION)")
     } else {
       error(
-        "$reason. On iOS the scene and inspector value of this property would be dropped. " +
-          "Change the property type, or accept the skip with " +
-          "-P$ALLOW_EXPORT_SKIPS_OPTION=true (KSP option $ALLOW_EXPORT_SKIPS_OPTION)."
+        "$reason. $consequence. $fix, or accept the skip with " +
+          "-P$ALLOW_IOS_SKIPS_OPTION=true (KSP option $ALLOW_IOS_SKIPS_OPTION)."
       )
     }
+  }
+
+  /** A @Export iOS does not deliver (task 131 item 9). */
+  private fun exportSkip(className: String, kotlinName: String, reason: String) =
+    iosSkip(
+      "export:$className.$kotlinName",
+      reason,
+      "On iOS the scene and inspector value of this property would be dropped",
+      "Change the property type",
+    )
+
+  /**
+   * A method or virtual whose argument iOS does not pass (task 131 N7): the engine's call would not
+   * reach it on iOS while it runs on desktop.
+   */
+  private fun methodArgSkip(className: String, method: IosMethod) {
+    val unsupported =
+      method.args
+        .filter { callArgExpr(0, it) == null }
+        .joinToString { "${it.name}: ${it.kotlinType}" }
+    iosSkip(
+      "method:$className.${method.kotlinName}",
+      "[kanama-ios] $className.${method.kotlinName} (godot: ${method.godotName}): argument " +
+        "$unsupported has a type iOS does not pass to a script method",
+      "On iOS a call to this method from Godot would not run",
+      "Use a supported parameter type (${iosCallArgTypeNames()}, a Godot object wrapper or a " +
+        "Godot enum)",
+    )
   }
 
   /** The combined registry file: `registerKanamaIosProjectScripts()` + bridge classes. */
@@ -326,8 +359,8 @@ internal class IosScriptCodeEmitter(
       builder.appendLine("    override val scriptInstance: Any get() = script")
       builder.appendLine()
       // Generic per-signature dispatch (Phase 3.3): one branch per method, each decoded arg
-      // cast/wrapped to its declared type. A method with an unaudited arg type is skipped +
-      // warned (no silent "wrong shape" drop).
+      // cast/wrapped to its declared type. A method with an arg type iOS does not pass gets no
+      // branch and is a build error unless the project opts in (task 131 N7, [methodArgSkip]).
       builder.appendLine(
         "    override fun callV(methodName: String, args: List<Any?>): Boolean = when (methodName) {"
       )
@@ -340,9 +373,7 @@ internal class IosScriptCodeEmitter(
               invocationByArgCount(method, exprs.map { it!! }, "script.${method.kotlinName}")
             builder.appendLine("        ${kotlinString(method.godotName)} -> { $invocation; true }")
           } else {
-            warn(
-              "[kanama-ios] ${script.className}.${method.kotlinName} (godot: ${method.godotName}) has an unaudited arg type — not dispatched on iOS"
-            )
+            methodArgSkip(script.className, method)
           }
         }
       builder.appendLine("        else -> false")
@@ -395,9 +426,7 @@ internal class IosScriptCodeEmitter(
             val returned = if (method.returnGodotEnum != null) "($invocation).value" else invocation
             builder.appendLine("        ${kotlinString(method.godotName)} -> $returned")
           } else {
-            warn(
-              "[kanama-ios] ${script.className}.${method.kotlinName} (godot: ${method.godotName}) has an unaudited arg type — not dispatched on iOS"
-            )
+            methodArgSkip(script.className, method)
           }
         }
         builder.appendLine("        else -> net.multigesture.kanama.ios.KanamaIosNoReturn")
@@ -779,7 +808,8 @@ internal class IosScriptCodeEmitter(
 
   private fun IosScriptInput.toIosScript(): IosScript {
     val methods =
-      (model.virtuals.mapNotNull { it.toIosMethod() } + model.methods.map { it.toIosMethod() })
+      (model.virtuals.mapNotNull { it.toIosMethod(className) } +
+          model.methods.map { it.toIosMethod(className) })
         .distinctBy { it.godotName }
     val properties =
       model.properties.map { it.toIosProperty(className) }.distinctBy { it.godotName }
@@ -822,31 +852,62 @@ internal class IosScriptCodeEmitter(
   // Phase 5.3a: arbitrary VOID @OverrideVirtual virtuals (e.g. _draw, _gui_input, drag-and-drop
   // _drop_data) dispatch through the same generic call path as a regular method — the engine
   // calls them on the script instance via the call callback once they appear in the method list.
-  // Value-returning virtuals (returnType != null) still need the iOS `callV` return-marshalling
-  // primitive (Phase 5.3b) and are skipped + warned until then.
-  private fun VirtualModel.toIosMethod(): IosMethod? =
+  // Value-returning virtuals (returnType != null) dispatch through `callVReturning` (Phase 5.3b),
+  // like value-returning methods; both share [IOS_RETURN_TYPES]. A return type outside it would
+  // leave the override never called (a virtual) or its value dropped (a method) on iOS, so it is a
+  // build error unless the project opts in (task 131 N7: it used to be a warning and a silent
+  // no-op).
+  private fun VirtualModel.toIosMethod(className: String): IosMethod? =
     when {
       virtualName in lifecycleIosVirtuals -> IosMethod(virtualName, kotlinMethodName, args)
       returnType == null -> IosMethod(virtualName, kotlinMethodName, args)
-      returnType in iosReturnTypes ->
+      returnType in IOS_RETURN_TYPES ->
         IosMethod(virtualName, kotlinMethodName, args, returnType, returnGodotEnum)
       else -> {
-        warn(
-          "[kanama-ios] $kotlinMethodName ($virtualName): @OverrideVirtual return type " +
-            "$returnType not yet marshalled on iOS (supported: Bool/Int/Float/Vector2/" +
-            "Vector2i/Vector3/String/RID/Packed*Array/Dictionary/Array/Variant/GodotObject) — silent no-op"
+        returnSkip(
+          className,
+          kotlinMethodName,
+          virtualName,
+          returnType,
+          "the engine would not call this override",
         )
         null
       }
     }
 
-  private fun MethodModel.toIosMethod(): IosMethod =
-    IosMethod(
+  private fun MethodModel.toIosMethod(className: String): IosMethod {
+    val returned = returnType?.takeIf { it in IOS_RETURN_TYPES }
+    if (returnType != null && returned == null) {
+      returnSkip(
+        className,
+        kotlinName,
+        godotName,
+        returnType,
+        "a call to this method would return nil",
+      )
+    }
+    return IosMethod(
       godotName = godotName,
       kotlinName = kotlinName,
       args = args,
-      returnType = returnType?.takeIf { it in iosReturnTypes || it in IOS_RAW_VALUE_TYPES },
+      returnType = returned,
       returnGodotEnum = returnGodotEnum,
+    )
+  }
+
+  private fun returnSkip(
+    className: String,
+    kotlinName: String,
+    godotName: String,
+    returnType: TypeMapping,
+    consequence: String,
+  ) =
+    iosSkip(
+      "method:$className.$kotlinName",
+      "[kanama-ios] $className.$kotlinName (godot: $godotName): return type ${returnType.kotlinType} " +
+        "is not marshalled on iOS",
+      "On iOS $consequence",
+      "Return a supported type (${IOS_RETURN_TYPES.joinToString { it.kotlinType.substringAfterLast('.') }})",
     )
 
   /** TypeMapping arg types the C inbound marshalling + decode handle (besides OBJECT wrappers). */
@@ -862,7 +923,14 @@ internal class IosScriptCodeEmitter(
       TypeMapping.VECTOR3,
       // Task 133 C2: the C call path tags a Color Variant PT_COLOR; decodeIosCallArg builds it.
       TypeMapping.COLOR,
+      // Task 131 N7: kanama_ios_marshal_variant_args already tags a RID Variant PT_RID for typed
+      // signal arguments; decodeIosCallArg builds the RID for a script method's argument too.
+      TypeMapping.RID,
     ) + IOS_RAW_VALUE_TYPES
+
+  /** The simple names of [iosCallArgTypes], for the error that names what is supported. */
+  private fun iosCallArgTypeNames(): String =
+    iosCallArgTypes.joinToString { it.kotlinType.substringAfterLast('.') }
 
   /**
    * The invocation of [callee] for a decoded `args` list. A method whose trailing parameters have
@@ -886,7 +954,7 @@ internal class IosScriptCodeEmitter(
   /**
    * Kotlin expression for call arg [i] (`args[i]` is the decoded value), cast/wrapped to its
    * declared type. Null when the arg type isn't marshalled by the iOS inbound path (the method is
-   * then skipped + warned, same boundary as before but keyed on audited type not call shape).
+   * then an iOS skip, a build error unless the project opts in: task 131 N7).
    */
   private fun callArgExpr(i: Int, a: ArgModel): String? {
     val cell = "args[$i]"

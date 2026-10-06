@@ -1775,6 +1775,8 @@ internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
     }
     IOS_PT_STRING -> ptr.toKString()
     IOS_PT_NODE_PATH -> NodePath(ptr.toKString())
+    // Task 131 N7: a RID argument of a script method (typed signals read it the same way).
+    IOS_PT_RID -> RID(ptr.reinterpret<LongVar>()[0])
     else -> decodeIosRawValue(tag, ptr)
   }
 }
@@ -1875,7 +1877,6 @@ internal class IosSignalArgReader : SignalArgReader {
     when (val tag = tag(index)) {
       IOS_PT_VOID -> null
       IOS_PT_OBJECT -> objectHandle(index)?.let { GodotObject(it) }
-      IOS_PT_RID -> RID(cell(index).reinterpret<LongVar>()[0])
       else ->
         if (tag >= IOS_ARG_UNMARSHALLED_BASE) mismatch(index, "Variant", tag)
         else decodeIosCallArg(tag, cell(index))
@@ -2741,6 +2742,16 @@ internal fun kanamaIosVariantReturnSelfTest(value: Any?): Int = memScoped {
   tag.value = IOS_PT_VOID
   encodeIosReturn(value, tag.ptr, buf)
   tag.value
+}
+
+// OBJECTCALLS-SELFTEST hook for a RID script-method argument (task 131 N7): the cell
+// kanama_ios_marshal_variant_args fills for a RID Variant (its 64-bit id, PT_RID-tagged), decoded
+// as the generated callV branch receives it.
+@OptIn(ExperimentalForeignApi::class)
+internal fun kanamaIosRidCallArgSelfTest(id: Long): Any? = memScoped {
+  val cell = alloc<LongVar>()
+  cell.value = id
+  decodeIosCallArg(IOS_PT_RID, cell.ptr.reinterpret())
 }
 
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)

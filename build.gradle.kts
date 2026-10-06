@@ -414,11 +414,9 @@ configure<com.google.devtools.ksp.gradle.KspExtension> {
     ),
   )
   arg("kanamaIosRegistryAsResource", "false")
-  // Task 131 item 9: an iOS @Export skip is a build error unless the project opts in.
-  arg(
-    "kanamaIosAllowExportSkips",
-    providers.gradleProperty("kanamaIosAllowExportSkips").orElse("false").get(),
-  )
+  // Task 131 item 9 / N7: an iOS skip (a @Export iOS cannot deliver, a method or virtual it cannot
+  // dispatch) is a build error unless the project opts in.
+  arg("kanamaIosAllowSkips", providers.gradleProperty("kanamaIosAllowSkips").orElse("false").get())
 }
 
 /**
