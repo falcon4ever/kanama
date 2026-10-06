@@ -1617,7 +1617,8 @@ fun appleSdkPath(sdk: String): String {
 
 /**
  * Compiles one C file of the iOS addon for [sdk]: the GDExtension shim, or the source-line lookup
- * (task 131 item 13), which a debug device build compiles with its generated [sourceLinesTable].
+ * (task 131 item 13), which a debug device build compiles with the table in [sourceLinesTable]
+ * (made by [sourceLinesTask]).
  */
 fun registerCompileIosCTask(
   name: String,
@@ -1625,7 +1626,8 @@ fun registerCompileIosCTask(
   minVersionFlag: String,
   source: RegularFile,
   outputObjectPath: Provider<RegularFile>,
-  sourceLinesTable: TaskProvider<*>? = null,
+  sourceLinesTask: TaskProvider<*>? = null,
+  sourceLinesTable: Provider<Directory>? = null,
 ) =
   tasks.register<Exec>(name) {
     group = "ios"
@@ -1633,9 +1635,13 @@ fun registerCompileIosCTask(
 
     inputs.file(source)
     inputs.file(layout.projectDirectory.file("gdextension/gdextension_interface.h"))
+    inputs.dir(iosHeaderDir)
     inputs.property("kanamaXcodeDeveloperDir", xcodeDeveloperDir)
     inputs.property("kanamaIosMinVersion", iosMinimumDeploymentTarget)
-    sourceLinesTable?.let { inputs.files(it) }
+    if (sourceLinesTask != null && sourceLinesTable != null) {
+      dependsOn(sourceLinesTask)
+      inputs.dir(sourceLinesTable)
+    }
     outputs.file(outputObjectPath)
 
     doFirst {
@@ -1643,7 +1649,7 @@ fun registerCompileIosCTask(
       outputObject.parentFile.mkdirs()
       val table =
         sourceLinesTable?.let {
-          listOf("-DKANAMA_IOS_SOURCE_LINES=1", "-I", it.get().outputs.files.singleFile.absolutePath)
+          listOf("-DKANAMA_IOS_SOURCE_LINES=1", "-I", it.get().asFile.absolutePath)
         }
       commandLine(
         listOf(
@@ -1659,6 +1665,8 @@ fun registerCompileIosCTask(
           "-fvisibility=hidden",
           "-I",
           layout.projectDirectory.dir("gdextension").asFile.absolutePath,
+          "-I",
+          iosHeaderDir.asFile.absolutePath,
         ) +
           table.orEmpty() +
           listOf("-c", source.asFile.absolutePath, "-o", outputObject.absolutePath)
@@ -1751,46 +1759,65 @@ fun iosRuntimeStaticLib(target: String, buildType: String): Provider<RegularFile
   layout.buildDirectory.file("bin/$target/${buildType}Static/libkanama_ios_runtime.a")
 
 /**
- * The iOS addon library for one [sdk] and [buildType]: the C shim, the source-line lookup and the
- * Kotlin/Native runtime of [target], combined into `lib/<sdk>/<buildType>/libkanama_ios.a`.
+ * The iOS addon library for one [sdk] and [buildType] ([variant] names its tasks, `DeviceDebug`):
+ * the C shim, the source-line lookup and the Kotlin/Native runtime of [target], combined into
+ * `lib/<sdk>/<buildType>/libkanama_ios.a`.
  */
 fun registerCombineIosLibTask(
-  name: String,
+  variant: String,
   sdk: String,
   minVersionFlag: String,
   target: String,
   buildType: String,
-  sourceLinesTable: TaskProvider<*>? = null,
+  linkTask: String,
+  sourceLinesTask: TaskProvider<*>? = null,
+  sourceLinesTable: Provider<Directory>? = null,
 ): TaskProvider<Exec> {
-  val variant = name.removePrefix("combineIos").removeSuffix("Lib")
-  val objects =
-    listOf(iosShimSource, iosSourceLinesSource).map { source ->
-      val objectName = source.asFile.nameWithoutExtension
-      registerCompileIosCTask(
-        "compileIos$variant${if (source == iosShimSource) "Shim" else "SourceLines"}",
-        sdk,
-        minVersionFlag,
-        source,
-        iosBuildDir.map { it.file("shim/$sdk/$buildType/$objectName.o") },
-        sourceLinesTable.takeIf { source == iosSourceLinesSource },
-      )
-    }
-  return tasks.register<Exec>(name) {
+  val shimObject = iosBuildDir.map { it.file("shim/$sdk/$buildType/kanama_ios_shim.o") }
+  val sourceLinesObject =
+    iosBuildDir.map { it.file("shim/$sdk/$buildType/kanama_ios_source_lines.o") }
+  val compileShim =
+    registerCompileIosCTask(
+      "compileIos${variant}Shim",
+      sdk,
+      minVersionFlag,
+      iosShimSource,
+      shimObject,
+    )
+  val compileSourceLines =
+    registerCompileIosCTask(
+      "compileIos${variant}SourceLines",
+      sdk,
+      minVersionFlag,
+      iosSourceLinesSource,
+      sourceLinesObject,
+      sourceLinesTask,
+      sourceLinesTable,
+    )
+  return tasks.register<Exec>("combineIos${variant}Lib") {
     group = "ios"
     description = "Combine the Kanama iOS $sdk $buildType static library."
-    dependsOn(tasks.named("link${buildType.replaceFirstChar { it.uppercase() }}Static${target.replaceFirstChar { it.uppercase() }}"))
+    dependsOn(linkTask, compileShim, compileSourceLines)
     val runtimeLib = iosRuntimeStaticLib(target, buildType)
     val outputLibPath = iosBuildDir.map { it.file("lib/$sdk/$buildType/libkanama_ios.a") }
     inputs.file(runtimeLib)
-    inputs.files(objects)
+    inputs.file(shimObject)
+    inputs.file(sourceLinesObject)
     outputs.file(outputLibPath)
     doFirst {
       val outputLib = outputLibPath.get().asFile
       outputLib.parentFile.mkdirs()
       commandLine(
-        listOf("xcrun", "--sdk", sdk, "libtool", "-static", "-o", outputLib.absolutePath) +
-          objects.map { it.get().outputs.files.singleFile.absolutePath } +
-          runtimeLib.get().asFile.absolutePath
+        "xcrun",
+        "--sdk",
+        sdk,
+        "libtool",
+        "-static",
+        "-o",
+        outputLib.absolutePath,
+        shimObject.get().asFile.absolutePath,
+        sourceLinesObject.get().asFile.absolutePath,
+        runtimeLib.get().asFile.absolutePath,
       )
       environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
     }
@@ -1802,270 +1829,11 @@ fun registerCombineIosLibTask(
 // object files on the Mac), so a device frame is only `kfun:<symbol> + <offset>`. The debug device
 // build maps those to Kotlin lines ahead of time from the debug runtime library's DWARF, for the
 // game's own functions (its script dirs) and the self-test probe; the table is static data in the
-// addon library (ios/bootstrap/kanama_ios_source_lines.c). Release and simulator builds compile
-// the lookup without a table (the simulator symbolicates through CoreSymbolication itself).
-
-/**
- * Writes `kanama_ios_source_lines_table.inc` (read by ios/bootstrap/kanama_ios_source_lines.c):
- * for each function of the debug Kotlin/Native [runtimeLib] with code from a file under
- * [sourceRoots], its symbol and the rows (offset from the function's start, Kotlin file, line) of
- * its line table. A row inside code inlined from elsewhere (the standard library's `error`,
- * `forEach`) takes the innermost enclosing frame from a source root, as `atos -i` resolves the
- * inline chain, so a return address maps to the game line that made the call. Returns the
- * function and row counts.
- */
-object IosSourceLines {
-  private class Row(val address: Long, val line: Int, val file: String, val ownFile: Boolean)
-
-  fun write(
-    runtimeLib: File,
-    sourceRoots: List<File>,
-    table: File,
-    workDir: File,
-    developerDir: String,
-  ): Pair<Int, Int> {
-    val roots = sourceRoots.flatMap { listOf(it.absolutePath, it.canonicalPath) }.distinct()
-    fun inRoots(path: String) = roots.any { path == it || path.startsWith("$it/") }
-    workDir.deleteRecursively()
-    workDir.mkdirs()
-    // The program's own object; the `-cache` members are the prebuilt standard library and
-    // dependencies, never game code.
-    val members =
-      xcrun(developerDir, workDir, "ar", "-t", runtimeLib.absolutePath).filter {
-        it.endsWith(".o") && "-cache" !in it
-      }
-    xcrun(developerDir, workDir, "ar", "-x", runtimeLib.absolutePath, *members.toTypedArray())
-    val functions = mutableMapOf<String, List<Triple<Int, String, Int>>>()
-    for (member in members) {
-      val objectFile = File(workDir, member)
-      // Function starts as the device's dladdr sees them: real symbols of __text. Linker-private
-      // `l`/`ltmp` labels do not reach the app, so a frame names the symbol before them.
-      val symbols =
-        xcrun(developerDir, workDir, "nm", "-n", "--defined-only", objectFile.absolutePath)
-          .mapNotNull { line ->
-            val parts = line.split(' ', limit = 3)
-            if (parts.size == 3 && parts[1] in setOf("t", "T") && parts[2].startsWith("_")) {
-              parts[0].toLong(16) to parts[2].substring(1)
-            } else null
-          }
-          .sortedBy { it.first }
-      // A repeated local name is ambiguous on the device: such a function gets no lines.
-      val repeated = symbols.groupingBy { it.second }.eachCount().filterValues { it > 1 }.keys
-      val starts = symbols.map { it.first }.toLongArray()
-      fun functionOf(address: Long): Int {
-        var index = java.util.Arrays.binarySearch(starts, address)
-        if (index < 0) index = -index - 2
-        return index
-      }
-      val rows = parseLineTable(developerDir, workDir, objectFile, ::inRoots)
-      val gameFunctions =
-        rows.filter { it.ownFile }.map { functionOf(it.address) }.filter { it >= 0 }.toSet()
-      val byFunction =
-        rows.filter { functionOf(it.address) in gameFunctions }.groupBy { functionOf(it.address) }
-      val gameNames = rows.filter { it.ownFile }.map { it.file }.toSet()
-      val inlined = byFunction.values.flatten().filter { !it.ownFile }.map { it.address }.distinct()
-      val outerGameFrame = resolveInlined(developerDir, workDir, objectFile, inlined, gameNames)
-      for ((index, functionRows) in byFunction) {
-        val (start, name) = symbols[index]
-        if (name in repeated) continue
-        val resolved = mutableListOf<Triple<Int, String, Int>>()
-        for (row in functionRows.sortedBy { it.address }) {
-          val (file, line) =
-            if (row.ownFile) row.file to row.line else outerGameFrame[row.address] ?: continue
-          if (line <= 0) continue
-          val offset = (row.address - start).toInt()
-          val last = resolved.lastOrNull()
-          if (last != null && last.second == file && last.third == line) continue
-          if (last != null && last.first == offset) resolved.removeAt(resolved.size - 1)
-          resolved += Triple(offset, file, line)
-        }
-        if (resolved.isNotEmpty()) functions[name] = resolved
-      }
-    }
-    writeTable(functions, table)
-    workDir.deleteRecursively()
-    return functions.size to functions.values.sumOf { it.size }
-  }
-
-  /** The rows of every `.debug_line` table of [objectFile] (`dwarfdump`, DWARF 2 to 5). */
-  private fun parseLineTable(
-    developerDir: String,
-    workDir: File,
-    objectFile: File,
-    inRoots: (String) -> Boolean,
-  ): List<Row> {
-    val quoted = Regex(""""([^"]*)"\s*$""")
-    val rows = mutableListOf<Row>()
-    val dirs = mutableMapOf<Int, String>()
-    val names = mutableMapOf<Int, String>()
-    val fileDirs = mutableMapOf<Int, Int>()
-    val files = mutableMapOf<Int, Pair<String, Boolean>>()
-    var currentFile = -1
-    xcrunLines(developerDir, workDir, "dwarfdump", "--debug-line", objectFile.absolutePath) { raw ->
-      val line = raw.trim()
-      when {
-        line.startsWith("debug_line[") -> {
-          dirs.clear()
-          names.clear()
-          fileDirs.clear()
-          files.clear()
-        }
-        line.startsWith("include_directories[") ->
-          dirs[line.substringAfter('[').substringBefore(']').trim().toInt()] =
-            quoted.find(line)!!.groupValues[1]
-        line.startsWith("file_names[") ->
-          currentFile = line.substringAfter('[').substringBefore(']').trim().toInt()
-        line.startsWith("name:") -> names[currentFile] = quoted.find(line)!!.groupValues[1]
-        line.startsWith("dir_index:") ->
-          fileDirs[currentFile] = line.substringAfter(':').trim().toInt()
-        line.startsWith("0x") && !line.contains("end_sequence") -> {
-          val fields = line.split(Regex("\\s+"))
-          val fileIndex = fields[3].toInt()
-          val (file, own) =
-            files.getOrPut(fileIndex) {
-              val name = names[fileIndex].orEmpty()
-              val path = if (name.startsWith("/")) name else "${dirs[fileDirs[fileIndex]]}/$name"
-              name.substringAfterLast('/') to inRoots(path)
-            }
-          rows += Row(fields[0].removePrefix("0x").toLong(16), fields[1].toInt(), file, own)
-        }
-      }
-    }
-    return rows
-  }
-
-  /**
-   * For each address in code inlined into a game function, the innermost frame of its inline chain
-   * whose file is a game file (`atos -i` lists the chain innermost first, one block per address).
-   */
-  private fun resolveInlined(
-    developerDir: String,
-    workDir: File,
-    objectFile: File,
-    addresses: List<Long>,
-    gameNames: Set<String>,
-  ): Map<Long, Pair<String, Int>> {
-    if (addresses.isEmpty()) return emptyMap()
-    val input = File(workDir, "inlined-addresses.txt")
-    input.writeText(addresses.joinToString("\n") { "0x" + it.toString(16) } + "\n")
-    val frame = Regex("""\(([^()\s]+\.kt):(\d+)\)\s*$""")
-    val blocks = mutableListOf<MutableList<String>>(mutableListOf())
-    xcrunLines(
-      developerDir,
-      workDir,
-      "atos",
-      "-o",
-      objectFile.absolutePath,
-      "-arch",
-      "arm64",
-      "-i",
-      "-f",
-      input.absolutePath,
-    ) {
-      if (it.isBlank()) blocks += mutableListOf<String>() else blocks.last() += it
-    }
-    blocks.removeAll { it.isEmpty() }
-    // Unexpected output: no inlined rows, so a lookup there answers the game line before them.
-    if (blocks.size != addresses.size) return emptyMap()
-    return addresses.indices
-      .mapNotNull { i ->
-        blocks[i]
-          .drop(1)
-          .mapNotNull { frame.find(it) }
-          .firstOrNull { it.groupValues[1] in gameNames }
-          ?.let { addresses[i] to (it.groupValues[1] to it.groupValues[2].toInt()) }
-      }
-      .toMap()
-  }
-
-  private fun writeTable(functions: Map<String, List<Triple<Int, String, Int>>>, table: File) {
-    // The string pool as C literal pieces: printable ASCII as is, every other byte (and `"`, `\`,
-    // `?`) as a three-digit octal escape, so no escape can run into the next character.
-    val pieces = mutableListOf<String>()
-    val offsets = mutableMapOf<String, Int>()
-    var size = 0
-    fun intern(value: String): Int =
-      offsets.getOrPut(value) {
-        val at = size
-        val bytes = value.toByteArray(Charsets.UTF_8) + 0.toByte()
-        bytes.forEach { byte ->
-          val c = byte.toInt() and 0xff
-          pieces +=
-            if (c in 0x20..0x7e && c.toChar() !in "\"\\?") c.toChar().toString()
-            else "\\" + c.toString(8).padStart(3, '0')
-        }
-        size += bytes.size
-        at
-      }
-    // strcmp order: unsigned UTF-8 bytes.
-    val sorted =
-      functions.entries.sortedWith { a, b ->
-        java.util.Arrays.compareUnsigned(
-          a.key.toByteArray(Charsets.UTF_8),
-          b.key.toByteArray(Charsets.UTF_8),
-        )
-      }
-    val symbols = StringBuilder()
-    val rows = StringBuilder()
-    var rowCount = 0
-    for ((name, functionRows) in sorted) {
-      symbols.append("    {${intern(name)}u, ${rowCount}u, ${functionRows.size}u},\n")
-      for ((offset, file, line) in functionRows) {
-        rows.append("    {${offset}u, ${intern(file)}u, ${line}u},\n")
-      }
-      rowCount += functionRows.size
-    }
-    table.parentFile.mkdirs()
-    table.writeText(
-      buildString {
-        append("// Generated by generateIosDeviceDebugSourceLines (build.gradle.kts). Do not edit.\n")
-        append("static const char k_strings[] =\n")
-        var lineLength = 0
-        append("    \"")
-        for (piece in pieces) {
-          if (lineLength >= 120) {
-            append("\"\n    \"")
-            lineLength = 0
-          }
-          append(piece)
-          lineLength += piece.length
-        }
-        append("\";\n")
-        append("static const uint32_t k_symbol_count = ${sorted.size}u;\n")
-        append("static const KanamaIosSourceSymbol k_symbols[${maxOf(sorted.size, 1)}] = {\n")
-        append(symbols.ifEmpty { "    {0u, 0u, 0u},\n" })
-        append("};\n")
-        append("static const KanamaIosSourceRow k_rows[${maxOf(rowCount, 1)}] = {\n")
-        append(rows.ifEmpty { "    {0u, 0u, 0u},\n" })
-        append("};\n")
-      }
-    )
-  }
-
-  private fun xcrun(developerDir: String, workDir: File, vararg command: String): List<String> {
-    val lines = mutableListOf<String>()
-    xcrunLines(developerDir, workDir, *command) { lines += it }
-    return lines
-  }
-
-  private fun xcrunLines(
-    developerDir: String,
-    workDir: File,
-    vararg command: String,
-    consume: (String) -> Unit,
-  ) {
-    val process =
-      ProcessBuilder(listOf("xcrun") + command)
-        .directory(workDir)
-        .redirectError(ProcessBuilder.Redirect.INHERIT)
-        .apply { environment()["DEVELOPER_DIR"] = developerDir }
-        .start()
-    process.inputStream.bufferedReader().useLines { lines -> lines.forEach(consume) }
-    check(process.waitFor() == 0) { "xcrun ${command.first()} failed (exit ${process.exitValue()})" }
-  }
-}
-
+// addon library (ios/bootstrap/kanama_ios_source_lines.c). The generator is
+// buildSrc/.../IosSourceLines.kt, with its tests. Release and simulator builds compile the lookup
+// without a table (the simulator symbolicates through CoreSymbolication itself).
 val iosSourceLinesSource = layout.projectDirectory.file("ios/bootstrap/kanama_ios_source_lines.c")
+val iosDeviceDebugSourceLinesDir = iosBuildDir.map { it.dir("source-lines/iphoneos/debug") }
 val generateIosDeviceDebugSourceLines by
   tasks.registering {
     group = "ios"
@@ -2075,61 +1843,67 @@ val generateIosDeviceDebugSourceLines by
     val sourceRoots =
       iosScriptDirs(configuredIosScriptDirs.orNull).map { file(it) } +
         file("src/iosMain/kotlin/net/multigesture/kanama/ios/KanamaIosScriptErrorProbe.kt")
-    val outputDir = iosBuildDir.map { it.dir("source-lines/iphoneos/debug") }
+    val outputDir = iosDeviceDebugSourceLinesDir
+    val developerDir = xcodeDeveloperDir
     inputs.file(runtimeLib)
     inputs.property("sourceRoots", sourceRoots.map { it.absolutePath })
-    inputs.property("kanamaXcodeDeveloperDir", xcodeDeveloperDir)
+    inputs.property("kanamaXcodeDeveloperDir", developerDir)
     outputs.dir(outputDir)
     doLast {
       val started = System.nanoTime()
       val table = outputDir.get().file("kanama_ios_source_lines_table.inc").asFile
-      val (symbols, rows) =
-        IosSourceLines.write(
+      val (functions, rows) =
+        net.multigesture.kanama.buildlogic.IosSourceLines.write(
           runtimeLib.get().asFile,
           sourceRoots,
           table,
           temporaryDir,
-          xcodeDeveloperDir.get(),
+          developerDir.get(),
         )
       logger.lifecycle(
-        "iOS source lines: $symbols functions, $rows rows, ${table.length() / 1024} KiB source, " +
-          "${(System.nanoTime() - started) / 1_000_000} ms"
+        "iOS source lines: $functions functions, $rows rows, ${table.length() / 1024} KiB " +
+          "source, ${(System.nanoTime() - started) / 1_000_000} ms"
       )
     }
   }
 
 val combineIosDeviceDebugLib =
   registerCombineIosLibTask(
-    "combineIosDeviceDebugLib",
+    "DeviceDebug",
     "iphoneos",
     "-miphoneos-version-min",
     "iosArm64",
     "debug",
+    "linkDebugStaticIosArm64",
     generateIosDeviceDebugSourceLines,
+    iosDeviceDebugSourceLinesDir,
   )
 val combineIosDeviceReleaseLib =
   registerCombineIosLibTask(
-    "combineIosDeviceReleaseLib",
+    "DeviceRelease",
     "iphoneos",
     "-miphoneos-version-min",
     "iosArm64",
     "release",
+    "linkReleaseStaticIosArm64",
   )
 val combineIosSimulatorDebugLib =
   registerCombineIosLibTask(
-    "combineIosSimulatorDebugLib",
+    "SimulatorDebug",
     "iphonesimulator",
     "-mios-simulator-version-min",
     "iosSimulatorArm64",
     "debug",
+    "linkDebugStaticIosSimulatorArm64",
   )
 val combineIosSimulatorReleaseLib =
   registerCombineIosLibTask(
-    "combineIosSimulatorReleaseLib",
+    "SimulatorRelease",
     "iphonesimulator",
     "-mios-simulator-version-min",
     "iosSimulatorArm64",
     "release",
+    "linkReleaseStaticIosSimulatorArm64",
   )
 
 val createIosDebugXcframework =

@@ -225,7 +225,7 @@ class ScriptErrorsTest {
   fun parsesKotlinNativeStackTraceLines() {
     val withSource =
       ScriptErrorReport.parseNativeFrame(
-        "at 3   libkanama   0x0000000104a1c2f3c kfun:com.example.game.Player#ready(){} + 52 " +
+        "at 3   libkanama   0x0000000104a1c2f3c kfun:com.example.game.Player#ready(){} + 51 " +
           "(/Users/dev/game/kotlin-src/com/example/game/Player.kt:12:5)"
       )
     assertNotNull(withSource)
@@ -288,10 +288,11 @@ class ScriptErrorsTest {
   @Test
   fun aDeviceFrameTakesItsFileAndLineFromTheSourceTable() {
     // Task 131 item 13: an iPhone frame carries no `(file:line)` (the app has no DWARF); the debug
-    // build's table maps the symbol and the return-address offset to the Kotlin line.
+    // build's table maps the symbol and the offset to the Kotlin line. Kotlin/Native prints the
+    // return address minus one, so real device offsets are 3 mod 4 (inside the call instruction).
     val table =
       mapOf(
-        ("kfun:com.example.game.Player#ready(){}" to 52) to ("Player.kt" to 12),
+        ("kfun:com.example.game.Player#ready(){}" to 51) to ("Player.kt" to 12),
         ("kfun:thirdperson.SmokeQuit.\$smokeCoinSpawnCallsCOROUTINE\$1.invokeSuspend#internal" to
           2271) to ("SmokeQuit.kt" to 88),
       )
@@ -307,7 +308,7 @@ class ScriptErrorsTest {
         "    at 1   KanamaThirdPerson                   0x106c42aa7        " +
           "kfun:kotlin.IllegalStateException#<init>(kotlin.String?){} + 95 ",
         "    at 2   KanamaThirdPerson                   0x103c95000        " +
-          "kfun:com.example.game.Player#ready(){} + 52 ",
+          "kfun:com.example.game.Player#ready(){} + 51 ",
         "    at 3   KanamaThirdPerson                   0x104b22eab        " +
           "kfun:net.multigesture.kanama.ios#kanamaIosRuntimeScriptInstanceCallV(kotlin.Long;" +
           "kotlin.Int){}kotlin.Int + 2659 ",
@@ -330,7 +331,7 @@ class ScriptErrorsTest {
     assertEquals("Player.ready", report.function)
     assertEquals("Player.kt", report.file)
     assertEquals(12, report.line)
-    assertTrue(("kfun:com.example.game.Player#ready(){}" to 52) in lookups, "$lookups")
+    assertTrue(("kfun:com.example.game.Player#ready(){}" to 51) in lookups, "$lookups")
     // The decimal offset and the full symbol, including a `#internal` one, reach the table.
     assertEquals(
       "SmokeQuit.kt" to 88,

@@ -270,8 +270,7 @@ internal class IosScriptCodeEmitter(
     val unsupported = method.args.filter { callArgExpr(0, it) == null }
     val named = unsupported.joinToString { "${it.name}: ${it.kotlinType}" }
     val what =
-      if (unsupported.size == 1) "argument $named has a type"
-      else "arguments $named have types"
+      if (unsupported.size == 1) "argument $named has a type" else "arguments $named have types"
     // Keyed on the Godot name: two overloads of one Kotlin name are two script methods.
     iosSkip(
       "method-arg:$className.${method.godotName}",

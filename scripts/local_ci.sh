@@ -236,6 +236,11 @@ stage "JVM unit tests + kanama-common-api contract"
 "$ROOT_DIR/gradlew" -p "$ROOT_DIR" jvmTest test \
   :kanama-common-api:jvmTest :kanama-common-api:checkPlatformBackendContract
 
+# buildSrc holds build logic with unit tests (the iOS source-line table generator, task 131 item
+# 13); Gradle compiles buildSrc for every build but no longer runs its tests, so they run here.
+stage "buildSrc unit tests + formatting"
+"$ROOT_DIR/gradlew" -p "$ROOT_DIR/buildSrc" test ktfmtCheck
+
 stage "public docs local-path guard"
 if git -C "$ROOT_DIR" grep -nE '(/Users/[[:alnum:]_.-]+|/home/[[:alnum:]_.-]+|lmuller)' -- \
   README.md AGENTS.md CLAUDE.md docs CONTRIBUTING.md templates example_project; then
