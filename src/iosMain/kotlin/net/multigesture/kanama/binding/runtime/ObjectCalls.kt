@@ -41483,10 +41483,11 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
 
   // Task 131 (F4): the report a contained script exception sends to Godot. Built, not sent -- a
   // sent one prints `SCRIPT ERROR`, which the visual smoke treats as a failure; delivery is the
-  // documented device check (a throwing _ready shows `SCRIPT ERROR:` in the device log). The
-  // function/file/line are logged for that check: file:line need a binary with source info.
+  // documented device check (a throwing _ready shows `SCRIPT ERROR:` in the device log). Task 131
+  // item 13: the report names the throwing function's Kotlin file and line -- on a device from the
+  // debug build's source-line table, on the simulator from Kotlin/Native's own symbolication.
   val scriptErrorReport =
-    runCatching { error("kanama self-test: deliberate script error") }
+    runCatching { net.multigesture.kanama.ios.throwSelfTestScriptError() }
       .exceptionOrNull()
       ?.let { IosScriptErrors.reportFor(it, "selfTest") }
   println("[kanama][ios][kn] OBJECTCALLS SELFTEST script-error report=$scriptErrorReport")
@@ -41524,6 +41525,13 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     scriptErrorReport?.description == "kotlin.IllegalStateException" &&
       scriptErrorReport.message ==
         "kotlin.IllegalStateException: kanama self-test: deliberate script error",
+  )
+  check(
+    "script-error(report carries the Kotlin file:line) at=${scriptErrorReport?.file}:" +
+      "${scriptErrorReport?.line}",
+    scriptErrorReport?.function == "throwSelfTestScriptError" &&
+      scriptErrorReport.file == "KanamaIosScriptErrorProbe.kt" &&
+      scriptErrorReport.line > 0,
   )
 
   // Task 131 item 11: a throwing property setter reached through the property-set @CName exports

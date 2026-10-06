@@ -392,6 +392,32 @@ plain buffer written with one `snprintf`, so `kanama_ios_last_fault()` is a **be
 snapshot** that can tear when two threads fault at the same instant. Compare the count; read the
 text as a hint.
 
+## Script errors: the Kotlin line on a device
+
+A contained Kotlin exception reaches Godot as a script error (`IosScriptErrors`, task 131) with
+the file and line of the game's top frame, parsed from Kotlin/Native's `getStackTrace()` lines by
+the shared `ScriptErrorReport.parseNativeFrame`. Kotlin/Native adds `(File.kt:line:column)` to a
+frame only when it can read DWARF: through CoreSymbolication on the simulator, where the object
+files are on the same Mac. An iPhone app carries no DWARF (Apple's linker leaves it in the object
+files, or a dSYM next to the app), and Kotlin/Native does not offer CoreSymbolication for
+`iosArm64`; `-Xbinary=sourceInfoType=libbacktrace` would read DWARF from the app or a dSYM inside
+it, which a Godot iOS export does not ship. So a device frame is only
+`kfun:<symbol> + <offset>` (task 131 item 13; before it the self-test printed `at selfTest (:0)`).
+
+The offset of a return address inside its function is fixed when the static library is built --
+linking moves a function, never its body -- so the debug device build maps it ahead of time.
+`generateIosDeviceDebugSourceLines` (`build.gradle.kts`) reads the debug runtime library's own
+object (`nm` for the function starts, `dwarfdump --debug-line` for the rows, `atos -i` for rows
+inside inlined code) and writes a table of the functions with code from the project's script dirs
+and from the self-test probe `KanamaIosScriptErrorProbe.kt`: symbol, then rows of (offset from the
+function's start, file base name, line). `ios/bootstrap/kanama_ios_source_lines.c` compiles it as
+static data into the addon library and answers `kanama_ios_source_line(symbol, offset)` by binary
+search; nothing runs until an error is reported. Release and simulator builds compile the same
+file with an empty table. The Kanama runtime's own functions are left out on purpose: their table
+would be megabytes (1.9 million line rows), and a script error is reported at the game's frame.
+The self-test row `script-error(report carries the Kotlin file:line)` proves the device path:
+the report of the probe's exception names `KanamaIosScriptErrorProbe.kt` and a line above 0.
+
 ## Rules
 
 - **No silent stubs.** Every API method must call through `ObjectCalls`. A method with

@@ -306,8 +306,10 @@ skipped. When the file is in the project (`res://kotlin-src/<package path>/` or
 the project root) the `res://` path is reported, so the Errors tab can open it;
 otherwise the bare file name. The rest of that call does not run and the caller
 gets `null`, as with a GDScript runtime error; the next frame calls `_process`
-again as usual. On iOS the file and line need a build with debug info (a release
-build names the class and method with line 0). In an R8-minified Android release
+again as usual. On iOS a debug build reports the bare file name and line of your
+code's frame (`Player.kt:42`): an iPhone app carries no debug info, so the debug
+addon build maps your scripts' functions to their lines ahead of time. A release
+build names the class and method with line 0. In an R8-minified Android release
 build a frame without source info is not attributed, and the error names the
 callback that failed instead. The Web backend does not report Kotlin exceptions
 to Godot yet.

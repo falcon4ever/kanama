@@ -153,13 +153,32 @@ this property would be dropped. ...
 
 Before task 131 this was a warning and the property silently kept its Kotlin
 default on the phone. Change the property's type, or accept the skip by adding
-`-PkanamaIosAllowExportSkips=true` (`1` also works) to the `installIosAddon`
+`-PkanamaIosAllowSkips=true` (`1` also works) to the `installIosAddon`
 command; each skipped property is then a warning again. Every Godot value type
 (`Vector2`/`2i`, `Vector3`/`3i`, `Vector4`/`4i`, `Rect2`/`2i`, `Plane`, `AABB`,
 `Quaternion`, `Basis`, `Transform2D`/`3D`, `Projection`, `Color`), `NodePath`, the
 scalars, `String`, object references and `List<String>` exports reach iOS
 (`Vector2i` and `Color` since task 133 C2, the others since task 133's value-type
 parcel).
+
+A script method the iOS backend cannot dispatch fails the build the same way
+(task 131 N7): a registered function or virtual with a parameter type the iOS
+call path does not pass (a `Map`, a `List`, a `Packed*Array`, an `Any?`), or an
+`@OverrideVirtual` whose return type iOS does not marshal. The error names the
+method, the parameter and the supported types:
+
+```text
+e: [ksp] [kanama:ksp] [kanama-ios] Board.apply (godot: apply): argument table: Map<String, Any?>
+has a type iOS does not pass to a script method. On iOS a call to this method from Godot would
+not run. Use a supported parameter type (Long, Double, Boolean, String, ...), or accept the skip
+with -PkanamaIosAllowSkips=true (KSP option kanamaIosAllowSkips).
+```
+
+Before task 131 this was a warning, and on the phone the method silently never
+ran while it worked on desktop. Parameters of the scalar types, `String`,
+`NodePath`, every value type, `Color`, `RID`, object wrappers and Godot enums
+are passed; every script type can be returned. `-PkanamaIosAllowSkips=true` is
+the one opt-in for every iOS skip, exports and methods alike.
 
 To verify an export directly, run the parity check from the exported project
 (it needs the Kanama addon loaded, so run it where the export ran):

@@ -4,8 +4,13 @@ import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.incrementAndFetch
 import kotlin.experimental.ExperimentalNativeApi
+import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.allocArray
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.toKString
 import net.multigesture.kanama.ios.cinterop.kanama_ios_report_script_error
+import net.multigesture.kanama.ios.cinterop.kanama_ios_source_line
 
 /**
  * The iOS half of task 131 item 1 (F4): a Kotlin exception contained at a script-call boundary (a
@@ -14,9 +19,11 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_report_script_error
  * debugger show `SCRIPT ERROR:` with the Kotlin file:line of the top game frame. Before task 131
  * such an exception crossed the `@CName` export and terminated the app.
  *
- * The file and line come from Kotlin/Native's symbolicated stack trace, which carries
- * `(File.kt:line:column)` only when the binary has source info (debug builds); a release frame
- * still names the class and method, reported with an empty file and line 0. Never throws.
+ * The file and line come from Kotlin/Native's symbolicated stack trace where it carries
+ * `(File.kt:line:column)` (a debug build on the simulator), and on a device -- whose app carries no
+ * DWARF, so its frames end at `kfun:<symbol> + <offset>` -- from the debug build's table of the
+ * game's functions (`kanama_ios_source_line`, task 131 item 13). A release frame still names the
+ * class and method, reported with an empty file and line 0. Never throws.
  */
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class, ExperimentalAtomicApi::class)
 object IosScriptErrors {
@@ -30,10 +37,19 @@ object IosScriptErrors {
   fun reportFor(t: Throwable, where: String): ScriptErrorReport =
     ScriptErrorReport.of(t, where, nameOf(t), sourcelessGameFrames = true) { throwable ->
       ScriptErrorReport.dropOwnConstructorFrames(
-        throwable.getStackTrace().mapNotNull { ScriptErrorReport.parseNativeFrame(it) },
+        throwable.getStackTrace().mapNotNull { ScriptErrorReport.parseNativeFrame(it, ::sourceOf) },
         nameOf(throwable),
       )
     }
+
+  /** The device table's `(File.kt, line)` for a frame, or null when the frame is not in it. */
+  private fun sourceOf(symbol: String, offset: Int): Pair<String, Int>? = memScoped {
+    val file = allocArray<ByteVar>(SOURCE_FILE_CAPACITY)
+    val line = kanama_ios_source_line(symbol, offset, file, SOURCE_FILE_CAPACITY)
+    if (line > 0) file.toKString() to line else null
+  }
+
+  private const val SOURCE_FILE_CAPACITY = 256
 
   private fun nameOf(t: Throwable): String =
     t::class.qualifiedName ?: t::class.simpleName ?: "Throwable"

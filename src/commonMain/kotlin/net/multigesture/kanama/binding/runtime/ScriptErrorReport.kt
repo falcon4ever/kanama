@@ -182,27 +182,50 @@ class ScriptErrorReport(
     }
 
     // `kfun:<owner>#<function>`; the owner is empty for a top-level function in the default
-    // package.
+    // package. A private or local declaration is `kfun:<owner>.<function>#internal` instead
+    // (`#internal.<n>` when the name repeats).
     private val NATIVE_FRAME = Regex("""kfun:([^#\s(]*)#([^(\s]*)""")
+    private val NATIVE_INTERNAL = Regex("""^internal(\.\d+)?$""")
     private val NATIVE_SOURCE = Regex("""\(([^()\s]*?)([^/()\s]+\.kt):(\d+)(?::\d+)?\)\s*$""")
+    private val NATIVE_SYMBOL = Regex("""(kfun:\S.*?) \+ (\d+)(?:\s|$)""")
 
     /**
      * Parses one Kotlin/Native `Throwable.getStackTrace()` line, e.g. `at 3 libfoo 0x1049c2f3c
      * kfun:com.example.Player#ready(){} + 52 (/src/Player.kt:12:5)`. The `(file:line:col)` suffix
-     * is present only when the binary carries source info (debug builds); without it the frame
-     * still names the class and the method, with an empty file and line 0. A line without a `kfun:`
-     * symbol (a C or Objective-C frame) yields null.
+     * is there only when Kotlin/Native itself symbolicates with source info (a debug build on the
+     * simulator or macOS). An iOS device frame ends at `+ <offset>`; [sourceOf] then maps the
+     * symbol and offset to the Kotlin file and line (a debug device build's table, see
+     * kanama_ios_source_lines.c), and without either the frame still names the class and the
+     * method, with an empty file and line 0. A line without a `kfun:` symbol (a C or Objective-C
+     * frame) yields null.
      */
-    fun parseNativeFrame(line: String): ScriptErrorFrame? {
+    fun parseNativeFrame(
+      line: String,
+      sourceOf: ((symbol: String, offset: Int) -> Pair<String, Int>?)? = null,
+    ): ScriptErrorFrame? {
       val symbol = NATIVE_FRAME.find(line) ?: return null
-      val owner = symbol.groupValues[1]
-      val method = symbol.groupValues[2].ifEmpty { "<anonymous>" }
-      val source = NATIVE_SOURCE.find(line)
+      var owner = symbol.groupValues[1]
+      var method = symbol.groupValues[2].ifEmpty { "<anonymous>" }
+      if (NATIVE_INTERNAL.matches(method)) {
+        method = owner.substringAfterLast('.')
+        owner = owner.substringBeforeLast('.', "")
+      }
+      val source =
+        NATIVE_SOURCE.find(line)?.let {
+          it.groupValues[2] to (it.groupValues[3].toIntOrNull() ?: 0)
+        }
+          ?: sourceOf?.let { lookup ->
+            NATIVE_SYMBOL.find(line)?.let { match ->
+              match.groupValues[2].toIntOrNull()?.let { offset ->
+                lookup(match.groupValues[1], offset)
+              }
+            }
+          }
       return ScriptErrorFrame(
         className = owner,
         methodName = method,
-        fileName = source?.groupValues?.get(2).orEmpty(),
-        line = source?.groupValues?.get(3)?.toIntOrNull() ?: 0,
+        fileName = source?.first.orEmpty(),
+        line = source?.second ?: 0,
       )
     }
   }
