@@ -128,7 +128,13 @@ fun kanamaWebCreate(scriptId: Int): Int {
     val scriptName =
       KanamaWebProjectRegistry.scripts.firstOrNull { it.id == scriptId }?.className
         ?: "script#$scriptId"
-    throw IllegalStateException("Kanama Web create failed: script=$scriptName", error)
+    // Name the cause chain like a callback failure does: a script constructor that throws (an
+    // autoload built before the engine calls it needs have somewhere to go) was otherwise reported
+    // as "create failed" with the reason only in an unprinted `cause`.
+    throw IllegalStateException(
+      "Kanama Web create failed: script=$scriptName cause=${describeCauseChain(error)}",
+      error,
+    )
   }
 }
 

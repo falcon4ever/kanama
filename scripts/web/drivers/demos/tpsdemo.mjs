@@ -48,6 +48,8 @@ async function snapshot(evaluate) {
         maxLiveHandles: bridge.maxLiveBrowserHandles,
         crossings: bridge.kotlinToGodotCalls,
         callbackErrors: bridge.callbackErrors,
+        callbackErrorLog: bridge.callbackErrorLog ?? null,
+        readyClasses: Object.keys(bridge.match3ReadyByClass ?? {}),
         physicsAfterProcess: bridge.physicsAfterProcessSameTick ?? 0,
         callbacks: bridge.api.kanamaWebPendingSignalCallbackCount(),
         pending: bridge.api.kanamaWebPendingCoroutineCount(),
@@ -139,8 +141,10 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
   // Generous first-load window: this is the largest export in the corpus.
   const menuDeadline = Math.min(deadline, Date.now() + 180_000);
   let menu = null;
+  let lastSnap = null;
   while (Date.now() < menuDeadline) {
     const snap = await snapshot(evaluate);
+    lastSnap = snap ?? lastSnap;
     if (
       snap &&
       snap.mode === "tpsdemo" &&
@@ -152,9 +156,15 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline }) {
       menu = snap;
       break;
     }
+    // A boundary failure before the menu readies is final: nothing retries a failed _ready.
+    if (snap && snap.callbackErrors > 0) break;
     await delay(250);
   }
-  if (!menu) throw new Error("Kotlin/Wasm tps-demo menu did not become ready");
+  // The last snapshot rides on the error: "did not become ready" alone cannot say whether the
+  // module never booted, the Main script never readied, or the Menu script never did.
+  if (!menu) {
+    throw new Error(`Kotlin/Wasm tps-demo menu did not become ready; last snapshot: ${JSON.stringify(lastSnap)}`);
+  }
   const startupDurationMs = Date.now() - startupStart;
   trace(`menu ready: readyCount=${menu.readyCount} mainHandle=${menu.mainHandle}`);
 

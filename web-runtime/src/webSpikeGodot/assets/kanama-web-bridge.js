@@ -307,6 +307,10 @@
     finishCalls: 0,
     callbackErrors: 0,
     lastCallbackError: null,
+    // Every boundary failure's message, oldest first, capped: lastCallbackError alone hides the
+    // FIRST failure behind whatever it caused (an autoload that failed to construct surfaced only
+    // as the later script that read it).
+    callbackErrorLog: [],
     drawCalls: 0,
     drawCommands: 0,
     drawBatches: 0,
@@ -532,6 +536,7 @@
         );
         this.callbackErrors += 1;
         this.lastCallbackError = contextual.message;
+        if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(contextual.message);
         globalThis.failKanamaWeb(contextual);
         return fallback;
       } finally {
@@ -1227,7 +1232,17 @@
     },
     ownerForHandle(handle) {
       const owner = this.handleOwners.get(handle);
-      if (!owner) throw new Error(`No Kanama Web proxy owns handle=${handle}`);
+      if (!owner) {
+        // handle=0 is "no script is running": a Godot call from a script CONSTRUCTOR or property
+        // initializer, which runs before its proxy registers (tps-demo's Settings autoload built a
+        // ConfigFile in an initializer and the whole menu never readied). Name the cause.
+        const hint =
+          handle === 0
+            ? " (a Godot call ran outside any script callback -- on Web a script constructor or" +
+              " property initializer cannot call the engine; move it into _ready or a lazy initializer)"
+            : "";
+        throw new Error(`No Kanama Web proxy owns handle=${handle}${hint}`);
+      }
       return owner;
     },
     internCommandStringName(value) {

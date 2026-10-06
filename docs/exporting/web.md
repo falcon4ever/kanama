@@ -75,6 +75,12 @@ another property is not — the proxy re-emits the default into GDScript and pus
 it back into Kotlin at hydration), and a property type outside the supported Web
 set is rejected with an error naming the property.
 
+**Do not call the engine from a property initializer or constructor.** On Web a script's
+constructor runs before its proxy registers, so `private val config = ConfigFile.create()` has no
+owner to route to and fails with "No Kanama Web proxy owns handle=0" — fatally for an autoload,
+which is built at engine start. Move the call into `@OnReady` or a `by lazy` initializer; both
+spellings work the same on desktop.
+
 **Physics loops should derive movement from velocity, not from re-reading a
 spatial value they just wrote.** On Web, spatial reads (`self.position`,
 `self.rotation`, …) come from a mirrored snapshot rather than a live engine

@@ -366,6 +366,21 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   desktop (`Basis(x, y, z)`, `withX(value)`, `lookingAt(target, up, useModelFront)`,
   `interpolateWith(xform, weight)`, `withBasis(value)`, `bounce(n)`, `times(scale)`).
 
+### Fixed — Web: a script constructor that calls the engine now says so, and the tps-demo menu boots
+
+- On Web a script's constructor and property initializers run before its proxy registers, so an
+  engine call from one (`val config = ConfigFile.create()` or
+  `RenderingServer.getCurrentRenderingDriverName()` in an initializer) has no owner to route to. For an
+  autoload that is fatal at engine start: the construction failed with a bare "No Kanama Web proxy
+  owns handle=0", and the scripts reading the autoload failed later with an unrelated null cast
+  (the tps-demo menu never became ready in the browser; CI never saw it because tpsdemo is not in the
+  hosted `ci` corpus). The message now names the cause and the fix (move the call into `_ready` or a
+  lazy initializer), a script `create` failure carries its cause chain like a callback failure does,
+  and the bridge keeps every boundary failure (`callbackErrorLog`, first eight), not only the last.
+  The tps driver fails fast on a boundary error before the menu readies and prints that log, instead
+  of waiting three minutes for "did not become ready". kanama-demos: tps-demo's `Settings` autoload
+  builds its `ConfigFile` and defaults lazily.
+
 ### Fixed — Web: a node looked up by two scripts survives the first script's free
 
 - On Web, when two scripts looked up the same plain node (`requireAs("../Target", ::Node)` in both),
