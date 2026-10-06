@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -30,42 +31,42 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
 
     fun setBoundsSize(boundsSize: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setBoundsSizeBind, segment, boundsSize)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setBoundsSizeBind, segment, boundsSize)
     }
 
     fun getBoundsSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getBoundsSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getBoundsSizeBind, segment)
     }
 
     fun setMarkerType(markerType: OpenXRSpatialComponentMarkerList.MarkerType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMarkerTypeBind, segment, markerType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMarkerTypeBind, segment, markerType.value)
     }
 
     fun getMarkerType(): OpenXRSpatialComponentMarkerList.MarkerType {
         checkOpen()
-        return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallNoArgsRetLong(getMarkerTypeBind, segment))
+        return OpenXRSpatialComponentMarkerList.MarkerType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMarkerTypeBind, segment))
     }
 
     fun setMarkerId(markerId: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setMarkerIdBind, segment, markerId)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setMarkerIdBind, segment, markerId)
     }
 
     fun getMarkerId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getMarkerIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMarkerIdBind, segment)
     }
 
     fun setMarkerData(markerData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithVariantArg(setMarkerDataBind, segment, markerData)
+        ObjectCalls.ptrcallWithVariantArg(Binds.setMarkerDataBind, segment, markerData)
     }
 
     fun getMarkerData(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getMarkerDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getMarkerDataBind, segment)
     }
 
     companion object {
@@ -78,45 +79,47 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRMarkerTracker? =
             if (handle.address() == 0L) null else OpenXRMarkerTracker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BOUNDS_SIZE_HASH = 743155724L
-        private val setBoundsSizeBind by lazy {
+        @JvmField
+        val setBoundsSizeBind =
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "set_bounds_size", SET_BOUNDS_SIZE_HASH)
-        }
 
         private const val GET_BOUNDS_SIZE_HASH = 3341600327L
-        private val getBoundsSizeBind by lazy {
+        @JvmField
+        val getBoundsSizeBind =
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "get_bounds_size", GET_BOUNDS_SIZE_HASH)
-        }
 
         private const val SET_MARKER_TYPE_HASH = 2156241362L
-        private val setMarkerTypeBind by lazy {
+        @JvmField
+        val setMarkerTypeBind =
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "set_marker_type", SET_MARKER_TYPE_HASH)
-        }
 
         private const val GET_MARKER_TYPE_HASH = 612702862L
-        private val getMarkerTypeBind by lazy {
+        @JvmField
+        val getMarkerTypeBind =
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "get_marker_type", GET_MARKER_TYPE_HASH)
-        }
 
         private const val SET_MARKER_ID_HASH = 1286410249L
-        private val setMarkerIdBind by lazy {
+        @JvmField
+        val setMarkerIdBind =
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "set_marker_id", SET_MARKER_ID_HASH)
-        }
 
         private const val GET_MARKER_ID_HASH = 3905245786L
-        private val getMarkerIdBind by lazy {
+        @JvmField
+        val getMarkerIdBind =
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "get_marker_id", GET_MARKER_ID_HASH)
-        }
 
         private const val SET_MARKER_DATA_HASH = 1114965689L
-        private val setMarkerDataBind by lazy {
+        @JvmField
+        val setMarkerDataBind =
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "set_marker_data", SET_MARKER_DATA_HASH)
-        }
 
         private const val GET_MARKER_DATA_HASH = 1214101251L
-        private val getMarkerDataBind by lazy {
+        @JvmField
+        val getMarkerDataBind =
             ObjectCalls.getMethodBind("OpenXRMarkerTracker", "get_marker_data", GET_MARKER_DATA_HASH)
-        }
     }
 }

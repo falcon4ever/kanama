@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -49,7 +50,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -58,7 +59,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -67,7 +68,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.set_expand_mode
      */
     fun setExpandMode(expandMode: TextureRect.ExpandMode) {
-        ObjectCalls.ptrcallWithLongArg(setExpandModeBind, segment, expandMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setExpandModeBind, segment, expandMode.value)
     }
 
     /**
@@ -76,7 +77,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.get_expand_mode
      */
     fun getExpandMode(): TextureRect.ExpandMode {
-        return TextureRect.ExpandMode(ObjectCalls.ptrcallNoArgsRetLong(getExpandModeBind, segment))
+        return TextureRect.ExpandMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getExpandModeBind, segment))
     }
 
     /**
@@ -85,7 +86,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.set_flip_h
      */
     fun setFlipH(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipHBind, segment, enable)
     }
 
     /**
@@ -94,7 +95,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.is_flipped_h
      */
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlippedHBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.set_flip_v
      */
     fun setFlipV(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipVBind, segment, enable)
     }
 
     /**
@@ -112,7 +113,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.is_flipped_v
      */
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlippedVBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.set_stretch_mode
      */
     fun setStretchMode(stretchMode: TextureRect.StretchMode) {
-        ObjectCalls.ptrcallWithLongArg(setStretchModeBind, segment, stretchMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStretchModeBind, segment, stretchMode.value)
     }
 
     /**
@@ -130,7 +131,7 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextureRect.get_stretch_mode
      */
     fun getStretchMode(): TextureRect.StretchMode {
-        return TextureRect.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(getStretchModeBind, segment))
+        return TextureRect.StretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStretchModeBind, segment))
     }
 
     /**
@@ -248,55 +249,57 @@ class TextureRect(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): TextureRect? =
             if (handle.address() == 0L) null else TextureRect(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("TextureRect", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("TextureRect", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_EXPAND_MODE_HASH = 1870766882L
-        private val setExpandModeBind by lazy {
+        @JvmField
+        val setExpandModeBind =
             ObjectCalls.getMethodBind("TextureRect", "set_expand_mode", SET_EXPAND_MODE_HASH)
-        }
 
         private const val GET_EXPAND_MODE_HASH = 3863824733L
-        private val getExpandModeBind by lazy {
+        @JvmField
+        val getExpandModeBind =
             ObjectCalls.getMethodBind("TextureRect", "get_expand_mode", GET_EXPAND_MODE_HASH)
-        }
 
         private const val SET_FLIP_H_HASH = 2586408642L
-        private val setFlipHBind by lazy {
+        @JvmField
+        val setFlipHBind =
             ObjectCalls.getMethodBind("TextureRect", "set_flip_h", SET_FLIP_H_HASH)
-        }
 
         private const val IS_FLIPPED_H_HASH = 36873697L
-        private val isFlippedHBind by lazy {
+        @JvmField
+        val isFlippedHBind =
             ObjectCalls.getMethodBind("TextureRect", "is_flipped_h", IS_FLIPPED_H_HASH)
-        }
 
         private const val SET_FLIP_V_HASH = 2586408642L
-        private val setFlipVBind by lazy {
+        @JvmField
+        val setFlipVBind =
             ObjectCalls.getMethodBind("TextureRect", "set_flip_v", SET_FLIP_V_HASH)
-        }
 
         private const val IS_FLIPPED_V_HASH = 36873697L
-        private val isFlippedVBind by lazy {
+        @JvmField
+        val isFlippedVBind =
             ObjectCalls.getMethodBind("TextureRect", "is_flipped_v", IS_FLIPPED_V_HASH)
-        }
 
         private const val SET_STRETCH_MODE_HASH = 58788729L
-        private val setStretchModeBind by lazy {
+        @JvmField
+        val setStretchModeBind =
             ObjectCalls.getMethodBind("TextureRect", "set_stretch_mode", SET_STRETCH_MODE_HASH)
-        }
 
         private const val GET_STRETCH_MODE_HASH = 346396079L
-        private val getStretchModeBind by lazy {
+        @JvmField
+        val getStretchModeBind =
             ObjectCalls.getMethodBind("TextureRect", "get_stretch_mode", GET_STRETCH_MODE_HASH)
-        }
     }
 }

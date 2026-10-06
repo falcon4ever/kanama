@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -20,7 +21,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun poll() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(pollBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pollBind, segment)
     }
 
     /**
@@ -33,7 +34,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun connectToPeer(packetPeer: PacketPeerUDP?, hostname: String, clientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: NULL_SEGMENT, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithObjectStringAndObjectArgsRetLong(Binds.connectToPeerBind, segment, packetPeer?.requireOpenHandle() ?: NULL_SEGMENT, hostname, clientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -43,7 +44,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun getStatus(): PacketPeerDTLS.Status {
         checkOpen()
-        return PacketPeerDTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(getStatusBind, segment))
+        return PacketPeerDTLS.Status(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStatusBind, segment))
     }
 
     /**
@@ -53,7 +54,7 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
      */
     fun disconnectFromPeer() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(disconnectFromPeerBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.disconnectFromPeerBind, segment)
     }
 
     /**
@@ -110,25 +111,27 @@ class PacketPeerDTLS(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PacketPeerDTLS? =
             if (handle.address() == 0L) null else PacketPeerDTLS(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val POLL_HASH = 3218959716L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("PacketPeerDTLS", "poll", POLL_HASH)
-        }
 
         private const val CONNECT_TO_PEER_HASH = 2880188099L
-        private val connectToPeerBind by lazy {
+        @JvmField
+        val connectToPeerBind =
             ObjectCalls.getMethodBind("PacketPeerDTLS", "connect_to_peer", CONNECT_TO_PEER_HASH)
-        }
 
         private const val GET_STATUS_HASH = 3248654679L
-        private val getStatusBind by lazy {
+        @JvmField
+        val getStatusBind =
             ObjectCalls.getMethodBind("PacketPeerDTLS", "get_status", GET_STATUS_HASH)
-        }
 
         private const val DISCONNECT_FROM_PEER_HASH = 3218959716L
-        private val disconnectFromPeerBind by lazy {
+        @JvmField
+        val disconnectFromPeerBind =
             ObjectCalls.getMethodBind("PacketPeerDTLS", "disconnect_from_peer", DISCONNECT_FROM_PEER_HASH)
-        }
     }
 }

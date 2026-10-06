@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -11,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpatialComponentData(handle) {
     fun getPlaneAlignment(index: Long): OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment {
         checkOpen()
-        return OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallWithLongArgRetLong(getPlaneAlignmentBind, segment, index))
+        return OpenXRSpatialComponentPlaneAlignmentList.PlaneAlignment(ObjectCalls.ptrcallWithLongArgRetLong(Binds.getPlaneAlignmentBind, segment, index))
     }
 
     @JvmInline
@@ -34,10 +35,12 @@ class OpenXRSpatialComponentPlaneAlignmentList(handle: GodotHandle) : OpenXRSpat
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialComponentPlaneAlignmentList? =
             if (handle.address() == 0L) null else OpenXRSpatialComponentPlaneAlignmentList(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_PLANE_ALIGNMENT_HASH = 3340200270L
-        private val getPlaneAlignmentBind by lazy {
+        @JvmField
+        val getPlaneAlignmentBind =
             ObjectCalls.getMethodBind("OpenXRSpatialComponentPlaneAlignmentList", "get_plane_alignment", GET_PLANE_ALIGNMENT_HASH)
-        }
     }
 }

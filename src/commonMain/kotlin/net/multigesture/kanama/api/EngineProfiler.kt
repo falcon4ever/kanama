@@ -22,7 +22,5 @@ class EngineProfiler(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EngineProfiler? =
             if (handle.address() == 0L) null else EngineProfiler(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

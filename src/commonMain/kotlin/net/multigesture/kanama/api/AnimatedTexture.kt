@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -51,7 +52,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFrames(frames: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFramesBind, segment, frames)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFramesBind, segment, frames)
     }
 
     /**
@@ -63,7 +64,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFrames(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFramesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFramesBind, segment)
     }
 
     /**
@@ -74,7 +75,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setCurrentFrame(frame: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCurrentFrameBind, segment, frame)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCurrentFrameBind, segment, frame)
     }
 
     /**
@@ -85,7 +86,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getCurrentFrame(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentFrameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentFrameBind, segment)
     }
 
     /**
@@ -96,7 +97,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setPause(pause: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPauseBind, segment, pause)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPauseBind, segment, pause)
     }
 
     /**
@@ -107,7 +108,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getPause(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPauseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPauseBind, segment)
     }
 
     /**
@@ -118,7 +119,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setOneShot(oneShot: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setOneShotBind, segment, oneShot)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOneShotBind, segment, oneShot)
     }
 
     /**
@@ -129,7 +130,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getOneShot(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getOneShotBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getOneShotBind, segment)
     }
 
     /**
@@ -140,7 +141,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSpeedScale(scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpeedScaleBind, segment, scale)
     }
 
     /**
@@ -151,7 +152,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSpeedScale(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
     }
 
     /**
@@ -164,7 +165,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFrameTexture(frame: Int, texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setFrameTextureBind, segment, frame, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setFrameTextureBind, segment, frame, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -174,7 +175,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFrameTexture(frame: Int): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getFrameTextureBind, segment, frame)
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getFrameTextureBind, segment, frame)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -190,7 +191,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setFrameDuration(frame: Int, duration: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setFrameDurationBind, segment, frame, duration)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setFrameDurationBind, segment, frame, duration)
     }
 
     /**
@@ -200,7 +201,7 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getFrameDuration(frame: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getFrameDurationBind, segment, frame)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getFrameDurationBind, segment, frame)
     }
 
     companion object {
@@ -215,75 +216,77 @@ class AnimatedTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimatedTexture? =
             if (handle.address() == 0L) null else AnimatedTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FRAMES_HASH = 1286410249L
-        private val setFramesBind by lazy {
+        @JvmField
+        val setFramesBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "set_frames", SET_FRAMES_HASH)
-        }
 
         private const val GET_FRAMES_HASH = 3905245786L
-        private val getFramesBind by lazy {
+        @JvmField
+        val getFramesBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "get_frames", GET_FRAMES_HASH)
-        }
 
         private const val SET_CURRENT_FRAME_HASH = 1286410249L
-        private val setCurrentFrameBind by lazy {
+        @JvmField
+        val setCurrentFrameBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "set_current_frame", SET_CURRENT_FRAME_HASH)
-        }
 
         private const val GET_CURRENT_FRAME_HASH = 3905245786L
-        private val getCurrentFrameBind by lazy {
+        @JvmField
+        val getCurrentFrameBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "get_current_frame", GET_CURRENT_FRAME_HASH)
-        }
 
         private const val SET_PAUSE_HASH = 2586408642L
-        private val setPauseBind by lazy {
+        @JvmField
+        val setPauseBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "set_pause", SET_PAUSE_HASH)
-        }
 
         private const val GET_PAUSE_HASH = 36873697L
-        private val getPauseBind by lazy {
+        @JvmField
+        val getPauseBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "get_pause", GET_PAUSE_HASH)
-        }
 
         private const val SET_ONE_SHOT_HASH = 2586408642L
-        private val setOneShotBind by lazy {
+        @JvmField
+        val setOneShotBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "set_one_shot", SET_ONE_SHOT_HASH)
-        }
 
         private const val GET_ONE_SHOT_HASH = 36873697L
-        private val getOneShotBind by lazy {
+        @JvmField
+        val getOneShotBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "get_one_shot", GET_ONE_SHOT_HASH)
-        }
 
         private const val SET_SPEED_SCALE_HASH = 373806689L
-        private val setSpeedScaleBind by lazy {
+        @JvmField
+        val setSpeedScaleBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "set_speed_scale", SET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_SPEED_SCALE_HASH = 1740695150L
-        private val getSpeedScaleBind by lazy {
+        @JvmField
+        val getSpeedScaleBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "get_speed_scale", GET_SPEED_SCALE_HASH)
-        }
 
         private const val SET_FRAME_TEXTURE_HASH = 666127730L
-        private val setFrameTextureBind by lazy {
+        @JvmField
+        val setFrameTextureBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "set_frame_texture", SET_FRAME_TEXTURE_HASH)
-        }
 
         private const val GET_FRAME_TEXTURE_HASH = 3536238170L
-        private val getFrameTextureBind by lazy {
+        @JvmField
+        val getFrameTextureBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "get_frame_texture", GET_FRAME_TEXTURE_HASH)
-        }
 
         private const val SET_FRAME_DURATION_HASH = 1602489585L
-        private val setFrameDurationBind by lazy {
+        @JvmField
+        val setFrameDurationBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "set_frame_duration", SET_FRAME_DURATION_HASH)
-        }
 
         private const val GET_FRAME_DURATION_HASH = 2339986948L
-        private val getFrameDurationBind by lazy {
+        @JvmField
+        val getFrameDurationBind =
             ObjectCalls.getMethodBind("AnimatedTexture", "get_frame_duration", GET_FRAME_DURATION_HASH)
-        }
     }
 }

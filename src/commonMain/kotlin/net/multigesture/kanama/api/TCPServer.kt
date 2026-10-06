@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -22,7 +23,7 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun listen(port: Int, bindAddress: String = "*"): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, segment, port, bindAddress))
+        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.listenBind, segment, port, bindAddress))
     }
 
     /**
@@ -32,7 +33,7 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
     }
 
     /**
@@ -42,7 +43,7 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun takeConnection(): StreamPeerTCP? {
         checkOpen()
-        return StreamPeerTCP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
+        return StreamPeerTCP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
     }
 
     companion object {
@@ -55,20 +56,22 @@ class TCPServer(handle: GodotHandle) : SocketServer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TCPServer? =
             if (handle.address() == 0L) null else TCPServer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LISTEN_HASH = 3167955072L
-        private val listenBind by lazy {
+        @JvmField
+        val listenBind =
             ObjectCalls.getMethodBind("TCPServer", "listen", LISTEN_HASH)
-        }
 
         private const val GET_LOCAL_PORT_HASH = 3905245786L
-        private val getLocalPortBind by lazy {
+        @JvmField
+        val getLocalPortBind =
             ObjectCalls.getMethodBind("TCPServer", "get_local_port", GET_LOCAL_PORT_HASH)
-        }
 
         private const val TAKE_CONNECTION_HASH = 30545006L
-        private val takeConnectionBind by lazy {
+        @JvmField
+        val takeConnectionBind =
             ObjectCalls.getMethodBind("TCPServer", "take_connection", TAKE_CONNECTION_HASH)
-        }
     }
 }

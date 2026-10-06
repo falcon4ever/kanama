@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -98,7 +99,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_total_gravity
      */
     fun getTotalGravity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTotalGravityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTotalGravityBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_total_linear_damp
      */
     fun getTotalLinearDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalLinearDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTotalLinearDampBind, segment)
     }
 
     /**
@@ -116,7 +117,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_total_angular_damp
      */
     fun getTotalAngularDamp(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTotalAngularDampBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTotalAngularDampBind, segment)
     }
 
     /**
@@ -126,7 +127,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_center_of_mass
      */
     fun getCenterOfMass(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOfMassBind, segment)
     }
 
     /**
@@ -135,11 +136,11 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_center_of_mass_local
      */
     fun getCenterOfMassLocal(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCenterOfMassLocalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCenterOfMassLocalBind, segment)
     }
 
     fun getPrincipalInertiaAxes(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getPrincipalInertiaAxesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBasis(Binds.getPrincipalInertiaAxesBind, segment)
     }
 
     /**
@@ -148,7 +149,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_inverse_mass
      */
     fun getInverseMass(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInverseMassBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInverseMassBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_inverse_inertia
      */
     fun getInverseInertia(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getInverseInertiaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getInverseInertiaBind, segment)
     }
 
     /**
@@ -166,7 +167,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_inverse_inertia_tensor
      */
     fun getInverseInertiaTensor(): Basis {
-        return ObjectCalls.ptrcallNoArgsRetBasis(getInverseInertiaTensorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBasis(Binds.getInverseInertiaTensorBind, segment)
     }
 
     /**
@@ -175,7 +176,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_linear_velocity
      */
     fun setLinearVelocity(velocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setLinearVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setLinearVelocityBind, segment, velocity)
     }
 
     /**
@@ -184,7 +185,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_linear_velocity
      */
     fun getLinearVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getLinearVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getLinearVelocityBind, segment)
     }
 
     /**
@@ -193,7 +194,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_angular_velocity
      */
     fun setAngularVelocity(velocity: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setAngularVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setAngularVelocityBind, segment, velocity)
     }
 
     /**
@@ -202,7 +203,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_angular_velocity
      */
     fun getAngularVelocity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getAngularVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getAngularVelocityBind, segment)
     }
 
     /**
@@ -211,7 +212,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_transform
      */
     fun setTransform(transform: Transform3D) {
-        ObjectCalls.ptrcallWithTransform3DArg(setTransformBind, segment, transform)
+        ObjectCalls.ptrcallWithTransform3DArg(Binds.setTransformBind, segment, transform)
     }
 
     /**
@@ -220,7 +221,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_transform
      */
     fun getTransform(): Transform3D {
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getTransformBind, segment)
     }
 
     /**
@@ -230,7 +231,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_velocity_at_local_position
      */
     fun getVelocityAtLocalPosition(localPosition: Vector3): Vector3 {
-        return ObjectCalls.ptrcallWithVector3ArgRetVector3(getVelocityAtLocalPositionBind, segment, localPosition)
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.getVelocityAtLocalPositionBind, segment, localPosition)
     }
 
     /**
@@ -242,7 +243,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_central_impulse
      */
     fun applyCentralImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralImpulseBind, segment, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyCentralImpulseBind, segment, impulse)
     }
 
     /**
@@ -254,7 +255,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_impulse
      */
     fun applyImpulse(impulse: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(applyImpulseBind, segment, impulse, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(Binds.applyImpulseBind, segment, impulse, position)
     }
 
     /**
@@ -268,7 +269,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_torque_impulse
      */
     fun applyTorqueImpulse(impulse: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyTorqueImpulseBind, segment, impulse)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyTorqueImpulseBind, segment, impulse)
     }
 
     /**
@@ -279,7 +280,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_central_force
      */
     fun applyCentralForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyCentralForceBind, segment, force)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyCentralForceBind, segment, force)
     }
 
     /**
@@ -289,7 +290,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_force
      */
     fun applyForce(force: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(applyForceBind, segment, force, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(Binds.applyForceBind, segment, force, position)
     }
 
     /**
@@ -301,7 +302,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.apply_torque
      */
     fun applyTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(applyTorqueBind, segment, torque)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.applyTorqueBind, segment, torque)
     }
 
     /**
@@ -312,7 +313,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.add_constant_central_force
      */
     fun addConstantCentralForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(addConstantCentralForceBind, segment, force)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.addConstantCentralForceBind, segment, force)
     }
 
     /**
@@ -323,7 +324,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.add_constant_force
      */
     fun addConstantForce(force: Vector3, position: Vector3) {
-        ObjectCalls.ptrcallWithTwoVector3Args(addConstantForceBind, segment, force, position)
+        ObjectCalls.ptrcallWithTwoVector3Args(Binds.addConstantForceBind, segment, force, position)
     }
 
     /**
@@ -333,7 +334,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.add_constant_torque
      */
     fun addConstantTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(addConstantTorqueBind, segment, torque)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.addConstantTorqueBind, segment, torque)
     }
 
     /**
@@ -343,7 +344,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_constant_force
      */
     fun setConstantForce(force: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setConstantForceBind, segment, force)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setConstantForceBind, segment, force)
     }
 
     /**
@@ -353,7 +354,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_constant_force
      */
     fun getConstantForce(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantForceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getConstantForceBind, segment)
     }
 
     /**
@@ -363,7 +364,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_constant_torque
      */
     fun setConstantTorque(torque: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setConstantTorqueBind, segment, torque)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setConstantTorqueBind, segment, torque)
     }
 
     /**
@@ -373,7 +374,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_constant_torque
      */
     fun getConstantTorque(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getConstantTorqueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getConstantTorqueBind, segment)
     }
 
     /**
@@ -382,7 +383,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_sleep_state
      */
     fun setSleepState(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSleepStateBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSleepStateBind, segment, enabled)
     }
 
     /**
@@ -391,7 +392,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.is_sleeping
      */
     fun isSleeping(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSleepingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSleepingBind, segment)
     }
 
     /**
@@ -400,7 +401,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_collision_layer
      */
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionLayerBind, segment, layer)
     }
 
     /**
@@ -409,7 +410,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_collision_layer
      */
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionLayerBind, segment)
     }
 
     /**
@@ -418,7 +419,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -427,7 +428,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
     }
 
     /**
@@ -437,7 +438,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_count
      */
     fun getContactCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getContactCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getContactCountBind, segment)
     }
 
     /**
@@ -446,7 +447,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_local_position
      */
     fun getContactLocalPosition(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalPositionBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getContactLocalPositionBind, segment, contactIdx)
     }
 
     /**
@@ -455,7 +456,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_local_normal
      */
     fun getContactLocalNormal(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalNormalBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getContactLocalNormalBind, segment, contactIdx)
     }
 
     /**
@@ -464,7 +465,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_impulse
      */
     fun getContactImpulse(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactImpulseBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getContactImpulseBind, segment, contactIdx)
     }
 
     /**
@@ -473,7 +474,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_local_shape
      */
     fun getContactLocalShape(contactIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getContactLocalShapeBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getContactLocalShapeBind, segment, contactIdx)
     }
 
     /**
@@ -482,7 +483,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_local_velocity_at_position
      */
     fun getContactLocalVelocityAtPosition(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactLocalVelocityAtPositionBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getContactLocalVelocityAtPositionBind, segment, contactIdx)
     }
 
     /**
@@ -491,7 +492,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider
      */
     fun getContactCollider(contactIdx: Int): RID {
-        return ObjectCalls.ptrcallWithIntArgRetRID(getContactColliderBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetRID(Binds.getContactColliderBind, segment, contactIdx)
     }
 
     /**
@@ -500,7 +501,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_position
      */
     fun getContactColliderPosition(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactColliderPositionBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getContactColliderPositionBind, segment, contactIdx)
     }
 
     /**
@@ -509,7 +510,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_id
      */
     fun getContactColliderId(contactIdx: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetLong(getContactColliderIdBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getContactColliderIdBind, segment, contactIdx)
     }
 
     /**
@@ -518,7 +519,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_object
      */
     fun getContactColliderObject(contactIdx: Int): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getContactColliderObjectBind, segment, contactIdx))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getContactColliderObjectBind, segment, contactIdx))
     }
 
     /**
@@ -527,7 +528,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_shape
      */
     fun getContactColliderShape(contactIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getContactColliderShapeBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getContactColliderShapeBind, segment, contactIdx)
     }
 
     /**
@@ -536,7 +537,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_contact_collider_velocity_at_position
      */
     fun getContactColliderVelocityAtPosition(contactIdx: Int): Vector3 {
-        return ObjectCalls.ptrcallWithIntArgRetVector3(getContactColliderVelocityAtPositionBind, segment, contactIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getContactColliderVelocityAtPositionBind, segment, contactIdx)
     }
 
     /**
@@ -545,7 +546,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_step
      */
     fun getStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
     }
 
     /**
@@ -555,7 +556,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.integrate_forces
      */
     fun integrateForces() {
-        ObjectCalls.ptrcallNoArgs(integrateForcesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.integrateForcesBind, segment)
     }
 
     /**
@@ -564,7 +565,7 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsDirectBodyState3D.get_space_state
      */
     fun getSpaceState(): PhysicsDirectSpaceState3D {
-        return requireGodotReturn(PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSpaceStateBind, segment)), "PhysicsDirectBodyState3D.get_space_state")
+        return requireGodotReturn(PhysicsDirectSpaceState3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSpaceStateBind, segment)), "PhysicsDirectBodyState3D.get_space_state")
     }
 
     companion object {
@@ -574,255 +575,257 @@ open class PhysicsDirectBodyState3D(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): PhysicsDirectBodyState3D? =
             if (handle.address() == 0L) null else PhysicsDirectBodyState3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TOTAL_GRAVITY_HASH = 3360562783L
-        private val getTotalGravityBind by lazy {
+        @JvmField
+        val getTotalGravityBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_total_gravity", GET_TOTAL_GRAVITY_HASH)
-        }
 
         private const val GET_TOTAL_LINEAR_DAMP_HASH = 1740695150L
-        private val getTotalLinearDampBind by lazy {
+        @JvmField
+        val getTotalLinearDampBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_total_linear_damp", GET_TOTAL_LINEAR_DAMP_HASH)
-        }
 
         private const val GET_TOTAL_ANGULAR_DAMP_HASH = 1740695150L
-        private val getTotalAngularDampBind by lazy {
+        @JvmField
+        val getTotalAngularDampBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_total_angular_damp", GET_TOTAL_ANGULAR_DAMP_HASH)
-        }
 
         private const val GET_CENTER_OF_MASS_HASH = 3360562783L
-        private val getCenterOfMassBind by lazy {
+        @JvmField
+        val getCenterOfMassBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_center_of_mass", GET_CENTER_OF_MASS_HASH)
-        }
 
         private const val GET_CENTER_OF_MASS_LOCAL_HASH = 3360562783L
-        private val getCenterOfMassLocalBind by lazy {
+        @JvmField
+        val getCenterOfMassLocalBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_center_of_mass_local", GET_CENTER_OF_MASS_LOCAL_HASH)
-        }
 
         private const val GET_PRINCIPAL_INERTIA_AXES_HASH = 2716978435L
-        private val getPrincipalInertiaAxesBind by lazy {
+        @JvmField
+        val getPrincipalInertiaAxesBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_principal_inertia_axes", GET_PRINCIPAL_INERTIA_AXES_HASH)
-        }
 
         private const val GET_INVERSE_MASS_HASH = 1740695150L
-        private val getInverseMassBind by lazy {
+        @JvmField
+        val getInverseMassBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_inverse_mass", GET_INVERSE_MASS_HASH)
-        }
 
         private const val GET_INVERSE_INERTIA_HASH = 3360562783L
-        private val getInverseInertiaBind by lazy {
+        @JvmField
+        val getInverseInertiaBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_inverse_inertia", GET_INVERSE_INERTIA_HASH)
-        }
 
         private const val GET_INVERSE_INERTIA_TENSOR_HASH = 2716978435L
-        private val getInverseInertiaTensorBind by lazy {
+        @JvmField
+        val getInverseInertiaTensorBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_inverse_inertia_tensor", GET_INVERSE_INERTIA_TENSOR_HASH)
-        }
 
         private const val SET_LINEAR_VELOCITY_HASH = 3460891852L
-        private val setLinearVelocityBind by lazy {
+        @JvmField
+        val setLinearVelocityBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "set_linear_velocity", SET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_LINEAR_VELOCITY_HASH = 3360562783L
-        private val getLinearVelocityBind by lazy {
+        @JvmField
+        val getLinearVelocityBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_linear_velocity", GET_LINEAR_VELOCITY_HASH)
-        }
 
         private const val SET_ANGULAR_VELOCITY_HASH = 3460891852L
-        private val setAngularVelocityBind by lazy {
+        @JvmField
+        val setAngularVelocityBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "set_angular_velocity", SET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_ANGULAR_VELOCITY_HASH = 3360562783L
-        private val getAngularVelocityBind by lazy {
+        @JvmField
+        val getAngularVelocityBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_angular_velocity", GET_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val SET_TRANSFORM_HASH = 2952846383L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val GET_TRANSFORM_HASH = 3229777777L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val GET_VELOCITY_AT_LOCAL_POSITION_HASH = 192990374L
-        private val getVelocityAtLocalPositionBind by lazy {
+        @JvmField
+        val getVelocityAtLocalPositionBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_velocity_at_local_position", GET_VELOCITY_AT_LOCAL_POSITION_HASH)
-        }
 
         private const val APPLY_CENTRAL_IMPULSE_HASH = 2007698547L
-        private val applyCentralImpulseBind by lazy {
+        @JvmField
+        val applyCentralImpulseBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "apply_central_impulse", APPLY_CENTRAL_IMPULSE_HASH)
-        }
 
         private const val APPLY_IMPULSE_HASH = 2754756483L
-        private val applyImpulseBind by lazy {
+        @JvmField
+        val applyImpulseBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "apply_impulse", APPLY_IMPULSE_HASH)
-        }
 
         private const val APPLY_TORQUE_IMPULSE_HASH = 3460891852L
-        private val applyTorqueImpulseBind by lazy {
+        @JvmField
+        val applyTorqueImpulseBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "apply_torque_impulse", APPLY_TORQUE_IMPULSE_HASH)
-        }
 
         private const val APPLY_CENTRAL_FORCE_HASH = 2007698547L
-        private val applyCentralForceBind by lazy {
+        @JvmField
+        val applyCentralForceBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "apply_central_force", APPLY_CENTRAL_FORCE_HASH)
-        }
 
         private const val APPLY_FORCE_HASH = 2754756483L
-        private val applyForceBind by lazy {
+        @JvmField
+        val applyForceBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "apply_force", APPLY_FORCE_HASH)
-        }
 
         private const val APPLY_TORQUE_HASH = 3460891852L
-        private val applyTorqueBind by lazy {
+        @JvmField
+        val applyTorqueBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "apply_torque", APPLY_TORQUE_HASH)
-        }
 
         private const val ADD_CONSTANT_CENTRAL_FORCE_HASH = 2007698547L
-        private val addConstantCentralForceBind by lazy {
+        @JvmField
+        val addConstantCentralForceBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "add_constant_central_force", ADD_CONSTANT_CENTRAL_FORCE_HASH)
-        }
 
         private const val ADD_CONSTANT_FORCE_HASH = 2754756483L
-        private val addConstantForceBind by lazy {
+        @JvmField
+        val addConstantForceBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "add_constant_force", ADD_CONSTANT_FORCE_HASH)
-        }
 
         private const val ADD_CONSTANT_TORQUE_HASH = 3460891852L
-        private val addConstantTorqueBind by lazy {
+        @JvmField
+        val addConstantTorqueBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "add_constant_torque", ADD_CONSTANT_TORQUE_HASH)
-        }
 
         private const val SET_CONSTANT_FORCE_HASH = 3460891852L
-        private val setConstantForceBind by lazy {
+        @JvmField
+        val setConstantForceBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "set_constant_force", SET_CONSTANT_FORCE_HASH)
-        }
 
         private const val GET_CONSTANT_FORCE_HASH = 3360562783L
-        private val getConstantForceBind by lazy {
+        @JvmField
+        val getConstantForceBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_constant_force", GET_CONSTANT_FORCE_HASH)
-        }
 
         private const val SET_CONSTANT_TORQUE_HASH = 3460891852L
-        private val setConstantTorqueBind by lazy {
+        @JvmField
+        val setConstantTorqueBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "set_constant_torque", SET_CONSTANT_TORQUE_HASH)
-        }
 
         private const val GET_CONSTANT_TORQUE_HASH = 3360562783L
-        private val getConstantTorqueBind by lazy {
+        @JvmField
+        val getConstantTorqueBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_constant_torque", GET_CONSTANT_TORQUE_HASH)
-        }
 
         private const val SET_SLEEP_STATE_HASH = 2586408642L
-        private val setSleepStateBind by lazy {
+        @JvmField
+        val setSleepStateBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "set_sleep_state", SET_SLEEP_STATE_HASH)
-        }
 
         private const val IS_SLEEPING_HASH = 36873697L
-        private val isSleepingBind by lazy {
+        @JvmField
+        val isSleepingBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "is_sleeping", IS_SLEEPING_HASH)
-        }
 
         private const val SET_COLLISION_LAYER_HASH = 1286410249L
-        private val setCollisionLayerBind by lazy {
+        @JvmField
+        val setCollisionLayerBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "set_collision_layer", SET_COLLISION_LAYER_HASH)
-        }
 
         private const val GET_COLLISION_LAYER_HASH = 3905245786L
-        private val getCollisionLayerBind by lazy {
+        @JvmField
+        val getCollisionLayerBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_collision_layer", GET_COLLISION_LAYER_HASH)
-        }
 
         private const val SET_COLLISION_MASK_HASH = 1286410249L
-        private val setCollisionMaskBind by lazy {
+        @JvmField
+        val setCollisionMaskBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "set_collision_mask", SET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
-        private val getCollisionMaskBind by lazy {
+        @JvmField
+        val getCollisionMaskBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_collision_mask", GET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_CONTACT_COUNT_HASH = 3905245786L
-        private val getContactCountBind by lazy {
+        @JvmField
+        val getContactCountBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_count", GET_CONTACT_COUNT_HASH)
-        }
 
         private const val GET_CONTACT_LOCAL_POSITION_HASH = 711720468L
-        private val getContactLocalPositionBind by lazy {
+        @JvmField
+        val getContactLocalPositionBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_local_position", GET_CONTACT_LOCAL_POSITION_HASH)
-        }
 
         private const val GET_CONTACT_LOCAL_NORMAL_HASH = 711720468L
-        private val getContactLocalNormalBind by lazy {
+        @JvmField
+        val getContactLocalNormalBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_local_normal", GET_CONTACT_LOCAL_NORMAL_HASH)
-        }
 
         private const val GET_CONTACT_IMPULSE_HASH = 711720468L
-        private val getContactImpulseBind by lazy {
+        @JvmField
+        val getContactImpulseBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_impulse", GET_CONTACT_IMPULSE_HASH)
-        }
 
         private const val GET_CONTACT_LOCAL_SHAPE_HASH = 923996154L
-        private val getContactLocalShapeBind by lazy {
+        @JvmField
+        val getContactLocalShapeBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_local_shape", GET_CONTACT_LOCAL_SHAPE_HASH)
-        }
 
         private const val GET_CONTACT_LOCAL_VELOCITY_AT_POSITION_HASH = 711720468L
-        private val getContactLocalVelocityAtPositionBind by lazy {
+        @JvmField
+        val getContactLocalVelocityAtPositionBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_local_velocity_at_position", GET_CONTACT_LOCAL_VELOCITY_AT_POSITION_HASH)
-        }
 
         private const val GET_CONTACT_COLLIDER_HASH = 495598643L
-        private val getContactColliderBind by lazy {
+        @JvmField
+        val getContactColliderBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_collider", GET_CONTACT_COLLIDER_HASH)
-        }
 
         private const val GET_CONTACT_COLLIDER_POSITION_HASH = 711720468L
-        private val getContactColliderPositionBind by lazy {
+        @JvmField
+        val getContactColliderPositionBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_collider_position", GET_CONTACT_COLLIDER_POSITION_HASH)
-        }
 
         private const val GET_CONTACT_COLLIDER_ID_HASH = 923996154L
-        private val getContactColliderIdBind by lazy {
+        @JvmField
+        val getContactColliderIdBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_collider_id", GET_CONTACT_COLLIDER_ID_HASH)
-        }
 
         private const val GET_CONTACT_COLLIDER_OBJECT_HASH = 3332903315L
-        private val getContactColliderObjectBind by lazy {
+        @JvmField
+        val getContactColliderObjectBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_collider_object", GET_CONTACT_COLLIDER_OBJECT_HASH)
-        }
 
         private const val GET_CONTACT_COLLIDER_SHAPE_HASH = 923996154L
-        private val getContactColliderShapeBind by lazy {
+        @JvmField
+        val getContactColliderShapeBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_collider_shape", GET_CONTACT_COLLIDER_SHAPE_HASH)
-        }
 
         private const val GET_CONTACT_COLLIDER_VELOCITY_AT_POSITION_HASH = 711720468L
-        private val getContactColliderVelocityAtPositionBind by lazy {
+        @JvmField
+        val getContactColliderVelocityAtPositionBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_contact_collider_velocity_at_position", GET_CONTACT_COLLIDER_VELOCITY_AT_POSITION_HASH)
-        }
 
         private const val GET_STEP_HASH = 1740695150L
-        private val getStepBind by lazy {
+        @JvmField
+        val getStepBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_step", GET_STEP_HASH)
-        }
 
         private const val INTEGRATE_FORCES_HASH = 3218959716L
-        private val integrateForcesBind by lazy {
+        @JvmField
+        val integrateForcesBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "integrate_forces", INTEGRATE_FORCES_HASH)
-        }
 
         private const val GET_SPACE_STATE_HASH = 2069328350L
-        private val getSpaceStateBind by lazy {
+        @JvmField
+        val getSpaceStateBind =
             ObjectCalls.getMethodBind("PhysicsDirectBodyState3D", "get_space_state", GET_SPACE_STATE_HASH)
-        }
     }
 }

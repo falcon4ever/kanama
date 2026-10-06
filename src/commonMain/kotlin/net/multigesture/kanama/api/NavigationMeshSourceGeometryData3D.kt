@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -42,7 +43,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun setVertices(vertices: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setVerticesBind, segment, vertices)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setVerticesBind, segment, vertices)
     }
 
     /**
@@ -52,7 +53,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun getVertices(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getVerticesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getVerticesBind, segment)
     }
 
     /**
@@ -64,7 +65,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun setIndices(indices: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setIndicesBind, segment, indices)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setIndicesBind, segment, indices)
     }
 
     /**
@@ -74,7 +75,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun getIndices(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getIndicesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getIndicesBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun appendArrays(vertices: List<Float>, indices: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListAndPackedInt32ListArgs(appendArraysBind, segment, vertices, indices)
+        ObjectCalls.ptrcallWithPackedFloat32ListAndPackedInt32ListArgs(Binds.appendArraysBind, segment, vertices, indices)
     }
 
     /**
@@ -95,7 +96,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun hasData(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasDataBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun addMesh(mesh: Mesh?, xform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndTransform3DArg(addMeshBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, xform)
+        ObjectCalls.ptrcallWithObjectAndTransform3DArg(Binds.addMeshBind, segment, mesh?.requireOpenHandle() ?: NULL_SEGMENT, xform)
     }
 
     /**
@@ -131,7 +132,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun addMeshArray(meshArray: List<Any?>, xform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayTransform3DArgs(addMeshArrayBind, segment, meshArray, xform)
+        ObjectCalls.ptrcallWithArrayTransform3DArgs(Binds.addMeshArrayBind, segment, meshArray, xform)
     }
 
     /**
@@ -144,7 +145,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun addFaces(faces: List<Vector3>, xform: Transform3D) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListAndTransform3DArg(addFacesBind, segment, faces, xform)
+        ObjectCalls.ptrcallWithPackedVector3ListAndTransform3DArg(Binds.addFacesBind, segment, faces, xform)
     }
 
     /**
@@ -155,7 +156,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun merge(otherGeometry: NavigationMeshSourceGeometryData3D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.mergeBind, segment, listOf(otherGeometry?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -168,7 +169,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun addProjectedObstruction(vertices: List<Vector3>, elevation: Double, height: Double, carve: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs(addProjectedObstructionBind, segment, vertices, elevation, height, carve)
+        ObjectCalls.ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs(Binds.addProjectedObstructionBind, segment, vertices, elevation, height, carve)
     }
 
     /**
@@ -178,7 +179,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun clearProjectedObstructions() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearProjectedObstructionsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearProjectedObstructionsBind, segment)
     }
 
     /**
@@ -189,7 +190,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun setProjectedObstructions(projectedObstructions: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setProjectedObstructionsBind, segment, projectedObstructions)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setProjectedObstructionsBind, segment, projectedObstructions)
     }
 
     /**
@@ -204,7 +205,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun getProjectedObstructions(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getProjectedObstructionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getProjectedObstructionsBind, segment)
     }
 
     /**
@@ -216,7 +217,7 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
      */
     fun getBounds(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getBoundsBind, segment)
     }
 
     companion object {
@@ -229,85 +230,87 @@ class NavigationMeshSourceGeometryData3D(handle: GodotHandle) : Resource(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationMeshSourceGeometryData3D? =
             if (handle.address() == 0L) null else NavigationMeshSourceGeometryData3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_VERTICES_HASH = 2899603908L
-        private val setVerticesBind by lazy {
+        @JvmField
+        val setVerticesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "set_vertices", SET_VERTICES_HASH)
-        }
 
         private const val GET_VERTICES_HASH = 675695659L
-        private val getVerticesBind by lazy {
+        @JvmField
+        val getVerticesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "get_vertices", GET_VERTICES_HASH)
-        }
 
         private const val SET_INDICES_HASH = 3614634198L
-        private val setIndicesBind by lazy {
+        @JvmField
+        val setIndicesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "set_indices", SET_INDICES_HASH)
-        }
 
         private const val GET_INDICES_HASH = 1930428628L
-        private val getIndicesBind by lazy {
+        @JvmField
+        val getIndicesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "get_indices", GET_INDICES_HASH)
-        }
 
         private const val APPEND_ARRAYS_HASH = 3117535015L
-        private val appendArraysBind by lazy {
+        @JvmField
+        val appendArraysBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "append_arrays", APPEND_ARRAYS_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "clear", CLEAR_HASH)
-        }
 
         private const val HAS_DATA_HASH = 2240911060L
-        private val hasDataBind by lazy {
+        @JvmField
+        val hasDataBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "has_data", HAS_DATA_HASH)
-        }
 
         private const val ADD_MESH_HASH = 975462459L
-        private val addMeshBind by lazy {
+        @JvmField
+        val addMeshBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_mesh", ADD_MESH_HASH)
-        }
 
         private const val ADD_MESH_ARRAY_HASH = 4235710913L
-        private val addMeshArrayBind by lazy {
+        @JvmField
+        val addMeshArrayBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_mesh_array", ADD_MESH_ARRAY_HASH)
-        }
 
         private const val ADD_FACES_HASH = 1440358797L
-        private val addFacesBind by lazy {
+        @JvmField
+        val addFacesBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_faces", ADD_FACES_HASH)
-        }
 
         private const val MERGE_HASH = 655828145L
-        private val mergeBind by lazy {
+        @JvmField
+        val mergeBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "merge", MERGE_HASH)
-        }
 
         private const val ADD_PROJECTED_OBSTRUCTION_HASH = 3351846707L
-        private val addProjectedObstructionBind by lazy {
+        @JvmField
+        val addProjectedObstructionBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "add_projected_obstruction", ADD_PROJECTED_OBSTRUCTION_HASH)
-        }
 
         private const val CLEAR_PROJECTED_OBSTRUCTIONS_HASH = 3218959716L
-        private val clearProjectedObstructionsBind by lazy {
+        @JvmField
+        val clearProjectedObstructionsBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "clear_projected_obstructions", CLEAR_PROJECTED_OBSTRUCTIONS_HASH)
-        }
 
         private const val SET_PROJECTED_OBSTRUCTIONS_HASH = 381264803L
-        private val setProjectedObstructionsBind by lazy {
+        @JvmField
+        val setProjectedObstructionsBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "set_projected_obstructions", SET_PROJECTED_OBSTRUCTIONS_HASH)
-        }
 
         private const val GET_PROJECTED_OBSTRUCTIONS_HASH = 3995934104L
-        private val getProjectedObstructionsBind by lazy {
+        @JvmField
+        val getProjectedObstructionsBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "get_projected_obstructions", GET_PROJECTED_OBSTRUCTIONS_HASH)
-        }
 
         private const val GET_BOUNDS_HASH = 1021181044L
-        private val getBoundsBind by lazy {
+        @JvmField
+        val getBoundsBind =
             ObjectCalls.getMethodBind("NavigationMeshSourceGeometryData3D", "get_bounds", GET_BOUNDS_HASH)
-        }
     }
 }

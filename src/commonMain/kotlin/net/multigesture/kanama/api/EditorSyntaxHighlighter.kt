@@ -22,7 +22,5 @@ open class EditorSyntaxHighlighter(handle: GodotHandle) : SyntaxHighlighter(hand
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSyntaxHighlighter? =
             if (handle.address() == 0L) null else EditorSyntaxHighlighter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

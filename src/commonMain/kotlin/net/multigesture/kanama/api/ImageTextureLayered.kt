@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -22,7 +23,7 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
      */
     fun createFromImages(images: List<Image>): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithObjectListArgRetLong(createFromImagesBind, segment, images))
+        return GodotError(ObjectCalls.ptrcallWithObjectListArgRetLong(Binds.createFromImagesBind, segment, images))
     }
 
     /**
@@ -35,7 +36,7 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
      */
     fun updateLayer(image: Image?, layer: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndIntArg(updateLayerBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, layer)
+        ObjectCalls.ptrcallWithObjectAndIntArg(Binds.updateLayerBind, segment, image?.requireOpenHandle() ?: NULL_SEGMENT, layer)
     }
 
     companion object {
@@ -48,15 +49,17 @@ open class ImageTextureLayered(handle: GodotHandle) : TextureLayered(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImageTextureLayered? =
             if (handle.address() == 0L) null else ImageTextureLayered(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_FROM_IMAGES_HASH = 2785773503L
-        private val createFromImagesBind by lazy {
+        @JvmField
+        val createFromImagesBind =
             ObjectCalls.getMethodBind("ImageTextureLayered", "create_from_images", CREATE_FROM_IMAGES_HASH)
-        }
 
         private const val UPDATE_LAYER_HASH = 3331733361L
-        private val updateLayerBind by lazy {
+        @JvmField
+        val updateLayerBind =
             ObjectCalls.getMethodBind("ImageTextureLayered", "update_layer", UPDATE_LAYER_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -24,7 +25,7 @@ class Path2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Path2D.set_curve
      */
     fun setCurve(curve: Curve2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCurveBind, segment, listOf(curve?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -33,7 +34,7 @@ class Path2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Path2D.get_curve
      */
     fun getCurve(): Curve2D? {
-        return Curve2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getCurveBind, segment))
+        return Curve2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCurveBind, segment))
     }
 
     companion object {
@@ -43,15 +44,17 @@ class Path2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Path2D? =
             if (handle.address() == 0L) null else Path2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CURVE_HASH = 659985499L
-        private val setCurveBind by lazy {
+        @JvmField
+        val setCurveBind =
             ObjectCalls.getMethodBind("Path2D", "set_curve", SET_CURVE_HASH)
-        }
 
         private const val GET_CURVE_HASH = 660369445L
-        private val getCurveBind by lazy {
+        @JvmField
+        val getCurveBind =
             ObjectCalls.getMethodBind("Path2D", "get_curve", GET_CURVE_HASH)
-        }
     }
 }

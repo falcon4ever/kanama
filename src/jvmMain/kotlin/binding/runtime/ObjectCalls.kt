@@ -119,7 +119,10 @@ actual object ObjectCalls {
     PtrcallHandle.HANDLE.invokeExact(methodBind, instance, args, ret)
   }
 
-  private val notificationBind by lazy { getMethodBind("Object", "notification", 4023243586L) }
+  /** `Object.notification`, sent once per [constructObject] (task 131 item 18: a static final). */
+  private object NotificationBind {
+    @JvmField val BIND: MemorySegment = getMethodBind("Object", "notification", 4023243586L)
+  }
 
   private class PtrcallScratch {
     private val arena = Arena.ofAuto()
@@ -265,7 +268,7 @@ actual object ObjectCalls {
 
   fun notifyPostinitialize(instance: MemorySegment) {
     if (instance.address() == 0L) return
-    ptrcallWithIntAndBoolArgs(notificationBind, instance, 0, false)
+    ptrcallWithIntAndBoolArgs(NotificationBind.BIND, instance, 0, false)
   }
 
   /**

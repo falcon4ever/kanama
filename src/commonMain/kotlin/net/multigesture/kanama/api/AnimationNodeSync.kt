@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
      */
     fun setUseSync(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseSyncBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseSyncBind, segment, enable)
     }
 
     /**
@@ -36,7 +37,7 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
      */
     fun isUsingSync(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingSyncBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingSyncBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ open class AnimationNodeSync(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeSync? =
             if (handle.address() == 0L) null else AnimationNodeSync(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_USE_SYNC_HASH = 2586408642L
-        private val setUseSyncBind by lazy {
+        @JvmField
+        val setUseSyncBind =
             ObjectCalls.getMethodBind("AnimationNodeSync", "set_use_sync", SET_USE_SYNC_HASH)
-        }
 
         private const val IS_USING_SYNC_HASH = 36873697L
-        private val isUsingSyncBind by lazy {
+        @JvmField
+        val isUsingSyncBind =
             ObjectCalls.getMethodBind("AnimationNodeSync", "is_using_sync", IS_USING_SYNC_HASH)
-        }
     }
 }

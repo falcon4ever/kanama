@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) 
      */
     fun setFactor(factor: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFactorBind, segment, factor)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFactorBind, segment, factor)
     }
 
     /**
@@ -36,7 +37,7 @@ class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) 
      */
     fun getFactor(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFactorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFactorBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ class InputEventMagnifyGesture(handle: GodotHandle) : InputEventGesture(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventMagnifyGesture? =
             if (handle.address() == 0L) null else InputEventMagnifyGesture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FACTOR_HASH = 373806689L
-        private val setFactorBind by lazy {
+        @JvmField
+        val setFactorBind =
             ObjectCalls.getMethodBind("InputEventMagnifyGesture", "set_factor", SET_FACTOR_HASH)
-        }
 
         private const val GET_FACTOR_HASH = 1740695150L
-        private val getFactorBind by lazy {
+        @JvmField
+        val getFactorBind =
             ObjectCalls.getMethodBind("InputEventMagnifyGesture", "get_factor", GET_FACTOR_HASH)
-        }
     }
 }

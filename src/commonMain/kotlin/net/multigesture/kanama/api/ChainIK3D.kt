@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -17,7 +18,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_root_bone_name
      */
     fun setRootBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setRootBoneNameBind, segment, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setRootBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -26,7 +27,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_root_bone_name
      */
     fun getRootBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getRootBoneNameBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getRootBoneNameBind, segment, index)
     }
 
     /**
@@ -35,7 +36,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_root_bone
      */
     fun setRootBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setRootBoneBind, segment, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setRootBoneBind, segment, index, bone)
     }
 
     /**
@@ -44,7 +45,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_root_bone
      */
     fun getRootBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getRootBoneBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getRootBoneBind, segment, index)
     }
 
     /**
@@ -55,7 +56,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_end_bone_name
      */
     fun setEndBoneName(index: Int, boneName: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setEndBoneNameBind, segment, index, boneName)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setEndBoneNameBind, segment, index, boneName)
     }
 
     /**
@@ -64,7 +65,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_end_bone_name
      */
     fun getEndBoneName(index: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getEndBoneNameBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getEndBoneNameBind, segment, index)
     }
 
     /**
@@ -73,7 +74,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_end_bone
      */
     fun setEndBone(index: Int, bone: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setEndBoneBind, segment, index, bone)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setEndBoneBind, segment, index, bone)
     }
 
     /**
@@ -82,7 +83,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_end_bone
      */
     fun getEndBone(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getEndBoneBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getEndBoneBind, segment, index)
     }
 
     /**
@@ -93,7 +94,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_extend_end_bone
      */
     fun setExtendEndBone(index: Int, enabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setExtendEndBoneBind, segment, index, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setExtendEndBoneBind, segment, index, enabled)
     }
 
     /**
@@ -102,7 +103,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.is_end_bone_extended
      */
     fun isEndBoneExtended(index: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isEndBoneExtendedBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isEndBoneExtendedBind, segment, index)
     }
 
     /**
@@ -111,7 +112,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_end_bone_direction
      */
     fun setEndBoneDirection(index: Int, boneDirection: SkeletonModifier3D.BoneDirection) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setEndBoneDirectionBind, segment, index, boneDirection.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setEndBoneDirectionBind, segment, index, boneDirection.value)
     }
 
     /**
@@ -121,7 +122,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_end_bone_direction
      */
     fun getEndBoneDirection(index: Int): SkeletonModifier3D.BoneDirection {
-        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(getEndBoneDirectionBind, segment, index))
+        return SkeletonModifier3D.BoneDirection(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getEndBoneDirectionBind, segment, index))
     }
 
     /**
@@ -130,7 +131,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.set_end_bone_length
      */
     fun setEndBoneLength(index: Int, length: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setEndBoneLengthBind, segment, index, length)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setEndBoneLengthBind, segment, index, length)
     }
 
     /**
@@ -139,7 +140,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_end_bone_length
      */
     fun getEndBoneLength(index: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getEndBoneLengthBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getEndBoneLengthBind, segment, index)
     }
 
     /**
@@ -148,7 +149,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_joint_bone_name
      */
     fun getJointBoneName(index: Int, joint: Int): String {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getJointBoneNameBind, segment, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getJointBoneNameBind, segment, index, joint)
     }
 
     /**
@@ -157,7 +158,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_joint_bone
      */
     fun getJointBone(index: Int, joint: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getJointBoneBind, segment, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getJointBoneBind, segment, index, joint)
     }
 
     /**
@@ -166,7 +167,7 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
      * Generated from Godot docs: ChainIK3D.get_joint_count
      */
     fun getJointCount(index: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getJointCountBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getJointCountBind, segment, index)
     }
 
     companion object {
@@ -176,90 +177,92 @@ open class ChainIK3D(handle: GodotHandle) : IKModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): ChainIK3D? =
             if (handle.address() == 0L) null else ChainIK3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ROOT_BONE_NAME_HASH = 501894301L
-        private val setRootBoneNameBind by lazy {
+        @JvmField
+        val setRootBoneNameBind =
             ObjectCalls.getMethodBind("ChainIK3D", "set_root_bone_name", SET_ROOT_BONE_NAME_HASH)
-        }
 
         private const val GET_ROOT_BONE_NAME_HASH = 844755477L
-        private val getRootBoneNameBind by lazy {
+        @JvmField
+        val getRootBoneNameBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_root_bone_name", GET_ROOT_BONE_NAME_HASH)
-        }
 
         private const val SET_ROOT_BONE_HASH = 3937882851L
-        private val setRootBoneBind by lazy {
+        @JvmField
+        val setRootBoneBind =
             ObjectCalls.getMethodBind("ChainIK3D", "set_root_bone", SET_ROOT_BONE_HASH)
-        }
 
         private const val GET_ROOT_BONE_HASH = 923996154L
-        private val getRootBoneBind by lazy {
+        @JvmField
+        val getRootBoneBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_root_bone", GET_ROOT_BONE_HASH)
-        }
 
         private const val SET_END_BONE_NAME_HASH = 501894301L
-        private val setEndBoneNameBind by lazy {
+        @JvmField
+        val setEndBoneNameBind =
             ObjectCalls.getMethodBind("ChainIK3D", "set_end_bone_name", SET_END_BONE_NAME_HASH)
-        }
 
         private const val GET_END_BONE_NAME_HASH = 844755477L
-        private val getEndBoneNameBind by lazy {
+        @JvmField
+        val getEndBoneNameBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_end_bone_name", GET_END_BONE_NAME_HASH)
-        }
 
         private const val SET_END_BONE_HASH = 3937882851L
-        private val setEndBoneBind by lazy {
+        @JvmField
+        val setEndBoneBind =
             ObjectCalls.getMethodBind("ChainIK3D", "set_end_bone", SET_END_BONE_HASH)
-        }
 
         private const val GET_END_BONE_HASH = 923996154L
-        private val getEndBoneBind by lazy {
+        @JvmField
+        val getEndBoneBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_end_bone", GET_END_BONE_HASH)
-        }
 
         private const val SET_EXTEND_END_BONE_HASH = 300928843L
-        private val setExtendEndBoneBind by lazy {
+        @JvmField
+        val setExtendEndBoneBind =
             ObjectCalls.getMethodBind("ChainIK3D", "set_extend_end_bone", SET_EXTEND_END_BONE_HASH)
-        }
 
         private const val IS_END_BONE_EXTENDED_HASH = 1116898809L
-        private val isEndBoneExtendedBind by lazy {
+        @JvmField
+        val isEndBoneExtendedBind =
             ObjectCalls.getMethodBind("ChainIK3D", "is_end_bone_extended", IS_END_BONE_EXTENDED_HASH)
-        }
 
         private const val SET_END_BONE_DIRECTION_HASH = 2838484201L
-        private val setEndBoneDirectionBind by lazy {
+        @JvmField
+        val setEndBoneDirectionBind =
             ObjectCalls.getMethodBind("ChainIK3D", "set_end_bone_direction", SET_END_BONE_DIRECTION_HASH)
-        }
 
         private const val GET_END_BONE_DIRECTION_HASH = 1843036459L
-        private val getEndBoneDirectionBind by lazy {
+        @JvmField
+        val getEndBoneDirectionBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_end_bone_direction", GET_END_BONE_DIRECTION_HASH)
-        }
 
         private const val SET_END_BONE_LENGTH_HASH = 1602489585L
-        private val setEndBoneLengthBind by lazy {
+        @JvmField
+        val setEndBoneLengthBind =
             ObjectCalls.getMethodBind("ChainIK3D", "set_end_bone_length", SET_END_BONE_LENGTH_HASH)
-        }
 
         private const val GET_END_BONE_LENGTH_HASH = 2339986948L
-        private val getEndBoneLengthBind by lazy {
+        @JvmField
+        val getEndBoneLengthBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_end_bone_length", GET_END_BONE_LENGTH_HASH)
-        }
 
         private const val GET_JOINT_BONE_NAME_HASH = 1391810591L
-        private val getJointBoneNameBind by lazy {
+        @JvmField
+        val getJointBoneNameBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_joint_bone_name", GET_JOINT_BONE_NAME_HASH)
-        }
 
         private const val GET_JOINT_BONE_HASH = 3175239445L
-        private val getJointBoneBind by lazy {
+        @JvmField
+        val getJointBoneBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_joint_bone", GET_JOINT_BONE_HASH)
-        }
 
         private const val GET_JOINT_COUNT_HASH = 923996154L
-        private val getJointCountBind by lazy {
+        @JvmField
+        val getJointCountBind =
             ObjectCalls.getMethodBind("ChainIK3D", "get_joint_count", GET_JOINT_COUNT_HASH)
-        }
     }
 }

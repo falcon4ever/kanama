@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -79,7 +80,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_position
      */
     fun setPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setPositionBind, segment, position)
     }
 
     /**
@@ -90,7 +91,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_rotation
      */
     fun setRotation(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRotationBind, segment, radians)
     }
 
     /**
@@ -100,7 +101,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_rotation_degrees
      */
     fun setRotationDegrees(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationDegreesBind, segment, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRotationDegreesBind, segment, degrees)
     }
 
     /**
@@ -112,7 +113,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_skew
      */
     fun setSkew(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSkewBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSkewBind, segment, radians)
     }
 
     /**
@@ -125,7 +126,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_scale
      */
     fun setScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setScaleBind, segment, scale)
     }
 
     /**
@@ -134,7 +135,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_position
      */
     fun getPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getPositionBind, segment)
     }
 
     /**
@@ -145,7 +146,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_rotation
      */
     fun getRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRotationBind, segment)
     }
 
     /**
@@ -155,7 +156,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_rotation_degrees
      */
     fun getRotationDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationDegreesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRotationDegreesBind, segment)
     }
 
     /**
@@ -167,7 +168,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_skew
      */
     fun getSkew(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkewBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkewBind, segment)
     }
 
     /**
@@ -180,7 +181,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_scale
      */
     fun getScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScaleBind, segment)
     }
 
     /**
@@ -190,7 +191,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.rotate
      */
     fun rotate(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(rotateBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.rotateBind, segment, radians)
     }
 
     /**
@@ -200,7 +201,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.move_local_x
      */
     fun moveLocalX(delta: Double, scaled: Boolean = false) {
-        ObjectCalls.ptrcallWithDoubleAndBoolArgs(moveLocalXBind, segment, delta, scaled)
+        ObjectCalls.ptrcallWithDoubleAndBoolArgs(Binds.moveLocalXBind, segment, delta, scaled)
     }
 
     /**
@@ -210,7 +211,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.move_local_y
      */
     fun moveLocalY(delta: Double, scaled: Boolean = false) {
-        ObjectCalls.ptrcallWithDoubleAndBoolArgs(moveLocalYBind, segment, delta, scaled)
+        ObjectCalls.ptrcallWithDoubleAndBoolArgs(Binds.moveLocalYBind, segment, delta, scaled)
     }
 
     /**
@@ -220,7 +221,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.translate
      */
     fun translate(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(translateBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.translateBind, segment, offset)
     }
 
     /**
@@ -229,7 +230,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.global_translate
      */
     fun globalTranslate(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(globalTranslateBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.globalTranslateBind, segment, offset)
     }
 
     /**
@@ -238,7 +239,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.apply_scale
      */
     fun applyScale(ratio: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(applyScaleBind, segment, ratio)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.applyScaleBind, segment, ratio)
     }
 
     /**
@@ -247,7 +248,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_position
      */
     fun setGlobalPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGlobalPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGlobalPositionBind, segment, position)
     }
 
     /**
@@ -256,7 +257,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_position
      */
     fun getGlobalPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalPositionBind, segment)
     }
 
     /**
@@ -265,7 +266,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_rotation
      */
     fun setGlobalRotation(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGlobalRotationBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlobalRotationBind, segment, radians)
     }
 
     /**
@@ -275,7 +276,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_rotation_degrees
      */
     fun setGlobalRotationDegrees(degrees: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGlobalRotationDegreesBind, segment, degrees)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlobalRotationDegreesBind, segment, degrees)
     }
 
     /**
@@ -284,7 +285,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_rotation
      */
     fun getGlobalRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlobalRotationBind, segment)
     }
 
     /**
@@ -294,7 +295,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_rotation_degrees
      */
     fun getGlobalRotationDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalRotationDegreesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlobalRotationDegreesBind, segment)
     }
 
     /**
@@ -303,7 +304,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_skew
      */
     fun setGlobalSkew(radians: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setGlobalSkewBind, segment, radians)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGlobalSkewBind, segment, radians)
     }
 
     /**
@@ -312,7 +313,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_skew
      */
     fun getGlobalSkew(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGlobalSkewBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGlobalSkewBind, segment)
     }
 
     /**
@@ -321,7 +322,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_scale
      */
     fun setGlobalScale(scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGlobalScaleBind, segment, scale)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGlobalScaleBind, segment, scale)
     }
 
     /**
@@ -330,7 +331,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_global_scale
      */
     fun getGlobalScale(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalScaleBind, segment)
     }
 
     /**
@@ -339,7 +340,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_transform
      */
     fun setTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, segment, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setTransformBind, segment, xform)
     }
 
     /**
@@ -348,7 +349,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.set_global_transform
      */
     fun setGlobalTransform(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(setGlobalTransformBind, segment, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setGlobalTransformBind, segment, xform)
     }
 
     /**
@@ -359,7 +360,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.look_at
      */
     fun lookAt(point: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(lookAtBind, segment, point)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.lookAtBind, segment, point)
     }
 
     /**
@@ -370,7 +371,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_angle_to
      */
     fun getAngleTo(point: Vector2): Double {
-        return ObjectCalls.ptrcallWithVector2ArgRetDouble(getAngleToBind, segment, point)
+        return ObjectCalls.ptrcallWithVector2ArgRetDouble(Binds.getAngleToBind, segment, point)
     }
 
     /**
@@ -382,7 +383,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.to_local
      */
     fun toLocal(globalPoint: Vector2): Vector2 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(toLocalBind, segment, globalPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.toLocalBind, segment, globalPoint)
     }
 
     /**
@@ -395,7 +396,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.to_global
      */
     fun toGlobal(localPoint: Vector2): Vector2 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(toGlobalBind, segment, localPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.toGlobalBind, segment, localPoint)
     }
 
     /**
@@ -404,7 +405,7 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
      * Generated from Godot docs: Node2D.get_relative_transform_to_parent
      */
     fun getRelativeTransformToParent(parent: Node): Transform2D {
-        return ObjectCalls.ptrcallWithObjectArgRetTransform2D(getRelativeTransformToParentBind, segment, parent.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetTransform2D(Binds.getRelativeTransformToParentBind, segment, parent.segment)
     }
 
     companion object {
@@ -414,170 +415,172 @@ open class Node2D(handle: GodotHandle) : CanvasItem(handle) {
 
         internal fun wrap(handle: RawSegment): Node2D? =
             if (handle.address() == 0L) null else Node2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POSITION_HASH = 743155724L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("Node2D", "set_position", SET_POSITION_HASH)
-        }
 
         private const val SET_ROTATION_HASH = 373806689L
-        private val setRotationBind by lazy {
+        @JvmField
+        val setRotationBind =
             ObjectCalls.getMethodBind("Node2D", "set_rotation", SET_ROTATION_HASH)
-        }
 
         private const val SET_ROTATION_DEGREES_HASH = 373806689L
-        private val setRotationDegreesBind by lazy {
+        @JvmField
+        val setRotationDegreesBind =
             ObjectCalls.getMethodBind("Node2D", "set_rotation_degrees", SET_ROTATION_DEGREES_HASH)
-        }
 
         private const val SET_SKEW_HASH = 373806689L
-        private val setSkewBind by lazy {
+        @JvmField
+        val setSkewBind =
             ObjectCalls.getMethodBind("Node2D", "set_skew", SET_SKEW_HASH)
-        }
 
         private const val SET_SCALE_HASH = 743155724L
-        private val setScaleBind by lazy {
+        @JvmField
+        val setScaleBind =
             ObjectCalls.getMethodBind("Node2D", "set_scale", SET_SCALE_HASH)
-        }
 
         private const val GET_POSITION_HASH = 3341600327L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("Node2D", "get_position", GET_POSITION_HASH)
-        }
 
         private const val GET_ROTATION_HASH = 1740695150L
-        private val getRotationBind by lazy {
+        @JvmField
+        val getRotationBind =
             ObjectCalls.getMethodBind("Node2D", "get_rotation", GET_ROTATION_HASH)
-        }
 
         private const val GET_ROTATION_DEGREES_HASH = 1740695150L
-        private val getRotationDegreesBind by lazy {
+        @JvmField
+        val getRotationDegreesBind =
             ObjectCalls.getMethodBind("Node2D", "get_rotation_degrees", GET_ROTATION_DEGREES_HASH)
-        }
 
         private const val GET_SKEW_HASH = 1740695150L
-        private val getSkewBind by lazy {
+        @JvmField
+        val getSkewBind =
             ObjectCalls.getMethodBind("Node2D", "get_skew", GET_SKEW_HASH)
-        }
 
         private const val GET_SCALE_HASH = 3341600327L
-        private val getScaleBind by lazy {
+        @JvmField
+        val getScaleBind =
             ObjectCalls.getMethodBind("Node2D", "get_scale", GET_SCALE_HASH)
-        }
 
         private const val ROTATE_HASH = 373806689L
-        private val rotateBind by lazy {
+        @JvmField
+        val rotateBind =
             ObjectCalls.getMethodBind("Node2D", "rotate", ROTATE_HASH)
-        }
 
         private const val MOVE_LOCAL_X_HASH = 2087892650L
-        private val moveLocalXBind by lazy {
+        @JvmField
+        val moveLocalXBind =
             ObjectCalls.getMethodBind("Node2D", "move_local_x", MOVE_LOCAL_X_HASH)
-        }
 
         private const val MOVE_LOCAL_Y_HASH = 2087892650L
-        private val moveLocalYBind by lazy {
+        @JvmField
+        val moveLocalYBind =
             ObjectCalls.getMethodBind("Node2D", "move_local_y", MOVE_LOCAL_Y_HASH)
-        }
 
         private const val TRANSLATE_HASH = 743155724L
-        private val translateBind by lazy {
+        @JvmField
+        val translateBind =
             ObjectCalls.getMethodBind("Node2D", "translate", TRANSLATE_HASH)
-        }
 
         private const val GLOBAL_TRANSLATE_HASH = 743155724L
-        private val globalTranslateBind by lazy {
+        @JvmField
+        val globalTranslateBind =
             ObjectCalls.getMethodBind("Node2D", "global_translate", GLOBAL_TRANSLATE_HASH)
-        }
 
         private const val APPLY_SCALE_HASH = 743155724L
-        private val applyScaleBind by lazy {
+        @JvmField
+        val applyScaleBind =
             ObjectCalls.getMethodBind("Node2D", "apply_scale", APPLY_SCALE_HASH)
-        }
 
         private const val SET_GLOBAL_POSITION_HASH = 743155724L
-        private val setGlobalPositionBind by lazy {
+        @JvmField
+        val setGlobalPositionBind =
             ObjectCalls.getMethodBind("Node2D", "set_global_position", SET_GLOBAL_POSITION_HASH)
-        }
 
         private const val GET_GLOBAL_POSITION_HASH = 3341600327L
-        private val getGlobalPositionBind by lazy {
+        @JvmField
+        val getGlobalPositionBind =
             ObjectCalls.getMethodBind("Node2D", "get_global_position", GET_GLOBAL_POSITION_HASH)
-        }
 
         private const val SET_GLOBAL_ROTATION_HASH = 373806689L
-        private val setGlobalRotationBind by lazy {
+        @JvmField
+        val setGlobalRotationBind =
             ObjectCalls.getMethodBind("Node2D", "set_global_rotation", SET_GLOBAL_ROTATION_HASH)
-        }
 
         private const val SET_GLOBAL_ROTATION_DEGREES_HASH = 373806689L
-        private val setGlobalRotationDegreesBind by lazy {
+        @JvmField
+        val setGlobalRotationDegreesBind =
             ObjectCalls.getMethodBind("Node2D", "set_global_rotation_degrees", SET_GLOBAL_ROTATION_DEGREES_HASH)
-        }
 
         private const val GET_GLOBAL_ROTATION_HASH = 1740695150L
-        private val getGlobalRotationBind by lazy {
+        @JvmField
+        val getGlobalRotationBind =
             ObjectCalls.getMethodBind("Node2D", "get_global_rotation", GET_GLOBAL_ROTATION_HASH)
-        }
 
         private const val GET_GLOBAL_ROTATION_DEGREES_HASH = 1740695150L
-        private val getGlobalRotationDegreesBind by lazy {
+        @JvmField
+        val getGlobalRotationDegreesBind =
             ObjectCalls.getMethodBind("Node2D", "get_global_rotation_degrees", GET_GLOBAL_ROTATION_DEGREES_HASH)
-        }
 
         private const val SET_GLOBAL_SKEW_HASH = 373806689L
-        private val setGlobalSkewBind by lazy {
+        @JvmField
+        val setGlobalSkewBind =
             ObjectCalls.getMethodBind("Node2D", "set_global_skew", SET_GLOBAL_SKEW_HASH)
-        }
 
         private const val GET_GLOBAL_SKEW_HASH = 1740695150L
-        private val getGlobalSkewBind by lazy {
+        @JvmField
+        val getGlobalSkewBind =
             ObjectCalls.getMethodBind("Node2D", "get_global_skew", GET_GLOBAL_SKEW_HASH)
-        }
 
         private const val SET_GLOBAL_SCALE_HASH = 743155724L
-        private val setGlobalScaleBind by lazy {
+        @JvmField
+        val setGlobalScaleBind =
             ObjectCalls.getMethodBind("Node2D", "set_global_scale", SET_GLOBAL_SCALE_HASH)
-        }
 
         private const val GET_GLOBAL_SCALE_HASH = 3341600327L
-        private val getGlobalScaleBind by lazy {
+        @JvmField
+        val getGlobalScaleBind =
             ObjectCalls.getMethodBind("Node2D", "get_global_scale", GET_GLOBAL_SCALE_HASH)
-        }
 
         private const val SET_TRANSFORM_HASH = 2761652528L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("Node2D", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val SET_GLOBAL_TRANSFORM_HASH = 2761652528L
-        private val setGlobalTransformBind by lazy {
+        @JvmField
+        val setGlobalTransformBind =
             ObjectCalls.getMethodBind("Node2D", "set_global_transform", SET_GLOBAL_TRANSFORM_HASH)
-        }
 
         private const val LOOK_AT_HASH = 743155724L
-        private val lookAtBind by lazy {
+        @JvmField
+        val lookAtBind =
             ObjectCalls.getMethodBind("Node2D", "look_at", LOOK_AT_HASH)
-        }
 
         private const val GET_ANGLE_TO_HASH = 2276447920L
-        private val getAngleToBind by lazy {
+        @JvmField
+        val getAngleToBind =
             ObjectCalls.getMethodBind("Node2D", "get_angle_to", GET_ANGLE_TO_HASH)
-        }
 
         private const val TO_LOCAL_HASH = 2656412154L
-        private val toLocalBind by lazy {
+        @JvmField
+        val toLocalBind =
             ObjectCalls.getMethodBind("Node2D", "to_local", TO_LOCAL_HASH)
-        }
 
         private const val TO_GLOBAL_HASH = 2656412154L
-        private val toGlobalBind by lazy {
+        @JvmField
+        val toGlobalBind =
             ObjectCalls.getMethodBind("Node2D", "to_global", TO_GLOBAL_HASH)
-        }
 
         private const val GET_RELATIVE_TRANSFORM_TO_PARENT_HASH = 904556875L
-        private val getRelativeTransformToParentBind by lazy {
+        @JvmField
+        val getRelativeTransformToParentBind =
             ObjectCalls.getMethodBind("Node2D", "get_relative_transform_to_parent", GET_RELATIVE_TRANSFORM_TO_PARENT_HASH)
-        }
     }
 }

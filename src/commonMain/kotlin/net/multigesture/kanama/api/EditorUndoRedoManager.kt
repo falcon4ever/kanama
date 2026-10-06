@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -28,7 +29,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.create_action
      */
     fun createAction(name: String, mergeMode: UndoRedo.MergeMode = UndoRedo.MergeMode.DISABLE, customContext: GodotObject, backwardUndoOps: Boolean = false, markUnsaved: Boolean = true) {
-        ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(createActionBind, segment, name, mergeMode.value, customContext.segment, backwardUndoOps, markUnsaved)
+        ObjectCalls.ptrcallWithStringLongObjectTwoBoolArgs(Binds.createActionBind, segment, name, mergeMode.value, customContext.segment, backwardUndoOps, markUnsaved)
     }
 
     /**
@@ -38,7 +39,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.commit_action
      */
     fun commitAction(execute: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(commitActionBind, segment, execute)
+        ObjectCalls.ptrcallWithBoolArg(Binds.commitActionBind, segment, execute)
     }
 
     /**
@@ -48,7 +49,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.is_committing_action
      */
     fun isCommittingAction(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCommittingActionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCommittingActionBind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.force_fixed_history
      */
     fun forceFixedHistory() {
-        ObjectCalls.ptrcallNoArgs(forceFixedHistoryBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceFixedHistoryBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_do_method
      */
     fun addDoMethod(objectValue: GodotObject, method: String, vararg extraArgs: Any?) {
-        ObjectCalls.callWithVariantArgs(addDoMethodBind, segment, listOf(objectValue, method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(Binds.addDoMethodBind, segment, listOf(objectValue, method, *extraArgs))
     }
 
     /**
@@ -81,7 +82,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_undo_method
      */
     fun addUndoMethod(objectValue: GodotObject, method: String, vararg extraArgs: Any?) {
-        ObjectCalls.callWithVariantArgs(addUndoMethodBind, segment, listOf(objectValue, method, *extraArgs))
+        ObjectCalls.callWithVariantArgs(Binds.addUndoMethodBind, segment, listOf(objectValue, method, *extraArgs))
     }
 
     /**
@@ -91,7 +92,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_do_property
      */
     fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, segment, objectValue.segment, property, value)
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(Binds.addDoPropertyBind, segment, objectValue.segment, property, value)
     }
 
     /**
@@ -101,7 +102,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_undo_property
      */
     fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, segment, objectValue.segment, property, value)
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(Binds.addUndoPropertyBind, segment, objectValue.segment, property, value)
     }
 
     /**
@@ -111,7 +112,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_do_reference
      */
     fun addDoReference(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(addDoReferenceBind, segment, listOf(objectValue.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addDoReferenceBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -121,7 +122,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.add_undo_reference
      */
     fun addUndoReference(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(addUndoReferenceBind, segment, listOf(objectValue.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addUndoReferenceBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -131,7 +132,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.get_object_history_id
      */
     fun getObjectHistoryId(objectValue: GodotObject): Int {
-        return ObjectCalls.ptrcallWithObjectArgRetInt(getObjectHistoryIdBind, segment, objectValue.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getObjectHistoryIdBind, segment, objectValue.segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.get_history_undo_redo
      */
     fun getHistoryUndoRedo(id: Int): UndoRedo? {
-        return UndoRedo.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getHistoryUndoRedoBind, segment, id))
+        return UndoRedo.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getHistoryUndoRedoBind, segment, id))
     }
 
     /**
@@ -157,7 +158,7 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: EditorUndoRedoManager.clear_history
      */
     fun clearHistory(id: Int = -99, increaseVersion: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(clearHistoryBind, segment, id, increaseVersion)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.clearHistoryBind, segment, id, increaseVersion)
     }
 
     /** Signal `history_changed()`; see [TypedSignal]. */
@@ -213,70 +214,72 @@ class EditorUndoRedoManager(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): EditorUndoRedoManager? =
             if (handle.address() == 0L) null else EditorUndoRedoManager(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_ACTION_HASH = 796197507L
-        private val createActionBind by lazy {
+        @JvmField
+        val createActionBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "create_action", CREATE_ACTION_HASH)
-        }
 
         private const val COMMIT_ACTION_HASH = 3216645846L
-        private val commitActionBind by lazy {
+        @JvmField
+        val commitActionBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "commit_action", COMMIT_ACTION_HASH)
-        }
 
         private const val IS_COMMITTING_ACTION_HASH = 36873697L
-        private val isCommittingActionBind by lazy {
+        @JvmField
+        val isCommittingActionBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "is_committing_action", IS_COMMITTING_ACTION_HASH)
-        }
 
         private const val FORCE_FIXED_HISTORY_HASH = 3218959716L
-        private val forceFixedHistoryBind by lazy {
+        @JvmField
+        val forceFixedHistoryBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "force_fixed_history", FORCE_FIXED_HISTORY_HASH)
-        }
 
         private const val ADD_DO_METHOD_HASH = 1517810467L
-        private val addDoMethodBind by lazy {
+        @JvmField
+        val addDoMethodBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_do_method", ADD_DO_METHOD_HASH)
-        }
 
         private const val ADD_UNDO_METHOD_HASH = 1517810467L
-        private val addUndoMethodBind by lazy {
+        @JvmField
+        val addUndoMethodBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_undo_method", ADD_UNDO_METHOD_HASH)
-        }
 
         private const val ADD_DO_PROPERTY_HASH = 1017172818L
-        private val addDoPropertyBind by lazy {
+        @JvmField
+        val addDoPropertyBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_do_property", ADD_DO_PROPERTY_HASH)
-        }
 
         private const val ADD_UNDO_PROPERTY_HASH = 1017172818L
-        private val addUndoPropertyBind by lazy {
+        @JvmField
+        val addUndoPropertyBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_undo_property", ADD_UNDO_PROPERTY_HASH)
-        }
 
         private const val ADD_DO_REFERENCE_HASH = 3975164845L
-        private val addDoReferenceBind by lazy {
+        @JvmField
+        val addDoReferenceBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_do_reference", ADD_DO_REFERENCE_HASH)
-        }
 
         private const val ADD_UNDO_REFERENCE_HASH = 3975164845L
-        private val addUndoReferenceBind by lazy {
+        @JvmField
+        val addUndoReferenceBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "add_undo_reference", ADD_UNDO_REFERENCE_HASH)
-        }
 
         private const val GET_OBJECT_HISTORY_ID_HASH = 1107568780L
-        private val getObjectHistoryIdBind by lazy {
+        @JvmField
+        val getObjectHistoryIdBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "get_object_history_id", GET_OBJECT_HISTORY_ID_HASH)
-        }
 
         private const val GET_HISTORY_UNDO_REDO_HASH = 2417974513L
-        private val getHistoryUndoRedoBind by lazy {
+        @JvmField
+        val getHistoryUndoRedoBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "get_history_undo_redo", GET_HISTORY_UNDO_REDO_HASH)
-        }
 
         private const val CLEAR_HISTORY_HASH = 2020603371L
-        private val clearHistoryBind by lazy {
+        @JvmField
+        val clearHistoryBind =
             ObjectCalls.getMethodBind("EditorUndoRedoManager", "clear_history", CLEAR_HISTORY_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setShader(pMember: RID) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDArg(setShaderBind, segment, pMember)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setShaderBind, segment, pMember)
     }
 
     /**
@@ -41,7 +42,7 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getShader(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getShaderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getShaderBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSpecializationConstants(specializationConstants: List<RDPipelineSpecializationConstant>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setSpecializationConstantsBind, segment, specializationConstants)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setSpecializationConstantsBind, segment, specializationConstants)
     }
 
     /**
@@ -61,7 +62,7 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSpecializationConstants(): List<RDPipelineSpecializationConstant> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSpecializationConstantsBind, segment, RDPipelineSpecializationConstant::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSpecializationConstantsBind, segment, RDPipelineSpecializationConstant::wrapBorrowed)
     }
 
     companion object {
@@ -74,25 +75,27 @@ class RDPipelineShader(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineShader? =
             if (handle.address() == 0L) null else RDPipelineShader(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SHADER_HASH = 2722037293L
-        private val setShaderBind by lazy {
+        @JvmField
+        val setShaderBind =
             ObjectCalls.getMethodBind("RDPipelineShader", "set_shader", SET_SHADER_HASH)
-        }
 
         private const val GET_SHADER_HASH = 2944877500L
-        private val getShaderBind by lazy {
+        @JvmField
+        val getShaderBind =
             ObjectCalls.getMethodBind("RDPipelineShader", "get_shader", GET_SHADER_HASH)
-        }
 
         private const val SET_SPECIALIZATION_CONSTANTS_HASH = 381264803L
-        private val setSpecializationConstantsBind by lazy {
+        @JvmField
+        val setSpecializationConstantsBind =
             ObjectCalls.getMethodBind("RDPipelineShader", "set_specialization_constants", SET_SPECIALIZATION_CONSTANTS_HASH)
-        }
 
         private const val GET_SPECIALIZATION_CONSTANTS_HASH = 3995934104L
-        private val getSpecializationConstantsBind by lazy {
+        @JvmField
+        val getSpecializationConstantsBind =
             ObjectCalls.getMethodBind("RDPipelineShader", "get_specialization_constants", GET_SPECIALIZATION_CONSTANTS_HASH)
-        }
     }
 }

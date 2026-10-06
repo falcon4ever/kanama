@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -12,9 +13,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: TextServerManager
  */
 object TextServerManager {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("TextServerManager")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Registers a `TextServer` interface.
@@ -23,7 +23,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun addInterface(interfaceValue: TextServer?) {
-        ObjectCalls.ptrcallWithObjectArgs(addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -33,7 +33,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun getInterfaceCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getInterfaceCountBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInterfaceCountBind, singleton)
     }
 
     /**
@@ -44,7 +44,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun removeInterface(interfaceValue: TextServer?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeInterfaceBind, singleton, listOf(interfaceValue?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -54,7 +54,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun getInterface(idx: Int): TextServer? {
-        return TextServer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getInterfaceBind, singleton, idx))
+        return TextServer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getInterfaceBind, singleton, idx))
     }
 
     /**
@@ -64,7 +64,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun getInterfaces(): List<Map<String, Any?>> {
-        return ObjectCalls.ptrcallNoArgsRetDictionaryList(getInterfacesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getInterfacesBind, singleton)
     }
 
     /**
@@ -74,7 +74,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun findInterface(name: String): TextServer? {
-        return TextServer.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(findInterfaceBind, singleton, name))
+        return TextServer.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.findInterfaceBind, singleton, name))
     }
 
     /**
@@ -84,7 +84,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun setPrimaryInterface(index: TextServer?) {
-        ObjectCalls.ptrcallWithObjectArgs(setPrimaryInterfaceBind, singleton, listOf(index?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setPrimaryInterfaceBind, singleton, listOf(index?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -94,7 +94,7 @@ object TextServerManager {
      */
     @JvmStatic
     fun getPrimaryInterface(): TextServer? {
-        return TextServer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPrimaryInterfaceBind, singleton))
+        return TextServer.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPrimaryInterfaceBind, singleton))
     }
 
     /** Signal `interface_added(interface_name: StringName)`; see [TypedSignal]. */
@@ -119,43 +119,48 @@ object TextServerManager {
     internal fun wrap(handle: RawSegment): TextServerManager? =
         if (handle.address() == 0L) null else this
 
-    private const val ADD_INTERFACE_HASH = 1799689403L
-    private val addInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("TextServerManager", "add_interface", ADD_INTERFACE_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("TextServerManager")
 
-    private const val GET_INTERFACE_COUNT_HASH = 3905245786L
-    private val getInterfaceCountBind by lazy {
-        ObjectCalls.getMethodBind("TextServerManager", "get_interface_count", GET_INTERFACE_COUNT_HASH)
-    }
+        private const val ADD_INTERFACE_HASH = 1799689403L
+        @JvmField
+        val addInterfaceBind =
+            ObjectCalls.getMethodBind("TextServerManager", "add_interface", ADD_INTERFACE_HASH)
 
-    private const val REMOVE_INTERFACE_HASH = 1799689403L
-    private val removeInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("TextServerManager", "remove_interface", REMOVE_INTERFACE_HASH)
-    }
+        private const val GET_INTERFACE_COUNT_HASH = 3905245786L
+        @JvmField
+        val getInterfaceCountBind =
+            ObjectCalls.getMethodBind("TextServerManager", "get_interface_count", GET_INTERFACE_COUNT_HASH)
 
-    private const val GET_INTERFACE_HASH = 1672475555L
-    private val getInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("TextServerManager", "get_interface", GET_INTERFACE_HASH)
-    }
+        private const val REMOVE_INTERFACE_HASH = 1799689403L
+        @JvmField
+        val removeInterfaceBind =
+            ObjectCalls.getMethodBind("TextServerManager", "remove_interface", REMOVE_INTERFACE_HASH)
 
-    private const val GET_INTERFACES_HASH = 3995934104L
-    private val getInterfacesBind by lazy {
-        ObjectCalls.getMethodBind("TextServerManager", "get_interfaces", GET_INTERFACES_HASH)
-    }
+        private const val GET_INTERFACE_HASH = 1672475555L
+        @JvmField
+        val getInterfaceBind =
+            ObjectCalls.getMethodBind("TextServerManager", "get_interface", GET_INTERFACE_HASH)
 
-    private const val FIND_INTERFACE_HASH = 2240905781L
-    private val findInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("TextServerManager", "find_interface", FIND_INTERFACE_HASH)
-    }
+        private const val GET_INTERFACES_HASH = 3995934104L
+        @JvmField
+        val getInterfacesBind =
+            ObjectCalls.getMethodBind("TextServerManager", "get_interfaces", GET_INTERFACES_HASH)
 
-    private const val SET_PRIMARY_INTERFACE_HASH = 1799689403L
-    private val setPrimaryInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("TextServerManager", "set_primary_interface", SET_PRIMARY_INTERFACE_HASH)
-    }
+        private const val FIND_INTERFACE_HASH = 2240905781L
+        @JvmField
+        val findInterfaceBind =
+            ObjectCalls.getMethodBind("TextServerManager", "find_interface", FIND_INTERFACE_HASH)
 
-    private const val GET_PRIMARY_INTERFACE_HASH = 905850878L
-    private val getPrimaryInterfaceBind by lazy {
-        ObjectCalls.getMethodBind("TextServerManager", "get_primary_interface", GET_PRIMARY_INTERFACE_HASH)
+        private const val SET_PRIMARY_INTERFACE_HASH = 1799689403L
+        @JvmField
+        val setPrimaryInterfaceBind =
+            ObjectCalls.getMethodBind("TextServerManager", "set_primary_interface", SET_PRIMARY_INTERFACE_HASH)
+
+        private const val GET_PRIMARY_INTERFACE_HASH = 905850878L
+        @JvmField
+        val getPrimaryInterfaceBind =
+            ObjectCalls.getMethodBind("TextServerManager", "get_primary_interface", GET_PRIMARY_INTERFACE_HASH)
     }
 }

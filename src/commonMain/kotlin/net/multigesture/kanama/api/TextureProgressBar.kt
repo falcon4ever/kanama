@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -117,7 +118,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_under_texture
      */
     fun setUnderTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setUnderTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setUnderTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -126,7 +127,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_under_texture
      */
     fun getUnderTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getUnderTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getUnderTextureBind, segment))
     }
 
     /**
@@ -138,7 +139,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_progress_texture
      */
     fun setProgressTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setProgressTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setProgressTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -150,7 +151,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_progress_texture
      */
     fun getProgressTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getProgressTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProgressTextureBind, segment))
     }
 
     /**
@@ -160,7 +161,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_over_texture
      */
     fun setOverTexture(tex: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOverTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setOverTextureBind, segment, listOf(tex?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -170,7 +171,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_over_texture
      */
     fun getOverTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOverTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOverTextureBind, segment))
     }
 
     /**
@@ -179,7 +180,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_fill_mode
      */
     fun setFillMode(mode: Int) {
-        ObjectCalls.ptrcallWithIntArg(setFillModeBind, segment, mode)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFillModeBind, segment, mode)
     }
 
     /**
@@ -188,7 +189,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_fill_mode
      */
     fun getFillMode(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFillModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFillModeBind, segment)
     }
 
     /**
@@ -197,7 +198,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_tint_under
      */
     fun setTintUnder(tint: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTintUnderBind, segment, tint)
+        ObjectCalls.ptrcallWithColorArg(Binds.setTintUnderBind, segment, tint)
     }
 
     /**
@@ -206,7 +207,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_tint_under
      */
     fun getTintUnder(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintUnderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTintUnderBind, segment)
     }
 
     /**
@@ -215,7 +216,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_tint_progress
      */
     fun setTintProgress(tint: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTintProgressBind, segment, tint)
+        ObjectCalls.ptrcallWithColorArg(Binds.setTintProgressBind, segment, tint)
     }
 
     /**
@@ -224,7 +225,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_tint_progress
      */
     fun getTintProgress(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintProgressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTintProgressBind, segment)
     }
 
     /**
@@ -234,7 +235,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_tint_over
      */
     fun setTintOver(tint: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTintOverBind, segment, tint)
+        ObjectCalls.ptrcallWithColorArg(Binds.setTintOverBind, segment, tint)
     }
 
     /**
@@ -244,7 +245,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_tint_over
      */
     fun getTintOver(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintOverBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTintOverBind, segment)
     }
 
     /**
@@ -254,7 +255,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_texture_progress_offset
      */
     fun setTextureProgressOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTextureProgressOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setTextureProgressOffsetBind, segment, offset)
     }
 
     /**
@@ -264,7 +265,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_texture_progress_offset
      */
     fun getTextureProgressOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureProgressOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTextureProgressOffsetBind, segment)
     }
 
     /**
@@ -277,7 +278,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_radial_initial_angle
      */
     fun setRadialInitialAngle(mode: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadialInitialAngleBind, segment, mode)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadialInitialAngleBind, segment, mode)
     }
 
     /**
@@ -290,7 +291,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_radial_initial_angle
      */
     fun getRadialInitialAngle(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadialInitialAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadialInitialAngleBind, segment)
     }
 
     /**
@@ -302,7 +303,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_radial_center_offset
      */
     fun setRadialCenterOffset(mode: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setRadialCenterOffsetBind, segment, mode)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setRadialCenterOffsetBind, segment, mode)
     }
 
     /**
@@ -314,7 +315,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_radial_center_offset
      */
     fun getRadialCenterOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getRadialCenterOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRadialCenterOffsetBind, segment)
     }
 
     /**
@@ -326,7 +327,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_fill_degrees
      */
     fun setFillDegrees(mode: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFillDegreesBind, segment, mode)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFillDegreesBind, segment, mode)
     }
 
     /**
@@ -338,7 +339,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_fill_degrees
      */
     fun getFillDegrees(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFillDegreesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFillDegreesBind, segment)
     }
 
     /**
@@ -347,7 +348,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_stretch_margin
      */
     fun setStretchMargin(margin: Side, value: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setStretchMarginBind, segment, margin.value, value)
+        ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setStretchMarginBind, segment, margin.value, value)
     }
 
     /**
@@ -356,7 +357,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_stretch_margin
      */
     fun getStretchMargin(margin: Side): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getStretchMarginBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getStretchMarginBind, segment, margin.value)
     }
 
     /**
@@ -368,7 +369,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.set_nine_patch_stretch
      */
     fun setNinePatchStretch(stretch: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNinePatchStretchBind, segment, stretch)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNinePatchStretchBind, segment, stretch)
     }
 
     /**
@@ -380,7 +381,7 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: TextureProgressBar.get_nine_patch_stretch
      */
     fun getNinePatchStretch(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getNinePatchStretchBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNinePatchStretchBind, segment)
     }
 
     /**
@@ -462,135 +463,137 @@ class TextureProgressBar(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): TextureProgressBar? =
             if (handle.address() == 0L) null else TextureProgressBar(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_UNDER_TEXTURE_HASH = 4051416890L
-        private val setUnderTextureBind by lazy {
+        @JvmField
+        val setUnderTextureBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_under_texture", SET_UNDER_TEXTURE_HASH)
-        }
 
         private const val GET_UNDER_TEXTURE_HASH = 3635182373L
-        private val getUnderTextureBind by lazy {
+        @JvmField
+        val getUnderTextureBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_under_texture", GET_UNDER_TEXTURE_HASH)
-        }
 
         private const val SET_PROGRESS_TEXTURE_HASH = 4051416890L
-        private val setProgressTextureBind by lazy {
+        @JvmField
+        val setProgressTextureBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_progress_texture", SET_PROGRESS_TEXTURE_HASH)
-        }
 
         private const val GET_PROGRESS_TEXTURE_HASH = 3635182373L
-        private val getProgressTextureBind by lazy {
+        @JvmField
+        val getProgressTextureBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_progress_texture", GET_PROGRESS_TEXTURE_HASH)
-        }
 
         private const val SET_OVER_TEXTURE_HASH = 4051416890L
-        private val setOverTextureBind by lazy {
+        @JvmField
+        val setOverTextureBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_over_texture", SET_OVER_TEXTURE_HASH)
-        }
 
         private const val GET_OVER_TEXTURE_HASH = 3635182373L
-        private val getOverTextureBind by lazy {
+        @JvmField
+        val getOverTextureBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_over_texture", GET_OVER_TEXTURE_HASH)
-        }
 
         private const val SET_FILL_MODE_HASH = 1286410249L
-        private val setFillModeBind by lazy {
+        @JvmField
+        val setFillModeBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_fill_mode", SET_FILL_MODE_HASH)
-        }
 
         private const val GET_FILL_MODE_HASH = 2455072627L
-        private val getFillModeBind by lazy {
+        @JvmField
+        val getFillModeBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_fill_mode", GET_FILL_MODE_HASH)
-        }
 
         private const val SET_TINT_UNDER_HASH = 2920490490L
-        private val setTintUnderBind by lazy {
+        @JvmField
+        val setTintUnderBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_tint_under", SET_TINT_UNDER_HASH)
-        }
 
         private const val GET_TINT_UNDER_HASH = 3444240500L
-        private val getTintUnderBind by lazy {
+        @JvmField
+        val getTintUnderBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_tint_under", GET_TINT_UNDER_HASH)
-        }
 
         private const val SET_TINT_PROGRESS_HASH = 2920490490L
-        private val setTintProgressBind by lazy {
+        @JvmField
+        val setTintProgressBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_tint_progress", SET_TINT_PROGRESS_HASH)
-        }
 
         private const val GET_TINT_PROGRESS_HASH = 3444240500L
-        private val getTintProgressBind by lazy {
+        @JvmField
+        val getTintProgressBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_tint_progress", GET_TINT_PROGRESS_HASH)
-        }
 
         private const val SET_TINT_OVER_HASH = 2920490490L
-        private val setTintOverBind by lazy {
+        @JvmField
+        val setTintOverBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_tint_over", SET_TINT_OVER_HASH)
-        }
 
         private const val GET_TINT_OVER_HASH = 3444240500L
-        private val getTintOverBind by lazy {
+        @JvmField
+        val getTintOverBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_tint_over", GET_TINT_OVER_HASH)
-        }
 
         private const val SET_TEXTURE_PROGRESS_OFFSET_HASH = 743155724L
-        private val setTextureProgressOffsetBind by lazy {
+        @JvmField
+        val setTextureProgressOffsetBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_texture_progress_offset", SET_TEXTURE_PROGRESS_OFFSET_HASH)
-        }
 
         private const val GET_TEXTURE_PROGRESS_OFFSET_HASH = 3341600327L
-        private val getTextureProgressOffsetBind by lazy {
+        @JvmField
+        val getTextureProgressOffsetBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_texture_progress_offset", GET_TEXTURE_PROGRESS_OFFSET_HASH)
-        }
 
         private const val SET_RADIAL_INITIAL_ANGLE_HASH = 373806689L
-        private val setRadialInitialAngleBind by lazy {
+        @JvmField
+        val setRadialInitialAngleBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_radial_initial_angle", SET_RADIAL_INITIAL_ANGLE_HASH)
-        }
 
         private const val GET_RADIAL_INITIAL_ANGLE_HASH = 191475506L
-        private val getRadialInitialAngleBind by lazy {
+        @JvmField
+        val getRadialInitialAngleBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_radial_initial_angle", GET_RADIAL_INITIAL_ANGLE_HASH)
-        }
 
         private const val SET_RADIAL_CENTER_OFFSET_HASH = 743155724L
-        private val setRadialCenterOffsetBind by lazy {
+        @JvmField
+        val setRadialCenterOffsetBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_radial_center_offset", SET_RADIAL_CENTER_OFFSET_HASH)
-        }
 
         private const val GET_RADIAL_CENTER_OFFSET_HASH = 1497962370L
-        private val getRadialCenterOffsetBind by lazy {
+        @JvmField
+        val getRadialCenterOffsetBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_radial_center_offset", GET_RADIAL_CENTER_OFFSET_HASH)
-        }
 
         private const val SET_FILL_DEGREES_HASH = 373806689L
-        private val setFillDegreesBind by lazy {
+        @JvmField
+        val setFillDegreesBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_fill_degrees", SET_FILL_DEGREES_HASH)
-        }
 
         private const val GET_FILL_DEGREES_HASH = 191475506L
-        private val getFillDegreesBind by lazy {
+        @JvmField
+        val getFillDegreesBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_fill_degrees", GET_FILL_DEGREES_HASH)
-        }
 
         private const val SET_STRETCH_MARGIN_HASH = 437707142L
-        private val setStretchMarginBind by lazy {
+        @JvmField
+        val setStretchMarginBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_stretch_margin", SET_STRETCH_MARGIN_HASH)
-        }
 
         private const val GET_STRETCH_MARGIN_HASH = 1983885014L
-        private val getStretchMarginBind by lazy {
+        @JvmField
+        val getStretchMarginBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_stretch_margin", GET_STRETCH_MARGIN_HASH)
-        }
 
         private const val SET_NINE_PATCH_STRETCH_HASH = 2586408642L
-        private val setNinePatchStretchBind by lazy {
+        @JvmField
+        val setNinePatchStretchBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "set_nine_patch_stretch", SET_NINE_PATCH_STRETCH_HASH)
-        }
 
         private const val GET_NINE_PATCH_STRETCH_HASH = 36873697L
-        private val getNinePatchStretchBind by lazy {
+        @JvmField
+        val getNinePatchStretchBind =
             ObjectCalls.getMethodBind("TextureProgressBar", "get_nine_patch_stretch", GET_NINE_PATCH_STRETCH_HASH)
-        }
     }
 }

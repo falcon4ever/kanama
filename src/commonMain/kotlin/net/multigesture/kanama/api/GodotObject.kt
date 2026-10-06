@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import net.multigesture.kanama.binding.runtime.FreedObjectChecks
@@ -62,7 +63,6 @@ open class GodotObject(val handle: GodotHandle) {
         }
     }
     // ===== END GENERATED ENUMS: GodotObject =====
-
 
     /**
      * The raw engine pointer behind [handle] — the runtime/ObjectCalls seam, read by every wrapper
@@ -139,19 +139,19 @@ open class GodotObject(val handle: GodotHandle) {
     internal open fun requireOpenHandle(): RawSegment = segment
 
     fun getClassName(): String =
-        ObjectCalls.ptrcallNoArgsRetString(getClassBind, segment)
+        ObjectCalls.ptrcallNoArgsRetString(Binds.getClassBind, segment)
 
     fun isClass(className: String): Boolean =
-        ObjectCalls.ptrcallWithStringArgRetBool(isClassBind, segment, className)
+        ObjectCalls.ptrcallWithStringArgRetBool(Binds.isClassBind, segment, className)
 
     fun getInstanceId(): Long =
-        ObjectCalls.ptrcallNoArgsRetLong(getInstanceIdBind, segment)
+        ObjectCalls.ptrcallNoArgsRetLong(Binds.getInstanceIdBind, segment)
 
     fun isQueuedForDeletion(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isQueuedForDeletionBind, segment)
+        ObjectCalls.ptrcallNoArgsRetBool(Binds.isQueuedForDeletionBind, segment)
 
     fun setIndexed(propertyPath: NodePath, value: Any?) {
-        ObjectCalls.ptrcallWithNodePathAndVariantArg(setIndexedBind, segment, propertyPath, value)
+        ObjectCalls.ptrcallWithNodePathAndVariantArg(Binds.setIndexedBind, segment, propertyPath, value)
     }
 
     fun setIndexed(propertyPath: String, value: Any?) {
@@ -159,80 +159,80 @@ open class GodotObject(val handle: GodotHandle) {
     }
 
     fun getIndexed(propertyPath: NodePath): Any? =
-        ObjectCalls.ptrcallWithNodePathArgRetVariantScalar(getIndexedBind, segment, propertyPath)
+        ObjectCalls.ptrcallWithNodePathArgRetVariantScalar(Binds.getIndexedBind, segment, propertyPath)
 
     fun getIndexed(propertyPath: String): Any? =
         getIndexed(NodePath(propertyPath))
 
     fun getPropertyList(): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallNoArgsRetDictionaryList(getPropertyListBind, segment)
+        ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getPropertyListBind, segment)
 
     fun getMethodList(): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallNoArgsRetDictionaryList(getMethodListBind, segment)
+        ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getMethodListBind, segment)
 
     fun propertyCanRevert(property: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(propertyCanRevertBind, segment, property)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.propertyCanRevertBind, segment, property)
 
     fun propertyGetRevert(property: String): Any? =
-        ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(propertyGetRevertBind, segment, property)
+        ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.propertyGetRevertBind, segment, property)
 
     fun notification(what: Int, reversed: Boolean = false) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(notificationBind, segment, what, reversed)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.notificationBind, segment, what, reversed)
     }
 
     /** Variant-path read: the script comes back as a borrowed view, never `close()` it — see [call]. */
     fun getScript(): Any? =
-        ObjectCalls.ptrcallNoArgsRetVariantScalar(getScriptBind, segment)
+        ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getScriptBind, segment)
 
     fun setMeta(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setMetaBind, segment, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setMetaBind, segment, name, value)
     }
 
     /** Variant-path read: an object result is a borrowed view, never `close()` it — see [call]. */
     fun getMeta(name: String, defaultValue: Any? = null): Any? =
-        ObjectCalls.ptrcallWithStringNameAndVariantArgRetVariantScalar(getMetaBind, segment, name, defaultValue)
+        ObjectCalls.ptrcallWithStringNameAndVariantArgRetVariantScalar(Binds.getMetaBind, segment, name, defaultValue)
 
     fun hasMeta(name: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMetaBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasMetaBind, segment, name)
 
     fun removeMeta(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeMetaBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeMetaBind, segment, name)
     }
 
     fun getMetaList(): List<String> =
-        ObjectCalls.ptrcallNoArgsRetStringNameList(getMetaListBind, segment)
+        ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getMetaListBind, segment)
 
     fun addUserSignal(signal: String, arguments: List<Map<String, Any>> = emptyList()) {
-        ObjectCalls.ptrcallWithStringAndArrayOfDictionariesArg(addUserSignalBind, segment, signal, arguments)
+        ObjectCalls.ptrcallWithStringAndArrayOfDictionariesArg(Binds.addUserSignalBind, segment, signal, arguments)
     }
 
     fun hasUserSignal(signal: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasUserSignalBind, segment, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasUserSignalBind, segment, signal)
 
     fun removeUserSignal(signal: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeUserSignalBind, segment, signal)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeUserSignalBind, segment, signal)
     }
 
     fun hasMethod(method: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasMethodBind, segment, method)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasMethodBind, segment, method)
 
     fun getMethodArgumentCount(method: String): Long =
-        ObjectCalls.ptrcallWithStringNameArgRetInt(getMethodArgumentCountBind, segment, method).toLong()
+        ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.getMethodArgumentCountBind, segment, method).toLong()
 
     fun hasSignal(signal: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasSignalBind, segment, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasSignalBind, segment, signal)
 
     fun getSignalList(): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallNoArgsRetDictionaryList(getSignalListBind, segment)
+        ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getSignalListBind, segment)
 
     fun getSignalConnectionList(signal: String): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(getSignalConnectionListBind, segment, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetDictionaryList(Binds.getSignalConnectionListBind, segment, signal)
 
     fun getIncomingConnections(): List<Map<String, Any?>> =
-        ObjectCalls.ptrcallNoArgsRetDictionaryList(getIncomingConnectionsBind, segment)
+        ObjectCalls.ptrcallNoArgsRetDictionaryList(Binds.getIncomingConnectionsBind, segment)
 
     fun hasConnections(signal: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameArgRetBool(hasConnectionsBind, segment, signal)
+        ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasConnectionsBind, segment, signal)
 
     fun signal(name: String): GodotSignal =
         GodotSignal(this, name)
@@ -260,7 +260,7 @@ open class GodotObject(val handle: GodotHandle) {
     ): GodotError =
         GodotError(
             ObjectCalls.ptrcallWithStringNameCallableAndUInt32ArgsRetLong(
-                connectBind,
+                Binds.connectBind,
                 segment,
                 signal,
                 target.segment,
@@ -278,7 +278,7 @@ open class GodotObject(val handle: GodotHandle) {
     ): GodotError =
         GodotError(
             ObjectCalls.ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong(
-                connectBind,
+                Binds.connectBind,
                 segment,
                 signal,
                 target.segment,
@@ -289,15 +289,15 @@ open class GodotObject(val handle: GodotHandle) {
         )
 
     fun disconnect(signal: String, target: GodotObject, method: String) {
-        ObjectCalls.ptrcallWithStringNameAndCallableArgs(disconnectBind, segment, signal, target.segment, method)
+        ObjectCalls.ptrcallWithStringNameAndCallableArgs(Binds.disconnectBind, segment, signal, target.segment, method)
     }
 
     fun isConnected(signal: String, target: GodotObject, method: String): Boolean =
-        ObjectCalls.ptrcallWithStringNameAndCallableArgsRetBool(isConnectedBind, segment, signal, target.segment, method)
+        ObjectCalls.ptrcallWithStringNameAndCallableArgsRetBool(Binds.isConnectedBind, segment, signal, target.segment, method)
 
     internal fun disconnectBound(signal: String, target: GodotObject, method: String, boundArgs: List<Any?>) {
         ObjectCalls.ptrcallWithStringNameAndBoundCallableArgs(
-            disconnectBind,
+            Binds.disconnectBind,
             segment,
             signal,
             target.segment,
@@ -311,22 +311,22 @@ open class GodotObject(val handle: GodotHandle) {
     }
 
     fun setBlockSignals(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBlockSignalsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBlockSignalsBind, segment, enable)
     }
 
     fun isBlockingSignals(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(isBlockingSignalsBind, segment)
+        ObjectCalls.ptrcallNoArgsRetBool(Binds.isBlockingSignalsBind, segment)
 
     fun notifyPropertyListChanged() {
-        ObjectCalls.ptrcallNoArgs(notifyPropertyListChangedBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.notifyPropertyListChangedBind, segment)
     }
 
     fun setMessageTranslation(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMessageTranslationBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMessageTranslationBind, segment, enable)
     }
 
     fun canTranslateMessages(): Boolean =
-        ObjectCalls.ptrcallNoArgsRetBool(canTranslateMessagesBind, segment)
+        ObjectCalls.ptrcallNoArgsRetBool(Binds.canTranslateMessagesBind, segment)
 
     /**
      * Dynamic `Object.call`. Scalars come back as Kotlin values. An **object** result comes back
@@ -360,11 +360,11 @@ open class GodotObject(val handle: GodotHandle) {
 
     /** Variant-path call; an object result is a borrowed view, never `close()` it — see [call]. */
     fun callDeferred(method: String, vararg args: Any?): Any? =
-        ObjectCalls.callWithVariantArgs(callDeferredBind, segment, listOf(method, *args))
+        ObjectCalls.callWithVariantArgs(Binds.callDeferredBind, segment, listOf(method, *args))
 
     /** Variant-path call; an object result is a borrowed view, never `close()` it — see [call]. */
     fun callv(method: String, arguments: List<Any?>): Any? =
-        ObjectCalls.ptrcallWithStringNameArrayArgsRetVariantScalar(callvBind, segment, method, arguments)
+        ObjectCalls.ptrcallWithStringNameArrayArgsRetVariantScalar(Binds.callvBind, segment, method, arguments)
 
     /**
      * Dynamic `Object.get`. A resource read this way (`get("mesh")`) is a *borrowed* view that
@@ -372,38 +372,38 @@ open class GodotObject(val handle: GodotHandle) {
      * typed getter (`getMesh()`) is the owned `+1` you close.
      */
     fun get(property: String): Any? =
-        ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(objectGetBind, segment, property)
+        ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.objectGetBind, segment, property)
 
     fun set(property: String, value: Any?): Long {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(objectSetBind, segment, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.objectSetBind, segment, property, value)
         ObjectRuntime.onPropertySet(segment, property, value)
         return 0L
     }
 
     fun setDeferred(property: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setDeferredBind, segment, property, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setDeferredBind, segment, property, value)
     }
 
     fun setScript(script: Resource?) {
         ObjectRuntime.onSetScript(segment, script?.segment ?: NULL_SEGMENT)
-        ObjectCalls.ptrcallWithVariantArg(setScriptBind, segment, script)
+        ObjectCalls.ptrcallWithVariantArg(Binds.setScriptBind, segment, script)
     }
 
     fun tr(message: String, context: String = ""): String =
-        ObjectCalls.ptrcallWithTwoStringNameArgsRetString(trBind, segment, message, context)
+        ObjectCalls.ptrcallWithTwoStringNameArgsRetString(Binds.trBind, segment, message, context)
 
     fun trN(message: String, pluralMessage: String, n: Int, context: String = ""): String =
-        ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetString(trNBind, segment, message, pluralMessage, n, context)
+        ObjectCalls.ptrcallWithTwoStringNameIntStringNameArgsRetString(Binds.trNBind, segment, message, pluralMessage, n, context)
 
     fun getTranslationDomain(): String =
-        ObjectCalls.ptrcallNoArgsRetStringName(getTranslationDomainBind, segment)
+        ObjectCalls.ptrcallNoArgsRetStringName(Binds.getTranslationDomainBind, segment)
 
     fun setTranslationDomain(domain: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setTranslationDomainBind, segment, domain)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setTranslationDomainBind, segment, domain)
     }
 
     fun cancelFree() {
-        ObjectCalls.ptrcallNoArgs(cancelFreeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.cancelFreeBind, segment)
     }
 
     /**
@@ -414,7 +414,7 @@ open class GodotObject(val handle: GodotHandle) {
         if (FreedObjectChecks.enabled && !isAlive(handle.segment)) {
             "<Freed Object>"
         } else {
-            ObjectCalls.ptrcallNoArgsRetString(toStringBind, segment)
+            ObjectCalls.ptrcallNoArgsRetString(Binds.toStringBind, segment)
         }
 
     object Signals {
@@ -467,198 +467,64 @@ open class GodotObject(val handle: GodotHandle) {
         private const val CONNECT_HASH = 1518946055L
         private const val DISCONNECT_HASH = 1874754934L
 
-        private val getClassBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_class", NOARGS_STRING_HASH)
-        }
-
-        private val isClassBind by lazy {
-            ObjectCalls.getMethodBind("Object", "is_class", STRING_BOOL_HASH)
-        }
-
-        private val getInstanceIdBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_instance_id", NOARGS_LONG_HASH)
-        }
-
-        private val isQueuedForDeletionBind by lazy {
-            ObjectCalls.getMethodBind("Object", "is_queued_for_deletion", NOARGS_BOOL_HASH)
-        }
-
-        private val setIndexedBind by lazy {
-            ObjectCalls.getMethodBind("Object", "set_indexed", SET_INDEXED_HASH)
-        }
-
-        private val getIndexedBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_indexed", GET_INDEXED_HASH)
-        }
-
-        private val objectSetBind by lazy {
-            ObjectCalls.getMethodBind("Object", "set", OBJECT_SET_HASH)
-        }
-
-        private val objectGetBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get", OBJECT_GET_HASH)
-        }
-
-        private val getPropertyListBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_property_list", DICTIONARY_LIST_HASH)
-        }
-
-        private val getMethodListBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_method_list", DICTIONARY_LIST_HASH)
-        }
-
-        private val toStringBind by lazy {
-            ObjectCalls.getMethodBind("Object", "to_string", TO_STRING_HASH)
-        }
-
-        private val propertyCanRevertBind by lazy {
-            ObjectCalls.getMethodBind("Object", "property_can_revert", STRING_NAME_BOOL_HASH)
-        }
-
-        private val propertyGetRevertBind by lazy {
-            ObjectCalls.getMethodBind("Object", "property_get_revert", PROPERTY_GET_REVERT_HASH)
-        }
-
-        private val notificationBind by lazy {
-            ObjectCalls.getMethodBind("Object", "notification", NOTIFICATION_HASH)
-        }
-
-        private val getScriptBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_script", GET_SCRIPT_HASH)
-        }
-
-        private val setMetaBind by lazy {
-            ObjectCalls.getMethodBind("Object", "set_meta", SET_META_HASH)
-        }
-
-        private val getMetaBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_meta", GET_META_HASH)
-        }
-
-        private val hasMetaBind by lazy {
-            ObjectCalls.getMethodBind("Object", "has_meta", STRING_NAME_BOOL_HASH)
-        }
-
-        private val removeMetaBind by lazy {
-            ObjectCalls.getMethodBind("Object", "remove_meta", STRING_NAME_VOID_HASH)
-        }
-
-        private val getMetaListBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_meta_list", GET_META_LIST_HASH)
-        }
-
-        private val addUserSignalBind by lazy {
-            ObjectCalls.getMethodBind("Object", "add_user_signal", ADD_USER_SIGNAL_HASH)
-        }
-
-        private val hasUserSignalBind by lazy {
-            ObjectCalls.getMethodBind("Object", "has_user_signal", STRING_NAME_BOOL_HASH)
-        }
-
-        private val removeUserSignalBind by lazy {
-            ObjectCalls.getMethodBind("Object", "remove_user_signal", STRING_NAME_VOID_HASH)
-        }
-
-        private val hasMethodBind by lazy {
-            ObjectCalls.getMethodBind("Object", "has_method", STRING_NAME_BOOL_HASH)
-        }
-
-        private val getMethodArgumentCountBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_method_argument_count", STRING_NAME_LONG_HASH)
-        }
-
-        private val hasSignalBind by lazy {
-            ObjectCalls.getMethodBind("Object", "has_signal", STRING_NAME_BOOL_HASH)
-        }
-
-        private val getSignalListBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_signal_list", DICTIONARY_LIST_HASH)
-        }
-
-        private val getSignalConnectionListBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_signal_connection_list", GET_SIGNAL_CONNECTION_LIST_HASH)
-        }
-
-        private val getIncomingConnectionsBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_incoming_connections", DICTIONARY_LIST_HASH)
-        }
-
-        private val hasConnectionsBind by lazy {
-            ObjectCalls.getMethodBind("Object", "has_connections", STRING_NAME_BOOL_HASH)
-        }
-
-        private val connectBind by lazy {
-            ObjectCalls.getMethodBind("Object", "connect", CONNECT_HASH)
-        }
-
-        private val disconnectBind by lazy {
-            ObjectCalls.getMethodBind("Object", "disconnect", DISCONNECT_HASH)
-        }
-
-        private val isConnectedBind by lazy {
-            ObjectCalls.getMethodBind("Object", "is_connected", IS_CONNECTED_HASH)
-        }
-
-        private val setBlockSignalsBind by lazy {
-            ObjectCalls.getMethodBind("Object", "set_block_signals", BOOL_VOID_HASH)
-        }
-
-        private val isBlockingSignalsBind by lazy {
-            ObjectCalls.getMethodBind("Object", "is_blocking_signals", NOARGS_BOOL_HASH)
-        }
-
-        private val notifyPropertyListChangedBind by lazy {
-            ObjectCalls.getMethodBind("Object", "notify_property_list_changed", NOARGS_VOID_HASH)
-        }
-
-        private val setMessageTranslationBind by lazy {
-            ObjectCalls.getMethodBind("Object", "set_message_translation", BOOL_VOID_HASH)
-        }
-
-        private val canTranslateMessagesBind by lazy {
-            ObjectCalls.getMethodBind("Object", "can_translate_messages", NOARGS_BOOL_HASH)
-        }
-
         // Internal, not private: the iOS ObjectRuntime.emitSignal Variant path reuses this cached
         // Object.call bind instead of resolving its own (task 117 P3′ follow-up).
         internal val callBind by lazy {
             ObjectCalls.getMethodBind("Object", "call", CALL_HASH)
         }
 
-        private val callDeferredBind by lazy {
-            ObjectCalls.getMethodBind("Object", "call_deferred", CALL_HASH)
-        }
+    }
 
-        private val callvBind by lazy {
-            ObjectCalls.getMethodBind("Object", "callv", CALLV_HASH)
-        }
-
-        private val setDeferredBind by lazy {
-            ObjectCalls.getMethodBind("Object", "set_deferred", SET_DEFERRED_HASH)
-        }
-
-        private val setScriptBind by lazy {
-            ObjectCalls.getMethodBind("Object", "set_script", SET_SCRIPT_HASH)
-        }
-
-        private val trBind by lazy {
-            ObjectCalls.getMethodBind("Object", "tr", TR_HASH)
-        }
-
-        private val trNBind by lazy {
-            ObjectCalls.getMethodBind("Object", "tr_n", TR_N_HASH)
-        }
-
-        private val getTranslationDomainBind by lazy {
-            ObjectCalls.getMethodBind("Object", "get_translation_domain", GET_TRANSLATION_DOMAIN_HASH)
-        }
-
-        private val setTranslationDomainBind by lazy {
-            ObjectCalls.getMethodBind("Object", "set_translation_domain", STRING_NAME_VOID_HASH)
-        }
-
-        private val cancelFreeBind by lazy {
-            ObjectCalls.getMethodBind("Object", "cancel_free", NOARGS_VOID_HASH)
-        }
+    // Every MethodBind of the class, bound together on the first call through any of them: the
+    // holder's class initialisation is the laziness, and a bind is a static final after it
+    // (task 131 item 18; the generated wrappers use the same holder).
+    private object Binds {
+        @JvmField val getClassBind = ObjectCalls.getMethodBind("Object", "get_class", NOARGS_STRING_HASH)
+        @JvmField val isClassBind = ObjectCalls.getMethodBind("Object", "is_class", STRING_BOOL_HASH)
+        @JvmField val getInstanceIdBind = ObjectCalls.getMethodBind("Object", "get_instance_id", NOARGS_LONG_HASH)
+        @JvmField val isQueuedForDeletionBind = ObjectCalls.getMethodBind("Object", "is_queued_for_deletion", NOARGS_BOOL_HASH)
+        @JvmField val setIndexedBind = ObjectCalls.getMethodBind("Object", "set_indexed", SET_INDEXED_HASH)
+        @JvmField val getIndexedBind = ObjectCalls.getMethodBind("Object", "get_indexed", GET_INDEXED_HASH)
+        @JvmField val objectSetBind = ObjectCalls.getMethodBind("Object", "set", OBJECT_SET_HASH)
+        @JvmField val objectGetBind = ObjectCalls.getMethodBind("Object", "get", OBJECT_GET_HASH)
+        @JvmField val getPropertyListBind = ObjectCalls.getMethodBind("Object", "get_property_list", DICTIONARY_LIST_HASH)
+        @JvmField val getMethodListBind = ObjectCalls.getMethodBind("Object", "get_method_list", DICTIONARY_LIST_HASH)
+        @JvmField val toStringBind = ObjectCalls.getMethodBind("Object", "to_string", TO_STRING_HASH)
+        @JvmField val propertyCanRevertBind = ObjectCalls.getMethodBind("Object", "property_can_revert", STRING_NAME_BOOL_HASH)
+        @JvmField val propertyGetRevertBind = ObjectCalls.getMethodBind("Object", "property_get_revert", PROPERTY_GET_REVERT_HASH)
+        @JvmField val notificationBind = ObjectCalls.getMethodBind("Object", "notification", NOTIFICATION_HASH)
+        @JvmField val getScriptBind = ObjectCalls.getMethodBind("Object", "get_script", GET_SCRIPT_HASH)
+        @JvmField val setMetaBind = ObjectCalls.getMethodBind("Object", "set_meta", SET_META_HASH)
+        @JvmField val getMetaBind = ObjectCalls.getMethodBind("Object", "get_meta", GET_META_HASH)
+        @JvmField val hasMetaBind = ObjectCalls.getMethodBind("Object", "has_meta", STRING_NAME_BOOL_HASH)
+        @JvmField val removeMetaBind = ObjectCalls.getMethodBind("Object", "remove_meta", STRING_NAME_VOID_HASH)
+        @JvmField val getMetaListBind = ObjectCalls.getMethodBind("Object", "get_meta_list", GET_META_LIST_HASH)
+        @JvmField val addUserSignalBind = ObjectCalls.getMethodBind("Object", "add_user_signal", ADD_USER_SIGNAL_HASH)
+        @JvmField val hasUserSignalBind = ObjectCalls.getMethodBind("Object", "has_user_signal", STRING_NAME_BOOL_HASH)
+        @JvmField val removeUserSignalBind = ObjectCalls.getMethodBind("Object", "remove_user_signal", STRING_NAME_VOID_HASH)
+        @JvmField val hasMethodBind = ObjectCalls.getMethodBind("Object", "has_method", STRING_NAME_BOOL_HASH)
+        @JvmField val getMethodArgumentCountBind = ObjectCalls.getMethodBind("Object", "get_method_argument_count", STRING_NAME_LONG_HASH)
+        @JvmField val hasSignalBind = ObjectCalls.getMethodBind("Object", "has_signal", STRING_NAME_BOOL_HASH)
+        @JvmField val getSignalListBind = ObjectCalls.getMethodBind("Object", "get_signal_list", DICTIONARY_LIST_HASH)
+        @JvmField val getSignalConnectionListBind = ObjectCalls.getMethodBind("Object", "get_signal_connection_list", GET_SIGNAL_CONNECTION_LIST_HASH)
+        @JvmField val getIncomingConnectionsBind = ObjectCalls.getMethodBind("Object", "get_incoming_connections", DICTIONARY_LIST_HASH)
+        @JvmField val hasConnectionsBind = ObjectCalls.getMethodBind("Object", "has_connections", STRING_NAME_BOOL_HASH)
+        @JvmField val connectBind = ObjectCalls.getMethodBind("Object", "connect", CONNECT_HASH)
+        @JvmField val disconnectBind = ObjectCalls.getMethodBind("Object", "disconnect", DISCONNECT_HASH)
+        @JvmField val isConnectedBind = ObjectCalls.getMethodBind("Object", "is_connected", IS_CONNECTED_HASH)
+        @JvmField val setBlockSignalsBind = ObjectCalls.getMethodBind("Object", "set_block_signals", BOOL_VOID_HASH)
+        @JvmField val isBlockingSignalsBind = ObjectCalls.getMethodBind("Object", "is_blocking_signals", NOARGS_BOOL_HASH)
+        @JvmField val notifyPropertyListChangedBind = ObjectCalls.getMethodBind("Object", "notify_property_list_changed", NOARGS_VOID_HASH)
+        @JvmField val setMessageTranslationBind = ObjectCalls.getMethodBind("Object", "set_message_translation", BOOL_VOID_HASH)
+        @JvmField val canTranslateMessagesBind = ObjectCalls.getMethodBind("Object", "can_translate_messages", NOARGS_BOOL_HASH)
+        @JvmField val callDeferredBind = ObjectCalls.getMethodBind("Object", "call_deferred", CALL_HASH)
+        @JvmField val callvBind = ObjectCalls.getMethodBind("Object", "callv", CALLV_HASH)
+        @JvmField val setDeferredBind = ObjectCalls.getMethodBind("Object", "set_deferred", SET_DEFERRED_HASH)
+        @JvmField val setScriptBind = ObjectCalls.getMethodBind("Object", "set_script", SET_SCRIPT_HASH)
+        @JvmField val trBind = ObjectCalls.getMethodBind("Object", "tr", TR_HASH)
+        @JvmField val trNBind = ObjectCalls.getMethodBind("Object", "tr_n", TR_N_HASH)
+        @JvmField val getTranslationDomainBind = ObjectCalls.getMethodBind("Object", "get_translation_domain", GET_TRANSLATION_DOMAIN_HASH)
+        @JvmField val setTranslationDomainBind = ObjectCalls.getMethodBind("Object", "set_translation_domain", STRING_NAME_VOID_HASH)
+        @JvmField val cancelFreeBind = ObjectCalls.getMethodBind("Object", "cancel_free", NOARGS_VOID_HASH)
     }
 }

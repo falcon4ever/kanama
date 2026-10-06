@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -102,7 +103,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -112,7 +113,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun duplicate(): TextParagraph? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.duplicateBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -127,7 +128,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDirection(direction: TextServer.Direction) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDirectionBind, segment, direction.value)
     }
 
     /**
@@ -137,7 +138,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDirection(): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, segment))
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDirectionBind, segment))
     }
 
     /**
@@ -147,7 +148,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInferredDirection(): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, segment))
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInferredDirectionBind, segment))
     }
 
     /**
@@ -158,7 +159,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCustomPunctuation(customPunctuation: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setCustomPunctuationBind, segment, customPunctuation)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCustomPunctuationBind, segment, customPunctuation)
     }
 
     /**
@@ -169,7 +170,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCustomPunctuation(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCustomPunctuationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCustomPunctuationBind, segment)
     }
 
     /**
@@ -179,7 +180,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setOrientation(orientation: TextServer.Orientation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOrientationBind, segment, orientation.value)
     }
 
     /**
@@ -189,7 +190,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOrientation(): TextServer.Orientation {
         checkOpen()
-        return TextServer.Orientation(ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment))
+        return TextServer.Orientation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOrientationBind, segment))
     }
 
     /**
@@ -199,7 +200,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPreserveInvalid(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPreserveInvalidBind, segment, enabled)
     }
 
     /**
@@ -209,7 +210,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPreserveInvalid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPreserveInvalidBind, segment)
     }
 
     /**
@@ -219,7 +220,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPreserveControl(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPreserveControlBind, segment, enabled)
     }
 
     /**
@@ -229,7 +230,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPreserveControl(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPreserveControlBind, segment)
     }
 
     /**
@@ -240,7 +241,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBidiOverride(override: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, segment, override)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setBidiOverrideBind, segment, override)
     }
 
     /**
@@ -251,7 +252,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDropcap(text: String, font: Font?, fontSize: Int, dropcapMargins: Rect2, language: String = ""): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(setDropcapBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, dropcapMargins, language)
+        return ObjectCalls.ptrcallWithStringObjectIntRect2StringArgsRetBool(Binds.setDropcapBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, dropcapMargins, language)
     }
 
     /**
@@ -261,7 +262,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clearDropcap() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearDropcapBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearDropcapBind, segment)
     }
 
     /**
@@ -271,7 +272,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, language, meta)
+        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(Binds.addStringBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, language, meta)
     }
 
     /**
@@ -282,7 +283,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, length: Int = 1, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, segment, key, size, inlineAlign.value, length, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(Binds.addObjectBind, segment, key, size, inlineAlign.value, length, baseline)
     }
 
     /**
@@ -292,7 +293,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun resizeObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, segment, key, size, inlineAlign.value, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(Binds.resizeObjectBind, segment, key, size, inlineAlign.value, baseline)
     }
 
     /**
@@ -302,7 +303,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasObject(key: Any?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, segment, key)
+        return ObjectCalls.ptrcallWithVariantArgRetBool(Binds.hasObjectBind, segment, key)
     }
 
     /**
@@ -312,7 +313,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setAlignment(alignment: HorizontalAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -322,7 +323,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAlignment(): HorizontalAlignment {
         checkOpen()
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlignmentBind, segment))
     }
 
     /**
@@ -332,7 +333,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tabAlign(tabStops: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, segment, tabStops)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.tabAlignBind, segment, tabStops)
     }
 
     /**
@@ -342,7 +343,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBreakFlags(flags: TextServer.LineBreakFlag) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBreakFlagsBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBreakFlagsBind, segment, flags.value)
     }
 
     /**
@@ -352,7 +353,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBreakFlags(): TextServer.LineBreakFlag {
         checkOpen()
-        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(getBreakFlagsBind, segment))
+        return TextServer.LineBreakFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBreakFlagsBind, segment))
     }
 
     /**
@@ -362,7 +363,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setJustificationFlags(flags: TextServer.JustificationFlag) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setJustificationFlagsBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setJustificationFlagsBind, segment, flags.value)
     }
 
     /**
@@ -372,7 +373,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getJustificationFlags(): TextServer.JustificationFlag {
         checkOpen()
-        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getJustificationFlagsBind, segment))
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJustificationFlagsBind, segment))
     }
 
     /**
@@ -382,7 +383,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -392,7 +393,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
         checkOpen()
-        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -402,7 +403,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEllipsisChar(char: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, segment, char)
+        ObjectCalls.ptrcallWithStringArg(Binds.setEllipsisCharBind, segment, char)
     }
 
     /**
@@ -412,7 +413,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEllipsisChar(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEllipsisCharBind, segment)
     }
 
     /**
@@ -422,7 +423,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setWidth(width: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -432,7 +433,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
     }
 
     /**
@@ -442,7 +443,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNonWrappedSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getNonWrappedSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getNonWrappedSizeBind, segment)
     }
 
     /**
@@ -452,7 +453,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
     }
 
     /**
@@ -462,7 +463,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     /**
@@ -472,7 +473,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineRid(line: Int): RID {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetRID(getLineRidBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetRID(Binds.getLineRidBind, segment, line)
     }
 
     /**
@@ -482,7 +483,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDropcapRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getDropcapRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getDropcapRidBind, segment)
     }
 
     /**
@@ -492,7 +493,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRange(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getRangeBind, segment)
     }
 
     /**
@@ -502,7 +503,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLineCountBind, segment)
     }
 
     /**
@@ -512,7 +513,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMaxLinesVisible(maxLinesVisible: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxLinesVisibleBind, segment, maxLinesVisible)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxLinesVisibleBind, segment, maxLinesVisible)
     }
 
     /**
@@ -522,7 +523,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaxLinesVisible(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxLinesVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxLinesVisibleBind, segment)
     }
 
     /**
@@ -533,7 +534,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setLineSpacing(lineSpacing: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLineSpacingBind, segment, lineSpacing)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLineSpacingBind, segment, lineSpacing)
     }
 
     /**
@@ -544,7 +545,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineSpacing(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineSpacingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineSpacingBind, segment)
     }
 
     /**
@@ -554,7 +555,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineObjects(line: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getLineObjectsBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getLineObjectsBind, segment, line)
     }
 
     /**
@@ -564,7 +565,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineObjectRect(line: Int, key: Any?): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndVariantArgRetRect2(getLineObjectRectBind, segment, line, key)
+        return ObjectCalls.ptrcallWithIntAndVariantArgRetRect2(Binds.getLineObjectRectBind, segment, line, key)
     }
 
     /**
@@ -574,7 +575,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineSize(line: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getLineSizeBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getLineSizeBind, segment, line)
     }
 
     /**
@@ -584,7 +585,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineRange(line: Int): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2i(getLineRangeBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetVector2i(Binds.getLineRangeBind, segment, line)
     }
 
     /**
@@ -595,7 +596,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineAscent(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getLineAscentBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineAscentBind, segment, line)
     }
 
     /**
@@ -606,7 +607,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineDescent(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getLineDescentBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineDescentBind, segment, line)
     }
 
     /**
@@ -616,7 +617,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineWidth(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getLineWidthBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineWidthBind, segment, line)
     }
 
     /**
@@ -626,7 +627,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineUnderlinePosition(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getLineUnderlinePositionBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineUnderlinePositionBind, segment, line)
     }
 
     /**
@@ -636,7 +637,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineUnderlineThickness(line: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getLineUnderlineThicknessBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getLineUnderlineThicknessBind, segment, line)
     }
 
     /**
@@ -646,7 +647,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDropcapSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getDropcapSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getDropcapSizeBind, segment)
     }
 
     /**
@@ -656,7 +657,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDropcapLines(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDropcapLinesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDropcapLinesBind, segment)
     }
 
     /**
@@ -668,7 +669,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun draw(canvas: RID, pos: Vector2, color: Color, dcColor: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2TwoColorDoubleArgs(drawBind, segment, canvas, pos, color, dcColor, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2TwoColorDoubleArgs(Binds.drawBind, segment, canvas, pos, color, dcColor, oversampling)
     }
 
     /**
@@ -681,7 +682,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, dcColor: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2IntTwoColorDoubleArgs(drawOutlineBind, segment, canvas, pos, outlineSize, color, dcColor, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2IntTwoColorDoubleArgs(Binds.drawOutlineBind, segment, canvas, pos, outlineSize, color, dcColor, oversampling)
     }
 
     /**
@@ -693,7 +694,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun drawLine(canvas: RID, pos: Vector2, line: Int, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawLineBind, segment, canvas, pos, line, color, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(Binds.drawLineBind, segment, canvas, pos, line, color, oversampling)
     }
 
     /**
@@ -705,7 +706,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun drawLineOutline(canvas: RID, pos: Vector2, line: Int, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgs(drawLineOutlineBind, segment, canvas, pos, line, outlineSize, color, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2TwoIntColorDoubleArgs(Binds.drawLineOutlineBind, segment, canvas, pos, line, outlineSize, color, oversampling)
     }
 
     /**
@@ -717,7 +718,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun drawDropcap(canvas: RID, pos: Vector2, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawDropcapBind, segment, canvas, pos, color, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(Binds.drawDropcapBind, segment, canvas, pos, color, oversampling)
     }
 
     /**
@@ -729,7 +730,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun drawDropcapOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawDropcapOutlineBind, segment, canvas, pos, outlineSize, color, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(Binds.drawDropcapOutlineBind, segment, canvas, pos, outlineSize, color, oversampling)
     }
 
     /**
@@ -740,7 +741,7 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hitTest(coords: Vector2): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetInt(hitTestBind, segment, coords)
+        return ObjectCalls.ptrcallWithVector2ArgRetInt(Binds.hitTestBind, segment, coords)
     }
 
     companion object {
@@ -753,315 +754,317 @@ class TextParagraph(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextParagraph? =
             if (handle.address() == 0L) null else TextParagraph(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("TextParagraph", "clear", CLEAR_HASH)
-        }
 
         private const val DUPLICATE_HASH = 3607706709L
-        private val duplicateBind by lazy {
+        @JvmField
+        val duplicateBind =
             ObjectCalls.getMethodBind("TextParagraph", "duplicate", DUPLICATE_HASH)
-        }
 
         private const val SET_DIRECTION_HASH = 1418190634L
-        private val setDirectionBind by lazy {
+        @JvmField
+        val setDirectionBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_direction", SET_DIRECTION_HASH)
-        }
 
         private const val GET_DIRECTION_HASH = 2516697328L
-        private val getDirectionBind by lazy {
+        @JvmField
+        val getDirectionBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_direction", GET_DIRECTION_HASH)
-        }
 
         private const val GET_INFERRED_DIRECTION_HASH = 2516697328L
-        private val getInferredDirectionBind by lazy {
+        @JvmField
+        val getInferredDirectionBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_inferred_direction", GET_INFERRED_DIRECTION_HASH)
-        }
 
         private const val SET_CUSTOM_PUNCTUATION_HASH = 83702148L
-        private val setCustomPunctuationBind by lazy {
+        @JvmField
+        val setCustomPunctuationBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_custom_punctuation", SET_CUSTOM_PUNCTUATION_HASH)
-        }
 
         private const val GET_CUSTOM_PUNCTUATION_HASH = 201670096L
-        private val getCustomPunctuationBind by lazy {
+        @JvmField
+        val getCustomPunctuationBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_custom_punctuation", GET_CUSTOM_PUNCTUATION_HASH)
-        }
 
         private const val SET_ORIENTATION_HASH = 42823726L
-        private val setOrientationBind by lazy {
+        @JvmField
+        val setOrientationBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_orientation", SET_ORIENTATION_HASH)
-        }
 
         private const val GET_ORIENTATION_HASH = 175768116L
-        private val getOrientationBind by lazy {
+        @JvmField
+        val getOrientationBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_orientation", GET_ORIENTATION_HASH)
-        }
 
         private const val SET_PRESERVE_INVALID_HASH = 2586408642L
-        private val setPreserveInvalidBind by lazy {
+        @JvmField
+        val setPreserveInvalidBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_preserve_invalid", SET_PRESERVE_INVALID_HASH)
-        }
 
         private const val GET_PRESERVE_INVALID_HASH = 36873697L
-        private val getPreserveInvalidBind by lazy {
+        @JvmField
+        val getPreserveInvalidBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_preserve_invalid", GET_PRESERVE_INVALID_HASH)
-        }
 
         private const val SET_PRESERVE_CONTROL_HASH = 2586408642L
-        private val setPreserveControlBind by lazy {
+        @JvmField
+        val setPreserveControlBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_preserve_control", SET_PRESERVE_CONTROL_HASH)
-        }
 
         private const val GET_PRESERVE_CONTROL_HASH = 36873697L
-        private val getPreserveControlBind by lazy {
+        @JvmField
+        val getPreserveControlBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_preserve_control", GET_PRESERVE_CONTROL_HASH)
-        }
 
         private const val SET_BIDI_OVERRIDE_HASH = 381264803L
-        private val setBidiOverrideBind by lazy {
+        @JvmField
+        val setBidiOverrideBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_bidi_override", SET_BIDI_OVERRIDE_HASH)
-        }
 
         private const val SET_DROPCAP_HASH = 2498990330L
-        private val setDropcapBind by lazy {
+        @JvmField
+        val setDropcapBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_dropcap", SET_DROPCAP_HASH)
-        }
 
         private const val CLEAR_DROPCAP_HASH = 3218959716L
-        private val clearDropcapBind by lazy {
+        @JvmField
+        val clearDropcapBind =
             ObjectCalls.getMethodBind("TextParagraph", "clear_dropcap", CLEAR_DROPCAP_HASH)
-        }
 
         private const val ADD_STRING_HASH = 621426851L
-        private val addStringBind by lazy {
+        @JvmField
+        val addStringBind =
             ObjectCalls.getMethodBind("TextParagraph", "add_string", ADD_STRING_HASH)
-        }
 
         private const val ADD_OBJECT_HASH = 1316529304L
-        private val addObjectBind by lazy {
+        @JvmField
+        val addObjectBind =
             ObjectCalls.getMethodBind("TextParagraph", "add_object", ADD_OBJECT_HASH)
-        }
 
         private const val RESIZE_OBJECT_HASH = 2095776372L
-        private val resizeObjectBind by lazy {
+        @JvmField
+        val resizeObjectBind =
             ObjectCalls.getMethodBind("TextParagraph", "resize_object", RESIZE_OBJECT_HASH)
-        }
 
         private const val HAS_OBJECT_HASH = 77467830L
-        private val hasObjectBind by lazy {
+        @JvmField
+        val hasObjectBind =
             ObjectCalls.getMethodBind("TextParagraph", "has_object", HAS_OBJECT_HASH)
-        }
 
         private const val SET_ALIGNMENT_HASH = 2312603777L
-        private val setAlignmentBind by lazy {
+        @JvmField
+        val setAlignmentBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_alignment", SET_ALIGNMENT_HASH)
-        }
 
         private const val GET_ALIGNMENT_HASH = 341400642L
-        private val getAlignmentBind by lazy {
+        @JvmField
+        val getAlignmentBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_alignment", GET_ALIGNMENT_HASH)
-        }
 
         private const val TAB_ALIGN_HASH = 2899603908L
-        private val tabAlignBind by lazy {
+        @JvmField
+        val tabAlignBind =
             ObjectCalls.getMethodBind("TextParagraph", "tab_align", TAB_ALIGN_HASH)
-        }
 
         private const val SET_BREAK_FLAGS_HASH = 2809697122L
-        private val setBreakFlagsBind by lazy {
+        @JvmField
+        val setBreakFlagsBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_break_flags", SET_BREAK_FLAGS_HASH)
-        }
 
         private const val GET_BREAK_FLAGS_HASH = 2340632602L
-        private val getBreakFlagsBind by lazy {
+        @JvmField
+        val getBreakFlagsBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_break_flags", GET_BREAK_FLAGS_HASH)
-        }
 
         private const val SET_JUSTIFICATION_FLAGS_HASH = 2877345813L
-        private val setJustificationFlagsBind by lazy {
+        @JvmField
+        val setJustificationFlagsBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_justification_flags", SET_JUSTIFICATION_FLAGS_HASH)
-        }
 
         private const val GET_JUSTIFICATION_FLAGS_HASH = 1583363614L
-        private val getJustificationFlagsBind by lazy {
+        @JvmField
+        val getJustificationFlagsBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_justification_flags", GET_JUSTIFICATION_FLAGS_HASH)
-        }
 
         private const val SET_TEXT_OVERRUN_BEHAVIOR_HASH = 1008890932L
-        private val setTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val setTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_text_overrun_behavior", SET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val GET_TEXT_OVERRUN_BEHAVIOR_HASH = 3779142101L
-        private val getTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val getTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_text_overrun_behavior", GET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val SET_ELLIPSIS_CHAR_HASH = 83702148L
-        private val setEllipsisCharBind by lazy {
+        @JvmField
+        val setEllipsisCharBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_ellipsis_char", SET_ELLIPSIS_CHAR_HASH)
-        }
 
         private const val GET_ELLIPSIS_CHAR_HASH = 201670096L
-        private val getEllipsisCharBind by lazy {
+        @JvmField
+        val getEllipsisCharBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_ellipsis_char", GET_ELLIPSIS_CHAR_HASH)
-        }
 
         private const val SET_WIDTH_HASH = 373806689L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 1740695150L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val GET_NON_WRAPPED_SIZE_HASH = 3341600327L
-        private val getNonWrappedSizeBind by lazy {
+        @JvmField
+        val getNonWrappedSizeBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_non_wrapped_size", GET_NON_WRAPPED_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3341600327L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_size", GET_SIZE_HASH)
-        }
 
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_rid", GET_RID_HASH)
-        }
 
         private const val GET_LINE_RID_HASH = 495598643L
-        private val getLineRidBind by lazy {
+        @JvmField
+        val getLineRidBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_rid", GET_LINE_RID_HASH)
-        }
 
         private const val GET_DROPCAP_RID_HASH = 2944877500L
-        private val getDropcapRidBind by lazy {
+        @JvmField
+        val getDropcapRidBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_dropcap_rid", GET_DROPCAP_RID_HASH)
-        }
 
         private const val GET_RANGE_HASH = 3690982128L
-        private val getRangeBind by lazy {
+        @JvmField
+        val getRangeBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_range", GET_RANGE_HASH)
-        }
 
         private const val GET_LINE_COUNT_HASH = 3905245786L
-        private val getLineCountBind by lazy {
+        @JvmField
+        val getLineCountBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_count", GET_LINE_COUNT_HASH)
-        }
 
         private const val SET_MAX_LINES_VISIBLE_HASH = 1286410249L
-        private val setMaxLinesVisibleBind by lazy {
+        @JvmField
+        val setMaxLinesVisibleBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_max_lines_visible", SET_MAX_LINES_VISIBLE_HASH)
-        }
 
         private const val GET_MAX_LINES_VISIBLE_HASH = 3905245786L
-        private val getMaxLinesVisibleBind by lazy {
+        @JvmField
+        val getMaxLinesVisibleBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_max_lines_visible", GET_MAX_LINES_VISIBLE_HASH)
-        }
 
         private const val SET_LINE_SPACING_HASH = 373806689L
-        private val setLineSpacingBind by lazy {
+        @JvmField
+        val setLineSpacingBind =
             ObjectCalls.getMethodBind("TextParagraph", "set_line_spacing", SET_LINE_SPACING_HASH)
-        }
 
         private const val GET_LINE_SPACING_HASH = 1740695150L
-        private val getLineSpacingBind by lazy {
+        @JvmField
+        val getLineSpacingBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_spacing", GET_LINE_SPACING_HASH)
-        }
 
         private const val GET_LINE_OBJECTS_HASH = 663333327L
-        private val getLineObjectsBind by lazy {
+        @JvmField
+        val getLineObjectsBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_objects", GET_LINE_OBJECTS_HASH)
-        }
 
         private const val GET_LINE_OBJECT_RECT_HASH = 204315017L
-        private val getLineObjectRectBind by lazy {
+        @JvmField
+        val getLineObjectRectBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_object_rect", GET_LINE_OBJECT_RECT_HASH)
-        }
 
         private const val GET_LINE_SIZE_HASH = 2299179447L
-        private val getLineSizeBind by lazy {
+        @JvmField
+        val getLineSizeBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_size", GET_LINE_SIZE_HASH)
-        }
 
         private const val GET_LINE_RANGE_HASH = 880721226L
-        private val getLineRangeBind by lazy {
+        @JvmField
+        val getLineRangeBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_range", GET_LINE_RANGE_HASH)
-        }
 
         private const val GET_LINE_ASCENT_HASH = 2339986948L
-        private val getLineAscentBind by lazy {
+        @JvmField
+        val getLineAscentBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_ascent", GET_LINE_ASCENT_HASH)
-        }
 
         private const val GET_LINE_DESCENT_HASH = 2339986948L
-        private val getLineDescentBind by lazy {
+        @JvmField
+        val getLineDescentBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_descent", GET_LINE_DESCENT_HASH)
-        }
 
         private const val GET_LINE_WIDTH_HASH = 2339986948L
-        private val getLineWidthBind by lazy {
+        @JvmField
+        val getLineWidthBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_width", GET_LINE_WIDTH_HASH)
-        }
 
         private const val GET_LINE_UNDERLINE_POSITION_HASH = 2339986948L
-        private val getLineUnderlinePositionBind by lazy {
+        @JvmField
+        val getLineUnderlinePositionBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_underline_position", GET_LINE_UNDERLINE_POSITION_HASH)
-        }
 
         private const val GET_LINE_UNDERLINE_THICKNESS_HASH = 2339986948L
-        private val getLineUnderlineThicknessBind by lazy {
+        @JvmField
+        val getLineUnderlineThicknessBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_line_underline_thickness", GET_LINE_UNDERLINE_THICKNESS_HASH)
-        }
 
         private const val GET_DROPCAP_SIZE_HASH = 3341600327L
-        private val getDropcapSizeBind by lazy {
+        @JvmField
+        val getDropcapSizeBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_dropcap_size", GET_DROPCAP_SIZE_HASH)
-        }
 
         private const val GET_DROPCAP_LINES_HASH = 3905245786L
-        private val getDropcapLinesBind by lazy {
+        @JvmField
+        val getDropcapLinesBind =
             ObjectCalls.getMethodBind("TextParagraph", "get_dropcap_lines", GET_DROPCAP_LINES_HASH)
-        }
 
         private const val DRAW_HASH = 1492808103L
-        private val drawBind by lazy {
+        @JvmField
+        val drawBind =
             ObjectCalls.getMethodBind("TextParagraph", "draw", DRAW_HASH)
-        }
 
         private const val DRAW_OUTLINE_HASH = 3820500590L
-        private val drawOutlineBind by lazy {
+        @JvmField
+        val drawOutlineBind =
             ObjectCalls.getMethodBind("TextParagraph", "draw_outline", DRAW_OUTLINE_HASH)
-        }
 
         private const val DRAW_LINE_HASH = 828033758L
-        private val drawLineBind by lazy {
+        @JvmField
+        val drawLineBind =
             ObjectCalls.getMethodBind("TextParagraph", "draw_line", DRAW_LINE_HASH)
-        }
 
         private const val DRAW_LINE_OUTLINE_HASH = 2822696703L
-        private val drawLineOutlineBind by lazy {
+        @JvmField
+        val drawLineOutlineBind =
             ObjectCalls.getMethodBind("TextParagraph", "draw_line_outline", DRAW_LINE_OUTLINE_HASH)
-        }
 
         private const val DRAW_DROPCAP_HASH = 3625105422L
-        private val drawDropcapBind by lazy {
+        @JvmField
+        val drawDropcapBind =
             ObjectCalls.getMethodBind("TextParagraph", "draw_dropcap", DRAW_DROPCAP_HASH)
-        }
 
         private const val DRAW_DROPCAP_OUTLINE_HASH = 2592177763L
-        private val drawDropcapOutlineBind by lazy {
+        @JvmField
+        val drawDropcapOutlineBind =
             ObjectCalls.getMethodBind("TextParagraph", "draw_dropcap_outline", DRAW_DROPCAP_OUTLINE_HASH)
-        }
 
         private const val HIT_TEST_HASH = 3820158470L
-        private val hitTestBind by lazy {
+        @JvmField
+        val hitTestBind =
             ObjectCalls.getMethodBind("TextParagraph", "hit_test", HIT_TEST_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -67,7 +68,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setChannel(channel: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setChannelBind, segment, channel)
+        ObjectCalls.ptrcallWithIntArg(Binds.setChannelBind, segment, channel)
     }
 
     /**
@@ -78,7 +79,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getChannel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getChannelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getChannelBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setMessage(message: MIDIMessage) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMessageBind, segment, message.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMessageBind, segment, message.value)
     }
 
     /**
@@ -102,7 +103,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getMessage(): MIDIMessage {
         checkOpen()
-        return MIDIMessage(ObjectCalls.ptrcallNoArgsRetLong(getMessageBind, segment))
+        return MIDIMessage(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMessageBind, segment))
     }
 
     /**
@@ -115,7 +116,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setPitch(pitch: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPitchBind, segment, pitch)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPitchBind, segment, pitch)
     }
 
     /**
@@ -128,7 +129,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getPitch(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPitchBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPitchBind, segment)
     }
 
     /**
@@ -141,7 +142,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setVelocity(velocity: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setVelocityBind, segment, velocity)
+        ObjectCalls.ptrcallWithIntArg(Binds.setVelocityBind, segment, velocity)
     }
 
     /**
@@ -154,7 +155,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getVelocity(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVelocityBind, segment)
     }
 
     /**
@@ -168,7 +169,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setInstrument(instrument: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInstrumentBind, segment, instrument)
+        ObjectCalls.ptrcallWithIntArg(Binds.setInstrumentBind, segment, instrument)
     }
 
     /**
@@ -182,7 +183,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getInstrument(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInstrumentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInstrumentBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setPressure(pressure: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPressureBind, segment, pressure)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPressureBind, segment, pressure)
     }
 
     /**
@@ -206,7 +207,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getPressure(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPressureBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPressureBind, segment)
     }
 
     /**
@@ -219,7 +220,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setControllerNumber(controllerNumber: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setControllerNumberBind, segment, controllerNumber)
+        ObjectCalls.ptrcallWithIntArg(Binds.setControllerNumberBind, segment, controllerNumber)
     }
 
     /**
@@ -232,7 +233,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getControllerNumber(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getControllerNumberBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getControllerNumberBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun setControllerValue(controllerValue: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setControllerValueBind, segment, controllerValue)
+        ObjectCalls.ptrcallWithIntArg(Binds.setControllerValueBind, segment, controllerValue)
     }
 
     /**
@@ -254,7 +255,7 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
      */
     fun getControllerValue(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getControllerValueBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getControllerValueBind, segment)
     }
 
     companion object {
@@ -267,85 +268,87 @@ class InputEventMIDI(handle: GodotHandle) : InputEvent(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): InputEventMIDI? =
             if (handle.address() == 0L) null else InputEventMIDI(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CHANNEL_HASH = 1286410249L
-        private val setChannelBind by lazy {
+        @JvmField
+        val setChannelBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "set_channel", SET_CHANNEL_HASH)
-        }
 
         private const val GET_CHANNEL_HASH = 3905245786L
-        private val getChannelBind by lazy {
+        @JvmField
+        val getChannelBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "get_channel", GET_CHANNEL_HASH)
-        }
 
         private const val SET_MESSAGE_HASH = 1064271510L
-        private val setMessageBind by lazy {
+        @JvmField
+        val setMessageBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "set_message", SET_MESSAGE_HASH)
-        }
 
         private const val GET_MESSAGE_HASH = 1936512097L
-        private val getMessageBind by lazy {
+        @JvmField
+        val getMessageBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "get_message", GET_MESSAGE_HASH)
-        }
 
         private const val SET_PITCH_HASH = 1286410249L
-        private val setPitchBind by lazy {
+        @JvmField
+        val setPitchBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "set_pitch", SET_PITCH_HASH)
-        }
 
         private const val GET_PITCH_HASH = 3905245786L
-        private val getPitchBind by lazy {
+        @JvmField
+        val getPitchBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "get_pitch", GET_PITCH_HASH)
-        }
 
         private const val SET_VELOCITY_HASH = 1286410249L
-        private val setVelocityBind by lazy {
+        @JvmField
+        val setVelocityBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "set_velocity", SET_VELOCITY_HASH)
-        }
 
         private const val GET_VELOCITY_HASH = 3905245786L
-        private val getVelocityBind by lazy {
+        @JvmField
+        val getVelocityBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "get_velocity", GET_VELOCITY_HASH)
-        }
 
         private const val SET_INSTRUMENT_HASH = 1286410249L
-        private val setInstrumentBind by lazy {
+        @JvmField
+        val setInstrumentBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "set_instrument", SET_INSTRUMENT_HASH)
-        }
 
         private const val GET_INSTRUMENT_HASH = 3905245786L
-        private val getInstrumentBind by lazy {
+        @JvmField
+        val getInstrumentBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "get_instrument", GET_INSTRUMENT_HASH)
-        }
 
         private const val SET_PRESSURE_HASH = 1286410249L
-        private val setPressureBind by lazy {
+        @JvmField
+        val setPressureBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "set_pressure", SET_PRESSURE_HASH)
-        }
 
         private const val GET_PRESSURE_HASH = 3905245786L
-        private val getPressureBind by lazy {
+        @JvmField
+        val getPressureBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "get_pressure", GET_PRESSURE_HASH)
-        }
 
         private const val SET_CONTROLLER_NUMBER_HASH = 1286410249L
-        private val setControllerNumberBind by lazy {
+        @JvmField
+        val setControllerNumberBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "set_controller_number", SET_CONTROLLER_NUMBER_HASH)
-        }
 
         private const val GET_CONTROLLER_NUMBER_HASH = 3905245786L
-        private val getControllerNumberBind by lazy {
+        @JvmField
+        val getControllerNumberBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "get_controller_number", GET_CONTROLLER_NUMBER_HASH)
-        }
 
         private const val SET_CONTROLLER_VALUE_HASH = 1286410249L
-        private val setControllerValueBind by lazy {
+        @JvmField
+        val setControllerValueBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "set_controller_value", SET_CONTROLLER_VALUE_HASH)
-        }
 
         private const val GET_CONTROLLER_VALUE_HASH = 3905245786L
-        private val getControllerValueBind by lazy {
+        @JvmField
+        val getControllerValueBind =
             ObjectCalls.getMethodBind("InputEventMIDI", "get_controller_value", GET_CONTROLLER_VALUE_HASH)
-        }
     }
 }

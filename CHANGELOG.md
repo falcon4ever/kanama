@@ -38,6 +38,49 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — wrapper calls without a lazy check; JVM options for desktop games (task 131 item 18)
+
+- **MethodBinds are static finals.** Each generated wrapper method read its MethodBind
+  through a per-method `by lazy` (`SynchronizedLazyImpl.getValue` on every call), and every
+  wrapper class spun one lambda and one `Lazy` per method when it was initialised. A
+  generated class now keeps its binds in one `private object Binds` (singletons: with the
+  engine singleton handle), bound on the first call through any of its methods — still lazy
+  per class, and a class absent from the running engine is never looked up — then read as
+  `static final` fields the JIT folds. `GodotObject`'s binds, the two RefCounted binds
+  `BuiltinTypes` uses and the post-initialize notification bind moved to holders too. Still
+  `by lazy`, on cold paths: `RefCounted.kt`'s own binds (commonMain), the hand-written
+  SceneTree/PhysicsDirectSpaceState3D generator sections, `GodotObject.callBind`, the 17
+  hand-kept desktop wrappers in `src/jvmMain/.../api` (FileAccess, Engine, DirAccess, …)
+  and the iOS per-platform files. Bunnymark steady state (Apple M1 Max, 12 interleaved
+  rounds): V3 −5 %, V2 −3 %, V1 Sprites −3 %; example project first frame ~1,180 → ~1,000 ms
+  (12–16 interleaved launches); `kanama.jar` 14.7 → 13.6 MB.
+- A bind Godot does not have still prints `FAULT bind-lookup-failed`, now for every bind of
+  a class the first time the class is called (only an engine built with `deprecated=no`
+  lacks any). An exception while a holder initialises — possible only before
+  `GodotFFI.bootstrap`, e.g. a wrapper called from a unit test without an engine — now
+  surfaces as `ExceptionInInitializerError`, then `NoClassDefFoundError` on later calls
+  through that class, instead of being retried.
+- **Desktop JVM options.** Your own JVM options now reach the embedded JVM from
+  `kanama-jvm-options.txt` next to `kanama.jar` (exported games;
+  `scripts/export_game_assemble.sh` writes it), the new project setting
+  `kanama/jvm/options`, and the `KANAMA_JVM_OPTIONS` environment variable, in that order.
+  Whitespace separates options, `"…"`/`'…'` quote a part of one (`-Dgame.title="My Game"`),
+  and a word that is not an option is skipped with a warning. They are passed as JNI
+  options, which HotSpot treats as command-line ones; that matters because G1 discards
+  `-XX:MaxNewSize`/`NewSize` given in `JAVA_TOOL_OPTIONS`. Kanama adds no heap or GC option
+  of its own.
+- **Recommended for games that spawn many objects at once:** `-XX:MaxNewSize=128m`. After a
+  large spawn, frames run ~20–30 % slower until the first young collection (Bunnymark V1
+  Sprites: ~900 frames at ~2,250 µs instead of ~1,750 µs): the new objects sit in eden
+  interleaved with the spawn's garbage until a collection copies them together, and G1
+  grows eden to ~450–600 MiB, so that takes seconds. The cap ends the phase within ~200
+  frames, at a steady-state cost that grows with the allocation rate and the machine's
+  load: Bunnymark V3 (~0.9 GB/s) +0.4…+0.9 % at load 4–7 and +4.6…+7.6 % on a busy machine
+  (plan for ~5–8 %), V2 −1…+3.5 %, V1 Sprites +1.5…+3.5 %. That is why it is not the
+  default. `-Xmn64m` also ends the phase but, head to head over 10 rounds, costs as much or
+  more with twice the collections. Cause, evidence and the table:
+  [Desktop and Packaging → JVM Options](docs/exporting/desktop.md#jvm-options).
+
 ### Fixed — Desktop: a crash or hang when a game is stopped with SIGTERM or `System.exit`
 
 Stopping a desktop game with SIGTERM (a process manager, `kill`, a test harness) -- or with SIGINT or

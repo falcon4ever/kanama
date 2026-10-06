@@ -654,54 +654,132 @@ check_absent "Resource still in use: .*Resource_smoke"
 # destructors then called ScriptLanguage::get_name through a Panama upcall stub that thread cannot
 # enter (SIGBUS in UpcallStub, exit 134, or a hang). The bootstrap's JNI exit hook ends the process
 # with _exit instead: exit 143 (128 + SIGTERM), no hs_err. Not on Windows (no SIGTERM there).
+# sigterm_leg <label> <log suffix> [VAR=value ...]: one SIGTERM run with the extra environment.
+sigterm_leg() {
+  local label="$1" suffix="$2"
+  shift 2
+  local SIGTERM_LOG="${LOG_FILE}.sigterm${suffix}"
+  local SIGTERM_ERR_DIR
+  SIGTERM_ERR_DIR="$(mktemp -d)"
+  env ${@+"$@"} JAVA_TOOL_OPTIONS="-XX:ErrorFile=$SIGTERM_ERR_DIR/hs_err_%p.log" \
+    "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit-after 1000000 >"$SIGTERM_LOG" 2>&1 &
+  sigterm_pid=$!
+  for _ in $(seq 1 600); do
+    grep -q "HelloScript(file)._ready" "$SIGTERM_LOG" && break
+    kill -0 "$sigterm_pid" 2>/dev/null || break
+    sleep 0.1
+  done
+  sleep 1
+  kill -TERM "$sigterm_pid" 2>/dev/null || true # justified: it may have exited already; its exit status decides below
+  for _ in $(seq 1 300); do
+    kill -0 "$sigterm_pid" 2>/dev/null || break
+    sleep 0.1
+  done
+  if kill -0 "$sigterm_pid" 2>/dev/null; then
+    kill -KILL "$sigterm_pid" 2>/dev/null || true # justified: the hang itself fails the leg (sigterm_rc=hang)
+    sigterm_rc=hang
+  fi
+  set +e # justified: the status of the wait below is the verdict, checked against 143
+  wait "$sigterm_pid" 2>/dev/null # justified: its status is captured on the next line and checked
+  sigterm_wait_rc=$?
+  set -e
+  [[ "${sigterm_rc:-}" == hang ]] || sigterm_rc=$sigterm_wait_rc
+  sigterm_problem=""
+  if ! grep -q "HelloScript(file)._ready" "$SIGTERM_LOG"; then
+    sigterm_problem="the scene never became ready before SIGTERM"
+  elif [[ "$sigterm_rc" != 143 ]]; then
+    sigterm_problem="exit status $sigterm_rc after SIGTERM (want 143; 134 = JVM crash, hang = no exit in 30 s)"
+  elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null || grep -q "A fatal error has been detected" "$SIGTERM_LOG"; then
+    sigterm_problem="JVM fatal error (hs_err) on SIGTERM"
+  elif ! grep -q "\[kanama\] JVM exit (code=143)" "$SIGTERM_LOG"; then
+    sigterm_problem="the bootstrap exit hook did not run"
+  fi
+  if [[ -n "$sigterm_problem" ]]; then
+    echo "[runtime_smoke] SIGTERM log tail:" >&2
+    tail -n 60 "$SIGTERM_LOG" >&2
+    cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null | head -n 40 >&2 || true # justified: diagnostics only; the leg fails just below
+    echo "[runtime_smoke] FAIL -- SIGTERM leg ($label): $sigterm_problem (log: $SIGTERM_LOG)" >&2
+    exit 1
+  fi
+  rm -rf "$SIGTERM_ERR_DIR"
+  sigterm_rc=""
+  echo "[runtime_smoke] SIGTERM leg ($label): exit 143 through the bootstrap exit hook"
+}
 case "$UNAME_S" in
   MINGW*|MSYS*|CYGWIN*) ;;
   *)
-    SIGTERM_LOG="${LOG_FILE}.sigterm"
-    SIGTERM_ERR_DIR="$(mktemp -d)"
-    JAVA_TOOL_OPTIONS="-XX:ErrorFile=$SIGTERM_ERR_DIR/hs_err_%p.log" \
-      "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit-after 1000000 >"$SIGTERM_LOG" 2>&1 &
-    sigterm_pid=$!
-    for _ in $(seq 1 600); do
-      grep -q "HelloScript(file)._ready" "$SIGTERM_LOG" && break
-      kill -0 "$sigterm_pid" 2>/dev/null || break
-      sleep 0.1
+    sigterm_leg "plain" ""
+    # task 131 item 18 -- the exit hook is a JNI option too: with JDWP on and user JVM options
+    # appended after it, it must still be there (and the JDWP option must not displace it).
+    sigterm_leg "JDWP + KANAMA_JVM_OPTIONS" ".jdwp" KANAMA_JDWP_PORT=0 "KANAMA_JVM_OPTIONS=-XX:MaxNewSize=96m"
+    for want in "JDWP debug agent enabled at \*:0" "JVM options from KANAMA_JVM_OPTIONS: -XX:MaxNewSize=96m"; do
+      if ! grep -q "\[kanama\] $want" "${LOG_FILE}.sigterm.jdwp"; then
+        echo "[runtime_smoke] FAIL -- SIGTERM leg (JDWP + KANAMA_JVM_OPTIONS): no '[kanama] $want' line (log: ${LOG_FILE}.sigterm.jdwp)" >&2
+        exit 1
+      fi
     done
-    sleep 1
-    kill -TERM "$sigterm_pid" 2>/dev/null || true # justified: it may have exited already; its exit status decides below
-    for _ in $(seq 1 300); do
-      kill -0 "$sigterm_pid" 2>/dev/null || break
-      sleep 0.1
-    done
-    if kill -0 "$sigterm_pid" 2>/dev/null; then
-      kill -KILL "$sigterm_pid" 2>/dev/null || true # justified: the hang itself fails the leg (sigterm_rc=hang)
-      sigterm_rc=hang
-    fi
-    set +e # justified: the status of the wait below is the verdict, checked against 143
-    wait "$sigterm_pid" 2>/dev/null # justified: its status is captured on the next line and checked
-    sigterm_wait_rc=$?
-    set -e
-    [[ "${sigterm_rc:-}" == hang ]] || sigterm_rc=$sigterm_wait_rc
-    sigterm_problem=""
-    if ! grep -q "HelloScript(file)._ready" "$SIGTERM_LOG"; then
-      sigterm_problem="the scene never became ready before SIGTERM"
-    elif [[ "$sigterm_rc" != 143 ]]; then
-      sigterm_problem="exit status $sigterm_rc after SIGTERM (want 143; 134 = JVM crash, hang = no exit in 30 s)"
-    elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null || grep -q "A fatal error has been detected" "$SIGTERM_LOG"; then
-      sigterm_problem="JVM fatal error (hs_err) on SIGTERM"
-    elif ! grep -q "\[kanama\] JVM exit (code=143)" "$SIGTERM_LOG"; then
-      sigterm_problem="the bootstrap exit hook did not run"
-    fi
-    if [[ -n "$sigterm_problem" ]]; then
-      echo "[runtime_smoke] SIGTERM log tail:" >&2
-      tail -n 60 "$SIGTERM_LOG" >&2
-      cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null | head -n 40 >&2 || true # justified: diagnostics only; the leg fails just below
-      echo "[runtime_smoke] FAIL -- $sigterm_problem (log: $SIGTERM_LOG)" >&2
-      exit 1
-    fi
-    rm -rf "$SIGTERM_ERR_DIR"
     ;;
 esac
+
+# task 131 item 18 -- the user's JVM options. The bootstrap adds no young-generation cap of its own
+# (HotSpot ergonomics size it); options from kanama-jvm-options.txt next to kanama.jar (exported
+# games), the project setting kanama/jvm/options and KANAMA_JVM_OPTIONS reach the JVM as
+# command-line options in that order (a later one wins), split on whitespace with '...'/"..."
+# quoting; a word that is not an option (a bare `exit` would replace the exit hook) is skipped; and
+# a cap in JAVA_TOOL_OPTIONS is discarded by G1 -- the reason the docs point at the other three.
+JVM_OPTIONS_LOG="${LOG_FILE}.jvm_options"
+jvm_flag() {
+  # "<value> <origin>" of a -XX:+PrintFlagsFinal line, e.g. "134217728 command line".
+  sed -nE "s/^ +[a-z_]+ $1 += (.*[^ ]) +\\{product\\} \\{([a-z ]+)\\}.*/\\1 \\2/p" "$JVM_OPTIONS_LOG" | head -n 1
+}
+check_jvm_flag() {
+  # $3 is a glob: "* ergonomic" means "not set, whatever the machine's ergonomic value is".
+  local label="$1" flag="$2" expected="$3" actual
+  actual="$(jvm_flag "$flag")"
+  # shellcheck disable=SC2053 # $expected is a glob on purpose
+  if [[ -z "$actual" || "$actual" != $expected ]]; then
+    echo "[runtime_smoke] FAIL -- embedded JVM $flag ($label): expected '$expected', got '$actual'" >&2
+    echo "[runtime_smoke] full log: $JVM_OPTIONS_LOG" >&2
+    exit 1
+  fi
+  echo "[runtime_smoke] embedded JVM $flag ($label): $actual"
+}
+run_jvm_options() {
+  env ${@+"$@"} JAVA_TOOL_OPTIONS="-XX:+PrintFlagsFinal ${EXTRA_TOOL_OPTIONS:-}" \
+    "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit >"$JVM_OPTIONS_LOG" 2>&1
+}
+run_jvm_options
+check_jvm_flag "default, no cap" MaxNewSize "* ergonomic"
+run_jvm_options "KANAMA_JVM_OPTIONS=-XX:MaxNewSize=96m"
+check_jvm_flag "KANAMA_JVM_OPTIONS=-XX:MaxNewSize=96m" MaxNewSize "100663296 command line"
+EXTRA_TOOL_OPTIONS="-XX:MaxNewSize=80m" run_jvm_options
+check_jvm_flag "JAVA_TOOL_OPTIONS=-XX:MaxNewSize=80m, discarded by G1" MaxNewSize "* ergonomic"
+# Several options, a quoted value with a space, a stray word and a trailing space.
+run_jvm_options "KANAMA_JVM_OPTIONS=-XX:MaxNewSize=96m -XX:ErrorFile=\"/tmp/kanama jvm opts/hs_%p.log\" exit "
+check_jvm_flag "several options" MaxNewSize "100663296 command line"
+check_jvm_flag "a quoted value with a space" ErrorFile "/tmp/kanama jvm opts/hs_%p.log command line"
+if ! grep -q "ignoring 'exit' in the JVM options from KANAMA_JVM_OPTIONS" "$JVM_OPTIONS_LOG"; then
+  echo "[runtime_smoke] FAIL -- the stray word 'exit' in KANAMA_JVM_OPTIONS was not skipped (log: $JVM_OPTIONS_LOG)" >&2
+  exit 1
+fi
+# The file an exported game ships and the project setting, each overridden by the next source.
+JVM_OPTIONS_FILE="$PROJECT_DIR/addons/kanama/kanama-jvm-options.txt"
+PROJECT_GODOT_BACKUP="${LOG_FILE}.project.godot"
+cp "$PROJECT_DIR/project.godot" "$PROJECT_GODOT_BACKUP"
+trap 'rm -f "$JVM_OPTIONS_FILE"; cp "$PROJECT_GODOT_BACKUP" "$PROJECT_DIR/project.godot"' EXIT
+printf '# a comment line\n-XX:MaxNewSize=104m\n' >"$JVM_OPTIONS_FILE"
+run_jvm_options
+check_jvm_flag "kanama-jvm-options.txt" MaxNewSize "109051904 command line"
+awk '{ print } $0 == "[kanama]" { print ""; print "jvm/options=\"-XX:MaxNewSize=112m -XX:ErrorFile=\\\"/tmp/kanama project opts/hs_%p.log\\\"\"" }' \
+  "$PROJECT_GODOT_BACKUP" >"$PROJECT_DIR/project.godot"
+run_jvm_options
+check_jvm_flag "project setting over the file" MaxNewSize "117440512 command line"
+check_jvm_flag "project setting, quoted value" ErrorFile "/tmp/kanama project opts/hs_%p.log command line"
+run_jvm_options "KANAMA_JVM_OPTIONS=-XX:MaxNewSize=96m"
+check_jvm_flag "KANAMA_JVM_OPTIONS over the project setting" MaxNewSize "100663296 command line"
+rm -f "$JVM_OPTIONS_FILE"
+cp "$PROJECT_GODOT_BACKUP" "$PROJECT_DIR/project.godot"
+trap - EXIT
 
 # task 83 -- no native call adapter may be generated inside a Godot->JVM upcall.
 # The trace (KANAMA_TRACE_NATIVE_ADAPTERS=1, set above) timestamps every adapter and

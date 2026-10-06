@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -31,7 +32,7 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: BoxContainer.add_spacer
      */
     fun addSpacer(begin: Boolean): Control? {
-        return Control.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(addSpacerBind, segment, begin))
+        return Control.wrap(ObjectCalls.ptrcallWithBoolArgRetObject(Binds.addSpacerBind, segment, begin))
     }
 
     /**
@@ -41,7 +42,7 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: BoxContainer.set_alignment
      */
     fun setAlignment(alignment: BoxContainer.AlignmentMode) {
-        ObjectCalls.ptrcallWithLongArg(setAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -51,7 +52,7 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: BoxContainer.get_alignment
      */
     fun getAlignment(): BoxContainer.AlignmentMode {
-        return BoxContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(getAlignmentBind, segment))
+        return BoxContainer.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlignmentBind, segment))
     }
 
     /**
@@ -61,7 +62,7 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: BoxContainer.set_vertical
      */
     fun setVertical(vertical: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, segment, vertical)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVerticalBind, segment, vertical)
     }
 
     /**
@@ -71,7 +72,7 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: BoxContainer.is_vertical
      */
     fun isVertical(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVerticalBind, segment)
     }
 
     /**
@@ -113,30 +114,32 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): BoxContainer? =
             if (handle.address() == 0L) null else BoxContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_SPACER_HASH = 1326660695L
-        private val addSpacerBind by lazy {
+        @JvmField
+        val addSpacerBind =
             ObjectCalls.getMethodBind("BoxContainer", "add_spacer", ADD_SPACER_HASH)
-        }
 
         private const val SET_ALIGNMENT_HASH = 2456745134L
-        private val setAlignmentBind by lazy {
+        @JvmField
+        val setAlignmentBind =
             ObjectCalls.getMethodBind("BoxContainer", "set_alignment", SET_ALIGNMENT_HASH)
-        }
 
         private const val GET_ALIGNMENT_HASH = 1915476527L
-        private val getAlignmentBind by lazy {
+        @JvmField
+        val getAlignmentBind =
             ObjectCalls.getMethodBind("BoxContainer", "get_alignment", GET_ALIGNMENT_HASH)
-        }
 
         private const val SET_VERTICAL_HASH = 2586408642L
-        private val setVerticalBind by lazy {
+        @JvmField
+        val setVerticalBind =
             ObjectCalls.getMethodBind("BoxContainer", "set_vertical", SET_VERTICAL_HASH)
-        }
 
         private const val IS_VERTICAL_HASH = 36873697L
-        private val isVerticalBind by lazy {
+        @JvmField
+        val isVerticalBind =
             ObjectCalls.getMethodBind("BoxContainer", "is_vertical", IS_VERTICAL_HASH)
-        }
     }
 }

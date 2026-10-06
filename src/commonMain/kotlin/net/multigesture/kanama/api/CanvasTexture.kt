@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -62,7 +63,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setDiffuseTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setDiffuseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setDiffuseTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -72,7 +73,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getDiffuseTexture(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getDiffuseTextureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getDiffuseTextureBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -90,7 +91,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setNormalTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setNormalTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -103,7 +104,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getNormalTexture(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getNormalTextureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getNormalTextureBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -121,7 +122,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSpecularTexture(texture: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setSpecularTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSpecularTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -134,7 +135,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSpecularTexture(): Texture2D? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getSpecularTextureBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getSpecularTextureBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -151,7 +152,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSpecularColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setSpecularColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setSpecularColorBind, segment, color)
     }
 
     /**
@@ -163,7 +164,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSpecularColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getSpecularColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSpecularColorBind, segment)
     }
 
     /**
@@ -176,7 +177,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSpecularShininess(shininess: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSpecularShininessBind, segment, shininess)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpecularShininessBind, segment, shininess)
     }
 
     /**
@@ -189,7 +190,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getSpecularShininess(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpecularShininessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpecularShininessBind, segment)
     }
 
     /**
@@ -199,7 +200,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setTextureFilter(filter: CanvasItem.TextureFilter) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, filter.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, filter.value)
     }
 
     /**
@@ -209,7 +210,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getTextureFilter(): CanvasItem.TextureFilter {
         checkOpen()
-        return CanvasItem.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
+        return CanvasItem.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
     }
 
     /**
@@ -219,7 +220,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setTextureRepeat(repeat: CanvasItem.TextureRepeat) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, repeat.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureRepeatBind, segment, repeat.value)
     }
 
     /**
@@ -229,7 +230,7 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getTextureRepeat(): CanvasItem.TextureRepeat {
         checkOpen()
-        return CanvasItem.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment))
+        return CanvasItem.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureRepeatBind, segment))
     }
 
     companion object {
@@ -242,75 +243,77 @@ class CanvasTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CanvasTexture? =
             if (handle.address() == 0L) null else CanvasTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DIFFUSE_TEXTURE_HASH = 4051416890L
-        private val setDiffuseTextureBind by lazy {
+        @JvmField
+        val setDiffuseTextureBind =
             ObjectCalls.getMethodBind("CanvasTexture", "set_diffuse_texture", SET_DIFFUSE_TEXTURE_HASH)
-        }
 
         private const val GET_DIFFUSE_TEXTURE_HASH = 3635182373L
-        private val getDiffuseTextureBind by lazy {
+        @JvmField
+        val getDiffuseTextureBind =
             ObjectCalls.getMethodBind("CanvasTexture", "get_diffuse_texture", GET_DIFFUSE_TEXTURE_HASH)
-        }
 
         private const val SET_NORMAL_TEXTURE_HASH = 4051416890L
-        private val setNormalTextureBind by lazy {
+        @JvmField
+        val setNormalTextureBind =
             ObjectCalls.getMethodBind("CanvasTexture", "set_normal_texture", SET_NORMAL_TEXTURE_HASH)
-        }
 
         private const val GET_NORMAL_TEXTURE_HASH = 3635182373L
-        private val getNormalTextureBind by lazy {
+        @JvmField
+        val getNormalTextureBind =
             ObjectCalls.getMethodBind("CanvasTexture", "get_normal_texture", GET_NORMAL_TEXTURE_HASH)
-        }
 
         private const val SET_SPECULAR_TEXTURE_HASH = 4051416890L
-        private val setSpecularTextureBind by lazy {
+        @JvmField
+        val setSpecularTextureBind =
             ObjectCalls.getMethodBind("CanvasTexture", "set_specular_texture", SET_SPECULAR_TEXTURE_HASH)
-        }
 
         private const val GET_SPECULAR_TEXTURE_HASH = 3635182373L
-        private val getSpecularTextureBind by lazy {
+        @JvmField
+        val getSpecularTextureBind =
             ObjectCalls.getMethodBind("CanvasTexture", "get_specular_texture", GET_SPECULAR_TEXTURE_HASH)
-        }
 
         private const val SET_SPECULAR_COLOR_HASH = 2920490490L
-        private val setSpecularColorBind by lazy {
+        @JvmField
+        val setSpecularColorBind =
             ObjectCalls.getMethodBind("CanvasTexture", "set_specular_color", SET_SPECULAR_COLOR_HASH)
-        }
 
         private const val GET_SPECULAR_COLOR_HASH = 3444240500L
-        private val getSpecularColorBind by lazy {
+        @JvmField
+        val getSpecularColorBind =
             ObjectCalls.getMethodBind("CanvasTexture", "get_specular_color", GET_SPECULAR_COLOR_HASH)
-        }
 
         private const val SET_SPECULAR_SHININESS_HASH = 373806689L
-        private val setSpecularShininessBind by lazy {
+        @JvmField
+        val setSpecularShininessBind =
             ObjectCalls.getMethodBind("CanvasTexture", "set_specular_shininess", SET_SPECULAR_SHININESS_HASH)
-        }
 
         private const val GET_SPECULAR_SHININESS_HASH = 1740695150L
-        private val getSpecularShininessBind by lazy {
+        @JvmField
+        val getSpecularShininessBind =
             ObjectCalls.getMethodBind("CanvasTexture", "get_specular_shininess", GET_SPECULAR_SHININESS_HASH)
-        }
 
         private const val SET_TEXTURE_FILTER_HASH = 1037999706L
-        private val setTextureFilterBind by lazy {
+        @JvmField
+        val setTextureFilterBind =
             ObjectCalls.getMethodBind("CanvasTexture", "set_texture_filter", SET_TEXTURE_FILTER_HASH)
-        }
 
         private const val GET_TEXTURE_FILTER_HASH = 121960042L
-        private val getTextureFilterBind by lazy {
+        @JvmField
+        val getTextureFilterBind =
             ObjectCalls.getMethodBind("CanvasTexture", "get_texture_filter", GET_TEXTURE_FILTER_HASH)
-        }
 
         private const val SET_TEXTURE_REPEAT_HASH = 1716472974L
-        private val setTextureRepeatBind by lazy {
+        @JvmField
+        val setTextureRepeatBind =
             ObjectCalls.getMethodBind("CanvasTexture", "set_texture_repeat", SET_TEXTURE_REPEAT_HASH)
-        }
 
         private const val GET_TEXTURE_REPEAT_HASH = 2667158319L
-        private val getTextureRepeatBind by lazy {
+        @JvmField
+        val getTextureRepeatBind =
             ObjectCalls.getMethodBind("CanvasTexture", "get_texture_repeat", GET_TEXTURE_REPEAT_HASH)
-        }
     }
 }

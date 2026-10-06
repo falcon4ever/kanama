@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -187,7 +188,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
     }
 
     /**
@@ -198,7 +199,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -207,7 +208,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_anchor_mode
      */
     fun setAnchorMode(anchorMode: Camera2D.AnchorMode) {
-        ObjectCalls.ptrcallWithLongArg(setAnchorModeBind, segment, anchorMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAnchorModeBind, segment, anchorMode.value)
     }
 
     /**
@@ -216,7 +217,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_anchor_mode
      */
     fun getAnchorMode(): Camera2D.AnchorMode {
-        return Camera2D.AnchorMode(ObjectCalls.ptrcallNoArgsRetLong(getAnchorModeBind, segment))
+        return Camera2D.AnchorMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAnchorModeBind, segment))
     }
 
     /**
@@ -226,7 +227,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_ignore_rotation
      */
     fun setIgnoreRotation(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreRotationBind, segment, ignore)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIgnoreRotationBind, segment, ignore)
     }
 
     /**
@@ -236,7 +237,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_ignoring_rotation
      */
     fun isIgnoringRotation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIgnoringRotationBind, segment)
     }
 
     /**
@@ -245,7 +246,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_process_callback
      */
     fun setProcessCallback(mode: Camera2D.Camera2DProcessCallback) {
-        ObjectCalls.ptrcallWithLongArg(setProcessCallbackBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setProcessCallbackBind, segment, mode.value)
     }
 
     /**
@@ -254,7 +255,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_process_callback
      */
     fun getProcessCallback(): Camera2D.Camera2DProcessCallback {
-        return Camera2D.Camera2DProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(getProcessCallbackBind, segment))
+        return Camera2D.Camera2DProcessCallback(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessCallbackBind, segment))
     }
 
     /**
@@ -266,7 +267,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -278,7 +279,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
     /**
@@ -287,7 +288,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.make_current
      */
     fun makeCurrent() {
-        ObjectCalls.ptrcallNoArgs(makeCurrentBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.makeCurrentBind, segment)
     }
 
     /**
@@ -296,7 +297,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_current
      */
     fun isCurrent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCurrentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCurrentBind, segment)
     }
 
     /**
@@ -306,7 +307,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_limit_enabled
      */
     fun setLimitEnabled(limitEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLimitEnabledBind, segment, limitEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLimitEnabledBind, segment, limitEnabled)
     }
 
     /**
@@ -316,7 +317,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_limit_enabled
      */
     fun isLimitEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLimitEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLimitEnabledBind, segment)
     }
 
     /**
@@ -326,7 +327,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_limit
      */
     fun setLimit(margin: Side, limit: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setLimitBind, segment, margin.value, limit)
+        ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setLimitBind, segment, margin.value, limit)
     }
 
     /**
@@ -336,7 +337,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_limit
      */
     fun getLimit(margin: Side): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getLimitBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getLimitBind, segment, margin.value)
     }
 
     /**
@@ -347,7 +348,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_limit_smoothing_enabled
      */
     fun setLimitSmoothingEnabled(limitSmoothingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLimitSmoothingEnabledBind, segment, limitSmoothingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLimitSmoothingEnabledBind, segment, limitSmoothingEnabled)
     }
 
     /**
@@ -358,7 +359,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_limit_smoothing_enabled
      */
     fun isLimitSmoothingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLimitSmoothingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLimitSmoothingEnabledBind, segment)
     }
 
     /**
@@ -368,7 +369,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_vertical_enabled
      */
     fun setDragVerticalEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragVerticalEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDragVerticalEnabledBind, segment, enabled)
     }
 
     /**
@@ -378,7 +379,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_drag_vertical_enabled
      */
     fun isDragVerticalEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragVerticalEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDragVerticalEnabledBind, segment)
     }
 
     /**
@@ -388,7 +389,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_horizontal_enabled
      */
     fun setDragHorizontalEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragHorizontalEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDragHorizontalEnabledBind, segment, enabled)
     }
 
     /**
@@ -398,7 +399,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_drag_horizontal_enabled
      */
     fun isDragHorizontalEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragHorizontalEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDragHorizontalEnabledBind, segment)
     }
 
     /**
@@ -410,7 +411,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_vertical_offset
      */
     fun setDragVerticalOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDragVerticalOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDragVerticalOffsetBind, segment, offset)
     }
 
     /**
@@ -422,7 +423,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_drag_vertical_offset
      */
     fun getDragVerticalOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDragVerticalOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDragVerticalOffsetBind, segment)
     }
 
     /**
@@ -434,7 +435,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_horizontal_offset
      */
     fun setDragHorizontalOffset(offset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDragHorizontalOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDragHorizontalOffsetBind, segment, offset)
     }
 
     /**
@@ -446,7 +447,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_drag_horizontal_offset
      */
     fun getDragHorizontalOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDragHorizontalOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDragHorizontalOffsetBind, segment)
     }
 
     /**
@@ -456,7 +457,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_drag_margin
      */
     fun setDragMargin(margin: Side, dragMargin: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setDragMarginBind, segment, margin.value, dragMargin)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setDragMarginBind, segment, margin.value, dragMargin)
     }
 
     /**
@@ -466,7 +467,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_drag_margin
      */
     fun getDragMargin(margin: Side): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getDragMarginBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getDragMarginBind, segment, margin.value)
     }
 
     /**
@@ -478,7 +479,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_target_position
      */
     fun getTargetPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTargetPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTargetPositionBind, segment)
     }
 
     /**
@@ -488,7 +489,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_screen_center_position
      */
     fun getScreenCenterPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getScreenCenterPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getScreenCenterPositionBind, segment)
     }
 
     /**
@@ -499,7 +500,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_screen_rotation
      */
     fun getScreenRotation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getScreenRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getScreenRotationBind, segment)
     }
 
     /**
@@ -520,7 +521,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_zoom
      */
     fun setZoom(zoom: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setZoomBind, segment, zoom)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setZoomBind, segment, zoom)
     }
 
     /**
@@ -541,7 +542,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_zoom
      */
     fun getZoom(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getZoomBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getZoomBind, segment)
     }
 
     /**
@@ -551,7 +552,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_custom_viewport
      */
     fun setCustomViewport(viewport: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(setCustomViewportBind, segment, listOf(viewport.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setCustomViewportBind, segment, listOf(viewport.segment))
     }
 
     /**
@@ -561,7 +562,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_custom_viewport
      */
     fun getCustomViewport(): Node? {
-        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCustomViewportBind, segment))
+        return Node.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCustomViewportBind, segment))
     }
 
     /**
@@ -571,7 +572,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_position_smoothing_speed
      */
     fun setPositionSmoothingSpeed(positionSmoothingSpeed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPositionSmoothingSpeedBind, segment, positionSmoothingSpeed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPositionSmoothingSpeedBind, segment, positionSmoothingSpeed)
     }
 
     /**
@@ -581,7 +582,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_position_smoothing_speed
      */
     fun getPositionSmoothingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPositionSmoothingSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPositionSmoothingSpeedBind, segment)
     }
 
     /**
@@ -591,7 +592,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_position_smoothing_enabled
      */
     fun setPositionSmoothingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPositionSmoothingEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPositionSmoothingEnabledBind, segment, enabled)
     }
 
     /**
@@ -601,7 +602,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_position_smoothing_enabled
      */
     fun isPositionSmoothingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPositionSmoothingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPositionSmoothingEnabledBind, segment)
     }
 
     /**
@@ -612,7 +613,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_rotation_smoothing_enabled
      */
     fun setRotationSmoothingEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRotationSmoothingEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRotationSmoothingEnabledBind, segment, enabled)
     }
 
     /**
@@ -623,7 +624,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_rotation_smoothing_enabled
      */
     fun isRotationSmoothingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRotationSmoothingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRotationSmoothingEnabledBind, segment)
     }
 
     /**
@@ -633,7 +634,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_rotation_smoothing_speed
      */
     fun setRotationSmoothingSpeed(speed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRotationSmoothingSpeedBind, segment, speed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRotationSmoothingSpeedBind, segment, speed)
     }
 
     /**
@@ -643,7 +644,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.get_rotation_smoothing_speed
      */
     fun getRotationSmoothingSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRotationSmoothingSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRotationSmoothingSpeedBind, segment)
     }
 
     /**
@@ -652,7 +653,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.force_update_scroll
      */
     fun forceUpdateScroll() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateScrollBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceUpdateScrollBind, segment)
     }
 
     /**
@@ -662,7 +663,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.reset_smoothing
      */
     fun resetSmoothing() {
-        ObjectCalls.ptrcallNoArgs(resetSmoothingBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetSmoothingBind, segment)
     }
 
     /**
@@ -672,7 +673,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.align
      */
     fun align() {
-        ObjectCalls.ptrcallNoArgs(alignBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.alignBind, segment)
     }
 
     /**
@@ -681,7 +682,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_screen_drawing_enabled
      */
     fun setScreenDrawingEnabled(screenDrawingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScreenDrawingEnabledBind, segment, screenDrawingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScreenDrawingEnabledBind, segment, screenDrawingEnabled)
     }
 
     /**
@@ -690,7 +691,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_screen_drawing_enabled
      */
     fun isScreenDrawingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScreenDrawingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScreenDrawingEnabledBind, segment)
     }
 
     /**
@@ -699,7 +700,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_limit_drawing_enabled
      */
     fun setLimitDrawingEnabled(limitDrawingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLimitDrawingEnabledBind, segment, limitDrawingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLimitDrawingEnabledBind, segment, limitDrawingEnabled)
     }
 
     /**
@@ -708,7 +709,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_limit_drawing_enabled
      */
     fun isLimitDrawingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLimitDrawingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLimitDrawingEnabledBind, segment)
     }
 
     /**
@@ -717,7 +718,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.set_margin_drawing_enabled
      */
     fun setMarginDrawingEnabled(marginDrawingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMarginDrawingEnabledBind, segment, marginDrawingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMarginDrawingEnabledBind, segment, marginDrawingEnabled)
     }
 
     /**
@@ -726,7 +727,7 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: Camera2D.is_margin_drawing_enabled
      */
     fun isMarginDrawingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMarginDrawingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMarginDrawingEnabledBind, segment)
     }
 
     /**
@@ -785,265 +786,267 @@ class Camera2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): Camera2D? =
             if (handle.address() == 0L) null else Camera2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_OFFSET_HASH = 743155724L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("Camera2D", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3341600327L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("Camera2D", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_ANCHOR_MODE_HASH = 2050398218L
-        private val setAnchorModeBind by lazy {
+        @JvmField
+        val setAnchorModeBind =
             ObjectCalls.getMethodBind("Camera2D", "set_anchor_mode", SET_ANCHOR_MODE_HASH)
-        }
 
         private const val GET_ANCHOR_MODE_HASH = 155978067L
-        private val getAnchorModeBind by lazy {
+        @JvmField
+        val getAnchorModeBind =
             ObjectCalls.getMethodBind("Camera2D", "get_anchor_mode", GET_ANCHOR_MODE_HASH)
-        }
 
         private const val SET_IGNORE_ROTATION_HASH = 2586408642L
-        private val setIgnoreRotationBind by lazy {
+        @JvmField
+        val setIgnoreRotationBind =
             ObjectCalls.getMethodBind("Camera2D", "set_ignore_rotation", SET_IGNORE_ROTATION_HASH)
-        }
 
         private const val IS_IGNORING_ROTATION_HASH = 36873697L
-        private val isIgnoringRotationBind by lazy {
+        @JvmField
+        val isIgnoringRotationBind =
             ObjectCalls.getMethodBind("Camera2D", "is_ignoring_rotation", IS_IGNORING_ROTATION_HASH)
-        }
 
         private const val SET_PROCESS_CALLBACK_HASH = 4201947462L
-        private val setProcessCallbackBind by lazy {
+        @JvmField
+        val setProcessCallbackBind =
             ObjectCalls.getMethodBind("Camera2D", "set_process_callback", SET_PROCESS_CALLBACK_HASH)
-        }
 
         private const val GET_PROCESS_CALLBACK_HASH = 2325344499L
-        private val getProcessCallbackBind by lazy {
+        @JvmField
+        val getProcessCallbackBind =
             ObjectCalls.getMethodBind("Camera2D", "get_process_callback", GET_PROCESS_CALLBACK_HASH)
-        }
 
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val IS_ENABLED_HASH = 36873697L
-        private val isEnabledBind by lazy {
+        @JvmField
+        val isEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_enabled", IS_ENABLED_HASH)
-        }
 
         private const val MAKE_CURRENT_HASH = 3218959716L
-        private val makeCurrentBind by lazy {
+        @JvmField
+        val makeCurrentBind =
             ObjectCalls.getMethodBind("Camera2D", "make_current", MAKE_CURRENT_HASH)
-        }
 
         private const val IS_CURRENT_HASH = 36873697L
-        private val isCurrentBind by lazy {
+        @JvmField
+        val isCurrentBind =
             ObjectCalls.getMethodBind("Camera2D", "is_current", IS_CURRENT_HASH)
-        }
 
         private const val SET_LIMIT_ENABLED_HASH = 2586408642L
-        private val setLimitEnabledBind by lazy {
+        @JvmField
+        val setLimitEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_limit_enabled", SET_LIMIT_ENABLED_HASH)
-        }
 
         private const val IS_LIMIT_ENABLED_HASH = 36873697L
-        private val isLimitEnabledBind by lazy {
+        @JvmField
+        val isLimitEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_limit_enabled", IS_LIMIT_ENABLED_HASH)
-        }
 
         private const val SET_LIMIT_HASH = 437707142L
-        private val setLimitBind by lazy {
+        @JvmField
+        val setLimitBind =
             ObjectCalls.getMethodBind("Camera2D", "set_limit", SET_LIMIT_HASH)
-        }
 
         private const val GET_LIMIT_HASH = 1983885014L
-        private val getLimitBind by lazy {
+        @JvmField
+        val getLimitBind =
             ObjectCalls.getMethodBind("Camera2D", "get_limit", GET_LIMIT_HASH)
-        }
 
         private const val SET_LIMIT_SMOOTHING_ENABLED_HASH = 2586408642L
-        private val setLimitSmoothingEnabledBind by lazy {
+        @JvmField
+        val setLimitSmoothingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_limit_smoothing_enabled", SET_LIMIT_SMOOTHING_ENABLED_HASH)
-        }
 
         private const val IS_LIMIT_SMOOTHING_ENABLED_HASH = 36873697L
-        private val isLimitSmoothingEnabledBind by lazy {
+        @JvmField
+        val isLimitSmoothingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_limit_smoothing_enabled", IS_LIMIT_SMOOTHING_ENABLED_HASH)
-        }
 
         private const val SET_DRAG_VERTICAL_ENABLED_HASH = 2586408642L
-        private val setDragVerticalEnabledBind by lazy {
+        @JvmField
+        val setDragVerticalEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_drag_vertical_enabled", SET_DRAG_VERTICAL_ENABLED_HASH)
-        }
 
         private const val IS_DRAG_VERTICAL_ENABLED_HASH = 36873697L
-        private val isDragVerticalEnabledBind by lazy {
+        @JvmField
+        val isDragVerticalEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_drag_vertical_enabled", IS_DRAG_VERTICAL_ENABLED_HASH)
-        }
 
         private const val SET_DRAG_HORIZONTAL_ENABLED_HASH = 2586408642L
-        private val setDragHorizontalEnabledBind by lazy {
+        @JvmField
+        val setDragHorizontalEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_drag_horizontal_enabled", SET_DRAG_HORIZONTAL_ENABLED_HASH)
-        }
 
         private const val IS_DRAG_HORIZONTAL_ENABLED_HASH = 36873697L
-        private val isDragHorizontalEnabledBind by lazy {
+        @JvmField
+        val isDragHorizontalEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_drag_horizontal_enabled", IS_DRAG_HORIZONTAL_ENABLED_HASH)
-        }
 
         private const val SET_DRAG_VERTICAL_OFFSET_HASH = 373806689L
-        private val setDragVerticalOffsetBind by lazy {
+        @JvmField
+        val setDragVerticalOffsetBind =
             ObjectCalls.getMethodBind("Camera2D", "set_drag_vertical_offset", SET_DRAG_VERTICAL_OFFSET_HASH)
-        }
 
         private const val GET_DRAG_VERTICAL_OFFSET_HASH = 1740695150L
-        private val getDragVerticalOffsetBind by lazy {
+        @JvmField
+        val getDragVerticalOffsetBind =
             ObjectCalls.getMethodBind("Camera2D", "get_drag_vertical_offset", GET_DRAG_VERTICAL_OFFSET_HASH)
-        }
 
         private const val SET_DRAG_HORIZONTAL_OFFSET_HASH = 373806689L
-        private val setDragHorizontalOffsetBind by lazy {
+        @JvmField
+        val setDragHorizontalOffsetBind =
             ObjectCalls.getMethodBind("Camera2D", "set_drag_horizontal_offset", SET_DRAG_HORIZONTAL_OFFSET_HASH)
-        }
 
         private const val GET_DRAG_HORIZONTAL_OFFSET_HASH = 1740695150L
-        private val getDragHorizontalOffsetBind by lazy {
+        @JvmField
+        val getDragHorizontalOffsetBind =
             ObjectCalls.getMethodBind("Camera2D", "get_drag_horizontal_offset", GET_DRAG_HORIZONTAL_OFFSET_HASH)
-        }
 
         private const val SET_DRAG_MARGIN_HASH = 4290182280L
-        private val setDragMarginBind by lazy {
+        @JvmField
+        val setDragMarginBind =
             ObjectCalls.getMethodBind("Camera2D", "set_drag_margin", SET_DRAG_MARGIN_HASH)
-        }
 
         private const val GET_DRAG_MARGIN_HASH = 2869120046L
-        private val getDragMarginBind by lazy {
+        @JvmField
+        val getDragMarginBind =
             ObjectCalls.getMethodBind("Camera2D", "get_drag_margin", GET_DRAG_MARGIN_HASH)
-        }
 
         private const val GET_TARGET_POSITION_HASH = 3341600327L
-        private val getTargetPositionBind by lazy {
+        @JvmField
+        val getTargetPositionBind =
             ObjectCalls.getMethodBind("Camera2D", "get_target_position", GET_TARGET_POSITION_HASH)
-        }
 
         private const val GET_SCREEN_CENTER_POSITION_HASH = 3341600327L
-        private val getScreenCenterPositionBind by lazy {
+        @JvmField
+        val getScreenCenterPositionBind =
             ObjectCalls.getMethodBind("Camera2D", "get_screen_center_position", GET_SCREEN_CENTER_POSITION_HASH)
-        }
 
         private const val GET_SCREEN_ROTATION_HASH = 1740695150L
-        private val getScreenRotationBind by lazy {
+        @JvmField
+        val getScreenRotationBind =
             ObjectCalls.getMethodBind("Camera2D", "get_screen_rotation", GET_SCREEN_ROTATION_HASH)
-        }
 
         private const val SET_ZOOM_HASH = 743155724L
-        private val setZoomBind by lazy {
+        @JvmField
+        val setZoomBind =
             ObjectCalls.getMethodBind("Camera2D", "set_zoom", SET_ZOOM_HASH)
-        }
 
         private const val GET_ZOOM_HASH = 3341600327L
-        private val getZoomBind by lazy {
+        @JvmField
+        val getZoomBind =
             ObjectCalls.getMethodBind("Camera2D", "get_zoom", GET_ZOOM_HASH)
-        }
 
         private const val SET_CUSTOM_VIEWPORT_HASH = 1078189570L
-        private val setCustomViewportBind by lazy {
+        @JvmField
+        val setCustomViewportBind =
             ObjectCalls.getMethodBind("Camera2D", "set_custom_viewport", SET_CUSTOM_VIEWPORT_HASH)
-        }
 
         private const val GET_CUSTOM_VIEWPORT_HASH = 3160264692L
-        private val getCustomViewportBind by lazy {
+        @JvmField
+        val getCustomViewportBind =
             ObjectCalls.getMethodBind("Camera2D", "get_custom_viewport", GET_CUSTOM_VIEWPORT_HASH)
-        }
 
         private const val SET_POSITION_SMOOTHING_SPEED_HASH = 373806689L
-        private val setPositionSmoothingSpeedBind by lazy {
+        @JvmField
+        val setPositionSmoothingSpeedBind =
             ObjectCalls.getMethodBind("Camera2D", "set_position_smoothing_speed", SET_POSITION_SMOOTHING_SPEED_HASH)
-        }
 
         private const val GET_POSITION_SMOOTHING_SPEED_HASH = 1740695150L
-        private val getPositionSmoothingSpeedBind by lazy {
+        @JvmField
+        val getPositionSmoothingSpeedBind =
             ObjectCalls.getMethodBind("Camera2D", "get_position_smoothing_speed", GET_POSITION_SMOOTHING_SPEED_HASH)
-        }
 
         private const val SET_POSITION_SMOOTHING_ENABLED_HASH = 2586408642L
-        private val setPositionSmoothingEnabledBind by lazy {
+        @JvmField
+        val setPositionSmoothingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_position_smoothing_enabled", SET_POSITION_SMOOTHING_ENABLED_HASH)
-        }
 
         private const val IS_POSITION_SMOOTHING_ENABLED_HASH = 36873697L
-        private val isPositionSmoothingEnabledBind by lazy {
+        @JvmField
+        val isPositionSmoothingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_position_smoothing_enabled", IS_POSITION_SMOOTHING_ENABLED_HASH)
-        }
 
         private const val SET_ROTATION_SMOOTHING_ENABLED_HASH = 2586408642L
-        private val setRotationSmoothingEnabledBind by lazy {
+        @JvmField
+        val setRotationSmoothingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_rotation_smoothing_enabled", SET_ROTATION_SMOOTHING_ENABLED_HASH)
-        }
 
         private const val IS_ROTATION_SMOOTHING_ENABLED_HASH = 36873697L
-        private val isRotationSmoothingEnabledBind by lazy {
+        @JvmField
+        val isRotationSmoothingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_rotation_smoothing_enabled", IS_ROTATION_SMOOTHING_ENABLED_HASH)
-        }
 
         private const val SET_ROTATION_SMOOTHING_SPEED_HASH = 373806689L
-        private val setRotationSmoothingSpeedBind by lazy {
+        @JvmField
+        val setRotationSmoothingSpeedBind =
             ObjectCalls.getMethodBind("Camera2D", "set_rotation_smoothing_speed", SET_ROTATION_SMOOTHING_SPEED_HASH)
-        }
 
         private const val GET_ROTATION_SMOOTHING_SPEED_HASH = 1740695150L
-        private val getRotationSmoothingSpeedBind by lazy {
+        @JvmField
+        val getRotationSmoothingSpeedBind =
             ObjectCalls.getMethodBind("Camera2D", "get_rotation_smoothing_speed", GET_ROTATION_SMOOTHING_SPEED_HASH)
-        }
 
         private const val FORCE_UPDATE_SCROLL_HASH = 3218959716L
-        private val forceUpdateScrollBind by lazy {
+        @JvmField
+        val forceUpdateScrollBind =
             ObjectCalls.getMethodBind("Camera2D", "force_update_scroll", FORCE_UPDATE_SCROLL_HASH)
-        }
 
         private const val RESET_SMOOTHING_HASH = 3218959716L
-        private val resetSmoothingBind by lazy {
+        @JvmField
+        val resetSmoothingBind =
             ObjectCalls.getMethodBind("Camera2D", "reset_smoothing", RESET_SMOOTHING_HASH)
-        }
 
         private const val ALIGN_HASH = 3218959716L
-        private val alignBind by lazy {
+        @JvmField
+        val alignBind =
             ObjectCalls.getMethodBind("Camera2D", "align", ALIGN_HASH)
-        }
 
         private const val SET_SCREEN_DRAWING_ENABLED_HASH = 2586408642L
-        private val setScreenDrawingEnabledBind by lazy {
+        @JvmField
+        val setScreenDrawingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_screen_drawing_enabled", SET_SCREEN_DRAWING_ENABLED_HASH)
-        }
 
         private const val IS_SCREEN_DRAWING_ENABLED_HASH = 36873697L
-        private val isScreenDrawingEnabledBind by lazy {
+        @JvmField
+        val isScreenDrawingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_screen_drawing_enabled", IS_SCREEN_DRAWING_ENABLED_HASH)
-        }
 
         private const val SET_LIMIT_DRAWING_ENABLED_HASH = 2586408642L
-        private val setLimitDrawingEnabledBind by lazy {
+        @JvmField
+        val setLimitDrawingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_limit_drawing_enabled", SET_LIMIT_DRAWING_ENABLED_HASH)
-        }
 
         private const val IS_LIMIT_DRAWING_ENABLED_HASH = 36873697L
-        private val isLimitDrawingEnabledBind by lazy {
+        @JvmField
+        val isLimitDrawingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_limit_drawing_enabled", IS_LIMIT_DRAWING_ENABLED_HASH)
-        }
 
         private const val SET_MARGIN_DRAWING_ENABLED_HASH = 2586408642L
-        private val setMarginDrawingEnabledBind by lazy {
+        @JvmField
+        val setMarginDrawingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "set_margin_drawing_enabled", SET_MARGIN_DRAWING_ENABLED_HASH)
-        }
 
         private const val IS_MARGIN_DRAWING_ENABLED_HASH = 36873697L
-        private val isMarginDrawingEnabledBind by lazy {
+        @JvmField
+        val isMarginDrawingEnabledBind =
             ObjectCalls.getMethodBind("Camera2D", "is_margin_drawing_enabled", IS_MARGIN_DRAWING_ENABLED_HASH)
-        }
     }
 }

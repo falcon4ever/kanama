@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVoiceCount(voices: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setVoiceCountBind, segment, voices)
+        ObjectCalls.ptrcallWithIntArg(Binds.setVoiceCountBind, segment, voices)
     }
 
     /**
@@ -46,7 +47,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getVoiceCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVoiceCountBind, segment)
     }
 
     /**
@@ -56,7 +57,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVoiceDelayMs(voiceIdx: Int, delayMs: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceDelayMsBind, segment, voiceIdx, delayMs)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceDelayMsBind, segment, voiceIdx, delayMs)
     }
 
     /**
@@ -66,7 +67,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceDelayMs(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceDelayMsBind, segment, voiceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceDelayMsBind, segment, voiceIdx)
     }
 
     /**
@@ -76,7 +77,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVoiceRateHz(voiceIdx: Int, rateHz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceRateHzBind, segment, voiceIdx, rateHz)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceRateHzBind, segment, voiceIdx, rateHz)
     }
 
     /**
@@ -86,7 +87,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceRateHz(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceRateHzBind, segment, voiceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceRateHzBind, segment, voiceIdx)
     }
 
     /**
@@ -96,7 +97,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVoiceDepthMs(voiceIdx: Int, depthMs: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceDepthMsBind, segment, voiceIdx, depthMs)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceDepthMsBind, segment, voiceIdx, depthMs)
     }
 
     /**
@@ -106,7 +107,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceDepthMs(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceDepthMsBind, segment, voiceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceDepthMsBind, segment, voiceIdx)
     }
 
     /**
@@ -116,7 +117,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVoiceLevelDb(voiceIdx: Int, levelDb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceLevelDbBind, segment, voiceIdx, levelDb)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceLevelDbBind, segment, voiceIdx, levelDb)
     }
 
     /**
@@ -126,7 +127,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceLevelDb(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceLevelDbBind, segment, voiceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceLevelDbBind, segment, voiceIdx)
     }
 
     /**
@@ -136,7 +137,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVoiceCutoffHz(voiceIdx: Int, cutoffHz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setVoiceCutoffHzBind, segment, voiceIdx, cutoffHz)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoiceCutoffHzBind, segment, voiceIdx, cutoffHz)
     }
 
     /**
@@ -146,7 +147,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoiceCutoffHz(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getVoiceCutoffHzBind, segment, voiceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoiceCutoffHzBind, segment, voiceIdx)
     }
 
     /**
@@ -156,7 +157,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setVoicePan(voiceIdx: Int, pan: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setVoicePanBind, segment, voiceIdx, pan)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setVoicePanBind, segment, voiceIdx, pan)
     }
 
     /**
@@ -166,7 +167,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getVoicePan(voiceIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getVoicePanBind, segment, voiceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getVoicePanBind, segment, voiceIdx)
     }
 
     /**
@@ -176,7 +177,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setWet(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWetBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWetBind, segment, amount)
     }
 
     /**
@@ -186,7 +187,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getWet(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWetBind, segment)
     }
 
     /**
@@ -196,7 +197,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setDry(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDryBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDryBind, segment, amount)
     }
 
     /**
@@ -206,7 +207,7 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getDry(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDryBind, segment)
     }
 
     companion object {
@@ -219,95 +220,97 @@ class AudioEffectChorus(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectChorus? =
             if (handle.address() == 0L) null else AudioEffectChorus(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_VOICE_COUNT_HASH = 1286410249L
-        private val setVoiceCountBind by lazy {
+        @JvmField
+        val setVoiceCountBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_voice_count", SET_VOICE_COUNT_HASH)
-        }
 
         private const val GET_VOICE_COUNT_HASH = 3905245786L
-        private val getVoiceCountBind by lazy {
+        @JvmField
+        val getVoiceCountBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_voice_count", GET_VOICE_COUNT_HASH)
-        }
 
         private const val SET_VOICE_DELAY_MS_HASH = 1602489585L
-        private val setVoiceDelayMsBind by lazy {
+        @JvmField
+        val setVoiceDelayMsBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_voice_delay_ms", SET_VOICE_DELAY_MS_HASH)
-        }
 
         private const val GET_VOICE_DELAY_MS_HASH = 2339986948L
-        private val getVoiceDelayMsBind by lazy {
+        @JvmField
+        val getVoiceDelayMsBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_voice_delay_ms", GET_VOICE_DELAY_MS_HASH)
-        }
 
         private const val SET_VOICE_RATE_HZ_HASH = 1602489585L
-        private val setVoiceRateHzBind by lazy {
+        @JvmField
+        val setVoiceRateHzBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_voice_rate_hz", SET_VOICE_RATE_HZ_HASH)
-        }
 
         private const val GET_VOICE_RATE_HZ_HASH = 2339986948L
-        private val getVoiceRateHzBind by lazy {
+        @JvmField
+        val getVoiceRateHzBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_voice_rate_hz", GET_VOICE_RATE_HZ_HASH)
-        }
 
         private const val SET_VOICE_DEPTH_MS_HASH = 1602489585L
-        private val setVoiceDepthMsBind by lazy {
+        @JvmField
+        val setVoiceDepthMsBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_voice_depth_ms", SET_VOICE_DEPTH_MS_HASH)
-        }
 
         private const val GET_VOICE_DEPTH_MS_HASH = 2339986948L
-        private val getVoiceDepthMsBind by lazy {
+        @JvmField
+        val getVoiceDepthMsBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_voice_depth_ms", GET_VOICE_DEPTH_MS_HASH)
-        }
 
         private const val SET_VOICE_LEVEL_DB_HASH = 1602489585L
-        private val setVoiceLevelDbBind by lazy {
+        @JvmField
+        val setVoiceLevelDbBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_voice_level_db", SET_VOICE_LEVEL_DB_HASH)
-        }
 
         private const val GET_VOICE_LEVEL_DB_HASH = 2339986948L
-        private val getVoiceLevelDbBind by lazy {
+        @JvmField
+        val getVoiceLevelDbBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_voice_level_db", GET_VOICE_LEVEL_DB_HASH)
-        }
 
         private const val SET_VOICE_CUTOFF_HZ_HASH = 1602489585L
-        private val setVoiceCutoffHzBind by lazy {
+        @JvmField
+        val setVoiceCutoffHzBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_voice_cutoff_hz", SET_VOICE_CUTOFF_HZ_HASH)
-        }
 
         private const val GET_VOICE_CUTOFF_HZ_HASH = 2339986948L
-        private val getVoiceCutoffHzBind by lazy {
+        @JvmField
+        val getVoiceCutoffHzBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_voice_cutoff_hz", GET_VOICE_CUTOFF_HZ_HASH)
-        }
 
         private const val SET_VOICE_PAN_HASH = 1602489585L
-        private val setVoicePanBind by lazy {
+        @JvmField
+        val setVoicePanBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_voice_pan", SET_VOICE_PAN_HASH)
-        }
 
         private const val GET_VOICE_PAN_HASH = 2339986948L
-        private val getVoicePanBind by lazy {
+        @JvmField
+        val getVoicePanBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_voice_pan", GET_VOICE_PAN_HASH)
-        }
 
         private const val SET_WET_HASH = 373806689L
-        private val setWetBind by lazy {
+        @JvmField
+        val setWetBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_wet", SET_WET_HASH)
-        }
 
         private const val GET_WET_HASH = 1740695150L
-        private val getWetBind by lazy {
+        @JvmField
+        val getWetBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_wet", GET_WET_HASH)
-        }
 
         private const val SET_DRY_HASH = 373806689L
-        private val setDryBind by lazy {
+        @JvmField
+        val setDryBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "set_dry", SET_DRY_HASH)
-        }
 
         private const val GET_DRY_HASH = 1740695150L
-        private val getDryBind by lazy {
+        @JvmField
+        val getDryBind =
             ObjectCalls.getMethodBind("AudioEffectChorus", "get_dry", GET_DRY_HASH)
-        }
     }
 }

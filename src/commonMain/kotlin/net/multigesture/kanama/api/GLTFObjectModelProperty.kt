@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -50,92 +51,92 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
 
     fun appendNodePath(nodePath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(appendNodePathBind, segment, nodePath)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.appendNodePathBind, segment, nodePath)
     }
 
     fun appendPathToProperty(nodePath: NodePath, propName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathStringNameArgs(appendPathToPropertyBind, segment, nodePath, propName)
+        ObjectCalls.ptrcallWithNodePathStringNameArgs(Binds.appendPathToPropertyBind, segment, nodePath, propName)
     }
 
     fun getAccessorType(): GLTFAccessor.GLTFAccessorType {
         checkOpen()
-        return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(getAccessorTypeBind, segment))
+        return GLTFAccessor.GLTFAccessorType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAccessorTypeBind, segment))
     }
 
     fun getGltfToGodotExpression(): Expression? {
         checkOpen()
-        return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGltfToGodotExpressionBind, segment))
+        return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGltfToGodotExpressionBind, segment))
     }
 
     fun setGltfToGodotExpression(gltfToGodotExpr: Expression?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGltfToGodotExpressionBind, segment, listOf(gltfToGodotExpr?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setGltfToGodotExpressionBind, segment, listOf(gltfToGodotExpr?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getGodotToGltfExpression(): Expression? {
         checkOpen()
-        return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getGodotToGltfExpressionBind, segment))
+        return Expression.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getGodotToGltfExpressionBind, segment))
     }
 
     fun setGodotToGltfExpression(godotToGltfExpr: Expression?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setGodotToGltfExpressionBind, segment, listOf(godotToGltfExpr?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setGodotToGltfExpressionBind, segment, listOf(godotToGltfExpr?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getNodePaths(): List<NodePath> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getNodePathsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getNodePathsBind, segment)
     }
 
     fun hasNodePaths(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasNodePathsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasNodePathsBind, segment)
     }
 
     fun setNodePaths(nodePaths: List<NodePath>) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathListArg(setNodePathsBind, segment, nodePaths)
+        ObjectCalls.ptrcallWithNodePathListArg(Binds.setNodePathsBind, segment, nodePaths)
     }
 
     fun getObjectModelType(): GLTFObjectModelProperty.GLTFObjectModelType {
         checkOpen()
-        return GLTFObjectModelProperty.GLTFObjectModelType(ObjectCalls.ptrcallNoArgsRetLong(getObjectModelTypeBind, segment))
+        return GLTFObjectModelProperty.GLTFObjectModelType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getObjectModelTypeBind, segment))
     }
 
     fun setObjectModelType(type: GLTFObjectModelProperty.GLTFObjectModelType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setObjectModelTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setObjectModelTypeBind, segment, type.value)
     }
 
     fun getJsonPointers(): List<List<String>> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringListList(getJsonPointersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringListList(Binds.getJsonPointersBind, segment)
     }
 
     fun hasJsonPointers(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasJsonPointersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasJsonPointersBind, segment)
     }
 
     fun setJsonPointers(jsonPointers: List<List<String>>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListListArg(setJsonPointersBind, segment, jsonPointers)
+        ObjectCalls.ptrcallWithPackedStringListListArg(Binds.setJsonPointersBind, segment, jsonPointers)
     }
 
     fun getVariantType(): VariantType {
         checkOpen()
-        return VariantType(ObjectCalls.ptrcallNoArgsRetLong(getVariantTypeBind, segment))
+        return VariantType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVariantTypeBind, segment))
     }
 
     fun setVariantType(variantType: VariantType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setVariantTypeBind, segment, variantType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVariantTypeBind, segment, variantType.value)
     }
 
     fun setTypes(variantType: VariantType, objModelType: GLTFObjectModelProperty.GLTFObjectModelType) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongArgs(setTypesBind, segment, variantType.value, objModelType.value)
+        ObjectCalls.ptrcallWithTwoLongArgs(Binds.setTypesBind, segment, variantType.value, objModelType.value)
     }
 
     @JvmInline
@@ -165,95 +166,97 @@ class GLTFObjectModelProperty(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFObjectModelProperty? =
             if (handle.address() == 0L) null else GLTFObjectModelProperty(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val APPEND_NODE_PATH_HASH = 1348162250L
-        private val appendNodePathBind by lazy {
+        @JvmField
+        val appendNodePathBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "append_node_path", APPEND_NODE_PATH_HASH)
-        }
 
         private const val APPEND_PATH_TO_PROPERTY_HASH = 1331931644L
-        private val appendPathToPropertyBind by lazy {
+        @JvmField
+        val appendPathToPropertyBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "append_path_to_property", APPEND_PATH_TO_PROPERTY_HASH)
-        }
 
         private const val GET_ACCESSOR_TYPE_HASH = 1998183368L
-        private val getAccessorTypeBind by lazy {
+        @JvmField
+        val getAccessorTypeBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_accessor_type", GET_ACCESSOR_TYPE_HASH)
-        }
 
         private const val GET_GLTF_TO_GODOT_EXPRESSION_HASH = 2240072449L
-        private val getGltfToGodotExpressionBind by lazy {
+        @JvmField
+        val getGltfToGodotExpressionBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_gltf_to_godot_expression", GET_GLTF_TO_GODOT_EXPRESSION_HASH)
-        }
 
         private const val SET_GLTF_TO_GODOT_EXPRESSION_HASH = 1815845073L
-        private val setGltfToGodotExpressionBind by lazy {
+        @JvmField
+        val setGltfToGodotExpressionBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_gltf_to_godot_expression", SET_GLTF_TO_GODOT_EXPRESSION_HASH)
-        }
 
         private const val GET_GODOT_TO_GLTF_EXPRESSION_HASH = 2240072449L
-        private val getGodotToGltfExpressionBind by lazy {
+        @JvmField
+        val getGodotToGltfExpressionBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_godot_to_gltf_expression", GET_GODOT_TO_GLTF_EXPRESSION_HASH)
-        }
 
         private const val SET_GODOT_TO_GLTF_EXPRESSION_HASH = 1815845073L
-        private val setGodotToGltfExpressionBind by lazy {
+        @JvmField
+        val setGodotToGltfExpressionBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_godot_to_gltf_expression", SET_GODOT_TO_GLTF_EXPRESSION_HASH)
-        }
 
         private const val GET_NODE_PATHS_HASH = 3995934104L
-        private val getNodePathsBind by lazy {
+        @JvmField
+        val getNodePathsBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_node_paths", GET_NODE_PATHS_HASH)
-        }
 
         private const val HAS_NODE_PATHS_HASH = 36873697L
-        private val hasNodePathsBind by lazy {
+        @JvmField
+        val hasNodePathsBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "has_node_paths", HAS_NODE_PATHS_HASH)
-        }
 
         private const val SET_NODE_PATHS_HASH = 381264803L
-        private val setNodePathsBind by lazy {
+        @JvmField
+        val setNodePathsBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_node_paths", SET_NODE_PATHS_HASH)
-        }
 
         private const val GET_OBJECT_MODEL_TYPE_HASH = 1094778507L
-        private val getObjectModelTypeBind by lazy {
+        @JvmField
+        val getObjectModelTypeBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_object_model_type", GET_OBJECT_MODEL_TYPE_HASH)
-        }
 
         private const val SET_OBJECT_MODEL_TYPE_HASH = 4108684086L
-        private val setObjectModelTypeBind by lazy {
+        @JvmField
+        val setObjectModelTypeBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_object_model_type", SET_OBJECT_MODEL_TYPE_HASH)
-        }
 
         private const val GET_JSON_POINTERS_HASH = 3995934104L
-        private val getJsonPointersBind by lazy {
+        @JvmField
+        val getJsonPointersBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_json_pointers", GET_JSON_POINTERS_HASH)
-        }
 
         private const val HAS_JSON_POINTERS_HASH = 36873697L
-        private val hasJsonPointersBind by lazy {
+        @JvmField
+        val hasJsonPointersBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "has_json_pointers", HAS_JSON_POINTERS_HASH)
-        }
 
         private const val SET_JSON_POINTERS_HASH = 381264803L
-        private val setJsonPointersBind by lazy {
+        @JvmField
+        val setJsonPointersBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_json_pointers", SET_JSON_POINTERS_HASH)
-        }
 
         private const val GET_VARIANT_TYPE_HASH = 3416842102L
-        private val getVariantTypeBind by lazy {
+        @JvmField
+        val getVariantTypeBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "get_variant_type", GET_VARIANT_TYPE_HASH)
-        }
 
         private const val SET_VARIANT_TYPE_HASH = 2887708385L
-        private val setVariantTypeBind by lazy {
+        @JvmField
+        val setVariantTypeBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_variant_type", SET_VARIANT_TYPE_HASH)
-        }
 
         private const val SET_TYPES_HASH = 4150728237L
-        private val setTypesBind by lazy {
+        @JvmField
+        val setTypesBind =
             ObjectCalls.getMethodBind("GLTFObjectModelProperty", "set_types", SET_TYPES_HASH)
-        }
     }
 }

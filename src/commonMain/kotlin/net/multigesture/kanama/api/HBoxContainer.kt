@@ -19,7 +19,5 @@ open class HBoxContainer(handle: GodotHandle) : BoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): HBoxContainer? =
             if (handle.address() == 0L) null else HBoxContainer(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

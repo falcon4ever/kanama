@@ -22,7 +22,5 @@ class MultiplayerAPIExtension(handle: GodotHandle) : MultiplayerAPI(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiplayerAPIExtension? =
             if (handle.address() == 0L) null else MultiplayerAPIExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

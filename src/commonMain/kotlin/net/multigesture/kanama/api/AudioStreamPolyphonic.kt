@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setPolyphony(voices: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPolyphonyBind, segment, voices)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPolyphonyBind, segment, voices)
     }
 
     /**
@@ -35,7 +36,7 @@ class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getPolyphony(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPolyphonyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPolyphonyBind, segment)
     }
 
     companion object {
@@ -48,15 +49,17 @@ class AudioStreamPolyphonic(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPolyphonic? =
             if (handle.address() == 0L) null else AudioStreamPolyphonic(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_POLYPHONY_HASH = 1286410249L
-        private val setPolyphonyBind by lazy {
+        @JvmField
+        val setPolyphonyBind =
             ObjectCalls.getMethodBind("AudioStreamPolyphonic", "set_polyphony", SET_POLYPHONY_HASH)
-        }
 
         private const val GET_POLYPHONY_HASH = 3905245786L
-        private val getPolyphonyBind by lazy {
+        @JvmField
+        val getPolyphonyBind =
             ObjectCalls.getMethodBind("AudioStreamPolyphonic", "get_polyphony", GET_POLYPHONY_HASH)
-        }
     }
 }

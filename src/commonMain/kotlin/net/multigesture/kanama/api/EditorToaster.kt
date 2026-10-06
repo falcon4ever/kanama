@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class EditorToaster(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorToaster.push_toast
      */
     fun pushToast(message: String, severity: EditorToaster.Severity = EditorToaster.Severity.INFO, tooltip: String = "") {
-        ObjectCalls.ptrcallWithStringLongStringArgs(pushToastBind, segment, message, severity.value, tooltip)
+        ObjectCalls.ptrcallWithStringLongStringArgs(Binds.pushToastBind, segment, message, severity.value, tooltip)
     }
 
     /**
@@ -57,10 +58,12 @@ class EditorToaster(handle: GodotHandle) : HBoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): EditorToaster? =
             if (handle.address() == 0L) null else EditorToaster(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PUSH_TOAST_HASH = 1813923476L
-        private val pushToastBind by lazy {
+        @JvmField
+        val pushToastBind =
             ObjectCalls.getMethodBind("EditorToaster", "push_toast", PUSH_TOAST_HASH)
-        }
     }
 }

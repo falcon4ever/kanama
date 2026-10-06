@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      */
     fun playStream(stream: AudioStream?, fromOffset: Double = 0.0, volumeDb: Double = 0.0, pitchScale: Double = 1.0, playbackType: AudioServer.PlaybackType = AudioServer.PlaybackType.DEFAULT, bus: String = "Master"): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(playStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, fromOffset, volumeDb, pitchScale, playbackType.value, bus)
+        return ObjectCalls.ptrcallWithObjectThreeDoubleLongStringNameArgsRetLong(Binds.playStreamBind, segment, stream?.requireOpenHandle() ?: NULL_SEGMENT, fromOffset, volumeDb, pitchScale, playbackType.value, bus)
     }
 
     /**
@@ -35,7 +36,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      */
     fun setStreamVolume(stream: Long, volumeDb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamVolumeBind, segment, stream, volumeDb)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setStreamVolumeBind, segment, stream, volumeDb)
     }
 
     /**
@@ -45,7 +46,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      */
     fun setStreamPitchScale(stream: Long, pitchScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setStreamPitchScaleBind, segment, stream, pitchScale)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setStreamPitchScaleBind, segment, stream, pitchScale)
     }
 
     /**
@@ -56,7 +57,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      */
     fun isStreamPlaying(stream: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(isStreamPlayingBind, segment, stream)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isStreamPlayingBind, segment, stream)
     }
 
     /**
@@ -67,7 +68,7 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
      */
     fun stopStream(stream: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(stopStreamBind, segment, stream)
+        ObjectCalls.ptrcallWithLongArg(Binds.stopStreamBind, segment, stream)
     }
 
     companion object {
@@ -82,30 +83,32 @@ class AudioStreamPlaybackPolyphonic(handle: GodotHandle) : AudioStreamPlayback(h
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamPlaybackPolyphonic? =
             if (handle.address() == 0L) null else AudioStreamPlaybackPolyphonic(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val PLAY_STREAM_HASH = 1846744803L
-        private val playStreamBind by lazy {
+        @JvmField
+        val playStreamBind =
             ObjectCalls.getMethodBind("AudioStreamPlaybackPolyphonic", "play_stream", PLAY_STREAM_HASH)
-        }
 
         private const val SET_STREAM_VOLUME_HASH = 1602489585L
-        private val setStreamVolumeBind by lazy {
+        @JvmField
+        val setStreamVolumeBind =
             ObjectCalls.getMethodBind("AudioStreamPlaybackPolyphonic", "set_stream_volume", SET_STREAM_VOLUME_HASH)
-        }
 
         private const val SET_STREAM_PITCH_SCALE_HASH = 1602489585L
-        private val setStreamPitchScaleBind by lazy {
+        @JvmField
+        val setStreamPitchScaleBind =
             ObjectCalls.getMethodBind("AudioStreamPlaybackPolyphonic", "set_stream_pitch_scale", SET_STREAM_PITCH_SCALE_HASH)
-        }
 
         private const val IS_STREAM_PLAYING_HASH = 1116898809L
-        private val isStreamPlayingBind by lazy {
+        @JvmField
+        val isStreamPlayingBind =
             ObjectCalls.getMethodBind("AudioStreamPlaybackPolyphonic", "is_stream_playing", IS_STREAM_PLAYING_HASH)
-        }
 
         private const val STOP_STREAM_HASH = 1286410249L
-        private val stopStreamBind by lazy {
+        @JvmField
+        val stopStreamBind =
             ObjectCalls.getMethodBind("AudioStreamPlaybackPolyphonic", "stop_stream", STOP_STREAM_HASH)
-        }
     }
 }

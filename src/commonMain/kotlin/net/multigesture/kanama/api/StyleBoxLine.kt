@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -49,7 +50,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setColor(color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     /**
@@ -59,7 +60,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getColor(): Color {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     /**
@@ -69,7 +70,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setThickness(thickness: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setThicknessBind, segment, thickness)
+        ObjectCalls.ptrcallWithIntArg(Binds.setThicknessBind, segment, thickness)
     }
 
     /**
@@ -79,7 +80,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getThickness(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getThicknessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getThicknessBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setGrowBegin(offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGrowBeginBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGrowBeginBind, segment, offset)
     }
 
     /**
@@ -101,7 +102,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getGrowBegin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowBeginBind, segment)
     }
 
     /**
@@ -112,7 +113,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setGrowEnd(offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setGrowEndBind, segment, offset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setGrowEndBind, segment, offset)
     }
 
     /**
@@ -123,7 +124,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun getGrowEnd(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getGrowEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getGrowEndBind, segment)
     }
 
     /**
@@ -133,7 +134,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun setVertical(vertical: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setVerticalBind, segment, vertical)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVerticalBind, segment, vertical)
     }
 
     /**
@@ -143,7 +144,7 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
      */
     fun isVertical(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isVerticalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVerticalBind, segment)
     }
 
     companion object {
@@ -156,55 +157,57 @@ class StyleBoxLine(handle: GodotHandle) : StyleBox(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): StyleBoxLine? =
             if (handle.address() == 0L) null else StyleBoxLine(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3444240500L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SET_THICKNESS_HASH = 1286410249L
-        private val setThicknessBind by lazy {
+        @JvmField
+        val setThicknessBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "set_thickness", SET_THICKNESS_HASH)
-        }
 
         private const val GET_THICKNESS_HASH = 3905245786L
-        private val getThicknessBind by lazy {
+        @JvmField
+        val getThicknessBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "get_thickness", GET_THICKNESS_HASH)
-        }
 
         private const val SET_GROW_BEGIN_HASH = 373806689L
-        private val setGrowBeginBind by lazy {
+        @JvmField
+        val setGrowBeginBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "set_grow_begin", SET_GROW_BEGIN_HASH)
-        }
 
         private const val GET_GROW_BEGIN_HASH = 1740695150L
-        private val getGrowBeginBind by lazy {
+        @JvmField
+        val getGrowBeginBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "get_grow_begin", GET_GROW_BEGIN_HASH)
-        }
 
         private const val SET_GROW_END_HASH = 373806689L
-        private val setGrowEndBind by lazy {
+        @JvmField
+        val setGrowEndBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "set_grow_end", SET_GROW_END_HASH)
-        }
 
         private const val GET_GROW_END_HASH = 1740695150L
-        private val getGrowEndBind by lazy {
+        @JvmField
+        val getGrowEndBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "get_grow_end", GET_GROW_END_HASH)
-        }
 
         private const val SET_VERTICAL_HASH = 2586408642L
-        private val setVerticalBind by lazy {
+        @JvmField
+        val setVerticalBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "set_vertical", SET_VERTICAL_HASH)
-        }
 
         private const val IS_VERTICAL_HASH = 36873697L
-        private val isVerticalBind by lazy {
+        @JvmField
+        val isVerticalBind =
             ObjectCalls.getMethodBind("StyleBoxLine", "is_vertical", IS_VERTICAL_HASH)
-        }
     }
 }

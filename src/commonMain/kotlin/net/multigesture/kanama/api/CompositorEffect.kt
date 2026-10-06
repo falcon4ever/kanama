@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -61,7 +62,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun setEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -71,7 +72,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnabledBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun setEffectCallbackType(effectCallbackType: CompositorEffect.EffectCallbackType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setEffectCallbackTypeBind, segment, effectCallbackType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setEffectCallbackTypeBind, segment, effectCallbackType.value)
     }
 
     /**
@@ -93,7 +94,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getEffectCallbackType(): CompositorEffect.EffectCallbackType {
         checkOpen()
-        return CompositorEffect.EffectCallbackType(ObjectCalls.ptrcallNoArgsRetLong(getEffectCallbackTypeBind, segment))
+        return CompositorEffect.EffectCallbackType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getEffectCallbackTypeBind, segment))
     }
 
     /**
@@ -104,7 +105,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun setAccessResolvedColor(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAccessResolvedColorBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAccessResolvedColorBind, segment, enable)
     }
 
     /**
@@ -115,7 +116,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getAccessResolvedColor(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAccessResolvedColorBind, segment)
     }
 
     /**
@@ -126,7 +127,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun setAccessResolvedDepth(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAccessResolvedDepthBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAccessResolvedDepthBind, segment, enable)
     }
 
     /**
@@ -137,7 +138,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getAccessResolvedDepth(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAccessResolvedDepthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAccessResolvedDepthBind, segment)
     }
 
     /**
@@ -147,7 +148,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun setNeedsMotionVectors(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNeedsMotionVectorsBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNeedsMotionVectorsBind, segment, enable)
     }
 
     /**
@@ -157,7 +158,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getNeedsMotionVectors(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsMotionVectorsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsMotionVectorsBind, segment)
     }
 
     /**
@@ -168,7 +169,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun setNeedsNormalRoughness(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNeedsNormalRoughnessBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNeedsNormalRoughnessBind, segment, enable)
     }
 
     /**
@@ -179,7 +180,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getNeedsNormalRoughness(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsNormalRoughnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsNormalRoughnessBind, segment)
     }
 
     /**
@@ -190,7 +191,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun setNeedsSeparateSpecular(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNeedsSeparateSpecularBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNeedsSeparateSpecularBind, segment, enable)
     }
 
     /**
@@ -201,7 +202,7 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
      */
     fun getNeedsSeparateSpecular(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNeedsSeparateSpecularBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNeedsSeparateSpecularBind, segment)
     }
 
     /**
@@ -267,75 +268,77 @@ class CompositorEffect(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CompositorEffect? =
             if (handle.address() == 0L) null else CompositorEffect(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("CompositorEffect", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val GET_ENABLED_HASH = 36873697L
-        private val getEnabledBind by lazy {
+        @JvmField
+        val getEnabledBind =
             ObjectCalls.getMethodBind("CompositorEffect", "get_enabled", GET_ENABLED_HASH)
-        }
 
         private const val SET_EFFECT_CALLBACK_TYPE_HASH = 1390728419L
-        private val setEffectCallbackTypeBind by lazy {
+        @JvmField
+        val setEffectCallbackTypeBind =
             ObjectCalls.getMethodBind("CompositorEffect", "set_effect_callback_type", SET_EFFECT_CALLBACK_TYPE_HASH)
-        }
 
         private const val GET_EFFECT_CALLBACK_TYPE_HASH = 1221912590L
-        private val getEffectCallbackTypeBind by lazy {
+        @JvmField
+        val getEffectCallbackTypeBind =
             ObjectCalls.getMethodBind("CompositorEffect", "get_effect_callback_type", GET_EFFECT_CALLBACK_TYPE_HASH)
-        }
 
         private const val SET_ACCESS_RESOLVED_COLOR_HASH = 2586408642L
-        private val setAccessResolvedColorBind by lazy {
+        @JvmField
+        val setAccessResolvedColorBind =
             ObjectCalls.getMethodBind("CompositorEffect", "set_access_resolved_color", SET_ACCESS_RESOLVED_COLOR_HASH)
-        }
 
         private const val GET_ACCESS_RESOLVED_COLOR_HASH = 36873697L
-        private val getAccessResolvedColorBind by lazy {
+        @JvmField
+        val getAccessResolvedColorBind =
             ObjectCalls.getMethodBind("CompositorEffect", "get_access_resolved_color", GET_ACCESS_RESOLVED_COLOR_HASH)
-        }
 
         private const val SET_ACCESS_RESOLVED_DEPTH_HASH = 2586408642L
-        private val setAccessResolvedDepthBind by lazy {
+        @JvmField
+        val setAccessResolvedDepthBind =
             ObjectCalls.getMethodBind("CompositorEffect", "set_access_resolved_depth", SET_ACCESS_RESOLVED_DEPTH_HASH)
-        }
 
         private const val GET_ACCESS_RESOLVED_DEPTH_HASH = 36873697L
-        private val getAccessResolvedDepthBind by lazy {
+        @JvmField
+        val getAccessResolvedDepthBind =
             ObjectCalls.getMethodBind("CompositorEffect", "get_access_resolved_depth", GET_ACCESS_RESOLVED_DEPTH_HASH)
-        }
 
         private const val SET_NEEDS_MOTION_VECTORS_HASH = 2586408642L
-        private val setNeedsMotionVectorsBind by lazy {
+        @JvmField
+        val setNeedsMotionVectorsBind =
             ObjectCalls.getMethodBind("CompositorEffect", "set_needs_motion_vectors", SET_NEEDS_MOTION_VECTORS_HASH)
-        }
 
         private const val GET_NEEDS_MOTION_VECTORS_HASH = 36873697L
-        private val getNeedsMotionVectorsBind by lazy {
+        @JvmField
+        val getNeedsMotionVectorsBind =
             ObjectCalls.getMethodBind("CompositorEffect", "get_needs_motion_vectors", GET_NEEDS_MOTION_VECTORS_HASH)
-        }
 
         private const val SET_NEEDS_NORMAL_ROUGHNESS_HASH = 2586408642L
-        private val setNeedsNormalRoughnessBind by lazy {
+        @JvmField
+        val setNeedsNormalRoughnessBind =
             ObjectCalls.getMethodBind("CompositorEffect", "set_needs_normal_roughness", SET_NEEDS_NORMAL_ROUGHNESS_HASH)
-        }
 
         private const val GET_NEEDS_NORMAL_ROUGHNESS_HASH = 36873697L
-        private val getNeedsNormalRoughnessBind by lazy {
+        @JvmField
+        val getNeedsNormalRoughnessBind =
             ObjectCalls.getMethodBind("CompositorEffect", "get_needs_normal_roughness", GET_NEEDS_NORMAL_ROUGHNESS_HASH)
-        }
 
         private const val SET_NEEDS_SEPARATE_SPECULAR_HASH = 2586408642L
-        private val setNeedsSeparateSpecularBind by lazy {
+        @JvmField
+        val setNeedsSeparateSpecularBind =
             ObjectCalls.getMethodBind("CompositorEffect", "set_needs_separate_specular", SET_NEEDS_SEPARATE_SPECULAR_HASH)
-        }
 
         private const val GET_NEEDS_SEPARATE_SPECULAR_HASH = 36873697L
-        private val getNeedsSeparateSpecularBind by lazy {
+        @JvmField
+        val getNeedsSeparateSpecularBind =
             ObjectCalls.getMethodBind("CompositorEffect", "get_needs_separate_specular", GET_NEEDS_SEPARATE_SPECULAR_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -77,7 +78,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -87,7 +88,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun duplicate(): TextLine? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(duplicateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.duplicateBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -102,7 +103,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDirection(direction: TextServer.Direction) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDirectionBind, segment, direction.value)
     }
 
     /**
@@ -112,7 +113,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDirection(): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getDirectionBind, segment))
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDirectionBind, segment))
     }
 
     /**
@@ -122,7 +123,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getInferredDirection(): TextServer.Direction {
         checkOpen()
-        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(getInferredDirectionBind, segment))
+        return TextServer.Direction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getInferredDirectionBind, segment))
     }
 
     /**
@@ -132,7 +133,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setOrientation(orientation: TextServer.Orientation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setOrientationBind, segment, orientation.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOrientationBind, segment, orientation.value)
     }
 
     /**
@@ -142,7 +143,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOrientation(): TextServer.Orientation {
         checkOpen()
-        return TextServer.Orientation(ObjectCalls.ptrcallNoArgsRetLong(getOrientationBind, segment))
+        return TextServer.Orientation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOrientationBind, segment))
     }
 
     /**
@@ -152,7 +153,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPreserveInvalid(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPreserveInvalidBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPreserveInvalidBind, segment, enabled)
     }
 
     /**
@@ -162,7 +163,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPreserveInvalid(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPreserveInvalidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPreserveInvalidBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPreserveControl(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPreserveControlBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPreserveControlBind, segment, enabled)
     }
 
     /**
@@ -182,7 +183,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPreserveControl(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPreserveControlBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPreserveControlBind, segment)
     }
 
     /**
@@ -193,7 +194,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setBidiOverride(override: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithArrayArg(setBidiOverrideBind, segment, override)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setBidiOverrideBind, segment, override)
     }
 
     /**
@@ -203,7 +204,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addString(text: String, font: Font?, fontSize: Int, language: String = "", meta: Any? = null): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(addStringBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, language, meta)
+        return ObjectCalls.ptrcallWithStringObjectIntStringVariantArgsRetBool(Binds.addStringBind, segment, text, font?.requireOpenHandle() ?: NULL_SEGMENT, fontSize, language, meta)
     }
 
     /**
@@ -214,7 +215,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, length: Int = 1, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(addObjectBind, segment, key, size, inlineAlign.value, length, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongIntDoubleArgsRetBool(Binds.addObjectBind, segment, key, size, inlineAlign.value, length, baseline)
     }
 
     /**
@@ -224,7 +225,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun resizeObject(key: Any?, size: Vector2, inlineAlign: InlineAlignment = InlineAlignment.CENTER, baseline: Double = 0.0): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(resizeObjectBind, segment, key, size, inlineAlign.value, baseline)
+        return ObjectCalls.ptrcallWithVariantVector2LongDoubleArgsRetBool(Binds.resizeObjectBind, segment, key, size, inlineAlign.value, baseline)
     }
 
     /**
@@ -234,7 +235,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasObject(key: Any?): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetBool(hasObjectBind, segment, key)
+        return ObjectCalls.ptrcallWithVariantArgRetBool(Binds.hasObjectBind, segment, key)
     }
 
     /**
@@ -244,7 +245,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setWidth(width: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setWidthBind, segment, width)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setWidthBind, segment, width)
     }
 
     /**
@@ -254,7 +255,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getWidthBind, segment)
     }
 
     /**
@@ -264,7 +265,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setHorizontalAlignment(alignment: HorizontalAlignment) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -274,7 +275,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getHorizontalAlignment(): HorizontalAlignment {
         checkOpen()
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -284,7 +285,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun tabAlign(tabStops: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(tabAlignBind, segment, tabStops)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.tabAlignBind, segment, tabStops)
     }
 
     /**
@@ -294,7 +295,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFlags(flags: TextServer.JustificationFlag) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFlagsBind, segment, flags.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFlagsBind, segment, flags.value)
     }
 
     /**
@@ -304,7 +305,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFlags(): TextServer.JustificationFlag {
         checkOpen()
-        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(getFlagsBind, segment))
+        return TextServer.JustificationFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFlagsBind, segment))
     }
 
     /**
@@ -314,7 +315,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -324,7 +325,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
         checkOpen()
-        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -334,7 +335,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setEllipsisChar(char: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, segment, char)
+        ObjectCalls.ptrcallWithStringArg(Binds.setEllipsisCharBind, segment, char)
     }
 
     /**
@@ -344,7 +345,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getEllipsisChar(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEllipsisCharBind, segment)
     }
 
     /**
@@ -354,7 +355,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getObjects(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getObjectsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getObjectsBind, segment)
     }
 
     /**
@@ -364,7 +365,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getObjectRect(key: Any?): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVariantArgRetRect2(getObjectRectBind, segment, key)
+        return ObjectCalls.ptrcallWithVariantArgRetRect2(Binds.getObjectRectBind, segment, key)
     }
 
     /**
@@ -374,7 +375,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
     }
 
     /**
@@ -384,7 +385,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRid(): RID {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     /**
@@ -395,7 +396,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineAscent(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineAscentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineAscentBind, segment)
     }
 
     /**
@@ -406,7 +407,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineDescent(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineDescentBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineDescentBind, segment)
     }
 
     /**
@@ -416,7 +417,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineWidth(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineWidthBind, segment)
     }
 
     /**
@@ -426,7 +427,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineUnderlinePosition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlinePositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineUnderlinePositionBind, segment)
     }
 
     /**
@@ -436,7 +437,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLineUnderlineThickness(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLineUnderlineThicknessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLineUnderlineThicknessBind, segment)
     }
 
     /**
@@ -448,7 +449,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun draw(canvas: RID, pos: Vector2, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(drawBind, segment, canvas, pos, color, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2ColorDoubleArgs(Binds.drawBind, segment, canvas, pos, color, oversampling)
     }
 
     /**
@@ -460,7 +461,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun drawOutline(canvas: RID, pos: Vector2, outlineSize: Int = 1, color: Color, oversampling: Double = 0.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(drawOutlineBind, segment, canvas, pos, outlineSize, color, oversampling)
+        ObjectCalls.ptrcallWithRIDVector2IntColorDoubleArgs(Binds.drawOutlineBind, segment, canvas, pos, outlineSize, color, oversampling)
     }
 
     /**
@@ -471,7 +472,7 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hitTest(coords: Double): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithDoubleArgRetInt(hitTestBind, segment, coords)
+        return ObjectCalls.ptrcallWithDoubleArgRetInt(Binds.hitTestBind, segment, coords)
     }
 
     companion object {
@@ -484,200 +485,202 @@ class TextLine(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextLine? =
             if (handle.address() == 0L) null else TextLine(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("TextLine", "clear", CLEAR_HASH)
-        }
 
         private const val DUPLICATE_HASH = 1912703884L
-        private val duplicateBind by lazy {
+        @JvmField
+        val duplicateBind =
             ObjectCalls.getMethodBind("TextLine", "duplicate", DUPLICATE_HASH)
-        }
 
         private const val SET_DIRECTION_HASH = 1418190634L
-        private val setDirectionBind by lazy {
+        @JvmField
+        val setDirectionBind =
             ObjectCalls.getMethodBind("TextLine", "set_direction", SET_DIRECTION_HASH)
-        }
 
         private const val GET_DIRECTION_HASH = 2516697328L
-        private val getDirectionBind by lazy {
+        @JvmField
+        val getDirectionBind =
             ObjectCalls.getMethodBind("TextLine", "get_direction", GET_DIRECTION_HASH)
-        }
 
         private const val GET_INFERRED_DIRECTION_HASH = 2516697328L
-        private val getInferredDirectionBind by lazy {
+        @JvmField
+        val getInferredDirectionBind =
             ObjectCalls.getMethodBind("TextLine", "get_inferred_direction", GET_INFERRED_DIRECTION_HASH)
-        }
 
         private const val SET_ORIENTATION_HASH = 42823726L
-        private val setOrientationBind by lazy {
+        @JvmField
+        val setOrientationBind =
             ObjectCalls.getMethodBind("TextLine", "set_orientation", SET_ORIENTATION_HASH)
-        }
 
         private const val GET_ORIENTATION_HASH = 175768116L
-        private val getOrientationBind by lazy {
+        @JvmField
+        val getOrientationBind =
             ObjectCalls.getMethodBind("TextLine", "get_orientation", GET_ORIENTATION_HASH)
-        }
 
         private const val SET_PRESERVE_INVALID_HASH = 2586408642L
-        private val setPreserveInvalidBind by lazy {
+        @JvmField
+        val setPreserveInvalidBind =
             ObjectCalls.getMethodBind("TextLine", "set_preserve_invalid", SET_PRESERVE_INVALID_HASH)
-        }
 
         private const val GET_PRESERVE_INVALID_HASH = 36873697L
-        private val getPreserveInvalidBind by lazy {
+        @JvmField
+        val getPreserveInvalidBind =
             ObjectCalls.getMethodBind("TextLine", "get_preserve_invalid", GET_PRESERVE_INVALID_HASH)
-        }
 
         private const val SET_PRESERVE_CONTROL_HASH = 2586408642L
-        private val setPreserveControlBind by lazy {
+        @JvmField
+        val setPreserveControlBind =
             ObjectCalls.getMethodBind("TextLine", "set_preserve_control", SET_PRESERVE_CONTROL_HASH)
-        }
 
         private const val GET_PRESERVE_CONTROL_HASH = 36873697L
-        private val getPreserveControlBind by lazy {
+        @JvmField
+        val getPreserveControlBind =
             ObjectCalls.getMethodBind("TextLine", "get_preserve_control", GET_PRESERVE_CONTROL_HASH)
-        }
 
         private const val SET_BIDI_OVERRIDE_HASH = 381264803L
-        private val setBidiOverrideBind by lazy {
+        @JvmField
+        val setBidiOverrideBind =
             ObjectCalls.getMethodBind("TextLine", "set_bidi_override", SET_BIDI_OVERRIDE_HASH)
-        }
 
         private const val ADD_STRING_HASH = 621426851L
-        private val addStringBind by lazy {
+        @JvmField
+        val addStringBind =
             ObjectCalls.getMethodBind("TextLine", "add_string", ADD_STRING_HASH)
-        }
 
         private const val ADD_OBJECT_HASH = 1316529304L
-        private val addObjectBind by lazy {
+        @JvmField
+        val addObjectBind =
             ObjectCalls.getMethodBind("TextLine", "add_object", ADD_OBJECT_HASH)
-        }
 
         private const val RESIZE_OBJECT_HASH = 2095776372L
-        private val resizeObjectBind by lazy {
+        @JvmField
+        val resizeObjectBind =
             ObjectCalls.getMethodBind("TextLine", "resize_object", RESIZE_OBJECT_HASH)
-        }
 
         private const val HAS_OBJECT_HASH = 77467830L
-        private val hasObjectBind by lazy {
+        @JvmField
+        val hasObjectBind =
             ObjectCalls.getMethodBind("TextLine", "has_object", HAS_OBJECT_HASH)
-        }
 
         private const val SET_WIDTH_HASH = 373806689L
-        private val setWidthBind by lazy {
+        @JvmField
+        val setWidthBind =
             ObjectCalls.getMethodBind("TextLine", "set_width", SET_WIDTH_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 1740695150L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("TextLine", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
-        private val setHorizontalAlignmentBind by lazy {
+        @JvmField
+        val setHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("TextLine", "set_horizontal_alignment", SET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val GET_HORIZONTAL_ALIGNMENT_HASH = 341400642L
-        private val getHorizontalAlignmentBind by lazy {
+        @JvmField
+        val getHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("TextLine", "get_horizontal_alignment", GET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val TAB_ALIGN_HASH = 2899603908L
-        private val tabAlignBind by lazy {
+        @JvmField
+        val tabAlignBind =
             ObjectCalls.getMethodBind("TextLine", "tab_align", TAB_ALIGN_HASH)
-        }
 
         private const val SET_FLAGS_HASH = 2877345813L
-        private val setFlagsBind by lazy {
+        @JvmField
+        val setFlagsBind =
             ObjectCalls.getMethodBind("TextLine", "set_flags", SET_FLAGS_HASH)
-        }
 
         private const val GET_FLAGS_HASH = 1583363614L
-        private val getFlagsBind by lazy {
+        @JvmField
+        val getFlagsBind =
             ObjectCalls.getMethodBind("TextLine", "get_flags", GET_FLAGS_HASH)
-        }
 
         private const val SET_TEXT_OVERRUN_BEHAVIOR_HASH = 1008890932L
-        private val setTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val setTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("TextLine", "set_text_overrun_behavior", SET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val GET_TEXT_OVERRUN_BEHAVIOR_HASH = 3779142101L
-        private val getTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val getTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("TextLine", "get_text_overrun_behavior", GET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val SET_ELLIPSIS_CHAR_HASH = 83702148L
-        private val setEllipsisCharBind by lazy {
+        @JvmField
+        val setEllipsisCharBind =
             ObjectCalls.getMethodBind("TextLine", "set_ellipsis_char", SET_ELLIPSIS_CHAR_HASH)
-        }
 
         private const val GET_ELLIPSIS_CHAR_HASH = 201670096L
-        private val getEllipsisCharBind by lazy {
+        @JvmField
+        val getEllipsisCharBind =
             ObjectCalls.getMethodBind("TextLine", "get_ellipsis_char", GET_ELLIPSIS_CHAR_HASH)
-        }
 
         private const val GET_OBJECTS_HASH = 3995934104L
-        private val getObjectsBind by lazy {
+        @JvmField
+        val getObjectsBind =
             ObjectCalls.getMethodBind("TextLine", "get_objects", GET_OBJECTS_HASH)
-        }
 
         private const val GET_OBJECT_RECT_HASH = 1742700391L
-        private val getObjectRectBind by lazy {
+        @JvmField
+        val getObjectRectBind =
             ObjectCalls.getMethodBind("TextLine", "get_object_rect", GET_OBJECT_RECT_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3341600327L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("TextLine", "get_size", GET_SIZE_HASH)
-        }
 
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("TextLine", "get_rid", GET_RID_HASH)
-        }
 
         private const val GET_LINE_ASCENT_HASH = 1740695150L
-        private val getLineAscentBind by lazy {
+        @JvmField
+        val getLineAscentBind =
             ObjectCalls.getMethodBind("TextLine", "get_line_ascent", GET_LINE_ASCENT_HASH)
-        }
 
         private const val GET_LINE_DESCENT_HASH = 1740695150L
-        private val getLineDescentBind by lazy {
+        @JvmField
+        val getLineDescentBind =
             ObjectCalls.getMethodBind("TextLine", "get_line_descent", GET_LINE_DESCENT_HASH)
-        }
 
         private const val GET_LINE_WIDTH_HASH = 1740695150L
-        private val getLineWidthBind by lazy {
+        @JvmField
+        val getLineWidthBind =
             ObjectCalls.getMethodBind("TextLine", "get_line_width", GET_LINE_WIDTH_HASH)
-        }
 
         private const val GET_LINE_UNDERLINE_POSITION_HASH = 1740695150L
-        private val getLineUnderlinePositionBind by lazy {
+        @JvmField
+        val getLineUnderlinePositionBind =
             ObjectCalls.getMethodBind("TextLine", "get_line_underline_position", GET_LINE_UNDERLINE_POSITION_HASH)
-        }
 
         private const val GET_LINE_UNDERLINE_THICKNESS_HASH = 1740695150L
-        private val getLineUnderlineThicknessBind by lazy {
+        @JvmField
+        val getLineUnderlineThicknessBind =
             ObjectCalls.getMethodBind("TextLine", "get_line_underline_thickness", GET_LINE_UNDERLINE_THICKNESS_HASH)
-        }
 
         private const val DRAW_HASH = 3625105422L
-        private val drawBind by lazy {
+        @JvmField
+        val drawBind =
             ObjectCalls.getMethodBind("TextLine", "draw", DRAW_HASH)
-        }
 
         private const val DRAW_OUTLINE_HASH = 2592177763L
-        private val drawOutlineBind by lazy {
+        @JvmField
+        val drawOutlineBind =
             ObjectCalls.getMethodBind("TextLine", "draw_outline", DRAW_OUTLINE_HASH)
-        }
 
         private const val HIT_TEST_HASH = 2401831903L
-        private val hitTestBind by lazy {
+        @JvmField
+        val hitTestBind =
             ObjectCalls.getMethodBind("TextLine", "hit_test", HIT_TEST_HASH)
-        }
     }
 }

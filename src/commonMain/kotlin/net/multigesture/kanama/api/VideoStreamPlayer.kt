@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -90,7 +91,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_stream
      */
     fun setStream(stream: VideoStream?) {
-        ObjectCalls.ptrcallWithObjectArgs(setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setStreamBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -99,7 +100,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream
      */
     fun getStream(): VideoStream? {
-        return VideoStream.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getStreamBind, segment))
+        return VideoStream.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getStreamBind, segment))
     }
 
     /**
@@ -109,7 +110,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.play
      */
     fun play() {
-        ObjectCalls.ptrcallNoArgs(playBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.playBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.stop
      */
     fun stop() {
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -129,7 +130,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.is_playing
      */
     fun isPlaying(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPlayingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPlayingBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_paused
      */
     fun setPaused(paused: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPausedBind, segment, paused)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPausedBind, segment, paused)
     }
 
     /**
@@ -147,7 +148,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.is_paused
      */
     fun isPaused(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPausedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPausedBind, segment)
     }
 
     /**
@@ -156,7 +157,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_loop
      */
     fun setLoop(loop: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, loop)
     }
 
     /**
@@ -165,7 +166,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.has_loop
      */
     fun hasLoop(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
     }
 
     /**
@@ -174,7 +175,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_volume
      */
     fun setVolume(volume: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeBind, segment, volume)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumeBind, segment, volume)
     }
 
     /**
@@ -183,7 +184,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_volume
      */
     fun getVolume(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeBind, segment)
     }
 
     /**
@@ -192,7 +193,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_volume_db
      */
     fun setVolumeDb(db: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVolumeDbBind, segment, db)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVolumeDbBind, segment, db)
     }
 
     /**
@@ -201,7 +202,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_volume_db
      */
     fun getVolumeDb(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVolumeDbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVolumeDbBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_speed_scale
      */
     fun setSpeedScale(speedScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSpeedScaleBind, segment, speedScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpeedScaleBind, segment, speedScale)
     }
 
     /**
@@ -223,7 +224,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_speed_scale
      */
     fun getSpeedScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSpeedScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpeedScaleBind, segment)
     }
 
     /**
@@ -232,7 +233,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_audio_track
      */
     fun setAudioTrack(track: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAudioTrackBind, segment, track)
+        ObjectCalls.ptrcallWithIntArg(Binds.setAudioTrackBind, segment, track)
     }
 
     /**
@@ -241,7 +242,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_audio_track
      */
     fun getAudioTrack(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAudioTrackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAudioTrackBind, segment)
     }
 
     /**
@@ -250,7 +251,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream_name
      */
     fun getStreamName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getStreamNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getStreamNameBind, segment)
     }
 
     /**
@@ -259,7 +260,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream_length
      */
     fun getStreamLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStreamLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStreamLengthBind, segment)
     }
 
     /**
@@ -268,7 +269,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_stream_position
      */
     fun setStreamPosition(position: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStreamPositionBind, segment, position)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStreamPositionBind, segment, position)
     }
 
     /**
@@ -277,7 +278,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_stream_position
      */
     fun getStreamPosition(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStreamPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStreamPositionBind, segment)
     }
 
     /**
@@ -286,7 +287,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_autoplay
      */
     fun setAutoplay(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoplayBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoplayBind, segment, enabled)
     }
 
     /**
@@ -295,7 +296,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.has_autoplay
      */
     fun hasAutoplay(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAutoplayBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAutoplayBind, segment)
     }
 
     /**
@@ -305,7 +306,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_expand
      */
     fun setExpand(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExpandBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setExpandBind, segment, enable)
     }
 
     /**
@@ -315,7 +316,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.has_expand
      */
     fun hasExpand(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasExpandBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasExpandBind, segment)
     }
 
     /**
@@ -324,7 +325,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_buffering_msec
      */
     fun setBufferingMsec(msec: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBufferingMsecBind, segment, msec)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBufferingMsecBind, segment, msec)
     }
 
     /**
@@ -333,7 +334,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_buffering_msec
      */
     fun getBufferingMsec(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferingMsecBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferingMsecBind, segment)
     }
 
     /**
@@ -342,7 +343,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.set_bus
      */
     fun setBus(bus: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setBusBind, segment, bus)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setBusBind, segment, bus)
     }
 
     /**
@@ -351,7 +352,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_bus
      */
     fun getBus(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getBusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getBusBind, segment)
     }
 
     /**
@@ -360,7 +361,7 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VideoStreamPlayer.get_video_texture
      */
     fun getVideoTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getVideoTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVideoTextureBind, segment))
     }
 
     /** Signal `finished()`; see [TypedSignal]. */
@@ -379,155 +380,157 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): VideoStreamPlayer? =
             if (handle.address() == 0L) null else VideoStreamPlayer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_STREAM_HASH = 2317102564L
-        private val setStreamBind by lazy {
+        @JvmField
+        val setStreamBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_stream", SET_STREAM_HASH)
-        }
 
         private const val GET_STREAM_HASH = 438621487L
-        private val getStreamBind by lazy {
+        @JvmField
+        val getStreamBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_stream", GET_STREAM_HASH)
-        }
 
         private const val PLAY_HASH = 3218959716L
-        private val playBind by lazy {
+        @JvmField
+        val playBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "play", PLAY_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "stop", STOP_HASH)
-        }
 
         private const val IS_PLAYING_HASH = 36873697L
-        private val isPlayingBind by lazy {
+        @JvmField
+        val isPlayingBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "is_playing", IS_PLAYING_HASH)
-        }
 
         private const val SET_PAUSED_HASH = 2586408642L
-        private val setPausedBind by lazy {
+        @JvmField
+        val setPausedBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_paused", SET_PAUSED_HASH)
-        }
 
         private const val IS_PAUSED_HASH = 36873697L
-        private val isPausedBind by lazy {
+        @JvmField
+        val isPausedBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "is_paused", IS_PAUSED_HASH)
-        }
 
         private const val SET_LOOP_HASH = 2586408642L
-        private val setLoopBind by lazy {
+        @JvmField
+        val setLoopBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_loop", SET_LOOP_HASH)
-        }
 
         private const val HAS_LOOP_HASH = 36873697L
-        private val hasLoopBind by lazy {
+        @JvmField
+        val hasLoopBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "has_loop", HAS_LOOP_HASH)
-        }
 
         private const val SET_VOLUME_HASH = 373806689L
-        private val setVolumeBind by lazy {
+        @JvmField
+        val setVolumeBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_volume", SET_VOLUME_HASH)
-        }
 
         private const val GET_VOLUME_HASH = 1740695150L
-        private val getVolumeBind by lazy {
+        @JvmField
+        val getVolumeBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_volume", GET_VOLUME_HASH)
-        }
 
         private const val SET_VOLUME_DB_HASH = 373806689L
-        private val setVolumeDbBind by lazy {
+        @JvmField
+        val setVolumeDbBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_volume_db", SET_VOLUME_DB_HASH)
-        }
 
         private const val GET_VOLUME_DB_HASH = 1740695150L
-        private val getVolumeDbBind by lazy {
+        @JvmField
+        val getVolumeDbBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_volume_db", GET_VOLUME_DB_HASH)
-        }
 
         private const val SET_SPEED_SCALE_HASH = 373806689L
-        private val setSpeedScaleBind by lazy {
+        @JvmField
+        val setSpeedScaleBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_speed_scale", SET_SPEED_SCALE_HASH)
-        }
 
         private const val GET_SPEED_SCALE_HASH = 1740695150L
-        private val getSpeedScaleBind by lazy {
+        @JvmField
+        val getSpeedScaleBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_speed_scale", GET_SPEED_SCALE_HASH)
-        }
 
         private const val SET_AUDIO_TRACK_HASH = 1286410249L
-        private val setAudioTrackBind by lazy {
+        @JvmField
+        val setAudioTrackBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_audio_track", SET_AUDIO_TRACK_HASH)
-        }
 
         private const val GET_AUDIO_TRACK_HASH = 3905245786L
-        private val getAudioTrackBind by lazy {
+        @JvmField
+        val getAudioTrackBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_audio_track", GET_AUDIO_TRACK_HASH)
-        }
 
         private const val GET_STREAM_NAME_HASH = 201670096L
-        private val getStreamNameBind by lazy {
+        @JvmField
+        val getStreamNameBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_stream_name", GET_STREAM_NAME_HASH)
-        }
 
         private const val GET_STREAM_LENGTH_HASH = 1740695150L
-        private val getStreamLengthBind by lazy {
+        @JvmField
+        val getStreamLengthBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_stream_length", GET_STREAM_LENGTH_HASH)
-        }
 
         private const val SET_STREAM_POSITION_HASH = 373806689L
-        private val setStreamPositionBind by lazy {
+        @JvmField
+        val setStreamPositionBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_stream_position", SET_STREAM_POSITION_HASH)
-        }
 
         private const val GET_STREAM_POSITION_HASH = 1740695150L
-        private val getStreamPositionBind by lazy {
+        @JvmField
+        val getStreamPositionBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_stream_position", GET_STREAM_POSITION_HASH)
-        }
 
         private const val SET_AUTOPLAY_HASH = 2586408642L
-        private val setAutoplayBind by lazy {
+        @JvmField
+        val setAutoplayBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_autoplay", SET_AUTOPLAY_HASH)
-        }
 
         private const val HAS_AUTOPLAY_HASH = 36873697L
-        private val hasAutoplayBind by lazy {
+        @JvmField
+        val hasAutoplayBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "has_autoplay", HAS_AUTOPLAY_HASH)
-        }
 
         private const val SET_EXPAND_HASH = 2586408642L
-        private val setExpandBind by lazy {
+        @JvmField
+        val setExpandBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_expand", SET_EXPAND_HASH)
-        }
 
         private const val HAS_EXPAND_HASH = 36873697L
-        private val hasExpandBind by lazy {
+        @JvmField
+        val hasExpandBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "has_expand", HAS_EXPAND_HASH)
-        }
 
         private const val SET_BUFFERING_MSEC_HASH = 1286410249L
-        private val setBufferingMsecBind by lazy {
+        @JvmField
+        val setBufferingMsecBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_buffering_msec", SET_BUFFERING_MSEC_HASH)
-        }
 
         private const val GET_BUFFERING_MSEC_HASH = 3905245786L
-        private val getBufferingMsecBind by lazy {
+        @JvmField
+        val getBufferingMsecBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_buffering_msec", GET_BUFFERING_MSEC_HASH)
-        }
 
         private const val SET_BUS_HASH = 3304788590L
-        private val setBusBind by lazy {
+        @JvmField
+        val setBusBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "set_bus", SET_BUS_HASH)
-        }
 
         private const val GET_BUS_HASH = 2002593661L
-        private val getBusBind by lazy {
+        @JvmField
+        val getBusBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_bus", GET_BUS_HASH)
-        }
 
         private const val GET_VIDEO_TEXTURE_HASH = 3635182373L
-        private val getVideoTextureBind by lazy {
+        @JvmField
+        val getVideoTextureBind =
             ObjectCalls.getMethodBind("VideoStreamPlayer", "get_video_texture", GET_VIDEO_TEXTURE_HASH)
-        }
     }
 }

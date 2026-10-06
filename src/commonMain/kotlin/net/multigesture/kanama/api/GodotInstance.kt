@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -16,7 +17,7 @@ class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.start
      */
     fun start(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(startBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.startBind, segment)
     }
 
     /**
@@ -25,7 +26,7 @@ class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.is_started
      */
     fun isStarted(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isStartedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStartedBind, segment)
     }
 
     /**
@@ -34,7 +35,7 @@ class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.iteration
      */
     fun iteration(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(iterationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.iterationBind, segment)
     }
 
     /**
@@ -43,7 +44,7 @@ class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.focus_in
      */
     fun focusIn() {
-        ObjectCalls.ptrcallNoArgs(focusInBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.focusInBind, segment)
     }
 
     /**
@@ -52,7 +53,7 @@ class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.focus_out
      */
     fun focusOut() {
-        ObjectCalls.ptrcallNoArgs(focusOutBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.focusOutBind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.pause
      */
     fun pause() {
-        ObjectCalls.ptrcallNoArgs(pauseBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.pauseBind, segment)
     }
 
     /**
@@ -70,7 +71,7 @@ class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: GodotInstance.resume
      */
     fun resume() {
-        ObjectCalls.ptrcallNoArgs(resumeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resumeBind, segment)
     }
 
     companion object {
@@ -80,40 +81,42 @@ class GodotInstance(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): GodotInstance? =
             if (handle.address() == 0L) null else GodotInstance(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val START_HASH = 2240911060L
-        private val startBind by lazy {
+        @JvmField
+        val startBind =
             ObjectCalls.getMethodBind("GodotInstance", "start", START_HASH)
-        }
 
         private const val IS_STARTED_HASH = 2240911060L
-        private val isStartedBind by lazy {
+        @JvmField
+        val isStartedBind =
             ObjectCalls.getMethodBind("GodotInstance", "is_started", IS_STARTED_HASH)
-        }
 
         private const val ITERATION_HASH = 2240911060L
-        private val iterationBind by lazy {
+        @JvmField
+        val iterationBind =
             ObjectCalls.getMethodBind("GodotInstance", "iteration", ITERATION_HASH)
-        }
 
         private const val FOCUS_IN_HASH = 3218959716L
-        private val focusInBind by lazy {
+        @JvmField
+        val focusInBind =
             ObjectCalls.getMethodBind("GodotInstance", "focus_in", FOCUS_IN_HASH)
-        }
 
         private const val FOCUS_OUT_HASH = 3218959716L
-        private val focusOutBind by lazy {
+        @JvmField
+        val focusOutBind =
             ObjectCalls.getMethodBind("GodotInstance", "focus_out", FOCUS_OUT_HASH)
-        }
 
         private const val PAUSE_HASH = 3218959716L
-        private val pauseBind by lazy {
+        @JvmField
+        val pauseBind =
             ObjectCalls.getMethodBind("GodotInstance", "pause", PAUSE_HASH)
-        }
 
         private const val RESUME_HASH = 3218959716L
-        private val resumeBind by lazy {
+        @JvmField
+        val resumeBind =
             ObjectCalls.getMethodBind("GodotInstance", "resume", RESUME_HASH)
-        }
     }
 }

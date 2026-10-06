@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.get_border_color
      */
     fun getBorderColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getBorderColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getBorderColorBind, segment)
     }
 
     /**
@@ -45,7 +46,7 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.set_border_color
      */
     fun setBorderColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setBorderColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setBorderColorBind, segment, color)
     }
 
     /**
@@ -55,7 +56,7 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.get_border_width
      */
     fun getBorderWidth(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBorderWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBorderWidthBind, segment)
     }
 
     /**
@@ -65,7 +66,7 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.set_border_width
      */
     fun setBorderWidth(width: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBorderWidthBind, segment, width)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBorderWidthBind, segment, width)
     }
 
     /**
@@ -75,7 +76,7 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.get_editor_only
      */
     fun getEditorOnly(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getEditorOnlyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEditorOnlyBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: ReferenceRect.set_editor_only
      */
     fun setEditorOnly(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditorOnlyBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditorOnlyBind, segment, enabled)
     }
 
     companion object {
@@ -95,35 +96,37 @@ class ReferenceRect(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): ReferenceRect? =
             if (handle.address() == 0L) null else ReferenceRect(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_BORDER_COLOR_HASH = 3444240500L
-        private val getBorderColorBind by lazy {
+        @JvmField
+        val getBorderColorBind =
             ObjectCalls.getMethodBind("ReferenceRect", "get_border_color", GET_BORDER_COLOR_HASH)
-        }
 
         private const val SET_BORDER_COLOR_HASH = 2920490490L
-        private val setBorderColorBind by lazy {
+        @JvmField
+        val setBorderColorBind =
             ObjectCalls.getMethodBind("ReferenceRect", "set_border_color", SET_BORDER_COLOR_HASH)
-        }
 
         private const val GET_BORDER_WIDTH_HASH = 1740695150L
-        private val getBorderWidthBind by lazy {
+        @JvmField
+        val getBorderWidthBind =
             ObjectCalls.getMethodBind("ReferenceRect", "get_border_width", GET_BORDER_WIDTH_HASH)
-        }
 
         private const val SET_BORDER_WIDTH_HASH = 373806689L
-        private val setBorderWidthBind by lazy {
+        @JvmField
+        val setBorderWidthBind =
             ObjectCalls.getMethodBind("ReferenceRect", "set_border_width", SET_BORDER_WIDTH_HASH)
-        }
 
         private const val GET_EDITOR_ONLY_HASH = 36873697L
-        private val getEditorOnlyBind by lazy {
+        @JvmField
+        val getEditorOnlyBind =
             ObjectCalls.getMethodBind("ReferenceRect", "get_editor_only", GET_EDITOR_ONLY_HASH)
-        }
 
         private const val SET_EDITOR_ONLY_HASH = 2586408642L
-        private val setEditorOnlyBind by lazy {
+        @JvmField
+        val setEditorOnlyBind =
             ObjectCalls.getMethodBind("ReferenceRect", "set_editor_only", SET_EDITOR_ONLY_HASH)
-        }
     }
 }

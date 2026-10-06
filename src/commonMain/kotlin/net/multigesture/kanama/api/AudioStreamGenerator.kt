@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -48,7 +49,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setMixRate(hz: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMixRateBind, segment, hz)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMixRateBind, segment, hz)
     }
 
     /**
@@ -69,7 +70,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getMixRate(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMixRateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMixRateBind, segment)
     }
 
     /**
@@ -80,7 +81,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setMixRateMode(mode: AudioStreamGenerator.AudioStreamGeneratorMixRate) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setMixRateModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setMixRateModeBind, segment, mode.value)
     }
 
     /**
@@ -91,7 +92,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getMixRateMode(): AudioStreamGenerator.AudioStreamGeneratorMixRate {
         checkOpen()
-        return AudioStreamGenerator.AudioStreamGeneratorMixRate(ObjectCalls.ptrcallNoArgsRetLong(getMixRateModeBind, segment))
+        return AudioStreamGenerator.AudioStreamGeneratorMixRate(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMixRateModeBind, segment))
     }
 
     /**
@@ -103,7 +104,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun setBufferLength(seconds: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBufferLengthBind, segment, seconds)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBufferLengthBind, segment, seconds)
     }
 
     /**
@@ -115,7 +116,7 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
      */
     fun getBufferLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBufferLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBufferLengthBind, segment)
     }
 
     /**
@@ -165,35 +166,37 @@ class AudioStreamGenerator(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamGenerator? =
             if (handle.address() == 0L) null else AudioStreamGenerator(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MIX_RATE_HASH = 373806689L
-        private val setMixRateBind by lazy {
+        @JvmField
+        val setMixRateBind =
             ObjectCalls.getMethodBind("AudioStreamGenerator", "set_mix_rate", SET_MIX_RATE_HASH)
-        }
 
         private const val GET_MIX_RATE_HASH = 1740695150L
-        private val getMixRateBind by lazy {
+        @JvmField
+        val getMixRateBind =
             ObjectCalls.getMethodBind("AudioStreamGenerator", "get_mix_rate", GET_MIX_RATE_HASH)
-        }
 
         private const val SET_MIX_RATE_MODE_HASH = 3354885803L
-        private val setMixRateModeBind by lazy {
+        @JvmField
+        val setMixRateModeBind =
             ObjectCalls.getMethodBind("AudioStreamGenerator", "set_mix_rate_mode", SET_MIX_RATE_MODE_HASH)
-        }
 
         private const val GET_MIX_RATE_MODE_HASH = 3537132591L
-        private val getMixRateModeBind by lazy {
+        @JvmField
+        val getMixRateModeBind =
             ObjectCalls.getMethodBind("AudioStreamGenerator", "get_mix_rate_mode", GET_MIX_RATE_MODE_HASH)
-        }
 
         private const val SET_BUFFER_LENGTH_HASH = 373806689L
-        private val setBufferLengthBind by lazy {
+        @JvmField
+        val setBufferLengthBind =
             ObjectCalls.getMethodBind("AudioStreamGenerator", "set_buffer_length", SET_BUFFER_LENGTH_HASH)
-        }
 
         private const val GET_BUFFER_LENGTH_HASH = 1740695150L
-        private val getBufferLengthBind by lazy {
+        @JvmField
+        val getBufferLengthBind =
             ObjectCalls.getMethodBind("AudioStreamGenerator", "get_buffer_length", GET_BUFFER_LENGTH_HASH)
-        }
     }
 }

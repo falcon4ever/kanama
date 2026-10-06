@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -30,7 +31,7 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.set_multimesh
      */
     fun setMultimesh(multimesh: MultiMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMultimeshBind, segment, listOf(multimesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -39,7 +40,7 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.get_multimesh
      */
     fun getMultimesh(): MultiMesh? {
-        return MultiMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMultimeshBind, segment))
+        return MultiMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMultimeshBind, segment))
     }
 
     /**
@@ -49,7 +50,7 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -59,7 +60,7 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: MultiMeshInstance2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /** Signal `texture_changed()`; see [TypedSignal]. */
@@ -78,25 +79,27 @@ class MultiMeshInstance2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): MultiMeshInstance2D? =
             if (handle.address() == 0L) null else MultiMeshInstance2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MULTIMESH_HASH = 2246127404L
-        private val setMultimeshBind by lazy {
+        @JvmField
+        val setMultimeshBind =
             ObjectCalls.getMethodBind("MultiMeshInstance2D", "set_multimesh", SET_MULTIMESH_HASH)
-        }
 
         private const val GET_MULTIMESH_HASH = 1385450523L
-        private val getMultimeshBind by lazy {
+        @JvmField
+        val getMultimeshBind =
             ObjectCalls.getMethodBind("MultiMeshInstance2D", "get_multimesh", GET_MULTIMESH_HASH)
-        }
 
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("MultiMeshInstance2D", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("MultiMeshInstance2D", "get_texture", GET_TEXTURE_HASH)
-        }
     }
 }

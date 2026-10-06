@@ -22,7 +22,5 @@ class CompressedTexture2DArray(handle: GodotHandle) : CompressedTextureLayered(h
 
         internal fun wrapBorrowed(handle: RawSegment): CompressedTexture2DArray? =
             if (handle.address() == 0L) null else CompressedTexture2DArray(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

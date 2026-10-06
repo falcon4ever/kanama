@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -32,7 +33,7 @@ class GPUParticlesAttractorVectorField3D(handle: GodotHandle) : GPUParticlesAttr
      * Generated from Godot docs: GPUParticlesAttractorVectorField3D.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -41,7 +42,7 @@ class GPUParticlesAttractorVectorField3D(handle: GodotHandle) : GPUParticlesAttr
      * Generated from Godot docs: GPUParticlesAttractorVectorField3D.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     /**
@@ -53,7 +54,7 @@ class GPUParticlesAttractorVectorField3D(handle: GodotHandle) : GPUParticlesAttr
      * Generated from Godot docs: GPUParticlesAttractorVectorField3D.set_texture
      */
     fun setTexture(texture: Texture3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -65,7 +66,7 @@ class GPUParticlesAttractorVectorField3D(handle: GodotHandle) : GPUParticlesAttr
      * Generated from Godot docs: GPUParticlesAttractorVectorField3D.get_texture
      */
     fun getTexture(): Texture3D? {
-        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     companion object {
@@ -75,25 +76,27 @@ class GPUParticlesAttractorVectorField3D(handle: GodotHandle) : GPUParticlesAttr
 
         internal fun wrap(handle: RawSegment): GPUParticlesAttractorVectorField3D? =
             if (handle.address() == 0L) null else GPUParticlesAttractorVectorField3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractorVectorField3D", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractorVectorField3D", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_TEXTURE_HASH = 1188404210L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractorVectorField3D", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 373985333L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractorVectorField3D", "get_texture", GET_TEXTURE_HASH)
-        }
     }
 }

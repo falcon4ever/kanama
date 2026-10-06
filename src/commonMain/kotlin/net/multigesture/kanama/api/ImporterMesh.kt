@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -21,7 +22,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun addBlendShape(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(addBlendShapeBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.addBlendShapeBind, segment, name)
     }
 
     /**
@@ -31,7 +32,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBlendShapeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBlendShapeCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBlendShapeCountBind, segment)
     }
 
     /**
@@ -41,7 +42,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBlendShapeName(blendShapeIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getBlendShapeNameBind, segment, blendShapeIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getBlendShapeNameBind, segment, blendShapeIdx)
     }
 
     /**
@@ -51,7 +52,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setBlendShapeMode(mode: Mesh.BlendShapeMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setBlendShapeModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBlendShapeModeBind, segment, mode.value)
     }
 
     /**
@@ -61,7 +62,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getBlendShapeMode(): Mesh.BlendShapeMode {
         checkOpen()
-        return Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(getBlendShapeModeBind, segment))
+        return Mesh.BlendShapeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBlendShapeModeBind, segment))
     }
 
     /**
@@ -94,7 +95,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun addSurface(primitive: Mesh.PrimitiveType, arrays: List<Any?>, blendShapes: List<List<Any?>>, lods: Map<String, Any?> = emptyMap(), material: Material?, name: String = "", flags: Long = 0L) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(addSurfaceBind, segment, primitive.value, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
+        ObjectCalls.ptrcallWithLongArrayArrayListDictionaryObjectStringLongArgs(Binds.addSurfaceBind, segment, primitive.value, arrays, blendShapes, lods, material?.requireOpenHandle() ?: NULL_SEGMENT, name, flags)
     }
 
     /**
@@ -104,7 +105,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSurfaceCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSurfaceCountBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfacePrimitiveType(surfaceIdx: Int): Mesh.PrimitiveType {
         checkOpen()
-        return Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(getSurfacePrimitiveTypeBind, segment, surfaceIdx))
+        return Mesh.PrimitiveType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getSurfacePrimitiveTypeBind, segment, surfaceIdx))
     }
 
     /**
@@ -124,7 +125,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceName(surfaceIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getSurfaceNameBind, segment, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getSurfaceNameBind, segment, surfaceIdx)
     }
 
     /**
@@ -135,7 +136,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceArrays(surfaceIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getSurfaceArraysBind, segment, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getSurfaceArraysBind, segment, surfaceIdx)
     }
 
     /**
@@ -145,7 +146,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceBlendShapeArrays(surfaceIdx: Int, blendShapeIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(getSurfaceBlendShapeArraysBind, segment, surfaceIdx, blendShapeIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(Binds.getSurfaceBlendShapeArraysBind, segment, surfaceIdx, blendShapeIdx)
     }
 
     /**
@@ -155,7 +156,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceLodCount(surfaceIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSurfaceLodCountBind, segment, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSurfaceLodCountBind, segment, surfaceIdx)
     }
 
     /**
@@ -165,7 +166,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceLodSize(surfaceIdx: Int, lodIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getSurfaceLodSizeBind, segment, surfaceIdx, lodIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getSurfaceLodSizeBind, segment, surfaceIdx, lodIdx)
     }
 
     /**
@@ -175,7 +176,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceLodIndices(surfaceIdx: Int, lodIdx: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(getSurfaceLodIndicesBind, segment, surfaceIdx, lodIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(Binds.getSurfaceLodIndicesBind, segment, surfaceIdx, lodIdx)
     }
 
     /**
@@ -185,7 +186,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceMaterial(surfaceIdx: Int): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSurfaceMaterialBind, segment, surfaceIdx))
+        return Material.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSurfaceMaterialBind, segment, surfaceIdx))
     }
 
     /**
@@ -195,7 +196,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getSurfaceFormat(surfaceIdx: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getSurfaceFormatBind, segment, surfaceIdx)
+        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getSurfaceFormatBind, segment, surfaceIdx)
     }
 
     /**
@@ -205,7 +206,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setSurfaceName(surfaceIdx: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setSurfaceNameBind, segment, surfaceIdx, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setSurfaceNameBind, segment, surfaceIdx, name)
     }
 
     /**
@@ -215,7 +216,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setSurfaceMaterial(surfaceIdx: Int, material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSurfaceMaterialBind, segment, surfaceIdx, material?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSurfaceMaterialBind, segment, surfaceIdx, material?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -232,7 +233,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun generateLods(normalMergeAngle: Double, normalSplitAngle: Double, boneTransformArray: List<Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoDoubleArrayArgs(generateLodsBind, segment, normalMergeAngle, normalSplitAngle, boneTransformArray)
+        ObjectCalls.ptrcallWithTwoDoubleArrayArgs(Binds.generateLodsBind, segment, normalMergeAngle, normalSplitAngle, boneTransformArray)
     }
 
     /**
@@ -244,7 +245,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getMesh(baseMesh: ArrayMesh?): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(getMeshBind, segment, baseMesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.getMeshBind, segment, baseMesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -254,7 +255,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -264,7 +265,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun setLightmapSizeHint(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setLightmapSizeHintBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setLightmapSizeHintBind, segment, size)
     }
 
     /**
@@ -274,7 +275,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
      */
     fun getLightmapSizeHint(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getLightmapSizeHintBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getLightmapSizeHintBind, segment)
     }
 
     companion object {
@@ -294,7 +295,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: ImporterMesh.merge_importer_meshes
          */
         fun mergeImporterMeshes(importerMeshes: List<ImporterMesh>, relativeTransforms: List<Transform3D>, deduplicateSurfaces: Boolean = true): ImporterMesh? {
-            return ImporterMesh.wrapOwned(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(mergeImporterMeshesBind, NULL_SEGMENT, importerMeshes, relativeTransforms, deduplicateSurfaces))
+            return ImporterMesh.wrapOwned(ObjectCalls.ptrcallWithObjectListTransform3DListBoolArgsRetObject(Binds.mergeImporterMeshesBind, NULL_SEGMENT, importerMeshes, relativeTransforms, deduplicateSurfaces))
         }
 
         /**
@@ -304,7 +305,7 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
          * Generated from Godot docs: ImporterMesh.from_mesh
          */
         fun fromMesh(mesh: Mesh?): ImporterMesh? {
-            return ImporterMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromMeshBind, NULL_SEGMENT, mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+            return ImporterMesh.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromMeshBind, NULL_SEGMENT, mesh?.requireOpenHandle() ?: NULL_SEGMENT))
         }
 
         @JvmStatic
@@ -316,130 +317,132 @@ class ImporterMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ImporterMesh? =
             if (handle.address() == 0L) null else ImporterMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val MERGE_IMPORTER_MESHES_HASH = 1030647649L
-        private val mergeImporterMeshesBind by lazy {
+        @JvmField
+        val mergeImporterMeshesBind =
             ObjectCalls.getMethodBind("ImporterMesh", "merge_importer_meshes", MERGE_IMPORTER_MESHES_HASH)
-        }
 
         private const val ADD_BLEND_SHAPE_HASH = 83702148L
-        private val addBlendShapeBind by lazy {
+        @JvmField
+        val addBlendShapeBind =
             ObjectCalls.getMethodBind("ImporterMesh", "add_blend_shape", ADD_BLEND_SHAPE_HASH)
-        }
 
         private const val GET_BLEND_SHAPE_COUNT_HASH = 3905245786L
-        private val getBlendShapeCountBind by lazy {
+        @JvmField
+        val getBlendShapeCountBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_blend_shape_count", GET_BLEND_SHAPE_COUNT_HASH)
-        }
 
         private const val GET_BLEND_SHAPE_NAME_HASH = 844755477L
-        private val getBlendShapeNameBind by lazy {
+        @JvmField
+        val getBlendShapeNameBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_blend_shape_name", GET_BLEND_SHAPE_NAME_HASH)
-        }
 
         private const val SET_BLEND_SHAPE_MODE_HASH = 227983991L
-        private val setBlendShapeModeBind by lazy {
+        @JvmField
+        val setBlendShapeModeBind =
             ObjectCalls.getMethodBind("ImporterMesh", "set_blend_shape_mode", SET_BLEND_SHAPE_MODE_HASH)
-        }
 
         private const val GET_BLEND_SHAPE_MODE_HASH = 836485024L
-        private val getBlendShapeModeBind by lazy {
+        @JvmField
+        val getBlendShapeModeBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_blend_shape_mode", GET_BLEND_SHAPE_MODE_HASH)
-        }
 
         private const val ADD_SURFACE_HASH = 1740448849L
-        private val addSurfaceBind by lazy {
+        @JvmField
+        val addSurfaceBind =
             ObjectCalls.getMethodBind("ImporterMesh", "add_surface", ADD_SURFACE_HASH)
-        }
 
         private const val GET_SURFACE_COUNT_HASH = 3905245786L
-        private val getSurfaceCountBind by lazy {
+        @JvmField
+        val getSurfaceCountBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_count", GET_SURFACE_COUNT_HASH)
-        }
 
         private const val GET_SURFACE_PRIMITIVE_TYPE_HASH = 3552571330L
-        private val getSurfacePrimitiveTypeBind by lazy {
+        @JvmField
+        val getSurfacePrimitiveTypeBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_primitive_type", GET_SURFACE_PRIMITIVE_TYPE_HASH)
-        }
 
         private const val GET_SURFACE_NAME_HASH = 844755477L
-        private val getSurfaceNameBind by lazy {
+        @JvmField
+        val getSurfaceNameBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_name", GET_SURFACE_NAME_HASH)
-        }
 
         private const val GET_SURFACE_ARRAYS_HASH = 663333327L
-        private val getSurfaceArraysBind by lazy {
+        @JvmField
+        val getSurfaceArraysBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_arrays", GET_SURFACE_ARRAYS_HASH)
-        }
 
         private const val GET_SURFACE_BLEND_SHAPE_ARRAYS_HASH = 2345056839L
-        private val getSurfaceBlendShapeArraysBind by lazy {
+        @JvmField
+        val getSurfaceBlendShapeArraysBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_blend_shape_arrays", GET_SURFACE_BLEND_SHAPE_ARRAYS_HASH)
-        }
 
         private const val GET_SURFACE_LOD_COUNT_HASH = 923996154L
-        private val getSurfaceLodCountBind by lazy {
+        @JvmField
+        val getSurfaceLodCountBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_lod_count", GET_SURFACE_LOD_COUNT_HASH)
-        }
 
         private const val GET_SURFACE_LOD_SIZE_HASH = 3085491603L
-        private val getSurfaceLodSizeBind by lazy {
+        @JvmField
+        val getSurfaceLodSizeBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_lod_size", GET_SURFACE_LOD_SIZE_HASH)
-        }
 
         private const val GET_SURFACE_LOD_INDICES_HASH = 1265128013L
-        private val getSurfaceLodIndicesBind by lazy {
+        @JvmField
+        val getSurfaceLodIndicesBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_lod_indices", GET_SURFACE_LOD_INDICES_HASH)
-        }
 
         private const val GET_SURFACE_MATERIAL_HASH = 2897466400L
-        private val getSurfaceMaterialBind by lazy {
+        @JvmField
+        val getSurfaceMaterialBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_material", GET_SURFACE_MATERIAL_HASH)
-        }
 
         private const val GET_SURFACE_FORMAT_HASH = 923996154L
-        private val getSurfaceFormatBind by lazy {
+        @JvmField
+        val getSurfaceFormatBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_surface_format", GET_SURFACE_FORMAT_HASH)
-        }
 
         private const val SET_SURFACE_NAME_HASH = 501894301L
-        private val setSurfaceNameBind by lazy {
+        @JvmField
+        val setSurfaceNameBind =
             ObjectCalls.getMethodBind("ImporterMesh", "set_surface_name", SET_SURFACE_NAME_HASH)
-        }
 
         private const val SET_SURFACE_MATERIAL_HASH = 3671737478L
-        private val setSurfaceMaterialBind by lazy {
+        @JvmField
+        val setSurfaceMaterialBind =
             ObjectCalls.getMethodBind("ImporterMesh", "set_surface_material", SET_SURFACE_MATERIAL_HASH)
-        }
 
         private const val GENERATE_LODS_HASH = 2491878677L
-        private val generateLodsBind by lazy {
+        @JvmField
+        val generateLodsBind =
             ObjectCalls.getMethodBind("ImporterMesh", "generate_lods", GENERATE_LODS_HASH)
-        }
 
         private const val GET_MESH_HASH = 1457573577L
-        private val getMeshBind by lazy {
+        @JvmField
+        val getMeshBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_mesh", GET_MESH_HASH)
-        }
 
         private const val FROM_MESH_HASH = 283226343L
-        private val fromMeshBind by lazy {
+        @JvmField
+        val fromMeshBind =
             ObjectCalls.getMethodBind("ImporterMesh", "from_mesh", FROM_MESH_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("ImporterMesh", "clear", CLEAR_HASH)
-        }
 
         private const val SET_LIGHTMAP_SIZE_HINT_HASH = 1130785943L
-        private val setLightmapSizeHintBind by lazy {
+        @JvmField
+        val setLightmapSizeHintBind =
             ObjectCalls.getMethodBind("ImporterMesh", "set_lightmap_size_hint", SET_LIGHTMAP_SIZE_HINT_HASH)
-        }
 
         private const val GET_LIGHTMAP_SIZE_HINT_HASH = 3690982128L
-        private val getLightmapSizeHintBind by lazy {
+        @JvmField
+        val getLightmapSizeHintBind =
             ObjectCalls.getMethodBind("ImporterMesh", "get_lightmap_size_hint", GET_LIGHTMAP_SIZE_HINT_HASH)
-        }
     }
 }

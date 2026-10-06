@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,7 +18,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_x
      */
     fun setParamX(param: Generic6DOFJoint3D.Param, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamXBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamXBind, segment, param.value, value)
     }
 
     /**
@@ -26,7 +27,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_x
      */
     fun getParamX(param: Generic6DOFJoint3D.Param): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamXBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamXBind, segment, param.value)
     }
 
     /**
@@ -35,7 +36,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_y
      */
     fun setParamY(param: Generic6DOFJoint3D.Param, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamYBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamYBind, segment, param.value, value)
     }
 
     /**
@@ -44,7 +45,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_y
      */
     fun getParamY(param: Generic6DOFJoint3D.Param): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamYBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamYBind, segment, param.value)
     }
 
     /**
@@ -53,7 +54,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_param_z
      */
     fun setParamZ(param: Generic6DOFJoint3D.Param, value: Double) {
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setParamZBind, segment, param.value, value)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setParamZBind, segment, param.value, value)
     }
 
     /**
@@ -62,7 +63,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_param_z
      */
     fun getParamZ(param: Generic6DOFJoint3D.Param): Double {
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getParamZBind, segment, param.value)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getParamZBind, segment, param.value)
     }
 
     /**
@@ -72,7 +73,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_x
      */
     fun setFlagX(flag: Generic6DOFJoint3D.Flag, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagXBind, segment, flag.value, value)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFlagXBind, segment, flag.value, value)
     }
 
     /**
@@ -82,7 +83,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_x
      */
     fun getFlagX(flag: Generic6DOFJoint3D.Flag): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagXBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFlagXBind, segment, flag.value)
     }
 
     /**
@@ -92,7 +93,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_y
      */
     fun setFlagY(flag: Generic6DOFJoint3D.Flag, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagYBind, segment, flag.value, value)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFlagYBind, segment, flag.value, value)
     }
 
     /**
@@ -102,7 +103,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_y
      */
     fun getFlagY(flag: Generic6DOFJoint3D.Flag): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagYBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFlagYBind, segment, flag.value)
     }
 
     /**
@@ -112,7 +113,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.set_flag_z
      */
     fun setFlagZ(flag: Generic6DOFJoint3D.Flag, value: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setFlagZBind, segment, flag.value, value)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setFlagZBind, segment, flag.value, value)
     }
 
     /**
@@ -122,7 +123,7 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
      * Generated from Godot docs: Generic6DOFJoint3D.get_flag_z
      */
     fun getFlagZ(flag: Generic6DOFJoint3D.Flag): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getFlagZBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getFlagZBind, segment, flag.value)
     }
 
     /**
@@ -297,65 +298,67 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
 
         internal fun wrap(handle: RawSegment): Generic6DOFJoint3D? =
             if (handle.address() == 0L) null else Generic6DOFJoint3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PARAM_X_HASH = 2018184242L
-        private val setParamXBind by lazy {
+        @JvmField
+        val setParamXBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "set_param_x", SET_PARAM_X_HASH)
-        }
 
         private const val GET_PARAM_X_HASH = 2599835054L
-        private val getParamXBind by lazy {
+        @JvmField
+        val getParamXBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "get_param_x", GET_PARAM_X_HASH)
-        }
 
         private const val SET_PARAM_Y_HASH = 2018184242L
-        private val setParamYBind by lazy {
+        @JvmField
+        val setParamYBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "set_param_y", SET_PARAM_Y_HASH)
-        }
 
         private const val GET_PARAM_Y_HASH = 2599835054L
-        private val getParamYBind by lazy {
+        @JvmField
+        val getParamYBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "get_param_y", GET_PARAM_Y_HASH)
-        }
 
         private const val SET_PARAM_Z_HASH = 2018184242L
-        private val setParamZBind by lazy {
+        @JvmField
+        val setParamZBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "set_param_z", SET_PARAM_Z_HASH)
-        }
 
         private const val GET_PARAM_Z_HASH = 2599835054L
-        private val getParamZBind by lazy {
+        @JvmField
+        val getParamZBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "get_param_z", GET_PARAM_Z_HASH)
-        }
 
         private const val SET_FLAG_X_HASH = 2451594564L
-        private val setFlagXBind by lazy {
+        @JvmField
+        val setFlagXBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "set_flag_x", SET_FLAG_X_HASH)
-        }
 
         private const val GET_FLAG_X_HASH = 2122427807L
-        private val getFlagXBind by lazy {
+        @JvmField
+        val getFlagXBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "get_flag_x", GET_FLAG_X_HASH)
-        }
 
         private const val SET_FLAG_Y_HASH = 2451594564L
-        private val setFlagYBind by lazy {
+        @JvmField
+        val setFlagYBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "set_flag_y", SET_FLAG_Y_HASH)
-        }
 
         private const val GET_FLAG_Y_HASH = 2122427807L
-        private val getFlagYBind by lazy {
+        @JvmField
+        val getFlagYBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "get_flag_y", GET_FLAG_Y_HASH)
-        }
 
         private const val SET_FLAG_Z_HASH = 2451594564L
-        private val setFlagZBind by lazy {
+        @JvmField
+        val setFlagZBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "set_flag_z", SET_FLAG_Z_HASH)
-        }
 
         private const val GET_FLAG_Z_HASH = 2122427807L
-        private val getFlagZBind by lazy {
+        @JvmField
+        val getFlagZBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "get_flag_z", GET_FLAG_Z_HASH)
-        }
     }
 }

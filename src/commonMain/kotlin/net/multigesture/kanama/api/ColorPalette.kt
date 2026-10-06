@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -26,7 +27,7 @@ class ColorPalette(handle: GodotHandle) : Resource(handle) {
      */
     fun setColors(colors: List<Color>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedColorListArg(setColorsBind, segment, colors)
+        ObjectCalls.ptrcallWithPackedColorListArg(Binds.setColorsBind, segment, colors)
     }
 
     /**
@@ -36,7 +37,7 @@ class ColorPalette(handle: GodotHandle) : Resource(handle) {
      */
     fun getColors(): List<Color> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedColorList(getColorsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedColorList(Binds.getColorsBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ class ColorPalette(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ColorPalette? =
             if (handle.address() == 0L) null else ColorPalette(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_COLORS_HASH = 3546319833L
-        private val setColorsBind by lazy {
+        @JvmField
+        val setColorsBind =
             ObjectCalls.getMethodBind("ColorPalette", "set_colors", SET_COLORS_HASH)
-        }
 
         private const val GET_COLORS_HASH = 1392750486L
-        private val getColorsBind by lazy {
+        @JvmField
+        val getColorsBind =
             ObjectCalls.getMethodBind("ColorPalette", "get_colors", GET_COLORS_HASH)
-        }
     }
 }

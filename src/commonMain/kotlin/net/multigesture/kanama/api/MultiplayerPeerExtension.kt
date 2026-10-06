@@ -23,7 +23,5 @@ class MultiplayerPeerExtension(handle: GodotHandle) : MultiplayerPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): MultiplayerPeerExtension? =
             if (handle.address() == 0L) null else MultiplayerPeerExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

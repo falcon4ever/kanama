@@ -19,7 +19,5 @@ class SpringBoneCollisionPlane3D(handle: GodotHandle) : SpringBoneCollision3D(ha
 
         internal fun wrap(handle: RawSegment): SpringBoneCollisionPlane3D? =
             if (handle.address() == 0L) null else SpringBoneCollisionPlane3D(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

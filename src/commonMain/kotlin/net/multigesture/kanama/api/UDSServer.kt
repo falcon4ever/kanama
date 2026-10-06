@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun listen(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(listenBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.listenBind, segment, path))
     }
 
     /**
@@ -29,7 +30,7 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
      */
     fun takeConnection(): StreamPeerUDS? {
         checkOpen()
-        return StreamPeerUDS.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
+        return StreamPeerUDS.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
     }
 
     companion object {
@@ -42,15 +43,17 @@ class UDSServer(handle: GodotHandle) : SocketServer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UDSServer? =
             if (handle.address() == 0L) null else UDSServer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LISTEN_HASH = 166001499L
-        private val listenBind by lazy {
+        @JvmField
+        val listenBind =
             ObjectCalls.getMethodBind("UDSServer", "listen", LISTEN_HASH)
-        }
 
         private const val TAKE_CONNECTION_HASH = 1623851112L
-        private val takeConnectionBind by lazy {
+        @JvmField
+        val takeConnectionBind =
             ObjectCalls.getMethodBind("UDSServer", "take_connection", TAKE_CONNECTION_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -26,7 +27,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun setBytecode(bytecode: RDShaderSPIRV?, version: String = "") {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectAndStringNameArg(setBytecodeBind, segment, bytecode?.requireOpenHandle() ?: NULL_SEGMENT, version)
+        ObjectCalls.ptrcallWithObjectAndStringNameArg(Binds.setBytecodeBind, segment, bytecode?.requireOpenHandle() ?: NULL_SEGMENT, version)
     }
 
     /**
@@ -36,7 +37,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun getSpirv(version: String = ""): RDShaderSPIRV? {
         checkOpen()
-        return RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getSpirvBind, segment, version))
+        return RDShaderSPIRV.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getSpirvBind, segment, version))
     }
 
     /**
@@ -46,7 +47,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun getVersionList(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getVersionListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getVersionListBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun setBaseError(error: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setBaseErrorBind, segment, error)
+        ObjectCalls.ptrcallWithStringArg(Binds.setBaseErrorBind, segment, error)
     }
 
     /**
@@ -70,7 +71,7 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
      */
     fun getBaseError(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getBaseErrorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBaseErrorBind, segment)
     }
 
     companion object {
@@ -83,30 +84,32 @@ class RDShaderFile(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): RDShaderFile? =
             if (handle.address() == 0L) null else RDShaderFile(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BYTECODE_HASH = 1526857008L
-        private val setBytecodeBind by lazy {
+        @JvmField
+        val setBytecodeBind =
             ObjectCalls.getMethodBind("RDShaderFile", "set_bytecode", SET_BYTECODE_HASH)
-        }
 
         private const val GET_SPIRV_HASH = 2689310080L
-        private val getSpirvBind by lazy {
+        @JvmField
+        val getSpirvBind =
             ObjectCalls.getMethodBind("RDShaderFile", "get_spirv", GET_SPIRV_HASH)
-        }
 
         private const val GET_VERSION_LIST_HASH = 3995934104L
-        private val getVersionListBind by lazy {
+        @JvmField
+        val getVersionListBind =
             ObjectCalls.getMethodBind("RDShaderFile", "get_version_list", GET_VERSION_LIST_HASH)
-        }
 
         private const val SET_BASE_ERROR_HASH = 83702148L
-        private val setBaseErrorBind by lazy {
+        @JvmField
+        val setBaseErrorBind =
             ObjectCalls.getMethodBind("RDShaderFile", "set_base_error", SET_BASE_ERROR_HASH)
-        }
 
         private const val GET_BASE_ERROR_HASH = 201670096L
-        private val getBaseErrorBind by lazy {
+        @JvmField
+        val getBaseErrorBind =
             ObjectCalls.getMethodBind("RDShaderFile", "get_base_error", GET_BASE_ERROR_HASH)
-        }
     }
 }

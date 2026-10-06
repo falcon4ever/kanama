@@ -22,7 +22,5 @@ class JavaScriptObject(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JavaScriptObject? =
             if (handle.address() == 0L) null else JavaScriptObject(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

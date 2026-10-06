@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -15,9 +16,8 @@ import net.multigesture.kanama.types.Transform2D
  * Generated from Godot docs: AccessibilityServer
  */
 object AccessibilityServer {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("AccessibilityServer")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Returns `true` if screen reader is support by this implementation.
@@ -26,7 +26,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun isSupported(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSupportedBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSupportedBind, singleton)
     }
 
     /**
@@ -38,7 +38,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun createElement(windowId: Int, role: AccessibilityServer.AccessibilityRole): RID {
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetRID(createElementBind, singleton, windowId, role.value)
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetRID(Binds.createElementBind, singleton, windowId, role.value)
     }
 
     /**
@@ -51,7 +51,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun createSubElement(parentRid: RID, role: AccessibilityServer.AccessibilityRole, insertPos: Int = -1): RID {
-        return ObjectCalls.ptrcallWithRIDLongIntArgsRetRID(createSubElementBind, singleton, parentRid, role.value, insertPos)
+        return ObjectCalls.ptrcallWithRIDLongIntArgsRetRID(Binds.createSubElementBind, singleton, parentRid, role.value, insertPos)
     }
 
     /**
@@ -65,7 +65,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun createSubTextEditElements(parentRid: RID, shapedText: RID, minHeight: Double, insertPos: Int = -1, isLastLine: Boolean = false): RID {
-        return ObjectCalls.ptrcallWithTwoRIDDoubleIntBoolArgsRetRID(createSubTextEditElementsBind, singleton, parentRid, shapedText, minHeight, insertPos, isLastLine)
+        return ObjectCalls.ptrcallWithTwoRIDDoubleIntBoolArgsRetRID(Binds.createSubTextEditElementsBind, singleton, parentRid, shapedText, minHeight, insertPos, isLastLine)
     }
 
     /**
@@ -75,7 +75,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun hasElement(id: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(hasElementBind, singleton, id)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.hasElementBind, singleton, id)
     }
 
     /**
@@ -86,7 +86,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun freeElement(id: RID) {
-        ObjectCalls.ptrcallWithRIDArg(freeElementBind, singleton, id)
+        ObjectCalls.ptrcallWithRIDArg(Binds.freeElementBind, singleton, id)
     }
 
     /**
@@ -96,7 +96,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun elementSetMeta(id: RID, meta: Any?) {
-        ObjectCalls.ptrcallWithRIDAndVariantArg(elementSetMetaBind, singleton, id, meta)
+        ObjectCalls.ptrcallWithRIDAndVariantArg(Binds.elementSetMetaBind, singleton, id, meta)
     }
 
     /**
@@ -106,7 +106,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun elementGetMeta(id: RID): Any? {
-        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(elementGetMetaBind, singleton, id)
+        return ObjectCalls.ptrcallWithRIDArgRetVariantScalar(Binds.elementGetMetaBind, singleton, id)
     }
 
     /**
@@ -118,7 +118,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun setWindowRect(windowId: Int, rectOut: Rect2, rectIn: Rect2) {
-        ObjectCalls.ptrcallWithIntRect2Rect2Args(setWindowRectBind, singleton, windowId, rectOut, rectIn)
+        ObjectCalls.ptrcallWithIntRect2Rect2Args(Binds.setWindowRectBind, singleton, windowId, rectOut, rectIn)
     }
 
     /**
@@ -129,7 +129,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun setWindowFocused(windowId: Int, focused: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setWindowFocusedBind, singleton, windowId, focused)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setWindowFocusedBind, singleton, windowId, focused)
     }
 
     /**
@@ -139,7 +139,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetFocus(id: RID) {
-        ObjectCalls.ptrcallWithRIDArg(updateSetFocusBind, singleton, id)
+        ObjectCalls.ptrcallWithRIDArg(Binds.updateSetFocusBind, singleton, id)
     }
 
     /**
@@ -149,7 +149,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun getWindowRoot(windowId: Int): RID {
-        return ObjectCalls.ptrcallWithIntArgRetRID(getWindowRootBind, singleton, windowId)
+        return ObjectCalls.ptrcallWithIntArgRetRID(Binds.getWindowRootBind, singleton, windowId)
     }
 
     /**
@@ -159,7 +159,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetRole(id: RID, role: AccessibilityServer.AccessibilityRole) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetRoleBind, singleton, id, role.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.updateSetRoleBind, singleton, id, role.value)
     }
 
     /**
@@ -169,7 +169,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetName(id: RID, name: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetNameBind, singleton, id, name)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetNameBind, singleton, id, name)
     }
 
     /**
@@ -179,7 +179,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetBrailleLabel(id: RID, name: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetBrailleLabelBind, singleton, id, name)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetBrailleLabelBind, singleton, id, name)
     }
 
     /**
@@ -189,7 +189,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetBrailleRoleDescription(id: RID, description: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetBrailleRoleDescriptionBind, singleton, id, description)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetBrailleRoleDescriptionBind, singleton, id, description)
     }
 
     /**
@@ -199,7 +199,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetExtraInfo(id: RID, name: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetExtraInfoBind, singleton, id, name)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetExtraInfoBind, singleton, id, name)
     }
 
     /**
@@ -209,7 +209,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetDescription(id: RID, description: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetDescriptionBind, singleton, id, description)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetDescriptionBind, singleton, id, description)
     }
 
     /**
@@ -219,7 +219,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetValue(id: RID, value: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetValueBind, singleton, id, value)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetValueBind, singleton, id, value)
     }
 
     /**
@@ -229,7 +229,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTooltip(id: RID, tooltip: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetTooltipBind, singleton, id, tooltip)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetTooltipBind, singleton, id, tooltip)
     }
 
     /**
@@ -239,7 +239,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetBounds(id: RID, rect: Rect2) {
-        ObjectCalls.ptrcallWithRIDAndRect2Arg(updateSetBoundsBind, singleton, id, rect)
+        ObjectCalls.ptrcallWithRIDAndRect2Arg(Binds.updateSetBoundsBind, singleton, id, rect)
     }
 
     /**
@@ -249,7 +249,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTransform(id: RID, transform: Transform2D) {
-        ObjectCalls.ptrcallWithRIDAndTransform2DArg(updateSetTransformBind, singleton, id, transform)
+        ObjectCalls.ptrcallWithRIDAndTransform2DArg(Binds.updateSetTransformBind, singleton, id, transform)
     }
 
     /**
@@ -260,7 +260,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddChild(id: RID, childId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateAddChildBind, singleton, id, childId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateAddChildBind, singleton, id, childId)
     }
 
     /**
@@ -270,7 +270,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddRelatedControls(id: RID, relatedId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateAddRelatedControlsBind, singleton, id, relatedId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateAddRelatedControlsBind, singleton, id, relatedId)
     }
 
     /**
@@ -280,7 +280,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddRelatedDetails(id: RID, relatedId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateAddRelatedDetailsBind, singleton, id, relatedId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateAddRelatedDetailsBind, singleton, id, relatedId)
     }
 
     /**
@@ -290,7 +290,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddRelatedDescribedBy(id: RID, relatedId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateAddRelatedDescribedByBind, singleton, id, relatedId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateAddRelatedDescribedByBind, singleton, id, relatedId)
     }
 
     /**
@@ -300,7 +300,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddRelatedFlowTo(id: RID, relatedId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateAddRelatedFlowToBind, singleton, id, relatedId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateAddRelatedFlowToBind, singleton, id, relatedId)
     }
 
     /**
@@ -310,7 +310,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddRelatedLabeledBy(id: RID, relatedId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateAddRelatedLabeledByBind, singleton, id, relatedId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateAddRelatedLabeledByBind, singleton, id, relatedId)
     }
 
     /**
@@ -321,7 +321,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddRelatedRadioGroup(id: RID, relatedId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateAddRelatedRadioGroupBind, singleton, id, relatedId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateAddRelatedRadioGroupBind, singleton, id, relatedId)
     }
 
     /**
@@ -331,7 +331,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetActiveDescendant(id: RID, otherId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateSetActiveDescendantBind, singleton, id, otherId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateSetActiveDescendantBind, singleton, id, otherId)
     }
 
     /**
@@ -341,7 +341,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetNextOnLine(id: RID, otherId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateSetNextOnLineBind, singleton, id, otherId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateSetNextOnLineBind, singleton, id, otherId)
     }
 
     /**
@@ -351,7 +351,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetPreviousOnLine(id: RID, otherId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateSetPreviousOnLineBind, singleton, id, otherId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateSetPreviousOnLineBind, singleton, id, otherId)
     }
 
     /**
@@ -361,7 +361,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetMemberOf(id: RID, groupId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateSetMemberOfBind, singleton, id, groupId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateSetMemberOfBind, singleton, id, groupId)
     }
 
     /**
@@ -371,7 +371,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetInPageLinkTarget(id: RID, otherId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateSetInPageLinkTargetBind, singleton, id, otherId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateSetInPageLinkTargetBind, singleton, id, otherId)
     }
 
     /**
@@ -381,7 +381,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetErrorMessage(id: RID, otherId: RID) {
-        ObjectCalls.ptrcallWithTwoRIDArgs(updateSetErrorMessageBind, singleton, id, otherId)
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.updateSetErrorMessageBind, singleton, id, otherId)
     }
 
     /**
@@ -391,7 +391,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetLive(id: RID, live: AccessibilityServer.AccessibilityLiveMode) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetLiveBind, singleton, id, live.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.updateSetLiveBind, singleton, id, live.value)
     }
 
     /**
@@ -403,7 +403,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddAction(id: RID, action: AccessibilityServer.AccessibilityAction, callable: GodotCallable) {
-        ObjectCalls.ptrcallWithRIDLongCallableArgs(updateAddActionBind, singleton, id, action.value, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithRIDLongCallableArgs(Binds.updateAddActionBind, singleton, id, action.value, callable.target.segment, callable.method)
     }
 
     /**
@@ -414,7 +414,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateAddCustomAction(id: RID, actionId: Int, actionDescription: String) {
-        ObjectCalls.ptrcallWithRIDIntAndStringArgs(updateAddCustomActionBind, singleton, id, actionId, actionDescription)
+        ObjectCalls.ptrcallWithRIDIntAndStringArgs(Binds.updateAddCustomActionBind, singleton, id, actionId, actionDescription)
     }
 
     /**
@@ -424,7 +424,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTableRowCount(id: RID, count: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(updateSetTableRowCountBind, singleton, id, count)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.updateSetTableRowCountBind, singleton, id, count)
     }
 
     /**
@@ -434,7 +434,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTableColumnCount(id: RID, count: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(updateSetTableColumnCountBind, singleton, id, count)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.updateSetTableColumnCountBind, singleton, id, count)
     }
 
     /**
@@ -444,7 +444,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTableRowIndex(id: RID, index: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(updateSetTableRowIndexBind, singleton, id, index)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.updateSetTableRowIndexBind, singleton, id, index)
     }
 
     /**
@@ -454,7 +454,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTableColumnIndex(id: RID, index: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(updateSetTableColumnIndexBind, singleton, id, index)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.updateSetTableColumnIndexBind, singleton, id, index)
     }
 
     /**
@@ -464,7 +464,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTableCellPosition(id: RID, rowIndex: Int, columnIndex: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(updateSetTableCellPositionBind, singleton, id, rowIndex, columnIndex)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.updateSetTableCellPositionBind, singleton, id, rowIndex, columnIndex)
     }
 
     /**
@@ -474,7 +474,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTableCellSpan(id: RID, rowSpan: Int, columnSpan: Int) {
-        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(updateSetTableCellSpanBind, singleton, id, rowSpan, columnSpan)
+        ObjectCalls.ptrcallWithRIDAndTwoIntArgs(Binds.updateSetTableCellSpanBind, singleton, id, rowSpan, columnSpan)
     }
 
     /**
@@ -484,7 +484,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetListItemCount(id: RID, size: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(updateSetListItemCountBind, singleton, id, size)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.updateSetListItemCountBind, singleton, id, size)
     }
 
     /**
@@ -494,7 +494,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetListItemIndex(id: RID, index: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(updateSetListItemIndexBind, singleton, id, index)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.updateSetListItemIndexBind, singleton, id, index)
     }
 
     /**
@@ -504,7 +504,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetListItemLevel(id: RID, level: Int) {
-        ObjectCalls.ptrcallWithRIDAndIntArg(updateSetListItemLevelBind, singleton, id, level)
+        ObjectCalls.ptrcallWithRIDAndIntArg(Binds.updateSetListItemLevelBind, singleton, id, level)
     }
 
     /**
@@ -514,7 +514,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetListItemSelected(id: RID, selected: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(updateSetListItemSelectedBind, singleton, id, selected)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.updateSetListItemSelectedBind, singleton, id, selected)
     }
 
     /**
@@ -524,7 +524,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetListItemExpanded(id: RID, expanded: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(updateSetListItemExpandedBind, singleton, id, expanded)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.updateSetListItemExpandedBind, singleton, id, expanded)
     }
 
     /**
@@ -534,7 +534,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetPopupType(id: RID, popup: AccessibilityServer.AccessibilityPopupType) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetPopupTypeBind, singleton, id, popup.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.updateSetPopupTypeBind, singleton, id, popup.value)
     }
 
     /**
@@ -544,7 +544,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetChecked(id: RID, checekd: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(updateSetCheckedBind, singleton, id, checekd)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.updateSetCheckedBind, singleton, id, checekd)
     }
 
     /**
@@ -554,7 +554,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetNumValue(id: RID, position: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(updateSetNumValueBind, singleton, id, position)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.updateSetNumValueBind, singleton, id, position)
     }
 
     /**
@@ -564,7 +564,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetNumRange(id: RID, min: Double, max: Double) {
-        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(updateSetNumRangeBind, singleton, id, min, max)
+        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(Binds.updateSetNumRangeBind, singleton, id, min, max)
     }
 
     /**
@@ -574,7 +574,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetNumStep(id: RID, step: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(updateSetNumStepBind, singleton, id, step)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.updateSetNumStepBind, singleton, id, step)
     }
 
     /**
@@ -584,7 +584,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetNumJump(id: RID, jump: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(updateSetNumJumpBind, singleton, id, jump)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.updateSetNumJumpBind, singleton, id, jump)
     }
 
     /**
@@ -594,7 +594,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetScrollX(id: RID, position: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(updateSetScrollXBind, singleton, id, position)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.updateSetScrollXBind, singleton, id, position)
     }
 
     /**
@@ -604,7 +604,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetScrollXRange(id: RID, min: Double, max: Double) {
-        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(updateSetScrollXRangeBind, singleton, id, min, max)
+        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(Binds.updateSetScrollXRangeBind, singleton, id, min, max)
     }
 
     /**
@@ -614,7 +614,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetScrollY(id: RID, position: Double) {
-        ObjectCalls.ptrcallWithRIDAndDoubleArg(updateSetScrollYBind, singleton, id, position)
+        ObjectCalls.ptrcallWithRIDAndDoubleArg(Binds.updateSetScrollYBind, singleton, id, position)
     }
 
     /**
@@ -624,7 +624,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetScrollYRange(id: RID, min: Double, max: Double) {
-        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(updateSetScrollYRangeBind, singleton, id, min, max)
+        ObjectCalls.ptrcallWithRIDAndTwoDoubleArgs(Binds.updateSetScrollYRangeBind, singleton, id, min, max)
     }
 
     /**
@@ -634,7 +634,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTextDecorations(id: RID, underline: Boolean, strikethrough: Boolean, overline: Boolean, color: Color) {
-        ObjectCalls.ptrcallWithRIDThreeBoolAndColorArgs(updateSetTextDecorationsBind, singleton, id, underline, strikethrough, overline, color)
+        ObjectCalls.ptrcallWithRIDThreeBoolAndColorArgs(Binds.updateSetTextDecorationsBind, singleton, id, underline, strikethrough, overline, color)
     }
 
     /**
@@ -644,7 +644,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTextAlign(id: RID, align: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithRIDAndLongArg(updateSetTextAlignBind, singleton, id, align.value)
+        ObjectCalls.ptrcallWithRIDAndLongArg(Binds.updateSetTextAlignBind, singleton, id, align.value)
     }
 
     /**
@@ -656,7 +656,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTextSelection(id: RID, textStartId: RID, startChar: Int, textEndId: RID, endChar: Int) {
-        ObjectCalls.ptrcallWithTwoRIDIntRIDIntArgs(updateSetTextSelectionBind, singleton, id, textStartId, startChar, textEndId, endChar)
+        ObjectCalls.ptrcallWithTwoRIDIntRIDIntArgs(Binds.updateSetTextSelectionBind, singleton, id, textStartId, startChar, textEndId, endChar)
     }
 
     /**
@@ -666,7 +666,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetFlag(id: RID, flag: AccessibilityServer.AccessibilityFlags, value: Boolean) {
-        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(updateSetFlagBind, singleton, id, flag.value, value)
+        ObjectCalls.ptrcallWithRIDLongAndBoolArgs(Binds.updateSetFlagBind, singleton, id, flag.value, value)
     }
 
     /**
@@ -676,7 +676,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetClassname(id: RID, classname: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetClassnameBind, singleton, id, classname)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetClassnameBind, singleton, id, classname)
     }
 
     /**
@@ -686,7 +686,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetPlaceholder(id: RID, placeholder: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetPlaceholderBind, singleton, id, placeholder)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetPlaceholderBind, singleton, id, placeholder)
     }
 
     /**
@@ -696,7 +696,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetLanguage(id: RID, language: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetLanguageBind, singleton, id, language)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetLanguageBind, singleton, id, language)
     }
 
     /**
@@ -706,7 +706,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetTextOrientation(id: RID, vertical: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(updateSetTextOrientationBind, singleton, id, vertical)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.updateSetTextOrientationBind, singleton, id, vertical)
     }
 
     /**
@@ -716,7 +716,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetListOrientation(id: RID, vertical: Boolean) {
-        ObjectCalls.ptrcallWithRIDAndBoolArg(updateSetListOrientationBind, singleton, id, vertical)
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.updateSetListOrientationBind, singleton, id, vertical)
     }
 
     /**
@@ -726,7 +726,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetShortcut(id: RID, shortcut: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetShortcutBind, singleton, id, shortcut)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetShortcutBind, singleton, id, shortcut)
     }
 
     /**
@@ -736,7 +736,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetUrl(id: RID, url: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetUrlBind, singleton, id, url)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetUrlBind, singleton, id, url)
     }
 
     /**
@@ -746,7 +746,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetRoleDescription(id: RID, description: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetRoleDescriptionBind, singleton, id, description)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetRoleDescriptionBind, singleton, id, description)
     }
 
     /**
@@ -756,7 +756,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetStateDescription(id: RID, description: String) {
-        ObjectCalls.ptrcallWithRIDAndStringArg(updateSetStateDescriptionBind, singleton, id, description)
+        ObjectCalls.ptrcallWithRIDAndStringArg(Binds.updateSetStateDescriptionBind, singleton, id, description)
     }
 
     /**
@@ -766,7 +766,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetColorValue(id: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(updateSetColorValueBind, singleton, id, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.updateSetColorValueBind, singleton, id, color)
     }
 
     /**
@@ -776,7 +776,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetBackgroundColor(id: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(updateSetBackgroundColorBind, singleton, id, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.updateSetBackgroundColorBind, singleton, id, color)
     }
 
     /**
@@ -786,7 +786,7 @@ object AccessibilityServer {
      */
     @JvmStatic
     fun updateSetForegroundColor(id: RID, color: Color) {
-        ObjectCalls.ptrcallWithRIDAndColorArg(updateSetForegroundColorBind, singleton, id, color)
+        ObjectCalls.ptrcallWithRIDAndColorArg(Binds.updateSetForegroundColorBind, singleton, id, color)
     }
 
     /**
@@ -1472,378 +1472,383 @@ object AccessibilityServer {
     internal fun wrap(handle: RawSegment): AccessibilityServer? =
         if (handle.address() == 0L) null else this
 
-    private const val IS_SUPPORTED_HASH = 36873697L
-    private val isSupportedBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "is_supported", IS_SUPPORTED_HASH)
-    }
-
-    private const val CREATE_ELEMENT_HASH = 3846965249L
-    private val createElementBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "create_element", CREATE_ELEMENT_HASH)
-    }
-
-    private const val CREATE_SUB_ELEMENT_HASH = 1151690429L
-    private val createSubElementBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "create_sub_element", CREATE_SUB_ELEMENT_HASH)
-    }
-
-    private const val CREATE_SUB_TEXT_EDIT_ELEMENTS_HASH = 2702009895L
-    private val createSubTextEditElementsBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "create_sub_text_edit_elements", CREATE_SUB_TEXT_EDIT_ELEMENTS_HASH)
-    }
-
-    private const val HAS_ELEMENT_HASH = 4155700596L
-    private val hasElementBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "has_element", HAS_ELEMENT_HASH)
-    }
-
-    private const val FREE_ELEMENT_HASH = 2722037293L
-    private val freeElementBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "free_element", FREE_ELEMENT_HASH)
-    }
-
-    private const val ELEMENT_SET_META_HASH = 3175752987L
-    private val elementSetMetaBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "element_set_meta", ELEMENT_SET_META_HASH)
-    }
-
-    private const val ELEMENT_GET_META_HASH = 4171304767L
-    private val elementGetMetaBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "element_get_meta", ELEMENT_GET_META_HASH)
-    }
-
-    private const val SET_WINDOW_RECT_HASH = 2386961724L
-    private val setWindowRectBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "set_window_rect", SET_WINDOW_RECT_HASH)
-    }
-
-    private const val SET_WINDOW_FOCUSED_HASH = 300928843L
-    private val setWindowFocusedBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "set_window_focused", SET_WINDOW_FOCUSED_HASH)
-    }
-
-    private const val UPDATE_SET_FOCUS_HASH = 2722037293L
-    private val updateSetFocusBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_focus", UPDATE_SET_FOCUS_HASH)
-    }
-
-    private const val GET_WINDOW_ROOT_HASH = 495598643L
-    private val getWindowRootBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "get_window_root", GET_WINDOW_ROOT_HASH)
-    }
-
-    private const val UPDATE_SET_ROLE_HASH = 3747886520L
-    private val updateSetRoleBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_role", UPDATE_SET_ROLE_HASH)
-    }
-
-    private const val UPDATE_SET_NAME_HASH = 2726140452L
-    private val updateSetNameBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_name", UPDATE_SET_NAME_HASH)
-    }
-
-    private const val UPDATE_SET_BRAILLE_LABEL_HASH = 2726140452L
-    private val updateSetBrailleLabelBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_braille_label", UPDATE_SET_BRAILLE_LABEL_HASH)
-    }
-
-    private const val UPDATE_SET_BRAILLE_ROLE_DESCRIPTION_HASH = 2726140452L
-    private val updateSetBrailleRoleDescriptionBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_braille_role_description", UPDATE_SET_BRAILLE_ROLE_DESCRIPTION_HASH)
-    }
-
-    private const val UPDATE_SET_EXTRA_INFO_HASH = 2726140452L
-    private val updateSetExtraInfoBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_extra_info", UPDATE_SET_EXTRA_INFO_HASH)
-    }
-
-    private const val UPDATE_SET_DESCRIPTION_HASH = 2726140452L
-    private val updateSetDescriptionBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_description", UPDATE_SET_DESCRIPTION_HASH)
-    }
-
-    private const val UPDATE_SET_VALUE_HASH = 2726140452L
-    private val updateSetValueBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_value", UPDATE_SET_VALUE_HASH)
-    }
-
-    private const val UPDATE_SET_TOOLTIP_HASH = 2726140452L
-    private val updateSetTooltipBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_tooltip", UPDATE_SET_TOOLTIP_HASH)
-    }
-
-    private const val UPDATE_SET_BOUNDS_HASH = 1378122625L
-    private val updateSetBoundsBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_bounds", UPDATE_SET_BOUNDS_HASH)
-    }
-
-    private const val UPDATE_SET_TRANSFORM_HASH = 1246044741L
-    private val updateSetTransformBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_transform", UPDATE_SET_TRANSFORM_HASH)
-    }
-
-    private const val UPDATE_ADD_CHILD_HASH = 395945892L
-    private val updateAddChildBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_child", UPDATE_ADD_CHILD_HASH)
-    }
-
-    private const val UPDATE_ADD_RELATED_CONTROLS_HASH = 395945892L
-    private val updateAddRelatedControlsBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_controls", UPDATE_ADD_RELATED_CONTROLS_HASH)
-    }
-
-    private const val UPDATE_ADD_RELATED_DETAILS_HASH = 395945892L
-    private val updateAddRelatedDetailsBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_details", UPDATE_ADD_RELATED_DETAILS_HASH)
-    }
-
-    private const val UPDATE_ADD_RELATED_DESCRIBED_BY_HASH = 395945892L
-    private val updateAddRelatedDescribedByBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_described_by", UPDATE_ADD_RELATED_DESCRIBED_BY_HASH)
-    }
-
-    private const val UPDATE_ADD_RELATED_FLOW_TO_HASH = 395945892L
-    private val updateAddRelatedFlowToBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_flow_to", UPDATE_ADD_RELATED_FLOW_TO_HASH)
-    }
-
-    private const val UPDATE_ADD_RELATED_LABELED_BY_HASH = 395945892L
-    private val updateAddRelatedLabeledByBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_labeled_by", UPDATE_ADD_RELATED_LABELED_BY_HASH)
-    }
-
-    private const val UPDATE_ADD_RELATED_RADIO_GROUP_HASH = 395945892L
-    private val updateAddRelatedRadioGroupBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_radio_group", UPDATE_ADD_RELATED_RADIO_GROUP_HASH)
-    }
-
-    private const val UPDATE_SET_ACTIVE_DESCENDANT_HASH = 395945892L
-    private val updateSetActiveDescendantBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_active_descendant", UPDATE_SET_ACTIVE_DESCENDANT_HASH)
-    }
-
-    private const val UPDATE_SET_NEXT_ON_LINE_HASH = 395945892L
-    private val updateSetNextOnLineBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_next_on_line", UPDATE_SET_NEXT_ON_LINE_HASH)
-    }
-
-    private const val UPDATE_SET_PREVIOUS_ON_LINE_HASH = 395945892L
-    private val updateSetPreviousOnLineBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_previous_on_line", UPDATE_SET_PREVIOUS_ON_LINE_HASH)
-    }
-
-    private const val UPDATE_SET_MEMBER_OF_HASH = 395945892L
-    private val updateSetMemberOfBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_member_of", UPDATE_SET_MEMBER_OF_HASH)
-    }
-
-    private const val UPDATE_SET_IN_PAGE_LINK_TARGET_HASH = 395945892L
-    private val updateSetInPageLinkTargetBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_in_page_link_target", UPDATE_SET_IN_PAGE_LINK_TARGET_HASH)
-    }
-
-    private const val UPDATE_SET_ERROR_MESSAGE_HASH = 395945892L
-    private val updateSetErrorMessageBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_error_message", UPDATE_SET_ERROR_MESSAGE_HASH)
-    }
-
-    private const val UPDATE_SET_LIVE_HASH = 2993365237L
-    private val updateSetLiveBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_live", UPDATE_SET_LIVE_HASH)
-    }
-
-    private const val UPDATE_ADD_ACTION_HASH = 3960092835L
-    private val updateAddActionBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_action", UPDATE_ADD_ACTION_HASH)
-    }
-
-    private const val UPDATE_ADD_CUSTOM_ACTION_HASH = 4153150897L
-    private val updateAddCustomActionBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_add_custom_action", UPDATE_ADD_CUSTOM_ACTION_HASH)
-    }
-
-    private const val UPDATE_SET_TABLE_ROW_COUNT_HASH = 3411492887L
-    private val updateSetTableRowCountBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_row_count", UPDATE_SET_TABLE_ROW_COUNT_HASH)
-    }
-
-    private const val UPDATE_SET_TABLE_COLUMN_COUNT_HASH = 3411492887L
-    private val updateSetTableColumnCountBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_column_count", UPDATE_SET_TABLE_COLUMN_COUNT_HASH)
-    }
-
-    private const val UPDATE_SET_TABLE_ROW_INDEX_HASH = 3411492887L
-    private val updateSetTableRowIndexBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_row_index", UPDATE_SET_TABLE_ROW_INDEX_HASH)
-    }
-
-    private const val UPDATE_SET_TABLE_COLUMN_INDEX_HASH = 3411492887L
-    private val updateSetTableColumnIndexBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_column_index", UPDATE_SET_TABLE_COLUMN_INDEX_HASH)
-    }
-
-    private const val UPDATE_SET_TABLE_CELL_POSITION_HASH = 4288446313L
-    private val updateSetTableCellPositionBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_cell_position", UPDATE_SET_TABLE_CELL_POSITION_HASH)
-    }
-
-    private const val UPDATE_SET_TABLE_CELL_SPAN_HASH = 4288446313L
-    private val updateSetTableCellSpanBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_cell_span", UPDATE_SET_TABLE_CELL_SPAN_HASH)
-    }
-
-    private const val UPDATE_SET_LIST_ITEM_COUNT_HASH = 3411492887L
-    private val updateSetListItemCountBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_count", UPDATE_SET_LIST_ITEM_COUNT_HASH)
-    }
-
-    private const val UPDATE_SET_LIST_ITEM_INDEX_HASH = 3411492887L
-    private val updateSetListItemIndexBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_index", UPDATE_SET_LIST_ITEM_INDEX_HASH)
-    }
-
-    private const val UPDATE_SET_LIST_ITEM_LEVEL_HASH = 3411492887L
-    private val updateSetListItemLevelBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_level", UPDATE_SET_LIST_ITEM_LEVEL_HASH)
-    }
-
-    private const val UPDATE_SET_LIST_ITEM_SELECTED_HASH = 1265174801L
-    private val updateSetListItemSelectedBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_selected", UPDATE_SET_LIST_ITEM_SELECTED_HASH)
-    }
-
-    private const val UPDATE_SET_LIST_ITEM_EXPANDED_HASH = 1265174801L
-    private val updateSetListItemExpandedBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_expanded", UPDATE_SET_LIST_ITEM_EXPANDED_HASH)
-    }
-
-    private const val UPDATE_SET_POPUP_TYPE_HASH = 690307634L
-    private val updateSetPopupTypeBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_popup_type", UPDATE_SET_POPUP_TYPE_HASH)
-    }
-
-    private const val UPDATE_SET_CHECKED_HASH = 1265174801L
-    private val updateSetCheckedBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_checked", UPDATE_SET_CHECKED_HASH)
-    }
-
-    private const val UPDATE_SET_NUM_VALUE_HASH = 1794382983L
-    private val updateSetNumValueBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_num_value", UPDATE_SET_NUM_VALUE_HASH)
-    }
-
-    private const val UPDATE_SET_NUM_RANGE_HASH = 2513314492L
-    private val updateSetNumRangeBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_num_range", UPDATE_SET_NUM_RANGE_HASH)
-    }
-
-    private const val UPDATE_SET_NUM_STEP_HASH = 1794382983L
-    private val updateSetNumStepBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_num_step", UPDATE_SET_NUM_STEP_HASH)
-    }
-
-    private const val UPDATE_SET_NUM_JUMP_HASH = 1794382983L
-    private val updateSetNumJumpBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_num_jump", UPDATE_SET_NUM_JUMP_HASH)
-    }
-
-    private const val UPDATE_SET_SCROLL_X_HASH = 1794382983L
-    private val updateSetScrollXBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_scroll_x", UPDATE_SET_SCROLL_X_HASH)
-    }
-
-    private const val UPDATE_SET_SCROLL_X_RANGE_HASH = 2513314492L
-    private val updateSetScrollXRangeBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_scroll_x_range", UPDATE_SET_SCROLL_X_RANGE_HASH)
-    }
-
-    private const val UPDATE_SET_SCROLL_Y_HASH = 1794382983L
-    private val updateSetScrollYBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_scroll_y", UPDATE_SET_SCROLL_Y_HASH)
-    }
-
-    private const val UPDATE_SET_SCROLL_Y_RANGE_HASH = 2513314492L
-    private val updateSetScrollYRangeBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_scroll_y_range", UPDATE_SET_SCROLL_Y_RANGE_HASH)
-    }
-
-    private const val UPDATE_SET_TEXT_DECORATIONS_HASH = 457503484L
-    private val updateSetTextDecorationsBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_text_decorations", UPDATE_SET_TEXT_DECORATIONS_HASH)
-    }
-
-    private const val UPDATE_SET_TEXT_ALIGN_HASH = 3725995085L
-    private val updateSetTextAlignBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_text_align", UPDATE_SET_TEXT_ALIGN_HASH)
-    }
-
-    private const val UPDATE_SET_TEXT_SELECTION_HASH = 3119144029L
-    private val updateSetTextSelectionBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_text_selection", UPDATE_SET_TEXT_SELECTION_HASH)
-    }
-
-    private const val UPDATE_SET_FLAG_HASH = 1473043386L
-    private val updateSetFlagBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_flag", UPDATE_SET_FLAG_HASH)
-    }
-
-    private const val UPDATE_SET_CLASSNAME_HASH = 2726140452L
-    private val updateSetClassnameBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_classname", UPDATE_SET_CLASSNAME_HASH)
-    }
-
-    private const val UPDATE_SET_PLACEHOLDER_HASH = 2726140452L
-    private val updateSetPlaceholderBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_placeholder", UPDATE_SET_PLACEHOLDER_HASH)
-    }
-
-    private const val UPDATE_SET_LANGUAGE_HASH = 2726140452L
-    private val updateSetLanguageBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_language", UPDATE_SET_LANGUAGE_HASH)
-    }
-
-    private const val UPDATE_SET_TEXT_ORIENTATION_HASH = 1265174801L
-    private val updateSetTextOrientationBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_text_orientation", UPDATE_SET_TEXT_ORIENTATION_HASH)
-    }
-
-    private const val UPDATE_SET_LIST_ORIENTATION_HASH = 1265174801L
-    private val updateSetListOrientationBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_orientation", UPDATE_SET_LIST_ORIENTATION_HASH)
-    }
-
-    private const val UPDATE_SET_SHORTCUT_HASH = 2726140452L
-    private val updateSetShortcutBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_shortcut", UPDATE_SET_SHORTCUT_HASH)
-    }
-
-    private const val UPDATE_SET_URL_HASH = 2726140452L
-    private val updateSetUrlBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_url", UPDATE_SET_URL_HASH)
-    }
-
-    private const val UPDATE_SET_ROLE_DESCRIPTION_HASH = 2726140452L
-    private val updateSetRoleDescriptionBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_role_description", UPDATE_SET_ROLE_DESCRIPTION_HASH)
-    }
-
-    private const val UPDATE_SET_STATE_DESCRIPTION_HASH = 2726140452L
-    private val updateSetStateDescriptionBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_state_description", UPDATE_SET_STATE_DESCRIPTION_HASH)
-    }
-
-    private const val UPDATE_SET_COLOR_VALUE_HASH = 2948539648L
-    private val updateSetColorValueBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_color_value", UPDATE_SET_COLOR_VALUE_HASH)
-    }
-
-    private const val UPDATE_SET_BACKGROUND_COLOR_HASH = 2948539648L
-    private val updateSetBackgroundColorBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_background_color", UPDATE_SET_BACKGROUND_COLOR_HASH)
-    }
-
-    private const val UPDATE_SET_FOREGROUND_COLOR_HASH = 2948539648L
-    private val updateSetForegroundColorBind by lazy {
-        ObjectCalls.getMethodBind("AccessibilityServer", "update_set_foreground_color", UPDATE_SET_FOREGROUND_COLOR_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("AccessibilityServer")
+
+        private const val IS_SUPPORTED_HASH = 36873697L
+        @JvmField
+        val isSupportedBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "is_supported", IS_SUPPORTED_HASH)
+
+        private const val CREATE_ELEMENT_HASH = 3846965249L
+        @JvmField
+        val createElementBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "create_element", CREATE_ELEMENT_HASH)
+
+        private const val CREATE_SUB_ELEMENT_HASH = 1151690429L
+        @JvmField
+        val createSubElementBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "create_sub_element", CREATE_SUB_ELEMENT_HASH)
+
+        private const val CREATE_SUB_TEXT_EDIT_ELEMENTS_HASH = 2702009895L
+        @JvmField
+        val createSubTextEditElementsBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "create_sub_text_edit_elements", CREATE_SUB_TEXT_EDIT_ELEMENTS_HASH)
+
+        private const val HAS_ELEMENT_HASH = 4155700596L
+        @JvmField
+        val hasElementBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "has_element", HAS_ELEMENT_HASH)
+
+        private const val FREE_ELEMENT_HASH = 2722037293L
+        @JvmField
+        val freeElementBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "free_element", FREE_ELEMENT_HASH)
+
+        private const val ELEMENT_SET_META_HASH = 3175752987L
+        @JvmField
+        val elementSetMetaBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "element_set_meta", ELEMENT_SET_META_HASH)
+
+        private const val ELEMENT_GET_META_HASH = 4171304767L
+        @JvmField
+        val elementGetMetaBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "element_get_meta", ELEMENT_GET_META_HASH)
+
+        private const val SET_WINDOW_RECT_HASH = 2386961724L
+        @JvmField
+        val setWindowRectBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "set_window_rect", SET_WINDOW_RECT_HASH)
+
+        private const val SET_WINDOW_FOCUSED_HASH = 300928843L
+        @JvmField
+        val setWindowFocusedBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "set_window_focused", SET_WINDOW_FOCUSED_HASH)
+
+        private const val UPDATE_SET_FOCUS_HASH = 2722037293L
+        @JvmField
+        val updateSetFocusBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_focus", UPDATE_SET_FOCUS_HASH)
+
+        private const val GET_WINDOW_ROOT_HASH = 495598643L
+        @JvmField
+        val getWindowRootBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "get_window_root", GET_WINDOW_ROOT_HASH)
+
+        private const val UPDATE_SET_ROLE_HASH = 3747886520L
+        @JvmField
+        val updateSetRoleBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_role", UPDATE_SET_ROLE_HASH)
+
+        private const val UPDATE_SET_NAME_HASH = 2726140452L
+        @JvmField
+        val updateSetNameBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_name", UPDATE_SET_NAME_HASH)
+
+        private const val UPDATE_SET_BRAILLE_LABEL_HASH = 2726140452L
+        @JvmField
+        val updateSetBrailleLabelBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_braille_label", UPDATE_SET_BRAILLE_LABEL_HASH)
+
+        private const val UPDATE_SET_BRAILLE_ROLE_DESCRIPTION_HASH = 2726140452L
+        @JvmField
+        val updateSetBrailleRoleDescriptionBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_braille_role_description", UPDATE_SET_BRAILLE_ROLE_DESCRIPTION_HASH)
+
+        private const val UPDATE_SET_EXTRA_INFO_HASH = 2726140452L
+        @JvmField
+        val updateSetExtraInfoBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_extra_info", UPDATE_SET_EXTRA_INFO_HASH)
+
+        private const val UPDATE_SET_DESCRIPTION_HASH = 2726140452L
+        @JvmField
+        val updateSetDescriptionBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_description", UPDATE_SET_DESCRIPTION_HASH)
+
+        private const val UPDATE_SET_VALUE_HASH = 2726140452L
+        @JvmField
+        val updateSetValueBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_value", UPDATE_SET_VALUE_HASH)
+
+        private const val UPDATE_SET_TOOLTIP_HASH = 2726140452L
+        @JvmField
+        val updateSetTooltipBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_tooltip", UPDATE_SET_TOOLTIP_HASH)
+
+        private const val UPDATE_SET_BOUNDS_HASH = 1378122625L
+        @JvmField
+        val updateSetBoundsBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_bounds", UPDATE_SET_BOUNDS_HASH)
+
+        private const val UPDATE_SET_TRANSFORM_HASH = 1246044741L
+        @JvmField
+        val updateSetTransformBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_transform", UPDATE_SET_TRANSFORM_HASH)
+
+        private const val UPDATE_ADD_CHILD_HASH = 395945892L
+        @JvmField
+        val updateAddChildBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_child", UPDATE_ADD_CHILD_HASH)
+
+        private const val UPDATE_ADD_RELATED_CONTROLS_HASH = 395945892L
+        @JvmField
+        val updateAddRelatedControlsBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_controls", UPDATE_ADD_RELATED_CONTROLS_HASH)
+
+        private const val UPDATE_ADD_RELATED_DETAILS_HASH = 395945892L
+        @JvmField
+        val updateAddRelatedDetailsBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_details", UPDATE_ADD_RELATED_DETAILS_HASH)
+
+        private const val UPDATE_ADD_RELATED_DESCRIBED_BY_HASH = 395945892L
+        @JvmField
+        val updateAddRelatedDescribedByBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_described_by", UPDATE_ADD_RELATED_DESCRIBED_BY_HASH)
+
+        private const val UPDATE_ADD_RELATED_FLOW_TO_HASH = 395945892L
+        @JvmField
+        val updateAddRelatedFlowToBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_flow_to", UPDATE_ADD_RELATED_FLOW_TO_HASH)
+
+        private const val UPDATE_ADD_RELATED_LABELED_BY_HASH = 395945892L
+        @JvmField
+        val updateAddRelatedLabeledByBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_labeled_by", UPDATE_ADD_RELATED_LABELED_BY_HASH)
+
+        private const val UPDATE_ADD_RELATED_RADIO_GROUP_HASH = 395945892L
+        @JvmField
+        val updateAddRelatedRadioGroupBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_related_radio_group", UPDATE_ADD_RELATED_RADIO_GROUP_HASH)
+
+        private const val UPDATE_SET_ACTIVE_DESCENDANT_HASH = 395945892L
+        @JvmField
+        val updateSetActiveDescendantBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_active_descendant", UPDATE_SET_ACTIVE_DESCENDANT_HASH)
+
+        private const val UPDATE_SET_NEXT_ON_LINE_HASH = 395945892L
+        @JvmField
+        val updateSetNextOnLineBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_next_on_line", UPDATE_SET_NEXT_ON_LINE_HASH)
+
+        private const val UPDATE_SET_PREVIOUS_ON_LINE_HASH = 395945892L
+        @JvmField
+        val updateSetPreviousOnLineBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_previous_on_line", UPDATE_SET_PREVIOUS_ON_LINE_HASH)
+
+        private const val UPDATE_SET_MEMBER_OF_HASH = 395945892L
+        @JvmField
+        val updateSetMemberOfBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_member_of", UPDATE_SET_MEMBER_OF_HASH)
+
+        private const val UPDATE_SET_IN_PAGE_LINK_TARGET_HASH = 395945892L
+        @JvmField
+        val updateSetInPageLinkTargetBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_in_page_link_target", UPDATE_SET_IN_PAGE_LINK_TARGET_HASH)
+
+        private const val UPDATE_SET_ERROR_MESSAGE_HASH = 395945892L
+        @JvmField
+        val updateSetErrorMessageBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_error_message", UPDATE_SET_ERROR_MESSAGE_HASH)
+
+        private const val UPDATE_SET_LIVE_HASH = 2993365237L
+        @JvmField
+        val updateSetLiveBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_live", UPDATE_SET_LIVE_HASH)
+
+        private const val UPDATE_ADD_ACTION_HASH = 3960092835L
+        @JvmField
+        val updateAddActionBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_action", UPDATE_ADD_ACTION_HASH)
+
+        private const val UPDATE_ADD_CUSTOM_ACTION_HASH = 4153150897L
+        @JvmField
+        val updateAddCustomActionBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_add_custom_action", UPDATE_ADD_CUSTOM_ACTION_HASH)
+
+        private const val UPDATE_SET_TABLE_ROW_COUNT_HASH = 3411492887L
+        @JvmField
+        val updateSetTableRowCountBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_row_count", UPDATE_SET_TABLE_ROW_COUNT_HASH)
+
+        private const val UPDATE_SET_TABLE_COLUMN_COUNT_HASH = 3411492887L
+        @JvmField
+        val updateSetTableColumnCountBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_column_count", UPDATE_SET_TABLE_COLUMN_COUNT_HASH)
+
+        private const val UPDATE_SET_TABLE_ROW_INDEX_HASH = 3411492887L
+        @JvmField
+        val updateSetTableRowIndexBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_row_index", UPDATE_SET_TABLE_ROW_INDEX_HASH)
+
+        private const val UPDATE_SET_TABLE_COLUMN_INDEX_HASH = 3411492887L
+        @JvmField
+        val updateSetTableColumnIndexBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_column_index", UPDATE_SET_TABLE_COLUMN_INDEX_HASH)
+
+        private const val UPDATE_SET_TABLE_CELL_POSITION_HASH = 4288446313L
+        @JvmField
+        val updateSetTableCellPositionBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_cell_position", UPDATE_SET_TABLE_CELL_POSITION_HASH)
+
+        private const val UPDATE_SET_TABLE_CELL_SPAN_HASH = 4288446313L
+        @JvmField
+        val updateSetTableCellSpanBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_table_cell_span", UPDATE_SET_TABLE_CELL_SPAN_HASH)
+
+        private const val UPDATE_SET_LIST_ITEM_COUNT_HASH = 3411492887L
+        @JvmField
+        val updateSetListItemCountBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_count", UPDATE_SET_LIST_ITEM_COUNT_HASH)
+
+        private const val UPDATE_SET_LIST_ITEM_INDEX_HASH = 3411492887L
+        @JvmField
+        val updateSetListItemIndexBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_index", UPDATE_SET_LIST_ITEM_INDEX_HASH)
+
+        private const val UPDATE_SET_LIST_ITEM_LEVEL_HASH = 3411492887L
+        @JvmField
+        val updateSetListItemLevelBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_level", UPDATE_SET_LIST_ITEM_LEVEL_HASH)
+
+        private const val UPDATE_SET_LIST_ITEM_SELECTED_HASH = 1265174801L
+        @JvmField
+        val updateSetListItemSelectedBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_selected", UPDATE_SET_LIST_ITEM_SELECTED_HASH)
+
+        private const val UPDATE_SET_LIST_ITEM_EXPANDED_HASH = 1265174801L
+        @JvmField
+        val updateSetListItemExpandedBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_item_expanded", UPDATE_SET_LIST_ITEM_EXPANDED_HASH)
+
+        private const val UPDATE_SET_POPUP_TYPE_HASH = 690307634L
+        @JvmField
+        val updateSetPopupTypeBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_popup_type", UPDATE_SET_POPUP_TYPE_HASH)
+
+        private const val UPDATE_SET_CHECKED_HASH = 1265174801L
+        @JvmField
+        val updateSetCheckedBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_checked", UPDATE_SET_CHECKED_HASH)
+
+        private const val UPDATE_SET_NUM_VALUE_HASH = 1794382983L
+        @JvmField
+        val updateSetNumValueBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_num_value", UPDATE_SET_NUM_VALUE_HASH)
+
+        private const val UPDATE_SET_NUM_RANGE_HASH = 2513314492L
+        @JvmField
+        val updateSetNumRangeBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_num_range", UPDATE_SET_NUM_RANGE_HASH)
+
+        private const val UPDATE_SET_NUM_STEP_HASH = 1794382983L
+        @JvmField
+        val updateSetNumStepBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_num_step", UPDATE_SET_NUM_STEP_HASH)
+
+        private const val UPDATE_SET_NUM_JUMP_HASH = 1794382983L
+        @JvmField
+        val updateSetNumJumpBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_num_jump", UPDATE_SET_NUM_JUMP_HASH)
+
+        private const val UPDATE_SET_SCROLL_X_HASH = 1794382983L
+        @JvmField
+        val updateSetScrollXBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_scroll_x", UPDATE_SET_SCROLL_X_HASH)
+
+        private const val UPDATE_SET_SCROLL_X_RANGE_HASH = 2513314492L
+        @JvmField
+        val updateSetScrollXRangeBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_scroll_x_range", UPDATE_SET_SCROLL_X_RANGE_HASH)
+
+        private const val UPDATE_SET_SCROLL_Y_HASH = 1794382983L
+        @JvmField
+        val updateSetScrollYBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_scroll_y", UPDATE_SET_SCROLL_Y_HASH)
+
+        private const val UPDATE_SET_SCROLL_Y_RANGE_HASH = 2513314492L
+        @JvmField
+        val updateSetScrollYRangeBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_scroll_y_range", UPDATE_SET_SCROLL_Y_RANGE_HASH)
+
+        private const val UPDATE_SET_TEXT_DECORATIONS_HASH = 457503484L
+        @JvmField
+        val updateSetTextDecorationsBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_text_decorations", UPDATE_SET_TEXT_DECORATIONS_HASH)
+
+        private const val UPDATE_SET_TEXT_ALIGN_HASH = 3725995085L
+        @JvmField
+        val updateSetTextAlignBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_text_align", UPDATE_SET_TEXT_ALIGN_HASH)
+
+        private const val UPDATE_SET_TEXT_SELECTION_HASH = 3119144029L
+        @JvmField
+        val updateSetTextSelectionBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_text_selection", UPDATE_SET_TEXT_SELECTION_HASH)
+
+        private const val UPDATE_SET_FLAG_HASH = 1473043386L
+        @JvmField
+        val updateSetFlagBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_flag", UPDATE_SET_FLAG_HASH)
+
+        private const val UPDATE_SET_CLASSNAME_HASH = 2726140452L
+        @JvmField
+        val updateSetClassnameBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_classname", UPDATE_SET_CLASSNAME_HASH)
+
+        private const val UPDATE_SET_PLACEHOLDER_HASH = 2726140452L
+        @JvmField
+        val updateSetPlaceholderBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_placeholder", UPDATE_SET_PLACEHOLDER_HASH)
+
+        private const val UPDATE_SET_LANGUAGE_HASH = 2726140452L
+        @JvmField
+        val updateSetLanguageBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_language", UPDATE_SET_LANGUAGE_HASH)
+
+        private const val UPDATE_SET_TEXT_ORIENTATION_HASH = 1265174801L
+        @JvmField
+        val updateSetTextOrientationBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_text_orientation", UPDATE_SET_TEXT_ORIENTATION_HASH)
+
+        private const val UPDATE_SET_LIST_ORIENTATION_HASH = 1265174801L
+        @JvmField
+        val updateSetListOrientationBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_list_orientation", UPDATE_SET_LIST_ORIENTATION_HASH)
+
+        private const val UPDATE_SET_SHORTCUT_HASH = 2726140452L
+        @JvmField
+        val updateSetShortcutBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_shortcut", UPDATE_SET_SHORTCUT_HASH)
+
+        private const val UPDATE_SET_URL_HASH = 2726140452L
+        @JvmField
+        val updateSetUrlBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_url", UPDATE_SET_URL_HASH)
+
+        private const val UPDATE_SET_ROLE_DESCRIPTION_HASH = 2726140452L
+        @JvmField
+        val updateSetRoleDescriptionBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_role_description", UPDATE_SET_ROLE_DESCRIPTION_HASH)
+
+        private const val UPDATE_SET_STATE_DESCRIPTION_HASH = 2726140452L
+        @JvmField
+        val updateSetStateDescriptionBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_state_description", UPDATE_SET_STATE_DESCRIPTION_HASH)
+
+        private const val UPDATE_SET_COLOR_VALUE_HASH = 2948539648L
+        @JvmField
+        val updateSetColorValueBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_color_value", UPDATE_SET_COLOR_VALUE_HASH)
+
+        private const val UPDATE_SET_BACKGROUND_COLOR_HASH = 2948539648L
+        @JvmField
+        val updateSetBackgroundColorBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_background_color", UPDATE_SET_BACKGROUND_COLOR_HASH)
+
+        private const val UPDATE_SET_FOREGROUND_COLOR_HASH = 2948539648L
+        @JvmField
+        val updateSetForegroundColorBind =
+            ObjectCalls.getMethodBind("AccessibilityServer", "update_set_foreground_color", UPDATE_SET_FOREGROUND_COLOR_HASH)
     }
 }

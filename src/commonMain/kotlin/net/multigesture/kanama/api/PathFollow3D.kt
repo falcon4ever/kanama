@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -75,7 +76,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_progress
      */
     fun setProgress(progress: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProgressBind, segment, progress)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setProgressBind, segment, progress)
     }
 
     /**
@@ -85,7 +86,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_progress
      */
     fun getProgress(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProgressBind, segment)
     }
 
     /**
@@ -94,7 +95,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_h_offset
      */
     fun setHOffset(hOffset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHOffsetBind, segment, hOffset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHOffsetBind, segment, hOffset)
     }
 
     /**
@@ -103,7 +104,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_h_offset
      */
     fun getHOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHOffsetBind, segment)
     }
 
     /**
@@ -112,7 +113,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_v_offset
      */
     fun setVOffset(vOffset: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVOffsetBind, segment, vOffset)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVOffsetBind, segment, vOffset)
     }
 
     /**
@@ -121,7 +122,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_v_offset
      */
     fun getVOffset(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVOffsetBind, segment)
     }
 
     /**
@@ -135,7 +136,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_progress_ratio
      */
     fun setProgressRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProgressRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setProgressRatioBind, segment, ratio)
     }
 
     /**
@@ -149,7 +150,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_progress_ratio
      */
     fun getProgressRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProgressRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProgressRatioBind, segment)
     }
 
     /**
@@ -159,7 +160,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_rotation_mode
      */
     fun setRotationMode(rotationMode: PathFollow3D.RotationMode) {
-        ObjectCalls.ptrcallWithLongArg(setRotationModeBind, segment, rotationMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRotationModeBind, segment, rotationMode.value)
     }
 
     /**
@@ -169,7 +170,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_rotation_mode
      */
     fun getRotationMode(): PathFollow3D.RotationMode {
-        return PathFollow3D.RotationMode(ObjectCalls.ptrcallNoArgsRetLong(getRotationModeBind, segment))
+        return PathFollow3D.RotationMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRotationModeBind, segment))
     }
 
     /**
@@ -184,7 +185,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_cubic_interpolation
      */
     fun setCubicInterpolation(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCubicInterpolationBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCubicInterpolationBind, segment, enabled)
     }
 
     /**
@@ -199,7 +200,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.get_cubic_interpolation
      */
     fun getCubicInterpolation(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getCubicInterpolationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCubicInterpolationBind, segment)
     }
 
     /**
@@ -209,7 +210,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_use_model_front
      */
     fun setUseModelFront(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseModelFrontBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseModelFrontBind, segment, enabled)
     }
 
     /**
@@ -219,7 +220,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.is_using_model_front
      */
     fun isUsingModelFront(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingModelFrontBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingModelFrontBind, segment)
     }
 
     /**
@@ -229,7 +230,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_loop
      */
     fun setLoop(loop: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLoopBind, segment, loop)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLoopBind, segment, loop)
     }
 
     /**
@@ -239,7 +240,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.has_loop
      */
     fun hasLoop(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasLoopBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasLoopBind, segment)
     }
 
     /**
@@ -248,7 +249,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.set_tilt_enabled
      */
     fun setTiltEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTiltEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTiltEnabledBind, segment, enabled)
     }
 
     /**
@@ -257,7 +258,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: PathFollow3D.is_tilt_enabled
      */
     fun isTiltEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTiltEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTiltEnabledBind, segment)
     }
 
     /**
@@ -311,7 +312,7 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
          * Generated from Godot docs: PathFollow3D.correct_posture
          */
         fun correctPosture(transform: Transform3D, rotationMode: PathFollow3D.RotationMode): Transform3D {
-            return ObjectCalls.ptrcallWithTransform3DAndLongArgsRetTransform3D(correctPostureBind, NULL_SEGMENT, transform, rotationMode.value)
+            return ObjectCalls.ptrcallWithTransform3DAndLongArgsRetTransform3D(Binds.correctPostureBind, NULL_SEGMENT, transform, rotationMode.value)
         }
 
         @JvmStatic
@@ -320,100 +321,102 @@ class PathFollow3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): PathFollow3D? =
             if (handle.address() == 0L) null else PathFollow3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PROGRESS_HASH = 373806689L
-        private val setProgressBind by lazy {
+        @JvmField
+        val setProgressBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_progress", SET_PROGRESS_HASH)
-        }
 
         private const val GET_PROGRESS_HASH = 1740695150L
-        private val getProgressBind by lazy {
+        @JvmField
+        val getProgressBind =
             ObjectCalls.getMethodBind("PathFollow3D", "get_progress", GET_PROGRESS_HASH)
-        }
 
         private const val SET_H_OFFSET_HASH = 373806689L
-        private val setHOffsetBind by lazy {
+        @JvmField
+        val setHOffsetBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_h_offset", SET_H_OFFSET_HASH)
-        }
 
         private const val GET_H_OFFSET_HASH = 1740695150L
-        private val getHOffsetBind by lazy {
+        @JvmField
+        val getHOffsetBind =
             ObjectCalls.getMethodBind("PathFollow3D", "get_h_offset", GET_H_OFFSET_HASH)
-        }
 
         private const val SET_V_OFFSET_HASH = 373806689L
-        private val setVOffsetBind by lazy {
+        @JvmField
+        val setVOffsetBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_v_offset", SET_V_OFFSET_HASH)
-        }
 
         private const val GET_V_OFFSET_HASH = 1740695150L
-        private val getVOffsetBind by lazy {
+        @JvmField
+        val getVOffsetBind =
             ObjectCalls.getMethodBind("PathFollow3D", "get_v_offset", GET_V_OFFSET_HASH)
-        }
 
         private const val SET_PROGRESS_RATIO_HASH = 373806689L
-        private val setProgressRatioBind by lazy {
+        @JvmField
+        val setProgressRatioBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_progress_ratio", SET_PROGRESS_RATIO_HASH)
-        }
 
         private const val GET_PROGRESS_RATIO_HASH = 1740695150L
-        private val getProgressRatioBind by lazy {
+        @JvmField
+        val getProgressRatioBind =
             ObjectCalls.getMethodBind("PathFollow3D", "get_progress_ratio", GET_PROGRESS_RATIO_HASH)
-        }
 
         private const val SET_ROTATION_MODE_HASH = 1640311967L
-        private val setRotationModeBind by lazy {
+        @JvmField
+        val setRotationModeBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_rotation_mode", SET_ROTATION_MODE_HASH)
-        }
 
         private const val GET_ROTATION_MODE_HASH = 3814010545L
-        private val getRotationModeBind by lazy {
+        @JvmField
+        val getRotationModeBind =
             ObjectCalls.getMethodBind("PathFollow3D", "get_rotation_mode", GET_ROTATION_MODE_HASH)
-        }
 
         private const val SET_CUBIC_INTERPOLATION_HASH = 2586408642L
-        private val setCubicInterpolationBind by lazy {
+        @JvmField
+        val setCubicInterpolationBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_cubic_interpolation", SET_CUBIC_INTERPOLATION_HASH)
-        }
 
         private const val GET_CUBIC_INTERPOLATION_HASH = 36873697L
-        private val getCubicInterpolationBind by lazy {
+        @JvmField
+        val getCubicInterpolationBind =
             ObjectCalls.getMethodBind("PathFollow3D", "get_cubic_interpolation", GET_CUBIC_INTERPOLATION_HASH)
-        }
 
         private const val SET_USE_MODEL_FRONT_HASH = 2586408642L
-        private val setUseModelFrontBind by lazy {
+        @JvmField
+        val setUseModelFrontBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_use_model_front", SET_USE_MODEL_FRONT_HASH)
-        }
 
         private const val IS_USING_MODEL_FRONT_HASH = 36873697L
-        private val isUsingModelFrontBind by lazy {
+        @JvmField
+        val isUsingModelFrontBind =
             ObjectCalls.getMethodBind("PathFollow3D", "is_using_model_front", IS_USING_MODEL_FRONT_HASH)
-        }
 
         private const val SET_LOOP_HASH = 2586408642L
-        private val setLoopBind by lazy {
+        @JvmField
+        val setLoopBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_loop", SET_LOOP_HASH)
-        }
 
         private const val HAS_LOOP_HASH = 36873697L
-        private val hasLoopBind by lazy {
+        @JvmField
+        val hasLoopBind =
             ObjectCalls.getMethodBind("PathFollow3D", "has_loop", HAS_LOOP_HASH)
-        }
 
         private const val SET_TILT_ENABLED_HASH = 2586408642L
-        private val setTiltEnabledBind by lazy {
+        @JvmField
+        val setTiltEnabledBind =
             ObjectCalls.getMethodBind("PathFollow3D", "set_tilt_enabled", SET_TILT_ENABLED_HASH)
-        }
 
         private const val IS_TILT_ENABLED_HASH = 36873697L
-        private val isTiltEnabledBind by lazy {
+        @JvmField
+        val isTiltEnabledBind =
             ObjectCalls.getMethodBind("PathFollow3D", "is_tilt_enabled", IS_TILT_ENABLED_HASH)
-        }
 
         private const val CORRECT_POSTURE_HASH = 2686588690L
-        private val correctPostureBind by lazy {
+        @JvmField
+        val correctPostureBind =
             ObjectCalls.getMethodBind("PathFollow3D", "correct_posture", CORRECT_POSTURE_HASH)
-        }
     }
 }

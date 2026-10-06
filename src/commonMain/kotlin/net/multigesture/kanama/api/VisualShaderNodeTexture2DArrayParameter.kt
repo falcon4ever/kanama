@@ -20,7 +20,5 @@ class VisualShaderNodeTexture2DArrayParameter(handle: GodotHandle) : VisualShade
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTexture2DArrayParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeTexture2DArrayParameter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

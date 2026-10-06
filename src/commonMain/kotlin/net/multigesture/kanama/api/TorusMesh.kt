@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -42,7 +43,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setInnerRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setInnerRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setInnerRadiusBind, segment, radius)
     }
 
     /**
@@ -52,7 +53,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getInnerRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInnerRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInnerRadiusBind, segment)
     }
 
     /**
@@ -62,7 +63,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setOuterRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOuterRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOuterRadiusBind, segment, radius)
     }
 
     /**
@@ -72,7 +73,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getOuterRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOuterRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOuterRadiusBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRings(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
     }
 
     /**
@@ -92,7 +93,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
     }
 
     /**
@@ -102,7 +103,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRingSegments(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingSegmentsBind, segment, rings)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRingSegmentsBind, segment, rings)
     }
 
     /**
@@ -112,7 +113,7 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRingSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingSegmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingSegmentsBind, segment)
     }
 
     companion object {
@@ -125,45 +126,47 @@ class TorusMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TorusMesh? =
             if (handle.address() == 0L) null else TorusMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_INNER_RADIUS_HASH = 373806689L
-        private val setInnerRadiusBind by lazy {
+        @JvmField
+        val setInnerRadiusBind =
             ObjectCalls.getMethodBind("TorusMesh", "set_inner_radius", SET_INNER_RADIUS_HASH)
-        }
 
         private const val GET_INNER_RADIUS_HASH = 1740695150L
-        private val getInnerRadiusBind by lazy {
+        @JvmField
+        val getInnerRadiusBind =
             ObjectCalls.getMethodBind("TorusMesh", "get_inner_radius", GET_INNER_RADIUS_HASH)
-        }
 
         private const val SET_OUTER_RADIUS_HASH = 373806689L
-        private val setOuterRadiusBind by lazy {
+        @JvmField
+        val setOuterRadiusBind =
             ObjectCalls.getMethodBind("TorusMesh", "set_outer_radius", SET_OUTER_RADIUS_HASH)
-        }
 
         private const val GET_OUTER_RADIUS_HASH = 1740695150L
-        private val getOuterRadiusBind by lazy {
+        @JvmField
+        val getOuterRadiusBind =
             ObjectCalls.getMethodBind("TorusMesh", "get_outer_radius", GET_OUTER_RADIUS_HASH)
-        }
 
         private const val SET_RINGS_HASH = 1286410249L
-        private val setRingsBind by lazy {
+        @JvmField
+        val setRingsBind =
             ObjectCalls.getMethodBind("TorusMesh", "set_rings", SET_RINGS_HASH)
-        }
 
         private const val GET_RINGS_HASH = 3905245786L
-        private val getRingsBind by lazy {
+        @JvmField
+        val getRingsBind =
             ObjectCalls.getMethodBind("TorusMesh", "get_rings", GET_RINGS_HASH)
-        }
 
         private const val SET_RING_SEGMENTS_HASH = 1286410249L
-        private val setRingSegmentsBind by lazy {
+        @JvmField
+        val setRingSegmentsBind =
             ObjectCalls.getMethodBind("TorusMesh", "set_ring_segments", SET_RING_SEGMENTS_HASH)
-        }
 
         private const val GET_RING_SEGMENTS_HASH = 3905245786L
-        private val getRingSegmentsBind by lazy {
+        @JvmField
+        val getRingSegmentsBind =
             ObjectCalls.getMethodBind("TorusMesh", "get_ring_segments", GET_RING_SEGMENTS_HASH)
-        }
     }
 }

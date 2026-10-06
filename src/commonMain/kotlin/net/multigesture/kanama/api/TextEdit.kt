@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -306,7 +307,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.has_ime_text
      */
     fun hasImeText(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasImeTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasImeTextBind, segment)
     }
 
     /**
@@ -316,7 +317,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.cancel_ime
      */
     fun cancelIme() {
-        ObjectCalls.ptrcallNoArgs(cancelImeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.cancelImeBind, segment)
     }
 
     /**
@@ -326,7 +327,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.apply_ime
      */
     fun applyIme() {
-        ObjectCalls.ptrcallNoArgs(applyImeBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.applyImeBind, segment)
     }
 
     /**
@@ -335,7 +336,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_editable
      */
     fun setEditable(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditableBind, segment, enabled)
     }
 
     /**
@@ -344,7 +345,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_editable
      */
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditableBind, segment)
     }
 
     /**
@@ -353,7 +354,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_text_direction
      */
     fun setTextDirection(direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -362,7 +363,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_text_direction
      */
     fun getTextDirection(): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextDirectionBind, segment))
     }
 
     /**
@@ -372,7 +373,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLanguageBind, segment, language)
     }
 
     /**
@@ -382,7 +383,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
     }
 
     /**
@@ -391,7 +392,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -400,7 +401,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
-        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -409,7 +410,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -418,7 +419,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -427,7 +428,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_tab_size
      */
     fun setTabSize(size: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTabSizeBind, segment, size)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTabSizeBind, segment, size)
     }
 
     /**
@@ -436,7 +437,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_tab_size
      */
     fun getTabSize(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTabSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTabSizeBind, segment)
     }
 
     /**
@@ -445,7 +446,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_indent_wrapped_lines
      */
     fun setIndentWrappedLines(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIndentWrappedLinesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIndentWrappedLinesBind, segment, enabled)
     }
 
     /**
@@ -454,7 +455,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_indent_wrapped_lines
      */
     fun isIndentWrappedLines(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIndentWrappedLinesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIndentWrappedLinesBind, segment)
     }
 
     /**
@@ -464,7 +465,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_tab_input_mode
      */
     fun setTabInputMode(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTabInputModeBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTabInputModeBind, segment, enabled)
     }
 
     /**
@@ -474,7 +475,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_tab_input_mode
      */
     fun getTabInputMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getTabInputModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getTabInputModeBind, segment)
     }
 
     /**
@@ -485,7 +486,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_overtype_mode_enabled
      */
     fun setOvertypeModeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setOvertypeModeEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setOvertypeModeEnabledBind, segment, enabled)
     }
 
     /**
@@ -494,7 +495,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_overtype_mode_enabled
      */
     fun isOvertypeModeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isOvertypeModeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOvertypeModeEnabledBind, segment)
     }
 
     /**
@@ -503,7 +504,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_context_menu_enabled
      */
     fun setContextMenuEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setContextMenuEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setContextMenuEnabledBind, segment, enabled)
     }
 
     /**
@@ -512,7 +513,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_context_menu_enabled
      */
     fun isContextMenuEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isContextMenuEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isContextMenuEnabledBind, segment)
     }
 
     /**
@@ -521,7 +522,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_emoji_menu_enabled
      */
     fun setEmojiMenuEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmojiMenuEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEmojiMenuEnabledBind, segment, enable)
     }
 
     /**
@@ -530,7 +531,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_emoji_menu_enabled
      */
     fun isEmojiMenuEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmojiMenuEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmojiMenuEnabledBind, segment)
     }
 
     /**
@@ -540,7 +541,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_backspace_deletes_composite_character_enabled
      */
     fun setBackspaceDeletesCompositeCharacterEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBackspaceDeletesCompositeCharacterEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBackspaceDeletesCompositeCharacterEnabledBind, segment, enable)
     }
 
     /**
@@ -550,7 +551,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_backspace_deletes_composite_character_enabled
      */
     fun isBackspaceDeletesCompositeCharacterEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBackspaceDeletesCompositeCharacterEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBackspaceDeletesCompositeCharacterEnabledBind, segment)
     }
 
     /**
@@ -560,7 +561,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_shortcut_keys_enabled
      */
     fun setShortcutKeysEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutKeysEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShortcutKeysEnabledBind, segment, enabled)
     }
 
     /**
@@ -570,7 +571,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_shortcut_keys_enabled
      */
     fun isShortcutKeysEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutKeysEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShortcutKeysEnabledBind, segment)
     }
 
     /**
@@ -579,7 +580,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_virtual_keyboard_enabled
      */
     fun setVirtualKeyboardEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVirtualKeyboardEnabledBind, segment, enabled)
     }
 
     /**
@@ -588,7 +589,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_virtual_keyboard_enabled
      */
     fun isVirtualKeyboardEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVirtualKeyboardEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVirtualKeyboardEnabledBind, segment)
     }
 
     /**
@@ -597,7 +598,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_virtual_keyboard_show_on_focus
      */
     fun setVirtualKeyboardShowOnFocus(showOnFocus: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVirtualKeyboardShowOnFocusBind, segment, showOnFocus)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVirtualKeyboardShowOnFocusBind, segment, showOnFocus)
     }
 
     /**
@@ -606,7 +607,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_virtual_keyboard_show_on_focus
      */
     fun getVirtualKeyboardShowOnFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getVirtualKeyboardShowOnFocusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getVirtualKeyboardShowOnFocusBind, segment)
     }
 
     /**
@@ -616,7 +617,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_middle_mouse_paste_enabled
      */
     fun setMiddleMousePasteEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMiddleMousePasteEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMiddleMousePasteEnabledBind, segment, enabled)
     }
 
     /**
@@ -626,7 +627,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_middle_mouse_paste_enabled
      */
     fun isMiddleMousePasteEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMiddleMousePasteEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMiddleMousePasteEnabledBind, segment)
     }
 
     /**
@@ -636,7 +637,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_empty_selection_clipboard_enabled
      */
     fun setEmptySelectionClipboardEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEmptySelectionClipboardEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEmptySelectionClipboardEnabledBind, segment, enabled)
     }
 
     /**
@@ -646,7 +647,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_empty_selection_clipboard_enabled
      */
     fun isEmptySelectionClipboardEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEmptySelectionClipboardEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEmptySelectionClipboardEnabledBind, segment)
     }
 
     /**
@@ -655,7 +656,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.clear
      */
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -664,7 +665,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTextBind, segment, text)
     }
 
     /**
@@ -673,7 +674,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
     }
 
     /**
@@ -682,7 +683,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_count
      */
     fun getLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLineCountBind, segment)
     }
 
     /**
@@ -691,7 +692,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_placeholder
      */
     fun setPlaceholder(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setPlaceholderBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setPlaceholderBind, segment, text)
     }
 
     /**
@@ -700,7 +701,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_placeholder
      */
     fun getPlaceholder(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPlaceholderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPlaceholderBind, segment)
     }
 
     /**
@@ -710,7 +711,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line
      */
     fun setLine(line: Int, newText: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setLineBind, segment, line, newText)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setLineBind, segment, line, newText)
     }
 
     /**
@@ -719,7 +720,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line
      */
     fun getLine(line: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getLineBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getLineBind, segment, line)
     }
 
     /**
@@ -728,7 +729,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_with_ime
      */
     fun getLineWithIme(line: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getLineWithImeBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getLineWithImeBind, segment, line)
     }
 
     /**
@@ -737,7 +738,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_width
      */
     fun getLineWidth(line: Int, wrapIndex: Int = -1): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWidthBind, segment, line, wrapIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getLineWidthBind, segment, line, wrapIndex)
     }
 
     /**
@@ -747,7 +748,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_height
      */
     fun getLineHeight(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLineHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLineHeightBind, segment)
     }
 
     /**
@@ -757,7 +758,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_indent_level
      */
     fun getIndentLevel(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getIndentLevelBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getIndentLevelBind, segment, line)
     }
 
     /**
@@ -767,7 +768,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_first_non_whitespace_column
      */
     fun getFirstNonWhitespaceColumn(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getFirstNonWhitespaceColumnBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getFirstNonWhitespaceColumnBind, segment, line)
     }
 
     /**
@@ -776,7 +777,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.swap_lines
      */
     fun swapLines(fromLine: Int, toLine: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(swapLinesBind, segment, fromLine, toLine)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.swapLinesBind, segment, fromLine, toLine)
     }
 
     /**
@@ -785,7 +786,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.insert_line_at
      */
     fun insertLineAt(line: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(insertLineAtBind, segment, line, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.insertLineAtBind, segment, line, text)
     }
 
     /**
@@ -796,7 +797,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_line_at
      */
     fun removeLineAt(line: Int, moveCaretsDown: Boolean = true) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(removeLineAtBind, segment, line, moveCaretsDown)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.removeLineAtBind, segment, line, moveCaretsDown)
     }
 
     /**
@@ -805,7 +806,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.insert_text_at_caret
      */
     fun insertTextAtCaret(text: String, caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithStringAndIntArg(insertTextAtCaretBind, segment, text, caretIndex)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.insertTextAtCaretBind, segment, text, caretIndex)
     }
 
     /**
@@ -818,7 +819,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.insert_text
      */
     fun insertText(text: String, line: Int, column: Int, beforeSelectionBegin: Boolean = true, beforeSelectionEnd: Boolean = false) {
-        ObjectCalls.ptrcallWithStringTwoIntTwoBoolArgs(insertTextBind, segment, text, line, column, beforeSelectionBegin, beforeSelectionEnd)
+        ObjectCalls.ptrcallWithStringTwoIntTwoBoolArgs(Binds.insertTextBind, segment, text, line, column, beforeSelectionBegin, beforeSelectionEnd)
     }
 
     /**
@@ -827,7 +828,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_text
      */
     fun removeText(fromLine: Int, fromColumn: Int, toLine: Int, toColumn: Int) {
-        ObjectCalls.ptrcallWithFourIntArgs(removeTextBind, segment, fromLine, fromColumn, toLine, toColumn)
+        ObjectCalls.ptrcallWithFourIntArgs(Binds.removeTextBind, segment, fromLine, fromColumn, toLine, toColumn)
     }
 
     /**
@@ -836,7 +837,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_last_unhidden_line
      */
     fun getLastUnhiddenLine(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastUnhiddenLineBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLastUnhiddenLineBind, segment)
     }
 
     /**
@@ -847,7 +848,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_next_visible_line_offset_from
      */
     fun getNextVisibleLineOffsetFrom(line: Int, visibleAmount: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getNextVisibleLineOffsetFromBind, segment, line, visibleAmount)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getNextVisibleLineOffsetFromBind, segment, line, visibleAmount)
     }
 
     /**
@@ -857,7 +858,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_next_visible_line_index_offset_from
      */
     fun getNextVisibleLineIndexOffsetFrom(line: Int, wrapIndex: Int, visibleAmount: Int): Vector2i {
-        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2i(getNextVisibleLineIndexOffsetFromBind, segment, line, wrapIndex, visibleAmount)
+        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2i(Binds.getNextVisibleLineIndexOffsetFromBind, segment, line, wrapIndex, visibleAmount)
     }
 
     /**
@@ -866,7 +867,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.backspace
      */
     fun backspace(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(backspaceBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.backspaceBind, segment, caretIndex)
     }
 
     /**
@@ -875,7 +876,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.cut
      */
     fun cut(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(cutBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.cutBind, segment, caretIndex)
     }
 
     /**
@@ -884,7 +885,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.copy
      */
     fun copy(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(copyBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.copyBind, segment, caretIndex)
     }
 
     /**
@@ -893,7 +894,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.paste
      */
     fun paste(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(pasteBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.pasteBind, segment, caretIndex)
     }
 
     /**
@@ -902,7 +903,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.paste_primary_clipboard
      */
     fun pastePrimaryClipboard(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(pastePrimaryClipboardBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.pastePrimaryClipboardBind, segment, caretIndex)
     }
 
     /**
@@ -913,7 +914,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.start_action
      */
     fun startAction(action: TextEdit.EditAction) {
-        ObjectCalls.ptrcallWithLongArg(startActionBind, segment, action.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.startActionBind, segment, action.value)
     }
 
     /**
@@ -922,7 +923,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.end_action
      */
     fun endAction() {
-        ObjectCalls.ptrcallNoArgs(endActionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.endActionBind, segment)
     }
 
     /**
@@ -932,7 +933,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.begin_complex_operation
      */
     fun beginComplexOperation() {
-        ObjectCalls.ptrcallNoArgs(beginComplexOperationBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.beginComplexOperationBind, segment)
     }
 
     /**
@@ -942,7 +943,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.end_complex_operation
      */
     fun endComplexOperation() {
-        ObjectCalls.ptrcallNoArgs(endComplexOperationBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.endComplexOperationBind, segment)
     }
 
     /**
@@ -951,7 +952,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.has_undo
      */
     fun hasUndo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasUndoBind, segment)
     }
 
     /**
@@ -960,7 +961,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.has_redo
      */
     fun hasRedo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasRedoBind, segment)
     }
 
     /**
@@ -969,7 +970,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.undo
      */
     fun undo() {
-        ObjectCalls.ptrcallNoArgs(undoBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.undoBind, segment)
     }
 
     /**
@@ -978,7 +979,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.redo
      */
     fun redo() {
-        ObjectCalls.ptrcallNoArgs(redoBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.redoBind, segment)
     }
 
     /**
@@ -987,7 +988,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.clear_undo_history
      */
     fun clearUndoHistory() {
-        ObjectCalls.ptrcallNoArgs(clearUndoHistoryBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearUndoHistoryBind, segment)
     }
 
     /**
@@ -996,7 +997,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.tag_saved_version
      */
     fun tagSavedVersion() {
-        ObjectCalls.ptrcallNoArgs(tagSavedVersionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.tagSavedVersionBind, segment)
     }
 
     /**
@@ -1006,7 +1007,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_version
      */
     fun getVersion(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVersionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVersionBind, segment)
     }
 
     /**
@@ -1015,7 +1016,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_saved_version
      */
     fun getSavedVersion(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getSavedVersionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getSavedVersionBind, segment)
     }
 
     /**
@@ -1024,7 +1025,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_search_text
      */
     fun setSearchText(searchText: String) {
-        ObjectCalls.ptrcallWithStringArg(setSearchTextBind, segment, searchText)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSearchTextBind, segment, searchText)
     }
 
     /**
@@ -1034,7 +1035,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_search_flags
      */
     fun setSearchFlags(flags: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setSearchFlagsBind, segment, flags)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setSearchFlagsBind, segment, flags)
     }
 
     /**
@@ -1045,7 +1046,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.search
      */
     fun search(text: String, flags: Long, fromLine: Int, fromColumn: Int): Vector2i {
-        return ObjectCalls.ptrcallWithStringUInt32TwoIntArgsRetVector2i(searchBind, segment, text, flags, fromLine, fromColumn)
+        return ObjectCalls.ptrcallWithStringUInt32TwoIntArgsRetVector2i(Binds.searchBind, segment, text, flags, fromLine, fromColumn)
     }
 
     /**
@@ -1055,7 +1056,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_tooltip_request_func
      */
     fun setTooltipRequestFunc(callback: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(setTooltipRequestFuncBind, segment, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.setTooltipRequestFuncBind, segment, callback.target.segment, callback.method)
     }
 
     /**
@@ -1064,7 +1065,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_local_mouse_pos
      */
     fun getLocalMousePos(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLocalMousePosBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getLocalMousePosBind, segment)
     }
 
     /**
@@ -1073,7 +1074,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_word_at_pos
      */
     fun getWordAtPos(position: Vector2): String {
-        return ObjectCalls.ptrcallWithVector2ArgRetString(getWordAtPosBind, segment, position)
+        return ObjectCalls.ptrcallWithVector2ArgRetString(Binds.getWordAtPosBind, segment, position)
     }
 
     /**
@@ -1085,7 +1086,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_column_at_pos
      */
     fun getLineColumnAtPos(position: Vector2i, clampLine: Boolean = true, clampColumn: Boolean = true): Vector2i {
-        return ObjectCalls.ptrcallWithVector2iAndTwoBoolArgsRetVector2i(getLineColumnAtPosBind, segment, position, clampLine, clampColumn)
+        return ObjectCalls.ptrcallWithVector2iAndTwoBoolArgsRetVector2i(Binds.getLineColumnAtPosBind, segment, position, clampLine, clampColumn)
     }
 
     /**
@@ -1097,7 +1098,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_pos_at_line_column
      */
     fun getPosAtLineColumn(line: Int, column: Int): Vector2i {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2i(getPosAtLineColumnBind, segment, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2i(Binds.getPosAtLineColumnBind, segment, line, column)
     }
 
     /**
@@ -1109,7 +1110,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_rect_at_line_column
      */
     fun getRectAtLineColumn(line: Int, column: Int): Rect2i {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetRect2i(getRectAtLineColumnBind, segment, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetRect2i(Binds.getRectAtLineColumnBind, segment, line, column)
     }
 
     /**
@@ -1118,7 +1119,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_minimap_line_at_pos
      */
     fun getMinimapLineAtPos(position: Vector2i): Int {
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getMinimapLineAtPosBind, segment, position)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getMinimapLineAtPosBind, segment, position)
     }
 
     /**
@@ -1127,7 +1128,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_dragging_cursor
      */
     fun isDraggingCursor(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDraggingCursorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDraggingCursorBind, segment)
     }
 
     /**
@@ -1137,7 +1138,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_mouse_over_selection
      */
     fun isMouseOverSelection(edges: Boolean, caretIndex: Int = -1): Boolean {
-        return ObjectCalls.ptrcallWithBoolAndIntArgsRetBool(isMouseOverSelectionBind, segment, edges, caretIndex)
+        return ObjectCalls.ptrcallWithBoolAndIntArgsRetBool(Binds.isMouseOverSelectionBind, segment, edges, caretIndex)
     }
 
     /**
@@ -1146,7 +1147,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_type
      */
     fun setCaretType(type: TextEdit.CaretType) {
-        ObjectCalls.ptrcallWithLongArg(setCaretTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCaretTypeBind, segment, type.value)
     }
 
     /**
@@ -1155,7 +1156,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_type
      */
     fun getCaretType(): TextEdit.CaretType {
-        return TextEdit.CaretType(ObjectCalls.ptrcallNoArgsRetLong(getCaretTypeBind, segment))
+        return TextEdit.CaretType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCaretTypeBind, segment))
     }
 
     /**
@@ -1164,7 +1165,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_blink_enabled
      */
     fun setCaretBlinkEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretBlinkEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCaretBlinkEnabledBind, segment, enable)
     }
 
     /**
@@ -1173,7 +1174,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_caret_blink_enabled
      */
     fun isCaretBlinkEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaretBlinkEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCaretBlinkEnabledBind, segment)
     }
 
     /**
@@ -1182,7 +1183,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_blink_interval
      */
     fun setCaretBlinkInterval(interval: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCaretBlinkIntervalBind, segment, interval)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCaretBlinkIntervalBind, segment, interval)
     }
 
     /**
@@ -1191,7 +1192,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_blink_interval
      */
     fun getCaretBlinkInterval(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCaretBlinkIntervalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCaretBlinkIntervalBind, segment)
     }
 
     /**
@@ -1200,7 +1201,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_caret_when_editable_disabled
      */
     fun setDrawCaretWhenEditableDisabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawCaretWhenEditableDisabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawCaretWhenEditableDisabledBind, segment, enable)
     }
 
     /**
@@ -1209,7 +1210,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drawing_caret_when_editable_disabled
      */
     fun isDrawingCaretWhenEditableDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingCaretWhenEditableDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawingCaretWhenEditableDisabledBind, segment)
     }
 
     /**
@@ -1219,7 +1220,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_move_caret_on_right_click_enabled
      */
     fun setMoveCaretOnRightClickEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMoveCaretOnRightClickEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMoveCaretOnRightClickEnabledBind, segment, enable)
     }
 
     /**
@@ -1229,7 +1230,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_move_caret_on_right_click_enabled
      */
     fun isMoveCaretOnRightClickEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMoveCaretOnRightClickEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMoveCaretOnRightClickEnabledBind, segment)
     }
 
     /**
@@ -1239,7 +1240,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_mid_grapheme_enabled
      */
     fun setCaretMidGraphemeEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCaretMidGraphemeEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCaretMidGraphemeEnabledBind, segment, enabled)
     }
 
     /**
@@ -1249,7 +1250,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_caret_mid_grapheme_enabled
      */
     fun isCaretMidGraphemeEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaretMidGraphemeEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCaretMidGraphemeEnabledBind, segment)
     }
 
     /**
@@ -1259,7 +1260,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_multiple_carets_enabled
      */
     fun setMultipleCaretsEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMultipleCaretsEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMultipleCaretsEnabledBind, segment, enabled)
     }
 
     /**
@@ -1269,7 +1270,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_multiple_carets_enabled
      */
     fun isMultipleCaretsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultipleCaretsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultipleCaretsEnabledBind, segment)
     }
 
     /**
@@ -1279,7 +1280,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.add_caret
      */
     fun addCaret(line: Int, column: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(addCaretBind, segment, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.addCaretBind, segment, line, column)
     }
 
     /**
@@ -1288,7 +1289,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_caret
      */
     fun removeCaret(caret: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeCaretBind, segment, caret)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeCaretBind, segment, caret)
     }
 
     /**
@@ -1297,7 +1298,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_secondary_carets
      */
     fun removeSecondaryCarets() {
-        ObjectCalls.ptrcallNoArgs(removeSecondaryCaretsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.removeSecondaryCaretsBind, segment)
     }
 
     /**
@@ -1306,7 +1307,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_count
      */
     fun getCaretCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCaretCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCaretCountBind, segment)
     }
 
     /**
@@ -1316,7 +1317,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.add_caret_at_carets
      */
     fun addCaretAtCarets(below: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(addCaretAtCaretsBind, segment, below)
+        ObjectCalls.ptrcallWithBoolArg(Binds.addCaretAtCaretsBind, segment, below)
     }
 
     /**
@@ -1327,7 +1328,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_sorted_carets
      */
     fun getSortedCarets(includeIgnoredCarets: Boolean = false): List<Int> {
-        return ObjectCalls.ptrcallWithBoolArgRetPackedInt32List(getSortedCaretsBind, segment, includeIgnoredCarets)
+        return ObjectCalls.ptrcallWithBoolArgRetPackedInt32List(Binds.getSortedCaretsBind, segment, includeIgnoredCarets)
     }
 
     /**
@@ -1339,7 +1340,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.collapse_carets
      */
     fun collapseCarets(fromLine: Int, fromColumn: Int, toLine: Int, toColumn: Int, inclusive: Boolean = false) {
-        ObjectCalls.ptrcallWithFourIntAndBoolArgs(collapseCaretsBind, segment, fromLine, fromColumn, toLine, toColumn, inclusive)
+        ObjectCalls.ptrcallWithFourIntAndBoolArgs(Binds.collapseCaretsBind, segment, fromLine, fromColumn, toLine, toColumn, inclusive)
     }
 
     /**
@@ -1352,7 +1353,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.merge_overlapping_carets
      */
     fun mergeOverlappingCarets() {
-        ObjectCalls.ptrcallNoArgs(mergeOverlappingCaretsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.mergeOverlappingCaretsBind, segment)
     }
 
     /**
@@ -1365,7 +1366,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.begin_multicaret_edit
      */
     fun beginMulticaretEdit() {
-        ObjectCalls.ptrcallNoArgs(beginMulticaretEditBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.beginMulticaretEditBind, segment)
     }
 
     /**
@@ -1375,7 +1376,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.end_multicaret_edit
      */
     fun endMulticaretEdit() {
-        ObjectCalls.ptrcallNoArgs(endMulticaretEditBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.endMulticaretEditBind, segment)
     }
 
     /**
@@ -1385,7 +1386,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_in_mulitcaret_edit
      */
     fun isInMulitcaretEdit(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInMulitcaretEditBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInMulitcaretEditBind, segment)
     }
 
     /**
@@ -1398,7 +1399,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.multicaret_edit_ignore_caret
      */
     fun multicaretEditIgnoreCaret(caretIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(multicaretEditIgnoreCaretBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.multicaretEditIgnoreCaretBind, segment, caretIndex)
     }
 
     /**
@@ -1415,7 +1416,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_caret_visible
      */
     fun isCaretVisible(caretIndex: Int = 0): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isCaretVisibleBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isCaretVisibleBind, segment, caretIndex)
     }
 
     /**
@@ -1424,7 +1425,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_draw_pos
      */
     fun getCaretDrawPos(caretIndex: Int = 0): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getCaretDrawPosBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getCaretDrawPosBind, segment, caretIndex)
     }
 
     /**
@@ -1440,7 +1441,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_line
      */
     fun setCaretLine(line: Int, adjustViewport: Boolean = true, canBeHidden: Boolean = true, wrapIndex: Int = 0, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntTwoBoolTwoIntArgs(setCaretLineBind, segment, line, adjustViewport, canBeHidden, wrapIndex, caretIndex)
+        ObjectCalls.ptrcallWithIntTwoBoolTwoIntArgs(Binds.setCaretLineBind, segment, line, adjustViewport, canBeHidden, wrapIndex, caretIndex)
     }
 
     /**
@@ -1449,7 +1450,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_line
      */
     fun getCaretLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretLineBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCaretLineBind, segment, caretIndex)
     }
 
     /**
@@ -1460,7 +1461,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_caret_column
      */
     fun setCaretColumn(column: Int, adjustViewport: Boolean = true, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntBoolIntArgs(setCaretColumnBind, segment, column, adjustViewport, caretIndex)
+        ObjectCalls.ptrcallWithIntBoolIntArgs(Binds.setCaretColumnBind, segment, column, adjustViewport, caretIndex)
     }
 
     /**
@@ -1469,7 +1470,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_column
      */
     fun getCaretColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretColumnBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCaretColumnBind, segment, caretIndex)
     }
 
     /**
@@ -1482,7 +1483,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_next_composite_character_column
      */
     fun getNextCompositeCharacterColumn(line: Int, column: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getNextCompositeCharacterColumnBind, segment, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getNextCompositeCharacterColumnBind, segment, line, column)
     }
 
     /**
@@ -1495,7 +1496,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_previous_composite_character_column
      */
     fun getPreviousCompositeCharacterColumn(line: Int, column: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getPreviousCompositeCharacterColumnBind, segment, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getPreviousCompositeCharacterColumnBind, segment, line, column)
     }
 
     /**
@@ -1504,7 +1505,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_wrap_index
      */
     fun getCaretWrapIndex(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCaretWrapIndexBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCaretWrapIndexBind, segment, caretIndex)
     }
 
     /**
@@ -1513,7 +1514,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_word_under_caret
      */
     fun getWordUnderCaret(caretIndex: Int = -1): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getWordUnderCaretBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getWordUnderCaretBind, segment, caretIndex)
     }
 
     /**
@@ -1526,7 +1527,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_use_default_word_separators
      */
     fun setUseDefaultWordSeparators(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseDefaultWordSeparatorsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseDefaultWordSeparatorsBind, segment, enabled)
     }
 
     /**
@@ -1539,7 +1540,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_default_word_separators_enabled
      */
     fun isDefaultWordSeparatorsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDefaultWordSeparatorsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDefaultWordSeparatorsEnabledBind, segment)
     }
 
     /**
@@ -1551,7 +1552,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_use_custom_word_separators
      */
     fun setUseCustomWordSeparators(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseCustomWordSeparatorsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseCustomWordSeparatorsBind, segment, enabled)
     }
 
     /**
@@ -1563,7 +1564,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_custom_word_separators_enabled
      */
     fun isCustomWordSeparatorsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCustomWordSeparatorsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCustomWordSeparatorsEnabledBind, segment)
     }
 
     /**
@@ -1573,7 +1574,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_custom_word_separators
      */
     fun setCustomWordSeparators(customWordSeparators: String) {
-        ObjectCalls.ptrcallWithStringArg(setCustomWordSeparatorsBind, segment, customWordSeparators)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCustomWordSeparatorsBind, segment, customWordSeparators)
     }
 
     /**
@@ -1583,7 +1584,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_custom_word_separators
      */
     fun getCustomWordSeparators(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCustomWordSeparatorsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCustomWordSeparatorsBind, segment)
     }
 
     /**
@@ -1593,7 +1594,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_selecting_enabled
      */
     fun setSelectingEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectingEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSelectingEnabledBind, segment, enable)
     }
 
     /**
@@ -1603,7 +1604,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_selecting_enabled
      */
     fun isSelectingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectingEnabledBind, segment)
     }
 
     /**
@@ -1612,7 +1613,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_deselect_on_focus_loss_enabled
      */
     fun setDeselectOnFocusLossEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeselectOnFocusLossEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeselectOnFocusLossEnabledBind, segment, enable)
     }
 
     /**
@@ -1621,7 +1622,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_deselect_on_focus_loss_enabled
      */
     fun isDeselectOnFocusLossEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeselectOnFocusLossEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDeselectOnFocusLossEnabledBind, segment)
     }
 
     /**
@@ -1630,7 +1631,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_drag_and_drop_selection_enabled
      */
     fun setDragAndDropSelectionEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDragAndDropSelectionEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDragAndDropSelectionEnabledBind, segment, enable)
     }
 
     /**
@@ -1639,7 +1640,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drag_and_drop_selection_enabled
      */
     fun isDragAndDropSelectionEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDragAndDropSelectionEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDragAndDropSelectionEnabledBind, segment)
     }
 
     /**
@@ -1648,7 +1649,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_selection_mode
      */
     fun setSelectionMode(mode: TextEdit.SelectionMode) {
-        ObjectCalls.ptrcallWithLongArg(setSelectionModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSelectionModeBind, segment, mode.value)
     }
 
     /**
@@ -1657,7 +1658,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_mode
      */
     fun getSelectionMode(): TextEdit.SelectionMode {
-        return TextEdit.SelectionMode(ObjectCalls.ptrcallNoArgsRetLong(getSelectionModeBind, segment))
+        return TextEdit.SelectionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSelectionModeBind, segment))
     }
 
     /**
@@ -1666,7 +1667,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.select_all
      */
     fun selectAll() {
-        ObjectCalls.ptrcallNoArgs(selectAllBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.selectAllBind, segment)
     }
 
     /**
@@ -1675,7 +1676,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.select_word_under_caret
      */
     fun selectWordUnderCaret(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(selectWordUnderCaretBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.selectWordUnderCaretBind, segment, caretIndex)
     }
 
     /**
@@ -1685,7 +1686,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.add_selection_for_next_occurrence
      */
     fun addSelectionForNextOccurrence() {
-        ObjectCalls.ptrcallNoArgs(addSelectionForNextOccurrenceBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.addSelectionForNextOccurrenceBind, segment)
     }
 
     /**
@@ -1695,7 +1696,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.skip_selection_for_next_occurrence
      */
     fun skipSelectionForNextOccurrence() {
-        ObjectCalls.ptrcallNoArgs(skipSelectionForNextOccurrenceBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.skipSelectionForNextOccurrenceBind, segment)
     }
 
     /**
@@ -1708,7 +1709,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.select
      */
     fun select(originLine: Int, originColumn: Int, caretLine: Int, caretColumn: Int, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithFiveIntArgs(selectBind, segment, originLine, originColumn, caretLine, caretColumn, caretIndex)
+        ObjectCalls.ptrcallWithFiveIntArgs(Binds.selectBind, segment, originLine, originColumn, caretLine, caretColumn, caretIndex)
     }
 
     /**
@@ -1717,7 +1718,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.has_selection
      */
     fun hasSelection(caretIndex: Int = -1): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasSelectionBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSelectionBind, segment, caretIndex)
     }
 
     /**
@@ -1727,7 +1728,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selected_text
      */
     fun getSelectedText(caretIndex: Int = -1): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getSelectedTextBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getSelectedTextBind, segment, caretIndex)
     }
 
     /**
@@ -1738,7 +1739,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_at_line_column
      */
     fun getSelectionAtLineColumn(line: Int, column: Int, includeEdges: Boolean = true, onlySelections: Boolean = true): Int {
-        return ObjectCalls.ptrcallWithTwoIntTwoBoolArgsRetInt(getSelectionAtLineColumnBind, segment, line, column, includeEdges, onlySelections)
+        return ObjectCalls.ptrcallWithTwoIntTwoBoolArgsRetInt(Binds.getSelectionAtLineColumnBind, segment, line, column, includeEdges, onlySelections)
     }
 
     /**
@@ -1752,7 +1753,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_ranges_from_carets
      */
     fun getLineRangesFromCarets(onlySelections: Boolean = false, mergeAdjacent: Boolean = true): List<Vector2i> {
-        return ObjectCalls.ptrcallWithTwoBoolArgsRetVector2iList(getLineRangesFromCaretsBind, segment, onlySelections, mergeAdjacent)
+        return ObjectCalls.ptrcallWithTwoBoolArgsRetVector2iList(Binds.getLineRangesFromCaretsBind, segment, onlySelections, mergeAdjacent)
     }
 
     /**
@@ -1761,7 +1762,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_origin_line
      */
     fun getSelectionOriginLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionOriginLineBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSelectionOriginLineBind, segment, caretIndex)
     }
 
     /**
@@ -1770,7 +1771,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_origin_column
      */
     fun getSelectionOriginColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionOriginColumnBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSelectionOriginColumnBind, segment, caretIndex)
     }
 
     /**
@@ -1785,7 +1786,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_selection_origin_line
      */
     fun setSelectionOriginLine(line: Int, canBeHidden: Boolean = true, wrapIndex: Int = -1, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntBoolTwoIntArgs(setSelectionOriginLineBind, segment, line, canBeHidden, wrapIndex, caretIndex)
+        ObjectCalls.ptrcallWithIntBoolTwoIntArgs(Binds.setSelectionOriginLineBind, segment, line, canBeHidden, wrapIndex, caretIndex)
     }
 
     /**
@@ -1795,7 +1796,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_selection_origin_column
      */
     fun setSelectionOriginColumn(column: Int, caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setSelectionOriginColumnBind, segment, column, caretIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSelectionOriginColumnBind, segment, column, caretIndex)
     }
 
     /**
@@ -1804,7 +1805,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_from_line
      */
     fun getSelectionFromLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionFromLineBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSelectionFromLineBind, segment, caretIndex)
     }
 
     /**
@@ -1813,7 +1814,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_from_column
      */
     fun getSelectionFromColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionFromColumnBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSelectionFromColumnBind, segment, caretIndex)
     }
 
     /**
@@ -1822,7 +1823,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_to_line
      */
     fun getSelectionToLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionToLineBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSelectionToLineBind, segment, caretIndex)
     }
 
     /**
@@ -1831,7 +1832,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_to_column
      */
     fun getSelectionToColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionToColumnBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSelectionToColumnBind, segment, caretIndex)
     }
 
     /**
@@ -1841,7 +1842,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_caret_after_selection_origin
      */
     fun isCaretAfterSelectionOrigin(caretIndex: Int = 0): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isCaretAfterSelectionOriginBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isCaretAfterSelectionOriginBind, segment, caretIndex)
     }
 
     /**
@@ -1850,7 +1851,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.deselect
      */
     fun deselect(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(deselectBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.deselectBind, segment, caretIndex)
     }
 
     /**
@@ -1859,7 +1860,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.delete_selection
      */
     fun deleteSelection(caretIndex: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(deleteSelectionBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.deleteSelectionBind, segment, caretIndex)
     }
 
     /**
@@ -1868,7 +1869,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_wrapping_mode
      */
     fun setLineWrappingMode(mode: TextEdit.LineWrappingMode) {
-        ObjectCalls.ptrcallWithLongArg(setLineWrappingModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLineWrappingModeBind, segment, mode.value)
     }
 
     /**
@@ -1877,7 +1878,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_wrapping_mode
      */
     fun getLineWrappingMode(): TextEdit.LineWrappingMode {
-        return TextEdit.LineWrappingMode(ObjectCalls.ptrcallNoArgsRetLong(getLineWrappingModeBind, segment))
+        return TextEdit.LineWrappingMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLineWrappingModeBind, segment))
     }
 
     /**
@@ -1886,7 +1887,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_autowrap_mode
      */
     fun setAutowrapMode(autowrapMode: TextServer.AutowrapMode) {
-        ObjectCalls.ptrcallWithLongArg(setAutowrapModeBind, segment, autowrapMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAutowrapModeBind, segment, autowrapMode.value)
     }
 
     /**
@@ -1895,7 +1896,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_autowrap_mode
      */
     fun getAutowrapMode(): TextServer.AutowrapMode {
-        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(getAutowrapModeBind, segment))
+        return TextServer.AutowrapMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAutowrapModeBind, segment))
     }
 
     /**
@@ -1904,7 +1905,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_line_wrapped
      */
     fun isLineWrapped(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineWrappedBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isLineWrappedBind, segment, line)
     }
 
     /**
@@ -1913,7 +1914,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_wrap_count
      */
     fun getLineWrapCount(line: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getLineWrapCountBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getLineWrapCountBind, segment, line)
     }
 
     /**
@@ -1923,7 +1924,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_wrap_index_at_column
      */
     fun getLineWrapIndexAtColumn(line: Int, column: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getLineWrapIndexAtColumnBind, segment, line, column)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getLineWrapIndexAtColumnBind, segment, line, column)
     }
 
     /**
@@ -1932,7 +1933,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_wrapped_text
      */
     fun getLineWrappedText(line: Int): List<String> {
-        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getLineWrappedTextBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(Binds.getLineWrappedTextBind, segment, line)
     }
 
     /**
@@ -1941,7 +1942,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_smooth_scroll_enabled
      */
     fun setSmoothScrollEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothScrollEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSmoothScrollEnabledBind, segment, enable)
     }
 
     /**
@@ -1950,7 +1951,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_smooth_scroll_enabled
      */
     fun isSmoothScrollEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSmoothScrollEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSmoothScrollEnabledBind, segment)
     }
 
     /**
@@ -1959,7 +1960,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_v_scroll_bar
      */
     fun getVScrollBar(): VScrollBar? {
-        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, segment))
+        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVScrollBarBind, segment))
     }
 
     /**
@@ -1968,7 +1969,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_h_scroll_bar
      */
     fun getHScrollBar(): HScrollBar? {
-        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, segment))
+        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getHScrollBarBind, segment))
     }
 
     /**
@@ -1978,7 +1979,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_v_scroll
      */
     fun setVScroll(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVScrollBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVScrollBind, segment, value)
     }
 
     /**
@@ -1988,7 +1989,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_v_scroll
      */
     fun getVScroll(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVScrollBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVScrollBind, segment)
     }
 
     /**
@@ -1998,7 +1999,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_h_scroll
      */
     fun setHScroll(value: Int) {
-        ObjectCalls.ptrcallWithIntArg(setHScrollBind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHScrollBind, segment, value)
     }
 
     /**
@@ -2008,7 +2009,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_h_scroll
      */
     fun getHScroll(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHScrollBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHScrollBind, segment)
     }
 
     /**
@@ -2017,7 +2018,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_scroll_past_end_of_file_enabled
      */
     fun setScrollPastEndOfFileEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollPastEndOfFileEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScrollPastEndOfFileEnabledBind, segment, enable)
     }
 
     /**
@@ -2026,7 +2027,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_scroll_past_end_of_file_enabled
      */
     fun isScrollPastEndOfFileEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollPastEndOfFileEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollPastEndOfFileEnabledBind, segment)
     }
 
     /**
@@ -2035,7 +2036,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_v_scroll_speed
      */
     fun setVScrollSpeed(speed: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVScrollSpeedBind, segment, speed)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVScrollSpeedBind, segment, speed)
     }
 
     /**
@@ -2044,7 +2045,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_v_scroll_speed
      */
     fun getVScrollSpeed(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVScrollSpeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVScrollSpeedBind, segment)
     }
 
     /**
@@ -2055,7 +2056,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_fit_content_height_enabled
      */
     fun setFitContentHeightEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitContentHeightEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFitContentHeightEnabledBind, segment, enabled)
     }
 
     /**
@@ -2066,7 +2067,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_fit_content_height_enabled
      */
     fun isFitContentHeightEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentHeightEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFitContentHeightEnabledBind, segment)
     }
 
     /**
@@ -2077,7 +2078,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_fit_content_width_enabled
      */
     fun setFitContentWidthEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitContentWidthEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFitContentWidthEnabledBind, segment, enabled)
     }
 
     /**
@@ -2088,7 +2089,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_fit_content_width_enabled
      */
     fun isFitContentWidthEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitContentWidthEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFitContentWidthEnabledBind, segment)
     }
 
     /**
@@ -2097,7 +2098,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_scroll_pos_for_line
      */
     fun getScrollPosForLine(line: Int, wrapIndex: Int = 0): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getScrollPosForLineBind, segment, line, wrapIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getScrollPosForLineBind, segment, line, wrapIndex)
     }
 
     /**
@@ -2106,7 +2107,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_as_first_visible
      */
     fun setLineAsFirstVisible(line: Int, wrapIndex: Int = 0) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsFirstVisibleBind, segment, line, wrapIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setLineAsFirstVisibleBind, segment, line, wrapIndex)
     }
 
     /**
@@ -2115,7 +2116,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_first_visible_line
      */
     fun getFirstVisibleLine(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFirstVisibleLineBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFirstVisibleLineBind, segment)
     }
 
     /**
@@ -2124,7 +2125,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_line_in_viewport
      */
     fun isLineInViewport(line: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isLineInViewportBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isLineInViewportBind, segment, line)
     }
 
     /**
@@ -2133,7 +2134,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_as_center_visible
      */
     fun setLineAsCenterVisible(line: Int, wrapIndex: Int = 0) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsCenterVisibleBind, segment, line, wrapIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setLineAsCenterVisibleBind, segment, line, wrapIndex)
     }
 
     /**
@@ -2142,7 +2143,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_as_last_visible
      */
     fun setLineAsLastVisible(line: Int, wrapIndex: Int = 0) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setLineAsLastVisibleBind, segment, line, wrapIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setLineAsLastVisibleBind, segment, line, wrapIndex)
     }
 
     /**
@@ -2151,7 +2152,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_last_full_visible_line
      */
     fun getLastFullVisibleLine(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastFullVisibleLineBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLastFullVisibleLineBind, segment)
     }
 
     /**
@@ -2160,7 +2161,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_last_full_visible_line_wrap_index
      */
     fun getLastFullVisibleLineWrapIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLastFullVisibleLineWrapIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLastFullVisibleLineWrapIndexBind, segment)
     }
 
     /**
@@ -2169,7 +2170,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_visible_line_count
      */
     fun getVisibleLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVisibleLineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVisibleLineCountBind, segment)
     }
 
     /**
@@ -2180,7 +2181,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_visible_line_count_in_range
      */
     fun getVisibleLineCountInRange(fromLine: Int, toLine: Int): Int {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getVisibleLineCountInRangeBind, segment, fromLine, toLine)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getVisibleLineCountInRangeBind, segment, fromLine, toLine)
     }
 
     /**
@@ -2192,7 +2193,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_total_visible_line_count
      */
     fun getTotalVisibleLineCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTotalVisibleLineCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTotalVisibleLineCountBind, segment)
     }
 
     /**
@@ -2201,7 +2202,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.adjust_viewport_to_caret
      */
     fun adjustViewportToCaret(caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(adjustViewportToCaretBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.adjustViewportToCaretBind, segment, caretIndex)
     }
 
     /**
@@ -2211,7 +2212,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.center_viewport_to_caret
      */
     fun centerViewportToCaret(caretIndex: Int = 0) {
-        ObjectCalls.ptrcallWithIntArg(centerViewportToCaretBind, segment, caretIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.centerViewportToCaretBind, segment, caretIndex)
     }
 
     /**
@@ -2221,7 +2222,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_minimap
      */
     fun setDrawMinimap(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawMinimapBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawMinimapBind, segment, enabled)
     }
 
     /**
@@ -2231,7 +2232,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drawing_minimap
      */
     fun isDrawingMinimap(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingMinimapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawingMinimapBind, segment)
     }
 
     /**
@@ -2240,7 +2241,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_minimap_width
      */
     fun setMinimapWidth(width: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMinimapWidthBind, segment, width)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMinimapWidthBind, segment, width)
     }
 
     /**
@@ -2249,7 +2250,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_minimap_width
      */
     fun getMinimapWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinimapWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinimapWidthBind, segment)
     }
 
     /**
@@ -2258,7 +2259,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_minimap_visible_lines
      */
     fun getMinimapVisibleLines(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinimapVisibleLinesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinimapVisibleLinesBind, segment)
     }
 
     /**
@@ -2268,7 +2269,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.add_gutter
      */
     fun addGutter(at: Int = -1) {
-        ObjectCalls.ptrcallWithIntArg(addGutterBind, segment, at)
+        ObjectCalls.ptrcallWithIntArg(Binds.addGutterBind, segment, at)
     }
 
     /**
@@ -2277,7 +2278,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.remove_gutter
      */
     fun removeGutter(gutter: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeGutterBind, segment, gutter)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeGutterBind, segment, gutter)
     }
 
     /**
@@ -2286,7 +2287,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_gutter_count
      */
     fun getGutterCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getGutterCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getGutterCountBind, segment)
     }
 
     /**
@@ -2295,7 +2296,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_name
      */
     fun setGutterName(gutter: Int, name: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setGutterNameBind, segment, gutter, name)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setGutterNameBind, segment, gutter, name)
     }
 
     /**
@@ -2304,7 +2305,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_gutter_name
      */
     fun getGutterName(gutter: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getGutterNameBind, segment, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getGutterNameBind, segment, gutter)
     }
 
     /**
@@ -2313,7 +2314,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_type
      */
     fun setGutterType(gutter: Int, type: TextEdit.GutterType) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setGutterTypeBind, segment, gutter, type.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setGutterTypeBind, segment, gutter, type.value)
     }
 
     /**
@@ -2323,7 +2324,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_gutter_type
      */
     fun getGutterType(gutter: Int): TextEdit.GutterType {
-        return TextEdit.GutterType(ObjectCalls.ptrcallWithIntArgRetLong(getGutterTypeBind, segment, gutter))
+        return TextEdit.GutterType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getGutterTypeBind, segment, gutter))
     }
 
     /**
@@ -2332,7 +2333,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_width
      */
     fun setGutterWidth(gutter: Int, width: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setGutterWidthBind, segment, gutter, width)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setGutterWidthBind, segment, gutter, width)
     }
 
     /**
@@ -2341,7 +2342,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_gutter_width
      */
     fun getGutterWidth(gutter: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getGutterWidthBind, segment, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getGutterWidthBind, segment, gutter)
     }
 
     /**
@@ -2351,7 +2352,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_draw
      */
     fun setGutterDraw(gutter: Int, draw: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterDrawBind, segment, gutter, draw)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setGutterDrawBind, segment, gutter, draw)
     }
 
     /**
@@ -2360,7 +2361,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_gutter_drawn
      */
     fun isGutterDrawn(gutter: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterDrawnBind, segment, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isGutterDrawnBind, segment, gutter)
     }
 
     /**
@@ -2371,7 +2372,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_clickable
      */
     fun setGutterClickable(gutter: Int, clickable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterClickableBind, segment, gutter, clickable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setGutterClickableBind, segment, gutter, clickable)
     }
 
     /**
@@ -2380,7 +2381,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_gutter_clickable
      */
     fun isGutterClickable(gutter: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterClickableBind, segment, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isGutterClickableBind, segment, gutter)
     }
 
     /**
@@ -2390,7 +2391,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_overwritable
      */
     fun setGutterOverwritable(gutter: Int, overwritable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setGutterOverwritableBind, segment, gutter, overwritable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setGutterOverwritableBind, segment, gutter, overwritable)
     }
 
     /**
@@ -2399,7 +2400,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_gutter_overwritable
      */
     fun isGutterOverwritable(gutter: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isGutterOverwritableBind, segment, gutter)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isGutterOverwritableBind, segment, gutter)
     }
 
     /**
@@ -2409,7 +2410,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.merge_gutters
      */
     fun mergeGutters(fromLine: Int, toLine: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(mergeGuttersBind, segment, fromLine, toLine)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.mergeGuttersBind, segment, fromLine, toLine)
     }
 
     /**
@@ -2420,7 +2421,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_gutter_custom_draw
      */
     fun setGutterCustomDraw(column: Int, drawCallback: GodotCallable) {
-        ObjectCalls.ptrcallWithIntCallableArgs(setGutterCustomDrawBind, segment, column, drawCallback.target.segment, drawCallback.method)
+        ObjectCalls.ptrcallWithIntCallableArgs(Binds.setGutterCustomDrawBind, segment, column, drawCallback.target.segment, drawCallback.method)
     }
 
     /**
@@ -2429,7 +2430,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_total_gutter_width
      */
     fun getTotalGutterWidth(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTotalGutterWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTotalGutterWidthBind, segment)
     }
 
     /**
@@ -2438,7 +2439,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_metadata
      */
     fun setLineGutterMetadata(line: Int, gutter: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithTwoIntAndVariantArg(setLineGutterMetadataBind, segment, line, gutter, metadata)
+        ObjectCalls.ptrcallWithTwoIntAndVariantArg(Binds.setLineGutterMetadataBind, segment, line, gutter, metadata)
     }
 
     /**
@@ -2447,7 +2448,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_metadata
      */
     fun getLineGutterMetadata(line: Int, gutter: Int): Any? {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getLineGutterMetadataBind, segment, line, gutter)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getLineGutterMetadataBind, segment, line, gutter)
     }
 
     /**
@@ -2457,7 +2458,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_text
      */
     fun setLineGutterText(line: Int, gutter: Int, text: String) {
-        ObjectCalls.ptrcallWithTwoIntAndStringArgs(setLineGutterTextBind, segment, line, gutter, text)
+        ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.setLineGutterTextBind, segment, line, gutter, text)
     }
 
     /**
@@ -2467,7 +2468,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_text
      */
     fun getLineGutterText(line: Int, gutter: Int): String {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getLineGutterTextBind, segment, line, gutter)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getLineGutterTextBind, segment, line, gutter)
     }
 
     /**
@@ -2477,7 +2478,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_icon
      */
     fun setLineGutterIcon(line: Int, gutter: Int, icon: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setLineGutterIconBind, segment, line, gutter, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.setLineGutterIconBind, segment, line, gutter, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -2487,7 +2488,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_icon
      */
     fun getLineGutterIcon(line: Int, gutter: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getLineGutterIconBind, segment, line, gutter))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(Binds.getLineGutterIconBind, segment, line, gutter))
     }
 
     /**
@@ -2496,7 +2497,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_item_color
      */
     fun setLineGutterItemColor(line: Int, gutter: Int, color: Color) {
-        ObjectCalls.ptrcallWithTwoIntAndColorArg(setLineGutterItemColorBind, segment, line, gutter, color)
+        ObjectCalls.ptrcallWithTwoIntAndColorArg(Binds.setLineGutterItemColorBind, segment, line, gutter, color)
     }
 
     /**
@@ -2505,7 +2506,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_gutter_item_color
      */
     fun getLineGutterItemColor(line: Int, gutter: Int): Color {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getLineGutterItemColorBind, segment, line, gutter)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(Binds.getLineGutterItemColorBind, segment, line, gutter)
     }
 
     /**
@@ -2516,7 +2517,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_gutter_clickable
      */
     fun setLineGutterClickable(line: Int, gutter: Int, clickable: Boolean) {
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setLineGutterClickableBind, segment, line, gutter, clickable)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(Binds.setLineGutterClickableBind, segment, line, gutter, clickable)
     }
 
     /**
@@ -2526,7 +2527,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_line_gutter_clickable
      */
     fun isLineGutterClickable(line: Int, gutter: Int): Boolean {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isLineGutterClickableBind, segment, line, gutter)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isLineGutterClickableBind, segment, line, gutter)
     }
 
     /**
@@ -2537,7 +2538,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_line_background_color
      */
     fun setLineBackgroundColor(line: Int, color: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setLineBackgroundColorBind, segment, line, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setLineBackgroundColorBind, segment, line, color)
     }
 
     /**
@@ -2547,7 +2548,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_line_background_color
      */
     fun getLineBackgroundColor(line: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getLineBackgroundColorBind, segment, line)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getLineBackgroundColorBind, segment, line)
     }
 
     /**
@@ -2557,7 +2558,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_syntax_highlighter
      */
     fun setSyntaxHighlighter(syntaxHighlighter: SyntaxHighlighter?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSyntaxHighlighterBind, segment, listOf(syntaxHighlighter?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -2567,7 +2568,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_syntax_highlighter
      */
     fun getSyntaxHighlighter(): SyntaxHighlighter? {
-        return SyntaxHighlighter.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSyntaxHighlighterBind, segment))
+        return SyntaxHighlighter.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSyntaxHighlighterBind, segment))
     }
 
     /**
@@ -2576,7 +2577,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_highlight_current_line
      */
     fun setHighlightCurrentLine(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHighlightCurrentLineBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHighlightCurrentLineBind, segment, enabled)
     }
 
     /**
@@ -2585,7 +2586,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_highlight_current_line_enabled
      */
     fun isHighlightCurrentLineEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHighlightCurrentLineEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHighlightCurrentLineEnabledBind, segment)
     }
 
     /**
@@ -2594,7 +2595,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_highlight_all_occurrences
      */
     fun setHighlightAllOccurrences(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHighlightAllOccurrencesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHighlightAllOccurrencesBind, segment, enabled)
     }
 
     /**
@@ -2603,7 +2604,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_highlight_all_occurrences_enabled
      */
     fun isHighlightAllOccurrencesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHighlightAllOccurrencesEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHighlightAllOccurrencesEnabledBind, segment)
     }
 
     /**
@@ -2612,7 +2613,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_draw_control_chars
      */
     fun getDrawControlChars(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDrawControlCharsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDrawControlCharsBind, segment)
     }
 
     /**
@@ -2621,7 +2622,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_control_chars
      */
     fun setDrawControlChars(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawControlCharsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawControlCharsBind, segment, enabled)
     }
 
     /**
@@ -2630,7 +2631,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_tabs
      */
     fun setDrawTabs(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawTabsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawTabsBind, segment, enabled)
     }
 
     /**
@@ -2639,7 +2640,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drawing_tabs
      */
     fun isDrawingTabs(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingTabsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawingTabsBind, segment)
     }
 
     /**
@@ -2648,7 +2649,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.set_draw_spaces
      */
     fun setDrawSpaces(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawSpacesBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawSpacesBind, segment, enabled)
     }
 
     /**
@@ -2657,7 +2658,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_drawing_spaces
      */
     fun isDrawingSpaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawingSpacesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawingSpacesBind, segment)
     }
 
     /**
@@ -2668,7 +2669,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_menu
      */
     fun getMenu(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getMenuBind, segment))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMenuBind, segment))
     }
 
     /**
@@ -2678,7 +2679,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.is_menu_visible
      */
     fun isMenuVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMenuVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMenuVisibleBind, segment)
     }
 
     /**
@@ -2687,7 +2688,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.menu_option
      */
     fun menuOption(option: Int) {
-        ObjectCalls.ptrcallWithIntArg(menuOptionBind, segment, option)
+        ObjectCalls.ptrcallWithIntArg(Binds.menuOptionBind, segment, option)
     }
 
     /**
@@ -2696,7 +2697,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.adjust_carets_after_edit
      */
     fun adjustCaretsAfterEdit(caret: Int, fromLine: Int, fromCol: Int, toLine: Int, toCol: Int) {
-        ObjectCalls.ptrcallWithFiveIntArgs(adjustCaretsAfterEditBind, segment, caret, fromLine, fromCol, toLine, toCol)
+        ObjectCalls.ptrcallWithFiveIntArgs(Binds.adjustCaretsAfterEditBind, segment, caret, fromLine, fromCol, toLine, toCol)
     }
 
     /**
@@ -2706,7 +2707,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_caret_index_edit_order
      */
     fun getCaretIndexEditOrder(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getCaretIndexEditOrderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getCaretIndexEditOrderBind, segment)
     }
 
     /**
@@ -2715,7 +2716,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_line
      */
     fun getSelectionLine(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionLineBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSelectionLineBind, segment, caretIndex)
     }
 
     /**
@@ -2724,7 +2725,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: TextEdit.get_selection_column
      */
     fun getSelectionColumn(caretIndex: Int = 0): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSelectionColumnBind, segment, caretIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSelectionColumnBind, segment, caretIndex)
     }
 
     /** Signal `text_set()`; see [TypedSignal]. */
@@ -3172,1250 +3173,1252 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): TextEdit? =
             if (handle.address() == 0L) null else TextEdit(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val HAS_IME_TEXT_HASH = 36873697L
-        private val hasImeTextBind by lazy {
+        @JvmField
+        val hasImeTextBind =
             ObjectCalls.getMethodBind("TextEdit", "has_ime_text", HAS_IME_TEXT_HASH)
-        }
 
         private const val CANCEL_IME_HASH = 3218959716L
-        private val cancelImeBind by lazy {
+        @JvmField
+        val cancelImeBind =
             ObjectCalls.getMethodBind("TextEdit", "cancel_ime", CANCEL_IME_HASH)
-        }
 
         private const val APPLY_IME_HASH = 3218959716L
-        private val applyImeBind by lazy {
+        @JvmField
+        val applyImeBind =
             ObjectCalls.getMethodBind("TextEdit", "apply_ime", APPLY_IME_HASH)
-        }
 
         private const val SET_EDITABLE_HASH = 2586408642L
-        private val setEditableBind by lazy {
+        @JvmField
+        val setEditableBind =
             ObjectCalls.getMethodBind("TextEdit", "set_editable", SET_EDITABLE_HASH)
-        }
 
         private const val IS_EDITABLE_HASH = 36873697L
-        private val isEditableBind by lazy {
+        @JvmField
+        val isEditableBind =
             ObjectCalls.getMethodBind("TextEdit", "is_editable", IS_EDITABLE_HASH)
-        }
 
         private const val SET_TEXT_DIRECTION_HASH = 119160795L
-        private val setTextDirectionBind by lazy {
+        @JvmField
+        val setTextDirectionBind =
             ObjectCalls.getMethodBind("TextEdit", "set_text_direction", SET_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TEXT_DIRECTION_HASH = 797257663L
-        private val getTextDirectionBind by lazy {
+        @JvmField
+        val getTextDirectionBind =
             ObjectCalls.getMethodBind("TextEdit", "get_text_direction", GET_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 83702148L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("TextEdit", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 201670096L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("TextEdit", "get_language", GET_LANGUAGE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 55961453L
-        private val setStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("TextEdit", "set_structured_text_bidi_override", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3385126229L
-        private val getStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("TextEdit", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
-        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("TextEdit", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 3995934104L
-        private val getStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("TextEdit", "get_structured_text_bidi_override_options", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val SET_TAB_SIZE_HASH = 1286410249L
-        private val setTabSizeBind by lazy {
+        @JvmField
+        val setTabSizeBind =
             ObjectCalls.getMethodBind("TextEdit", "set_tab_size", SET_TAB_SIZE_HASH)
-        }
 
         private const val GET_TAB_SIZE_HASH = 3905245786L
-        private val getTabSizeBind by lazy {
+        @JvmField
+        val getTabSizeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_tab_size", GET_TAB_SIZE_HASH)
-        }
 
         private const val SET_INDENT_WRAPPED_LINES_HASH = 2586408642L
-        private val setIndentWrappedLinesBind by lazy {
+        @JvmField
+        val setIndentWrappedLinesBind =
             ObjectCalls.getMethodBind("TextEdit", "set_indent_wrapped_lines", SET_INDENT_WRAPPED_LINES_HASH)
-        }
 
         private const val IS_INDENT_WRAPPED_LINES_HASH = 36873697L
-        private val isIndentWrappedLinesBind by lazy {
+        @JvmField
+        val isIndentWrappedLinesBind =
             ObjectCalls.getMethodBind("TextEdit", "is_indent_wrapped_lines", IS_INDENT_WRAPPED_LINES_HASH)
-        }
 
         private const val SET_TAB_INPUT_MODE_HASH = 2586408642L
-        private val setTabInputModeBind by lazy {
+        @JvmField
+        val setTabInputModeBind =
             ObjectCalls.getMethodBind("TextEdit", "set_tab_input_mode", SET_TAB_INPUT_MODE_HASH)
-        }
 
         private const val GET_TAB_INPUT_MODE_HASH = 36873697L
-        private val getTabInputModeBind by lazy {
+        @JvmField
+        val getTabInputModeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_tab_input_mode", GET_TAB_INPUT_MODE_HASH)
-        }
 
         private const val SET_OVERTYPE_MODE_ENABLED_HASH = 2586408642L
-        private val setOvertypeModeEnabledBind by lazy {
+        @JvmField
+        val setOvertypeModeEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_overtype_mode_enabled", SET_OVERTYPE_MODE_ENABLED_HASH)
-        }
 
         private const val IS_OVERTYPE_MODE_ENABLED_HASH = 36873697L
-        private val isOvertypeModeEnabledBind by lazy {
+        @JvmField
+        val isOvertypeModeEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_overtype_mode_enabled", IS_OVERTYPE_MODE_ENABLED_HASH)
-        }
 
         private const val SET_CONTEXT_MENU_ENABLED_HASH = 2586408642L
-        private val setContextMenuEnabledBind by lazy {
+        @JvmField
+        val setContextMenuEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_context_menu_enabled", SET_CONTEXT_MENU_ENABLED_HASH)
-        }
 
         private const val IS_CONTEXT_MENU_ENABLED_HASH = 36873697L
-        private val isContextMenuEnabledBind by lazy {
+        @JvmField
+        val isContextMenuEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_context_menu_enabled", IS_CONTEXT_MENU_ENABLED_HASH)
-        }
 
         private const val SET_EMOJI_MENU_ENABLED_HASH = 2586408642L
-        private val setEmojiMenuEnabledBind by lazy {
+        @JvmField
+        val setEmojiMenuEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_emoji_menu_enabled", SET_EMOJI_MENU_ENABLED_HASH)
-        }
 
         private const val IS_EMOJI_MENU_ENABLED_HASH = 36873697L
-        private val isEmojiMenuEnabledBind by lazy {
+        @JvmField
+        val isEmojiMenuEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_emoji_menu_enabled", IS_EMOJI_MENU_ENABLED_HASH)
-        }
 
         private const val SET_BACKSPACE_DELETES_COMPOSITE_CHARACTER_ENABLED_HASH = 2586408642L
-        private val setBackspaceDeletesCompositeCharacterEnabledBind by lazy {
+        @JvmField
+        val setBackspaceDeletesCompositeCharacterEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_backspace_deletes_composite_character_enabled", SET_BACKSPACE_DELETES_COMPOSITE_CHARACTER_ENABLED_HASH)
-        }
 
         private const val IS_BACKSPACE_DELETES_COMPOSITE_CHARACTER_ENABLED_HASH = 36873697L
-        private val isBackspaceDeletesCompositeCharacterEnabledBind by lazy {
+        @JvmField
+        val isBackspaceDeletesCompositeCharacterEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_backspace_deletes_composite_character_enabled", IS_BACKSPACE_DELETES_COMPOSITE_CHARACTER_ENABLED_HASH)
-        }
 
         private const val SET_SHORTCUT_KEYS_ENABLED_HASH = 2586408642L
-        private val setShortcutKeysEnabledBind by lazy {
+        @JvmField
+        val setShortcutKeysEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_shortcut_keys_enabled", SET_SHORTCUT_KEYS_ENABLED_HASH)
-        }
 
         private const val IS_SHORTCUT_KEYS_ENABLED_HASH = 36873697L
-        private val isShortcutKeysEnabledBind by lazy {
+        @JvmField
+        val isShortcutKeysEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_shortcut_keys_enabled", IS_SHORTCUT_KEYS_ENABLED_HASH)
-        }
 
         private const val SET_VIRTUAL_KEYBOARD_ENABLED_HASH = 2586408642L
-        private val setVirtualKeyboardEnabledBind by lazy {
+        @JvmField
+        val setVirtualKeyboardEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_virtual_keyboard_enabled", SET_VIRTUAL_KEYBOARD_ENABLED_HASH)
-        }
 
         private const val IS_VIRTUAL_KEYBOARD_ENABLED_HASH = 36873697L
-        private val isVirtualKeyboardEnabledBind by lazy {
+        @JvmField
+        val isVirtualKeyboardEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_virtual_keyboard_enabled", IS_VIRTUAL_KEYBOARD_ENABLED_HASH)
-        }
 
         private const val SET_VIRTUAL_KEYBOARD_SHOW_ON_FOCUS_HASH = 2586408642L
-        private val setVirtualKeyboardShowOnFocusBind by lazy {
+        @JvmField
+        val setVirtualKeyboardShowOnFocusBind =
             ObjectCalls.getMethodBind("TextEdit", "set_virtual_keyboard_show_on_focus", SET_VIRTUAL_KEYBOARD_SHOW_ON_FOCUS_HASH)
-        }
 
         private const val GET_VIRTUAL_KEYBOARD_SHOW_ON_FOCUS_HASH = 36873697L
-        private val getVirtualKeyboardShowOnFocusBind by lazy {
+        @JvmField
+        val getVirtualKeyboardShowOnFocusBind =
             ObjectCalls.getMethodBind("TextEdit", "get_virtual_keyboard_show_on_focus", GET_VIRTUAL_KEYBOARD_SHOW_ON_FOCUS_HASH)
-        }
 
         private const val SET_MIDDLE_MOUSE_PASTE_ENABLED_HASH = 2586408642L
-        private val setMiddleMousePasteEnabledBind by lazy {
+        @JvmField
+        val setMiddleMousePasteEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_middle_mouse_paste_enabled", SET_MIDDLE_MOUSE_PASTE_ENABLED_HASH)
-        }
 
         private const val IS_MIDDLE_MOUSE_PASTE_ENABLED_HASH = 36873697L
-        private val isMiddleMousePasteEnabledBind by lazy {
+        @JvmField
+        val isMiddleMousePasteEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_middle_mouse_paste_enabled", IS_MIDDLE_MOUSE_PASTE_ENABLED_HASH)
-        }
 
         private const val SET_EMPTY_SELECTION_CLIPBOARD_ENABLED_HASH = 2586408642L
-        private val setEmptySelectionClipboardEnabledBind by lazy {
+        @JvmField
+        val setEmptySelectionClipboardEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_empty_selection_clipboard_enabled", SET_EMPTY_SELECTION_CLIPBOARD_ENABLED_HASH)
-        }
 
         private const val IS_EMPTY_SELECTION_CLIPBOARD_ENABLED_HASH = 36873697L
-        private val isEmptySelectionClipboardEnabledBind by lazy {
+        @JvmField
+        val isEmptySelectionClipboardEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_empty_selection_clipboard_enabled", IS_EMPTY_SELECTION_CLIPBOARD_ENABLED_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("TextEdit", "clear", CLEAR_HASH)
-        }
 
         private const val SET_TEXT_HASH = 83702148L
-        private val setTextBind by lazy {
+        @JvmField
+        val setTextBind =
             ObjectCalls.getMethodBind("TextEdit", "set_text", SET_TEXT_HASH)
-        }
 
         private const val GET_TEXT_HASH = 201670096L
-        private val getTextBind by lazy {
+        @JvmField
+        val getTextBind =
             ObjectCalls.getMethodBind("TextEdit", "get_text", GET_TEXT_HASH)
-        }
 
         private const val GET_LINE_COUNT_HASH = 3905245786L
-        private val getLineCountBind by lazy {
+        @JvmField
+        val getLineCountBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_count", GET_LINE_COUNT_HASH)
-        }
 
         private const val SET_PLACEHOLDER_HASH = 83702148L
-        private val setPlaceholderBind by lazy {
+        @JvmField
+        val setPlaceholderBind =
             ObjectCalls.getMethodBind("TextEdit", "set_placeholder", SET_PLACEHOLDER_HASH)
-        }
 
         private const val GET_PLACEHOLDER_HASH = 201670096L
-        private val getPlaceholderBind by lazy {
+        @JvmField
+        val getPlaceholderBind =
             ObjectCalls.getMethodBind("TextEdit", "get_placeholder", GET_PLACEHOLDER_HASH)
-        }
 
         private const val SET_LINE_HASH = 501894301L
-        private val setLineBind by lazy {
+        @JvmField
+        val setLineBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line", SET_LINE_HASH)
-        }
 
         private const val GET_LINE_HASH = 844755477L
-        private val getLineBind by lazy {
+        @JvmField
+        val getLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line", GET_LINE_HASH)
-        }
 
         private const val GET_LINE_WITH_IME_HASH = 844755477L
-        private val getLineWithImeBind by lazy {
+        @JvmField
+        val getLineWithImeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_with_ime", GET_LINE_WITH_IME_HASH)
-        }
 
         private const val GET_LINE_WIDTH_HASH = 688195400L
-        private val getLineWidthBind by lazy {
+        @JvmField
+        val getLineWidthBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_width", GET_LINE_WIDTH_HASH)
-        }
 
         private const val GET_LINE_HEIGHT_HASH = 3905245786L
-        private val getLineHeightBind by lazy {
+        @JvmField
+        val getLineHeightBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_height", GET_LINE_HEIGHT_HASH)
-        }
 
         private const val GET_INDENT_LEVEL_HASH = 923996154L
-        private val getIndentLevelBind by lazy {
+        @JvmField
+        val getIndentLevelBind =
             ObjectCalls.getMethodBind("TextEdit", "get_indent_level", GET_INDENT_LEVEL_HASH)
-        }
 
         private const val GET_FIRST_NON_WHITESPACE_COLUMN_HASH = 923996154L
-        private val getFirstNonWhitespaceColumnBind by lazy {
+        @JvmField
+        val getFirstNonWhitespaceColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_first_non_whitespace_column", GET_FIRST_NON_WHITESPACE_COLUMN_HASH)
-        }
 
         private const val SWAP_LINES_HASH = 3937882851L
-        private val swapLinesBind by lazy {
+        @JvmField
+        val swapLinesBind =
             ObjectCalls.getMethodBind("TextEdit", "swap_lines", SWAP_LINES_HASH)
-        }
 
         private const val INSERT_LINE_AT_HASH = 501894301L
-        private val insertLineAtBind by lazy {
+        @JvmField
+        val insertLineAtBind =
             ObjectCalls.getMethodBind("TextEdit", "insert_line_at", INSERT_LINE_AT_HASH)
-        }
 
         private const val REMOVE_LINE_AT_HASH = 972357352L
-        private val removeLineAtBind by lazy {
+        @JvmField
+        val removeLineAtBind =
             ObjectCalls.getMethodBind("TextEdit", "remove_line_at", REMOVE_LINE_AT_HASH)
-        }
 
         private const val INSERT_TEXT_AT_CARET_HASH = 2697778442L
-        private val insertTextAtCaretBind by lazy {
+        @JvmField
+        val insertTextAtCaretBind =
             ObjectCalls.getMethodBind("TextEdit", "insert_text_at_caret", INSERT_TEXT_AT_CARET_HASH)
-        }
 
         private const val INSERT_TEXT_HASH = 1881564334L
-        private val insertTextBind by lazy {
+        @JvmField
+        val insertTextBind =
             ObjectCalls.getMethodBind("TextEdit", "insert_text", INSERT_TEXT_HASH)
-        }
 
         private const val REMOVE_TEXT_HASH = 4275841770L
-        private val removeTextBind by lazy {
+        @JvmField
+        val removeTextBind =
             ObjectCalls.getMethodBind("TextEdit", "remove_text", REMOVE_TEXT_HASH)
-        }
 
         private const val GET_LAST_UNHIDDEN_LINE_HASH = 3905245786L
-        private val getLastUnhiddenLineBind by lazy {
+        @JvmField
+        val getLastUnhiddenLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_last_unhidden_line", GET_LAST_UNHIDDEN_LINE_HASH)
-        }
 
         private const val GET_NEXT_VISIBLE_LINE_OFFSET_FROM_HASH = 3175239445L
-        private val getNextVisibleLineOffsetFromBind by lazy {
+        @JvmField
+        val getNextVisibleLineOffsetFromBind =
             ObjectCalls.getMethodBind("TextEdit", "get_next_visible_line_offset_from", GET_NEXT_VISIBLE_LINE_OFFSET_FROM_HASH)
-        }
 
         private const val GET_NEXT_VISIBLE_LINE_INDEX_OFFSET_FROM_HASH = 3386475622L
-        private val getNextVisibleLineIndexOffsetFromBind by lazy {
+        @JvmField
+        val getNextVisibleLineIndexOffsetFromBind =
             ObjectCalls.getMethodBind("TextEdit", "get_next_visible_line_index_offset_from", GET_NEXT_VISIBLE_LINE_INDEX_OFFSET_FROM_HASH)
-        }
 
         private const val BACKSPACE_HASH = 1025054187L
-        private val backspaceBind by lazy {
+        @JvmField
+        val backspaceBind =
             ObjectCalls.getMethodBind("TextEdit", "backspace", BACKSPACE_HASH)
-        }
 
         private const val CUT_HASH = 1025054187L
-        private val cutBind by lazy {
+        @JvmField
+        val cutBind =
             ObjectCalls.getMethodBind("TextEdit", "cut", CUT_HASH)
-        }
 
         private const val COPY_HASH = 1025054187L
-        private val copyBind by lazy {
+        @JvmField
+        val copyBind =
             ObjectCalls.getMethodBind("TextEdit", "copy", COPY_HASH)
-        }
 
         private const val PASTE_HASH = 1025054187L
-        private val pasteBind by lazy {
+        @JvmField
+        val pasteBind =
             ObjectCalls.getMethodBind("TextEdit", "paste", PASTE_HASH)
-        }
 
         private const val PASTE_PRIMARY_CLIPBOARD_HASH = 1025054187L
-        private val pastePrimaryClipboardBind by lazy {
+        @JvmField
+        val pastePrimaryClipboardBind =
             ObjectCalls.getMethodBind("TextEdit", "paste_primary_clipboard", PASTE_PRIMARY_CLIPBOARD_HASH)
-        }
 
         private const val START_ACTION_HASH = 2834827583L
-        private val startActionBind by lazy {
+        @JvmField
+        val startActionBind =
             ObjectCalls.getMethodBind("TextEdit", "start_action", START_ACTION_HASH)
-        }
 
         private const val END_ACTION_HASH = 3218959716L
-        private val endActionBind by lazy {
+        @JvmField
+        val endActionBind =
             ObjectCalls.getMethodBind("TextEdit", "end_action", END_ACTION_HASH)
-        }
 
         private const val BEGIN_COMPLEX_OPERATION_HASH = 3218959716L
-        private val beginComplexOperationBind by lazy {
+        @JvmField
+        val beginComplexOperationBind =
             ObjectCalls.getMethodBind("TextEdit", "begin_complex_operation", BEGIN_COMPLEX_OPERATION_HASH)
-        }
 
         private const val END_COMPLEX_OPERATION_HASH = 3218959716L
-        private val endComplexOperationBind by lazy {
+        @JvmField
+        val endComplexOperationBind =
             ObjectCalls.getMethodBind("TextEdit", "end_complex_operation", END_COMPLEX_OPERATION_HASH)
-        }
 
         private const val HAS_UNDO_HASH = 36873697L
-        private val hasUndoBind by lazy {
+        @JvmField
+        val hasUndoBind =
             ObjectCalls.getMethodBind("TextEdit", "has_undo", HAS_UNDO_HASH)
-        }
 
         private const val HAS_REDO_HASH = 36873697L
-        private val hasRedoBind by lazy {
+        @JvmField
+        val hasRedoBind =
             ObjectCalls.getMethodBind("TextEdit", "has_redo", HAS_REDO_HASH)
-        }
 
         private const val UNDO_HASH = 3218959716L
-        private val undoBind by lazy {
+        @JvmField
+        val undoBind =
             ObjectCalls.getMethodBind("TextEdit", "undo", UNDO_HASH)
-        }
 
         private const val REDO_HASH = 3218959716L
-        private val redoBind by lazy {
+        @JvmField
+        val redoBind =
             ObjectCalls.getMethodBind("TextEdit", "redo", REDO_HASH)
-        }
 
         private const val CLEAR_UNDO_HISTORY_HASH = 3218959716L
-        private val clearUndoHistoryBind by lazy {
+        @JvmField
+        val clearUndoHistoryBind =
             ObjectCalls.getMethodBind("TextEdit", "clear_undo_history", CLEAR_UNDO_HISTORY_HASH)
-        }
 
         private const val TAG_SAVED_VERSION_HASH = 3218959716L
-        private val tagSavedVersionBind by lazy {
+        @JvmField
+        val tagSavedVersionBind =
             ObjectCalls.getMethodBind("TextEdit", "tag_saved_version", TAG_SAVED_VERSION_HASH)
-        }
 
         private const val GET_VERSION_HASH = 3905245786L
-        private val getVersionBind by lazy {
+        @JvmField
+        val getVersionBind =
             ObjectCalls.getMethodBind("TextEdit", "get_version", GET_VERSION_HASH)
-        }
 
         private const val GET_SAVED_VERSION_HASH = 3905245786L
-        private val getSavedVersionBind by lazy {
+        @JvmField
+        val getSavedVersionBind =
             ObjectCalls.getMethodBind("TextEdit", "get_saved_version", GET_SAVED_VERSION_HASH)
-        }
 
         private const val SET_SEARCH_TEXT_HASH = 83702148L
-        private val setSearchTextBind by lazy {
+        @JvmField
+        val setSearchTextBind =
             ObjectCalls.getMethodBind("TextEdit", "set_search_text", SET_SEARCH_TEXT_HASH)
-        }
 
         private const val SET_SEARCH_FLAGS_HASH = 1286410249L
-        private val setSearchFlagsBind by lazy {
+        @JvmField
+        val setSearchFlagsBind =
             ObjectCalls.getMethodBind("TextEdit", "set_search_flags", SET_SEARCH_FLAGS_HASH)
-        }
 
         private const val SEARCH_HASH = 1203739136L
-        private val searchBind by lazy {
+        @JvmField
+        val searchBind =
             ObjectCalls.getMethodBind("TextEdit", "search", SEARCH_HASH)
-        }
 
         private const val SET_TOOLTIP_REQUEST_FUNC_HASH = 1611583062L
-        private val setTooltipRequestFuncBind by lazy {
+        @JvmField
+        val setTooltipRequestFuncBind =
             ObjectCalls.getMethodBind("TextEdit", "set_tooltip_request_func", SET_TOOLTIP_REQUEST_FUNC_HASH)
-        }
 
         private const val GET_LOCAL_MOUSE_POS_HASH = 3341600327L
-        private val getLocalMousePosBind by lazy {
+        @JvmField
+        val getLocalMousePosBind =
             ObjectCalls.getMethodBind("TextEdit", "get_local_mouse_pos", GET_LOCAL_MOUSE_POS_HASH)
-        }
 
         private const val GET_WORD_AT_POS_HASH = 3674420000L
-        private val getWordAtPosBind by lazy {
+        @JvmField
+        val getWordAtPosBind =
             ObjectCalls.getMethodBind("TextEdit", "get_word_at_pos", GET_WORD_AT_POS_HASH)
-        }
 
         private const val GET_LINE_COLUMN_AT_POS_HASH = 3472935744L
-        private val getLineColumnAtPosBind by lazy {
+        @JvmField
+        val getLineColumnAtPosBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_column_at_pos", GET_LINE_COLUMN_AT_POS_HASH)
-        }
 
         private const val GET_POS_AT_LINE_COLUMN_HASH = 410388347L
-        private val getPosAtLineColumnBind by lazy {
+        @JvmField
+        val getPosAtLineColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_pos_at_line_column", GET_POS_AT_LINE_COLUMN_HASH)
-        }
 
         private const val GET_RECT_AT_LINE_COLUMN_HASH = 3256618057L
-        private val getRectAtLineColumnBind by lazy {
+        @JvmField
+        val getRectAtLineColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_rect_at_line_column", GET_RECT_AT_LINE_COLUMN_HASH)
-        }
 
         private const val GET_MINIMAP_LINE_AT_POS_HASH = 2485466453L
-        private val getMinimapLineAtPosBind by lazy {
+        @JvmField
+        val getMinimapLineAtPosBind =
             ObjectCalls.getMethodBind("TextEdit", "get_minimap_line_at_pos", GET_MINIMAP_LINE_AT_POS_HASH)
-        }
 
         private const val IS_DRAGGING_CURSOR_HASH = 36873697L
-        private val isDraggingCursorBind by lazy {
+        @JvmField
+        val isDraggingCursorBind =
             ObjectCalls.getMethodBind("TextEdit", "is_dragging_cursor", IS_DRAGGING_CURSOR_HASH)
-        }
 
         private const val IS_MOUSE_OVER_SELECTION_HASH = 1840282309L
-        private val isMouseOverSelectionBind by lazy {
+        @JvmField
+        val isMouseOverSelectionBind =
             ObjectCalls.getMethodBind("TextEdit", "is_mouse_over_selection", IS_MOUSE_OVER_SELECTION_HASH)
-        }
 
         private const val SET_CARET_TYPE_HASH = 1211596914L
-        private val setCaretTypeBind by lazy {
+        @JvmField
+        val setCaretTypeBind =
             ObjectCalls.getMethodBind("TextEdit", "set_caret_type", SET_CARET_TYPE_HASH)
-        }
 
         private const val GET_CARET_TYPE_HASH = 2830252959L
-        private val getCaretTypeBind by lazy {
+        @JvmField
+        val getCaretTypeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_caret_type", GET_CARET_TYPE_HASH)
-        }
 
         private const val SET_CARET_BLINK_ENABLED_HASH = 2586408642L
-        private val setCaretBlinkEnabledBind by lazy {
+        @JvmField
+        val setCaretBlinkEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_caret_blink_enabled", SET_CARET_BLINK_ENABLED_HASH)
-        }
 
         private const val IS_CARET_BLINK_ENABLED_HASH = 36873697L
-        private val isCaretBlinkEnabledBind by lazy {
+        @JvmField
+        val isCaretBlinkEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_caret_blink_enabled", IS_CARET_BLINK_ENABLED_HASH)
-        }
 
         private const val SET_CARET_BLINK_INTERVAL_HASH = 373806689L
-        private val setCaretBlinkIntervalBind by lazy {
+        @JvmField
+        val setCaretBlinkIntervalBind =
             ObjectCalls.getMethodBind("TextEdit", "set_caret_blink_interval", SET_CARET_BLINK_INTERVAL_HASH)
-        }
 
         private const val GET_CARET_BLINK_INTERVAL_HASH = 1740695150L
-        private val getCaretBlinkIntervalBind by lazy {
+        @JvmField
+        val getCaretBlinkIntervalBind =
             ObjectCalls.getMethodBind("TextEdit", "get_caret_blink_interval", GET_CARET_BLINK_INTERVAL_HASH)
-        }
 
         private const val SET_DRAW_CARET_WHEN_EDITABLE_DISABLED_HASH = 2586408642L
-        private val setDrawCaretWhenEditableDisabledBind by lazy {
+        @JvmField
+        val setDrawCaretWhenEditableDisabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_draw_caret_when_editable_disabled", SET_DRAW_CARET_WHEN_EDITABLE_DISABLED_HASH)
-        }
 
         private const val IS_DRAWING_CARET_WHEN_EDITABLE_DISABLED_HASH = 36873697L
-        private val isDrawingCaretWhenEditableDisabledBind by lazy {
+        @JvmField
+        val isDrawingCaretWhenEditableDisabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_drawing_caret_when_editable_disabled", IS_DRAWING_CARET_WHEN_EDITABLE_DISABLED_HASH)
-        }
 
         private const val SET_MOVE_CARET_ON_RIGHT_CLICK_ENABLED_HASH = 2586408642L
-        private val setMoveCaretOnRightClickEnabledBind by lazy {
+        @JvmField
+        val setMoveCaretOnRightClickEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_move_caret_on_right_click_enabled", SET_MOVE_CARET_ON_RIGHT_CLICK_ENABLED_HASH)
-        }
 
         private const val IS_MOVE_CARET_ON_RIGHT_CLICK_ENABLED_HASH = 36873697L
-        private val isMoveCaretOnRightClickEnabledBind by lazy {
+        @JvmField
+        val isMoveCaretOnRightClickEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_move_caret_on_right_click_enabled", IS_MOVE_CARET_ON_RIGHT_CLICK_ENABLED_HASH)
-        }
 
         private const val SET_CARET_MID_GRAPHEME_ENABLED_HASH = 2586408642L
-        private val setCaretMidGraphemeEnabledBind by lazy {
+        @JvmField
+        val setCaretMidGraphemeEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_caret_mid_grapheme_enabled", SET_CARET_MID_GRAPHEME_ENABLED_HASH)
-        }
 
         private const val IS_CARET_MID_GRAPHEME_ENABLED_HASH = 36873697L
-        private val isCaretMidGraphemeEnabledBind by lazy {
+        @JvmField
+        val isCaretMidGraphemeEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_caret_mid_grapheme_enabled", IS_CARET_MID_GRAPHEME_ENABLED_HASH)
-        }
 
         private const val SET_MULTIPLE_CARETS_ENABLED_HASH = 2586408642L
-        private val setMultipleCaretsEnabledBind by lazy {
+        @JvmField
+        val setMultipleCaretsEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_multiple_carets_enabled", SET_MULTIPLE_CARETS_ENABLED_HASH)
-        }
 
         private const val IS_MULTIPLE_CARETS_ENABLED_HASH = 36873697L
-        private val isMultipleCaretsEnabledBind by lazy {
+        @JvmField
+        val isMultipleCaretsEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_multiple_carets_enabled", IS_MULTIPLE_CARETS_ENABLED_HASH)
-        }
 
         private const val ADD_CARET_HASH = 50157827L
-        private val addCaretBind by lazy {
+        @JvmField
+        val addCaretBind =
             ObjectCalls.getMethodBind("TextEdit", "add_caret", ADD_CARET_HASH)
-        }
 
         private const val REMOVE_CARET_HASH = 1286410249L
-        private val removeCaretBind by lazy {
+        @JvmField
+        val removeCaretBind =
             ObjectCalls.getMethodBind("TextEdit", "remove_caret", REMOVE_CARET_HASH)
-        }
 
         private const val REMOVE_SECONDARY_CARETS_HASH = 3218959716L
-        private val removeSecondaryCaretsBind by lazy {
+        @JvmField
+        val removeSecondaryCaretsBind =
             ObjectCalls.getMethodBind("TextEdit", "remove_secondary_carets", REMOVE_SECONDARY_CARETS_HASH)
-        }
 
         private const val GET_CARET_COUNT_HASH = 3905245786L
-        private val getCaretCountBind by lazy {
+        @JvmField
+        val getCaretCountBind =
             ObjectCalls.getMethodBind("TextEdit", "get_caret_count", GET_CARET_COUNT_HASH)
-        }
 
         private const val ADD_CARET_AT_CARETS_HASH = 2586408642L
-        private val addCaretAtCaretsBind by lazy {
+        @JvmField
+        val addCaretAtCaretsBind =
             ObjectCalls.getMethodBind("TextEdit", "add_caret_at_carets", ADD_CARET_AT_CARETS_HASH)
-        }
 
         private const val GET_SORTED_CARETS_HASH = 2131714034L
-        private val getSortedCaretsBind by lazy {
+        @JvmField
+        val getSortedCaretsBind =
             ObjectCalls.getMethodBind("TextEdit", "get_sorted_carets", GET_SORTED_CARETS_HASH)
-        }
 
         private const val COLLAPSE_CARETS_HASH = 228654177L
-        private val collapseCaretsBind by lazy {
+        @JvmField
+        val collapseCaretsBind =
             ObjectCalls.getMethodBind("TextEdit", "collapse_carets", COLLAPSE_CARETS_HASH)
-        }
 
         private const val MERGE_OVERLAPPING_CARETS_HASH = 3218959716L
-        private val mergeOverlappingCaretsBind by lazy {
+        @JvmField
+        val mergeOverlappingCaretsBind =
             ObjectCalls.getMethodBind("TextEdit", "merge_overlapping_carets", MERGE_OVERLAPPING_CARETS_HASH)
-        }
 
         private const val BEGIN_MULTICARET_EDIT_HASH = 3218959716L
-        private val beginMulticaretEditBind by lazy {
+        @JvmField
+        val beginMulticaretEditBind =
             ObjectCalls.getMethodBind("TextEdit", "begin_multicaret_edit", BEGIN_MULTICARET_EDIT_HASH)
-        }
 
         private const val END_MULTICARET_EDIT_HASH = 3218959716L
-        private val endMulticaretEditBind by lazy {
+        @JvmField
+        val endMulticaretEditBind =
             ObjectCalls.getMethodBind("TextEdit", "end_multicaret_edit", END_MULTICARET_EDIT_HASH)
-        }
 
         private const val IS_IN_MULITCARET_EDIT_HASH = 36873697L
-        private val isInMulitcaretEditBind by lazy {
+        @JvmField
+        val isInMulitcaretEditBind =
             ObjectCalls.getMethodBind("TextEdit", "is_in_mulitcaret_edit", IS_IN_MULITCARET_EDIT_HASH)
-        }
 
         private const val MULTICARET_EDIT_IGNORE_CARET_HASH = 1116898809L
-        private val multicaretEditIgnoreCaretBind by lazy {
+        @JvmField
+        val multicaretEditIgnoreCaretBind =
             ObjectCalls.getMethodBind("TextEdit", "multicaret_edit_ignore_caret", MULTICARET_EDIT_IGNORE_CARET_HASH)
-        }
 
         private const val IS_CARET_VISIBLE_HASH = 1051549951L
-        private val isCaretVisibleBind by lazy {
+        @JvmField
+        val isCaretVisibleBind =
             ObjectCalls.getMethodBind("TextEdit", "is_caret_visible", IS_CARET_VISIBLE_HASH)
-        }
 
         private const val GET_CARET_DRAW_POS_HASH = 478253731L
-        private val getCaretDrawPosBind by lazy {
+        @JvmField
+        val getCaretDrawPosBind =
             ObjectCalls.getMethodBind("TextEdit", "get_caret_draw_pos", GET_CARET_DRAW_POS_HASH)
-        }
 
         private const val SET_CARET_LINE_HASH = 1302582944L
-        private val setCaretLineBind by lazy {
+        @JvmField
+        val setCaretLineBind =
             ObjectCalls.getMethodBind("TextEdit", "set_caret_line", SET_CARET_LINE_HASH)
-        }
 
         private const val GET_CARET_LINE_HASH = 1591665591L
-        private val getCaretLineBind by lazy {
+        @JvmField
+        val getCaretLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_caret_line", GET_CARET_LINE_HASH)
-        }
 
         private const val SET_CARET_COLUMN_HASH = 3796796178L
-        private val setCaretColumnBind by lazy {
+        @JvmField
+        val setCaretColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "set_caret_column", SET_CARET_COLUMN_HASH)
-        }
 
         private const val GET_CARET_COLUMN_HASH = 1591665591L
-        private val getCaretColumnBind by lazy {
+        @JvmField
+        val getCaretColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_caret_column", GET_CARET_COLUMN_HASH)
-        }
 
         private const val GET_NEXT_COMPOSITE_CHARACTER_COLUMN_HASH = 3175239445L
-        private val getNextCompositeCharacterColumnBind by lazy {
+        @JvmField
+        val getNextCompositeCharacterColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_next_composite_character_column", GET_NEXT_COMPOSITE_CHARACTER_COLUMN_HASH)
-        }
 
         private const val GET_PREVIOUS_COMPOSITE_CHARACTER_COLUMN_HASH = 3175239445L
-        private val getPreviousCompositeCharacterColumnBind by lazy {
+        @JvmField
+        val getPreviousCompositeCharacterColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_previous_composite_character_column", GET_PREVIOUS_COMPOSITE_CHARACTER_COLUMN_HASH)
-        }
 
         private const val GET_CARET_WRAP_INDEX_HASH = 1591665591L
-        private val getCaretWrapIndexBind by lazy {
+        @JvmField
+        val getCaretWrapIndexBind =
             ObjectCalls.getMethodBind("TextEdit", "get_caret_wrap_index", GET_CARET_WRAP_INDEX_HASH)
-        }
 
         private const val GET_WORD_UNDER_CARET_HASH = 3929349208L
-        private val getWordUnderCaretBind by lazy {
+        @JvmField
+        val getWordUnderCaretBind =
             ObjectCalls.getMethodBind("TextEdit", "get_word_under_caret", GET_WORD_UNDER_CARET_HASH)
-        }
 
         private const val SET_USE_DEFAULT_WORD_SEPARATORS_HASH = 2586408642L
-        private val setUseDefaultWordSeparatorsBind by lazy {
+        @JvmField
+        val setUseDefaultWordSeparatorsBind =
             ObjectCalls.getMethodBind("TextEdit", "set_use_default_word_separators", SET_USE_DEFAULT_WORD_SEPARATORS_HASH)
-        }
 
         private const val IS_DEFAULT_WORD_SEPARATORS_ENABLED_HASH = 36873697L
-        private val isDefaultWordSeparatorsEnabledBind by lazy {
+        @JvmField
+        val isDefaultWordSeparatorsEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_default_word_separators_enabled", IS_DEFAULT_WORD_SEPARATORS_ENABLED_HASH)
-        }
 
         private const val SET_USE_CUSTOM_WORD_SEPARATORS_HASH = 2586408642L
-        private val setUseCustomWordSeparatorsBind by lazy {
+        @JvmField
+        val setUseCustomWordSeparatorsBind =
             ObjectCalls.getMethodBind("TextEdit", "set_use_custom_word_separators", SET_USE_CUSTOM_WORD_SEPARATORS_HASH)
-        }
 
         private const val IS_CUSTOM_WORD_SEPARATORS_ENABLED_HASH = 36873697L
-        private val isCustomWordSeparatorsEnabledBind by lazy {
+        @JvmField
+        val isCustomWordSeparatorsEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_custom_word_separators_enabled", IS_CUSTOM_WORD_SEPARATORS_ENABLED_HASH)
-        }
 
         private const val SET_CUSTOM_WORD_SEPARATORS_HASH = 83702148L
-        private val setCustomWordSeparatorsBind by lazy {
+        @JvmField
+        val setCustomWordSeparatorsBind =
             ObjectCalls.getMethodBind("TextEdit", "set_custom_word_separators", SET_CUSTOM_WORD_SEPARATORS_HASH)
-        }
 
         private const val GET_CUSTOM_WORD_SEPARATORS_HASH = 201670096L
-        private val getCustomWordSeparatorsBind by lazy {
+        @JvmField
+        val getCustomWordSeparatorsBind =
             ObjectCalls.getMethodBind("TextEdit", "get_custom_word_separators", GET_CUSTOM_WORD_SEPARATORS_HASH)
-        }
 
         private const val SET_SELECTING_ENABLED_HASH = 2586408642L
-        private val setSelectingEnabledBind by lazy {
+        @JvmField
+        val setSelectingEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_selecting_enabled", SET_SELECTING_ENABLED_HASH)
-        }
 
         private const val IS_SELECTING_ENABLED_HASH = 36873697L
-        private val isSelectingEnabledBind by lazy {
+        @JvmField
+        val isSelectingEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_selecting_enabled", IS_SELECTING_ENABLED_HASH)
-        }
 
         private const val SET_DESELECT_ON_FOCUS_LOSS_ENABLED_HASH = 2586408642L
-        private val setDeselectOnFocusLossEnabledBind by lazy {
+        @JvmField
+        val setDeselectOnFocusLossEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_deselect_on_focus_loss_enabled", SET_DESELECT_ON_FOCUS_LOSS_ENABLED_HASH)
-        }
 
         private const val IS_DESELECT_ON_FOCUS_LOSS_ENABLED_HASH = 36873697L
-        private val isDeselectOnFocusLossEnabledBind by lazy {
+        @JvmField
+        val isDeselectOnFocusLossEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_deselect_on_focus_loss_enabled", IS_DESELECT_ON_FOCUS_LOSS_ENABLED_HASH)
-        }
 
         private const val SET_DRAG_AND_DROP_SELECTION_ENABLED_HASH = 2586408642L
-        private val setDragAndDropSelectionEnabledBind by lazy {
+        @JvmField
+        val setDragAndDropSelectionEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_drag_and_drop_selection_enabled", SET_DRAG_AND_DROP_SELECTION_ENABLED_HASH)
-        }
 
         private const val IS_DRAG_AND_DROP_SELECTION_ENABLED_HASH = 36873697L
-        private val isDragAndDropSelectionEnabledBind by lazy {
+        @JvmField
+        val isDragAndDropSelectionEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_drag_and_drop_selection_enabled", IS_DRAG_AND_DROP_SELECTION_ENABLED_HASH)
-        }
 
         private const val SET_SELECTION_MODE_HASH = 1658801786L
-        private val setSelectionModeBind by lazy {
+        @JvmField
+        val setSelectionModeBind =
             ObjectCalls.getMethodBind("TextEdit", "set_selection_mode", SET_SELECTION_MODE_HASH)
-        }
 
         private const val GET_SELECTION_MODE_HASH = 3750106938L
-        private val getSelectionModeBind by lazy {
+        @JvmField
+        val getSelectionModeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_mode", GET_SELECTION_MODE_HASH)
-        }
 
         private const val SELECT_ALL_HASH = 3218959716L
-        private val selectAllBind by lazy {
+        @JvmField
+        val selectAllBind =
             ObjectCalls.getMethodBind("TextEdit", "select_all", SELECT_ALL_HASH)
-        }
 
         private const val SELECT_WORD_UNDER_CARET_HASH = 1025054187L
-        private val selectWordUnderCaretBind by lazy {
+        @JvmField
+        val selectWordUnderCaretBind =
             ObjectCalls.getMethodBind("TextEdit", "select_word_under_caret", SELECT_WORD_UNDER_CARET_HASH)
-        }
 
         private const val ADD_SELECTION_FOR_NEXT_OCCURRENCE_HASH = 3218959716L
-        private val addSelectionForNextOccurrenceBind by lazy {
+        @JvmField
+        val addSelectionForNextOccurrenceBind =
             ObjectCalls.getMethodBind("TextEdit", "add_selection_for_next_occurrence", ADD_SELECTION_FOR_NEXT_OCCURRENCE_HASH)
-        }
 
         private const val SKIP_SELECTION_FOR_NEXT_OCCURRENCE_HASH = 3218959716L
-        private val skipSelectionForNextOccurrenceBind by lazy {
+        @JvmField
+        val skipSelectionForNextOccurrenceBind =
             ObjectCalls.getMethodBind("TextEdit", "skip_selection_for_next_occurrence", SKIP_SELECTION_FOR_NEXT_OCCURRENCE_HASH)
-        }
 
         private const val SELECT_HASH = 2560984452L
-        private val selectBind by lazy {
+        @JvmField
+        val selectBind =
             ObjectCalls.getMethodBind("TextEdit", "select", SELECT_HASH)
-        }
 
         private const val HAS_SELECTION_HASH = 2824505868L
-        private val hasSelectionBind by lazy {
+        @JvmField
+        val hasSelectionBind =
             ObjectCalls.getMethodBind("TextEdit", "has_selection", HAS_SELECTION_HASH)
-        }
 
         private const val GET_SELECTED_TEXT_HASH = 2309358862L
-        private val getSelectedTextBind by lazy {
+        @JvmField
+        val getSelectedTextBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selected_text", GET_SELECTED_TEXT_HASH)
-        }
 
         private const val GET_SELECTION_AT_LINE_COLUMN_HASH = 1810224333L
-        private val getSelectionAtLineColumnBind by lazy {
+        @JvmField
+        val getSelectionAtLineColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_at_line_column", GET_SELECTION_AT_LINE_COLUMN_HASH)
-        }
 
         private const val GET_LINE_RANGES_FROM_CARETS_HASH = 2393089247L
-        private val getLineRangesFromCaretsBind by lazy {
+        @JvmField
+        val getLineRangesFromCaretsBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_ranges_from_carets", GET_LINE_RANGES_FROM_CARETS_HASH)
-        }
 
         private const val GET_SELECTION_ORIGIN_LINE_HASH = 1591665591L
-        private val getSelectionOriginLineBind by lazy {
+        @JvmField
+        val getSelectionOriginLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_origin_line", GET_SELECTION_ORIGIN_LINE_HASH)
-        }
 
         private const val GET_SELECTION_ORIGIN_COLUMN_HASH = 1591665591L
-        private val getSelectionOriginColumnBind by lazy {
+        @JvmField
+        val getSelectionOriginColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_origin_column", GET_SELECTION_ORIGIN_COLUMN_HASH)
-        }
 
         private const val SET_SELECTION_ORIGIN_LINE_HASH = 195434140L
-        private val setSelectionOriginLineBind by lazy {
+        @JvmField
+        val setSelectionOriginLineBind =
             ObjectCalls.getMethodBind("TextEdit", "set_selection_origin_line", SET_SELECTION_ORIGIN_LINE_HASH)
-        }
 
         private const val SET_SELECTION_ORIGIN_COLUMN_HASH = 2230941749L
-        private val setSelectionOriginColumnBind by lazy {
+        @JvmField
+        val setSelectionOriginColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "set_selection_origin_column", SET_SELECTION_ORIGIN_COLUMN_HASH)
-        }
 
         private const val GET_SELECTION_FROM_LINE_HASH = 1591665591L
-        private val getSelectionFromLineBind by lazy {
+        @JvmField
+        val getSelectionFromLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_from_line", GET_SELECTION_FROM_LINE_HASH)
-        }
 
         private const val GET_SELECTION_FROM_COLUMN_HASH = 1591665591L
-        private val getSelectionFromColumnBind by lazy {
+        @JvmField
+        val getSelectionFromColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_from_column", GET_SELECTION_FROM_COLUMN_HASH)
-        }
 
         private const val GET_SELECTION_TO_LINE_HASH = 1591665591L
-        private val getSelectionToLineBind by lazy {
+        @JvmField
+        val getSelectionToLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_to_line", GET_SELECTION_TO_LINE_HASH)
-        }
 
         private const val GET_SELECTION_TO_COLUMN_HASH = 1591665591L
-        private val getSelectionToColumnBind by lazy {
+        @JvmField
+        val getSelectionToColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_to_column", GET_SELECTION_TO_COLUMN_HASH)
-        }
 
         private const val IS_CARET_AFTER_SELECTION_ORIGIN_HASH = 1051549951L
-        private val isCaretAfterSelectionOriginBind by lazy {
+        @JvmField
+        val isCaretAfterSelectionOriginBind =
             ObjectCalls.getMethodBind("TextEdit", "is_caret_after_selection_origin", IS_CARET_AFTER_SELECTION_ORIGIN_HASH)
-        }
 
         private const val DESELECT_HASH = 1025054187L
-        private val deselectBind by lazy {
+        @JvmField
+        val deselectBind =
             ObjectCalls.getMethodBind("TextEdit", "deselect", DESELECT_HASH)
-        }
 
         private const val DELETE_SELECTION_HASH = 1025054187L
-        private val deleteSelectionBind by lazy {
+        @JvmField
+        val deleteSelectionBind =
             ObjectCalls.getMethodBind("TextEdit", "delete_selection", DELETE_SELECTION_HASH)
-        }
 
         private const val SET_LINE_WRAPPING_MODE_HASH = 2525115309L
-        private val setLineWrappingModeBind by lazy {
+        @JvmField
+        val setLineWrappingModeBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_wrapping_mode", SET_LINE_WRAPPING_MODE_HASH)
-        }
 
         private const val GET_LINE_WRAPPING_MODE_HASH = 3562716114L
-        private val getLineWrappingModeBind by lazy {
+        @JvmField
+        val getLineWrappingModeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_wrapping_mode", GET_LINE_WRAPPING_MODE_HASH)
-        }
 
         private const val SET_AUTOWRAP_MODE_HASH = 3289138044L
-        private val setAutowrapModeBind by lazy {
+        @JvmField
+        val setAutowrapModeBind =
             ObjectCalls.getMethodBind("TextEdit", "set_autowrap_mode", SET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val GET_AUTOWRAP_MODE_HASH = 1549071663L
-        private val getAutowrapModeBind by lazy {
+        @JvmField
+        val getAutowrapModeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_autowrap_mode", GET_AUTOWRAP_MODE_HASH)
-        }
 
         private const val IS_LINE_WRAPPED_HASH = 1116898809L
-        private val isLineWrappedBind by lazy {
+        @JvmField
+        val isLineWrappedBind =
             ObjectCalls.getMethodBind("TextEdit", "is_line_wrapped", IS_LINE_WRAPPED_HASH)
-        }
 
         private const val GET_LINE_WRAP_COUNT_HASH = 923996154L
-        private val getLineWrapCountBind by lazy {
+        @JvmField
+        val getLineWrapCountBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_wrap_count", GET_LINE_WRAP_COUNT_HASH)
-        }
 
         private const val GET_LINE_WRAP_INDEX_AT_COLUMN_HASH = 3175239445L
-        private val getLineWrapIndexAtColumnBind by lazy {
+        @JvmField
+        val getLineWrapIndexAtColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_wrap_index_at_column", GET_LINE_WRAP_INDEX_AT_COLUMN_HASH)
-        }
 
         private const val GET_LINE_WRAPPED_TEXT_HASH = 647634434L
-        private val getLineWrappedTextBind by lazy {
+        @JvmField
+        val getLineWrappedTextBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_wrapped_text", GET_LINE_WRAPPED_TEXT_HASH)
-        }
 
         private const val SET_SMOOTH_SCROLL_ENABLED_HASH = 2586408642L
-        private val setSmoothScrollEnabledBind by lazy {
+        @JvmField
+        val setSmoothScrollEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_smooth_scroll_enabled", SET_SMOOTH_SCROLL_ENABLED_HASH)
-        }
 
         private const val IS_SMOOTH_SCROLL_ENABLED_HASH = 36873697L
-        private val isSmoothScrollEnabledBind by lazy {
+        @JvmField
+        val isSmoothScrollEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_smooth_scroll_enabled", IS_SMOOTH_SCROLL_ENABLED_HASH)
-        }
 
         private const val GET_V_SCROLL_BAR_HASH = 3226026593L
-        private val getVScrollBarBind by lazy {
+        @JvmField
+        val getVScrollBarBind =
             ObjectCalls.getMethodBind("TextEdit", "get_v_scroll_bar", GET_V_SCROLL_BAR_HASH)
-        }
 
         private const val GET_H_SCROLL_BAR_HASH = 3774687988L
-        private val getHScrollBarBind by lazy {
+        @JvmField
+        val getHScrollBarBind =
             ObjectCalls.getMethodBind("TextEdit", "get_h_scroll_bar", GET_H_SCROLL_BAR_HASH)
-        }
 
         private const val SET_V_SCROLL_HASH = 373806689L
-        private val setVScrollBind by lazy {
+        @JvmField
+        val setVScrollBind =
             ObjectCalls.getMethodBind("TextEdit", "set_v_scroll", SET_V_SCROLL_HASH)
-        }
 
         private const val GET_V_SCROLL_HASH = 1740695150L
-        private val getVScrollBind by lazy {
+        @JvmField
+        val getVScrollBind =
             ObjectCalls.getMethodBind("TextEdit", "get_v_scroll", GET_V_SCROLL_HASH)
-        }
 
         private const val SET_H_SCROLL_HASH = 1286410249L
-        private val setHScrollBind by lazy {
+        @JvmField
+        val setHScrollBind =
             ObjectCalls.getMethodBind("TextEdit", "set_h_scroll", SET_H_SCROLL_HASH)
-        }
 
         private const val GET_H_SCROLL_HASH = 3905245786L
-        private val getHScrollBind by lazy {
+        @JvmField
+        val getHScrollBind =
             ObjectCalls.getMethodBind("TextEdit", "get_h_scroll", GET_H_SCROLL_HASH)
-        }
 
         private const val SET_SCROLL_PAST_END_OF_FILE_ENABLED_HASH = 2586408642L
-        private val setScrollPastEndOfFileEnabledBind by lazy {
+        @JvmField
+        val setScrollPastEndOfFileEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_scroll_past_end_of_file_enabled", SET_SCROLL_PAST_END_OF_FILE_ENABLED_HASH)
-        }
 
         private const val IS_SCROLL_PAST_END_OF_FILE_ENABLED_HASH = 36873697L
-        private val isScrollPastEndOfFileEnabledBind by lazy {
+        @JvmField
+        val isScrollPastEndOfFileEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_scroll_past_end_of_file_enabled", IS_SCROLL_PAST_END_OF_FILE_ENABLED_HASH)
-        }
 
         private const val SET_V_SCROLL_SPEED_HASH = 373806689L
-        private val setVScrollSpeedBind by lazy {
+        @JvmField
+        val setVScrollSpeedBind =
             ObjectCalls.getMethodBind("TextEdit", "set_v_scroll_speed", SET_V_SCROLL_SPEED_HASH)
-        }
 
         private const val GET_V_SCROLL_SPEED_HASH = 1740695150L
-        private val getVScrollSpeedBind by lazy {
+        @JvmField
+        val getVScrollSpeedBind =
             ObjectCalls.getMethodBind("TextEdit", "get_v_scroll_speed", GET_V_SCROLL_SPEED_HASH)
-        }
 
         private const val SET_FIT_CONTENT_HEIGHT_ENABLED_HASH = 2586408642L
-        private val setFitContentHeightEnabledBind by lazy {
+        @JvmField
+        val setFitContentHeightEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_fit_content_height_enabled", SET_FIT_CONTENT_HEIGHT_ENABLED_HASH)
-        }
 
         private const val IS_FIT_CONTENT_HEIGHT_ENABLED_HASH = 36873697L
-        private val isFitContentHeightEnabledBind by lazy {
+        @JvmField
+        val isFitContentHeightEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_fit_content_height_enabled", IS_FIT_CONTENT_HEIGHT_ENABLED_HASH)
-        }
 
         private const val SET_FIT_CONTENT_WIDTH_ENABLED_HASH = 2586408642L
-        private val setFitContentWidthEnabledBind by lazy {
+        @JvmField
+        val setFitContentWidthEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "set_fit_content_width_enabled", SET_FIT_CONTENT_WIDTH_ENABLED_HASH)
-        }
 
         private const val IS_FIT_CONTENT_WIDTH_ENABLED_HASH = 36873697L
-        private val isFitContentWidthEnabledBind by lazy {
+        @JvmField
+        val isFitContentWidthEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_fit_content_width_enabled", IS_FIT_CONTENT_WIDTH_ENABLED_HASH)
-        }
 
         private const val GET_SCROLL_POS_FOR_LINE_HASH = 3929084198L
-        private val getScrollPosForLineBind by lazy {
+        @JvmField
+        val getScrollPosForLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_scroll_pos_for_line", GET_SCROLL_POS_FOR_LINE_HASH)
-        }
 
         private const val SET_LINE_AS_FIRST_VISIBLE_HASH = 2230941749L
-        private val setLineAsFirstVisibleBind by lazy {
+        @JvmField
+        val setLineAsFirstVisibleBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_as_first_visible", SET_LINE_AS_FIRST_VISIBLE_HASH)
-        }
 
         private const val GET_FIRST_VISIBLE_LINE_HASH = 3905245786L
-        private val getFirstVisibleLineBind by lazy {
+        @JvmField
+        val getFirstVisibleLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_first_visible_line", GET_FIRST_VISIBLE_LINE_HASH)
-        }
 
         private const val IS_LINE_IN_VIEWPORT_HASH = 1116898809L
-        private val isLineInViewportBind by lazy {
+        @JvmField
+        val isLineInViewportBind =
             ObjectCalls.getMethodBind("TextEdit", "is_line_in_viewport", IS_LINE_IN_VIEWPORT_HASH)
-        }
 
         private const val SET_LINE_AS_CENTER_VISIBLE_HASH = 2230941749L
-        private val setLineAsCenterVisibleBind by lazy {
+        @JvmField
+        val setLineAsCenterVisibleBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_as_center_visible", SET_LINE_AS_CENTER_VISIBLE_HASH)
-        }
 
         private const val SET_LINE_AS_LAST_VISIBLE_HASH = 2230941749L
-        private val setLineAsLastVisibleBind by lazy {
+        @JvmField
+        val setLineAsLastVisibleBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_as_last_visible", SET_LINE_AS_LAST_VISIBLE_HASH)
-        }
 
         private const val GET_LAST_FULL_VISIBLE_LINE_HASH = 3905245786L
-        private val getLastFullVisibleLineBind by lazy {
+        @JvmField
+        val getLastFullVisibleLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_last_full_visible_line", GET_LAST_FULL_VISIBLE_LINE_HASH)
-        }
 
         private const val GET_LAST_FULL_VISIBLE_LINE_WRAP_INDEX_HASH = 3905245786L
-        private val getLastFullVisibleLineWrapIndexBind by lazy {
+        @JvmField
+        val getLastFullVisibleLineWrapIndexBind =
             ObjectCalls.getMethodBind("TextEdit", "get_last_full_visible_line_wrap_index", GET_LAST_FULL_VISIBLE_LINE_WRAP_INDEX_HASH)
-        }
 
         private const val GET_VISIBLE_LINE_COUNT_HASH = 3905245786L
-        private val getVisibleLineCountBind by lazy {
+        @JvmField
+        val getVisibleLineCountBind =
             ObjectCalls.getMethodBind("TextEdit", "get_visible_line_count", GET_VISIBLE_LINE_COUNT_HASH)
-        }
 
         private const val GET_VISIBLE_LINE_COUNT_IN_RANGE_HASH = 3175239445L
-        private val getVisibleLineCountInRangeBind by lazy {
+        @JvmField
+        val getVisibleLineCountInRangeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_visible_line_count_in_range", GET_VISIBLE_LINE_COUNT_IN_RANGE_HASH)
-        }
 
         private const val GET_TOTAL_VISIBLE_LINE_COUNT_HASH = 3905245786L
-        private val getTotalVisibleLineCountBind by lazy {
+        @JvmField
+        val getTotalVisibleLineCountBind =
             ObjectCalls.getMethodBind("TextEdit", "get_total_visible_line_count", GET_TOTAL_VISIBLE_LINE_COUNT_HASH)
-        }
 
         private const val ADJUST_VIEWPORT_TO_CARET_HASH = 1995695955L
-        private val adjustViewportToCaretBind by lazy {
+        @JvmField
+        val adjustViewportToCaretBind =
             ObjectCalls.getMethodBind("TextEdit", "adjust_viewport_to_caret", ADJUST_VIEWPORT_TO_CARET_HASH)
-        }
 
         private const val CENTER_VIEWPORT_TO_CARET_HASH = 1995695955L
-        private val centerViewportToCaretBind by lazy {
+        @JvmField
+        val centerViewportToCaretBind =
             ObjectCalls.getMethodBind("TextEdit", "center_viewport_to_caret", CENTER_VIEWPORT_TO_CARET_HASH)
-        }
 
         private const val SET_DRAW_MINIMAP_HASH = 2586408642L
-        private val setDrawMinimapBind by lazy {
+        @JvmField
+        val setDrawMinimapBind =
             ObjectCalls.getMethodBind("TextEdit", "set_draw_minimap", SET_DRAW_MINIMAP_HASH)
-        }
 
         private const val IS_DRAWING_MINIMAP_HASH = 36873697L
-        private val isDrawingMinimapBind by lazy {
+        @JvmField
+        val isDrawingMinimapBind =
             ObjectCalls.getMethodBind("TextEdit", "is_drawing_minimap", IS_DRAWING_MINIMAP_HASH)
-        }
 
         private const val SET_MINIMAP_WIDTH_HASH = 1286410249L
-        private val setMinimapWidthBind by lazy {
+        @JvmField
+        val setMinimapWidthBind =
             ObjectCalls.getMethodBind("TextEdit", "set_minimap_width", SET_MINIMAP_WIDTH_HASH)
-        }
 
         private const val GET_MINIMAP_WIDTH_HASH = 3905245786L
-        private val getMinimapWidthBind by lazy {
+        @JvmField
+        val getMinimapWidthBind =
             ObjectCalls.getMethodBind("TextEdit", "get_minimap_width", GET_MINIMAP_WIDTH_HASH)
-        }
 
         private const val GET_MINIMAP_VISIBLE_LINES_HASH = 3905245786L
-        private val getMinimapVisibleLinesBind by lazy {
+        @JvmField
+        val getMinimapVisibleLinesBind =
             ObjectCalls.getMethodBind("TextEdit", "get_minimap_visible_lines", GET_MINIMAP_VISIBLE_LINES_HASH)
-        }
 
         private const val ADD_GUTTER_HASH = 1025054187L
-        private val addGutterBind by lazy {
+        @JvmField
+        val addGutterBind =
             ObjectCalls.getMethodBind("TextEdit", "add_gutter", ADD_GUTTER_HASH)
-        }
 
         private const val REMOVE_GUTTER_HASH = 1286410249L
-        private val removeGutterBind by lazy {
+        @JvmField
+        val removeGutterBind =
             ObjectCalls.getMethodBind("TextEdit", "remove_gutter", REMOVE_GUTTER_HASH)
-        }
 
         private const val GET_GUTTER_COUNT_HASH = 3905245786L
-        private val getGutterCountBind by lazy {
+        @JvmField
+        val getGutterCountBind =
             ObjectCalls.getMethodBind("TextEdit", "get_gutter_count", GET_GUTTER_COUNT_HASH)
-        }
 
         private const val SET_GUTTER_NAME_HASH = 501894301L
-        private val setGutterNameBind by lazy {
+        @JvmField
+        val setGutterNameBind =
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_name", SET_GUTTER_NAME_HASH)
-        }
 
         private const val GET_GUTTER_NAME_HASH = 844755477L
-        private val getGutterNameBind by lazy {
+        @JvmField
+        val getGutterNameBind =
             ObjectCalls.getMethodBind("TextEdit", "get_gutter_name", GET_GUTTER_NAME_HASH)
-        }
 
         private const val SET_GUTTER_TYPE_HASH = 1088959071L
-        private val setGutterTypeBind by lazy {
+        @JvmField
+        val setGutterTypeBind =
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_type", SET_GUTTER_TYPE_HASH)
-        }
 
         private const val GET_GUTTER_TYPE_HASH = 1159699127L
-        private val getGutterTypeBind by lazy {
+        @JvmField
+        val getGutterTypeBind =
             ObjectCalls.getMethodBind("TextEdit", "get_gutter_type", GET_GUTTER_TYPE_HASH)
-        }
 
         private const val SET_GUTTER_WIDTH_HASH = 3937882851L
-        private val setGutterWidthBind by lazy {
+        @JvmField
+        val setGutterWidthBind =
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_width", SET_GUTTER_WIDTH_HASH)
-        }
 
         private const val GET_GUTTER_WIDTH_HASH = 923996154L
-        private val getGutterWidthBind by lazy {
+        @JvmField
+        val getGutterWidthBind =
             ObjectCalls.getMethodBind("TextEdit", "get_gutter_width", GET_GUTTER_WIDTH_HASH)
-        }
 
         private const val SET_GUTTER_DRAW_HASH = 300928843L
-        private val setGutterDrawBind by lazy {
+        @JvmField
+        val setGutterDrawBind =
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_draw", SET_GUTTER_DRAW_HASH)
-        }
 
         private const val IS_GUTTER_DRAWN_HASH = 1116898809L
-        private val isGutterDrawnBind by lazy {
+        @JvmField
+        val isGutterDrawnBind =
             ObjectCalls.getMethodBind("TextEdit", "is_gutter_drawn", IS_GUTTER_DRAWN_HASH)
-        }
 
         private const val SET_GUTTER_CLICKABLE_HASH = 300928843L
-        private val setGutterClickableBind by lazy {
+        @JvmField
+        val setGutterClickableBind =
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_clickable", SET_GUTTER_CLICKABLE_HASH)
-        }
 
         private const val IS_GUTTER_CLICKABLE_HASH = 1116898809L
-        private val isGutterClickableBind by lazy {
+        @JvmField
+        val isGutterClickableBind =
             ObjectCalls.getMethodBind("TextEdit", "is_gutter_clickable", IS_GUTTER_CLICKABLE_HASH)
-        }
 
         private const val SET_GUTTER_OVERWRITABLE_HASH = 300928843L
-        private val setGutterOverwritableBind by lazy {
+        @JvmField
+        val setGutterOverwritableBind =
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_overwritable", SET_GUTTER_OVERWRITABLE_HASH)
-        }
 
         private const val IS_GUTTER_OVERWRITABLE_HASH = 1116898809L
-        private val isGutterOverwritableBind by lazy {
+        @JvmField
+        val isGutterOverwritableBind =
             ObjectCalls.getMethodBind("TextEdit", "is_gutter_overwritable", IS_GUTTER_OVERWRITABLE_HASH)
-        }
 
         private const val MERGE_GUTTERS_HASH = 3937882851L
-        private val mergeGuttersBind by lazy {
+        @JvmField
+        val mergeGuttersBind =
             ObjectCalls.getMethodBind("TextEdit", "merge_gutters", MERGE_GUTTERS_HASH)
-        }
 
         private const val SET_GUTTER_CUSTOM_DRAW_HASH = 957362965L
-        private val setGutterCustomDrawBind by lazy {
+        @JvmField
+        val setGutterCustomDrawBind =
             ObjectCalls.getMethodBind("TextEdit", "set_gutter_custom_draw", SET_GUTTER_CUSTOM_DRAW_HASH)
-        }
 
         private const val GET_TOTAL_GUTTER_WIDTH_HASH = 3905245786L
-        private val getTotalGutterWidthBind by lazy {
+        @JvmField
+        val getTotalGutterWidthBind =
             ObjectCalls.getMethodBind("TextEdit", "get_total_gutter_width", GET_TOTAL_GUTTER_WIDTH_HASH)
-        }
 
         private const val SET_LINE_GUTTER_METADATA_HASH = 2060538656L
-        private val setLineGutterMetadataBind by lazy {
+        @JvmField
+        val setLineGutterMetadataBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_gutter_metadata", SET_LINE_GUTTER_METADATA_HASH)
-        }
 
         private const val GET_LINE_GUTTER_METADATA_HASH = 678354945L
-        private val getLineGutterMetadataBind by lazy {
+        @JvmField
+        val getLineGutterMetadataBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_gutter_metadata", GET_LINE_GUTTER_METADATA_HASH)
-        }
 
         private const val SET_LINE_GUTTER_TEXT_HASH = 2285447957L
-        private val setLineGutterTextBind by lazy {
+        @JvmField
+        val setLineGutterTextBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_gutter_text", SET_LINE_GUTTER_TEXT_HASH)
-        }
 
         private const val GET_LINE_GUTTER_TEXT_HASH = 1391810591L
-        private val getLineGutterTextBind by lazy {
+        @JvmField
+        val getLineGutterTextBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_gutter_text", GET_LINE_GUTTER_TEXT_HASH)
-        }
 
         private const val SET_LINE_GUTTER_ICON_HASH = 176101966L
-        private val setLineGutterIconBind by lazy {
+        @JvmField
+        val setLineGutterIconBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_gutter_icon", SET_LINE_GUTTER_ICON_HASH)
-        }
 
         private const val GET_LINE_GUTTER_ICON_HASH = 2584904275L
-        private val getLineGutterIconBind by lazy {
+        @JvmField
+        val getLineGutterIconBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_gutter_icon", GET_LINE_GUTTER_ICON_HASH)
-        }
 
         private const val SET_LINE_GUTTER_ITEM_COLOR_HASH = 3733378741L
-        private val setLineGutterItemColorBind by lazy {
+        @JvmField
+        val setLineGutterItemColorBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_gutter_item_color", SET_LINE_GUTTER_ITEM_COLOR_HASH)
-        }
 
         private const val GET_LINE_GUTTER_ITEM_COLOR_HASH = 2165839948L
-        private val getLineGutterItemColorBind by lazy {
+        @JvmField
+        val getLineGutterItemColorBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_gutter_item_color", GET_LINE_GUTTER_ITEM_COLOR_HASH)
-        }
 
         private const val SET_LINE_GUTTER_CLICKABLE_HASH = 1383440665L
-        private val setLineGutterClickableBind by lazy {
+        @JvmField
+        val setLineGutterClickableBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_gutter_clickable", SET_LINE_GUTTER_CLICKABLE_HASH)
-        }
 
         private const val IS_LINE_GUTTER_CLICKABLE_HASH = 2522259332L
-        private val isLineGutterClickableBind by lazy {
+        @JvmField
+        val isLineGutterClickableBind =
             ObjectCalls.getMethodBind("TextEdit", "is_line_gutter_clickable", IS_LINE_GUTTER_CLICKABLE_HASH)
-        }
 
         private const val SET_LINE_BACKGROUND_COLOR_HASH = 2878471219L
-        private val setLineBackgroundColorBind by lazy {
+        @JvmField
+        val setLineBackgroundColorBind =
             ObjectCalls.getMethodBind("TextEdit", "set_line_background_color", SET_LINE_BACKGROUND_COLOR_HASH)
-        }
 
         private const val GET_LINE_BACKGROUND_COLOR_HASH = 3457211756L
-        private val getLineBackgroundColorBind by lazy {
+        @JvmField
+        val getLineBackgroundColorBind =
             ObjectCalls.getMethodBind("TextEdit", "get_line_background_color", GET_LINE_BACKGROUND_COLOR_HASH)
-        }
 
         private const val SET_SYNTAX_HIGHLIGHTER_HASH = 2765644541L
-        private val setSyntaxHighlighterBind by lazy {
+        @JvmField
+        val setSyntaxHighlighterBind =
             ObjectCalls.getMethodBind("TextEdit", "set_syntax_highlighter", SET_SYNTAX_HIGHLIGHTER_HASH)
-        }
 
         private const val GET_SYNTAX_HIGHLIGHTER_HASH = 2721131626L
-        private val getSyntaxHighlighterBind by lazy {
+        @JvmField
+        val getSyntaxHighlighterBind =
             ObjectCalls.getMethodBind("TextEdit", "get_syntax_highlighter", GET_SYNTAX_HIGHLIGHTER_HASH)
-        }
 
         private const val SET_HIGHLIGHT_CURRENT_LINE_HASH = 2586408642L
-        private val setHighlightCurrentLineBind by lazy {
+        @JvmField
+        val setHighlightCurrentLineBind =
             ObjectCalls.getMethodBind("TextEdit", "set_highlight_current_line", SET_HIGHLIGHT_CURRENT_LINE_HASH)
-        }
 
         private const val IS_HIGHLIGHT_CURRENT_LINE_ENABLED_HASH = 36873697L
-        private val isHighlightCurrentLineEnabledBind by lazy {
+        @JvmField
+        val isHighlightCurrentLineEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_highlight_current_line_enabled", IS_HIGHLIGHT_CURRENT_LINE_ENABLED_HASH)
-        }
 
         private const val SET_HIGHLIGHT_ALL_OCCURRENCES_HASH = 2586408642L
-        private val setHighlightAllOccurrencesBind by lazy {
+        @JvmField
+        val setHighlightAllOccurrencesBind =
             ObjectCalls.getMethodBind("TextEdit", "set_highlight_all_occurrences", SET_HIGHLIGHT_ALL_OCCURRENCES_HASH)
-        }
 
         private const val IS_HIGHLIGHT_ALL_OCCURRENCES_ENABLED_HASH = 36873697L
-        private val isHighlightAllOccurrencesEnabledBind by lazy {
+        @JvmField
+        val isHighlightAllOccurrencesEnabledBind =
             ObjectCalls.getMethodBind("TextEdit", "is_highlight_all_occurrences_enabled", IS_HIGHLIGHT_ALL_OCCURRENCES_ENABLED_HASH)
-        }
 
         private const val GET_DRAW_CONTROL_CHARS_HASH = 36873697L
-        private val getDrawControlCharsBind by lazy {
+        @JvmField
+        val getDrawControlCharsBind =
             ObjectCalls.getMethodBind("TextEdit", "get_draw_control_chars", GET_DRAW_CONTROL_CHARS_HASH)
-        }
 
         private const val SET_DRAW_CONTROL_CHARS_HASH = 2586408642L
-        private val setDrawControlCharsBind by lazy {
+        @JvmField
+        val setDrawControlCharsBind =
             ObjectCalls.getMethodBind("TextEdit", "set_draw_control_chars", SET_DRAW_CONTROL_CHARS_HASH)
-        }
 
         private const val SET_DRAW_TABS_HASH = 2586408642L
-        private val setDrawTabsBind by lazy {
+        @JvmField
+        val setDrawTabsBind =
             ObjectCalls.getMethodBind("TextEdit", "set_draw_tabs", SET_DRAW_TABS_HASH)
-        }
 
         private const val IS_DRAWING_TABS_HASH = 36873697L
-        private val isDrawingTabsBind by lazy {
+        @JvmField
+        val isDrawingTabsBind =
             ObjectCalls.getMethodBind("TextEdit", "is_drawing_tabs", IS_DRAWING_TABS_HASH)
-        }
 
         private const val SET_DRAW_SPACES_HASH = 2586408642L
-        private val setDrawSpacesBind by lazy {
+        @JvmField
+        val setDrawSpacesBind =
             ObjectCalls.getMethodBind("TextEdit", "set_draw_spaces", SET_DRAW_SPACES_HASH)
-        }
 
         private const val IS_DRAWING_SPACES_HASH = 36873697L
-        private val isDrawingSpacesBind by lazy {
+        @JvmField
+        val isDrawingSpacesBind =
             ObjectCalls.getMethodBind("TextEdit", "is_drawing_spaces", IS_DRAWING_SPACES_HASH)
-        }
 
         private const val GET_MENU_HASH = 229722558L
-        private val getMenuBind by lazy {
+        @JvmField
+        val getMenuBind =
             ObjectCalls.getMethodBind("TextEdit", "get_menu", GET_MENU_HASH)
-        }
 
         private const val IS_MENU_VISIBLE_HASH = 36873697L
-        private val isMenuVisibleBind by lazy {
+        @JvmField
+        val isMenuVisibleBind =
             ObjectCalls.getMethodBind("TextEdit", "is_menu_visible", IS_MENU_VISIBLE_HASH)
-        }
 
         private const val MENU_OPTION_HASH = 1286410249L
-        private val menuOptionBind by lazy {
+        @JvmField
+        val menuOptionBind =
             ObjectCalls.getMethodBind("TextEdit", "menu_option", MENU_OPTION_HASH)
-        }
 
         private const val ADJUST_CARETS_AFTER_EDIT_HASH = 1770277138L
-        private val adjustCaretsAfterEditBind by lazy {
+        @JvmField
+        val adjustCaretsAfterEditBind =
             ObjectCalls.getMethodBind("TextEdit", "adjust_carets_after_edit", ADJUST_CARETS_AFTER_EDIT_HASH)
-        }
 
         private const val GET_CARET_INDEX_EDIT_ORDER_HASH = 969006518L
-        private val getCaretIndexEditOrderBind by lazy {
+        @JvmField
+        val getCaretIndexEditOrderBind =
             ObjectCalls.getMethodBind("TextEdit", "get_caret_index_edit_order", GET_CARET_INDEX_EDIT_ORDER_HASH)
-        }
 
         private const val GET_SELECTION_LINE_HASH = 1591665591L
-        private val getSelectionLineBind by lazy {
+        @JvmField
+        val getSelectionLineBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_line", GET_SELECTION_LINE_HASH)
-        }
 
         private const val GET_SELECTION_COLUMN_HASH = 1591665591L
-        private val getSelectionColumnBind by lazy {
+        @JvmField
+        val getSelectionColumnBind =
             ObjectCalls.getMethodBind("TextEdit", "get_selection_column", GET_SELECTION_COLUMN_HASH)
-        }
     }
 }

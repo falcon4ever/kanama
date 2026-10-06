@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -29,7 +30,7 @@ class SpringBoneCollisionSphere3D(handle: GodotHandle) : SpringBoneCollision3D(h
      * Generated from Godot docs: SpringBoneCollisionSphere3D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -38,7 +39,7 @@ class SpringBoneCollisionSphere3D(handle: GodotHandle) : SpringBoneCollision3D(h
      * Generated from Godot docs: SpringBoneCollisionSphere3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -47,7 +48,7 @@ class SpringBoneCollisionSphere3D(handle: GodotHandle) : SpringBoneCollision3D(h
      * Generated from Godot docs: SpringBoneCollisionSphere3D.set_inside
      */
     fun setInside(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setInsideBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setInsideBind, segment, enabled)
     }
 
     /**
@@ -56,7 +57,7 @@ class SpringBoneCollisionSphere3D(handle: GodotHandle) : SpringBoneCollision3D(h
      * Generated from Godot docs: SpringBoneCollisionSphere3D.is_inside
      */
     fun isInside(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInsideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInsideBind, segment)
     }
 
     companion object {
@@ -66,25 +67,27 @@ class SpringBoneCollisionSphere3D(handle: GodotHandle) : SpringBoneCollision3D(h
 
         internal fun wrap(handle: RawSegment): SpringBoneCollisionSphere3D? =
             if (handle.address() == 0L) null else SpringBoneCollisionSphere3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionSphere3D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionSphere3D", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_INSIDE_HASH = 2586408642L
-        private val setInsideBind by lazy {
+        @JvmField
+        val setInsideBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionSphere3D", "set_inside", SET_INSIDE_HASH)
-        }
 
         private const val IS_INSIDE_HASH = 36873697L
-        private val isInsideBind by lazy {
+        @JvmField
+        val isInsideBind =
             ObjectCalls.getMethodBind("SpringBoneCollisionSphere3D", "is_inside", IS_INSIDE_HASH)
-        }
     }
 }

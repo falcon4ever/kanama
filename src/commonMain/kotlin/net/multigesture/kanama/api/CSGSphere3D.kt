@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -41,43 +42,43 @@ class CSGSphere3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
         set(value) = setMaterial(value)
 
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     fun setRadialSegments(radialSegments: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, segment, radialSegments)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRadialSegmentsBind, segment, radialSegments)
     }
 
     fun getRadialSegments(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
     }
 
     fun setRings(rings: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
     }
 
     fun getRings(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
     }
 
     fun setSmoothFaces(smoothFaces: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSmoothFacesBind, segment, smoothFaces)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSmoothFacesBind, segment, smoothFaces)
     }
 
     fun getSmoothFaces(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSmoothFacesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSmoothFacesBind, segment)
     }
 
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMaterial(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
     companion object {
@@ -87,55 +88,57 @@ class CSGSphere3D(handle: GodotHandle) : CSGPrimitive3D(handle) {
 
         internal fun wrap(handle: RawSegment): CSGSphere3D? =
             if (handle.address() == 0L) null else CSGSphere3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_RADIAL_SEGMENTS_HASH = 1286410249L
-        private val setRadialSegmentsBind by lazy {
+        @JvmField
+        val setRadialSegmentsBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "set_radial_segments", SET_RADIAL_SEGMENTS_HASH)
-        }
 
         private const val GET_RADIAL_SEGMENTS_HASH = 3905245786L
-        private val getRadialSegmentsBind by lazy {
+        @JvmField
+        val getRadialSegmentsBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "get_radial_segments", GET_RADIAL_SEGMENTS_HASH)
-        }
 
         private const val SET_RINGS_HASH = 1286410249L
-        private val setRingsBind by lazy {
+        @JvmField
+        val setRingsBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "set_rings", SET_RINGS_HASH)
-        }
 
         private const val GET_RINGS_HASH = 3905245786L
-        private val getRingsBind by lazy {
+        @JvmField
+        val getRingsBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "get_rings", GET_RINGS_HASH)
-        }
 
         private const val SET_SMOOTH_FACES_HASH = 2586408642L
-        private val setSmoothFacesBind by lazy {
+        @JvmField
+        val setSmoothFacesBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "set_smooth_faces", SET_SMOOTH_FACES_HASH)
-        }
 
         private const val GET_SMOOTH_FACES_HASH = 36873697L
-        private val getSmoothFacesBind by lazy {
+        @JvmField
+        val getSmoothFacesBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "get_smooth_faces", GET_SMOOTH_FACES_HASH)
-        }
 
         private const val SET_MATERIAL_HASH = 2757459619L
-        private val setMaterialBind by lazy {
+        @JvmField
+        val setMaterialBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "set_material", SET_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 5934680L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("CSGSphere3D", "get_material", GET_MATERIAL_HASH)
-        }
     }
 }

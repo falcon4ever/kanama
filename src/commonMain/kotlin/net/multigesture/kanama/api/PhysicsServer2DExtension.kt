@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class PhysicsServer2DExtension(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsServer2DExtension.body_test_motion_is_excluding_body
      */
     fun bodyTestMotionIsExcludingBody(body: RID): Boolean {
-        return ObjectCalls.ptrcallWithRIDArgRetBool(bodyTestMotionIsExcludingBodyBind, segment, body)
+        return ObjectCalls.ptrcallWithRIDArgRetBool(Binds.bodyTestMotionIsExcludingBodyBind, segment, body)
     }
 
     /**
@@ -29,7 +30,7 @@ class PhysicsServer2DExtension(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: PhysicsServer2DExtension.body_test_motion_is_excluding_object
      */
     fun bodyTestMotionIsExcludingObject(objectValue: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(bodyTestMotionIsExcludingObjectBind, segment, objectValue)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.bodyTestMotionIsExcludingObjectBind, segment, objectValue)
     }
 
     companion object {
@@ -39,15 +40,17 @@ class PhysicsServer2DExtension(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): PhysicsServer2DExtension? =
             if (handle.address() == 0L) null else PhysicsServer2DExtension(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val BODY_TEST_MOTION_IS_EXCLUDING_BODY_HASH = 4155700596L
-        private val bodyTestMotionIsExcludingBodyBind by lazy {
+        @JvmField
+        val bodyTestMotionIsExcludingBodyBind =
             ObjectCalls.getMethodBind("PhysicsServer2DExtension", "body_test_motion_is_excluding_body", BODY_TEST_MOTION_IS_EXCLUDING_BODY_HASH)
-        }
 
         private const val BODY_TEST_MOTION_IS_EXCLUDING_OBJECT_HASH = 1116898809L
-        private val bodyTestMotionIsExcludingObjectBind by lazy {
+        @JvmField
+        val bodyTestMotionIsExcludingObjectBind =
             ObjectCalls.getMethodBind("PhysicsServer2DExtension", "body_test_motion_is_excluding_object", BODY_TEST_MOTION_IS_EXCLUDING_OBJECT_HASH)
-        }
     }
 }

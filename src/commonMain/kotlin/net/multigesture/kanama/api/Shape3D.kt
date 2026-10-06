@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -33,7 +34,7 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun setCustomSolverBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCustomSolverBiasBind, segment, bias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCustomSolverBiasBind, segment, bias)
     }
 
     /**
@@ -46,7 +47,7 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomSolverBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomSolverBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCustomSolverBiasBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun setMargin(margin: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMarginBind, segment, margin)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMarginBind, segment, margin)
     }
 
     /**
@@ -74,7 +75,7 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getMargin(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMarginBind, segment)
     }
 
     /**
@@ -84,7 +85,7 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
      */
     fun getDebugMesh(): ArrayMesh? {
         checkOpen()
-        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getDebugMeshBind, segment))
+        return ArrayMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getDebugMeshBind, segment))
     }
 
     companion object {
@@ -97,30 +98,32 @@ open class Shape3D(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Shape3D? =
             if (handle.address() == 0L) null else Shape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CUSTOM_SOLVER_BIAS_HASH = 373806689L
-        private val setCustomSolverBiasBind by lazy {
+        @JvmField
+        val setCustomSolverBiasBind =
             ObjectCalls.getMethodBind("Shape3D", "set_custom_solver_bias", SET_CUSTOM_SOLVER_BIAS_HASH)
-        }
 
         private const val GET_CUSTOM_SOLVER_BIAS_HASH = 1740695150L
-        private val getCustomSolverBiasBind by lazy {
+        @JvmField
+        val getCustomSolverBiasBind =
             ObjectCalls.getMethodBind("Shape3D", "get_custom_solver_bias", GET_CUSTOM_SOLVER_BIAS_HASH)
-        }
 
         private const val SET_MARGIN_HASH = 373806689L
-        private val setMarginBind by lazy {
+        @JvmField
+        val setMarginBind =
             ObjectCalls.getMethodBind("Shape3D", "set_margin", SET_MARGIN_HASH)
-        }
 
         private const val GET_MARGIN_HASH = 1740695150L
-        private val getMarginBind by lazy {
+        @JvmField
+        val getMarginBind =
             ObjectCalls.getMethodBind("Shape3D", "get_margin", GET_MARGIN_HASH)
-        }
 
         private const val GET_DEBUG_MESH_HASH = 1605880883L
-        private val getDebugMeshBind by lazy {
+        @JvmField
+        val getDebugMeshBind =
             ObjectCalls.getMethodBind("Shape3D", "get_debug_mesh", GET_DEBUG_MESH_HASH)
-        }
     }
 }

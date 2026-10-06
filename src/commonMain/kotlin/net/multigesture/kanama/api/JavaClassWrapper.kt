@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,9 +11,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: JavaClassWrapper
  */
 object JavaClassWrapper {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("JavaClassWrapper")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Wraps a class defined in Java, and returns it as a `JavaClass` `Object` type that Godot can
@@ -25,7 +25,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun wrap(name: String): JavaClass? {
-        return JavaClass.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(wrapBind, singleton, name))
+        return JavaClass.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.wrapBind, singleton, name))
     }
 
     /**
@@ -37,7 +37,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun getException(): JavaObject? {
-        return JavaObject.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getExceptionBind, singleton))
+        return JavaObject.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getExceptionBind, singleton))
     }
 
     /**
@@ -52,7 +52,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun createSamCallback(samInterface: String, callable: GodotCallable): JavaObject? {
-        return JavaObject.wrapOwned(ObjectCalls.ptrcallWithStringCallableArgsRetObject(createSamCallbackBind, singleton, samInterface, callable.target.segment, callable.method))
+        return JavaObject.wrapOwned(ObjectCalls.ptrcallWithStringCallableArgsRetObject(Binds.createSamCallbackBind, singleton, samInterface, callable.target.segment, callable.method))
     }
 
     /**
@@ -65,7 +65,7 @@ object JavaClassWrapper {
      */
     @JvmStatic
     fun createProxy(objectValue: GodotObject, interfaces: List<String>): JavaObject? {
-        return JavaObject.wrapOwned(ObjectCalls.ptrcallWithObjectAndPackedStringListArgsRetObject(createProxyBind, singleton, objectValue.segment, interfaces))
+        return JavaObject.wrapOwned(ObjectCalls.ptrcallWithObjectAndPackedStringListArgsRetObject(Binds.createProxyBind, singleton, objectValue.segment, interfaces))
     }
 
     @JvmStatic
@@ -75,23 +75,28 @@ object JavaClassWrapper {
     internal fun wrap(handle: RawSegment): JavaClassWrapper? =
         if (handle.address() == 0L) null else this
 
-    private const val WRAP_HASH = 1124367868L
-    private val wrapBind by lazy {
-        ObjectCalls.getMethodBind("JavaClassWrapper", "wrap", WRAP_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("JavaClassWrapper")
 
-    private const val GET_EXCEPTION_HASH = 3277089691L
-    private val getExceptionBind by lazy {
-        ObjectCalls.getMethodBind("JavaClassWrapper", "get_exception", GET_EXCEPTION_HASH)
-    }
+        private const val WRAP_HASH = 1124367868L
+        @JvmField
+        val wrapBind =
+            ObjectCalls.getMethodBind("JavaClassWrapper", "wrap", WRAP_HASH)
 
-    private const val CREATE_SAM_CALLBACK_HASH = 2479014754L
-    private val createSamCallbackBind by lazy {
-        ObjectCalls.getMethodBind("JavaClassWrapper", "create_sam_callback", CREATE_SAM_CALLBACK_HASH)
-    }
+        private const val GET_EXCEPTION_HASH = 3277089691L
+        @JvmField
+        val getExceptionBind =
+            ObjectCalls.getMethodBind("JavaClassWrapper", "get_exception", GET_EXCEPTION_HASH)
 
-    private const val CREATE_PROXY_HASH = 2694931752L
-    private val createProxyBind by lazy {
-        ObjectCalls.getMethodBind("JavaClassWrapper", "create_proxy", CREATE_PROXY_HASH)
+        private const val CREATE_SAM_CALLBACK_HASH = 2479014754L
+        @JvmField
+        val createSamCallbackBind =
+            ObjectCalls.getMethodBind("JavaClassWrapper", "create_sam_callback", CREATE_SAM_CALLBACK_HASH)
+
+        private const val CREATE_PROXY_HASH = 2694931752L
+        @JvmField
+        val createProxyBind =
+            ObjectCalls.getMethodBind("JavaClassWrapper", "create_proxy", CREATE_PROXY_HASH)
     }
 }

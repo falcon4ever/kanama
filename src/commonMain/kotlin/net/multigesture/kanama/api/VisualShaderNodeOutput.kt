@@ -20,7 +20,5 @@ open class VisualShaderNodeOutput(handle: GodotHandle) : VisualShaderNode(handle
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeOutput? =
             if (handle.address() == 0L) null else VisualShaderNodeOutput(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

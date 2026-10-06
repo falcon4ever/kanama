@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,7 +11,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 class VisualShaderNodeCustom(handle: GodotHandle) : VisualShaderNode(handle) {
     fun getOptionIndex(option: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOptionIndexBind, segment, option)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOptionIndexBind, segment, option)
     }
 
     companion object {
@@ -23,10 +24,12 @@ class VisualShaderNodeCustom(handle: GodotHandle) : VisualShaderNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCustom? =
             if (handle.address() == 0L) null else VisualShaderNodeCustom(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_OPTION_INDEX_HASH = 923996154L
-        private val getOptionIndexBind by lazy {
+        @JvmField
+        val getOptionIndexBind =
             ObjectCalls.getMethodBind("VisualShaderNodeCustom", "get_option_index", GET_OPTION_INDEX_HASH)
-        }
     }
 }

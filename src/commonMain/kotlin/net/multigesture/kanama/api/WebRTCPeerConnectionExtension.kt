@@ -20,7 +20,5 @@ class WebRTCPeerConnectionExtension(handle: GodotHandle) : WebRTCPeerConnection(
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCPeerConnectionExtension? =
             if (handle.address() == 0L) null else WebRTCPeerConnectionExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

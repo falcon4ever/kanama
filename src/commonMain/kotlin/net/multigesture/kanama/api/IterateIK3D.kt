@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -45,7 +46,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_max_iterations
      */
     fun setMaxIterations(maxIterations: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxIterationsBind, segment, maxIterations)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxIterationsBind, segment, maxIterations)
     }
 
     /**
@@ -54,7 +55,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_max_iterations
      */
     fun getMaxIterations(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxIterationsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxIterationsBind, segment)
     }
 
     /**
@@ -64,7 +65,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_min_distance
      */
     fun setMinDistance(minDistance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMinDistanceBind, segment, minDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinDistanceBind, segment, minDistance)
     }
 
     /**
@@ -74,7 +75,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_min_distance
      */
     fun getMinDistance(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinDistanceBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_angular_delta_limit
      */
     fun setAngularDeltaLimit(angularDeltaLimit: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularDeltaLimitBind, segment, angularDeltaLimit)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAngularDeltaLimitBind, segment, angularDeltaLimit)
     }
 
     /**
@@ -96,7 +97,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_angular_delta_limit
      */
     fun getAngularDeltaLimit(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularDeltaLimitBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngularDeltaLimitBind, segment)
     }
 
     /**
@@ -110,7 +111,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_deterministic
      */
     fun setDeterministic(deterministic: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeterministicBind, segment, deterministic)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeterministicBind, segment, deterministic)
     }
 
     /**
@@ -124,7 +125,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.is_deterministic
      */
     fun isDeterministic(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeterministicBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDeterministicBind, segment)
     }
 
     /**
@@ -133,7 +134,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_target_node
      */
     fun setTargetNode(index: Int, targetNode: NodePath) {
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setTargetNodeBind, segment, index, targetNode)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.setTargetNodeBind, segment, index, targetNode)
     }
 
     /**
@@ -142,7 +143,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_target_node
      */
     fun getTargetNode(index: Int): NodePath {
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getTargetNodeBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getTargetNodeBind, segment, index)
     }
 
     /**
@@ -155,7 +156,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_joint_rotation_axis
      */
     fun setJointRotationAxis(index: Int, joint: Int, axis: SkeletonModifier3D.RotationAxis) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointRotationAxisBind, segment, index, joint, axis.value)
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(Binds.setJointRotationAxisBind, segment, index, joint, axis.value)
     }
 
     /**
@@ -164,7 +165,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_joint_rotation_axis
      */
     fun getJointRotationAxis(index: Int, joint: Int): SkeletonModifier3D.RotationAxis {
-        return SkeletonModifier3D.RotationAxis(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointRotationAxisBind, segment, index, joint))
+        return SkeletonModifier3D.RotationAxis(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getJointRotationAxisBind, segment, index, joint))
     }
 
     /**
@@ -176,7 +177,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_joint_rotation_axis_vector
      */
     fun setJointRotationAxisVector(index: Int, joint: Int, axisVector: Vector3) {
-        ObjectCalls.ptrcallWithTwoIntAndVector3Arg(setJointRotationAxisVectorBind, segment, index, joint, axisVector)
+        ObjectCalls.ptrcallWithTwoIntAndVector3Arg(Binds.setJointRotationAxisVectorBind, segment, index, joint, axisVector)
     }
 
     /**
@@ -188,7 +189,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_joint_rotation_axis_vector
      */
     fun getJointRotationAxisVector(index: Int, joint: Int): Vector3 {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(getJointRotationAxisVectorBind, segment, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(Binds.getJointRotationAxisVectorBind, segment, index, joint)
     }
 
     /**
@@ -197,7 +198,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_joint_limitation
      */
     fun setJointLimitation(index: Int, joint: Int, limitation: JointLimitation3D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setJointLimitationBind, segment, index, joint, limitation?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.setJointLimitationBind, segment, index, joint, limitation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -206,7 +207,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_joint_limitation
      */
     fun getJointLimitation(index: Int, joint: Int): JointLimitation3D? {
-        return JointLimitation3D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(getJointLimitationBind, segment, index, joint))
+        return JointLimitation3D.wrapOwned(ObjectCalls.ptrcallWithTwoIntArgsRetObject(Binds.getJointLimitationBind, segment, index, joint))
     }
 
     /**
@@ -215,7 +216,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_joint_limitation_right_axis
      */
     fun setJointLimitationRightAxis(index: Int, joint: Int, direction: SkeletonModifier3D.SecondaryDirection) {
-        ObjectCalls.ptrcallWithTwoIntAndLongArgs(setJointLimitationRightAxisBind, segment, index, joint, direction.value)
+        ObjectCalls.ptrcallWithTwoIntAndLongArgs(Binds.setJointLimitationRightAxisBind, segment, index, joint, direction.value)
     }
 
     /**
@@ -224,7 +225,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_joint_limitation_right_axis
      */
     fun getJointLimitationRightAxis(index: Int, joint: Int): SkeletonModifier3D.SecondaryDirection {
-        return SkeletonModifier3D.SecondaryDirection(ObjectCalls.ptrcallWithTwoIntArgsRetLong(getJointLimitationRightAxisBind, segment, index, joint))
+        return SkeletonModifier3D.SecondaryDirection(ObjectCalls.ptrcallWithTwoIntArgsRetLong(Binds.getJointLimitationRightAxisBind, segment, index, joint))
     }
 
     /**
@@ -233,7 +234,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_joint_limitation_right_axis_vector
      */
     fun setJointLimitationRightAxisVector(index: Int, joint: Int, vector: Vector3) {
-        ObjectCalls.ptrcallWithTwoIntAndVector3Arg(setJointLimitationRightAxisVectorBind, segment, index, joint, vector)
+        ObjectCalls.ptrcallWithTwoIntAndVector3Arg(Binds.setJointLimitationRightAxisVectorBind, segment, index, joint, vector)
     }
 
     /**
@@ -244,7 +245,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_joint_limitation_right_axis_vector
      */
     fun getJointLimitationRightAxisVector(index: Int, joint: Int): Vector3 {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(getJointLimitationRightAxisVectorBind, segment, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector3(Binds.getJointLimitationRightAxisVectorBind, segment, index, joint)
     }
 
     /**
@@ -260,7 +261,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.set_joint_limitation_rotation_offset
      */
     fun setJointLimitationRotationOffset(index: Int, joint: Int, offset: Quaternion) {
-        ObjectCalls.ptrcallWithTwoIntAndQuaternionArg(setJointLimitationRotationOffsetBind, segment, index, joint, offset)
+        ObjectCalls.ptrcallWithTwoIntAndQuaternionArg(Binds.setJointLimitationRotationOffsetBind, segment, index, joint, offset)
     }
 
     /**
@@ -276,7 +277,7 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * Generated from Godot docs: IterateIK3D.get_joint_limitation_rotation_offset
      */
     fun getJointLimitationRotationOffset(index: Int, joint: Int): Quaternion {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetQuaternion(getJointLimitationRotationOffsetBind, segment, index, joint)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetQuaternion(Binds.getJointLimitationRotationOffsetBind, segment, index, joint)
     }
 
     companion object {
@@ -286,115 +287,117 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
 
         internal fun wrap(handle: RawSegment): IterateIK3D? =
             if (handle.address() == 0L) null else IterateIK3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MAX_ITERATIONS_HASH = 1286410249L
-        private val setMaxIterationsBind by lazy {
+        @JvmField
+        val setMaxIterationsBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_max_iterations", SET_MAX_ITERATIONS_HASH)
-        }
 
         private const val GET_MAX_ITERATIONS_HASH = 3905245786L
-        private val getMaxIterationsBind by lazy {
+        @JvmField
+        val getMaxIterationsBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_max_iterations", GET_MAX_ITERATIONS_HASH)
-        }
 
         private const val SET_MIN_DISTANCE_HASH = 373806689L
-        private val setMinDistanceBind by lazy {
+        @JvmField
+        val setMinDistanceBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_min_distance", SET_MIN_DISTANCE_HASH)
-        }
 
         private const val GET_MIN_DISTANCE_HASH = 1740695150L
-        private val getMinDistanceBind by lazy {
+        @JvmField
+        val getMinDistanceBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_min_distance", GET_MIN_DISTANCE_HASH)
-        }
 
         private const val SET_ANGULAR_DELTA_LIMIT_HASH = 373806689L
-        private val setAngularDeltaLimitBind by lazy {
+        @JvmField
+        val setAngularDeltaLimitBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_angular_delta_limit", SET_ANGULAR_DELTA_LIMIT_HASH)
-        }
 
         private const val GET_ANGULAR_DELTA_LIMIT_HASH = 1740695150L
-        private val getAngularDeltaLimitBind by lazy {
+        @JvmField
+        val getAngularDeltaLimitBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_angular_delta_limit", GET_ANGULAR_DELTA_LIMIT_HASH)
-        }
 
         private const val SET_DETERMINISTIC_HASH = 2586408642L
-        private val setDeterministicBind by lazy {
+        @JvmField
+        val setDeterministicBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_deterministic", SET_DETERMINISTIC_HASH)
-        }
 
         private const val IS_DETERMINISTIC_HASH = 36873697L
-        private val isDeterministicBind by lazy {
+        @JvmField
+        val isDeterministicBind =
             ObjectCalls.getMethodBind("IterateIK3D", "is_deterministic", IS_DETERMINISTIC_HASH)
-        }
 
         private const val SET_TARGET_NODE_HASH = 2761262315L
-        private val setTargetNodeBind by lazy {
+        @JvmField
+        val setTargetNodeBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_target_node", SET_TARGET_NODE_HASH)
-        }
 
         private const val GET_TARGET_NODE_HASH = 408788394L
-        private val getTargetNodeBind by lazy {
+        @JvmField
+        val getTargetNodeBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_target_node", GET_TARGET_NODE_HASH)
-        }
 
         private const val SET_JOINT_ROTATION_AXIS_HASH = 1391134969L
-        private val setJointRotationAxisBind by lazy {
+        @JvmField
+        val setJointRotationAxisBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_joint_rotation_axis", SET_JOINT_ROTATION_AXIS_HASH)
-        }
 
         private const val GET_JOINT_ROTATION_AXIS_HASH = 3312594080L
-        private val getJointRotationAxisBind by lazy {
+        @JvmField
+        val getJointRotationAxisBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_joint_rotation_axis", GET_JOINT_ROTATION_AXIS_HASH)
-        }
 
         private const val SET_JOINT_ROTATION_AXIS_VECTOR_HASH = 2866752138L
-        private val setJointRotationAxisVectorBind by lazy {
+        @JvmField
+        val setJointRotationAxisVectorBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_joint_rotation_axis_vector", SET_JOINT_ROTATION_AXIS_VECTOR_HASH)
-        }
 
         private const val GET_JOINT_ROTATION_AXIS_VECTOR_HASH = 1592972041L
-        private val getJointRotationAxisVectorBind by lazy {
+        @JvmField
+        val getJointRotationAxisVectorBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_joint_rotation_axis_vector", GET_JOINT_ROTATION_AXIS_VECTOR_HASH)
-        }
 
         private const val SET_JOINT_LIMITATION_HASH = 1194636955L
-        private val setJointLimitationBind by lazy {
+        @JvmField
+        val setJointLimitationBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_joint_limitation", SET_JOINT_LIMITATION_HASH)
-        }
 
         private const val GET_JOINT_LIMITATION_HASH = 91665146L
-        private val getJointLimitationBind by lazy {
+        @JvmField
+        val getJointLimitationBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_joint_limitation", GET_JOINT_LIMITATION_HASH)
-        }
 
         private const val SET_JOINT_LIMITATION_RIGHT_AXIS_HASH = 3838967147L
-        private val setJointLimitationRightAxisBind by lazy {
+        @JvmField
+        val setJointLimitationRightAxisBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_joint_limitation_right_axis", SET_JOINT_LIMITATION_RIGHT_AXIS_HASH)
-        }
 
         private const val GET_JOINT_LIMITATION_RIGHT_AXIS_HASH = 623936134L
-        private val getJointLimitationRightAxisBind by lazy {
+        @JvmField
+        val getJointLimitationRightAxisBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_joint_limitation_right_axis", GET_JOINT_LIMITATION_RIGHT_AXIS_HASH)
-        }
 
         private const val SET_JOINT_LIMITATION_RIGHT_AXIS_VECTOR_HASH = 2866752138L
-        private val setJointLimitationRightAxisVectorBind by lazy {
+        @JvmField
+        val setJointLimitationRightAxisVectorBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_joint_limitation_right_axis_vector", SET_JOINT_LIMITATION_RIGHT_AXIS_VECTOR_HASH)
-        }
 
         private const val GET_JOINT_LIMITATION_RIGHT_AXIS_VECTOR_HASH = 1592972041L
-        private val getJointLimitationRightAxisVectorBind by lazy {
+        @JvmField
+        val getJointLimitationRightAxisVectorBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_joint_limitation_right_axis_vector", GET_JOINT_LIMITATION_RIGHT_AXIS_VECTOR_HASH)
-        }
 
         private const val SET_JOINT_LIMITATION_ROTATION_OFFSET_HASH = 4188936002L
-        private val setJointLimitationRotationOffsetBind by lazy {
+        @JvmField
+        val setJointLimitationRotationOffsetBind =
             ObjectCalls.getMethodBind("IterateIK3D", "set_joint_limitation_rotation_offset", SET_JOINT_LIMITATION_ROTATION_OFFSET_HASH)
-        }
 
         private const val GET_JOINT_LIMITATION_ROTATION_OFFSET_HASH = 2722473700L
-        private val getJointLimitationRotationOffsetBind by lazy {
+        @JvmField
+        val getJointLimitationRotationOffsetBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_joint_limitation_rotation_offset", GET_JOINT_LIMITATION_ROTATION_OFFSET_HASH)
-        }
     }
 }

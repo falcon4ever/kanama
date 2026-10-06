@@ -20,7 +20,5 @@ class VisualShaderNodeCubemapParameter(handle: GodotHandle) : VisualShaderNodeTe
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeCubemapParameter? =
             if (handle.address() == 0L) null else VisualShaderNodeCubemapParameter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

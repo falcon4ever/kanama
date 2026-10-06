@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -82,7 +83,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_pressed
      */
     fun setPressed(pressed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPressedBind, segment, pressed)
     }
 
     /**
@@ -94,7 +95,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_pressed
      */
     fun isPressed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPressedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPressedBind, segment)
     }
 
     /**
@@ -106,7 +107,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_pressed_no_signal
      */
     fun setPressedNoSignal(pressed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPressedNoSignalBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPressedNoSignalBind, segment, pressed)
     }
 
     /**
@@ -115,7 +116,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_hovered
      */
     fun isHovered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHoveredBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHoveredBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_toggle_mode
      */
     fun setToggleMode(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setToggleModeBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setToggleModeBind, segment, enabled)
     }
 
     /**
@@ -135,7 +136,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_toggle_mode
      */
     fun isToggleMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isToggleModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isToggleModeBind, segment)
     }
 
     /**
@@ -147,7 +148,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_shortcut_in_tooltip
      */
     fun setShortcutInTooltip(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutInTooltipBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShortcutInTooltipBind, segment, enabled)
     }
 
     /**
@@ -159,7 +160,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_shortcut_in_tooltip_enabled
      */
     fun isShortcutInTooltipEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutInTooltipEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShortcutInTooltipEnabledBind, segment)
     }
 
     /**
@@ -169,7 +170,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_disabled
      */
     fun setDisabled(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, disabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisabledBind, segment, disabled)
     }
 
     /**
@@ -179,7 +180,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDisabledBind, segment)
     }
 
     /**
@@ -188,7 +189,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_action_mode
      */
     fun setActionMode(mode: BaseButton.ActionMode) {
-        ObjectCalls.ptrcallWithLongArg(setActionModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setActionModeBind, segment, mode.value)
     }
 
     /**
@@ -197,7 +198,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_action_mode
      */
     fun getActionMode(): BaseButton.ActionMode {
-        return BaseButton.ActionMode(ObjectCalls.ptrcallNoArgsRetLong(getActionModeBind, segment))
+        return BaseButton.ActionMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getActionModeBind, segment))
     }
 
     /**
@@ -207,7 +208,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_button_mask
      */
     fun setButtonMask(mask: MouseButtonMask) {
-        ObjectCalls.ptrcallWithLongArg(setButtonMaskBind, segment, mask.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setButtonMaskBind, segment, mask.value)
     }
 
     /**
@@ -217,7 +218,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_button_mask
      */
     fun getButtonMask(): MouseButtonMask {
-        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(getButtonMaskBind, segment))
+        return MouseButtonMask(ObjectCalls.ptrcallNoArgsRetLong(Binds.getButtonMaskBind, segment))
     }
 
     /**
@@ -228,7 +229,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_draw_mode
      */
     fun getDrawMode(): BaseButton.DrawMode {
-        return BaseButton.DrawMode(ObjectCalls.ptrcallNoArgsRetLong(getDrawModeBind, segment))
+        return BaseButton.DrawMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDrawModeBind, segment))
     }
 
     /**
@@ -239,7 +240,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_keep_pressed_outside
      */
     fun setKeepPressedOutside(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setKeepPressedOutsideBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setKeepPressedOutsideBind, segment, enabled)
     }
 
     /**
@@ -250,7 +251,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_keep_pressed_outside
      */
     fun isKeepPressedOutside(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isKeepPressedOutsideBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepPressedOutsideBind, segment)
     }
 
     /**
@@ -260,7 +261,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_shortcut_feedback
      */
     fun setShortcutFeedback(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShortcutFeedbackBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShortcutFeedbackBind, segment, enabled)
     }
 
     /**
@@ -270,7 +271,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.is_shortcut_feedback
      */
     fun isShortcutFeedback(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isShortcutFeedbackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isShortcutFeedbackBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_shortcut
      */
     fun setShortcut(shortcut: Shortcut?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setShortcutBind, segment, listOf(shortcut?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -288,7 +289,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_shortcut
      */
     fun getShortcut(): Shortcut? {
-        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShortcutBind, segment))
+        return Shortcut.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShortcutBind, segment))
     }
 
     /**
@@ -298,7 +299,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.set_button_group
      */
     fun setButtonGroup(buttonGroup: ButtonGroup?) {
-        ObjectCalls.ptrcallWithObjectArgs(setButtonGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setButtonGroupBind, segment, listOf(buttonGroup?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -308,7 +309,7 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: BaseButton.get_button_group
      */
     fun getButtonGroup(): ButtonGroup? {
-        return ButtonGroup.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getButtonGroupBind, segment))
+        return ButtonGroup.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getButtonGroupBind, segment))
     }
 
     /** Signal `pressed()`; see [TypedSignal]. */
@@ -411,120 +412,122 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): BaseButton? =
             if (handle.address() == 0L) null else BaseButton(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PRESSED_HASH = 2586408642L
-        private val setPressedBind by lazy {
+        @JvmField
+        val setPressedBind =
             ObjectCalls.getMethodBind("BaseButton", "set_pressed", SET_PRESSED_HASH)
-        }
 
         private const val IS_PRESSED_HASH = 36873697L
-        private val isPressedBind by lazy {
+        @JvmField
+        val isPressedBind =
             ObjectCalls.getMethodBind("BaseButton", "is_pressed", IS_PRESSED_HASH)
-        }
 
         private const val SET_PRESSED_NO_SIGNAL_HASH = 2586408642L
-        private val setPressedNoSignalBind by lazy {
+        @JvmField
+        val setPressedNoSignalBind =
             ObjectCalls.getMethodBind("BaseButton", "set_pressed_no_signal", SET_PRESSED_NO_SIGNAL_HASH)
-        }
 
         private const val IS_HOVERED_HASH = 36873697L
-        private val isHoveredBind by lazy {
+        @JvmField
+        val isHoveredBind =
             ObjectCalls.getMethodBind("BaseButton", "is_hovered", IS_HOVERED_HASH)
-        }
 
         private const val SET_TOGGLE_MODE_HASH = 2586408642L
-        private val setToggleModeBind by lazy {
+        @JvmField
+        val setToggleModeBind =
             ObjectCalls.getMethodBind("BaseButton", "set_toggle_mode", SET_TOGGLE_MODE_HASH)
-        }
 
         private const val IS_TOGGLE_MODE_HASH = 36873697L
-        private val isToggleModeBind by lazy {
+        @JvmField
+        val isToggleModeBind =
             ObjectCalls.getMethodBind("BaseButton", "is_toggle_mode", IS_TOGGLE_MODE_HASH)
-        }
 
         private const val SET_SHORTCUT_IN_TOOLTIP_HASH = 2586408642L
-        private val setShortcutInTooltipBind by lazy {
+        @JvmField
+        val setShortcutInTooltipBind =
             ObjectCalls.getMethodBind("BaseButton", "set_shortcut_in_tooltip", SET_SHORTCUT_IN_TOOLTIP_HASH)
-        }
 
         private const val IS_SHORTCUT_IN_TOOLTIP_ENABLED_HASH = 36873697L
-        private val isShortcutInTooltipEnabledBind by lazy {
+        @JvmField
+        val isShortcutInTooltipEnabledBind =
             ObjectCalls.getMethodBind("BaseButton", "is_shortcut_in_tooltip_enabled", IS_SHORTCUT_IN_TOOLTIP_ENABLED_HASH)
-        }
 
         private const val SET_DISABLED_HASH = 2586408642L
-        private val setDisabledBind by lazy {
+        @JvmField
+        val setDisabledBind =
             ObjectCalls.getMethodBind("BaseButton", "set_disabled", SET_DISABLED_HASH)
-        }
 
         private const val IS_DISABLED_HASH = 36873697L
-        private val isDisabledBind by lazy {
+        @JvmField
+        val isDisabledBind =
             ObjectCalls.getMethodBind("BaseButton", "is_disabled", IS_DISABLED_HASH)
-        }
 
         private const val SET_ACTION_MODE_HASH = 1985162088L
-        private val setActionModeBind by lazy {
+        @JvmField
+        val setActionModeBind =
             ObjectCalls.getMethodBind("BaseButton", "set_action_mode", SET_ACTION_MODE_HASH)
-        }
 
         private const val GET_ACTION_MODE_HASH = 2589712189L
-        private val getActionModeBind by lazy {
+        @JvmField
+        val getActionModeBind =
             ObjectCalls.getMethodBind("BaseButton", "get_action_mode", GET_ACTION_MODE_HASH)
-        }
 
         private const val SET_BUTTON_MASK_HASH = 3950145251L
-        private val setButtonMaskBind by lazy {
+        @JvmField
+        val setButtonMaskBind =
             ObjectCalls.getMethodBind("BaseButton", "set_button_mask", SET_BUTTON_MASK_HASH)
-        }
 
         private const val GET_BUTTON_MASK_HASH = 2512161324L
-        private val getButtonMaskBind by lazy {
+        @JvmField
+        val getButtonMaskBind =
             ObjectCalls.getMethodBind("BaseButton", "get_button_mask", GET_BUTTON_MASK_HASH)
-        }
 
         private const val GET_DRAW_MODE_HASH = 2492721305L
-        private val getDrawModeBind by lazy {
+        @JvmField
+        val getDrawModeBind =
             ObjectCalls.getMethodBind("BaseButton", "get_draw_mode", GET_DRAW_MODE_HASH)
-        }
 
         private const val SET_KEEP_PRESSED_OUTSIDE_HASH = 2586408642L
-        private val setKeepPressedOutsideBind by lazy {
+        @JvmField
+        val setKeepPressedOutsideBind =
             ObjectCalls.getMethodBind("BaseButton", "set_keep_pressed_outside", SET_KEEP_PRESSED_OUTSIDE_HASH)
-        }
 
         private const val IS_KEEP_PRESSED_OUTSIDE_HASH = 36873697L
-        private val isKeepPressedOutsideBind by lazy {
+        @JvmField
+        val isKeepPressedOutsideBind =
             ObjectCalls.getMethodBind("BaseButton", "is_keep_pressed_outside", IS_KEEP_PRESSED_OUTSIDE_HASH)
-        }
 
         private const val SET_SHORTCUT_FEEDBACK_HASH = 2586408642L
-        private val setShortcutFeedbackBind by lazy {
+        @JvmField
+        val setShortcutFeedbackBind =
             ObjectCalls.getMethodBind("BaseButton", "set_shortcut_feedback", SET_SHORTCUT_FEEDBACK_HASH)
-        }
 
         private const val IS_SHORTCUT_FEEDBACK_HASH = 36873697L
-        private val isShortcutFeedbackBind by lazy {
+        @JvmField
+        val isShortcutFeedbackBind =
             ObjectCalls.getMethodBind("BaseButton", "is_shortcut_feedback", IS_SHORTCUT_FEEDBACK_HASH)
-        }
 
         private const val SET_SHORTCUT_HASH = 857163497L
-        private val setShortcutBind by lazy {
+        @JvmField
+        val setShortcutBind =
             ObjectCalls.getMethodBind("BaseButton", "set_shortcut", SET_SHORTCUT_HASH)
-        }
 
         private const val GET_SHORTCUT_HASH = 3415666916L
-        private val getShortcutBind by lazy {
+        @JvmField
+        val getShortcutBind =
             ObjectCalls.getMethodBind("BaseButton", "get_shortcut", GET_SHORTCUT_HASH)
-        }
 
         private const val SET_BUTTON_GROUP_HASH = 1794463739L
-        private val setButtonGroupBind by lazy {
+        @JvmField
+        val setButtonGroupBind =
             ObjectCalls.getMethodBind("BaseButton", "set_button_group", SET_BUTTON_GROUP_HASH)
-        }
 
         private const val GET_BUTTON_GROUP_HASH = 281644053L
-        private val getButtonGroupBind by lazy {
+        @JvmField
+        val getButtonGroupBind =
             ObjectCalls.getMethodBind("BaseButton", "get_button_group", GET_BUTTON_GROUP_HASH)
-        }
     }
 }

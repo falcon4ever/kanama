@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -49,7 +50,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_animation_path
      */
     fun setAnimationPath(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setAnimationPathBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setAnimationPathBind, segment, path)
     }
 
     /**
@@ -58,7 +59,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_animation_path
      */
     fun getAnimationPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getAnimationPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getAnimationPathBind, segment)
     }
 
     /**
@@ -67,7 +68,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_color
      */
     fun setColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setColorBind, segment, color)
     }
 
     /**
@@ -76,7 +77,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_color
      */
     fun getColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getColorBind, segment)
     }
 
     /**
@@ -85,7 +86,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_cell_size
      */
     fun setCellSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCellSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCellSizeBind, segment, size)
     }
 
     /**
@@ -94,7 +95,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_cell_size
      */
     fun getCellSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellSizeBind, segment)
     }
 
     /**
@@ -104,7 +105,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_radius
      */
     fun setRadius(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, size)
     }
 
     /**
@@ -114,7 +115,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -124,7 +125,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.set_zero_y
      */
     fun setZeroY(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setZeroYBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setZeroYBind, segment, enable)
     }
 
     /**
@@ -134,7 +135,7 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
      * Generated from Godot docs: RootMotionView.get_zero_y
      */
     fun getZeroY(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getZeroYBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getZeroYBind, segment)
     }
 
     companion object {
@@ -144,55 +145,57 @@ class RootMotionView(handle: GodotHandle) : VisualInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): RootMotionView? =
             if (handle.address() == 0L) null else RootMotionView(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ANIMATION_PATH_HASH = 1348162250L
-        private val setAnimationPathBind by lazy {
+        @JvmField
+        val setAnimationPathBind =
             ObjectCalls.getMethodBind("RootMotionView", "set_animation_path", SET_ANIMATION_PATH_HASH)
-        }
 
         private const val GET_ANIMATION_PATH_HASH = 4075236667L
-        private val getAnimationPathBind by lazy {
+        @JvmField
+        val getAnimationPathBind =
             ObjectCalls.getMethodBind("RootMotionView", "get_animation_path", GET_ANIMATION_PATH_HASH)
-        }
 
         private const val SET_COLOR_HASH = 2920490490L
-        private val setColorBind by lazy {
+        @JvmField
+        val setColorBind =
             ObjectCalls.getMethodBind("RootMotionView", "set_color", SET_COLOR_HASH)
-        }
 
         private const val GET_COLOR_HASH = 3444240500L
-        private val getColorBind by lazy {
+        @JvmField
+        val getColorBind =
             ObjectCalls.getMethodBind("RootMotionView", "get_color", GET_COLOR_HASH)
-        }
 
         private const val SET_CELL_SIZE_HASH = 373806689L
-        private val setCellSizeBind by lazy {
+        @JvmField
+        val setCellSizeBind =
             ObjectCalls.getMethodBind("RootMotionView", "set_cell_size", SET_CELL_SIZE_HASH)
-        }
 
         private const val GET_CELL_SIZE_HASH = 1740695150L
-        private val getCellSizeBind by lazy {
+        @JvmField
+        val getCellSizeBind =
             ObjectCalls.getMethodBind("RootMotionView", "get_cell_size", GET_CELL_SIZE_HASH)
-        }
 
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("RootMotionView", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("RootMotionView", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_ZERO_Y_HASH = 2586408642L
-        private val setZeroYBind by lazy {
+        @JvmField
+        val setZeroYBind =
             ObjectCalls.getMethodBind("RootMotionView", "set_zero_y", SET_ZERO_Y_HASH)
-        }
 
         private const val GET_ZERO_Y_HASH = 36873697L
-        private val getZeroYBind by lazy {
+        @JvmField
+        val getZeroYBind =
             ObjectCalls.getMethodBind("RootMotionView", "get_zero_y", GET_ZERO_Y_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -87,7 +88,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_flip_h
      */
     fun setFlipH(flipH: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, flipH)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipHBind, segment, flipH)
     }
 
     /**
@@ -96,7 +97,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_flip_h
      */
     fun getFlipH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipHBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipHBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_flip_v
      */
     fun setFlipV(flipV: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, flipV)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipVBind, segment, flipV)
     }
 
     /**
@@ -114,7 +115,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_flip_v
      */
     fun getFlipV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipVBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipVBind, segment)
     }
 
     /**
@@ -124,7 +125,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_transpose
      */
     fun setTranspose(transpose: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTransposeBind, segment, transpose)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTransposeBind, segment, transpose)
     }
 
     /**
@@ -134,7 +135,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_transpose
      */
     fun getTranspose(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getTransposeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getTransposeBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -154,7 +155,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
     /**
@@ -163,7 +164,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_texture_origin
      */
     fun setTextureOrigin(textureOrigin: Vector2i) {
-        ObjectCalls.ptrcallWithVector2iArg(setTextureOriginBind, segment, textureOrigin)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setTextureOriginBind, segment, textureOrigin)
     }
 
     /**
@@ -172,7 +173,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_texture_origin
      */
     fun getTextureOrigin(): Vector2i {
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTextureOriginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTextureOriginBind, segment)
     }
 
     /**
@@ -181,7 +182,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_modulate
      */
     fun setModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, modulate)
+        ObjectCalls.ptrcallWithColorArg(Binds.setModulateBind, segment, modulate)
     }
 
     /**
@@ -190,7 +191,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getModulateBind, segment)
     }
 
     /**
@@ -199,7 +200,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_z_index
      */
     fun setZIndex(zIndex: Int) {
-        ObjectCalls.ptrcallWithIntArg(setZIndexBind, segment, zIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.setZIndexBind, segment, zIndex)
     }
 
     /**
@@ -208,7 +209,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_z_index
      */
     fun getZIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getZIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getZIndexBind, segment)
     }
 
     /**
@@ -217,7 +218,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_y_sort_origin
      */
     fun setYSortOrigin(ySortOrigin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setYSortOriginBind, segment, ySortOrigin)
+        ObjectCalls.ptrcallWithIntArg(Binds.setYSortOriginBind, segment, ySortOrigin)
     }
 
     /**
@@ -226,7 +227,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_y_sort_origin
      */
     fun getYSortOrigin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getYSortOriginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getYSortOriginBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_occluder_polygons_count
      */
     fun setOccluderPolygonsCount(layerId: Int, polygonsCount: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setOccluderPolygonsCountBind, segment, layerId, polygonsCount)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setOccluderPolygonsCountBind, segment, layerId, polygonsCount)
     }
 
     /**
@@ -245,7 +246,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_occluder_polygons_count
      */
     fun getOccluderPolygonsCount(layerId: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOccluderPolygonsCountBind, segment, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOccluderPolygonsCountBind, segment, layerId)
     }
 
     /**
@@ -254,7 +255,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.add_occluder_polygon
      */
     fun addOccluderPolygon(layerId: Int) {
-        ObjectCalls.ptrcallWithIntArg(addOccluderPolygonBind, segment, layerId)
+        ObjectCalls.ptrcallWithIntArg(Binds.addOccluderPolygonBind, segment, layerId)
     }
 
     /**
@@ -263,7 +264,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.remove_occluder_polygon
      */
     fun removeOccluderPolygon(layerId: Int, polygonIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(removeOccluderPolygonBind, segment, layerId, polygonIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.removeOccluderPolygonBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -273,7 +274,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_occluder_polygon
      */
     fun setOccluderPolygon(layerId: Int, polygonIndex: Int, polygon: OccluderPolygon2D?) {
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(setOccluderPolygonBind, segment, layerId, polygonIndex, polygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.setOccluderPolygonBind, segment, layerId, polygonIndex, polygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -284,7 +285,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_occluder_polygon
      */
     fun getOccluderPolygon(layerId: Int, polygonIndex: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(getOccluderPolygonBind, segment, layerId, polygonIndex, flipH, flipV, transpose))
+        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallWithTwoIntAndThreeBoolArgsRetObject(Binds.getOccluderPolygonBind, segment, layerId, polygonIndex, flipH, flipV, transpose))
     }
 
     /**
@@ -293,7 +294,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_occluder
      */
     fun setOccluder(layerId: Int, occluderPolygon: OccluderPolygon2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setOccluderBind, segment, layerId, occluderPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setOccluderBind, segment, layerId, occluderPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -303,7 +304,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_occluder
      */
     fun getOccluder(layerId: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getOccluderBind, segment, layerId, flipH, flipV, transpose))
+        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(Binds.getOccluderBind, segment, layerId, flipH, flipV, transpose))
     }
 
     /**
@@ -313,7 +314,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_constant_linear_velocity
      */
     fun setConstantLinearVelocity(layerId: Int, velocity: Vector2) {
-        ObjectCalls.ptrcallWithIntAndVector2Arg(setConstantLinearVelocityBind, segment, layerId, velocity)
+        ObjectCalls.ptrcallWithIntAndVector2Arg(Binds.setConstantLinearVelocityBind, segment, layerId, velocity)
     }
 
     /**
@@ -322,7 +323,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_constant_linear_velocity
      */
     fun getConstantLinearVelocity(layerId: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getConstantLinearVelocityBind, segment, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getConstantLinearVelocityBind, segment, layerId)
     }
 
     /**
@@ -332,7 +333,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_constant_angular_velocity
      */
     fun setConstantAngularVelocity(layerId: Int, velocity: Double) {
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setConstantAngularVelocityBind, segment, layerId, velocity)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setConstantAngularVelocityBind, segment, layerId, velocity)
     }
 
     /**
@@ -341,7 +342,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_constant_angular_velocity
      */
     fun getConstantAngularVelocity(layerId: Int): Double {
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getConstantAngularVelocityBind, segment, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getConstantAngularVelocityBind, segment, layerId)
     }
 
     /**
@@ -350,7 +351,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_collision_polygons_count
      */
     fun setCollisionPolygonsCount(layerId: Int, polygonsCount: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setCollisionPolygonsCountBind, segment, layerId, polygonsCount)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setCollisionPolygonsCountBind, segment, layerId, polygonsCount)
     }
 
     /**
@@ -359,7 +360,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_collision_polygons_count
      */
     fun getCollisionPolygonsCount(layerId: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getCollisionPolygonsCountBind, segment, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getCollisionPolygonsCountBind, segment, layerId)
     }
 
     /**
@@ -368,7 +369,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.add_collision_polygon
      */
     fun addCollisionPolygon(layerId: Int) {
-        ObjectCalls.ptrcallWithIntArg(addCollisionPolygonBind, segment, layerId)
+        ObjectCalls.ptrcallWithIntArg(Binds.addCollisionPolygonBind, segment, layerId)
     }
 
     /**
@@ -377,7 +378,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.remove_collision_polygon
      */
     fun removeCollisionPolygon(layerId: Int, polygonIndex: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(removeCollisionPolygonBind, segment, layerId, polygonIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.removeCollisionPolygonBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -387,7 +388,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_collision_polygon_points
      */
     fun setCollisionPolygonPoints(layerId: Int, polygonIndex: Int, polygon: List<Vector2>) {
-        ObjectCalls.ptrcallWithTwoIntAndPackedVector2ListArg(setCollisionPolygonPointsBind, segment, layerId, polygonIndex, polygon)
+        ObjectCalls.ptrcallWithTwoIntAndPackedVector2ListArg(Binds.setCollisionPolygonPointsBind, segment, layerId, polygonIndex, polygon)
     }
 
     /**
@@ -397,7 +398,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_collision_polygon_points
      */
     fun getCollisionPolygonPoints(layerId: Int, polygonIndex: Int): List<Vector2> {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedVector2List(getCollisionPolygonPointsBind, segment, layerId, polygonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedVector2List(Binds.getCollisionPolygonPointsBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -407,7 +408,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_collision_polygon_one_way
      */
     fun setCollisionPolygonOneWay(layerId: Int, polygonIndex: Int, oneWay: Boolean) {
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setCollisionPolygonOneWayBind, segment, layerId, polygonIndex, oneWay)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(Binds.setCollisionPolygonOneWayBind, segment, layerId, polygonIndex, oneWay)
     }
 
     /**
@@ -417,7 +418,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.is_collision_polygon_one_way
      */
     fun isCollisionPolygonOneWay(layerId: Int, polygonIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isCollisionPolygonOneWayBind, segment, layerId, polygonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isCollisionPolygonOneWayBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -427,7 +428,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_collision_polygon_one_way_margin
      */
     fun setCollisionPolygonOneWayMargin(layerId: Int, polygonIndex: Int, oneWayMargin: Double) {
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCollisionPolygonOneWayMarginBind, segment, layerId, polygonIndex, oneWayMargin)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCollisionPolygonOneWayMarginBind, segment, layerId, polygonIndex, oneWayMargin)
     }
 
     /**
@@ -437,7 +438,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_collision_polygon_one_way_margin
      */
     fun getCollisionPolygonOneWayMargin(layerId: Int, polygonIndex: Int): Double {
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCollisionPolygonOneWayMarginBind, segment, layerId, polygonIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCollisionPolygonOneWayMarginBind, segment, layerId, polygonIndex)
     }
 
     /**
@@ -446,7 +447,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_terrain_set
      */
     fun setTerrainSet(terrainSet: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTerrainSetBind, segment, terrainSet)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTerrainSetBind, segment, terrainSet)
     }
 
     /**
@@ -455,7 +456,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_terrain_set
      */
     fun getTerrainSet(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTerrainSetBind, segment)
     }
 
     /**
@@ -464,7 +465,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_terrain
      */
     fun setTerrain(terrain: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTerrainBind, segment, terrain)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTerrainBind, segment, terrain)
     }
 
     /**
@@ -473,7 +474,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_terrain
      */
     fun getTerrain(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTerrainBind, segment)
     }
 
     /**
@@ -483,7 +484,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_terrain_peering_bit
      */
     fun setTerrainPeeringBit(peeringBit: TileSet.CellNeighbor, terrain: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setTerrainPeeringBitBind, segment, peeringBit.value, terrain)
+        ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setTerrainPeeringBitBind, segment, peeringBit.value, terrain)
     }
 
     /**
@@ -493,7 +494,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_terrain_peering_bit
      */
     fun getTerrainPeeringBit(peeringBit: TileSet.CellNeighbor): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getTerrainPeeringBitBind, segment, peeringBit.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getTerrainPeeringBitBind, segment, peeringBit.value)
     }
 
     /**
@@ -502,7 +503,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.is_valid_terrain_peering_bit
      */
     fun isValidTerrainPeeringBit(peeringBit: TileSet.CellNeighbor): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isValidTerrainPeeringBitBind, segment, peeringBit.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isValidTerrainPeeringBitBind, segment, peeringBit.value)
     }
 
     /**
@@ -511,7 +512,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_navigation_polygon
      */
     fun setNavigationPolygon(layerId: Int, navigationPolygon: NavigationPolygon?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setNavigationPolygonBind, segment, layerId, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setNavigationPolygonBind, segment, layerId, navigationPolygon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -521,7 +522,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_navigation_polygon
      */
     fun getNavigationPolygon(layerId: Int, flipH: Boolean = false, flipV: Boolean = false, transpose: Boolean = false): NavigationPolygon? {
-        return NavigationPolygon.wrapOwned(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(getNavigationPolygonBind, segment, layerId, flipH, flipV, transpose))
+        return NavigationPolygon.wrapOwned(ObjectCalls.ptrcallWithIntAndThreeBoolArgsRetObject(Binds.getNavigationPolygonBind, segment, layerId, flipH, flipV, transpose))
     }
 
     /**
@@ -530,7 +531,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_probability
      */
     fun setProbability(probability: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setProbabilityBind, segment, probability)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setProbabilityBind, segment, probability)
     }
 
     /**
@@ -539,7 +540,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_probability
      */
     fun getProbability(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getProbabilityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getProbabilityBind, segment)
     }
 
     /**
@@ -548,7 +549,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_custom_data
      */
     fun setCustomData(layerName: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringAndVariantArg(setCustomDataBind, segment, layerName, value)
+        ObjectCalls.ptrcallWithStringAndVariantArg(Binds.setCustomDataBind, segment, layerName, value)
     }
 
     /**
@@ -558,7 +559,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_custom_data
      */
     fun getCustomData(layerName: String): Any? {
-        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(getCustomDataBind, segment, layerName)
+        return ObjectCalls.ptrcallWithStringArgRetVariantScalar(Binds.getCustomDataBind, segment, layerName)
     }
 
     /**
@@ -567,7 +568,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.has_custom_data
      */
     fun hasCustomData(layerName: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataBind, segment, layerName)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasCustomDataBind, segment, layerName)
     }
 
     /**
@@ -576,7 +577,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.set_custom_data_by_layer_id
      */
     fun setCustomDataByLayerId(layerId: Int, value: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setCustomDataByLayerIdBind, segment, layerId, value)
+        ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setCustomDataByLayerIdBind, segment, layerId, value)
     }
 
     /**
@@ -585,7 +586,7 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: TileData.get_custom_data_by_layer_id
      */
     fun getCustomDataByLayerId(layerId: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getCustomDataByLayerIdBind, segment, layerId)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getCustomDataByLayerIdBind, segment, layerId)
     }
 
     /** Signal `changed()`; see [TypedSignal]. */
@@ -604,275 +605,277 @@ class TileData(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): TileData? =
             if (handle.address() == 0L) null else TileData(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_FLIP_H_HASH = 2586408642L
-        private val setFlipHBind by lazy {
+        @JvmField
+        val setFlipHBind =
             ObjectCalls.getMethodBind("TileData", "set_flip_h", SET_FLIP_H_HASH)
-        }
 
         private const val GET_FLIP_H_HASH = 36873697L
-        private val getFlipHBind by lazy {
+        @JvmField
+        val getFlipHBind =
             ObjectCalls.getMethodBind("TileData", "get_flip_h", GET_FLIP_H_HASH)
-        }
 
         private const val SET_FLIP_V_HASH = 2586408642L
-        private val setFlipVBind by lazy {
+        @JvmField
+        val setFlipVBind =
             ObjectCalls.getMethodBind("TileData", "set_flip_v", SET_FLIP_V_HASH)
-        }
 
         private const val GET_FLIP_V_HASH = 36873697L
-        private val getFlipVBind by lazy {
+        @JvmField
+        val getFlipVBind =
             ObjectCalls.getMethodBind("TileData", "get_flip_v", GET_FLIP_V_HASH)
-        }
 
         private const val SET_TRANSPOSE_HASH = 2586408642L
-        private val setTransposeBind by lazy {
+        @JvmField
+        val setTransposeBind =
             ObjectCalls.getMethodBind("TileData", "set_transpose", SET_TRANSPOSE_HASH)
-        }
 
         private const val GET_TRANSPOSE_HASH = 36873697L
-        private val getTransposeBind by lazy {
+        @JvmField
+        val getTransposeBind =
             ObjectCalls.getMethodBind("TileData", "get_transpose", GET_TRANSPOSE_HASH)
-        }
 
         private const val SET_MATERIAL_HASH = 2757459619L
-        private val setMaterialBind by lazy {
+        @JvmField
+        val setMaterialBind =
             ObjectCalls.getMethodBind("TileData", "set_material", SET_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 5934680L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("TileData", "get_material", GET_MATERIAL_HASH)
-        }
 
         private const val SET_TEXTURE_ORIGIN_HASH = 1130785943L
-        private val setTextureOriginBind by lazy {
+        @JvmField
+        val setTextureOriginBind =
             ObjectCalls.getMethodBind("TileData", "set_texture_origin", SET_TEXTURE_ORIGIN_HASH)
-        }
 
         private const val GET_TEXTURE_ORIGIN_HASH = 3690982128L
-        private val getTextureOriginBind by lazy {
+        @JvmField
+        val getTextureOriginBind =
             ObjectCalls.getMethodBind("TileData", "get_texture_origin", GET_TEXTURE_ORIGIN_HASH)
-        }
 
         private const val SET_MODULATE_HASH = 2920490490L
-        private val setModulateBind by lazy {
+        @JvmField
+        val setModulateBind =
             ObjectCalls.getMethodBind("TileData", "set_modulate", SET_MODULATE_HASH)
-        }
 
         private const val GET_MODULATE_HASH = 3444240500L
-        private val getModulateBind by lazy {
+        @JvmField
+        val getModulateBind =
             ObjectCalls.getMethodBind("TileData", "get_modulate", GET_MODULATE_HASH)
-        }
 
         private const val SET_Z_INDEX_HASH = 1286410249L
-        private val setZIndexBind by lazy {
+        @JvmField
+        val setZIndexBind =
             ObjectCalls.getMethodBind("TileData", "set_z_index", SET_Z_INDEX_HASH)
-        }
 
         private const val GET_Z_INDEX_HASH = 3905245786L
-        private val getZIndexBind by lazy {
+        @JvmField
+        val getZIndexBind =
             ObjectCalls.getMethodBind("TileData", "get_z_index", GET_Z_INDEX_HASH)
-        }
 
         private const val SET_Y_SORT_ORIGIN_HASH = 1286410249L
-        private val setYSortOriginBind by lazy {
+        @JvmField
+        val setYSortOriginBind =
             ObjectCalls.getMethodBind("TileData", "set_y_sort_origin", SET_Y_SORT_ORIGIN_HASH)
-        }
 
         private const val GET_Y_SORT_ORIGIN_HASH = 3905245786L
-        private val getYSortOriginBind by lazy {
+        @JvmField
+        val getYSortOriginBind =
             ObjectCalls.getMethodBind("TileData", "get_y_sort_origin", GET_Y_SORT_ORIGIN_HASH)
-        }
 
         private const val SET_OCCLUDER_POLYGONS_COUNT_HASH = 3937882851L
-        private val setOccluderPolygonsCountBind by lazy {
+        @JvmField
+        val setOccluderPolygonsCountBind =
             ObjectCalls.getMethodBind("TileData", "set_occluder_polygons_count", SET_OCCLUDER_POLYGONS_COUNT_HASH)
-        }
 
         private const val GET_OCCLUDER_POLYGONS_COUNT_HASH = 923996154L
-        private val getOccluderPolygonsCountBind by lazy {
+        @JvmField
+        val getOccluderPolygonsCountBind =
             ObjectCalls.getMethodBind("TileData", "get_occluder_polygons_count", GET_OCCLUDER_POLYGONS_COUNT_HASH)
-        }
 
         private const val ADD_OCCLUDER_POLYGON_HASH = 1286410249L
-        private val addOccluderPolygonBind by lazy {
+        @JvmField
+        val addOccluderPolygonBind =
             ObjectCalls.getMethodBind("TileData", "add_occluder_polygon", ADD_OCCLUDER_POLYGON_HASH)
-        }
 
         private const val REMOVE_OCCLUDER_POLYGON_HASH = 3937882851L
-        private val removeOccluderPolygonBind by lazy {
+        @JvmField
+        val removeOccluderPolygonBind =
             ObjectCalls.getMethodBind("TileData", "remove_occluder_polygon", REMOVE_OCCLUDER_POLYGON_HASH)
-        }
 
         private const val SET_OCCLUDER_POLYGON_HASH = 164249167L
-        private val setOccluderPolygonBind by lazy {
+        @JvmField
+        val setOccluderPolygonBind =
             ObjectCalls.getMethodBind("TileData", "set_occluder_polygon", SET_OCCLUDER_POLYGON_HASH)
-        }
 
         private const val GET_OCCLUDER_POLYGON_HASH = 971166743L
-        private val getOccluderPolygonBind by lazy {
+        @JvmField
+        val getOccluderPolygonBind =
             ObjectCalls.getMethodBind("TileData", "get_occluder_polygon", GET_OCCLUDER_POLYGON_HASH)
-        }
 
         private const val SET_OCCLUDER_HASH = 914399637L
-        private val setOccluderBind by lazy {
+        @JvmField
+        val setOccluderBind =
             ObjectCalls.getMethodBind("TileData", "set_occluder", SET_OCCLUDER_HASH)
-        }
 
         private const val GET_OCCLUDER_HASH = 2377324099L
-        private val getOccluderBind by lazy {
+        @JvmField
+        val getOccluderBind =
             ObjectCalls.getMethodBind("TileData", "get_occluder", GET_OCCLUDER_HASH)
-        }
 
         private const val SET_CONSTANT_LINEAR_VELOCITY_HASH = 163021252L
-        private val setConstantLinearVelocityBind by lazy {
+        @JvmField
+        val setConstantLinearVelocityBind =
             ObjectCalls.getMethodBind("TileData", "set_constant_linear_velocity", SET_CONSTANT_LINEAR_VELOCITY_HASH)
-        }
 
         private const val GET_CONSTANT_LINEAR_VELOCITY_HASH = 2299179447L
-        private val getConstantLinearVelocityBind by lazy {
+        @JvmField
+        val getConstantLinearVelocityBind =
             ObjectCalls.getMethodBind("TileData", "get_constant_linear_velocity", GET_CONSTANT_LINEAR_VELOCITY_HASH)
-        }
 
         private const val SET_CONSTANT_ANGULAR_VELOCITY_HASH = 1602489585L
-        private val setConstantAngularVelocityBind by lazy {
+        @JvmField
+        val setConstantAngularVelocityBind =
             ObjectCalls.getMethodBind("TileData", "set_constant_angular_velocity", SET_CONSTANT_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val GET_CONSTANT_ANGULAR_VELOCITY_HASH = 2339986948L
-        private val getConstantAngularVelocityBind by lazy {
+        @JvmField
+        val getConstantAngularVelocityBind =
             ObjectCalls.getMethodBind("TileData", "get_constant_angular_velocity", GET_CONSTANT_ANGULAR_VELOCITY_HASH)
-        }
 
         private const val SET_COLLISION_POLYGONS_COUNT_HASH = 3937882851L
-        private val setCollisionPolygonsCountBind by lazy {
+        @JvmField
+        val setCollisionPolygonsCountBind =
             ObjectCalls.getMethodBind("TileData", "set_collision_polygons_count", SET_COLLISION_POLYGONS_COUNT_HASH)
-        }
 
         private const val GET_COLLISION_POLYGONS_COUNT_HASH = 923996154L
-        private val getCollisionPolygonsCountBind by lazy {
+        @JvmField
+        val getCollisionPolygonsCountBind =
             ObjectCalls.getMethodBind("TileData", "get_collision_polygons_count", GET_COLLISION_POLYGONS_COUNT_HASH)
-        }
 
         private const val ADD_COLLISION_POLYGON_HASH = 1286410249L
-        private val addCollisionPolygonBind by lazy {
+        @JvmField
+        val addCollisionPolygonBind =
             ObjectCalls.getMethodBind("TileData", "add_collision_polygon", ADD_COLLISION_POLYGON_HASH)
-        }
 
         private const val REMOVE_COLLISION_POLYGON_HASH = 3937882851L
-        private val removeCollisionPolygonBind by lazy {
+        @JvmField
+        val removeCollisionPolygonBind =
             ObjectCalls.getMethodBind("TileData", "remove_collision_polygon", REMOVE_COLLISION_POLYGON_HASH)
-        }
 
         private const val SET_COLLISION_POLYGON_POINTS_HASH = 3230546541L
-        private val setCollisionPolygonPointsBind by lazy {
+        @JvmField
+        val setCollisionPolygonPointsBind =
             ObjectCalls.getMethodBind("TileData", "set_collision_polygon_points", SET_COLLISION_POLYGON_POINTS_HASH)
-        }
 
         private const val GET_COLLISION_POLYGON_POINTS_HASH = 103942801L
-        private val getCollisionPolygonPointsBind by lazy {
+        @JvmField
+        val getCollisionPolygonPointsBind =
             ObjectCalls.getMethodBind("TileData", "get_collision_polygon_points", GET_COLLISION_POLYGON_POINTS_HASH)
-        }
 
         private const val SET_COLLISION_POLYGON_ONE_WAY_HASH = 1383440665L
-        private val setCollisionPolygonOneWayBind by lazy {
+        @JvmField
+        val setCollisionPolygonOneWayBind =
             ObjectCalls.getMethodBind("TileData", "set_collision_polygon_one_way", SET_COLLISION_POLYGON_ONE_WAY_HASH)
-        }
 
         private const val IS_COLLISION_POLYGON_ONE_WAY_HASH = 2522259332L
-        private val isCollisionPolygonOneWayBind by lazy {
+        @JvmField
+        val isCollisionPolygonOneWayBind =
             ObjectCalls.getMethodBind("TileData", "is_collision_polygon_one_way", IS_COLLISION_POLYGON_ONE_WAY_HASH)
-        }
 
         private const val SET_COLLISION_POLYGON_ONE_WAY_MARGIN_HASH = 3506521499L
-        private val setCollisionPolygonOneWayMarginBind by lazy {
+        @JvmField
+        val setCollisionPolygonOneWayMarginBind =
             ObjectCalls.getMethodBind("TileData", "set_collision_polygon_one_way_margin", SET_COLLISION_POLYGON_ONE_WAY_MARGIN_HASH)
-        }
 
         private const val GET_COLLISION_POLYGON_ONE_WAY_MARGIN_HASH = 3085491603L
-        private val getCollisionPolygonOneWayMarginBind by lazy {
+        @JvmField
+        val getCollisionPolygonOneWayMarginBind =
             ObjectCalls.getMethodBind("TileData", "get_collision_polygon_one_way_margin", GET_COLLISION_POLYGON_ONE_WAY_MARGIN_HASH)
-        }
 
         private const val SET_TERRAIN_SET_HASH = 1286410249L
-        private val setTerrainSetBind by lazy {
+        @JvmField
+        val setTerrainSetBind =
             ObjectCalls.getMethodBind("TileData", "set_terrain_set", SET_TERRAIN_SET_HASH)
-        }
 
         private const val GET_TERRAIN_SET_HASH = 3905245786L
-        private val getTerrainSetBind by lazy {
+        @JvmField
+        val getTerrainSetBind =
             ObjectCalls.getMethodBind("TileData", "get_terrain_set", GET_TERRAIN_SET_HASH)
-        }
 
         private const val SET_TERRAIN_HASH = 1286410249L
-        private val setTerrainBind by lazy {
+        @JvmField
+        val setTerrainBind =
             ObjectCalls.getMethodBind("TileData", "set_terrain", SET_TERRAIN_HASH)
-        }
 
         private const val GET_TERRAIN_HASH = 3905245786L
-        private val getTerrainBind by lazy {
+        @JvmField
+        val getTerrainBind =
             ObjectCalls.getMethodBind("TileData", "get_terrain", GET_TERRAIN_HASH)
-        }
 
         private const val SET_TERRAIN_PEERING_BIT_HASH = 1084452308L
-        private val setTerrainPeeringBitBind by lazy {
+        @JvmField
+        val setTerrainPeeringBitBind =
             ObjectCalls.getMethodBind("TileData", "set_terrain_peering_bit", SET_TERRAIN_PEERING_BIT_HASH)
-        }
 
         private const val GET_TERRAIN_PEERING_BIT_HASH = 3831796792L
-        private val getTerrainPeeringBitBind by lazy {
+        @JvmField
+        val getTerrainPeeringBitBind =
             ObjectCalls.getMethodBind("TileData", "get_terrain_peering_bit", GET_TERRAIN_PEERING_BIT_HASH)
-        }
 
         private const val IS_VALID_TERRAIN_PEERING_BIT_HASH = 845723972L
-        private val isValidTerrainPeeringBitBind by lazy {
+        @JvmField
+        val isValidTerrainPeeringBitBind =
             ObjectCalls.getMethodBind("TileData", "is_valid_terrain_peering_bit", IS_VALID_TERRAIN_PEERING_BIT_HASH)
-        }
 
         private const val SET_NAVIGATION_POLYGON_HASH = 2224691167L
-        private val setNavigationPolygonBind by lazy {
+        @JvmField
+        val setNavigationPolygonBind =
             ObjectCalls.getMethodBind("TileData", "set_navigation_polygon", SET_NAVIGATION_POLYGON_HASH)
-        }
 
         private const val GET_NAVIGATION_POLYGON_HASH = 2907127272L
-        private val getNavigationPolygonBind by lazy {
+        @JvmField
+        val getNavigationPolygonBind =
             ObjectCalls.getMethodBind("TileData", "get_navigation_polygon", GET_NAVIGATION_POLYGON_HASH)
-        }
 
         private const val SET_PROBABILITY_HASH = 373806689L
-        private val setProbabilityBind by lazy {
+        @JvmField
+        val setProbabilityBind =
             ObjectCalls.getMethodBind("TileData", "set_probability", SET_PROBABILITY_HASH)
-        }
 
         private const val GET_PROBABILITY_HASH = 1740695150L
-        private val getProbabilityBind by lazy {
+        @JvmField
+        val getProbabilityBind =
             ObjectCalls.getMethodBind("TileData", "get_probability", GET_PROBABILITY_HASH)
-        }
 
         private const val SET_CUSTOM_DATA_HASH = 402577236L
-        private val setCustomDataBind by lazy {
+        @JvmField
+        val setCustomDataBind =
             ObjectCalls.getMethodBind("TileData", "set_custom_data", SET_CUSTOM_DATA_HASH)
-        }
 
         private const val GET_CUSTOM_DATA_HASH = 1868160156L
-        private val getCustomDataBind by lazy {
+        @JvmField
+        val getCustomDataBind =
             ObjectCalls.getMethodBind("TileData", "get_custom_data", GET_CUSTOM_DATA_HASH)
-        }
 
         private const val HAS_CUSTOM_DATA_HASH = 3927539163L
-        private val hasCustomDataBind by lazy {
+        @JvmField
+        val hasCustomDataBind =
             ObjectCalls.getMethodBind("TileData", "has_custom_data", HAS_CUSTOM_DATA_HASH)
-        }
 
         private const val SET_CUSTOM_DATA_BY_LAYER_ID_HASH = 2152698145L
-        private val setCustomDataByLayerIdBind by lazy {
+        @JvmField
+        val setCustomDataByLayerIdBind =
             ObjectCalls.getMethodBind("TileData", "set_custom_data_by_layer_id", SET_CUSTOM_DATA_BY_LAYER_ID_HASH)
-        }
 
         private const val GET_CUSTOM_DATA_BY_LAYER_ID_HASH = 4227898402L
-        private val getCustomDataByLayerIdBind by lazy {
+        @JvmField
+        val getCustomDataByLayerIdBind =
             ObjectCalls.getMethodBind("TileData", "get_custom_data_by_layer_id", GET_CUSTOM_DATA_BY_LAYER_ID_HASH)
-        }
     }
 }

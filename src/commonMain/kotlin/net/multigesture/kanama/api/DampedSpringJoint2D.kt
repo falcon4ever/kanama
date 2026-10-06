@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -41,7 +42,7 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: DampedSpringJoint2D.set_length
      */
     fun setLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLengthBind, segment, length)
     }
 
     /**
@@ -50,7 +51,7 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: DampedSpringJoint2D.get_length
      */
     fun getLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: DampedSpringJoint2D.set_rest_length
      */
     fun setRestLength(restLength: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRestLengthBind, segment, restLength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRestLengthBind, segment, restLength)
     }
 
     /**
@@ -70,7 +71,7 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: DampedSpringJoint2D.get_rest_length
      */
     fun getRestLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRestLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRestLengthBind, segment)
     }
 
     /**
@@ -81,7 +82,7 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: DampedSpringJoint2D.set_stiffness
      */
     fun setStiffness(stiffness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setStiffnessBind, segment, stiffness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStiffnessBind, segment, stiffness)
     }
 
     /**
@@ -92,7 +93,7 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: DampedSpringJoint2D.get_stiffness
      */
     fun getStiffness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStiffnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStiffnessBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: DampedSpringJoint2D.set_damping
      */
     fun setDamping(damping: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDampingBind, segment, damping)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDampingBind, segment, damping)
     }
 
     /**
@@ -114,7 +115,7 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: DampedSpringJoint2D.get_damping
      */
     fun getDamping(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDampingBind, segment)
     }
 
     companion object {
@@ -124,45 +125,47 @@ class DampedSpringJoint2D(handle: GodotHandle) : Joint2D(handle) {
 
         internal fun wrap(handle: RawSegment): DampedSpringJoint2D? =
             if (handle.address() == 0L) null else DampedSpringJoint2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_LENGTH_HASH = 373806689L
-        private val setLengthBind by lazy {
+        @JvmField
+        val setLengthBind =
             ObjectCalls.getMethodBind("DampedSpringJoint2D", "set_length", SET_LENGTH_HASH)
-        }
 
         private const val GET_LENGTH_HASH = 1740695150L
-        private val getLengthBind by lazy {
+        @JvmField
+        val getLengthBind =
             ObjectCalls.getMethodBind("DampedSpringJoint2D", "get_length", GET_LENGTH_HASH)
-        }
 
         private const val SET_REST_LENGTH_HASH = 373806689L
-        private val setRestLengthBind by lazy {
+        @JvmField
+        val setRestLengthBind =
             ObjectCalls.getMethodBind("DampedSpringJoint2D", "set_rest_length", SET_REST_LENGTH_HASH)
-        }
 
         private const val GET_REST_LENGTH_HASH = 1740695150L
-        private val getRestLengthBind by lazy {
+        @JvmField
+        val getRestLengthBind =
             ObjectCalls.getMethodBind("DampedSpringJoint2D", "get_rest_length", GET_REST_LENGTH_HASH)
-        }
 
         private const val SET_STIFFNESS_HASH = 373806689L
-        private val setStiffnessBind by lazy {
+        @JvmField
+        val setStiffnessBind =
             ObjectCalls.getMethodBind("DampedSpringJoint2D", "set_stiffness", SET_STIFFNESS_HASH)
-        }
 
         private const val GET_STIFFNESS_HASH = 1740695150L
-        private val getStiffnessBind by lazy {
+        @JvmField
+        val getStiffnessBind =
             ObjectCalls.getMethodBind("DampedSpringJoint2D", "get_stiffness", GET_STIFFNESS_HASH)
-        }
 
         private const val SET_DAMPING_HASH = 373806689L
-        private val setDampingBind by lazy {
+        @JvmField
+        val setDampingBind =
             ObjectCalls.getMethodBind("DampedSpringJoint2D", "set_damping", SET_DAMPING_HASH)
-        }
 
         private const val GET_DAMPING_HASH = 1740695150L
-        private val getDampingBind by lazy {
+        @JvmField
+        val getDampingBind =
             ObjectCalls.getMethodBind("DampedSpringJoint2D", "get_damping", GET_DAMPING_HASH)
-        }
     }
 }

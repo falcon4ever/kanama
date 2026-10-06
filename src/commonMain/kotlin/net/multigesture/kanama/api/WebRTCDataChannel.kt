@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,72 +19,72 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
 
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
     }
 
     fun closeConnection() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(closeConnectionBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.closeConnectionBind, segment)
     }
 
     fun wasStringPacket(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(wasStringPacketBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.wasStringPacketBind, segment)
     }
 
     fun setWriteMode(writeMode: WebRTCDataChannel.WriteMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setWriteModeBind, segment, writeMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setWriteModeBind, segment, writeMode.value)
     }
 
     fun getWriteMode(): WebRTCDataChannel.WriteMode {
         checkOpen()
-        return WebRTCDataChannel.WriteMode(ObjectCalls.ptrcallNoArgsRetLong(getWriteModeBind, segment))
+        return WebRTCDataChannel.WriteMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getWriteModeBind, segment))
     }
 
     fun getReadyState(): WebRTCDataChannel.ChannelState {
         checkOpen()
-        return WebRTCDataChannel.ChannelState(ObjectCalls.ptrcallNoArgsRetLong(getReadyStateBind, segment))
+        return WebRTCDataChannel.ChannelState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getReadyStateBind, segment))
     }
 
     fun getLabel(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLabelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLabelBind, segment)
     }
 
     fun isOrdered(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isOrderedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isOrderedBind, segment)
     }
 
     fun getId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIdBind, segment)
     }
 
     fun getMaxPacketLifeTime(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPacketLifeTimeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxPacketLifeTimeBind, segment)
     }
 
     fun getMaxRetransmits(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxRetransmitsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxRetransmitsBind, segment)
     }
 
     fun getProtocol(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getProtocolBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getProtocolBind, segment)
     }
 
     fun isNegotiated(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNegotiatedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNegotiatedBind, segment)
     }
 
     fun getBufferedAmount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getBufferedAmountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBufferedAmountBind, segment)
     }
 
     @JvmInline
@@ -114,75 +115,77 @@ open class WebRTCDataChannel(handle: GodotHandle) : PacketPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebRTCDataChannel? =
             if (handle.address() == 0L) null else WebRTCDataChannel(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val POLL_HASH = 166280745L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "poll", POLL_HASH)
-        }
 
         private const val CLOSE_HASH = 3218959716L
-        private val closeConnectionBind by lazy {
+        @JvmField
+        val closeConnectionBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "close", CLOSE_HASH)
-        }
 
         private const val WAS_STRING_PACKET_HASH = 36873697L
-        private val wasStringPacketBind by lazy {
+        @JvmField
+        val wasStringPacketBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "was_string_packet", WAS_STRING_PACKET_HASH)
-        }
 
         private const val SET_WRITE_MODE_HASH = 1999768052L
-        private val setWriteModeBind by lazy {
+        @JvmField
+        val setWriteModeBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "set_write_mode", SET_WRITE_MODE_HASH)
-        }
 
         private const val GET_WRITE_MODE_HASH = 2848495172L
-        private val getWriteModeBind by lazy {
+        @JvmField
+        val getWriteModeBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "get_write_mode", GET_WRITE_MODE_HASH)
-        }
 
         private const val GET_READY_STATE_HASH = 3501143017L
-        private val getReadyStateBind by lazy {
+        @JvmField
+        val getReadyStateBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "get_ready_state", GET_READY_STATE_HASH)
-        }
 
         private const val GET_LABEL_HASH = 201670096L
-        private val getLabelBind by lazy {
+        @JvmField
+        val getLabelBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "get_label", GET_LABEL_HASH)
-        }
 
         private const val IS_ORDERED_HASH = 36873697L
-        private val isOrderedBind by lazy {
+        @JvmField
+        val isOrderedBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "is_ordered", IS_ORDERED_HASH)
-        }
 
         private const val GET_ID_HASH = 3905245786L
-        private val getIdBind by lazy {
+        @JvmField
+        val getIdBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "get_id", GET_ID_HASH)
-        }
 
         private const val GET_MAX_PACKET_LIFE_TIME_HASH = 3905245786L
-        private val getMaxPacketLifeTimeBind by lazy {
+        @JvmField
+        val getMaxPacketLifeTimeBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "get_max_packet_life_time", GET_MAX_PACKET_LIFE_TIME_HASH)
-        }
 
         private const val GET_MAX_RETRANSMITS_HASH = 3905245786L
-        private val getMaxRetransmitsBind by lazy {
+        @JvmField
+        val getMaxRetransmitsBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "get_max_retransmits", GET_MAX_RETRANSMITS_HASH)
-        }
 
         private const val GET_PROTOCOL_HASH = 201670096L
-        private val getProtocolBind by lazy {
+        @JvmField
+        val getProtocolBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "get_protocol", GET_PROTOCOL_HASH)
-        }
 
         private const val IS_NEGOTIATED_HASH = 36873697L
-        private val isNegotiatedBind by lazy {
+        @JvmField
+        val isNegotiatedBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "is_negotiated", IS_NEGOTIATED_HASH)
-        }
 
         private const val GET_BUFFERED_AMOUNT_HASH = 3905245786L
-        private val getBufferedAmountBind by lazy {
+        @JvmField
+        val getBufferedAmountBind =
             ObjectCalls.getMethodBind("WebRTCDataChannel", "get_buffered_amount", GET_BUFFERED_AMOUNT_HASH)
-        }
     }
 }

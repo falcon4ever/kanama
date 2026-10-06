@@ -22,7 +22,5 @@ class AudioEffectHighShelfFilter(handle: GodotHandle) : AudioEffectFilter(handle
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectHighShelfFilter? =
             if (handle.address() == 0L) null else AudioEffectHighShelfFilter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -20,7 +20,5 @@ class VisualShaderNodeVaryingGetter(handle: GodotHandle) : VisualShaderNodeVaryi
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVaryingGetter? =
             if (handle.address() == 0L) null else VisualShaderNodeVaryingGetter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

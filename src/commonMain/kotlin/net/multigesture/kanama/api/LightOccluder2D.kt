@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -36,7 +37,7 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.set_occluder_polygon
      */
     fun setOccluderPolygon(polygon: OccluderPolygon2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setOccluderPolygonBind, segment, listOf(polygon?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setOccluderPolygonBind, segment, listOf(polygon?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -45,7 +46,7 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.get_occluder_polygon
      */
     fun getOccluderPolygon(): OccluderPolygon2D? {
-        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getOccluderPolygonBind, segment))
+        return OccluderPolygon2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getOccluderPolygonBind, segment))
     }
 
     /**
@@ -55,7 +56,7 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.set_occluder_light_mask
      */
     fun setOccluderLightMask(mask: Int) {
-        ObjectCalls.ptrcallWithIntArg(setOccluderLightMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOccluderLightMaskBind, segment, mask)
     }
 
     /**
@@ -65,7 +66,7 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.get_occluder_light_mask
      */
     fun getOccluderLightMask(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOccluderLightMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOccluderLightMaskBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.set_as_sdf_collision
      */
     fun setAsSdfCollision(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsSdfCollisionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAsSdfCollisionBind, segment, enable)
     }
 
     /**
@@ -85,7 +86,7 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: LightOccluder2D.is_set_as_sdf_collision
      */
     fun isSetAsSdfCollision(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsSdfCollisionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSetAsSdfCollisionBind, segment)
     }
 
     companion object {
@@ -95,35 +96,37 @@ class LightOccluder2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): LightOccluder2D? =
             if (handle.address() == 0L) null else LightOccluder2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_OCCLUDER_POLYGON_HASH = 3258315893L
-        private val setOccluderPolygonBind by lazy {
+        @JvmField
+        val setOccluderPolygonBind =
             ObjectCalls.getMethodBind("LightOccluder2D", "set_occluder_polygon", SET_OCCLUDER_POLYGON_HASH)
-        }
 
         private const val GET_OCCLUDER_POLYGON_HASH = 3962317075L
-        private val getOccluderPolygonBind by lazy {
+        @JvmField
+        val getOccluderPolygonBind =
             ObjectCalls.getMethodBind("LightOccluder2D", "get_occluder_polygon", GET_OCCLUDER_POLYGON_HASH)
-        }
 
         private const val SET_OCCLUDER_LIGHT_MASK_HASH = 1286410249L
-        private val setOccluderLightMaskBind by lazy {
+        @JvmField
+        val setOccluderLightMaskBind =
             ObjectCalls.getMethodBind("LightOccluder2D", "set_occluder_light_mask", SET_OCCLUDER_LIGHT_MASK_HASH)
-        }
 
         private const val GET_OCCLUDER_LIGHT_MASK_HASH = 3905245786L
-        private val getOccluderLightMaskBind by lazy {
+        @JvmField
+        val getOccluderLightMaskBind =
             ObjectCalls.getMethodBind("LightOccluder2D", "get_occluder_light_mask", GET_OCCLUDER_LIGHT_MASK_HASH)
-        }
 
         private const val SET_AS_SDF_COLLISION_HASH = 2586408642L
-        private val setAsSdfCollisionBind by lazy {
+        @JvmField
+        val setAsSdfCollisionBind =
             ObjectCalls.getMethodBind("LightOccluder2D", "set_as_sdf_collision", SET_AS_SDF_COLLISION_HASH)
-        }
 
         private const val IS_SET_AS_SDF_COLLISION_HASH = 36873697L
-        private val isSetAsSdfCollisionBind by lazy {
+        @JvmField
+        val isSetAsSdfCollisionBind =
             ObjectCalls.getMethodBind("LightOccluder2D", "is_set_as_sdf_collision", IS_SET_AS_SDF_COLLISION_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -22,7 +23,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addMenuShortcut(shortcut: Shortcut?, callback: GodotCallable) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectCallableArgs(addMenuShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithObjectCallableArgs(Binds.addMenuShortcutBind, segment, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
     }
 
     /**
@@ -34,7 +35,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addContextMenuItem(name: String, callback: GodotCallable, icon: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringCallableObjectArgs(addContextMenuItemBind, segment, name, callback.target.segment, callback.method, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringCallableObjectArgs(Binds.addContextMenuItemBind, segment, name, callback.target.segment, callback.method, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -46,7 +47,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addContextMenuItemFromShortcut(name: String, shortcut: Shortcut?, icon: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextMenuItemFromShortcutBind, segment, name, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringAndTwoObjectArgs(Binds.addContextMenuItemFromShortcutBind, segment, name, shortcut?.requireOpenHandle() ?: NULL_SEGMENT, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -58,7 +59,7 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addContextSubmenuItem(name: String, menu: PopupMenu, icon: Texture2D?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndTwoObjectArgs(addContextSubmenuItemBind, segment, name, menu.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringAndTwoObjectArgs(Binds.addContextSubmenuItemBind, segment, name, menu.segment, icon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -145,25 +146,27 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): EditorContextMenuPlugin? =
             if (handle.address() == 0L) null else EditorContextMenuPlugin(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_MENU_SHORTCUT_HASH = 851596305L
-        private val addMenuShortcutBind by lazy {
+        @JvmField
+        val addMenuShortcutBind =
             ObjectCalls.getMethodBind("EditorContextMenuPlugin", "add_menu_shortcut", ADD_MENU_SHORTCUT_HASH)
-        }
 
         private const val ADD_CONTEXT_MENU_ITEM_HASH = 2748336951L
-        private val addContextMenuItemBind by lazy {
+        @JvmField
+        val addContextMenuItemBind =
             ObjectCalls.getMethodBind("EditorContextMenuPlugin", "add_context_menu_item", ADD_CONTEXT_MENU_ITEM_HASH)
-        }
 
         private const val ADD_CONTEXT_MENU_ITEM_FROM_SHORTCUT_HASH = 3799546916L
-        private val addContextMenuItemFromShortcutBind by lazy {
+        @JvmField
+        val addContextMenuItemFromShortcutBind =
             ObjectCalls.getMethodBind("EditorContextMenuPlugin", "add_context_menu_item_from_shortcut", ADD_CONTEXT_MENU_ITEM_FROM_SHORTCUT_HASH)
-        }
 
         private const val ADD_CONTEXT_SUBMENU_ITEM_HASH = 1994674995L
-        private val addContextSubmenuItemBind by lazy {
+        @JvmField
+        val addContextSubmenuItemBind =
             ObjectCalls.getMethodBind("EditorContextMenuPlugin", "add_context_submenu_item", ADD_CONTEXT_SUBMENU_ITEM_HASH)
-        }
     }
 }

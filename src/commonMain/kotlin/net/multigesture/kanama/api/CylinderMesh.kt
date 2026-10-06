@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -61,7 +62,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setTopRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTopRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTopRadiusBind, segment, radius)
     }
 
     /**
@@ -72,7 +73,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getTopRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTopRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTopRadiusBind, segment)
     }
 
     /**
@@ -83,7 +84,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setBottomRadius(radius: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBottomRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBottomRadiusBind, segment, radius)
     }
 
     /**
@@ -94,7 +95,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getBottomRadius(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBottomRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBottomRadiusBind, segment)
     }
 
     /**
@@ -104,7 +105,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setHeight(height: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHeightBind, segment, height)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHeightBind, segment, height)
     }
 
     /**
@@ -114,7 +115,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getHeight(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHeightBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRadialSegments(segments: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRadialSegmentsBind, segment, segments)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRadialSegmentsBind, segment, segments)
     }
 
     /**
@@ -136,7 +137,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRadialSegments(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRadialSegmentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRadialSegmentsBind, segment)
     }
 
     /**
@@ -150,7 +151,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setRings(rings: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setRingsBind, segment, rings)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRingsBind, segment, rings)
     }
 
     /**
@@ -164,7 +165,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun getRings(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getRingsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRingsBind, segment)
     }
 
     /**
@@ -176,7 +177,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCapTop(capTop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCapTopBind, segment, capTop)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCapTopBind, segment, capTop)
     }
 
     /**
@@ -188,7 +189,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isCapTop(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCapTopBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapTopBind, segment)
     }
 
     /**
@@ -201,7 +202,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun setCapBottom(capBottom: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCapBottomBind, segment, capBottom)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCapBottomBind, segment, capBottom)
     }
 
     /**
@@ -214,7 +215,7 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
      */
     fun isCapBottom(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCapBottomBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCapBottomBind, segment)
     }
 
     companion object {
@@ -227,75 +228,77 @@ class CylinderMesh(handle: GodotHandle) : PrimitiveMesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CylinderMesh? =
             if (handle.address() == 0L) null else CylinderMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TOP_RADIUS_HASH = 373806689L
-        private val setTopRadiusBind by lazy {
+        @JvmField
+        val setTopRadiusBind =
             ObjectCalls.getMethodBind("CylinderMesh", "set_top_radius", SET_TOP_RADIUS_HASH)
-        }
 
         private const val GET_TOP_RADIUS_HASH = 1740695150L
-        private val getTopRadiusBind by lazy {
+        @JvmField
+        val getTopRadiusBind =
             ObjectCalls.getMethodBind("CylinderMesh", "get_top_radius", GET_TOP_RADIUS_HASH)
-        }
 
         private const val SET_BOTTOM_RADIUS_HASH = 373806689L
-        private val setBottomRadiusBind by lazy {
+        @JvmField
+        val setBottomRadiusBind =
             ObjectCalls.getMethodBind("CylinderMesh", "set_bottom_radius", SET_BOTTOM_RADIUS_HASH)
-        }
 
         private const val GET_BOTTOM_RADIUS_HASH = 1740695150L
-        private val getBottomRadiusBind by lazy {
+        @JvmField
+        val getBottomRadiusBind =
             ObjectCalls.getMethodBind("CylinderMesh", "get_bottom_radius", GET_BOTTOM_RADIUS_HASH)
-        }
 
         private const val SET_HEIGHT_HASH = 373806689L
-        private val setHeightBind by lazy {
+        @JvmField
+        val setHeightBind =
             ObjectCalls.getMethodBind("CylinderMesh", "set_height", SET_HEIGHT_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 1740695150L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("CylinderMesh", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val SET_RADIAL_SEGMENTS_HASH = 1286410249L
-        private val setRadialSegmentsBind by lazy {
+        @JvmField
+        val setRadialSegmentsBind =
             ObjectCalls.getMethodBind("CylinderMesh", "set_radial_segments", SET_RADIAL_SEGMENTS_HASH)
-        }
 
         private const val GET_RADIAL_SEGMENTS_HASH = 3905245786L
-        private val getRadialSegmentsBind by lazy {
+        @JvmField
+        val getRadialSegmentsBind =
             ObjectCalls.getMethodBind("CylinderMesh", "get_radial_segments", GET_RADIAL_SEGMENTS_HASH)
-        }
 
         private const val SET_RINGS_HASH = 1286410249L
-        private val setRingsBind by lazy {
+        @JvmField
+        val setRingsBind =
             ObjectCalls.getMethodBind("CylinderMesh", "set_rings", SET_RINGS_HASH)
-        }
 
         private const val GET_RINGS_HASH = 3905245786L
-        private val getRingsBind by lazy {
+        @JvmField
+        val getRingsBind =
             ObjectCalls.getMethodBind("CylinderMesh", "get_rings", GET_RINGS_HASH)
-        }
 
         private const val SET_CAP_TOP_HASH = 2586408642L
-        private val setCapTopBind by lazy {
+        @JvmField
+        val setCapTopBind =
             ObjectCalls.getMethodBind("CylinderMesh", "set_cap_top", SET_CAP_TOP_HASH)
-        }
 
         private const val IS_CAP_TOP_HASH = 36873697L
-        private val isCapTopBind by lazy {
+        @JvmField
+        val isCapTopBind =
             ObjectCalls.getMethodBind("CylinderMesh", "is_cap_top", IS_CAP_TOP_HASH)
-        }
 
         private const val SET_CAP_BOTTOM_HASH = 2586408642L
-        private val setCapBottomBind by lazy {
+        @JvmField
+        val setCapBottomBind =
             ObjectCalls.getMethodBind("CylinderMesh", "set_cap_bottom", SET_CAP_BOTTOM_HASH)
-        }
 
         private const val IS_CAP_BOTTOM_HASH = 36873697L
-        private val isCapBottomBind by lazy {
+        @JvmField
+        val isCapBottomBind =
             ObjectCalls.getMethodBind("CylinderMesh", "is_cap_bottom", IS_CAP_BOTTOM_HASH)
-        }
     }
 }

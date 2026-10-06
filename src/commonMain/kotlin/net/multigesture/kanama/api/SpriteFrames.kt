@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -19,7 +20,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun addAnimation(anim: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(addAnimationBind, segment, anim)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.addAnimationBind, segment, anim)
     }
 
     /**
@@ -29,7 +30,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun hasAnimation(anim: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, segment, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasAnimationBind, segment, anim)
     }
 
     /**
@@ -40,7 +41,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun duplicateAnimation(animFrom: String, animTo: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(duplicateAnimationBind, segment, animFrom, animTo)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.duplicateAnimationBind, segment, animFrom, animTo)
     }
 
     /**
@@ -50,7 +51,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun removeAnimation(anim: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeAnimationBind, segment, anim)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeAnimationBind, segment, anim)
     }
 
     /**
@@ -60,7 +61,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun renameAnimation(anim: String, newname: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationBind, segment, anim, newname)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameAnimationBind, segment, anim, newname)
     }
 
     /**
@@ -71,7 +72,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationNamesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getAnimationNamesBind, segment)
     }
 
     /**
@@ -81,7 +82,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun setAnimationSpeed(anim: String, fps: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndDoubleArg(setAnimationSpeedBind, segment, anim, fps)
+        ObjectCalls.ptrcallWithStringNameAndDoubleArg(Binds.setAnimationSpeedBind, segment, anim, fps)
     }
 
     /**
@@ -91,7 +92,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationSpeed(anim: String): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getAnimationSpeedBind, segment, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetDouble(Binds.getAnimationSpeedBind, segment, anim)
     }
 
     /**
@@ -102,7 +103,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun setAnimationLoop(anim: String, loop: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndBoolArg(setAnimationLoopBind, segment, anim, loop)
+        ObjectCalls.ptrcallWithStringNameAndBoolArg(Binds.setAnimationLoopBind, segment, anim, loop)
     }
 
     /**
@@ -112,7 +113,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationLoop(anim: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(getAnimationLoopBind, segment, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.getAnimationLoopBind, segment, anim)
     }
 
     /**
@@ -122,7 +123,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun setAnimationLoopMode(anim: String, loopMode: SpriteFrames.LoopMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndLongArg(setAnimationLoopModeBind, segment, anim, loopMode.value)
+        ObjectCalls.ptrcallWithStringNameAndLongArg(Binds.setAnimationLoopModeBind, segment, anim, loopMode.value)
     }
 
     /**
@@ -132,7 +133,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getAnimationLoopMode(anim: String): SpriteFrames.LoopMode {
         checkOpen()
-        return SpriteFrames.LoopMode(ObjectCalls.ptrcallWithStringNameArgRetLong(getAnimationLoopModeBind, segment, anim))
+        return SpriteFrames.LoopMode(ObjectCalls.ptrcallWithStringNameArgRetLong(Binds.getAnimationLoopModeBind, segment, anim))
     }
 
     /**
@@ -144,7 +145,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun addFrame(anim: String, texture: Texture2D?, duration: Double = 1.0, atPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(addFrameBind, segment, anim, texture?.requireOpenHandle() ?: NULL_SEGMENT, duration, atPosition)
+        ObjectCalls.ptrcallWithStringNameObjectDoubleIntArgs(Binds.addFrameBind, segment, anim, texture?.requireOpenHandle() ?: NULL_SEGMENT, duration, atPosition)
     }
 
     /**
@@ -155,7 +156,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun setFrame(anim: String, idx: Int, texture: Texture2D?, duration: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(setFrameBind, segment, anim, idx, texture?.requireOpenHandle() ?: NULL_SEGMENT, duration)
+        ObjectCalls.ptrcallWithStringNameIntObjectDoubleArgs(Binds.setFrameBind, segment, anim, idx, texture?.requireOpenHandle() ?: NULL_SEGMENT, duration)
     }
 
     /**
@@ -165,7 +166,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun removeFrame(anim: String, idx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndIntArg(removeFrameBind, segment, anim, idx)
+        ObjectCalls.ptrcallWithStringNameAndIntArg(Binds.removeFrameBind, segment, anim, idx)
     }
 
     /**
@@ -175,7 +176,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getFrameCount(anim: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetInt(getFrameCountBind, segment, anim)
+        return ObjectCalls.ptrcallWithStringNameArgRetInt(Binds.getFrameCountBind, segment, anim)
     }
 
     /**
@@ -185,7 +186,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getFrameTexture(anim: String, idx: Int): Texture2D? {
         checkOpen()
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(getFrameTextureBind, segment, anim, idx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithStringNameAndIntArgRetObject(Binds.getFrameTextureBind, segment, anim, idx))
     }
 
     /**
@@ -197,7 +198,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun getFrameDuration(anim: String, idx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameAndIntArgRetDouble(getFrameDurationBind, segment, anim, idx)
+        return ObjectCalls.ptrcallWithStringNameAndIntArgRetDouble(Binds.getFrameDurationBind, segment, anim, idx)
     }
 
     /**
@@ -207,7 +208,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun clear(anim: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(clearBind, segment, anim)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.clearBind, segment, anim)
     }
 
     /**
@@ -217,7 +218,7 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
      */
     fun clearAll() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearAllBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearAllBind, segment)
     }
 
     /**
@@ -264,105 +265,107 @@ class SpriteFrames(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SpriteFrames? =
             if (handle.address() == 0L) null else SpriteFrames(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_ANIMATION_HASH = 3304788590L
-        private val addAnimationBind by lazy {
+        @JvmField
+        val addAnimationBind =
             ObjectCalls.getMethodBind("SpriteFrames", "add_animation", ADD_ANIMATION_HASH)
-        }
 
         private const val HAS_ANIMATION_HASH = 2619796661L
-        private val hasAnimationBind by lazy {
+        @JvmField
+        val hasAnimationBind =
             ObjectCalls.getMethodBind("SpriteFrames", "has_animation", HAS_ANIMATION_HASH)
-        }
 
         private const val DUPLICATE_ANIMATION_HASH = 3740211285L
-        private val duplicateAnimationBind by lazy {
+        @JvmField
+        val duplicateAnimationBind =
             ObjectCalls.getMethodBind("SpriteFrames", "duplicate_animation", DUPLICATE_ANIMATION_HASH)
-        }
 
         private const val REMOVE_ANIMATION_HASH = 3304788590L
-        private val removeAnimationBind by lazy {
+        @JvmField
+        val removeAnimationBind =
             ObjectCalls.getMethodBind("SpriteFrames", "remove_animation", REMOVE_ANIMATION_HASH)
-        }
 
         private const val RENAME_ANIMATION_HASH = 3740211285L
-        private val renameAnimationBind by lazy {
+        @JvmField
+        val renameAnimationBind =
             ObjectCalls.getMethodBind("SpriteFrames", "rename_animation", RENAME_ANIMATION_HASH)
-        }
 
         private const val GET_ANIMATION_NAMES_HASH = 1139954409L
-        private val getAnimationNamesBind by lazy {
+        @JvmField
+        val getAnimationNamesBind =
             ObjectCalls.getMethodBind("SpriteFrames", "get_animation_names", GET_ANIMATION_NAMES_HASH)
-        }
 
         private const val SET_ANIMATION_SPEED_HASH = 4135858297L
-        private val setAnimationSpeedBind by lazy {
+        @JvmField
+        val setAnimationSpeedBind =
             ObjectCalls.getMethodBind("SpriteFrames", "set_animation_speed", SET_ANIMATION_SPEED_HASH)
-        }
 
         private const val GET_ANIMATION_SPEED_HASH = 2349060816L
-        private val getAnimationSpeedBind by lazy {
+        @JvmField
+        val getAnimationSpeedBind =
             ObjectCalls.getMethodBind("SpriteFrames", "get_animation_speed", GET_ANIMATION_SPEED_HASH)
-        }
 
         private const val SET_ANIMATION_LOOP_HASH = 2524380260L
-        private val setAnimationLoopBind by lazy {
+        @JvmField
+        val setAnimationLoopBind =
             ObjectCalls.getMethodBind("SpriteFrames", "set_animation_loop", SET_ANIMATION_LOOP_HASH)
-        }
 
         private const val GET_ANIMATION_LOOP_HASH = 2619796661L
-        private val getAnimationLoopBind by lazy {
+        @JvmField
+        val getAnimationLoopBind =
             ObjectCalls.getMethodBind("SpriteFrames", "get_animation_loop", GET_ANIMATION_LOOP_HASH)
-        }
 
         private const val SET_ANIMATION_LOOP_MODE_HASH = 918068248L
-        private val setAnimationLoopModeBind by lazy {
+        @JvmField
+        val setAnimationLoopModeBind =
             ObjectCalls.getMethodBind("SpriteFrames", "set_animation_loop_mode", SET_ANIMATION_LOOP_MODE_HASH)
-        }
 
         private const val GET_ANIMATION_LOOP_MODE_HASH = 3606360228L
-        private val getAnimationLoopModeBind by lazy {
+        @JvmField
+        val getAnimationLoopModeBind =
             ObjectCalls.getMethodBind("SpriteFrames", "get_animation_loop_mode", GET_ANIMATION_LOOP_MODE_HASH)
-        }
 
         private const val ADD_FRAME_HASH = 1351332740L
-        private val addFrameBind by lazy {
+        @JvmField
+        val addFrameBind =
             ObjectCalls.getMethodBind("SpriteFrames", "add_frame", ADD_FRAME_HASH)
-        }
 
         private const val SET_FRAME_HASH = 56804795L
-        private val setFrameBind by lazy {
+        @JvmField
+        val setFrameBind =
             ObjectCalls.getMethodBind("SpriteFrames", "set_frame", SET_FRAME_HASH)
-        }
 
         private const val REMOVE_FRAME_HASH = 2415702435L
-        private val removeFrameBind by lazy {
+        @JvmField
+        val removeFrameBind =
             ObjectCalls.getMethodBind("SpriteFrames", "remove_frame", REMOVE_FRAME_HASH)
-        }
 
         private const val GET_FRAME_COUNT_HASH = 2458036349L
-        private val getFrameCountBind by lazy {
+        @JvmField
+        val getFrameCountBind =
             ObjectCalls.getMethodBind("SpriteFrames", "get_frame_count", GET_FRAME_COUNT_HASH)
-        }
 
         private const val GET_FRAME_TEXTURE_HASH = 2900517879L
-        private val getFrameTextureBind by lazy {
+        @JvmField
+        val getFrameTextureBind =
             ObjectCalls.getMethodBind("SpriteFrames", "get_frame_texture", GET_FRAME_TEXTURE_HASH)
-        }
 
         private const val GET_FRAME_DURATION_HASH = 1129309260L
-        private val getFrameDurationBind by lazy {
+        @JvmField
+        val getFrameDurationBind =
             ObjectCalls.getMethodBind("SpriteFrames", "get_frame_duration", GET_FRAME_DURATION_HASH)
-        }
 
         private const val CLEAR_HASH = 3304788590L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("SpriteFrames", "clear", CLEAR_HASH)
-        }
 
         private const val CLEAR_ALL_HASH = 3218959716L
-        private val clearAllBind by lazy {
+        @JvmField
+        val clearAllBind =
             ObjectCalls.getMethodBind("SpriteFrames", "clear_all", CLEAR_ALL_HASH)
-        }
     }
 }

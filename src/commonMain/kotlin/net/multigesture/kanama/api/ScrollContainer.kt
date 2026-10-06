@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -92,7 +93,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_h_scroll
      */
     fun setHScroll(value: Int) {
-        ObjectCalls.ptrcallWithIntArg(setHScrollBind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHScrollBind, segment, value)
     }
 
     /**
@@ -103,7 +104,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_h_scroll
      */
     fun getHScroll(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHScrollBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHScrollBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_v_scroll
      */
     fun setVScroll(value: Int) {
-        ObjectCalls.ptrcallWithIntArg(setVScrollBind, segment, value)
+        ObjectCalls.ptrcallWithIntArg(Binds.setVScrollBind, segment, value)
     }
 
     /**
@@ -123,7 +124,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_v_scroll
      */
     fun getVScroll(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getVScrollBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getVScrollBind, segment)
     }
 
     /**
@@ -133,7 +134,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_horizontal_custom_step
      */
     fun setHorizontalCustomStep(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setHorizontalCustomStepBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHorizontalCustomStepBind, segment, value)
     }
 
     /**
@@ -143,7 +144,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_horizontal_custom_step
      */
     fun getHorizontalCustomStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHorizontalCustomStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHorizontalCustomStepBind, segment)
     }
 
     /**
@@ -153,7 +154,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_vertical_custom_step
      */
     fun setVerticalCustomStep(value: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVerticalCustomStepBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVerticalCustomStepBind, segment, value)
     }
 
     /**
@@ -163,7 +164,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_vertical_custom_step
      */
     fun getVerticalCustomStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVerticalCustomStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVerticalCustomStepBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_horizontal_scroll_mode
      */
     fun setHorizontalScrollMode(enable: ScrollContainer.ScrollMode) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalScrollModeBind, segment, enable.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHorizontalScrollModeBind, segment, enable.value)
     }
 
     /**
@@ -181,7 +182,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_horizontal_scroll_mode
      */
     fun getHorizontalScrollMode(): ScrollContainer.ScrollMode {
-        return ScrollContainer.ScrollMode(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalScrollModeBind, segment))
+        return ScrollContainer.ScrollMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalScrollModeBind, segment))
     }
 
     /**
@@ -190,7 +191,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_vertical_scroll_mode
      */
     fun setVerticalScrollMode(enable: ScrollContainer.ScrollMode) {
-        ObjectCalls.ptrcallWithLongArg(setVerticalScrollModeBind, segment, enable.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVerticalScrollModeBind, segment, enable.value)
     }
 
     /**
@@ -199,7 +200,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_vertical_scroll_mode
      */
     fun getVerticalScrollMode(): ScrollContainer.ScrollMode {
-        return ScrollContainer.ScrollMode(ObjectCalls.ptrcallNoArgsRetLong(getVerticalScrollModeBind, segment))
+        return ScrollContainer.ScrollMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVerticalScrollModeBind, segment))
     }
 
     /**
@@ -210,7 +211,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_scroll_horizontal_by_default
      */
     fun setScrollHorizontalByDefault(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollHorizontalByDefaultBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScrollHorizontalByDefaultBind, segment, enable)
     }
 
     /**
@@ -221,7 +222,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.is_scroll_horizontal_by_default
      */
     fun isScrollHorizontalByDefault(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHorizontalByDefaultBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollHorizontalByDefaultBind, segment)
     }
 
     /**
@@ -230,7 +231,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_deadzone
      */
     fun setDeadzone(deadzone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDeadzoneBind, segment, deadzone)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDeadzoneBind, segment, deadzone)
     }
 
     /**
@@ -239,7 +240,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_deadzone
      */
     fun getDeadzone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDeadzoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDeadzoneBind, segment)
     }
 
     /**
@@ -250,7 +251,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_scroll_hint_mode
      */
     fun setScrollHintMode(scrollHintMode: ScrollContainer.ScrollHintMode) {
-        ObjectCalls.ptrcallWithLongArg(setScrollHintModeBind, segment, scrollHintMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setScrollHintModeBind, segment, scrollHintMode.value)
     }
 
     /**
@@ -261,7 +262,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_scroll_hint_mode
      */
     fun getScrollHintMode(): ScrollContainer.ScrollHintMode {
-        return ScrollContainer.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(getScrollHintModeBind, segment))
+        return ScrollContainer.ScrollHintMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getScrollHintModeBind, segment))
     }
 
     /**
@@ -270,7 +271,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_tile_scroll_hint
      */
     fun setTileScrollHint(tileScrollHint: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTileScrollHintBind, segment, tileScrollHint)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTileScrollHintBind, segment, tileScrollHint)
     }
 
     /**
@@ -279,7 +280,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.is_scroll_hint_tiled
      */
     fun isScrollHintTiled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollHintTiledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollHintTiledBind, segment)
     }
 
     /**
@@ -289,7 +290,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_follow_focus
      */
     fun setFollowFocus(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFollowFocusBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFollowFocusBind, segment, enabled)
     }
 
     /**
@@ -299,7 +300,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.is_following_focus
      */
     fun isFollowingFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFollowingFocusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFollowingFocusBind, segment)
     }
 
     /**
@@ -310,7 +311,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_h_scroll_bar
      */
     fun getHScrollBar(): HScrollBar? {
-        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getHScrollBarBind, segment))
+        return HScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getHScrollBarBind, segment))
     }
 
     /**
@@ -321,7 +322,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_v_scroll_bar
      */
     fun getVScrollBar(): VScrollBar? {
-        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(getVScrollBarBind, segment))
+        return VScrollBar.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getVScrollBarBind, segment))
     }
 
     /**
@@ -332,7 +333,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.ensure_control_visible
      */
     fun ensureControlVisible(control: Control) {
-        ObjectCalls.ptrcallWithObjectArgs(ensureControlVisibleBind, segment, listOf(control.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.ensureControlVisibleBind, segment, listOf(control.segment))
     }
 
     /**
@@ -341,7 +342,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.set_draw_focus_border
      */
     fun setDrawFocusBorder(draw: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawFocusBorderBind, segment, draw)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawFocusBorderBind, segment, draw)
     }
 
     /**
@@ -350,7 +351,7 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
      * Generated from Godot docs: ScrollContainer.get_draw_focus_border
      */
     fun getDrawFocusBorder(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getDrawFocusBorderBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDrawFocusBorderBind, segment)
     }
 
     /** Signal `scroll_started()`; see [TypedSignal]. */
@@ -465,140 +466,142 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): ScrollContainer? =
             if (handle.address() == 0L) null else ScrollContainer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_H_SCROLL_HASH = 1286410249L
-        private val setHScrollBind by lazy {
+        @JvmField
+        val setHScrollBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_h_scroll", SET_H_SCROLL_HASH)
-        }
 
         private const val GET_H_SCROLL_HASH = 3905245786L
-        private val getHScrollBind by lazy {
+        @JvmField
+        val getHScrollBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_h_scroll", GET_H_SCROLL_HASH)
-        }
 
         private const val SET_V_SCROLL_HASH = 1286410249L
-        private val setVScrollBind by lazy {
+        @JvmField
+        val setVScrollBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_v_scroll", SET_V_SCROLL_HASH)
-        }
 
         private const val GET_V_SCROLL_HASH = 3905245786L
-        private val getVScrollBind by lazy {
+        @JvmField
+        val getVScrollBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_v_scroll", GET_V_SCROLL_HASH)
-        }
 
         private const val SET_HORIZONTAL_CUSTOM_STEP_HASH = 373806689L
-        private val setHorizontalCustomStepBind by lazy {
+        @JvmField
+        val setHorizontalCustomStepBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_horizontal_custom_step", SET_HORIZONTAL_CUSTOM_STEP_HASH)
-        }
 
         private const val GET_HORIZONTAL_CUSTOM_STEP_HASH = 1740695150L
-        private val getHorizontalCustomStepBind by lazy {
+        @JvmField
+        val getHorizontalCustomStepBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_horizontal_custom_step", GET_HORIZONTAL_CUSTOM_STEP_HASH)
-        }
 
         private const val SET_VERTICAL_CUSTOM_STEP_HASH = 373806689L
-        private val setVerticalCustomStepBind by lazy {
+        @JvmField
+        val setVerticalCustomStepBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_vertical_custom_step", SET_VERTICAL_CUSTOM_STEP_HASH)
-        }
 
         private const val GET_VERTICAL_CUSTOM_STEP_HASH = 1740695150L
-        private val getVerticalCustomStepBind by lazy {
+        @JvmField
+        val getVerticalCustomStepBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_vertical_custom_step", GET_VERTICAL_CUSTOM_STEP_HASH)
-        }
 
         private const val SET_HORIZONTAL_SCROLL_MODE_HASH = 2750506364L
-        private val setHorizontalScrollModeBind by lazy {
+        @JvmField
+        val setHorizontalScrollModeBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_horizontal_scroll_mode", SET_HORIZONTAL_SCROLL_MODE_HASH)
-        }
 
         private const val GET_HORIZONTAL_SCROLL_MODE_HASH = 3987985145L
-        private val getHorizontalScrollModeBind by lazy {
+        @JvmField
+        val getHorizontalScrollModeBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_horizontal_scroll_mode", GET_HORIZONTAL_SCROLL_MODE_HASH)
-        }
 
         private const val SET_VERTICAL_SCROLL_MODE_HASH = 2750506364L
-        private val setVerticalScrollModeBind by lazy {
+        @JvmField
+        val setVerticalScrollModeBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_vertical_scroll_mode", SET_VERTICAL_SCROLL_MODE_HASH)
-        }
 
         private const val GET_VERTICAL_SCROLL_MODE_HASH = 3987985145L
-        private val getVerticalScrollModeBind by lazy {
+        @JvmField
+        val getVerticalScrollModeBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_vertical_scroll_mode", GET_VERTICAL_SCROLL_MODE_HASH)
-        }
 
         private const val SET_SCROLL_HORIZONTAL_BY_DEFAULT_HASH = 2586408642L
-        private val setScrollHorizontalByDefaultBind by lazy {
+        @JvmField
+        val setScrollHorizontalByDefaultBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_scroll_horizontal_by_default", SET_SCROLL_HORIZONTAL_BY_DEFAULT_HASH)
-        }
 
         private const val IS_SCROLL_HORIZONTAL_BY_DEFAULT_HASH = 36873697L
-        private val isScrollHorizontalByDefaultBind by lazy {
+        @JvmField
+        val isScrollHorizontalByDefaultBind =
             ObjectCalls.getMethodBind("ScrollContainer", "is_scroll_horizontal_by_default", IS_SCROLL_HORIZONTAL_BY_DEFAULT_HASH)
-        }
 
         private const val SET_DEADZONE_HASH = 1286410249L
-        private val setDeadzoneBind by lazy {
+        @JvmField
+        val setDeadzoneBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_deadzone", SET_DEADZONE_HASH)
-        }
 
         private const val GET_DEADZONE_HASH = 3905245786L
-        private val getDeadzoneBind by lazy {
+        @JvmField
+        val getDeadzoneBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_deadzone", GET_DEADZONE_HASH)
-        }
 
         private const val SET_SCROLL_HINT_MODE_HASH = 578158943L
-        private val setScrollHintModeBind by lazy {
+        @JvmField
+        val setScrollHintModeBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_scroll_hint_mode", SET_SCROLL_HINT_MODE_HASH)
-        }
 
         private const val GET_SCROLL_HINT_MODE_HASH = 246835423L
-        private val getScrollHintModeBind by lazy {
+        @JvmField
+        val getScrollHintModeBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_scroll_hint_mode", GET_SCROLL_HINT_MODE_HASH)
-        }
 
         private const val SET_TILE_SCROLL_HINT_HASH = 2586408642L
-        private val setTileScrollHintBind by lazy {
+        @JvmField
+        val setTileScrollHintBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_tile_scroll_hint", SET_TILE_SCROLL_HINT_HASH)
-        }
 
         private const val IS_SCROLL_HINT_TILED_HASH = 2240911060L
-        private val isScrollHintTiledBind by lazy {
+        @JvmField
+        val isScrollHintTiledBind =
             ObjectCalls.getMethodBind("ScrollContainer", "is_scroll_hint_tiled", IS_SCROLL_HINT_TILED_HASH)
-        }
 
         private const val SET_FOLLOW_FOCUS_HASH = 2586408642L
-        private val setFollowFocusBind by lazy {
+        @JvmField
+        val setFollowFocusBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_follow_focus", SET_FOLLOW_FOCUS_HASH)
-        }
 
         private const val IS_FOLLOWING_FOCUS_HASH = 36873697L
-        private val isFollowingFocusBind by lazy {
+        @JvmField
+        val isFollowingFocusBind =
             ObjectCalls.getMethodBind("ScrollContainer", "is_following_focus", IS_FOLLOWING_FOCUS_HASH)
-        }
 
         private const val GET_H_SCROLL_BAR_HASH = 4004517983L
-        private val getHScrollBarBind by lazy {
+        @JvmField
+        val getHScrollBarBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_h_scroll_bar", GET_H_SCROLL_BAR_HASH)
-        }
 
         private const val GET_V_SCROLL_BAR_HASH = 2630340773L
-        private val getVScrollBarBind by lazy {
+        @JvmField
+        val getVScrollBarBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_v_scroll_bar", GET_V_SCROLL_BAR_HASH)
-        }
 
         private const val ENSURE_CONTROL_VISIBLE_HASH = 1496901182L
-        private val ensureControlVisibleBind by lazy {
+        @JvmField
+        val ensureControlVisibleBind =
             ObjectCalls.getMethodBind("ScrollContainer", "ensure_control_visible", ENSURE_CONTROL_VISIBLE_HASH)
-        }
 
         private const val SET_DRAW_FOCUS_BORDER_HASH = 2586408642L
-        private val setDrawFocusBorderBind by lazy {
+        @JvmField
+        val setDrawFocusBorderBind =
             ObjectCalls.getMethodBind("ScrollContainer", "set_draw_focus_border", SET_DRAW_FOCUS_BORDER_HASH)
-        }
 
         private const val GET_DRAW_FOCUS_BORDER_HASH = 2240911060L
-        private val getDrawFocusBorderBind by lazy {
+        @JvmField
+        val getDrawFocusBorderBind =
             ObjectCalls.getMethodBind("ScrollContainer", "get_draw_focus_border", GET_DRAW_FOCUS_BORDER_HASH)
-        }
     }
 }

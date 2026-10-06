@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -13,9 +14,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: CameraServer
  */
 object CameraServer {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("CameraServer")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     var monitoringFeeds: Boolean
         @JvmName("monitoringFeedsProperty")
@@ -32,7 +32,7 @@ object CameraServer {
      */
     @JvmStatic
     fun setMonitoringFeeds(isMonitoringFeeds: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMonitoringFeedsBind, singleton, isMonitoringFeeds)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMonitoringFeedsBind, singleton, isMonitoringFeeds)
     }
 
     /**
@@ -44,7 +44,7 @@ object CameraServer {
      */
     @JvmStatic
     fun isMonitoringFeeds(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonitoringFeedsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMonitoringFeedsBind, singleton)
     }
 
     /**
@@ -54,7 +54,7 @@ object CameraServer {
      */
     @JvmStatic
     fun getFeed(index: Int): CameraFeed? {
-        return CameraFeed.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getFeedBind, singleton, index))
+        return CameraFeed.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getFeedBind, singleton, index))
     }
 
     /**
@@ -64,7 +64,7 @@ object CameraServer {
      */
     @JvmStatic
     fun getFeedCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getFeedCountBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFeedCountBind, singleton)
     }
 
     /**
@@ -74,7 +74,7 @@ object CameraServer {
      */
     @JvmStatic
     fun feeds(): List<CameraFeed> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(feedsBind, singleton, CameraFeed::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.feedsBind, singleton, CameraFeed::wrapBorrowed)
     }
 
     /**
@@ -84,7 +84,7 @@ object CameraServer {
      */
     @JvmStatic
     fun addFeed(feed: CameraFeed?) {
-        ObjectCalls.ptrcallWithObjectArgs(addFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -94,7 +94,7 @@ object CameraServer {
      */
     @JvmStatic
     fun removeFeed(feed: CameraFeed?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeFeedBind, singleton, listOf(feed?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /** Signal `camera_feed_added(id: int)`; see [TypedSignal]. */
@@ -161,38 +161,43 @@ object CameraServer {
     internal fun wrap(handle: RawSegment): CameraServer? =
         if (handle.address() == 0L) null else this
 
-    private const val SET_MONITORING_FEEDS_HASH = 2586408642L
-    private val setMonitoringFeedsBind by lazy {
-        ObjectCalls.getMethodBind("CameraServer", "set_monitoring_feeds", SET_MONITORING_FEEDS_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("CameraServer")
 
-    private const val IS_MONITORING_FEEDS_HASH = 36873697L
-    private val isMonitoringFeedsBind by lazy {
-        ObjectCalls.getMethodBind("CameraServer", "is_monitoring_feeds", IS_MONITORING_FEEDS_HASH)
-    }
+        private const val SET_MONITORING_FEEDS_HASH = 2586408642L
+        @JvmField
+        val setMonitoringFeedsBind =
+            ObjectCalls.getMethodBind("CameraServer", "set_monitoring_feeds", SET_MONITORING_FEEDS_HASH)
 
-    private const val GET_FEED_HASH = 361927068L
-    private val getFeedBind by lazy {
-        ObjectCalls.getMethodBind("CameraServer", "get_feed", GET_FEED_HASH)
-    }
+        private const val IS_MONITORING_FEEDS_HASH = 36873697L
+        @JvmField
+        val isMonitoringFeedsBind =
+            ObjectCalls.getMethodBind("CameraServer", "is_monitoring_feeds", IS_MONITORING_FEEDS_HASH)
 
-    private const val GET_FEED_COUNT_HASH = 2455072627L
-    private val getFeedCountBind by lazy {
-        ObjectCalls.getMethodBind("CameraServer", "get_feed_count", GET_FEED_COUNT_HASH)
-    }
+        private const val GET_FEED_HASH = 361927068L
+        @JvmField
+        val getFeedBind =
+            ObjectCalls.getMethodBind("CameraServer", "get_feed", GET_FEED_HASH)
 
-    private const val FEEDS_HASH = 2915620761L
-    private val feedsBind by lazy {
-        ObjectCalls.getMethodBind("CameraServer", "feeds", FEEDS_HASH)
-    }
+        private const val GET_FEED_COUNT_HASH = 2455072627L
+        @JvmField
+        val getFeedCountBind =
+            ObjectCalls.getMethodBind("CameraServer", "get_feed_count", GET_FEED_COUNT_HASH)
 
-    private const val ADD_FEED_HASH = 3204782488L
-    private val addFeedBind by lazy {
-        ObjectCalls.getMethodBind("CameraServer", "add_feed", ADD_FEED_HASH)
-    }
+        private const val FEEDS_HASH = 2915620761L
+        @JvmField
+        val feedsBind =
+            ObjectCalls.getMethodBind("CameraServer", "feeds", FEEDS_HASH)
 
-    private const val REMOVE_FEED_HASH = 3204782488L
-    private val removeFeedBind by lazy {
-        ObjectCalls.getMethodBind("CameraServer", "remove_feed", REMOVE_FEED_HASH)
+        private const val ADD_FEED_HASH = 3204782488L
+        @JvmField
+        val addFeedBind =
+            ObjectCalls.getMethodBind("CameraServer", "add_feed", ADD_FEED_HASH)
+
+        private const val REMOVE_FEED_HASH = 3204782488L
+        @JvmField
+        val removeFeedBind =
+            ObjectCalls.getMethodBind("CameraServer", "remove_feed", REMOVE_FEED_HASH)
     }
 }

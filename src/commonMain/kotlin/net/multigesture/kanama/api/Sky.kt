@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -40,7 +41,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun setRadianceSize(size: Sky.RadianceSize) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setRadianceSizeBind, segment, size.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setRadianceSizeBind, segment, size.value)
     }
 
     /**
@@ -52,7 +53,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun getRadianceSize(): Sky.RadianceSize {
         checkOpen()
-        return Sky.RadianceSize(ObjectCalls.ptrcallNoArgsRetLong(getRadianceSizeBind, segment))
+        return Sky.RadianceSize(ObjectCalls.ptrcallNoArgsRetLong(Binds.getRadianceSizeBind, segment))
     }
 
     /**
@@ -64,7 +65,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun setProcessMode(mode: Sky.ProcessMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setProcessModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setProcessModeBind, segment, mode.value)
     }
 
     /**
@@ -76,7 +77,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun getProcessMode(): Sky.ProcessMode {
         checkOpen()
-        return Sky.ProcessMode(ObjectCalls.ptrcallNoArgsRetLong(getProcessModeBind, segment))
+        return Sky.ProcessMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getProcessModeBind, segment))
     }
 
     /**
@@ -87,7 +88,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -98,7 +99,7 @@ class Sky(handle: GodotHandle) : Resource(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
     /**
@@ -223,35 +224,37 @@ class Sky(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Sky? =
             if (handle.address() == 0L) null else Sky(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIANCE_SIZE_HASH = 1512957179L
-        private val setRadianceSizeBind by lazy {
+        @JvmField
+        val setRadianceSizeBind =
             ObjectCalls.getMethodBind("Sky", "set_radiance_size", SET_RADIANCE_SIZE_HASH)
-        }
 
         private const val GET_RADIANCE_SIZE_HASH = 2708733976L
-        private val getRadianceSizeBind by lazy {
+        @JvmField
+        val getRadianceSizeBind =
             ObjectCalls.getMethodBind("Sky", "get_radiance_size", GET_RADIANCE_SIZE_HASH)
-        }
 
         private const val SET_PROCESS_MODE_HASH = 875986769L
-        private val setProcessModeBind by lazy {
+        @JvmField
+        val setProcessModeBind =
             ObjectCalls.getMethodBind("Sky", "set_process_mode", SET_PROCESS_MODE_HASH)
-        }
 
         private const val GET_PROCESS_MODE_HASH = 731245043L
-        private val getProcessModeBind by lazy {
+        @JvmField
+        val getProcessModeBind =
             ObjectCalls.getMethodBind("Sky", "get_process_mode", GET_PROCESS_MODE_HASH)
-        }
 
         private const val SET_MATERIAL_HASH = 2757459619L
-        private val setMaterialBind by lazy {
+        @JvmField
+        val setMaterialBind =
             ObjectCalls.getMethodBind("Sky", "set_material", SET_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 5934680L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("Sky", "get_material", GET_MATERIAL_HASH)
-        }
     }
 }

@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -56,179 +57,179 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
         set(value) = setItemCount(value)
 
     fun addItem(label: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithStringAndIntArg(addItemBind, segment, label, id)
+        ObjectCalls.ptrcallWithStringAndIntArg(Binds.addItemBind, segment, label, id)
     }
 
     fun addIconItem(texture: Texture2D?, label: String, id: Int = -1) {
-        ObjectCalls.ptrcallWithObjectStringAndIntArgs(addIconItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id)
+        ObjectCalls.ptrcallWithObjectStringAndIntArgs(Binds.addIconItemBind, segment, texture?.requireOpenHandle() ?: MemorySegment.NULL, label, id)
     }
 
     fun setItemText(idx: Int, text: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTextBind, segment, idx, text)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemTextBind, segment, idx, text)
     }
 
     fun setItemIcon(idx: Int, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setItemIconBind, segment, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setItemIconBind, segment, idx, texture?.requireOpenHandle() ?: MemorySegment.NULL)
     }
 
     fun setItemDisabled(idx: Int, disabled: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setItemDisabledBind, segment, idx, disabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemDisabledBind, segment, idx, disabled)
     }
 
     fun setItemId(idx: Int, id: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setItemIdBind, segment, idx, id)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setItemIdBind, segment, idx, id)
     }
 
     fun setItemMetadata(idx: Int, metadata: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setItemMetadataBind, segment, idx, metadata)
+        ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setItemMetadataBind, segment, idx, metadata)
     }
 
     fun setItemTooltip(idx: Int, tooltip: String) {
-        ObjectCalls.ptrcallWithIntAndStringArg(setItemTooltipBind, segment, idx, tooltip)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setItemTooltipBind, segment, idx, tooltip)
     }
 
     fun setItemAutoTranslateMode(idx: Int, mode: Node.AutoTranslateMode) {
-        ObjectCalls.ptrcallWithIntAndLongArgs(setItemAutoTranslateModeBind, segment, idx, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setItemAutoTranslateModeBind, segment, idx, mode.value)
     }
 
     fun setSearchBarEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSearchBarEnabledBind, segment, enabled)
     }
 
     fun setSearchBarMinItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarMinItemCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSearchBarMinItemCountBind, segment, count)
     }
 
     fun getSearchBarMinItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarMinItemCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSearchBarMinItemCountBind, segment)
     }
 
     fun setSearchBarFuzzySearchEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSearchBarFuzzySearchEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSearchBarFuzzySearchEnabledBind, segment, enabled)
     }
 
     fun isSearchBarFuzzySearchEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarFuzzySearchEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSearchBarFuzzySearchEnabledBind, segment)
     }
 
     fun setSearchBarFuzzySearchMaxMisses(maxMisses: Int) {
-        ObjectCalls.ptrcallWithIntArg(setSearchBarFuzzySearchMaxMissesBind, segment, maxMisses)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSearchBarFuzzySearchMaxMissesBind, segment, maxMisses)
     }
 
     fun getSearchBarFuzzySearchMaxMisses(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSearchBarFuzzySearchMaxMissesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSearchBarFuzzySearchMaxMissesBind, segment)
     }
 
     fun getItemText(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTextBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemTextBind, segment, idx)
     }
 
     fun getItemIcon(idx: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getItemIconBind, segment, idx))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getItemIconBind, segment, idx))
     }
 
     fun getItemId(idx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIdBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getItemIdBind, segment, idx)
     }
 
     fun getItemIndex(id: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getItemIndexBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getItemIndexBind, segment, id)
     }
 
     fun getItemMetadata(idx: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getItemMetadataBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getItemMetadataBind, segment, idx)
     }
 
     fun getItemTooltip(idx: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getItemTooltipBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemTooltipBind, segment, idx)
     }
 
     fun getItemAutoTranslateMode(idx: Int): Node.AutoTranslateMode {
-        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(getItemAutoTranslateModeBind, segment, idx))
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getItemAutoTranslateModeBind, segment, idx))
     }
 
     fun isItemDisabled(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemDisabledBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemDisabledBind, segment, idx)
     }
 
     fun isItemSeparator(idx: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isItemSeparatorBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemSeparatorBind, segment, idx)
     }
 
     fun isSearchBarEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSearchBarEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSearchBarEnabledBind, segment)
     }
 
     fun addSeparator(text: String = "") {
-        ObjectCalls.ptrcallWithStringArg(addSeparatorBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.addSeparatorBind, segment, text)
     }
 
     fun clear() {
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     fun select(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(selectBind, segment, idx)
+        ObjectCalls.ptrcallWithIntArg(Binds.selectBind, segment, idx)
     }
 
     fun getSelected(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSelectedBind, segment)
     }
 
     fun getSelectedId(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getSelectedIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSelectedIdBind, segment)
     }
 
     fun getSelectedMetadata(): Any? {
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getSelectedMetadataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getSelectedMetadataBind, segment)
     }
 
     fun removeItem(idx: Int) {
-        ObjectCalls.ptrcallWithIntArg(removeItemBind, segment, idx)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeItemBind, segment, idx)
     }
 
     fun getPopup(): PopupMenu? {
-        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPopupBind, segment))
+        return PopupMenu.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPopupBind, segment))
     }
 
     fun showPopup() {
-        ObjectCalls.ptrcallNoArgs(showPopupBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.showPopupBind, segment)
     }
 
     fun setItemCount(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setItemCountBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setItemCountBind, segment, count)
     }
 
     fun getItemCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getItemCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getItemCountBind, segment)
     }
 
     fun hasSelectableItems(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasSelectableItemsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasSelectableItemsBind, segment)
     }
 
     fun getSelectableItem(fromLast: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithBoolArgRetInt(getSelectableItemBind, segment, fromLast)
+        return ObjectCalls.ptrcallWithBoolArgRetInt(Binds.getSelectableItemBind, segment, fromLast)
     }
 
     fun setFitToLongestItem(fit: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFitToLongestItemBind, segment, fit)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFitToLongestItemBind, segment, fit)
     }
 
     fun isFitToLongestItem(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFitToLongestItemBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFitToLongestItemBind, segment)
     }
 
     fun setAllowReselect(allow: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAllowReselectBind, segment, allow)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowReselectBind, segment, allow)
     }
 
     fun getAllowReselect(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAllowReselectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowReselectBind, segment)
     }
 
     fun setDisableShortcuts(disabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisableShortcutsBind, segment, disabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableShortcutsBind, segment, disabled)
     }
 
     /** Signal `item_selected(index: int)`; see [TypedSignal]. */
@@ -253,225 +254,227 @@ class OptionButton(handle: GodotHandle) : Button(handle) {
 
         internal fun wrap(handle: MemorySegment): OptionButton? =
             if (handle.address() == 0L) null else OptionButton(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_ITEM_HASH = 2697778442L
-        private val addItemBind by lazy {
+        @JvmField
+        val addItemBind =
             ObjectCalls.getMethodBind("OptionButton", "add_item", ADD_ITEM_HASH)
-        }
 
         private const val ADD_ICON_ITEM_HASH = 3781678508L
-        private val addIconItemBind by lazy {
+        @JvmField
+        val addIconItemBind =
             ObjectCalls.getMethodBind("OptionButton", "add_icon_item", ADD_ICON_ITEM_HASH)
-        }
 
         private const val SET_ITEM_TEXT_HASH = 501894301L
-        private val setItemTextBind by lazy {
+        @JvmField
+        val setItemTextBind =
             ObjectCalls.getMethodBind("OptionButton", "set_item_text", SET_ITEM_TEXT_HASH)
-        }
 
         private const val SET_ITEM_ICON_HASH = 666127730L
-        private val setItemIconBind by lazy {
+        @JvmField
+        val setItemIconBind =
             ObjectCalls.getMethodBind("OptionButton", "set_item_icon", SET_ITEM_ICON_HASH)
-        }
 
         private const val SET_ITEM_DISABLED_HASH = 300928843L
-        private val setItemDisabledBind by lazy {
+        @JvmField
+        val setItemDisabledBind =
             ObjectCalls.getMethodBind("OptionButton", "set_item_disabled", SET_ITEM_DISABLED_HASH)
-        }
 
         private const val SET_ITEM_ID_HASH = 3937882851L
-        private val setItemIdBind by lazy {
+        @JvmField
+        val setItemIdBind =
             ObjectCalls.getMethodBind("OptionButton", "set_item_id", SET_ITEM_ID_HASH)
-        }
 
         private const val SET_ITEM_METADATA_HASH = 2152698145L
-        private val setItemMetadataBind by lazy {
+        @JvmField
+        val setItemMetadataBind =
             ObjectCalls.getMethodBind("OptionButton", "set_item_metadata", SET_ITEM_METADATA_HASH)
-        }
 
         private const val SET_ITEM_TOOLTIP_HASH = 501894301L
-        private val setItemTooltipBind by lazy {
+        @JvmField
+        val setItemTooltipBind =
             ObjectCalls.getMethodBind("OptionButton", "set_item_tooltip", SET_ITEM_TOOLTIP_HASH)
-        }
 
         private const val SET_ITEM_AUTO_TRANSLATE_MODE_HASH = 287402019L
-        private val setItemAutoTranslateModeBind by lazy {
+        @JvmField
+        val setItemAutoTranslateModeBind =
             ObjectCalls.getMethodBind("OptionButton", "set_item_auto_translate_mode", SET_ITEM_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val SET_SEARCH_BAR_ENABLED_HASH = 2586408642L
-        private val setSearchBarEnabledBind by lazy {
+        @JvmField
+        val setSearchBarEnabledBind =
             ObjectCalls.getMethodBind("OptionButton", "set_search_bar_enabled", SET_SEARCH_BAR_ENABLED_HASH)
-        }
 
         private const val SET_SEARCH_BAR_MIN_ITEM_COUNT_HASH = 1286410249L
-        private val setSearchBarMinItemCountBind by lazy {
+        @JvmField
+        val setSearchBarMinItemCountBind =
             ObjectCalls.getMethodBind("OptionButton", "set_search_bar_min_item_count", SET_SEARCH_BAR_MIN_ITEM_COUNT_HASH)
-        }
 
         private const val GET_SEARCH_BAR_MIN_ITEM_COUNT_HASH = 3905245786L
-        private val getSearchBarMinItemCountBind by lazy {
+        @JvmField
+        val getSearchBarMinItemCountBind =
             ObjectCalls.getMethodBind("OptionButton", "get_search_bar_min_item_count", GET_SEARCH_BAR_MIN_ITEM_COUNT_HASH)
-        }
 
         private const val SET_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH = 2586408642L
-        private val setSearchBarFuzzySearchEnabledBind by lazy {
+        @JvmField
+        val setSearchBarFuzzySearchEnabledBind =
             ObjectCalls.getMethodBind("OptionButton", "set_search_bar_fuzzy_search_enabled", SET_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH)
-        }
 
         private const val IS_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH = 36873697L
-        private val isSearchBarFuzzySearchEnabledBind by lazy {
+        @JvmField
+        val isSearchBarFuzzySearchEnabledBind =
             ObjectCalls.getMethodBind("OptionButton", "is_search_bar_fuzzy_search_enabled", IS_SEARCH_BAR_FUZZY_SEARCH_ENABLED_HASH)
-        }
 
         private const val SET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH = 1286410249L
-        private val setSearchBarFuzzySearchMaxMissesBind by lazy {
+        @JvmField
+        val setSearchBarFuzzySearchMaxMissesBind =
             ObjectCalls.getMethodBind("OptionButton", "set_search_bar_fuzzy_search_max_misses", SET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH)
-        }
 
         private const val GET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH = 3905245786L
-        private val getSearchBarFuzzySearchMaxMissesBind by lazy {
+        @JvmField
+        val getSearchBarFuzzySearchMaxMissesBind =
             ObjectCalls.getMethodBind("OptionButton", "get_search_bar_fuzzy_search_max_misses", GET_SEARCH_BAR_FUZZY_SEARCH_MAX_MISSES_HASH)
-        }
 
         private const val GET_ITEM_TEXT_HASH = 844755477L
-        private val getItemTextBind by lazy {
+        @JvmField
+        val getItemTextBind =
             ObjectCalls.getMethodBind("OptionButton", "get_item_text", GET_ITEM_TEXT_HASH)
-        }
 
         private const val GET_ITEM_ICON_HASH = 3536238170L
-        private val getItemIconBind by lazy {
+        @JvmField
+        val getItemIconBind =
             ObjectCalls.getMethodBind("OptionButton", "get_item_icon", GET_ITEM_ICON_HASH)
-        }
 
         private const val GET_ITEM_ID_HASH = 923996154L
-        private val getItemIdBind by lazy {
+        @JvmField
+        val getItemIdBind =
             ObjectCalls.getMethodBind("OptionButton", "get_item_id", GET_ITEM_ID_HASH)
-        }
 
         private const val GET_ITEM_INDEX_HASH = 923996154L
-        private val getItemIndexBind by lazy {
+        @JvmField
+        val getItemIndexBind =
             ObjectCalls.getMethodBind("OptionButton", "get_item_index", GET_ITEM_INDEX_HASH)
-        }
 
         private const val GET_ITEM_METADATA_HASH = 4227898402L
-        private val getItemMetadataBind by lazy {
+        @JvmField
+        val getItemMetadataBind =
             ObjectCalls.getMethodBind("OptionButton", "get_item_metadata", GET_ITEM_METADATA_HASH)
-        }
 
         private const val GET_ITEM_TOOLTIP_HASH = 844755477L
-        private val getItemTooltipBind by lazy {
+        @JvmField
+        val getItemTooltipBind =
             ObjectCalls.getMethodBind("OptionButton", "get_item_tooltip", GET_ITEM_TOOLTIP_HASH)
-        }
 
         private const val GET_ITEM_AUTO_TRANSLATE_MODE_HASH = 906302372L
-        private val getItemAutoTranslateModeBind by lazy {
+        @JvmField
+        val getItemAutoTranslateModeBind =
             ObjectCalls.getMethodBind("OptionButton", "get_item_auto_translate_mode", GET_ITEM_AUTO_TRANSLATE_MODE_HASH)
-        }
 
         private const val IS_ITEM_DISABLED_HASH = 1116898809L
-        private val isItemDisabledBind by lazy {
+        @JvmField
+        val isItemDisabledBind =
             ObjectCalls.getMethodBind("OptionButton", "is_item_disabled", IS_ITEM_DISABLED_HASH)
-        }
 
         private const val IS_ITEM_SEPARATOR_HASH = 1116898809L
-        private val isItemSeparatorBind by lazy {
+        @JvmField
+        val isItemSeparatorBind =
             ObjectCalls.getMethodBind("OptionButton", "is_item_separator", IS_ITEM_SEPARATOR_HASH)
-        }
 
         private const val IS_SEARCH_BAR_ENABLED_HASH = 36873697L
-        private val isSearchBarEnabledBind by lazy {
+        @JvmField
+        val isSearchBarEnabledBind =
             ObjectCalls.getMethodBind("OptionButton", "is_search_bar_enabled", IS_SEARCH_BAR_ENABLED_HASH)
-        }
 
         private const val ADD_SEPARATOR_HASH = 3005725572L
-        private val addSeparatorBind by lazy {
+        @JvmField
+        val addSeparatorBind =
             ObjectCalls.getMethodBind("OptionButton", "add_separator", ADD_SEPARATOR_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("OptionButton", "clear", CLEAR_HASH)
-        }
 
         private const val SELECT_HASH = 1286410249L
-        private val selectBind by lazy {
+        @JvmField
+        val selectBind =
             ObjectCalls.getMethodBind("OptionButton", "select", SELECT_HASH)
-        }
 
         private const val GET_SELECTED_HASH = 3905245786L
-        private val getSelectedBind by lazy {
+        @JvmField
+        val getSelectedBind =
             ObjectCalls.getMethodBind("OptionButton", "get_selected", GET_SELECTED_HASH)
-        }
 
         private const val GET_SELECTED_ID_HASH = 3905245786L
-        private val getSelectedIdBind by lazy {
+        @JvmField
+        val getSelectedIdBind =
             ObjectCalls.getMethodBind("OptionButton", "get_selected_id", GET_SELECTED_ID_HASH)
-        }
 
         private const val GET_SELECTED_METADATA_HASH = 1214101251L
-        private val getSelectedMetadataBind by lazy {
+        @JvmField
+        val getSelectedMetadataBind =
             ObjectCalls.getMethodBind("OptionButton", "get_selected_metadata", GET_SELECTED_METADATA_HASH)
-        }
 
         private const val REMOVE_ITEM_HASH = 1286410249L
-        private val removeItemBind by lazy {
+        @JvmField
+        val removeItemBind =
             ObjectCalls.getMethodBind("OptionButton", "remove_item", REMOVE_ITEM_HASH)
-        }
 
         private const val GET_POPUP_HASH = 229722558L
-        private val getPopupBind by lazy {
+        @JvmField
+        val getPopupBind =
             ObjectCalls.getMethodBind("OptionButton", "get_popup", GET_POPUP_HASH)
-        }
 
         private const val SHOW_POPUP_HASH = 3218959716L
-        private val showPopupBind by lazy {
+        @JvmField
+        val showPopupBind =
             ObjectCalls.getMethodBind("OptionButton", "show_popup", SHOW_POPUP_HASH)
-        }
 
         private const val SET_ITEM_COUNT_HASH = 1286410249L
-        private val setItemCountBind by lazy {
+        @JvmField
+        val setItemCountBind =
             ObjectCalls.getMethodBind("OptionButton", "set_item_count", SET_ITEM_COUNT_HASH)
-        }
 
         private const val GET_ITEM_COUNT_HASH = 3905245786L
-        private val getItemCountBind by lazy {
+        @JvmField
+        val getItemCountBind =
             ObjectCalls.getMethodBind("OptionButton", "get_item_count", GET_ITEM_COUNT_HASH)
-        }
 
         private const val HAS_SELECTABLE_ITEMS_HASH = 36873697L
-        private val hasSelectableItemsBind by lazy {
+        @JvmField
+        val hasSelectableItemsBind =
             ObjectCalls.getMethodBind("OptionButton", "has_selectable_items", HAS_SELECTABLE_ITEMS_HASH)
-        }
 
         private const val GET_SELECTABLE_ITEM_HASH = 894402480L
-        private val getSelectableItemBind by lazy {
+        @JvmField
+        val getSelectableItemBind =
             ObjectCalls.getMethodBind("OptionButton", "get_selectable_item", GET_SELECTABLE_ITEM_HASH)
-        }
 
         private const val SET_FIT_TO_LONGEST_ITEM_HASH = 2586408642L
-        private val setFitToLongestItemBind by lazy {
+        @JvmField
+        val setFitToLongestItemBind =
             ObjectCalls.getMethodBind("OptionButton", "set_fit_to_longest_item", SET_FIT_TO_LONGEST_ITEM_HASH)
-        }
 
         private const val IS_FIT_TO_LONGEST_ITEM_HASH = 36873697L
-        private val isFitToLongestItemBind by lazy {
+        @JvmField
+        val isFitToLongestItemBind =
             ObjectCalls.getMethodBind("OptionButton", "is_fit_to_longest_item", IS_FIT_TO_LONGEST_ITEM_HASH)
-        }
 
         private const val SET_ALLOW_RESELECT_HASH = 2586408642L
-        private val setAllowReselectBind by lazy {
+        @JvmField
+        val setAllowReselectBind =
             ObjectCalls.getMethodBind("OptionButton", "set_allow_reselect", SET_ALLOW_RESELECT_HASH)
-        }
 
         private const val GET_ALLOW_RESELECT_HASH = 36873697L
-        private val getAllowReselectBind by lazy {
+        @JvmField
+        val getAllowReselectBind =
             ObjectCalls.getMethodBind("OptionButton", "get_allow_reselect", GET_ALLOW_RESELECT_HASH)
-        }
 
         private const val SET_DISABLE_SHORTCUTS_HASH = 2586408642L
-        private val setDisableShortcutsBind by lazy {
+        @JvmField
+        val setDisableShortcutsBind =
             ObjectCalls.getMethodBind("OptionButton", "set_disable_shortcuts", SET_DISABLE_SHORTCUTS_HASH)
-        }
     }
 }

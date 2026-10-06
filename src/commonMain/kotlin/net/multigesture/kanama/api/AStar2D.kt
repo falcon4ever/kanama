@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -26,7 +27,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getAvailablePointId(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getAvailablePointIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getAvailablePointIdBind, segment)
     }
 
     /**
@@ -40,7 +41,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun addPoint(id: Long, position: Vector2, weightScale: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongVector2AndDoubleArgs(addPointBind, segment, id, position, weightScale)
+        ObjectCalls.ptrcallWithLongVector2AndDoubleArgs(Binds.addPointBind, segment, id, position, weightScale)
     }
 
     /**
@@ -50,7 +51,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointPosition(id: Long): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetVector2(getPointPositionBind, segment, id)
+        return ObjectCalls.ptrcallWithLongArgRetVector2(Binds.getPointPositionBind, segment, id)
     }
 
     /**
@@ -60,7 +61,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPointPosition(id: Long, position: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndVector2Arg(setPointPositionBind, segment, id, position)
+        ObjectCalls.ptrcallWithLongAndVector2Arg(Binds.setPointPositionBind, segment, id, position)
     }
 
     /**
@@ -70,7 +71,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointWeightScale(id: Long): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetDouble(getPointWeightScaleBind, segment, id)
+        return ObjectCalls.ptrcallWithLongArgRetDouble(Binds.getPointWeightScaleBind, segment, id)
     }
 
     /**
@@ -82,7 +83,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPointWeightScale(id: Long, weightScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndDoubleArg(setPointWeightScaleBind, segment, id, weightScale)
+        ObjectCalls.ptrcallWithLongAndDoubleArg(Binds.setPointWeightScaleBind, segment, id, weightScale)
     }
 
     /**
@@ -92,7 +93,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun removePoint(id: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(removePointBind, segment, id)
+        ObjectCalls.ptrcallWithLongArg(Binds.removePointBind, segment, id)
     }
 
     /**
@@ -102,7 +103,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasPoint(id: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(hasPointBind, segment, id)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.hasPointBind, segment, id)
     }
 
     /**
@@ -112,7 +113,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointConnections(id: Long): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetPackedInt64List(getPointConnectionsBind, segment, id)
+        return ObjectCalls.ptrcallWithLongArgRetPackedInt64List(Binds.getPointConnectionsBind, segment, id)
     }
 
     /**
@@ -122,7 +123,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointIds(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPointIdsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPointIdsBind, segment)
     }
 
     /**
@@ -132,7 +133,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setNeighborFilterEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNeighborFilterEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNeighborFilterEnabledBind, segment, enabled)
     }
 
     /**
@@ -142,7 +143,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isNeighborFilterEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isNeighborFilterEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isNeighborFilterEnabledBind, segment)
     }
 
     /**
@@ -152,7 +153,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPointDisabled(id: Long, disabled: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setPointDisabledBind, segment, id, disabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setPointDisabledBind, segment, id, disabled)
     }
 
     /**
@@ -162,7 +163,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPointDisabled(id: Long): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetBool(isPointDisabledBind, segment, id)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isPointDisabledBind, segment, id)
     }
 
     /**
@@ -173,7 +174,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun connectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongAndBoolArgs(connectPointsBind, segment, id, toId, bidirectional)
+        ObjectCalls.ptrcallWithTwoLongAndBoolArgs(Binds.connectPointsBind, segment, id, toId, bidirectional)
     }
 
     /**
@@ -184,7 +185,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun disconnectPoints(id: Long, toId: Long, bidirectional: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoLongAndBoolArgs(disconnectPointsBind, segment, id, toId, bidirectional)
+        ObjectCalls.ptrcallWithTwoLongAndBoolArgs(Binds.disconnectPointsBind, segment, id, toId, bidirectional)
     }
 
     /**
@@ -195,7 +196,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun arePointsConnected(id: Long, toId: Long, bidirectional: Boolean = true): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetBool(arePointsConnectedBind, segment, id, toId, bidirectional)
+        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetBool(Binds.arePointsConnectedBind, segment, id, toId, bidirectional)
     }
 
     /**
@@ -205,7 +206,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointCount(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPointCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPointCountBind, segment)
     }
 
     /**
@@ -216,7 +217,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointCapacity(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetLong(getPointCapacityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getPointCapacityBind, segment)
     }
 
     /**
@@ -227,7 +228,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun reserveSpace(numNodes: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(reserveSpaceBind, segment, numNodes)
+        ObjectCalls.ptrcallWithLongArg(Binds.reserveSpaceBind, segment, numNodes)
     }
 
     /**
@@ -237,7 +238,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -250,7 +251,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getClosestPoint(toPosition: Vector2, includeDisabled: Boolean = false): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2AndBoolArgRetLong(getClosestPointBind, segment, toPosition, includeDisabled)
+        return ObjectCalls.ptrcallWithVector2AndBoolArgRetLong(Binds.getClosestPointBind, segment, toPosition, includeDisabled)
     }
 
     /**
@@ -261,7 +262,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getClosestPositionInSegment(toPosition: Vector2): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(getClosestPositionInSegmentBind, segment, toPosition)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.getClosestPositionInSegmentBind, segment, toPosition)
     }
 
     /**
@@ -279,7 +280,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector2List(getPointPathBind, segment, fromId, toId, allowPartialPath)
+        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedVector2List(Binds.getPointPathBind, segment, fromId, toId, allowPartialPath)
     }
 
     /**
@@ -295,7 +296,7 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIdPath(fromId: Long, toId: Long, allowPartialPath: Boolean = false): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(getIdPathBind, segment, fromId, toId, allowPartialPath)
+        return ObjectCalls.ptrcallWithTwoLongAndBoolArgsRetPackedInt64List(Binds.getIdPathBind, segment, fromId, toId, allowPartialPath)
     }
 
     companion object {
@@ -308,130 +309,132 @@ class AStar2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AStar2D? =
             if (handle.address() == 0L) null else AStar2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_AVAILABLE_POINT_ID_HASH = 3905245786L
-        private val getAvailablePointIdBind by lazy {
+        @JvmField
+        val getAvailablePointIdBind =
             ObjectCalls.getMethodBind("AStar2D", "get_available_point_id", GET_AVAILABLE_POINT_ID_HASH)
-        }
 
         private const val ADD_POINT_HASH = 4074201818L
-        private val addPointBind by lazy {
+        @JvmField
+        val addPointBind =
             ObjectCalls.getMethodBind("AStar2D", "add_point", ADD_POINT_HASH)
-        }
 
         private const val GET_POINT_POSITION_HASH = 2299179447L
-        private val getPointPositionBind by lazy {
+        @JvmField
+        val getPointPositionBind =
             ObjectCalls.getMethodBind("AStar2D", "get_point_position", GET_POINT_POSITION_HASH)
-        }
 
         private const val SET_POINT_POSITION_HASH = 163021252L
-        private val setPointPositionBind by lazy {
+        @JvmField
+        val setPointPositionBind =
             ObjectCalls.getMethodBind("AStar2D", "set_point_position", SET_POINT_POSITION_HASH)
-        }
 
         private const val GET_POINT_WEIGHT_SCALE_HASH = 2339986948L
-        private val getPointWeightScaleBind by lazy {
+        @JvmField
+        val getPointWeightScaleBind =
             ObjectCalls.getMethodBind("AStar2D", "get_point_weight_scale", GET_POINT_WEIGHT_SCALE_HASH)
-        }
 
         private const val SET_POINT_WEIGHT_SCALE_HASH = 1602489585L
-        private val setPointWeightScaleBind by lazy {
+        @JvmField
+        val setPointWeightScaleBind =
             ObjectCalls.getMethodBind("AStar2D", "set_point_weight_scale", SET_POINT_WEIGHT_SCALE_HASH)
-        }
 
         private const val REMOVE_POINT_HASH = 1286410249L
-        private val removePointBind by lazy {
+        @JvmField
+        val removePointBind =
             ObjectCalls.getMethodBind("AStar2D", "remove_point", REMOVE_POINT_HASH)
-        }
 
         private const val HAS_POINT_HASH = 1116898809L
-        private val hasPointBind by lazy {
+        @JvmField
+        val hasPointBind =
             ObjectCalls.getMethodBind("AStar2D", "has_point", HAS_POINT_HASH)
-        }
 
         private const val GET_POINT_CONNECTIONS_HASH = 2865087369L
-        private val getPointConnectionsBind by lazy {
+        @JvmField
+        val getPointConnectionsBind =
             ObjectCalls.getMethodBind("AStar2D", "get_point_connections", GET_POINT_CONNECTIONS_HASH)
-        }
 
         private const val GET_POINT_IDS_HASH = 3851388692L
-        private val getPointIdsBind by lazy {
+        @JvmField
+        val getPointIdsBind =
             ObjectCalls.getMethodBind("AStar2D", "get_point_ids", GET_POINT_IDS_HASH)
-        }
 
         private const val SET_NEIGHBOR_FILTER_ENABLED_HASH = 2586408642L
-        private val setNeighborFilterEnabledBind by lazy {
+        @JvmField
+        val setNeighborFilterEnabledBind =
             ObjectCalls.getMethodBind("AStar2D", "set_neighbor_filter_enabled", SET_NEIGHBOR_FILTER_ENABLED_HASH)
-        }
 
         private const val IS_NEIGHBOR_FILTER_ENABLED_HASH = 36873697L
-        private val isNeighborFilterEnabledBind by lazy {
+        @JvmField
+        val isNeighborFilterEnabledBind =
             ObjectCalls.getMethodBind("AStar2D", "is_neighbor_filter_enabled", IS_NEIGHBOR_FILTER_ENABLED_HASH)
-        }
 
         private const val SET_POINT_DISABLED_HASH = 972357352L
-        private val setPointDisabledBind by lazy {
+        @JvmField
+        val setPointDisabledBind =
             ObjectCalls.getMethodBind("AStar2D", "set_point_disabled", SET_POINT_DISABLED_HASH)
-        }
 
         private const val IS_POINT_DISABLED_HASH = 1116898809L
-        private val isPointDisabledBind by lazy {
+        @JvmField
+        val isPointDisabledBind =
             ObjectCalls.getMethodBind("AStar2D", "is_point_disabled", IS_POINT_DISABLED_HASH)
-        }
 
         private const val CONNECT_POINTS_HASH = 3710494224L
-        private val connectPointsBind by lazy {
+        @JvmField
+        val connectPointsBind =
             ObjectCalls.getMethodBind("AStar2D", "connect_points", CONNECT_POINTS_HASH)
-        }
 
         private const val DISCONNECT_POINTS_HASH = 3710494224L
-        private val disconnectPointsBind by lazy {
+        @JvmField
+        val disconnectPointsBind =
             ObjectCalls.getMethodBind("AStar2D", "disconnect_points", DISCONNECT_POINTS_HASH)
-        }
 
         private const val ARE_POINTS_CONNECTED_HASH = 2288175859L
-        private val arePointsConnectedBind by lazy {
+        @JvmField
+        val arePointsConnectedBind =
             ObjectCalls.getMethodBind("AStar2D", "are_points_connected", ARE_POINTS_CONNECTED_HASH)
-        }
 
         private const val GET_POINT_COUNT_HASH = 3905245786L
-        private val getPointCountBind by lazy {
+        @JvmField
+        val getPointCountBind =
             ObjectCalls.getMethodBind("AStar2D", "get_point_count", GET_POINT_COUNT_HASH)
-        }
 
         private const val GET_POINT_CAPACITY_HASH = 3905245786L
-        private val getPointCapacityBind by lazy {
+        @JvmField
+        val getPointCapacityBind =
             ObjectCalls.getMethodBind("AStar2D", "get_point_capacity", GET_POINT_CAPACITY_HASH)
-        }
 
         private const val RESERVE_SPACE_HASH = 1286410249L
-        private val reserveSpaceBind by lazy {
+        @JvmField
+        val reserveSpaceBind =
             ObjectCalls.getMethodBind("AStar2D", "reserve_space", RESERVE_SPACE_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("AStar2D", "clear", CLEAR_HASH)
-        }
 
         private const val GET_CLOSEST_POINT_HASH = 2300324924L
-        private val getClosestPointBind by lazy {
+        @JvmField
+        val getClosestPointBind =
             ObjectCalls.getMethodBind("AStar2D", "get_closest_point", GET_CLOSEST_POINT_HASH)
-        }
 
         private const val GET_CLOSEST_POSITION_IN_SEGMENT_HASH = 2656412154L
-        private val getClosestPositionInSegmentBind by lazy {
+        @JvmField
+        val getClosestPositionInSegmentBind =
             ObjectCalls.getMethodBind("AStar2D", "get_closest_position_in_segment", GET_CLOSEST_POSITION_IN_SEGMENT_HASH)
-        }
 
         private const val GET_POINT_PATH_HASH = 3427490392L
-        private val getPointPathBind by lazy {
+        @JvmField
+        val getPointPathBind =
             ObjectCalls.getMethodBind("AStar2D", "get_point_path", GET_POINT_PATH_HASH)
-        }
 
         private const val GET_ID_PATH_HASH = 3136199648L
-        private val getIdPathBind by lazy {
+        @JvmField
+        val getIdPathBind =
             ObjectCalls.getMethodBind("AStar2D", "get_id_path", GET_ID_PATH_HASH)
-        }
     }
 }

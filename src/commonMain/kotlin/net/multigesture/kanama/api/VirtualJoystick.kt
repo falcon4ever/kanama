@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -85,7 +86,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_joystick_mode
      */
     fun setJoystickMode(mode: VirtualJoystick.JoystickMode) {
-        ObjectCalls.ptrcallWithLongArg(setJoystickModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setJoystickModeBind, segment, mode.value)
     }
 
     /**
@@ -94,7 +95,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_joystick_mode
      */
     fun getJoystickMode(): VirtualJoystick.JoystickMode {
-        return VirtualJoystick.JoystickMode(ObjectCalls.ptrcallNoArgsRetLong(getJoystickModeBind, segment))
+        return VirtualJoystick.JoystickMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJoystickModeBind, segment))
     }
 
     /**
@@ -103,7 +104,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_joystick_size
      */
     fun setJoystickSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setJoystickSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setJoystickSizeBind, segment, size)
     }
 
     /**
@@ -112,7 +113,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_joystick_size
      */
     fun getJoystickSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getJoystickSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getJoystickSizeBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_tip_size
      */
     fun setTipSize(size: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTipSizeBind, segment, size)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTipSizeBind, segment, size)
     }
 
     /**
@@ -130,7 +131,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_tip_size
      */
     fun getTipSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTipSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTipSizeBind, segment)
     }
 
     /**
@@ -145,7 +146,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_deadzone_ratio
      */
     fun setDeadzoneRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDeadzoneRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDeadzoneRatioBind, segment, ratio)
     }
 
     /**
@@ -160,7 +161,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_deadzone_ratio
      */
     fun getDeadzoneRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDeadzoneRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDeadzoneRatioBind, segment)
     }
 
     /**
@@ -173,7 +174,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_clampzone_ratio
      */
     fun setClampzoneRatio(ratio: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setClampzoneRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setClampzoneRatioBind, segment, ratio)
     }
 
     /**
@@ -186,7 +187,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_clampzone_ratio
      */
     fun getClampzoneRatio(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getClampzoneRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getClampzoneRatioBind, segment)
     }
 
     /**
@@ -196,7 +197,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_initial_offset_ratio
      */
     fun setInitialOffsetRatio(ratio: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setInitialOffsetRatioBind, segment, ratio)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setInitialOffsetRatioBind, segment, ratio)
     }
 
     /**
@@ -206,7 +207,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_initial_offset_ratio
      */
     fun getInitialOffsetRatio(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getInitialOffsetRatioBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getInitialOffsetRatioBind, segment)
     }
 
     /**
@@ -215,7 +216,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_action_left
      */
     fun setActionLeft(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setActionLeftBind, segment, action)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setActionLeftBind, segment, action)
     }
 
     /**
@@ -224,7 +225,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_action_left
      */
     fun getActionLeft(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionLeftBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getActionLeftBind, segment)
     }
 
     /**
@@ -233,7 +234,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_action_right
      */
     fun setActionRight(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setActionRightBind, segment, action)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setActionRightBind, segment, action)
     }
 
     /**
@@ -242,7 +243,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_action_right
      */
     fun getActionRight(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionRightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getActionRightBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_action_up
      */
     fun setActionUp(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setActionUpBind, segment, action)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setActionUpBind, segment, action)
     }
 
     /**
@@ -260,7 +261,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_action_up
      */
     fun getActionUp(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionUpBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getActionUpBind, segment)
     }
 
     /**
@@ -269,7 +270,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_action_down
      */
     fun setActionDown(action: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setActionDownBind, segment, action)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setActionDownBind, segment, action)
     }
 
     /**
@@ -278,7 +279,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_action_down
      */
     fun getActionDown(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getActionDownBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getActionDownBind, segment)
     }
 
     /**
@@ -287,7 +288,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.set_visibility_mode
      */
     fun setVisibilityMode(mode: VirtualJoystick.VisibilityMode) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVisibilityModeBind, segment, mode.value)
     }
 
     /**
@@ -296,7 +297,7 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: VirtualJoystick.get_visibility_mode
      */
     fun getVisibilityMode(): VirtualJoystick.VisibilityMode {
-        return VirtualJoystick.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityModeBind, segment))
+        return VirtualJoystick.VisibilityMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibilityModeBind, segment))
     }
 
     /** Signal `pressed()`; see [TypedSignal]. */
@@ -396,115 +397,117 @@ class VirtualJoystick(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): VirtualJoystick? =
             if (handle.address() == 0L) null else VirtualJoystick(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_JOYSTICK_MODE_HASH = 1316760817L
-        private val setJoystickModeBind by lazy {
+        @JvmField
+        val setJoystickModeBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_joystick_mode", SET_JOYSTICK_MODE_HASH)
-        }
 
         private const val GET_JOYSTICK_MODE_HASH = 2694680530L
-        private val getJoystickModeBind by lazy {
+        @JvmField
+        val getJoystickModeBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_joystick_mode", GET_JOYSTICK_MODE_HASH)
-        }
 
         private const val SET_JOYSTICK_SIZE_HASH = 373806689L
-        private val setJoystickSizeBind by lazy {
+        @JvmField
+        val setJoystickSizeBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_joystick_size", SET_JOYSTICK_SIZE_HASH)
-        }
 
         private const val GET_JOYSTICK_SIZE_HASH = 1740695150L
-        private val getJoystickSizeBind by lazy {
+        @JvmField
+        val getJoystickSizeBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_joystick_size", GET_JOYSTICK_SIZE_HASH)
-        }
 
         private const val SET_TIP_SIZE_HASH = 373806689L
-        private val setTipSizeBind by lazy {
+        @JvmField
+        val setTipSizeBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_tip_size", SET_TIP_SIZE_HASH)
-        }
 
         private const val GET_TIP_SIZE_HASH = 1740695150L
-        private val getTipSizeBind by lazy {
+        @JvmField
+        val getTipSizeBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_tip_size", GET_TIP_SIZE_HASH)
-        }
 
         private const val SET_DEADZONE_RATIO_HASH = 373806689L
-        private val setDeadzoneRatioBind by lazy {
+        @JvmField
+        val setDeadzoneRatioBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_deadzone_ratio", SET_DEADZONE_RATIO_HASH)
-        }
 
         private const val GET_DEADZONE_RATIO_HASH = 1740695150L
-        private val getDeadzoneRatioBind by lazy {
+        @JvmField
+        val getDeadzoneRatioBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_deadzone_ratio", GET_DEADZONE_RATIO_HASH)
-        }
 
         private const val SET_CLAMPZONE_RATIO_HASH = 373806689L
-        private val setClampzoneRatioBind by lazy {
+        @JvmField
+        val setClampzoneRatioBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_clampzone_ratio", SET_CLAMPZONE_RATIO_HASH)
-        }
 
         private const val GET_CLAMPZONE_RATIO_HASH = 1740695150L
-        private val getClampzoneRatioBind by lazy {
+        @JvmField
+        val getClampzoneRatioBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_clampzone_ratio", GET_CLAMPZONE_RATIO_HASH)
-        }
 
         private const val SET_INITIAL_OFFSET_RATIO_HASH = 743155724L
-        private val setInitialOffsetRatioBind by lazy {
+        @JvmField
+        val setInitialOffsetRatioBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_initial_offset_ratio", SET_INITIAL_OFFSET_RATIO_HASH)
-        }
 
         private const val GET_INITIAL_OFFSET_RATIO_HASH = 3341600327L
-        private val getInitialOffsetRatioBind by lazy {
+        @JvmField
+        val getInitialOffsetRatioBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_initial_offset_ratio", GET_INITIAL_OFFSET_RATIO_HASH)
-        }
 
         private const val SET_ACTION_LEFT_HASH = 3304788590L
-        private val setActionLeftBind by lazy {
+        @JvmField
+        val setActionLeftBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_action_left", SET_ACTION_LEFT_HASH)
-        }
 
         private const val GET_ACTION_LEFT_HASH = 2002593661L
-        private val getActionLeftBind by lazy {
+        @JvmField
+        val getActionLeftBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_action_left", GET_ACTION_LEFT_HASH)
-        }
 
         private const val SET_ACTION_RIGHT_HASH = 3304788590L
-        private val setActionRightBind by lazy {
+        @JvmField
+        val setActionRightBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_action_right", SET_ACTION_RIGHT_HASH)
-        }
 
         private const val GET_ACTION_RIGHT_HASH = 2002593661L
-        private val getActionRightBind by lazy {
+        @JvmField
+        val getActionRightBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_action_right", GET_ACTION_RIGHT_HASH)
-        }
 
         private const val SET_ACTION_UP_HASH = 3304788590L
-        private val setActionUpBind by lazy {
+        @JvmField
+        val setActionUpBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_action_up", SET_ACTION_UP_HASH)
-        }
 
         private const val GET_ACTION_UP_HASH = 2002593661L
-        private val getActionUpBind by lazy {
+        @JvmField
+        val getActionUpBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_action_up", GET_ACTION_UP_HASH)
-        }
 
         private const val SET_ACTION_DOWN_HASH = 3304788590L
-        private val setActionDownBind by lazy {
+        @JvmField
+        val setActionDownBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_action_down", SET_ACTION_DOWN_HASH)
-        }
 
         private const val GET_ACTION_DOWN_HASH = 2002593661L
-        private val getActionDownBind by lazy {
+        @JvmField
+        val getActionDownBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_action_down", GET_ACTION_DOWN_HASH)
-        }
 
         private const val SET_VISIBILITY_MODE_HASH = 2638298545L
-        private val setVisibilityModeBind by lazy {
+        @JvmField
+        val setVisibilityModeBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "set_visibility_mode", SET_VISIBILITY_MODE_HASH)
-        }
 
         private const val GET_VISIBILITY_MODE_HASH = 3530872950L
-        private val getVisibilityModeBind by lazy {
+        @JvmField
+        val getVisibilityModeBind =
             ObjectCalls.getMethodBind("VirtualJoystick", "get_visibility_mode", GET_VISIBILITY_MODE_HASH)
-        }
     }
 }

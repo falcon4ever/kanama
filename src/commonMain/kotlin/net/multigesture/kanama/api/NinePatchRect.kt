@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -75,7 +76,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -84,7 +85,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -95,7 +96,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_patch_margin
      */
     fun setPatchMargin(margin: Side, value: Int) {
-        ObjectCalls.ptrcallWithLongAndIntArgs(setPatchMarginBind, segment, margin.value, value)
+        ObjectCalls.ptrcallWithLongAndIntArgs(Binds.setPatchMarginBind, segment, margin.value, value)
     }
 
     /**
@@ -106,7 +107,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_patch_margin
      */
     fun getPatchMargin(margin: Side): Int {
-        return ObjectCalls.ptrcallWithLongArgRetInt(getPatchMarginBind, segment, margin.value)
+        return ObjectCalls.ptrcallWithLongArgRetInt(Binds.getPatchMarginBind, segment, margin.value)
     }
 
     /**
@@ -117,7 +118,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_region_rect
      */
     fun setRegionRect(rect: Rect2) {
-        ObjectCalls.ptrcallWithRect2Arg(setRegionRectBind, segment, rect)
+        ObjectCalls.ptrcallWithRect2Arg(Binds.setRegionRectBind, segment, rect)
     }
 
     /**
@@ -128,7 +129,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_region_rect
      */
     fun getRegionRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getRegionRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getRegionRectBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_draw_center
      */
     fun setDrawCenter(drawCenter: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawCenterBind, segment, drawCenter)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawCenterBind, segment, drawCenter)
     }
 
     /**
@@ -146,7 +147,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.is_draw_center_enabled
      */
     fun isDrawCenterEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawCenterEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawCenterEnabledBind, segment)
     }
 
     /**
@@ -155,7 +156,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_h_axis_stretch_mode
      */
     fun setHAxisStretchMode(mode: NinePatchRect.AxisStretchMode) {
-        ObjectCalls.ptrcallWithLongArg(setHAxisStretchModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHAxisStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -164,7 +165,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_h_axis_stretch_mode
      */
     fun getHAxisStretchMode(): NinePatchRect.AxisStretchMode {
-        return NinePatchRect.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getHAxisStretchModeBind, segment))
+        return NinePatchRect.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHAxisStretchModeBind, segment))
     }
 
     /**
@@ -173,7 +174,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.set_v_axis_stretch_mode
      */
     fun setVAxisStretchMode(mode: NinePatchRect.AxisStretchMode) {
-        ObjectCalls.ptrcallWithLongArg(setVAxisStretchModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVAxisStretchModeBind, segment, mode.value)
     }
 
     /**
@@ -182,7 +183,7 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
      * Generated from Godot docs: NinePatchRect.get_v_axis_stretch_mode
      */
     fun getVAxisStretchMode(): NinePatchRect.AxisStretchMode {
-        return NinePatchRect.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(getVAxisStretchModeBind, segment))
+        return NinePatchRect.AxisStretchMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVAxisStretchModeBind, segment))
     }
 
     /** Signal `texture_changed()`; see [TypedSignal]. */
@@ -236,65 +237,67 @@ class NinePatchRect(handle: GodotHandle) : Control(handle) {
 
         internal fun wrap(handle: RawSegment): NinePatchRect? =
             if (handle.address() == 0L) null else NinePatchRect(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("NinePatchRect", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("NinePatchRect", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_PATCH_MARGIN_HASH = 437707142L
-        private val setPatchMarginBind by lazy {
+        @JvmField
+        val setPatchMarginBind =
             ObjectCalls.getMethodBind("NinePatchRect", "set_patch_margin", SET_PATCH_MARGIN_HASH)
-        }
 
         private const val GET_PATCH_MARGIN_HASH = 1983885014L
-        private val getPatchMarginBind by lazy {
+        @JvmField
+        val getPatchMarginBind =
             ObjectCalls.getMethodBind("NinePatchRect", "get_patch_margin", GET_PATCH_MARGIN_HASH)
-        }
 
         private const val SET_REGION_RECT_HASH = 2046264180L
-        private val setRegionRectBind by lazy {
+        @JvmField
+        val setRegionRectBind =
             ObjectCalls.getMethodBind("NinePatchRect", "set_region_rect", SET_REGION_RECT_HASH)
-        }
 
         private const val GET_REGION_RECT_HASH = 1639390495L
-        private val getRegionRectBind by lazy {
+        @JvmField
+        val getRegionRectBind =
             ObjectCalls.getMethodBind("NinePatchRect", "get_region_rect", GET_REGION_RECT_HASH)
-        }
 
         private const val SET_DRAW_CENTER_HASH = 2586408642L
-        private val setDrawCenterBind by lazy {
+        @JvmField
+        val setDrawCenterBind =
             ObjectCalls.getMethodBind("NinePatchRect", "set_draw_center", SET_DRAW_CENTER_HASH)
-        }
 
         private const val IS_DRAW_CENTER_ENABLED_HASH = 36873697L
-        private val isDrawCenterEnabledBind by lazy {
+        @JvmField
+        val isDrawCenterEnabledBind =
             ObjectCalls.getMethodBind("NinePatchRect", "is_draw_center_enabled", IS_DRAW_CENTER_ENABLED_HASH)
-        }
 
         private const val SET_H_AXIS_STRETCH_MODE_HASH = 3219608417L
-        private val setHAxisStretchModeBind by lazy {
+        @JvmField
+        val setHAxisStretchModeBind =
             ObjectCalls.getMethodBind("NinePatchRect", "set_h_axis_stretch_mode", SET_H_AXIS_STRETCH_MODE_HASH)
-        }
 
         private const val GET_H_AXIS_STRETCH_MODE_HASH = 3317113799L
-        private val getHAxisStretchModeBind by lazy {
+        @JvmField
+        val getHAxisStretchModeBind =
             ObjectCalls.getMethodBind("NinePatchRect", "get_h_axis_stretch_mode", GET_H_AXIS_STRETCH_MODE_HASH)
-        }
 
         private const val SET_V_AXIS_STRETCH_MODE_HASH = 3219608417L
-        private val setVAxisStretchModeBind by lazy {
+        @JvmField
+        val setVAxisStretchModeBind =
             ObjectCalls.getMethodBind("NinePatchRect", "set_v_axis_stretch_mode", SET_V_AXIS_STRETCH_MODE_HASH)
-        }
 
         private const val GET_V_AXIS_STRETCH_MODE_HASH = 3317113799L
-        private val getVAxisStretchModeBind by lazy {
+        @JvmField
+        val getVAxisStretchModeBind =
             ObjectCalls.getMethodBind("NinePatchRect", "get_v_axis_stretch_mode", GET_V_AXIS_STRETCH_MODE_HASH)
-        }
     }
 }

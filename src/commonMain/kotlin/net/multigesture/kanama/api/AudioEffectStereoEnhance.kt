@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -38,7 +39,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setPanPullout(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPanPulloutBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPanPulloutBind, segment, amount)
     }
 
     /**
@@ -49,7 +50,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getPanPullout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPanPulloutBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPanPulloutBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setTimePullout(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTimePulloutBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTimePulloutBind, segment, amount)
     }
 
     /**
@@ -71,7 +72,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getTimePullout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTimePulloutBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTimePulloutBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun setSurround(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSurroundBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSurroundBind, segment, amount)
     }
 
     /**
@@ -93,7 +94,7 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
      */
     fun getSurround(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSurroundBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSurroundBind, segment)
     }
 
     companion object {
@@ -106,35 +107,37 @@ class AudioEffectStereoEnhance(handle: GodotHandle) : AudioEffect(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectStereoEnhance? =
             if (handle.address() == 0L) null else AudioEffectStereoEnhance(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PAN_PULLOUT_HASH = 373806689L
-        private val setPanPulloutBind by lazy {
+        @JvmField
+        val setPanPulloutBind =
             ObjectCalls.getMethodBind("AudioEffectStereoEnhance", "set_pan_pullout", SET_PAN_PULLOUT_HASH)
-        }
 
         private const val GET_PAN_PULLOUT_HASH = 1740695150L
-        private val getPanPulloutBind by lazy {
+        @JvmField
+        val getPanPulloutBind =
             ObjectCalls.getMethodBind("AudioEffectStereoEnhance", "get_pan_pullout", GET_PAN_PULLOUT_HASH)
-        }
 
         private const val SET_TIME_PULLOUT_HASH = 373806689L
-        private val setTimePulloutBind by lazy {
+        @JvmField
+        val setTimePulloutBind =
             ObjectCalls.getMethodBind("AudioEffectStereoEnhance", "set_time_pullout", SET_TIME_PULLOUT_HASH)
-        }
 
         private const val GET_TIME_PULLOUT_HASH = 1740695150L
-        private val getTimePulloutBind by lazy {
+        @JvmField
+        val getTimePulloutBind =
             ObjectCalls.getMethodBind("AudioEffectStereoEnhance", "get_time_pullout", GET_TIME_PULLOUT_HASH)
-        }
 
         private const val SET_SURROUND_HASH = 373806689L
-        private val setSurroundBind by lazy {
+        @JvmField
+        val setSurroundBind =
             ObjectCalls.getMethodBind("AudioEffectStereoEnhance", "set_surround", SET_SURROUND_HASH)
-        }
 
         private const val GET_SURROUND_HASH = 1740695150L
-        private val getSurroundBind by lazy {
+        @JvmField
+        val getSurroundBind =
             ObjectCalls.getMethodBind("AudioEffectStereoEnhance", "get_surround", GET_SURROUND_HASH)
-        }
     }
 }

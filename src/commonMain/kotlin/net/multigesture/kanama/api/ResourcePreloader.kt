@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.add_resource
      */
     fun addResource(name: String, resource: Resource?) {
-        ObjectCalls.ptrcallWithStringNameAndObjectArg(addResourceBind, segment, name, resource?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addResourceBind, segment, name, resource?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -28,7 +29,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.remove_resource
      */
     fun removeResource(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeResourceBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeResourceBind, segment, name)
     }
 
     /**
@@ -37,7 +38,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.rename_resource
      */
     fun renameResource(name: String, newname: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameResourceBind, segment, name, newname)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameResourceBind, segment, name, newname)
     }
 
     /**
@@ -46,7 +47,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.has_resource
      */
     fun hasResource(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasResourceBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasResourceBind, segment, name)
     }
 
     /**
@@ -55,7 +56,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.get_resource
      */
     fun getResource(name: String): Resource? {
-        return Resource.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getResourceBind, segment, name))
+        return Resource.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getResourceBind, segment, name))
     }
 
     /**
@@ -64,7 +65,7 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: ResourcePreloader.get_resource_list
      */
     fun getResourceList(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getResourceListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getResourceListBind, segment)
     }
 
     companion object {
@@ -74,35 +75,37 @@ class ResourcePreloader(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): ResourcePreloader? =
             if (handle.address() == 0L) null else ResourcePreloader(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_RESOURCE_HASH = 1168801743L
-        private val addResourceBind by lazy {
+        @JvmField
+        val addResourceBind =
             ObjectCalls.getMethodBind("ResourcePreloader", "add_resource", ADD_RESOURCE_HASH)
-        }
 
         private const val REMOVE_RESOURCE_HASH = 3304788590L
-        private val removeResourceBind by lazy {
+        @JvmField
+        val removeResourceBind =
             ObjectCalls.getMethodBind("ResourcePreloader", "remove_resource", REMOVE_RESOURCE_HASH)
-        }
 
         private const val RENAME_RESOURCE_HASH = 3740211285L
-        private val renameResourceBind by lazy {
+        @JvmField
+        val renameResourceBind =
             ObjectCalls.getMethodBind("ResourcePreloader", "rename_resource", RENAME_RESOURCE_HASH)
-        }
 
         private const val HAS_RESOURCE_HASH = 2619796661L
-        private val hasResourceBind by lazy {
+        @JvmField
+        val hasResourceBind =
             ObjectCalls.getMethodBind("ResourcePreloader", "has_resource", HAS_RESOURCE_HASH)
-        }
 
         private const val GET_RESOURCE_HASH = 3742749261L
-        private val getResourceBind by lazy {
+        @JvmField
+        val getResourceBind =
             ObjectCalls.getMethodBind("ResourcePreloader", "get_resource", GET_RESOURCE_HASH)
-        }
 
         private const val GET_RESOURCE_LIST_HASH = 1139954409L
-        private val getResourceListBind by lazy {
+        @JvmField
+        val getResourceListBind =
             ObjectCalls.getMethodBind("ResourcePreloader", "get_resource_list", GET_RESOURCE_LIST_HASH)
-        }
     }
 }

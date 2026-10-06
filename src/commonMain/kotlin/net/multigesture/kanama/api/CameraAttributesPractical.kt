@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -76,7 +77,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setDofBlurFarEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDofBlurFarEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDofBlurFarEnabledBind, segment, enabled)
     }
 
     /**
@@ -90,7 +91,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun isDofBlurFarEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurFarEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDofBlurFarEnabledBind, segment)
     }
 
     /**
@@ -101,7 +102,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setDofBlurFarDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurFarDistanceBind, segment, distance)
     }
 
     /**
@@ -112,7 +113,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurFarDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurFarDistanceBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setDofBlurFarTransition(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurFarTransitionBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurFarTransitionBind, segment, distance)
     }
 
     /**
@@ -138,7 +139,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurFarTransition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurFarTransitionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurFarTransitionBind, segment)
     }
 
     /**
@@ -152,7 +153,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setDofBlurNearEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDofBlurNearEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDofBlurNearEnabledBind, segment, enabled)
     }
 
     /**
@@ -166,7 +167,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun isDofBlurNearEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDofBlurNearEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDofBlurNearEnabledBind, segment)
     }
 
     /**
@@ -177,7 +178,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setDofBlurNearDistance(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearDistanceBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurNearDistanceBind, segment, distance)
     }
 
     /**
@@ -188,7 +189,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurNearDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurNearDistanceBind, segment)
     }
 
     /**
@@ -201,7 +202,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setDofBlurNearTransition(distance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurNearTransitionBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurNearTransitionBind, segment, distance)
     }
 
     /**
@@ -214,7 +215,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurNearTransition(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurNearTransitionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurNearTransitionBind, segment)
     }
 
     /**
@@ -226,7 +227,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setDofBlurAmount(amount: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDofBlurAmountBind, segment, amount)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDofBlurAmountBind, segment, amount)
     }
 
     /**
@@ -238,7 +239,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getDofBlurAmount(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDofBlurAmountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDofBlurAmountBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setAutoExposureMaxSensitivity(maxSensitivity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMaxSensitivityBind, segment, maxSensitivity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureMaxSensitivityBind, segment, maxSensitivity)
     }
 
     /**
@@ -264,7 +265,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getAutoExposureMaxSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMaxSensitivityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMaxSensitivityBind, segment)
     }
 
     /**
@@ -277,7 +278,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun setAutoExposureMinSensitivity(minSensitivity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAutoExposureMinSensitivityBind, segment, minSensitivity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAutoExposureMinSensitivityBind, segment, minSensitivity)
     }
 
     /**
@@ -290,7 +291,7 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
      */
     fun getAutoExposureMinSensitivity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAutoExposureMinSensitivityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAutoExposureMinSensitivityBind, segment)
     }
 
     companion object {
@@ -303,95 +304,97 @@ class CameraAttributesPractical(handle: GodotHandle) : CameraAttributes(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): CameraAttributesPractical? =
             if (handle.address() == 0L) null else CameraAttributesPractical(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_DOF_BLUR_FAR_ENABLED_HASH = 2586408642L
-        private val setDofBlurFarEnabledBind by lazy {
+        @JvmField
+        val setDofBlurFarEnabledBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_dof_blur_far_enabled", SET_DOF_BLUR_FAR_ENABLED_HASH)
-        }
 
         private const val IS_DOF_BLUR_FAR_ENABLED_HASH = 36873697L
-        private val isDofBlurFarEnabledBind by lazy {
+        @JvmField
+        val isDofBlurFarEnabledBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "is_dof_blur_far_enabled", IS_DOF_BLUR_FAR_ENABLED_HASH)
-        }
 
         private const val SET_DOF_BLUR_FAR_DISTANCE_HASH = 373806689L
-        private val setDofBlurFarDistanceBind by lazy {
+        @JvmField
+        val setDofBlurFarDistanceBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_dof_blur_far_distance", SET_DOF_BLUR_FAR_DISTANCE_HASH)
-        }
 
         private const val GET_DOF_BLUR_FAR_DISTANCE_HASH = 1740695150L
-        private val getDofBlurFarDistanceBind by lazy {
+        @JvmField
+        val getDofBlurFarDistanceBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "get_dof_blur_far_distance", GET_DOF_BLUR_FAR_DISTANCE_HASH)
-        }
 
         private const val SET_DOF_BLUR_FAR_TRANSITION_HASH = 373806689L
-        private val setDofBlurFarTransitionBind by lazy {
+        @JvmField
+        val setDofBlurFarTransitionBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_dof_blur_far_transition", SET_DOF_BLUR_FAR_TRANSITION_HASH)
-        }
 
         private const val GET_DOF_BLUR_FAR_TRANSITION_HASH = 1740695150L
-        private val getDofBlurFarTransitionBind by lazy {
+        @JvmField
+        val getDofBlurFarTransitionBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "get_dof_blur_far_transition", GET_DOF_BLUR_FAR_TRANSITION_HASH)
-        }
 
         private const val SET_DOF_BLUR_NEAR_ENABLED_HASH = 2586408642L
-        private val setDofBlurNearEnabledBind by lazy {
+        @JvmField
+        val setDofBlurNearEnabledBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_dof_blur_near_enabled", SET_DOF_BLUR_NEAR_ENABLED_HASH)
-        }
 
         private const val IS_DOF_BLUR_NEAR_ENABLED_HASH = 36873697L
-        private val isDofBlurNearEnabledBind by lazy {
+        @JvmField
+        val isDofBlurNearEnabledBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "is_dof_blur_near_enabled", IS_DOF_BLUR_NEAR_ENABLED_HASH)
-        }
 
         private const val SET_DOF_BLUR_NEAR_DISTANCE_HASH = 373806689L
-        private val setDofBlurNearDistanceBind by lazy {
+        @JvmField
+        val setDofBlurNearDistanceBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_dof_blur_near_distance", SET_DOF_BLUR_NEAR_DISTANCE_HASH)
-        }
 
         private const val GET_DOF_BLUR_NEAR_DISTANCE_HASH = 1740695150L
-        private val getDofBlurNearDistanceBind by lazy {
+        @JvmField
+        val getDofBlurNearDistanceBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "get_dof_blur_near_distance", GET_DOF_BLUR_NEAR_DISTANCE_HASH)
-        }
 
         private const val SET_DOF_BLUR_NEAR_TRANSITION_HASH = 373806689L
-        private val setDofBlurNearTransitionBind by lazy {
+        @JvmField
+        val setDofBlurNearTransitionBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_dof_blur_near_transition", SET_DOF_BLUR_NEAR_TRANSITION_HASH)
-        }
 
         private const val GET_DOF_BLUR_NEAR_TRANSITION_HASH = 1740695150L
-        private val getDofBlurNearTransitionBind by lazy {
+        @JvmField
+        val getDofBlurNearTransitionBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "get_dof_blur_near_transition", GET_DOF_BLUR_NEAR_TRANSITION_HASH)
-        }
 
         private const val SET_DOF_BLUR_AMOUNT_HASH = 373806689L
-        private val setDofBlurAmountBind by lazy {
+        @JvmField
+        val setDofBlurAmountBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_dof_blur_amount", SET_DOF_BLUR_AMOUNT_HASH)
-        }
 
         private const val GET_DOF_BLUR_AMOUNT_HASH = 1740695150L
-        private val getDofBlurAmountBind by lazy {
+        @JvmField
+        val getDofBlurAmountBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "get_dof_blur_amount", GET_DOF_BLUR_AMOUNT_HASH)
-        }
 
         private const val SET_AUTO_EXPOSURE_MAX_SENSITIVITY_HASH = 373806689L
-        private val setAutoExposureMaxSensitivityBind by lazy {
+        @JvmField
+        val setAutoExposureMaxSensitivityBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_auto_exposure_max_sensitivity", SET_AUTO_EXPOSURE_MAX_SENSITIVITY_HASH)
-        }
 
         private const val GET_AUTO_EXPOSURE_MAX_SENSITIVITY_HASH = 1740695150L
-        private val getAutoExposureMaxSensitivityBind by lazy {
+        @JvmField
+        val getAutoExposureMaxSensitivityBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "get_auto_exposure_max_sensitivity", GET_AUTO_EXPOSURE_MAX_SENSITIVITY_HASH)
-        }
 
         private const val SET_AUTO_EXPOSURE_MIN_SENSITIVITY_HASH = 373806689L
-        private val setAutoExposureMinSensitivityBind by lazy {
+        @JvmField
+        val setAutoExposureMinSensitivityBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "set_auto_exposure_min_sensitivity", SET_AUTO_EXPOSURE_MIN_SENSITIVITY_HASH)
-        }
 
         private const val GET_AUTO_EXPOSURE_MIN_SENSITIVITY_HASH = 1740695150L
-        private val getAutoExposureMinSensitivityBind by lazy {
+        @JvmField
+        val getAutoExposureMinSensitivityBind =
             ObjectCalls.getMethodBind("CameraAttributesPractical", "get_auto_exposure_min_sensitivity", GET_AUTO_EXPOSURE_MIN_SENSITIVITY_HASH)
-        }
     }
 }

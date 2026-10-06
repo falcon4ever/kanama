@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -54,7 +55,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_softness
      */
     fun setSoftness(softness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSoftnessBind, segment, softness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSoftnessBind, segment, softness)
     }
 
     /**
@@ -63,7 +64,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.get_softness
      */
     fun getSoftness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSoftnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSoftnessBind, segment)
     }
 
     /**
@@ -72,7 +73,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_angular_limit_lower
      */
     fun setAngularLimitLower(angularLimitLower: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularLimitLowerBind, segment, angularLimitLower)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAngularLimitLowerBind, segment, angularLimitLower)
     }
 
     /**
@@ -81,7 +82,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.get_angular_limit_lower
      */
     fun getAngularLimitLower(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularLimitLowerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngularLimitLowerBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_angular_limit_upper
      */
     fun setAngularLimitUpper(angularLimitUpper: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAngularLimitUpperBind, segment, angularLimitUpper)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAngularLimitUpperBind, segment, angularLimitUpper)
     }
 
     /**
@@ -99,7 +100,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.get_angular_limit_upper
      */
     fun getAngularLimitUpper(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngularLimitUpperBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngularLimitUpperBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_motor_target_velocity
      */
     fun setMotorTargetVelocity(motorTargetVelocity: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setMotorTargetVelocityBind, segment, motorTargetVelocity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMotorTargetVelocityBind, segment, motorTargetVelocity)
     }
 
     /**
@@ -117,7 +118,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.get_motor_target_velocity
      */
     fun getMotorTargetVelocity(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMotorTargetVelocityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMotorTargetVelocityBind, segment)
     }
 
     /**
@@ -126,7 +127,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_motor_enabled
      */
     fun setMotorEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setMotorEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMotorEnabledBind, segment, enabled)
     }
 
     /**
@@ -135,7 +136,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.is_motor_enabled
      */
     fun isMotorEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isMotorEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMotorEnabledBind, segment)
     }
 
     /**
@@ -145,7 +146,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.set_angular_limit_enabled
      */
     fun setAngularLimitEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAngularLimitEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAngularLimitEnabledBind, segment, enabled)
     }
 
     /**
@@ -155,7 +156,7 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
      * Generated from Godot docs: PinJoint2D.is_angular_limit_enabled
      */
     fun isAngularLimitEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAngularLimitEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAngularLimitEnabledBind, segment)
     }
 
     companion object {
@@ -165,65 +166,67 @@ class PinJoint2D(handle: GodotHandle) : Joint2D(handle) {
 
         internal fun wrap(handle: RawSegment): PinJoint2D? =
             if (handle.address() == 0L) null else PinJoint2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SOFTNESS_HASH = 373806689L
-        private val setSoftnessBind by lazy {
+        @JvmField
+        val setSoftnessBind =
             ObjectCalls.getMethodBind("PinJoint2D", "set_softness", SET_SOFTNESS_HASH)
-        }
 
         private const val GET_SOFTNESS_HASH = 1740695150L
-        private val getSoftnessBind by lazy {
+        @JvmField
+        val getSoftnessBind =
             ObjectCalls.getMethodBind("PinJoint2D", "get_softness", GET_SOFTNESS_HASH)
-        }
 
         private const val SET_ANGULAR_LIMIT_LOWER_HASH = 373806689L
-        private val setAngularLimitLowerBind by lazy {
+        @JvmField
+        val setAngularLimitLowerBind =
             ObjectCalls.getMethodBind("PinJoint2D", "set_angular_limit_lower", SET_ANGULAR_LIMIT_LOWER_HASH)
-        }
 
         private const val GET_ANGULAR_LIMIT_LOWER_HASH = 1740695150L
-        private val getAngularLimitLowerBind by lazy {
+        @JvmField
+        val getAngularLimitLowerBind =
             ObjectCalls.getMethodBind("PinJoint2D", "get_angular_limit_lower", GET_ANGULAR_LIMIT_LOWER_HASH)
-        }
 
         private const val SET_ANGULAR_LIMIT_UPPER_HASH = 373806689L
-        private val setAngularLimitUpperBind by lazy {
+        @JvmField
+        val setAngularLimitUpperBind =
             ObjectCalls.getMethodBind("PinJoint2D", "set_angular_limit_upper", SET_ANGULAR_LIMIT_UPPER_HASH)
-        }
 
         private const val GET_ANGULAR_LIMIT_UPPER_HASH = 1740695150L
-        private val getAngularLimitUpperBind by lazy {
+        @JvmField
+        val getAngularLimitUpperBind =
             ObjectCalls.getMethodBind("PinJoint2D", "get_angular_limit_upper", GET_ANGULAR_LIMIT_UPPER_HASH)
-        }
 
         private const val SET_MOTOR_TARGET_VELOCITY_HASH = 373806689L
-        private val setMotorTargetVelocityBind by lazy {
+        @JvmField
+        val setMotorTargetVelocityBind =
             ObjectCalls.getMethodBind("PinJoint2D", "set_motor_target_velocity", SET_MOTOR_TARGET_VELOCITY_HASH)
-        }
 
         private const val GET_MOTOR_TARGET_VELOCITY_HASH = 1740695150L
-        private val getMotorTargetVelocityBind by lazy {
+        @JvmField
+        val getMotorTargetVelocityBind =
             ObjectCalls.getMethodBind("PinJoint2D", "get_motor_target_velocity", GET_MOTOR_TARGET_VELOCITY_HASH)
-        }
 
         private const val SET_MOTOR_ENABLED_HASH = 2586408642L
-        private val setMotorEnabledBind by lazy {
+        @JvmField
+        val setMotorEnabledBind =
             ObjectCalls.getMethodBind("PinJoint2D", "set_motor_enabled", SET_MOTOR_ENABLED_HASH)
-        }
 
         private const val IS_MOTOR_ENABLED_HASH = 36873697L
-        private val isMotorEnabledBind by lazy {
+        @JvmField
+        val isMotorEnabledBind =
             ObjectCalls.getMethodBind("PinJoint2D", "is_motor_enabled", IS_MOTOR_ENABLED_HASH)
-        }
 
         private const val SET_ANGULAR_LIMIT_ENABLED_HASH = 2586408642L
-        private val setAngularLimitEnabledBind by lazy {
+        @JvmField
+        val setAngularLimitEnabledBind =
             ObjectCalls.getMethodBind("PinJoint2D", "set_angular_limit_enabled", SET_ANGULAR_LIMIT_ENABLED_HASH)
-        }
 
         private const val IS_ANGULAR_LIMIT_ENABLED_HASH = 36873697L
-        private val isAngularLimitEnabledBind by lazy {
+        @JvmField
+        val isAngularLimitEnabledBind =
             ObjectCalls.getMethodBind("PinJoint2D", "is_angular_limit_enabled", IS_ANGULAR_LIMIT_ENABLED_HASH)
-        }
     }
 }

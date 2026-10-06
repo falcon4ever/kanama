@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class JointLimitationCone3D(handle: GodotHandle) : JointLimitation3D(handle) {
      */
     fun setAngle(angle: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setAngleBind, segment, angle)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAngleBind, segment, angle)
     }
 
     /**
@@ -36,7 +37,7 @@ class JointLimitationCone3D(handle: GodotHandle) : JointLimitation3D(handle) {
      */
     fun getAngle(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAngleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAngleBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ class JointLimitationCone3D(handle: GodotHandle) : JointLimitation3D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): JointLimitationCone3D? =
             if (handle.address() == 0L) null else JointLimitationCone3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ANGLE_HASH = 373806689L
-        private val setAngleBind by lazy {
+        @JvmField
+        val setAngleBind =
             ObjectCalls.getMethodBind("JointLimitationCone3D", "set_angle", SET_ANGLE_HASH)
-        }
 
         private const val GET_ANGLE_HASH = 1740695150L
-        private val getAngleBind by lazy {
+        @JvmField
+        val getAngleBind =
             ObjectCalls.getMethodBind("JointLimitationCone3D", "get_angle", GET_ANGLE_HASH)
-        }
     }
 }

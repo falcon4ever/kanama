@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -38,7 +39,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_title
      */
     fun setTitle(title: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTitleBind, segment, title)
     }
 
     /**
@@ -47,7 +48,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTitleBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_titlebar_hbox
      */
     fun getTitlebarHbox(): HBoxContainer? {
-        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTitlebarHboxBind, segment))
+        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTitlebarHboxBind, segment))
     }
 
     /**
@@ -80,7 +81,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot
      */
     fun setSlot(slotIndex: Int, enableLeftPort: Boolean, typeLeft: Int, colorLeft: Color, enableRightPort: Boolean, typeRight: Int, colorRight: Color, customIconLeft: Texture2D?, customIconRight: Texture2D?, drawStylebox: Boolean = true) {
-        ObjectCalls.ptrcallWithIntBoolIntColorBoolIntColorTwoObjectBoolArgs(setSlotBind, segment, slotIndex, enableLeftPort, typeLeft, colorLeft, enableRightPort, typeRight, colorRight, customIconLeft?.requireOpenHandle() ?: NULL_SEGMENT, customIconRight?.requireOpenHandle() ?: NULL_SEGMENT, drawStylebox)
+        ObjectCalls.ptrcallWithIntBoolIntColorBoolIntColorTwoObjectBoolArgs(Binds.setSlotBind, segment, slotIndex, enableLeftPort, typeLeft, colorLeft, enableRightPort, typeRight, colorRight, customIconLeft?.requireOpenHandle() ?: NULL_SEGMENT, customIconRight?.requireOpenHandle() ?: NULL_SEGMENT, drawStylebox)
     }
 
     /**
@@ -90,7 +91,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.clear_slot
      */
     fun clearSlot(slotIndex: Int) {
-        ObjectCalls.ptrcallWithIntArg(clearSlotBind, segment, slotIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.clearSlotBind, segment, slotIndex)
     }
 
     /**
@@ -99,7 +100,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.clear_all_slots
      */
     fun clearAllSlots() {
-        ObjectCalls.ptrcallNoArgs(clearAllSlotsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearAllSlotsBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.is_slot_enabled_left
      */
     fun isSlotEnabledLeft(slotIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotEnabledLeftBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isSlotEnabledLeftBind, segment, slotIndex)
     }
 
     /**
@@ -118,7 +119,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_enabled_left
      */
     fun setSlotEnabledLeft(slotIndex: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotEnabledLeftBind, segment, slotIndex, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setSlotEnabledLeftBind, segment, slotIndex, enable)
     }
 
     /**
@@ -128,7 +129,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_type_left
      */
     fun setSlotTypeLeft(slotIndex: Int, type: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setSlotTypeLeftBind, segment, slotIndex, type)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSlotTypeLeftBind, segment, slotIndex, type)
     }
 
     /**
@@ -137,7 +138,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_type_left
      */
     fun getSlotTypeLeft(slotIndex: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSlotTypeLeftBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSlotTypeLeftBind, segment, slotIndex)
     }
 
     /**
@@ -146,7 +147,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_color_left
      */
     fun setSlotColorLeft(slotIndex: Int, color: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setSlotColorLeftBind, segment, slotIndex, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setSlotColorLeftBind, segment, slotIndex, color)
     }
 
     /**
@@ -155,7 +156,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_color_left
      */
     fun getSlotColorLeft(slotIndex: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getSlotColorLeftBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getSlotColorLeftBind, segment, slotIndex)
     }
 
     /**
@@ -165,7 +166,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_custom_icon_left
      */
     fun setSlotCustomIconLeft(slotIndex: Int, customIcon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSlotCustomIconLeftBind, segment, slotIndex, customIcon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSlotCustomIconLeftBind, segment, slotIndex, customIcon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -174,7 +175,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_custom_icon_left
      */
     fun getSlotCustomIconLeft(slotIndex: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconLeftBind, segment, slotIndex))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSlotCustomIconLeftBind, segment, slotIndex))
     }
 
     /**
@@ -184,7 +185,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_metadata_left
      */
     fun setSlotMetadataLeft(slotIndex: Int, value: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setSlotMetadataLeftBind, segment, slotIndex, value)
+        ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setSlotMetadataLeftBind, segment, slotIndex, value)
     }
 
     /**
@@ -193,7 +194,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_metadata_left
      */
     fun getSlotMetadataLeft(slotIndex: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getSlotMetadataLeftBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getSlotMetadataLeftBind, segment, slotIndex)
     }
 
     /**
@@ -202,7 +203,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.is_slot_enabled_right
      */
     fun isSlotEnabledRight(slotIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotEnabledRightBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isSlotEnabledRightBind, segment, slotIndex)
     }
 
     /**
@@ -212,7 +213,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_enabled_right
      */
     fun setSlotEnabledRight(slotIndex: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotEnabledRightBind, segment, slotIndex, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setSlotEnabledRightBind, segment, slotIndex, enable)
     }
 
     /**
@@ -222,7 +223,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_type_right
      */
     fun setSlotTypeRight(slotIndex: Int, type: Int) {
-        ObjectCalls.ptrcallWithTwoIntArgs(setSlotTypeRightBind, segment, slotIndex, type)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSlotTypeRightBind, segment, slotIndex, type)
     }
 
     /**
@@ -231,7 +232,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_type_right
      */
     fun getSlotTypeRight(slotIndex: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSlotTypeRightBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSlotTypeRightBind, segment, slotIndex)
     }
 
     /**
@@ -240,7 +241,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_color_right
      */
     fun setSlotColorRight(slotIndex: Int, color: Color) {
-        ObjectCalls.ptrcallWithIntAndColorArg(setSlotColorRightBind, segment, slotIndex, color)
+        ObjectCalls.ptrcallWithIntAndColorArg(Binds.setSlotColorRightBind, segment, slotIndex, color)
     }
 
     /**
@@ -249,7 +250,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_color_right
      */
     fun getSlotColorRight(slotIndex: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getSlotColorRightBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getSlotColorRightBind, segment, slotIndex)
     }
 
     /**
@@ -259,7 +260,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_custom_icon_right
      */
     fun setSlotCustomIconRight(slotIndex: Int, customIcon: Texture2D?) {
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSlotCustomIconRightBind, segment, slotIndex, customIcon?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSlotCustomIconRightBind, segment, slotIndex, customIcon?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -268,7 +269,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_custom_icon_right
      */
     fun getSlotCustomIconRight(slotIndex: Int): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSlotCustomIconRightBind, segment, slotIndex))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSlotCustomIconRightBind, segment, slotIndex))
     }
 
     /**
@@ -278,7 +279,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_metadata_right
      */
     fun setSlotMetadataRight(slotIndex: Int, value: Any?) {
-        ObjectCalls.ptrcallWithIntAndVariantArg(setSlotMetadataRightBind, segment, slotIndex, value)
+        ObjectCalls.ptrcallWithIntAndVariantArg(Binds.setSlotMetadataRightBind, segment, slotIndex, value)
     }
 
     /**
@@ -287,7 +288,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slot_metadata_right
      */
     fun getSlotMetadataRight(slotIndex: Int): Any? {
-        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(getSlotMetadataRightBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVariantScalar(Binds.getSlotMetadataRightBind, segment, slotIndex)
     }
 
     /**
@@ -296,7 +297,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.is_slot_draw_stylebox
      */
     fun isSlotDrawStylebox(slotIndex: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isSlotDrawStyleboxBind, segment, slotIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isSlotDrawStyleboxBind, segment, slotIndex)
     }
 
     /**
@@ -305,7 +306,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slot_draw_stylebox
      */
     fun setSlotDrawStylebox(slotIndex: Int, enable: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSlotDrawStyleboxBind, segment, slotIndex, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setSlotDrawStyleboxBind, segment, slotIndex, enable)
     }
 
     /**
@@ -315,7 +316,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_ignore_invalid_connection_type
      */
     fun setIgnoreInvalidConnectionType(ignore: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setIgnoreInvalidConnectionTypeBind, segment, ignore)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setIgnoreInvalidConnectionTypeBind, segment, ignore)
     }
 
     /**
@@ -325,7 +326,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.is_ignoring_valid_connection_type
      */
     fun isIgnoringValidConnectionType(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isIgnoringValidConnectionTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isIgnoringValidConnectionTypeBind, segment)
     }
 
     /**
@@ -339,7 +340,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.set_slots_focus_mode
      */
     fun setSlotsFocusMode(focusMode: Control.FocusMode) {
-        ObjectCalls.ptrcallWithLongArg(setSlotsFocusModeBind, segment, focusMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSlotsFocusModeBind, segment, focusMode.value)
     }
 
     /**
@@ -353,7 +354,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_slots_focus_mode
      */
     fun getSlotsFocusMode(): Control.FocusMode {
-        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(getSlotsFocusModeBind, segment))
+        return Control.FocusMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSlotsFocusModeBind, segment))
     }
 
     /**
@@ -362,7 +363,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_count
      */
     fun getInputPortCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getInputPortCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInputPortCountBind, segment)
     }
 
     /**
@@ -371,7 +372,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_position
      */
     fun getInputPortPosition(portIdx: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getInputPortPositionBind, segment, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getInputPortPositionBind, segment, portIdx)
     }
 
     /**
@@ -380,7 +381,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_type
      */
     fun getInputPortType(portIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getInputPortTypeBind, segment, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getInputPortTypeBind, segment, portIdx)
     }
 
     /**
@@ -389,7 +390,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_color
      */
     fun getInputPortColor(portIdx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getInputPortColorBind, segment, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getInputPortColorBind, segment, portIdx)
     }
 
     /**
@@ -398,7 +399,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_input_port_slot
      */
     fun getInputPortSlot(portIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getInputPortSlotBind, segment, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getInputPortSlotBind, segment, portIdx)
     }
 
     /**
@@ -407,7 +408,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_count
      */
     fun getOutputPortCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutputPortCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutputPortCountBind, segment)
     }
 
     /**
@@ -416,7 +417,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_position
      */
     fun getOutputPortPosition(portIdx: Int): Vector2 {
-        return ObjectCalls.ptrcallWithIntArgRetVector2(getOutputPortPositionBind, segment, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetVector2(Binds.getOutputPortPositionBind, segment, portIdx)
     }
 
     /**
@@ -425,7 +426,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_type
      */
     fun getOutputPortType(portIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOutputPortTypeBind, segment, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOutputPortTypeBind, segment, portIdx)
     }
 
     /**
@@ -434,7 +435,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_color
      */
     fun getOutputPortColor(portIdx: Int): Color {
-        return ObjectCalls.ptrcallWithIntArgRetColor(getOutputPortColorBind, segment, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetColor(Binds.getOutputPortColorBind, segment, portIdx)
     }
 
     /**
@@ -443,7 +444,7 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphNode.get_output_port_slot
      */
     fun getOutputPortSlot(portIdx: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOutputPortSlotBind, segment, portIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOutputPortSlotBind, segment, portIdx)
     }
 
     /** Signal `slot_updated(slot_index: int)`; see [TypedSignal]. */
@@ -468,215 +469,217 @@ class GraphNode(handle: GodotHandle) : GraphElement(handle) {
 
         internal fun wrap(handle: RawSegment): GraphNode? =
             if (handle.address() == 0L) null else GraphNode(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TITLE_HASH = 83702148L
-        private val setTitleBind by lazy {
+        @JvmField
+        val setTitleBind =
             ObjectCalls.getMethodBind("GraphNode", "set_title", SET_TITLE_HASH)
-        }
 
         private const val GET_TITLE_HASH = 201670096L
-        private val getTitleBind by lazy {
+        @JvmField
+        val getTitleBind =
             ObjectCalls.getMethodBind("GraphNode", "get_title", GET_TITLE_HASH)
-        }
 
         private const val GET_TITLEBAR_HBOX_HASH = 3590609951L
-        private val getTitlebarHboxBind by lazy {
+        @JvmField
+        val getTitlebarHboxBind =
             ObjectCalls.getMethodBind("GraphNode", "get_titlebar_hbox", GET_TITLEBAR_HBOX_HASH)
-        }
 
         private const val SET_SLOT_HASH = 2873310869L
-        private val setSlotBind by lazy {
+        @JvmField
+        val setSlotBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot", SET_SLOT_HASH)
-        }
 
         private const val CLEAR_SLOT_HASH = 1286410249L
-        private val clearSlotBind by lazy {
+        @JvmField
+        val clearSlotBind =
             ObjectCalls.getMethodBind("GraphNode", "clear_slot", CLEAR_SLOT_HASH)
-        }
 
         private const val CLEAR_ALL_SLOTS_HASH = 3218959716L
-        private val clearAllSlotsBind by lazy {
+        @JvmField
+        val clearAllSlotsBind =
             ObjectCalls.getMethodBind("GraphNode", "clear_all_slots", CLEAR_ALL_SLOTS_HASH)
-        }
 
         private const val IS_SLOT_ENABLED_LEFT_HASH = 1116898809L
-        private val isSlotEnabledLeftBind by lazy {
+        @JvmField
+        val isSlotEnabledLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "is_slot_enabled_left", IS_SLOT_ENABLED_LEFT_HASH)
-        }
 
         private const val SET_SLOT_ENABLED_LEFT_HASH = 300928843L
-        private val setSlotEnabledLeftBind by lazy {
+        @JvmField
+        val setSlotEnabledLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_enabled_left", SET_SLOT_ENABLED_LEFT_HASH)
-        }
 
         private const val SET_SLOT_TYPE_LEFT_HASH = 3937882851L
-        private val setSlotTypeLeftBind by lazy {
+        @JvmField
+        val setSlotTypeLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_type_left", SET_SLOT_TYPE_LEFT_HASH)
-        }
 
         private const val GET_SLOT_TYPE_LEFT_HASH = 923996154L
-        private val getSlotTypeLeftBind by lazy {
+        @JvmField
+        val getSlotTypeLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slot_type_left", GET_SLOT_TYPE_LEFT_HASH)
-        }
 
         private const val SET_SLOT_COLOR_LEFT_HASH = 2878471219L
-        private val setSlotColorLeftBind by lazy {
+        @JvmField
+        val setSlotColorLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_color_left", SET_SLOT_COLOR_LEFT_HASH)
-        }
 
         private const val GET_SLOT_COLOR_LEFT_HASH = 3457211756L
-        private val getSlotColorLeftBind by lazy {
+        @JvmField
+        val getSlotColorLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slot_color_left", GET_SLOT_COLOR_LEFT_HASH)
-        }
 
         private const val SET_SLOT_CUSTOM_ICON_LEFT_HASH = 666127730L
-        private val setSlotCustomIconLeftBind by lazy {
+        @JvmField
+        val setSlotCustomIconLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_custom_icon_left", SET_SLOT_CUSTOM_ICON_LEFT_HASH)
-        }
 
         private const val GET_SLOT_CUSTOM_ICON_LEFT_HASH = 3536238170L
-        private val getSlotCustomIconLeftBind by lazy {
+        @JvmField
+        val getSlotCustomIconLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slot_custom_icon_left", GET_SLOT_CUSTOM_ICON_LEFT_HASH)
-        }
 
         private const val SET_SLOT_METADATA_LEFT_HASH = 2152698145L
-        private val setSlotMetadataLeftBind by lazy {
+        @JvmField
+        val setSlotMetadataLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_metadata_left", SET_SLOT_METADATA_LEFT_HASH)
-        }
 
         private const val GET_SLOT_METADATA_LEFT_HASH = 4227898402L
-        private val getSlotMetadataLeftBind by lazy {
+        @JvmField
+        val getSlotMetadataLeftBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slot_metadata_left", GET_SLOT_METADATA_LEFT_HASH)
-        }
 
         private const val IS_SLOT_ENABLED_RIGHT_HASH = 1116898809L
-        private val isSlotEnabledRightBind by lazy {
+        @JvmField
+        val isSlotEnabledRightBind =
             ObjectCalls.getMethodBind("GraphNode", "is_slot_enabled_right", IS_SLOT_ENABLED_RIGHT_HASH)
-        }
 
         private const val SET_SLOT_ENABLED_RIGHT_HASH = 300928843L
-        private val setSlotEnabledRightBind by lazy {
+        @JvmField
+        val setSlotEnabledRightBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_enabled_right", SET_SLOT_ENABLED_RIGHT_HASH)
-        }
 
         private const val SET_SLOT_TYPE_RIGHT_HASH = 3937882851L
-        private val setSlotTypeRightBind by lazy {
+        @JvmField
+        val setSlotTypeRightBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_type_right", SET_SLOT_TYPE_RIGHT_HASH)
-        }
 
         private const val GET_SLOT_TYPE_RIGHT_HASH = 923996154L
-        private val getSlotTypeRightBind by lazy {
+        @JvmField
+        val getSlotTypeRightBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slot_type_right", GET_SLOT_TYPE_RIGHT_HASH)
-        }
 
         private const val SET_SLOT_COLOR_RIGHT_HASH = 2878471219L
-        private val setSlotColorRightBind by lazy {
+        @JvmField
+        val setSlotColorRightBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_color_right", SET_SLOT_COLOR_RIGHT_HASH)
-        }
 
         private const val GET_SLOT_COLOR_RIGHT_HASH = 3457211756L
-        private val getSlotColorRightBind by lazy {
+        @JvmField
+        val getSlotColorRightBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slot_color_right", GET_SLOT_COLOR_RIGHT_HASH)
-        }
 
         private const val SET_SLOT_CUSTOM_ICON_RIGHT_HASH = 666127730L
-        private val setSlotCustomIconRightBind by lazy {
+        @JvmField
+        val setSlotCustomIconRightBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_custom_icon_right", SET_SLOT_CUSTOM_ICON_RIGHT_HASH)
-        }
 
         private const val GET_SLOT_CUSTOM_ICON_RIGHT_HASH = 3536238170L
-        private val getSlotCustomIconRightBind by lazy {
+        @JvmField
+        val getSlotCustomIconRightBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slot_custom_icon_right", GET_SLOT_CUSTOM_ICON_RIGHT_HASH)
-        }
 
         private const val SET_SLOT_METADATA_RIGHT_HASH = 2152698145L
-        private val setSlotMetadataRightBind by lazy {
+        @JvmField
+        val setSlotMetadataRightBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_metadata_right", SET_SLOT_METADATA_RIGHT_HASH)
-        }
 
         private const val GET_SLOT_METADATA_RIGHT_HASH = 4227898402L
-        private val getSlotMetadataRightBind by lazy {
+        @JvmField
+        val getSlotMetadataRightBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slot_metadata_right", GET_SLOT_METADATA_RIGHT_HASH)
-        }
 
         private const val IS_SLOT_DRAW_STYLEBOX_HASH = 1116898809L
-        private val isSlotDrawStyleboxBind by lazy {
+        @JvmField
+        val isSlotDrawStyleboxBind =
             ObjectCalls.getMethodBind("GraphNode", "is_slot_draw_stylebox", IS_SLOT_DRAW_STYLEBOX_HASH)
-        }
 
         private const val SET_SLOT_DRAW_STYLEBOX_HASH = 300928843L
-        private val setSlotDrawStyleboxBind by lazy {
+        @JvmField
+        val setSlotDrawStyleboxBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slot_draw_stylebox", SET_SLOT_DRAW_STYLEBOX_HASH)
-        }
 
         private const val SET_IGNORE_INVALID_CONNECTION_TYPE_HASH = 2586408642L
-        private val setIgnoreInvalidConnectionTypeBind by lazy {
+        @JvmField
+        val setIgnoreInvalidConnectionTypeBind =
             ObjectCalls.getMethodBind("GraphNode", "set_ignore_invalid_connection_type", SET_IGNORE_INVALID_CONNECTION_TYPE_HASH)
-        }
 
         private const val IS_IGNORING_VALID_CONNECTION_TYPE_HASH = 36873697L
-        private val isIgnoringValidConnectionTypeBind by lazy {
+        @JvmField
+        val isIgnoringValidConnectionTypeBind =
             ObjectCalls.getMethodBind("GraphNode", "is_ignoring_valid_connection_type", IS_IGNORING_VALID_CONNECTION_TYPE_HASH)
-        }
 
         private const val SET_SLOTS_FOCUS_MODE_HASH = 3232914922L
-        private val setSlotsFocusModeBind by lazy {
+        @JvmField
+        val setSlotsFocusModeBind =
             ObjectCalls.getMethodBind("GraphNode", "set_slots_focus_mode", SET_SLOTS_FOCUS_MODE_HASH)
-        }
 
         private const val GET_SLOTS_FOCUS_MODE_HASH = 2132829277L
-        private val getSlotsFocusModeBind by lazy {
+        @JvmField
+        val getSlotsFocusModeBind =
             ObjectCalls.getMethodBind("GraphNode", "get_slots_focus_mode", GET_SLOTS_FOCUS_MODE_HASH)
-        }
 
         private const val GET_INPUT_PORT_COUNT_HASH = 2455072627L
-        private val getInputPortCountBind by lazy {
+        @JvmField
+        val getInputPortCountBind =
             ObjectCalls.getMethodBind("GraphNode", "get_input_port_count", GET_INPUT_PORT_COUNT_HASH)
-        }
 
         private const val GET_INPUT_PORT_POSITION_HASH = 3114997196L
-        private val getInputPortPositionBind by lazy {
+        @JvmField
+        val getInputPortPositionBind =
             ObjectCalls.getMethodBind("GraphNode", "get_input_port_position", GET_INPUT_PORT_POSITION_HASH)
-        }
 
         private const val GET_INPUT_PORT_TYPE_HASH = 3744713108L
-        private val getInputPortTypeBind by lazy {
+        @JvmField
+        val getInputPortTypeBind =
             ObjectCalls.getMethodBind("GraphNode", "get_input_port_type", GET_INPUT_PORT_TYPE_HASH)
-        }
 
         private const val GET_INPUT_PORT_COLOR_HASH = 2624840992L
-        private val getInputPortColorBind by lazy {
+        @JvmField
+        val getInputPortColorBind =
             ObjectCalls.getMethodBind("GraphNode", "get_input_port_color", GET_INPUT_PORT_COLOR_HASH)
-        }
 
         private const val GET_INPUT_PORT_SLOT_HASH = 3744713108L
-        private val getInputPortSlotBind by lazy {
+        @JvmField
+        val getInputPortSlotBind =
             ObjectCalls.getMethodBind("GraphNode", "get_input_port_slot", GET_INPUT_PORT_SLOT_HASH)
-        }
 
         private const val GET_OUTPUT_PORT_COUNT_HASH = 2455072627L
-        private val getOutputPortCountBind by lazy {
+        @JvmField
+        val getOutputPortCountBind =
             ObjectCalls.getMethodBind("GraphNode", "get_output_port_count", GET_OUTPUT_PORT_COUNT_HASH)
-        }
 
         private const val GET_OUTPUT_PORT_POSITION_HASH = 3114997196L
-        private val getOutputPortPositionBind by lazy {
+        @JvmField
+        val getOutputPortPositionBind =
             ObjectCalls.getMethodBind("GraphNode", "get_output_port_position", GET_OUTPUT_PORT_POSITION_HASH)
-        }
 
         private const val GET_OUTPUT_PORT_TYPE_HASH = 3744713108L
-        private val getOutputPortTypeBind by lazy {
+        @JvmField
+        val getOutputPortTypeBind =
             ObjectCalls.getMethodBind("GraphNode", "get_output_port_type", GET_OUTPUT_PORT_TYPE_HASH)
-        }
 
         private const val GET_OUTPUT_PORT_COLOR_HASH = 2624840992L
-        private val getOutputPortColorBind by lazy {
+        @JvmField
+        val getOutputPortColorBind =
             ObjectCalls.getMethodBind("GraphNode", "get_output_port_color", GET_OUTPUT_PORT_COLOR_HASH)
-        }
 
         private const val GET_OUTPUT_PORT_SLOT_HASH = 3744713108L
-        private val getOutputPortSlotBind by lazy {
+        @JvmField
+        val getOutputPortSlotBind =
             ObjectCalls.getMethodBind("GraphNode", "get_output_port_slot", GET_OUTPUT_PORT_SLOT_HASH)
-        }
     }
 }

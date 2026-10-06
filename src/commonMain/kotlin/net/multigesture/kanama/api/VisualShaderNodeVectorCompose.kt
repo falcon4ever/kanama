@@ -20,7 +20,5 @@ class VisualShaderNodeVectorCompose(handle: GodotHandle) : VisualShaderNodeVecto
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeVectorCompose? =
             if (handle.address() == 0L) null else VisualShaderNodeVectorCompose(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

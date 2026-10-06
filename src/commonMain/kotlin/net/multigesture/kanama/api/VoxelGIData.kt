@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -65,7 +66,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun allocate(toCellXform: Transform3D, aabb: AABB, octreeSize: Vector3, octreeCells: ByteArray, dataCells: ByteArray, distanceField: ByteArray, levelCounts: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(allocateBind, segment, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
+        ObjectCalls.ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs(Binds.allocateBind, segment, toCellXform, aabb, octreeSize, octreeCells, dataCells, distanceField, levelCounts)
     }
 
     /**
@@ -78,7 +79,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getBounds(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getBoundsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getBoundsBind, segment)
     }
 
     /**
@@ -91,7 +92,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getOctreeSize(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getOctreeSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOctreeSizeBind, segment)
     }
 
     /**
@@ -101,7 +102,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getToCellXform(): Transform3D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform3D(getToCellXformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform3D(Binds.getToCellXformBind, segment)
     }
 
     /**
@@ -111,7 +112,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getOctreeCells(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getOctreeCellsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getOctreeCellsBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getDataCells(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataCellsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataCellsBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getLevelCounts(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getLevelCountsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getLevelCountsBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setDynamicRange(dynamicRange: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDynamicRangeBind, segment, dynamicRange)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDynamicRangeBind, segment, dynamicRange)
     }
 
     /**
@@ -157,7 +158,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getDynamicRange(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDynamicRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDynamicRangeBind, segment)
     }
 
     /**
@@ -170,7 +171,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setEnergy(energy: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setEnergyBind, segment, energy)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEnergyBind, segment, energy)
     }
 
     /**
@@ -183,7 +184,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getEnergy(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnergyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnergyBind, segment)
     }
 
     /**
@@ -196,7 +197,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBiasBind, segment, bias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBiasBind, segment, bias)
     }
 
     /**
@@ -209,7 +210,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBiasBind, segment)
     }
 
     /**
@@ -222,7 +223,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setNormalBias(bias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setNormalBiasBind, segment, bias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setNormalBiasBind, segment, bias)
     }
 
     /**
@@ -235,7 +236,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getNormalBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getNormalBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getNormalBiasBind, segment)
     }
 
     /**
@@ -248,7 +249,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setPropagation(propagation: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPropagationBind, segment, propagation)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPropagationBind, segment, propagation)
     }
 
     /**
@@ -261,7 +262,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun getPropagation(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPropagationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPropagationBind, segment)
     }
 
     /**
@@ -273,7 +274,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setInterior(interior: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setInteriorBind, segment, interior)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setInteriorBind, segment, interior)
     }
 
     /**
@@ -285,7 +286,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun isInterior(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isInteriorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInteriorBind, segment)
     }
 
     /**
@@ -298,7 +299,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun setUseTwoBounces(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseTwoBouncesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseTwoBouncesBind, segment, enable)
     }
 
     /**
@@ -311,7 +312,7 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
      */
     fun isUsingTwoBounces(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsingTwoBouncesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingTwoBouncesBind, segment)
     }
 
     companion object {
@@ -324,110 +325,112 @@ class VoxelGIData(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): VoxelGIData? =
             if (handle.address() == 0L) null else VoxelGIData(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ALLOCATE_HASH = 4041601946L
-        private val allocateBind by lazy {
+        @JvmField
+        val allocateBind =
             ObjectCalls.getMethodBind("VoxelGIData", "allocate", ALLOCATE_HASH)
-        }
 
         private const val GET_BOUNDS_HASH = 1068685055L
-        private val getBoundsBind by lazy {
+        @JvmField
+        val getBoundsBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_bounds", GET_BOUNDS_HASH)
-        }
 
         private const val GET_OCTREE_SIZE_HASH = 3360562783L
-        private val getOctreeSizeBind by lazy {
+        @JvmField
+        val getOctreeSizeBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_octree_size", GET_OCTREE_SIZE_HASH)
-        }
 
         private const val GET_TO_CELL_XFORM_HASH = 3229777777L
-        private val getToCellXformBind by lazy {
+        @JvmField
+        val getToCellXformBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_to_cell_xform", GET_TO_CELL_XFORM_HASH)
-        }
 
         private const val GET_OCTREE_CELLS_HASH = 2362200018L
-        private val getOctreeCellsBind by lazy {
+        @JvmField
+        val getOctreeCellsBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_octree_cells", GET_OCTREE_CELLS_HASH)
-        }
 
         private const val GET_DATA_CELLS_HASH = 2362200018L
-        private val getDataCellsBind by lazy {
+        @JvmField
+        val getDataCellsBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_data_cells", GET_DATA_CELLS_HASH)
-        }
 
         private const val GET_LEVEL_COUNTS_HASH = 1930428628L
-        private val getLevelCountsBind by lazy {
+        @JvmField
+        val getLevelCountsBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_level_counts", GET_LEVEL_COUNTS_HASH)
-        }
 
         private const val SET_DYNAMIC_RANGE_HASH = 373806689L
-        private val setDynamicRangeBind by lazy {
+        @JvmField
+        val setDynamicRangeBind =
             ObjectCalls.getMethodBind("VoxelGIData", "set_dynamic_range", SET_DYNAMIC_RANGE_HASH)
-        }
 
         private const val GET_DYNAMIC_RANGE_HASH = 1740695150L
-        private val getDynamicRangeBind by lazy {
+        @JvmField
+        val getDynamicRangeBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_dynamic_range", GET_DYNAMIC_RANGE_HASH)
-        }
 
         private const val SET_ENERGY_HASH = 373806689L
-        private val setEnergyBind by lazy {
+        @JvmField
+        val setEnergyBind =
             ObjectCalls.getMethodBind("VoxelGIData", "set_energy", SET_ENERGY_HASH)
-        }
 
         private const val GET_ENERGY_HASH = 1740695150L
-        private val getEnergyBind by lazy {
+        @JvmField
+        val getEnergyBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_energy", GET_ENERGY_HASH)
-        }
 
         private const val SET_BIAS_HASH = 373806689L
-        private val setBiasBind by lazy {
+        @JvmField
+        val setBiasBind =
             ObjectCalls.getMethodBind("VoxelGIData", "set_bias", SET_BIAS_HASH)
-        }
 
         private const val GET_BIAS_HASH = 1740695150L
-        private val getBiasBind by lazy {
+        @JvmField
+        val getBiasBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_bias", GET_BIAS_HASH)
-        }
 
         private const val SET_NORMAL_BIAS_HASH = 373806689L
-        private val setNormalBiasBind by lazy {
+        @JvmField
+        val setNormalBiasBind =
             ObjectCalls.getMethodBind("VoxelGIData", "set_normal_bias", SET_NORMAL_BIAS_HASH)
-        }
 
         private const val GET_NORMAL_BIAS_HASH = 1740695150L
-        private val getNormalBiasBind by lazy {
+        @JvmField
+        val getNormalBiasBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_normal_bias", GET_NORMAL_BIAS_HASH)
-        }
 
         private const val SET_PROPAGATION_HASH = 373806689L
-        private val setPropagationBind by lazy {
+        @JvmField
+        val setPropagationBind =
             ObjectCalls.getMethodBind("VoxelGIData", "set_propagation", SET_PROPAGATION_HASH)
-        }
 
         private const val GET_PROPAGATION_HASH = 1740695150L
-        private val getPropagationBind by lazy {
+        @JvmField
+        val getPropagationBind =
             ObjectCalls.getMethodBind("VoxelGIData", "get_propagation", GET_PROPAGATION_HASH)
-        }
 
         private const val SET_INTERIOR_HASH = 2586408642L
-        private val setInteriorBind by lazy {
+        @JvmField
+        val setInteriorBind =
             ObjectCalls.getMethodBind("VoxelGIData", "set_interior", SET_INTERIOR_HASH)
-        }
 
         private const val IS_INTERIOR_HASH = 36873697L
-        private val isInteriorBind by lazy {
+        @JvmField
+        val isInteriorBind =
             ObjectCalls.getMethodBind("VoxelGIData", "is_interior", IS_INTERIOR_HASH)
-        }
 
         private const val SET_USE_TWO_BOUNCES_HASH = 2586408642L
-        private val setUseTwoBouncesBind by lazy {
+        @JvmField
+        val setUseTwoBouncesBind =
             ObjectCalls.getMethodBind("VoxelGIData", "set_use_two_bounces", SET_USE_TWO_BOUNCES_HASH)
-        }
 
         private const val IS_USING_TWO_BOUNCES_HASH = 36873697L
-        private val isUsingTwoBouncesBind by lazy {
+        @JvmField
+        val isUsingTwoBouncesBind =
             ObjectCalls.getMethodBind("VoxelGIData", "is_using_two_bounces", IS_USING_TWO_BOUNCES_HASH)
-        }
     }
 }

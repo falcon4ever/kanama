@@ -20,7 +20,5 @@ class EditorExportPlatformAndroid(handle: GodotHandle) : EditorExportPlatform(ha
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformAndroid? =
             if (handle.address() == 0L) null else EditorExportPlatformAndroid(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

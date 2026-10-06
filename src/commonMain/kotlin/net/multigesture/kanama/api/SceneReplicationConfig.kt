@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -12,67 +13,67 @@ import net.multigesture.kanama.types.NodePath
 class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
     fun getProperties(): List<NodePath> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePathList(getPropertiesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePathList(Binds.getPropertiesBind, segment)
     }
 
     fun addProperty(path: NodePath, index: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndIntArg(addPropertyBind, segment, path, index)
+        ObjectCalls.ptrcallWithNodePathAndIntArg(Binds.addPropertyBind, segment, path, index)
     }
 
     fun hasProperty(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(hasPropertyBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.hasPropertyBind, segment, path)
     }
 
     fun removeProperty(path: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(removePropertyBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.removePropertyBind, segment, path)
     }
 
     fun propertyGetIndex(path: NodePath): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetInt(propertyGetIndexBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetInt(Binds.propertyGetIndexBind, segment, path)
     }
 
     fun propertyGetSpawn(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetSpawnBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetSpawnBind, segment, path)
     }
 
     fun propertySetSpawn(path: NodePath, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSpawnBind, segment, path, enabled)
+        ObjectCalls.ptrcallWithNodePathAndBoolArgs(Binds.propertySetSpawnBind, segment, path, enabled)
     }
 
     fun propertyGetReplicationMode(path: NodePath): SceneReplicationConfig.ReplicationMode {
         checkOpen()
-        return SceneReplicationConfig.ReplicationMode(ObjectCalls.ptrcallWithNodePathArgRetLong(propertyGetReplicationModeBind, segment, path))
+        return SceneReplicationConfig.ReplicationMode(ObjectCalls.ptrcallWithNodePathArgRetLong(Binds.propertyGetReplicationModeBind, segment, path))
     }
 
     fun propertySetReplicationMode(path: NodePath, mode: SceneReplicationConfig.ReplicationMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndLongArg(propertySetReplicationModeBind, segment, path, mode.value)
+        ObjectCalls.ptrcallWithNodePathAndLongArg(Binds.propertySetReplicationModeBind, segment, path, mode.value)
     }
 
     fun propertyGetSync(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetSyncBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetSyncBind, segment, path)
     }
 
     fun propertySetSync(path: NodePath, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetSyncBind, segment, path, enabled)
+        ObjectCalls.ptrcallWithNodePathAndBoolArgs(Binds.propertySetSyncBind, segment, path, enabled)
     }
 
     fun propertyGetWatch(path: NodePath): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathArgRetBool(propertyGetWatchBind, segment, path)
+        return ObjectCalls.ptrcallWithNodePathArgRetBool(Binds.propertyGetWatchBind, segment, path)
     }
 
     fun propertySetWatch(path: NodePath, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathAndBoolArgs(propertySetWatchBind, segment, path, enabled)
+        ObjectCalls.ptrcallWithNodePathAndBoolArgs(Binds.propertySetWatchBind, segment, path, enabled)
     }
 
     @JvmInline
@@ -94,70 +95,72 @@ class SceneReplicationConfig(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SceneReplicationConfig? =
             if (handle.address() == 0L) null else SceneReplicationConfig(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_PROPERTIES_HASH = 3995934104L
-        private val getPropertiesBind by lazy {
+        @JvmField
+        val getPropertiesBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "get_properties", GET_PROPERTIES_HASH)
-        }
 
         private const val ADD_PROPERTY_HASH = 4094619021L
-        private val addPropertyBind by lazy {
+        @JvmField
+        val addPropertyBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "add_property", ADD_PROPERTY_HASH)
-        }
 
         private const val HAS_PROPERTY_HASH = 861721659L
-        private val hasPropertyBind by lazy {
+        @JvmField
+        val hasPropertyBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "has_property", HAS_PROPERTY_HASH)
-        }
 
         private const val REMOVE_PROPERTY_HASH = 1348162250L
-        private val removePropertyBind by lazy {
+        @JvmField
+        val removePropertyBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "remove_property", REMOVE_PROPERTY_HASH)
-        }
 
         private const val PROPERTY_GET_INDEX_HASH = 1382022557L
-        private val propertyGetIndexBind by lazy {
+        @JvmField
+        val propertyGetIndexBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_get_index", PROPERTY_GET_INDEX_HASH)
-        }
 
         private const val PROPERTY_GET_SPAWN_HASH = 3456846888L
-        private val propertyGetSpawnBind by lazy {
+        @JvmField
+        val propertyGetSpawnBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_get_spawn", PROPERTY_GET_SPAWN_HASH)
-        }
 
         private const val PROPERTY_SET_SPAWN_HASH = 3868023870L
-        private val propertySetSpawnBind by lazy {
+        @JvmField
+        val propertySetSpawnBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_set_spawn", PROPERTY_SET_SPAWN_HASH)
-        }
 
         private const val PROPERTY_GET_REPLICATION_MODE_HASH = 2870606336L
-        private val propertyGetReplicationModeBind by lazy {
+        @JvmField
+        val propertyGetReplicationModeBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_get_replication_mode", PROPERTY_GET_REPLICATION_MODE_HASH)
-        }
 
         private const val PROPERTY_SET_REPLICATION_MODE_HASH = 3200083865L
-        private val propertySetReplicationModeBind by lazy {
+        @JvmField
+        val propertySetReplicationModeBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_set_replication_mode", PROPERTY_SET_REPLICATION_MODE_HASH)
-        }
 
         private const val PROPERTY_GET_SYNC_HASH = 3456846888L
-        private val propertyGetSyncBind by lazy {
+        @JvmField
+        val propertyGetSyncBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_get_sync", PROPERTY_GET_SYNC_HASH)
-        }
 
         private const val PROPERTY_SET_SYNC_HASH = 3868023870L
-        private val propertySetSyncBind by lazy {
+        @JvmField
+        val propertySetSyncBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_set_sync", PROPERTY_SET_SYNC_HASH)
-        }
 
         private const val PROPERTY_GET_WATCH_HASH = 3456846888L
-        private val propertyGetWatchBind by lazy {
+        @JvmField
+        val propertyGetWatchBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_get_watch", PROPERTY_GET_WATCH_HASH)
-        }
 
         private const val PROPERTY_SET_WATCH_HASH = 3868023870L
-        private val propertySetWatchBind by lazy {
+        @JvmField
+        val propertySetWatchBind =
             ObjectCalls.getMethodBind("SceneReplicationConfig", "property_set_watch", PROPERTY_SET_WATCH_HASH)
-        }
     }
 }

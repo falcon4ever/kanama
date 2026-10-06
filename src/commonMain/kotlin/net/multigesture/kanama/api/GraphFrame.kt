@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -55,7 +56,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_title
      */
     fun setTitle(title: String) {
-        ObjectCalls.ptrcallWithStringArg(setTitleBind, segment, title)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTitleBind, segment, title)
     }
 
     /**
@@ -64,7 +65,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_title
      */
     fun getTitle(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTitleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTitleBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_titlebar_hbox
      */
     fun getTitlebarHbox(): HBoxContainer? {
-        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getTitlebarHboxBind, segment))
+        return HBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTitlebarHboxBind, segment))
     }
 
     /**
@@ -85,7 +86,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_autoshrink_enabled
      */
     fun setAutoshrinkEnabled(shrink: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoshrinkEnabledBind, segment, shrink)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoshrinkEnabledBind, segment, shrink)
     }
 
     /**
@@ -95,7 +96,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.is_autoshrink_enabled
      */
     fun isAutoshrinkEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isAutoshrinkEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAutoshrinkEnabledBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_autoshrink_margin
      */
     fun setAutoshrinkMargin(autoshrinkMargin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAutoshrinkMarginBind, segment, autoshrinkMargin)
+        ObjectCalls.ptrcallWithIntArg(Binds.setAutoshrinkMarginBind, segment, autoshrinkMargin)
     }
 
     /**
@@ -115,7 +116,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_autoshrink_margin
      */
     fun getAutoshrinkMargin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAutoshrinkMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAutoshrinkMarginBind, segment)
     }
 
     /**
@@ -124,7 +125,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_drag_margin
      */
     fun setDragMargin(dragMargin: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDragMarginBind, segment, dragMargin)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDragMarginBind, segment, dragMargin)
     }
 
     /**
@@ -133,7 +134,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_drag_margin
      */
     fun getDragMargin(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDragMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDragMarginBind, segment)
     }
 
     /**
@@ -142,7 +143,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_tint_color_enabled
      */
     fun setTintColorEnabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTintColorEnabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTintColorEnabledBind, segment, enable)
     }
 
     /**
@@ -151,7 +152,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.is_tint_color_enabled
      */
     fun isTintColorEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTintColorEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTintColorEnabledBind, segment)
     }
 
     /**
@@ -160,7 +161,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.set_tint_color
      */
     fun setTintColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setTintColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setTintColorBind, segment, color)
     }
 
     /**
@@ -169,7 +170,7 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
      * Generated from Godot docs: GraphFrame.get_tint_color
      */
     fun getTintColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getTintColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getTintColorBind, segment)
     }
 
     /** Signal `autoshrink_changed()`; see [TypedSignal]. */
@@ -188,70 +189,72 @@ class GraphFrame(handle: GodotHandle) : GraphElement(handle) {
 
         internal fun wrap(handle: RawSegment): GraphFrame? =
             if (handle.address() == 0L) null else GraphFrame(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TITLE_HASH = 83702148L
-        private val setTitleBind by lazy {
+        @JvmField
+        val setTitleBind =
             ObjectCalls.getMethodBind("GraphFrame", "set_title", SET_TITLE_HASH)
-        }
 
         private const val GET_TITLE_HASH = 201670096L
-        private val getTitleBind by lazy {
+        @JvmField
+        val getTitleBind =
             ObjectCalls.getMethodBind("GraphFrame", "get_title", GET_TITLE_HASH)
-        }
 
         private const val GET_TITLEBAR_HBOX_HASH = 3590609951L
-        private val getTitlebarHboxBind by lazy {
+        @JvmField
+        val getTitlebarHboxBind =
             ObjectCalls.getMethodBind("GraphFrame", "get_titlebar_hbox", GET_TITLEBAR_HBOX_HASH)
-        }
 
         private const val SET_AUTOSHRINK_ENABLED_HASH = 2586408642L
-        private val setAutoshrinkEnabledBind by lazy {
+        @JvmField
+        val setAutoshrinkEnabledBind =
             ObjectCalls.getMethodBind("GraphFrame", "set_autoshrink_enabled", SET_AUTOSHRINK_ENABLED_HASH)
-        }
 
         private const val IS_AUTOSHRINK_ENABLED_HASH = 36873697L
-        private val isAutoshrinkEnabledBind by lazy {
+        @JvmField
+        val isAutoshrinkEnabledBind =
             ObjectCalls.getMethodBind("GraphFrame", "is_autoshrink_enabled", IS_AUTOSHRINK_ENABLED_HASH)
-        }
 
         private const val SET_AUTOSHRINK_MARGIN_HASH = 1286410249L
-        private val setAutoshrinkMarginBind by lazy {
+        @JvmField
+        val setAutoshrinkMarginBind =
             ObjectCalls.getMethodBind("GraphFrame", "set_autoshrink_margin", SET_AUTOSHRINK_MARGIN_HASH)
-        }
 
         private const val GET_AUTOSHRINK_MARGIN_HASH = 3905245786L
-        private val getAutoshrinkMarginBind by lazy {
+        @JvmField
+        val getAutoshrinkMarginBind =
             ObjectCalls.getMethodBind("GraphFrame", "get_autoshrink_margin", GET_AUTOSHRINK_MARGIN_HASH)
-        }
 
         private const val SET_DRAG_MARGIN_HASH = 1286410249L
-        private val setDragMarginBind by lazy {
+        @JvmField
+        val setDragMarginBind =
             ObjectCalls.getMethodBind("GraphFrame", "set_drag_margin", SET_DRAG_MARGIN_HASH)
-        }
 
         private const val GET_DRAG_MARGIN_HASH = 3905245786L
-        private val getDragMarginBind by lazy {
+        @JvmField
+        val getDragMarginBind =
             ObjectCalls.getMethodBind("GraphFrame", "get_drag_margin", GET_DRAG_MARGIN_HASH)
-        }
 
         private const val SET_TINT_COLOR_ENABLED_HASH = 2586408642L
-        private val setTintColorEnabledBind by lazy {
+        @JvmField
+        val setTintColorEnabledBind =
             ObjectCalls.getMethodBind("GraphFrame", "set_tint_color_enabled", SET_TINT_COLOR_ENABLED_HASH)
-        }
 
         private const val IS_TINT_COLOR_ENABLED_HASH = 36873697L
-        private val isTintColorEnabledBind by lazy {
+        @JvmField
+        val isTintColorEnabledBind =
             ObjectCalls.getMethodBind("GraphFrame", "is_tint_color_enabled", IS_TINT_COLOR_ENABLED_HASH)
-        }
 
         private const val SET_TINT_COLOR_HASH = 2920490490L
-        private val setTintColorBind by lazy {
+        @JvmField
+        val setTintColorBind =
             ObjectCalls.getMethodBind("GraphFrame", "set_tint_color", SET_TINT_COLOR_HASH)
-        }
 
         private const val GET_TINT_COLOR_HASH = 3444240500L
-        private val getTintColorBind by lazy {
+        @JvmField
+        val getTintColorBind =
             ObjectCalls.getMethodBind("GraphFrame", "get_tint_color", GET_TINT_COLOR_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -199,357 +200,357 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
     fun addUsedExtension(extensionName: String, required: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndBoolArg(addUsedExtensionBind, segment, extensionName, required)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.addUsedExtensionBind, segment, extensionName, required)
     }
 
     fun appendDataToBuffers(data: ByteArray, deduplication: Boolean): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(appendDataToBuffersBind, segment, data, deduplication)
+        return ObjectCalls.ptrcallWithByteArrayAndBoolArgRetInt(Binds.appendDataToBuffersBind, segment, data, deduplication)
     }
 
     fun appendGltfNode(gltfNode: GLTFNode?, godotSceneNode: Node, parentNodeIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(appendGltfNodeBind, segment, gltfNode?.requireOpenHandle() ?: NULL_SEGMENT, godotSceneNode.segment, parentNodeIndex)
+        return ObjectCalls.ptrcallWithTwoObjectIntArgsRetInt(Binds.appendGltfNodeBind, segment, gltfNode?.requireOpenHandle() ?: NULL_SEGMENT, godotSceneNode.segment, parentNodeIndex)
     }
 
     fun getJson(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getJsonBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getJsonBind, segment)
     }
 
     fun setJson(json: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setJsonBind, segment, json)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setJsonBind, segment, json)
     }
 
     fun getMajorVersion(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMajorVersionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMajorVersionBind, segment)
     }
 
     fun setMajorVersion(majorVersion: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMajorVersionBind, segment, majorVersion)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMajorVersionBind, segment, majorVersion)
     }
 
     fun getMinorVersion(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMinorVersionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinorVersionBind, segment)
     }
 
     fun setMinorVersion(minorVersion: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMinorVersionBind, segment, minorVersion)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMinorVersionBind, segment, minorVersion)
     }
 
     fun getCopyright(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getCopyrightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCopyrightBind, segment)
     }
 
     fun setCopyright(copyright: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setCopyrightBind, segment, copyright)
+        ObjectCalls.ptrcallWithStringArg(Binds.setCopyrightBind, segment, copyright)
     }
 
     fun getGlbData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getGlbDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getGlbDataBind, segment)
     }
 
     fun setGlbData(glbData: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayArg(setGlbDataBind, segment, glbData)
+        ObjectCalls.ptrcallWithByteArrayArg(Binds.setGlbDataBind, segment, glbData)
     }
 
     fun getUseNamedSkinBinds(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseNamedSkinBindsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseNamedSkinBindsBind, segment)
     }
 
     fun setUseNamedSkinBinds(useNamedSkinBinds: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUseNamedSkinBindsBind, segment, useNamedSkinBinds)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseNamedSkinBindsBind, segment, useNamedSkinBinds)
     }
 
     fun getNodes(): List<GLTFNode> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getNodesBind, segment, GLTFNode::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getNodesBind, segment, GLTFNode::wrapBorrowed)
     }
 
     fun setNodes(nodes: List<GLTFNode>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setNodesBind, segment, nodes)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setNodesBind, segment, nodes)
     }
 
     fun getBuffers(): List<ByteArray> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArrayList(getBuffersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArrayList(Binds.getBuffersBind, segment)
     }
 
     fun setBuffers(buffers: List<ByteArray>) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayListArg(setBuffersBind, segment, buffers)
+        ObjectCalls.ptrcallWithByteArrayListArg(Binds.setBuffersBind, segment, buffers)
     }
 
     fun getBufferViews(): List<GLTFBufferView> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getBufferViewsBind, segment, GLTFBufferView::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getBufferViewsBind, segment, GLTFBufferView::wrapBorrowed)
     }
 
     fun setBufferViews(bufferViews: List<GLTFBufferView>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setBufferViewsBind, segment, bufferViews)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setBufferViewsBind, segment, bufferViews)
     }
 
     fun getAccessors(): List<GLTFAccessor> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAccessorsBind, segment, GLTFAccessor::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAccessorsBind, segment, GLTFAccessor::wrapBorrowed)
     }
 
     fun setAccessors(accessors: List<GLTFAccessor>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setAccessorsBind, segment, accessors)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setAccessorsBind, segment, accessors)
     }
 
     fun getMeshes(): List<GLTFMesh> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMeshesBind, segment, GLTFMesh::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getMeshesBind, segment, GLTFMesh::wrapBorrowed)
     }
 
     fun setMeshes(meshes: List<GLTFMesh>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setMeshesBind, segment, meshes)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setMeshesBind, segment, meshes)
     }
 
     fun getAnimationPlayersCount(animPlayerIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getAnimationPlayersCountBind, segment, animPlayerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getAnimationPlayersCountBind, segment, animPlayerIndex)
     }
 
     fun getAnimationPlayer(animPlayerIndex: Int): AnimationPlayer? {
         checkOpen()
-        return AnimationPlayer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getAnimationPlayerBind, segment, animPlayerIndex))
+        return AnimationPlayer.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getAnimationPlayerBind, segment, animPlayerIndex))
     }
 
     fun getMaterials(): List<Material> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getMaterialsBind, segment, Material::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getMaterialsBind, segment, Material::wrapBorrowed)
     }
 
     fun setMaterials(materials: List<Material>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedMaterialListArg(setMaterialsBind, segment, materials)
+        ObjectCalls.ptrcallWithTypedMaterialListArg(Binds.setMaterialsBind, segment, materials)
     }
 
     fun getSceneName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getSceneNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSceneNameBind, segment)
     }
 
     fun setSceneName(sceneName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setSceneNameBind, segment, sceneName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSceneNameBind, segment, sceneName)
     }
 
     fun getBasePath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getBasePathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBasePathBind, segment)
     }
 
     fun setBasePath(basePath: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setBasePathBind, segment, basePath)
+        ObjectCalls.ptrcallWithStringArg(Binds.setBasePathBind, segment, basePath)
     }
 
     fun getFilename(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getFilenameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFilenameBind, segment)
     }
 
     fun setFilename(filename: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFilenameBind, segment, filename)
+        ObjectCalls.ptrcallWithStringArg(Binds.setFilenameBind, segment, filename)
     }
 
     fun getRootNodes(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getRootNodesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getRootNodesBind, segment)
     }
 
     fun setRootNodes(rootNodes: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setRootNodesBind, segment, rootNodes)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setRootNodesBind, segment, rootNodes)
     }
 
     fun getTextures(): List<GLTFTexture> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTexturesBind, segment, GLTFTexture::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTexturesBind, segment, GLTFTexture::wrapBorrowed)
     }
 
     fun setTextures(textures: List<GLTFTexture>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setTexturesBind, segment, textures)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setTexturesBind, segment, textures)
     }
 
     fun getTextureSamplers(): List<GLTFTextureSampler> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getTextureSamplersBind, segment, GLTFTextureSampler::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getTextureSamplersBind, segment, GLTFTextureSampler::wrapBorrowed)
     }
 
     fun setTextureSamplers(textureSamplers: List<GLTFTextureSampler>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setTextureSamplersBind, segment, textureSamplers)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setTextureSamplersBind, segment, textureSamplers)
     }
 
     fun getImages(): List<Texture2D> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getImagesBind, segment, Texture2D::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getImagesBind, segment, Texture2D::wrapBorrowed)
     }
 
     fun setImages(images: List<Texture2D>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setImagesBind, segment, images)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setImagesBind, segment, images)
     }
 
     fun getSkins(): List<GLTFSkin> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkinsBind, segment, GLTFSkin::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSkinsBind, segment, GLTFSkin::wrapBorrowed)
     }
 
     fun setSkins(skins: List<GLTFSkin>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setSkinsBind, segment, skins)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setSkinsBind, segment, skins)
     }
 
     fun getCameras(): List<GLTFCamera> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCamerasBind, segment, GLTFCamera::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCamerasBind, segment, GLTFCamera::wrapBorrowed)
     }
 
     fun setCameras(cameras: List<GLTFCamera>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setCamerasBind, segment, cameras)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setCamerasBind, segment, cameras)
     }
 
     fun getLights(): List<GLTFLight> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getLightsBind, segment, GLTFLight::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getLightsBind, segment, GLTFLight::wrapBorrowed)
     }
 
     fun setLights(lights: List<GLTFLight>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setLightsBind, segment, lights)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setLightsBind, segment, lights)
     }
 
     fun getUniqueNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueNamesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueNamesBind, segment)
     }
 
     fun setUniqueNames(uniqueNames: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedStringListArg(setUniqueNamesBind, segment, uniqueNames)
+        ObjectCalls.ptrcallWithTypedStringListArg(Binds.setUniqueNamesBind, segment, uniqueNames)
     }
 
     fun getUniqueAnimationNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedStringList(getUniqueAnimationNamesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTypedStringList(Binds.getUniqueAnimationNamesBind, segment)
     }
 
     fun setUniqueAnimationNames(uniqueAnimationNames: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedStringListArg(setUniqueAnimationNamesBind, segment, uniqueAnimationNames)
+        ObjectCalls.ptrcallWithTypedStringListArg(Binds.setUniqueAnimationNamesBind, segment, uniqueAnimationNames)
     }
 
     fun getSkeletons(): List<GLTFSkeleton> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getSkeletonsBind, segment, GLTFSkeleton::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getSkeletonsBind, segment, GLTFSkeleton::wrapBorrowed)
     }
 
     fun setSkeletons(skeletons: List<GLTFSkeleton>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setSkeletonsBind, segment, skeletons)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setSkeletonsBind, segment, skeletons)
     }
 
     fun getCreateAnimations(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getCreateAnimationsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getCreateAnimationsBind, segment)
     }
 
     fun setCreateAnimations(createAnimations: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setCreateAnimationsBind, segment, createAnimations)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCreateAnimationsBind, segment, createAnimations)
     }
 
     fun getImportAsSkeletonBones(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getImportAsSkeletonBonesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getImportAsSkeletonBonesBind, segment)
     }
 
     fun setImportAsSkeletonBones(importAsSkeletonBones: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setImportAsSkeletonBonesBind, segment, importAsSkeletonBones)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setImportAsSkeletonBonesBind, segment, importAsSkeletonBones)
     }
 
     fun getAnimations(): List<GLTFAnimation> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getAnimationsBind, segment, GLTFAnimation::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getAnimationsBind, segment, GLTFAnimation::wrapBorrowed)
     }
 
     fun setAnimations(animations: List<GLTFAnimation>) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectListArg(setAnimationsBind, segment, animations)
+        ObjectCalls.ptrcallWithObjectListArg(Binds.setAnimationsBind, segment, animations)
     }
 
     fun getSceneNode(gltfNodeIndex: Int): Node? {
         checkOpen()
-        return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(getSceneNodeBind, segment, gltfNodeIndex))
+        return Node.wrap(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSceneNodeBind, segment, gltfNodeIndex))
     }
 
     fun getNodeIndex(sceneNode: Node): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectArgRetInt(getNodeIndexBind, segment, sceneNode.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetInt(Binds.getNodeIndexBind, segment, sceneNode.segment)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, segment, extensionName)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, segment, extensionName, additionalData)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
     fun getHandleBinaryImageMode(): GLTFState.HandleBinaryImageMode {
         checkOpen()
-        return GLTFState.HandleBinaryImageMode(ObjectCalls.ptrcallNoArgsRetLong(getHandleBinaryImageModeBind, segment))
+        return GLTFState.HandleBinaryImageMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHandleBinaryImageModeBind, segment))
     }
 
     fun setHandleBinaryImageMode(method: GLTFState.HandleBinaryImageMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHandleBinaryImageModeBind, segment, method.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHandleBinaryImageModeBind, segment, method.value)
     }
 
     fun setBakeFps(value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setBakeFpsBind, segment, value)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBakeFpsBind, segment, value)
     }
 
     fun getBakeFps(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBakeFpsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBakeFpsBind, segment)
     }
 
     fun getHandleBinaryImage(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHandleBinaryImageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHandleBinaryImageBind, segment)
     }
 
     fun setHandleBinaryImage(method: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setHandleBinaryImageBind, segment, method)
+        ObjectCalls.ptrcallWithIntArg(Binds.setHandleBinaryImageBind, segment, method)
     }
 
     @JvmInline
@@ -577,360 +578,362 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFState? =
             if (handle.address() == 0L) null else GLTFState(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_USED_EXTENSION_HASH = 2678287736L
-        private val addUsedExtensionBind by lazy {
+        @JvmField
+        val addUsedExtensionBind =
             ObjectCalls.getMethodBind("GLTFState", "add_used_extension", ADD_USED_EXTENSION_HASH)
-        }
 
         private const val APPEND_DATA_TO_BUFFERS_HASH = 1460416665L
-        private val appendDataToBuffersBind by lazy {
+        @JvmField
+        val appendDataToBuffersBind =
             ObjectCalls.getMethodBind("GLTFState", "append_data_to_buffers", APPEND_DATA_TO_BUFFERS_HASH)
-        }
 
         private const val APPEND_GLTF_NODE_HASH = 3562288551L
-        private val appendGltfNodeBind by lazy {
+        @JvmField
+        val appendGltfNodeBind =
             ObjectCalls.getMethodBind("GLTFState", "append_gltf_node", APPEND_GLTF_NODE_HASH)
-        }
 
         private const val GET_JSON_HASH = 3102165223L
-        private val getJsonBind by lazy {
+        @JvmField
+        val getJsonBind =
             ObjectCalls.getMethodBind("GLTFState", "get_json", GET_JSON_HASH)
-        }
 
         private const val SET_JSON_HASH = 4155329257L
-        private val setJsonBind by lazy {
+        @JvmField
+        val setJsonBind =
             ObjectCalls.getMethodBind("GLTFState", "set_json", SET_JSON_HASH)
-        }
 
         private const val GET_MAJOR_VERSION_HASH = 3905245786L
-        private val getMajorVersionBind by lazy {
+        @JvmField
+        val getMajorVersionBind =
             ObjectCalls.getMethodBind("GLTFState", "get_major_version", GET_MAJOR_VERSION_HASH)
-        }
 
         private const val SET_MAJOR_VERSION_HASH = 1286410249L
-        private val setMajorVersionBind by lazy {
+        @JvmField
+        val setMajorVersionBind =
             ObjectCalls.getMethodBind("GLTFState", "set_major_version", SET_MAJOR_VERSION_HASH)
-        }
 
         private const val GET_MINOR_VERSION_HASH = 3905245786L
-        private val getMinorVersionBind by lazy {
+        @JvmField
+        val getMinorVersionBind =
             ObjectCalls.getMethodBind("GLTFState", "get_minor_version", GET_MINOR_VERSION_HASH)
-        }
 
         private const val SET_MINOR_VERSION_HASH = 1286410249L
-        private val setMinorVersionBind by lazy {
+        @JvmField
+        val setMinorVersionBind =
             ObjectCalls.getMethodBind("GLTFState", "set_minor_version", SET_MINOR_VERSION_HASH)
-        }
 
         private const val GET_COPYRIGHT_HASH = 201670096L
-        private val getCopyrightBind by lazy {
+        @JvmField
+        val getCopyrightBind =
             ObjectCalls.getMethodBind("GLTFState", "get_copyright", GET_COPYRIGHT_HASH)
-        }
 
         private const val SET_COPYRIGHT_HASH = 83702148L
-        private val setCopyrightBind by lazy {
+        @JvmField
+        val setCopyrightBind =
             ObjectCalls.getMethodBind("GLTFState", "set_copyright", SET_COPYRIGHT_HASH)
-        }
 
         private const val GET_GLB_DATA_HASH = 2362200018L
-        private val getGlbDataBind by lazy {
+        @JvmField
+        val getGlbDataBind =
             ObjectCalls.getMethodBind("GLTFState", "get_glb_data", GET_GLB_DATA_HASH)
-        }
 
         private const val SET_GLB_DATA_HASH = 2971499966L
-        private val setGlbDataBind by lazy {
+        @JvmField
+        val setGlbDataBind =
             ObjectCalls.getMethodBind("GLTFState", "set_glb_data", SET_GLB_DATA_HASH)
-        }
 
         private const val GET_USE_NAMED_SKIN_BINDS_HASH = 36873697L
-        private val getUseNamedSkinBindsBind by lazy {
+        @JvmField
+        val getUseNamedSkinBindsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_use_named_skin_binds", GET_USE_NAMED_SKIN_BINDS_HASH)
-        }
 
         private const val SET_USE_NAMED_SKIN_BINDS_HASH = 2586408642L
-        private val setUseNamedSkinBindsBind by lazy {
+        @JvmField
+        val setUseNamedSkinBindsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_use_named_skin_binds", SET_USE_NAMED_SKIN_BINDS_HASH)
-        }
 
         private const val GET_NODES_HASH = 3995934104L
-        private val getNodesBind by lazy {
+        @JvmField
+        val getNodesBind =
             ObjectCalls.getMethodBind("GLTFState", "get_nodes", GET_NODES_HASH)
-        }
 
         private const val SET_NODES_HASH = 381264803L
-        private val setNodesBind by lazy {
+        @JvmField
+        val setNodesBind =
             ObjectCalls.getMethodBind("GLTFState", "set_nodes", SET_NODES_HASH)
-        }
 
         private const val GET_BUFFERS_HASH = 3995934104L
-        private val getBuffersBind by lazy {
+        @JvmField
+        val getBuffersBind =
             ObjectCalls.getMethodBind("GLTFState", "get_buffers", GET_BUFFERS_HASH)
-        }
 
         private const val SET_BUFFERS_HASH = 381264803L
-        private val setBuffersBind by lazy {
+        @JvmField
+        val setBuffersBind =
             ObjectCalls.getMethodBind("GLTFState", "set_buffers", SET_BUFFERS_HASH)
-        }
 
         private const val GET_BUFFER_VIEWS_HASH = 3995934104L
-        private val getBufferViewsBind by lazy {
+        @JvmField
+        val getBufferViewsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_buffer_views", GET_BUFFER_VIEWS_HASH)
-        }
 
         private const val SET_BUFFER_VIEWS_HASH = 381264803L
-        private val setBufferViewsBind by lazy {
+        @JvmField
+        val setBufferViewsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_buffer_views", SET_BUFFER_VIEWS_HASH)
-        }
 
         private const val GET_ACCESSORS_HASH = 3995934104L
-        private val getAccessorsBind by lazy {
+        @JvmField
+        val getAccessorsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_accessors", GET_ACCESSORS_HASH)
-        }
 
         private const val SET_ACCESSORS_HASH = 381264803L
-        private val setAccessorsBind by lazy {
+        @JvmField
+        val setAccessorsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_accessors", SET_ACCESSORS_HASH)
-        }
 
         private const val GET_MESHES_HASH = 3995934104L
-        private val getMeshesBind by lazy {
+        @JvmField
+        val getMeshesBind =
             ObjectCalls.getMethodBind("GLTFState", "get_meshes", GET_MESHES_HASH)
-        }
 
         private const val SET_MESHES_HASH = 381264803L
-        private val setMeshesBind by lazy {
+        @JvmField
+        val setMeshesBind =
             ObjectCalls.getMethodBind("GLTFState", "set_meshes", SET_MESHES_HASH)
-        }
 
         private const val GET_ANIMATION_PLAYERS_COUNT_HASH = 923996154L
-        private val getAnimationPlayersCountBind by lazy {
+        @JvmField
+        val getAnimationPlayersCountBind =
             ObjectCalls.getMethodBind("GLTFState", "get_animation_players_count", GET_ANIMATION_PLAYERS_COUNT_HASH)
-        }
 
         private const val GET_ANIMATION_PLAYER_HASH = 1550200483L
-        private val getAnimationPlayerBind by lazy {
+        @JvmField
+        val getAnimationPlayerBind =
             ObjectCalls.getMethodBind("GLTFState", "get_animation_player", GET_ANIMATION_PLAYER_HASH)
-        }
 
         private const val GET_MATERIALS_HASH = 3995934104L
-        private val getMaterialsBind by lazy {
+        @JvmField
+        val getMaterialsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_materials", GET_MATERIALS_HASH)
-        }
 
         private const val SET_MATERIALS_HASH = 381264803L
-        private val setMaterialsBind by lazy {
+        @JvmField
+        val setMaterialsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_materials", SET_MATERIALS_HASH)
-        }
 
         private const val GET_SCENE_NAME_HASH = 201670096L
-        private val getSceneNameBind by lazy {
+        @JvmField
+        val getSceneNameBind =
             ObjectCalls.getMethodBind("GLTFState", "get_scene_name", GET_SCENE_NAME_HASH)
-        }
 
         private const val SET_SCENE_NAME_HASH = 83702148L
-        private val setSceneNameBind by lazy {
+        @JvmField
+        val setSceneNameBind =
             ObjectCalls.getMethodBind("GLTFState", "set_scene_name", SET_SCENE_NAME_HASH)
-        }
 
         private const val GET_BASE_PATH_HASH = 201670096L
-        private val getBasePathBind by lazy {
+        @JvmField
+        val getBasePathBind =
             ObjectCalls.getMethodBind("GLTFState", "get_base_path", GET_BASE_PATH_HASH)
-        }
 
         private const val SET_BASE_PATH_HASH = 83702148L
-        private val setBasePathBind by lazy {
+        @JvmField
+        val setBasePathBind =
             ObjectCalls.getMethodBind("GLTFState", "set_base_path", SET_BASE_PATH_HASH)
-        }
 
         private const val GET_FILENAME_HASH = 201670096L
-        private val getFilenameBind by lazy {
+        @JvmField
+        val getFilenameBind =
             ObjectCalls.getMethodBind("GLTFState", "get_filename", GET_FILENAME_HASH)
-        }
 
         private const val SET_FILENAME_HASH = 83702148L
-        private val setFilenameBind by lazy {
+        @JvmField
+        val setFilenameBind =
             ObjectCalls.getMethodBind("GLTFState", "set_filename", SET_FILENAME_HASH)
-        }
 
         private const val GET_ROOT_NODES_HASH = 1930428628L
-        private val getRootNodesBind by lazy {
+        @JvmField
+        val getRootNodesBind =
             ObjectCalls.getMethodBind("GLTFState", "get_root_nodes", GET_ROOT_NODES_HASH)
-        }
 
         private const val SET_ROOT_NODES_HASH = 3614634198L
-        private val setRootNodesBind by lazy {
+        @JvmField
+        val setRootNodesBind =
             ObjectCalls.getMethodBind("GLTFState", "set_root_nodes", SET_ROOT_NODES_HASH)
-        }
 
         private const val GET_TEXTURES_HASH = 3995934104L
-        private val getTexturesBind by lazy {
+        @JvmField
+        val getTexturesBind =
             ObjectCalls.getMethodBind("GLTFState", "get_textures", GET_TEXTURES_HASH)
-        }
 
         private const val SET_TEXTURES_HASH = 381264803L
-        private val setTexturesBind by lazy {
+        @JvmField
+        val setTexturesBind =
             ObjectCalls.getMethodBind("GLTFState", "set_textures", SET_TEXTURES_HASH)
-        }
 
         private const val GET_TEXTURE_SAMPLERS_HASH = 3995934104L
-        private val getTextureSamplersBind by lazy {
+        @JvmField
+        val getTextureSamplersBind =
             ObjectCalls.getMethodBind("GLTFState", "get_texture_samplers", GET_TEXTURE_SAMPLERS_HASH)
-        }
 
         private const val SET_TEXTURE_SAMPLERS_HASH = 381264803L
-        private val setTextureSamplersBind by lazy {
+        @JvmField
+        val setTextureSamplersBind =
             ObjectCalls.getMethodBind("GLTFState", "set_texture_samplers", SET_TEXTURE_SAMPLERS_HASH)
-        }
 
         private const val GET_IMAGES_HASH = 3995934104L
-        private val getImagesBind by lazy {
+        @JvmField
+        val getImagesBind =
             ObjectCalls.getMethodBind("GLTFState", "get_images", GET_IMAGES_HASH)
-        }
 
         private const val SET_IMAGES_HASH = 381264803L
-        private val setImagesBind by lazy {
+        @JvmField
+        val setImagesBind =
             ObjectCalls.getMethodBind("GLTFState", "set_images", SET_IMAGES_HASH)
-        }
 
         private const val GET_SKINS_HASH = 3995934104L
-        private val getSkinsBind by lazy {
+        @JvmField
+        val getSkinsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_skins", GET_SKINS_HASH)
-        }
 
         private const val SET_SKINS_HASH = 381264803L
-        private val setSkinsBind by lazy {
+        @JvmField
+        val setSkinsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_skins", SET_SKINS_HASH)
-        }
 
         private const val GET_CAMERAS_HASH = 3995934104L
-        private val getCamerasBind by lazy {
+        @JvmField
+        val getCamerasBind =
             ObjectCalls.getMethodBind("GLTFState", "get_cameras", GET_CAMERAS_HASH)
-        }
 
         private const val SET_CAMERAS_HASH = 381264803L
-        private val setCamerasBind by lazy {
+        @JvmField
+        val setCamerasBind =
             ObjectCalls.getMethodBind("GLTFState", "set_cameras", SET_CAMERAS_HASH)
-        }
 
         private const val GET_LIGHTS_HASH = 3995934104L
-        private val getLightsBind by lazy {
+        @JvmField
+        val getLightsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_lights", GET_LIGHTS_HASH)
-        }
 
         private const val SET_LIGHTS_HASH = 381264803L
-        private val setLightsBind by lazy {
+        @JvmField
+        val setLightsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_lights", SET_LIGHTS_HASH)
-        }
 
         private const val GET_UNIQUE_NAMES_HASH = 3995934104L
-        private val getUniqueNamesBind by lazy {
+        @JvmField
+        val getUniqueNamesBind =
             ObjectCalls.getMethodBind("GLTFState", "get_unique_names", GET_UNIQUE_NAMES_HASH)
-        }
 
         private const val SET_UNIQUE_NAMES_HASH = 381264803L
-        private val setUniqueNamesBind by lazy {
+        @JvmField
+        val setUniqueNamesBind =
             ObjectCalls.getMethodBind("GLTFState", "set_unique_names", SET_UNIQUE_NAMES_HASH)
-        }
 
         private const val GET_UNIQUE_ANIMATION_NAMES_HASH = 3995934104L
-        private val getUniqueAnimationNamesBind by lazy {
+        @JvmField
+        val getUniqueAnimationNamesBind =
             ObjectCalls.getMethodBind("GLTFState", "get_unique_animation_names", GET_UNIQUE_ANIMATION_NAMES_HASH)
-        }
 
         private const val SET_UNIQUE_ANIMATION_NAMES_HASH = 381264803L
-        private val setUniqueAnimationNamesBind by lazy {
+        @JvmField
+        val setUniqueAnimationNamesBind =
             ObjectCalls.getMethodBind("GLTFState", "set_unique_animation_names", SET_UNIQUE_ANIMATION_NAMES_HASH)
-        }
 
         private const val GET_SKELETONS_HASH = 3995934104L
-        private val getSkeletonsBind by lazy {
+        @JvmField
+        val getSkeletonsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_skeletons", GET_SKELETONS_HASH)
-        }
 
         private const val SET_SKELETONS_HASH = 381264803L
-        private val setSkeletonsBind by lazy {
+        @JvmField
+        val setSkeletonsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_skeletons", SET_SKELETONS_HASH)
-        }
 
         private const val GET_CREATE_ANIMATIONS_HASH = 36873697L
-        private val getCreateAnimationsBind by lazy {
+        @JvmField
+        val getCreateAnimationsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_create_animations", GET_CREATE_ANIMATIONS_HASH)
-        }
 
         private const val SET_CREATE_ANIMATIONS_HASH = 2586408642L
-        private val setCreateAnimationsBind by lazy {
+        @JvmField
+        val setCreateAnimationsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_create_animations", SET_CREATE_ANIMATIONS_HASH)
-        }
 
         private const val GET_IMPORT_AS_SKELETON_BONES_HASH = 36873697L
-        private val getImportAsSkeletonBonesBind by lazy {
+        @JvmField
+        val getImportAsSkeletonBonesBind =
             ObjectCalls.getMethodBind("GLTFState", "get_import_as_skeleton_bones", GET_IMPORT_AS_SKELETON_BONES_HASH)
-        }
 
         private const val SET_IMPORT_AS_SKELETON_BONES_HASH = 2586408642L
-        private val setImportAsSkeletonBonesBind by lazy {
+        @JvmField
+        val setImportAsSkeletonBonesBind =
             ObjectCalls.getMethodBind("GLTFState", "set_import_as_skeleton_bones", SET_IMPORT_AS_SKELETON_BONES_HASH)
-        }
 
         private const val GET_ANIMATIONS_HASH = 3995934104L
-        private val getAnimationsBind by lazy {
+        @JvmField
+        val getAnimationsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_animations", GET_ANIMATIONS_HASH)
-        }
 
         private const val SET_ANIMATIONS_HASH = 381264803L
-        private val setAnimationsBind by lazy {
+        @JvmField
+        val setAnimationsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_animations", SET_ANIMATIONS_HASH)
-        }
 
         private const val GET_SCENE_NODE_HASH = 539202265L
-        private val getSceneNodeBind by lazy {
+        @JvmField
+        val getSceneNodeBind =
             ObjectCalls.getMethodBind("GLTFState", "get_scene_node", GET_SCENE_NODE_HASH)
-        }
 
         private const val GET_NODE_INDEX_HASH = 3810805390L
-        private val getNodeIndexBind by lazy {
+        @JvmField
+        val getNodeIndexBind =
             ObjectCalls.getMethodBind("GLTFState", "get_node_index", GET_NODE_INDEX_HASH)
-        }
 
         private const val GET_ADDITIONAL_DATA_HASH = 2760726917L
-        private val getAdditionalDataBind by lazy {
+        @JvmField
+        val getAdditionalDataBind =
             ObjectCalls.getMethodBind("GLTFState", "get_additional_data", GET_ADDITIONAL_DATA_HASH)
-        }
 
         private const val SET_ADDITIONAL_DATA_HASH = 3776071444L
-        private val setAdditionalDataBind by lazy {
+        @JvmField
+        val setAdditionalDataBind =
             ObjectCalls.getMethodBind("GLTFState", "set_additional_data", SET_ADDITIONAL_DATA_HASH)
-        }
 
         private const val GET_HANDLE_BINARY_IMAGE_MODE_HASH = 1363384196L
-        private val getHandleBinaryImageModeBind by lazy {
+        @JvmField
+        val getHandleBinaryImageModeBind =
             ObjectCalls.getMethodBind("GLTFState", "get_handle_binary_image_mode", GET_HANDLE_BINARY_IMAGE_MODE_HASH)
-        }
 
         private const val SET_HANDLE_BINARY_IMAGE_MODE_HASH = 854676334L
-        private val setHandleBinaryImageModeBind by lazy {
+        @JvmField
+        val setHandleBinaryImageModeBind =
             ObjectCalls.getMethodBind("GLTFState", "set_handle_binary_image_mode", SET_HANDLE_BINARY_IMAGE_MODE_HASH)
-        }
 
         private const val SET_BAKE_FPS_HASH = 373806689L
-        private val setBakeFpsBind by lazy {
+        @JvmField
+        val setBakeFpsBind =
             ObjectCalls.getMethodBind("GLTFState", "set_bake_fps", SET_BAKE_FPS_HASH)
-        }
 
         private const val GET_BAKE_FPS_HASH = 1740695150L
-        private val getBakeFpsBind by lazy {
+        @JvmField
+        val getBakeFpsBind =
             ObjectCalls.getMethodBind("GLTFState", "get_bake_fps", GET_BAKE_FPS_HASH)
-        }
 
         private const val GET_HANDLE_BINARY_IMAGE_HASH = 3905245786L
-        private val getHandleBinaryImageBind by lazy {
+        @JvmField
+        val getHandleBinaryImageBind =
             ObjectCalls.getMethodBind("GLTFState", "get_handle_binary_image", GET_HANDLE_BINARY_IMAGE_HASH)
-        }
 
         private const val SET_HANDLE_BINARY_IMAGE_HASH = 1286410249L
-        private val setHandleBinaryImageBind by lazy {
+        @JvmField
+        val setHandleBinaryImageBind =
             ObjectCalls.getMethodBind("GLTFState", "set_handle_binary_image", SET_HANDLE_BINARY_IMAGE_HASH)
-        }
     }
 }

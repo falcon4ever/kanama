@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -29,7 +30,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.create_action
      */
     fun createAction(name: String, mergeMode: UndoRedo.MergeMode = UndoRedo.MergeMode.DISABLE, backwardUndoOps: Boolean = false) {
-        ObjectCalls.ptrcallWithStringLongBoolArgs(createActionBind, segment, name, mergeMode.value, backwardUndoOps)
+        ObjectCalls.ptrcallWithStringLongBoolArgs(Binds.createActionBind, segment, name, mergeMode.value, backwardUndoOps)
     }
 
     /**
@@ -39,7 +40,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.commit_action
      */
     fun commitAction(execute: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(commitActionBind, segment, execute)
+        ObjectCalls.ptrcallWithBoolArg(Binds.commitActionBind, segment, execute)
     }
 
     /**
@@ -49,7 +50,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.is_committing_action
      */
     fun isCommittingAction(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCommittingActionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCommittingActionBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_do_method
      */
     fun addDoMethod(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(addDoMethodBind, segment, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.addDoMethodBind, segment, callable.target.segment, callable.method)
     }
 
     /**
@@ -67,7 +68,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_undo_method
      */
     fun addUndoMethod(callable: GodotCallable) {
-        ObjectCalls.ptrcallWithCallableArg(addUndoMethodBind, segment, callable.target.segment, callable.method)
+        ObjectCalls.ptrcallWithCallableArg(Binds.addUndoMethodBind, segment, callable.target.segment, callable.method)
     }
 
     /**
@@ -76,7 +77,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_do_property
      */
     fun addDoProperty(objectValue: GodotObject, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addDoPropertyBind, segment, objectValue.segment, property, value)
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(Binds.addDoPropertyBind, segment, objectValue.segment, property, value)
     }
 
     /**
@@ -85,7 +86,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_undo_property
      */
     fun addUndoProperty(objectValue: GodotObject, property: String, value: Any?) {
-        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(addUndoPropertyBind, segment, objectValue.segment, property, value)
+        ObjectCalls.ptrcallWithObjectStringNameAndVariantArg(Binds.addUndoPropertyBind, segment, objectValue.segment, property, value)
     }
 
     /**
@@ -97,7 +98,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_do_reference
      */
     fun addDoReference(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(addDoReferenceBind, segment, listOf(objectValue.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addDoReferenceBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -109,7 +110,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.add_undo_reference
      */
     fun addUndoReference(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(addUndoReferenceBind, segment, listOf(objectValue.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addUndoReferenceBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -120,7 +121,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.start_force_keep_in_merge_ends
      */
     fun startForceKeepInMergeEnds() {
-        ObjectCalls.ptrcallNoArgs(startForceKeepInMergeEndsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.startForceKeepInMergeEndsBind, segment)
     }
 
     /**
@@ -130,7 +131,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.end_force_keep_in_merge_ends
      */
     fun endForceKeepInMergeEnds() {
-        ObjectCalls.ptrcallNoArgs(endForceKeepInMergeEndsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.endForceKeepInMergeEndsBind, segment)
     }
 
     /**
@@ -139,7 +140,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_history_count
      */
     fun getHistoryCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getHistoryCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHistoryCountBind, segment)
     }
 
     /**
@@ -148,7 +149,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_current_action
      */
     fun getCurrentAction(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCurrentActionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCurrentActionBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_action_name
      */
     fun getActionName(id: Int): String {
-        return ObjectCalls.ptrcallWithIntArgRetString(getActionNameBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getActionNameBind, segment, id)
     }
 
     /**
@@ -167,7 +168,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.clear_history
      */
     fun clearHistory(increaseVersion: Boolean = true) {
-        ObjectCalls.ptrcallWithBoolArg(clearHistoryBind, segment, increaseVersion)
+        ObjectCalls.ptrcallWithBoolArg(Binds.clearHistoryBind, segment, increaseVersion)
     }
 
     /**
@@ -176,7 +177,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_current_action_name
      */
     fun getCurrentActionName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCurrentActionNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCurrentActionNameBind, segment)
     }
 
     /**
@@ -185,7 +186,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.has_undo
      */
     fun hasUndo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasUndoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasUndoBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.has_redo
      */
     fun hasRedo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(hasRedoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasRedoBind, segment)
     }
 
     /**
@@ -205,7 +206,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_version
      */
     fun getVersion(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getVersionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getVersionBind, segment)
     }
 
     /**
@@ -216,7 +217,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.set_max_steps
      */
     fun setMaxSteps(maxSteps: Int) {
-        ObjectCalls.ptrcallWithIntArg(setMaxStepsBind, segment, maxSteps)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxStepsBind, segment, maxSteps)
     }
 
     /**
@@ -227,7 +228,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.get_max_steps
      */
     fun getMaxSteps(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxStepsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxStepsBind, segment)
     }
 
     /**
@@ -236,7 +237,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.redo
      */
     fun redo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(redoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.redoBind, segment)
     }
 
     /**
@@ -245,7 +246,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: UndoRedo.undo
      */
     fun undo(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(undoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.undoBind, segment)
     }
 
     /** Signal `version_changed()`; see [TypedSignal]. */
@@ -296,120 +297,122 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): UndoRedo? =
             if (handle.address() == 0L) null else UndoRedo(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_ACTION_HASH = 3171901514L
-        private val createActionBind by lazy {
+        @JvmField
+        val createActionBind =
             ObjectCalls.getMethodBind("UndoRedo", "create_action", CREATE_ACTION_HASH)
-        }
 
         private const val COMMIT_ACTION_HASH = 3216645846L
-        private val commitActionBind by lazy {
+        @JvmField
+        val commitActionBind =
             ObjectCalls.getMethodBind("UndoRedo", "commit_action", COMMIT_ACTION_HASH)
-        }
 
         private const val IS_COMMITTING_ACTION_HASH = 36873697L
-        private val isCommittingActionBind by lazy {
+        @JvmField
+        val isCommittingActionBind =
             ObjectCalls.getMethodBind("UndoRedo", "is_committing_action", IS_COMMITTING_ACTION_HASH)
-        }
 
         private const val ADD_DO_METHOD_HASH = 1611583062L
-        private val addDoMethodBind by lazy {
+        @JvmField
+        val addDoMethodBind =
             ObjectCalls.getMethodBind("UndoRedo", "add_do_method", ADD_DO_METHOD_HASH)
-        }
 
         private const val ADD_UNDO_METHOD_HASH = 1611583062L
-        private val addUndoMethodBind by lazy {
+        @JvmField
+        val addUndoMethodBind =
             ObjectCalls.getMethodBind("UndoRedo", "add_undo_method", ADD_UNDO_METHOD_HASH)
-        }
 
         private const val ADD_DO_PROPERTY_HASH = 1017172818L
-        private val addDoPropertyBind by lazy {
+        @JvmField
+        val addDoPropertyBind =
             ObjectCalls.getMethodBind("UndoRedo", "add_do_property", ADD_DO_PROPERTY_HASH)
-        }
 
         private const val ADD_UNDO_PROPERTY_HASH = 1017172818L
-        private val addUndoPropertyBind by lazy {
+        @JvmField
+        val addUndoPropertyBind =
             ObjectCalls.getMethodBind("UndoRedo", "add_undo_property", ADD_UNDO_PROPERTY_HASH)
-        }
 
         private const val ADD_DO_REFERENCE_HASH = 3975164845L
-        private val addDoReferenceBind by lazy {
+        @JvmField
+        val addDoReferenceBind =
             ObjectCalls.getMethodBind("UndoRedo", "add_do_reference", ADD_DO_REFERENCE_HASH)
-        }
 
         private const val ADD_UNDO_REFERENCE_HASH = 3975164845L
-        private val addUndoReferenceBind by lazy {
+        @JvmField
+        val addUndoReferenceBind =
             ObjectCalls.getMethodBind("UndoRedo", "add_undo_reference", ADD_UNDO_REFERENCE_HASH)
-        }
 
         private const val START_FORCE_KEEP_IN_MERGE_ENDS_HASH = 3218959716L
-        private val startForceKeepInMergeEndsBind by lazy {
+        @JvmField
+        val startForceKeepInMergeEndsBind =
             ObjectCalls.getMethodBind("UndoRedo", "start_force_keep_in_merge_ends", START_FORCE_KEEP_IN_MERGE_ENDS_HASH)
-        }
 
         private const val END_FORCE_KEEP_IN_MERGE_ENDS_HASH = 3218959716L
-        private val endForceKeepInMergeEndsBind by lazy {
+        @JvmField
+        val endForceKeepInMergeEndsBind =
             ObjectCalls.getMethodBind("UndoRedo", "end_force_keep_in_merge_ends", END_FORCE_KEEP_IN_MERGE_ENDS_HASH)
-        }
 
         private const val GET_HISTORY_COUNT_HASH = 2455072627L
-        private val getHistoryCountBind by lazy {
+        @JvmField
+        val getHistoryCountBind =
             ObjectCalls.getMethodBind("UndoRedo", "get_history_count", GET_HISTORY_COUNT_HASH)
-        }
 
         private const val GET_CURRENT_ACTION_HASH = 2455072627L
-        private val getCurrentActionBind by lazy {
+        @JvmField
+        val getCurrentActionBind =
             ObjectCalls.getMethodBind("UndoRedo", "get_current_action", GET_CURRENT_ACTION_HASH)
-        }
 
         private const val GET_ACTION_NAME_HASH = 990163283L
-        private val getActionNameBind by lazy {
+        @JvmField
+        val getActionNameBind =
             ObjectCalls.getMethodBind("UndoRedo", "get_action_name", GET_ACTION_NAME_HASH)
-        }
 
         private const val CLEAR_HISTORY_HASH = 3216645846L
-        private val clearHistoryBind by lazy {
+        @JvmField
+        val clearHistoryBind =
             ObjectCalls.getMethodBind("UndoRedo", "clear_history", CLEAR_HISTORY_HASH)
-        }
 
         private const val GET_CURRENT_ACTION_NAME_HASH = 201670096L
-        private val getCurrentActionNameBind by lazy {
+        @JvmField
+        val getCurrentActionNameBind =
             ObjectCalls.getMethodBind("UndoRedo", "get_current_action_name", GET_CURRENT_ACTION_NAME_HASH)
-        }
 
         private const val HAS_UNDO_HASH = 36873697L
-        private val hasUndoBind by lazy {
+        @JvmField
+        val hasUndoBind =
             ObjectCalls.getMethodBind("UndoRedo", "has_undo", HAS_UNDO_HASH)
-        }
 
         private const val HAS_REDO_HASH = 36873697L
-        private val hasRedoBind by lazy {
+        @JvmField
+        val hasRedoBind =
             ObjectCalls.getMethodBind("UndoRedo", "has_redo", HAS_REDO_HASH)
-        }
 
         private const val GET_VERSION_HASH = 3905245786L
-        private val getVersionBind by lazy {
+        @JvmField
+        val getVersionBind =
             ObjectCalls.getMethodBind("UndoRedo", "get_version", GET_VERSION_HASH)
-        }
 
         private const val SET_MAX_STEPS_HASH = 1286410249L
-        private val setMaxStepsBind by lazy {
+        @JvmField
+        val setMaxStepsBind =
             ObjectCalls.getMethodBind("UndoRedo", "set_max_steps", SET_MAX_STEPS_HASH)
-        }
 
         private const val GET_MAX_STEPS_HASH = 3905245786L
-        private val getMaxStepsBind by lazy {
+        @JvmField
+        val getMaxStepsBind =
             ObjectCalls.getMethodBind("UndoRedo", "get_max_steps", GET_MAX_STEPS_HASH)
-        }
 
         private const val REDO_HASH = 2240911060L
-        private val redoBind by lazy {
+        @JvmField
+        val redoBind =
             ObjectCalls.getMethodBind("UndoRedo", "redo", REDO_HASH)
-        }
 
         private const val UNDO_HASH = 2240911060L
-        private val undoBind by lazy {
+        @JvmField
+        val undoBind =
             ObjectCalls.getMethodBind("UndoRedo", "undo", UNDO_HASH)
-        }
     }
 }

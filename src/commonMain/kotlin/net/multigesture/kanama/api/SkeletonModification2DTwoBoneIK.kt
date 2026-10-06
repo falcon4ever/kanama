@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -44,7 +45,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun setTargetNode(targetNodepath: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setTargetNodeBind, segment, targetNodepath)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setTargetNodeBind, segment, targetNodepath)
     }
 
     /**
@@ -55,7 +56,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getTargetNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getTargetNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getTargetNodeBind, segment)
     }
 
     /**
@@ -67,7 +68,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun setTargetMinimumDistance(minimumDistance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTargetMinimumDistanceBind, segment, minimumDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTargetMinimumDistanceBind, segment, minimumDistance)
     }
 
     /**
@@ -79,7 +80,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getTargetMinimumDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMinimumDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTargetMinimumDistanceBind, segment)
     }
 
     /**
@@ -91,7 +92,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun setTargetMaximumDistance(maximumDistance: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setTargetMaximumDistanceBind, segment, maximumDistance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTargetMaximumDistanceBind, segment, maximumDistance)
     }
 
     /**
@@ -103,7 +104,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getTargetMaximumDistance(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTargetMaximumDistanceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTargetMaximumDistanceBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun setFlipBendDirection(flipDirection: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFlipBendDirectionBind, segment, flipDirection)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipBendDirectionBind, segment, flipDirection)
     }
 
     /**
@@ -125,7 +126,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getFlipBendDirection(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipBendDirectionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipBendDirectionBind, segment)
     }
 
     /**
@@ -135,7 +136,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun setJointOneBone2dNode(bone2dNode: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setJointOneBone2dNodeBind, segment, bone2dNode)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setJointOneBone2dNodeBind, segment, bone2dNode)
     }
 
     /**
@@ -145,7 +146,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getJointOneBone2dNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getJointOneBone2dNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getJointOneBone2dNodeBind, segment)
     }
 
     /**
@@ -156,7 +157,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun setJointOneBoneIdx(boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setJointOneBoneIdxBind, segment, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.setJointOneBoneIdxBind, segment, boneIdx)
     }
 
     /**
@@ -167,7 +168,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getJointOneBoneIdx(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getJointOneBoneIdxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getJointOneBoneIdxBind, segment)
     }
 
     /**
@@ -177,7 +178,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun setJointTwoBone2dNode(bone2dNode: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithNodePathArg(setJointTwoBone2dNodeBind, segment, bone2dNode)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setJointTwoBone2dNodeBind, segment, bone2dNode)
     }
 
     /**
@@ -187,7 +188,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getJointTwoBone2dNode(): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getJointTwoBone2dNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getJointTwoBone2dNodeBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun setJointTwoBoneIdx(boneIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setJointTwoBoneIdxBind, segment, boneIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.setJointTwoBoneIdxBind, segment, boneIdx)
     }
 
     /**
@@ -209,7 +210,7 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
      */
     fun getJointTwoBoneIdx(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getJointTwoBoneIdxBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getJointTwoBoneIdxBind, segment)
     }
 
     companion object {
@@ -222,85 +223,87 @@ class SkeletonModification2DTwoBoneIK(handle: GodotHandle) : SkeletonModificatio
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DTwoBoneIK? =
             if (handle.address() == 0L) null else SkeletonModification2DTwoBoneIK(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TARGET_NODE_HASH = 1348162250L
-        private val setTargetNodeBind by lazy {
+        @JvmField
+        val setTargetNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "set_target_node", SET_TARGET_NODE_HASH)
-        }
 
         private const val GET_TARGET_NODE_HASH = 4075236667L
-        private val getTargetNodeBind by lazy {
+        @JvmField
+        val getTargetNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "get_target_node", GET_TARGET_NODE_HASH)
-        }
 
         private const val SET_TARGET_MINIMUM_DISTANCE_HASH = 373806689L
-        private val setTargetMinimumDistanceBind by lazy {
+        @JvmField
+        val setTargetMinimumDistanceBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "set_target_minimum_distance", SET_TARGET_MINIMUM_DISTANCE_HASH)
-        }
 
         private const val GET_TARGET_MINIMUM_DISTANCE_HASH = 1740695150L
-        private val getTargetMinimumDistanceBind by lazy {
+        @JvmField
+        val getTargetMinimumDistanceBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "get_target_minimum_distance", GET_TARGET_MINIMUM_DISTANCE_HASH)
-        }
 
         private const val SET_TARGET_MAXIMUM_DISTANCE_HASH = 373806689L
-        private val setTargetMaximumDistanceBind by lazy {
+        @JvmField
+        val setTargetMaximumDistanceBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "set_target_maximum_distance", SET_TARGET_MAXIMUM_DISTANCE_HASH)
-        }
 
         private const val GET_TARGET_MAXIMUM_DISTANCE_HASH = 1740695150L
-        private val getTargetMaximumDistanceBind by lazy {
+        @JvmField
+        val getTargetMaximumDistanceBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "get_target_maximum_distance", GET_TARGET_MAXIMUM_DISTANCE_HASH)
-        }
 
         private const val SET_FLIP_BEND_DIRECTION_HASH = 2586408642L
-        private val setFlipBendDirectionBind by lazy {
+        @JvmField
+        val setFlipBendDirectionBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "set_flip_bend_direction", SET_FLIP_BEND_DIRECTION_HASH)
-        }
 
         private const val GET_FLIP_BEND_DIRECTION_HASH = 36873697L
-        private val getFlipBendDirectionBind by lazy {
+        @JvmField
+        val getFlipBendDirectionBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "get_flip_bend_direction", GET_FLIP_BEND_DIRECTION_HASH)
-        }
 
         private const val SET_JOINT_ONE_BONE2D_NODE_HASH = 1348162250L
-        private val setJointOneBone2dNodeBind by lazy {
+        @JvmField
+        val setJointOneBone2dNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "set_joint_one_bone2d_node", SET_JOINT_ONE_BONE2D_NODE_HASH)
-        }
 
         private const val GET_JOINT_ONE_BONE2D_NODE_HASH = 4075236667L
-        private val getJointOneBone2dNodeBind by lazy {
+        @JvmField
+        val getJointOneBone2dNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "get_joint_one_bone2d_node", GET_JOINT_ONE_BONE2D_NODE_HASH)
-        }
 
         private const val SET_JOINT_ONE_BONE_IDX_HASH = 1286410249L
-        private val setJointOneBoneIdxBind by lazy {
+        @JvmField
+        val setJointOneBoneIdxBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "set_joint_one_bone_idx", SET_JOINT_ONE_BONE_IDX_HASH)
-        }
 
         private const val GET_JOINT_ONE_BONE_IDX_HASH = 3905245786L
-        private val getJointOneBoneIdxBind by lazy {
+        @JvmField
+        val getJointOneBoneIdxBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "get_joint_one_bone_idx", GET_JOINT_ONE_BONE_IDX_HASH)
-        }
 
         private const val SET_JOINT_TWO_BONE2D_NODE_HASH = 1348162250L
-        private val setJointTwoBone2dNodeBind by lazy {
+        @JvmField
+        val setJointTwoBone2dNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "set_joint_two_bone2d_node", SET_JOINT_TWO_BONE2D_NODE_HASH)
-        }
 
         private const val GET_JOINT_TWO_BONE2D_NODE_HASH = 4075236667L
-        private val getJointTwoBone2dNodeBind by lazy {
+        @JvmField
+        val getJointTwoBone2dNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "get_joint_two_bone2d_node", GET_JOINT_TWO_BONE2D_NODE_HASH)
-        }
 
         private const val SET_JOINT_TWO_BONE_IDX_HASH = 1286410249L
-        private val setJointTwoBoneIdxBind by lazy {
+        @JvmField
+        val setJointTwoBoneIdxBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "set_joint_two_bone_idx", SET_JOINT_TWO_BONE_IDX_HASH)
-        }
 
         private const val GET_JOINT_TWO_BONE_IDX_HASH = 3905245786L
-        private val getJointTwoBoneIdxBind by lazy {
+        @JvmField
+        val getJointTwoBoneIdxBind =
             ObjectCalls.getMethodBind("SkeletonModification2DTwoBoneIK", "get_joint_two_bone_idx", GET_JOINT_TWO_BONE_IDX_HASH)
-        }
     }
 }

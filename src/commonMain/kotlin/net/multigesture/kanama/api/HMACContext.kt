@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun start(hashType: HashingContext.HashType, key: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(startBind, segment, hashType.value, key))
+        return GodotError(ObjectCalls.ptrcallWithLongAndByteArrayArgRetLong(Binds.startBind, segment, hashType.value, key))
     }
 
     /**
@@ -29,7 +30,7 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun update(data: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(updateBind, segment, data))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.updateBind, segment, data))
     }
 
     /**
@@ -39,7 +40,7 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
      */
     fun finish(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(finishBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.finishBind, segment)
     }
 
     companion object {
@@ -52,20 +53,22 @@ class HMACContext(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): HMACContext? =
             if (handle.address() == 0L) null else HMACContext(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val START_HASH = 3537364598L
-        private val startBind by lazy {
+        @JvmField
+        val startBind =
             ObjectCalls.getMethodBind("HMACContext", "start", START_HASH)
-        }
 
         private const val UPDATE_HASH = 680677267L
-        private val updateBind by lazy {
+        @JvmField
+        val updateBind =
             ObjectCalls.getMethodBind("HMACContext", "update", UPDATE_HASH)
-        }
 
         private const val FINISH_HASH = 2115431945L
-        private val finishBind by lazy {
+        @JvmField
+        val finishBind =
             ObjectCalls.getMethodBind("HMACContext", "finish", FINISH_HASH)
-        }
     }
 }

@@ -19,7 +19,5 @@ open class VBoxContainer(handle: GodotHandle) : BoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): VBoxContainer? =
             if (handle.address() == 0L) null else VBoxContainer(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

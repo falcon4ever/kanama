@@ -22,7 +22,5 @@ class Texture2DArrayRD(handle: GodotHandle) : TextureLayeredRD(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture2DArrayRD? =
             if (handle.address() == 0L) null else Texture2DArrayRD(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

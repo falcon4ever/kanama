@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -36,7 +37,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackerType(): XRServer.TrackerType {
         checkOpen()
-        return XRServer.TrackerType(ObjectCalls.ptrcallNoArgsRetLong(getTrackerTypeBind, segment))
+        return XRServer.TrackerType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTrackerTypeBind, segment))
     }
 
     /**
@@ -46,7 +47,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTrackerType(type: XRServer.TrackerType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTrackerTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTrackerTypeBind, segment, type.value)
     }
 
     /**
@@ -64,7 +65,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackerName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetStringName(getTrackerNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getTrackerNameBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTrackerName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(setTrackerNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setTrackerNameBind, segment, name)
     }
 
     /**
@@ -92,7 +93,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTrackerDesc(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getTrackerDescBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTrackerDescBind, segment)
     }
 
     /**
@@ -102,7 +103,7 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTrackerDesc(description: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setTrackerDescBind, segment, description)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTrackerDescBind, segment, description)
     }
 
     companion object {
@@ -115,35 +116,37 @@ open class XRTracker(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): XRTracker? =
             if (handle.address() == 0L) null else XRTracker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TRACKER_TYPE_HASH = 2784508102L
-        private val getTrackerTypeBind by lazy {
+        @JvmField
+        val getTrackerTypeBind =
             ObjectCalls.getMethodBind("XRTracker", "get_tracker_type", GET_TRACKER_TYPE_HASH)
-        }
 
         private const val SET_TRACKER_TYPE_HASH = 3055763575L
-        private val setTrackerTypeBind by lazy {
+        @JvmField
+        val setTrackerTypeBind =
             ObjectCalls.getMethodBind("XRTracker", "set_tracker_type", SET_TRACKER_TYPE_HASH)
-        }
 
         private const val GET_TRACKER_NAME_HASH = 2002593661L
-        private val getTrackerNameBind by lazy {
+        @JvmField
+        val getTrackerNameBind =
             ObjectCalls.getMethodBind("XRTracker", "get_tracker_name", GET_TRACKER_NAME_HASH)
-        }
 
         private const val SET_TRACKER_NAME_HASH = 3304788590L
-        private val setTrackerNameBind by lazy {
+        @JvmField
+        val setTrackerNameBind =
             ObjectCalls.getMethodBind("XRTracker", "set_tracker_name", SET_TRACKER_NAME_HASH)
-        }
 
         private const val GET_TRACKER_DESC_HASH = 201670096L
-        private val getTrackerDescBind by lazy {
+        @JvmField
+        val getTrackerDescBind =
             ObjectCalls.getMethodBind("XRTracker", "get_tracker_desc", GET_TRACKER_DESC_HASH)
-        }
 
         private const val SET_TRACKER_DESC_HASH = 83702148L
-        private val setTrackerDescBind by lazy {
+        @JvmField
+        val setTrackerDescBind =
             ObjectCalls.getMethodBind("XRTracker", "set_tracker_desc", SET_TRACKER_DESC_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun getPressedButton(): BaseButton? {
         checkOpen()
-        return BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(getPressedButtonBind, segment))
+        return BaseButton.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPressedButtonBind, segment))
     }
 
     /**
@@ -35,7 +36,7 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun getButtons(): List<BaseButton> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getButtonsBind, segment, BaseButton::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getButtonsBind, segment, BaseButton::wrap)
     }
 
     /**
@@ -45,7 +46,7 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun setAllowUnpress(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowUnpressBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowUnpressBind, segment, enabled)
     }
 
     /**
@@ -55,7 +56,7 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
      */
     fun isAllowUnpress(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowUnpressBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowUnpressBind, segment)
     }
 
     /** Signal `pressed(button: BaseButton)`; see [TypedSignal]. */
@@ -82,25 +83,27 @@ class ButtonGroup(handle: GodotHandle) : Resource(handle) {
         @JvmStatic
         fun create(): ButtonGroup =
             RefCounted.owned(ButtonGroup(GodotHandle(ObjectCalls.constructObject("ButtonGroup"))))
+    }
 
+    private object Binds {
         private const val GET_PRESSED_BUTTON_HASH = 3886434893L
-        private val getPressedButtonBind by lazy {
+        @JvmField
+        val getPressedButtonBind =
             ObjectCalls.getMethodBind("ButtonGroup", "get_pressed_button", GET_PRESSED_BUTTON_HASH)
-        }
 
         private const val GET_BUTTONS_HASH = 2915620761L
-        private val getButtonsBind by lazy {
+        @JvmField
+        val getButtonsBind =
             ObjectCalls.getMethodBind("ButtonGroup", "get_buttons", GET_BUTTONS_HASH)
-        }
 
         private const val SET_ALLOW_UNPRESS_HASH = 2586408642L
-        private val setAllowUnpressBind by lazy {
+        @JvmField
+        val setAllowUnpressBind =
             ObjectCalls.getMethodBind("ButtonGroup", "set_allow_unpress", SET_ALLOW_UNPRESS_HASH)
-        }
 
         private const val IS_ALLOW_UNPRESS_HASH = 2240911060L
-        private val isAllowUnpressBind by lazy {
+        @JvmField
+        val isAllowUnpressBind =
             ObjectCalls.getMethodBind("ButtonGroup", "is_allow_unpress", IS_ALLOW_UNPRESS_HASH)
-        }
     }
 }

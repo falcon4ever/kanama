@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -21,7 +22,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getFormat(): Image.Format {
         checkOpen()
-        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(getFormatBind, segment))
+        return Image.Format(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatBind, segment))
     }
 
     /**
@@ -31,7 +32,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getMipmapCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMipmapCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMipmapCountBind, segment)
     }
 
     /**
@@ -41,7 +42,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getWidth(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getWidthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getWidthBind, segment)
     }
 
     /**
@@ -51,7 +52,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getHeight(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getHeightBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getHeightBind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun hasAlpha(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasAlphaBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasAlphaBind, segment)
     }
 
     /**
@@ -81,7 +82,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun hasMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(hasMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasMipmapsBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun draw(canvasItem: RID, position: Vector2, modulate: Color, transpose: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDVector2ColorBoolArgs(drawBind, segment, canvasItem, position, modulate, transpose)
+        ObjectCalls.ptrcallWithRIDVector2ColorBoolArgs(Binds.drawBind, segment, canvasItem, position, modulate, transpose)
     }
 
     /**
@@ -102,7 +103,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun drawRect(canvasItem: RID, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDRect2BoolColorBoolArgs(drawRectBind, segment, canvasItem, rect, tile, modulate, transpose)
+        ObjectCalls.ptrcallWithRIDRect2BoolColorBoolArgs(Binds.drawRectBind, segment, canvasItem, rect, tile, modulate, transpose)
     }
 
     /**
@@ -112,7 +113,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun drawRectRegion(canvasItem: RID, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDTwoRect2ColorTwoBoolArgs(drawRectRegionBind, segment, canvasItem, rect, srcRect, modulate, transpose, clipUv)
+        ObjectCalls.ptrcallWithRIDTwoRect2ColorTwoBoolArgs(Binds.drawRectRegionBind, segment, canvasItem, rect, srcRect, modulate, transpose, clipUv)
     }
 
     /**
@@ -126,7 +127,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun getImage(): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getImageBind, segment))
+        return Image.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getImageBind, segment))
     }
 
     /**
@@ -136,7 +137,7 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
      */
     fun createPlaceholder(): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(createPlaceholderBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.createPlaceholderBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -154,65 +155,67 @@ open class Texture2D(handle: GodotHandle) : Texture(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Texture2D? =
             if (handle.address() == 0L) null else Texture2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_FORMAT_HASH = 3847873762L
-        private val getFormatBind by lazy {
+        @JvmField
+        val getFormatBind =
             ObjectCalls.getMethodBind("Texture2D", "get_format", GET_FORMAT_HASH)
-        }
 
         private const val GET_MIPMAP_COUNT_HASH = 3905245786L
-        private val getMipmapCountBind by lazy {
+        @JvmField
+        val getMipmapCountBind =
             ObjectCalls.getMethodBind("Texture2D", "get_mipmap_count", GET_MIPMAP_COUNT_HASH)
-        }
 
         private const val GET_WIDTH_HASH = 3905245786L
-        private val getWidthBind by lazy {
+        @JvmField
+        val getWidthBind =
             ObjectCalls.getMethodBind("Texture2D", "get_width", GET_WIDTH_HASH)
-        }
 
         private const val GET_HEIGHT_HASH = 3905245786L
-        private val getHeightBind by lazy {
+        @JvmField
+        val getHeightBind =
             ObjectCalls.getMethodBind("Texture2D", "get_height", GET_HEIGHT_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3341600327L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("Texture2D", "get_size", GET_SIZE_HASH)
-        }
 
         private const val HAS_ALPHA_HASH = 36873697L
-        private val hasAlphaBind by lazy {
+        @JvmField
+        val hasAlphaBind =
             ObjectCalls.getMethodBind("Texture2D", "has_alpha", HAS_ALPHA_HASH)
-        }
 
         private const val HAS_MIPMAPS_HASH = 36873697L
-        private val hasMipmapsBind by lazy {
+        @JvmField
+        val hasMipmapsBind =
             ObjectCalls.getMethodBind("Texture2D", "has_mipmaps", HAS_MIPMAPS_HASH)
-        }
 
         private const val DRAW_HASH = 2729649137L
-        private val drawBind by lazy {
+        @JvmField
+        val drawBind =
             ObjectCalls.getMethodBind("Texture2D", "draw", DRAW_HASH)
-        }
 
         private const val DRAW_RECT_HASH = 3499451691L
-        private val drawRectBind by lazy {
+        @JvmField
+        val drawRectBind =
             ObjectCalls.getMethodBind("Texture2D", "draw_rect", DRAW_RECT_HASH)
-        }
 
         private const val DRAW_RECT_REGION_HASH = 2963678660L
-        private val drawRectRegionBind by lazy {
+        @JvmField
+        val drawRectRegionBind =
             ObjectCalls.getMethodBind("Texture2D", "draw_rect_region", DRAW_RECT_REGION_HASH)
-        }
 
         private const val GET_IMAGE_HASH = 4190603485L
-        private val getImageBind by lazy {
+        @JvmField
+        val getImageBind =
             ObjectCalls.getMethodBind("Texture2D", "get_image", GET_IMAGE_HASH)
-        }
 
         private const val CREATE_PLACEHOLDER_HASH = 121922552L
-        private val createPlaceholderBind by lazy {
+        @JvmField
+        val createPlaceholderBind =
             ObjectCalls.getMethodBind("Texture2D", "create_placeholder", CREATE_PLACEHOLDER_HASH)
-        }
     }
 }

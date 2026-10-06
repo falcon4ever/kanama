@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -89,7 +90,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setAsMix() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(setAsMixBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.setAsMixBind, segment)
     }
 
     /**
@@ -102,7 +103,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setEnableBlend(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setEnableBlendBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableBlendBind, segment, pMember)
     }
 
     /**
@@ -115,7 +116,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getEnableBlend(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableBlendBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableBlendBind, segment)
     }
 
     /**
@@ -126,7 +127,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setSrcColorBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSrcColorBlendFactorBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSrcColorBlendFactorBind, segment, pMember.value)
     }
 
     /**
@@ -137,7 +138,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getSrcColorBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(getSrcColorBlendFactorBind, segment))
+        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSrcColorBlendFactorBind, segment))
     }
 
     /**
@@ -148,7 +149,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setDstColorBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDstColorBlendFactorBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDstColorBlendFactorBind, segment, pMember.value)
     }
 
     /**
@@ -159,7 +160,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getDstColorBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(getDstColorBlendFactorBind, segment))
+        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDstColorBlendFactorBind, segment))
     }
 
     /**
@@ -169,7 +170,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setColorBlendOp(pMember: RenderingDevice.BlendOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setColorBlendOpBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setColorBlendOpBind, segment, pMember.value)
     }
 
     /**
@@ -179,7 +180,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getColorBlendOp(): RenderingDevice.BlendOperation {
         checkOpen()
-        return RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(getColorBlendOpBind, segment))
+        return RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getColorBlendOpBind, segment))
     }
 
     /**
@@ -190,7 +191,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setSrcAlphaBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSrcAlphaBlendFactorBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSrcAlphaBlendFactorBind, segment, pMember.value)
     }
 
     /**
@@ -201,7 +202,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getSrcAlphaBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(getSrcAlphaBlendFactorBind, segment))
+        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSrcAlphaBlendFactorBind, segment))
     }
 
     /**
@@ -212,7 +213,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setDstAlphaBlendFactor(pMember: RenderingDevice.BlendFactor) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDstAlphaBlendFactorBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDstAlphaBlendFactorBind, segment, pMember.value)
     }
 
     /**
@@ -223,7 +224,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getDstAlphaBlendFactor(): RenderingDevice.BlendFactor {
         checkOpen()
-        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(getDstAlphaBlendFactorBind, segment))
+        return RenderingDevice.BlendFactor(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDstAlphaBlendFactorBind, segment))
     }
 
     /**
@@ -233,7 +234,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setAlphaBlendOp(pMember: RenderingDevice.BlendOperation) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAlphaBlendOpBind, segment, pMember.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlphaBlendOpBind, segment, pMember.value)
     }
 
     /**
@@ -243,7 +244,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getAlphaBlendOp(): RenderingDevice.BlendOperation {
         checkOpen()
-        return RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(getAlphaBlendOpBind, segment))
+        return RenderingDevice.BlendOperation(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaBlendOpBind, segment))
     }
 
     /**
@@ -253,7 +254,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setWriteR(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWriteRBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setWriteRBind, segment, pMember)
     }
 
     /**
@@ -263,7 +264,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getWriteR(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWriteRBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteRBind, segment)
     }
 
     /**
@@ -273,7 +274,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setWriteG(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWriteGBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setWriteGBind, segment, pMember)
     }
 
     /**
@@ -283,7 +284,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getWriteG(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWriteGBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteGBind, segment)
     }
 
     /**
@@ -293,7 +294,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setWriteB(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWriteBBind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setWriteBBind, segment, pMember)
     }
 
     /**
@@ -303,7 +304,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getWriteB(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWriteBBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteBBind, segment)
     }
 
     /**
@@ -313,7 +314,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun setWriteA(pMember: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setWriteABind, segment, pMember)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setWriteABind, segment, pMember)
     }
 
     /**
@@ -323,7 +324,7 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
      */
     fun getWriteA(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getWriteABind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getWriteABind, segment)
     }
 
     companion object {
@@ -336,120 +337,122 @@ class RDPipelineColorBlendStateAttachment(handle: GodotHandle) : RefCounted(hand
 
         internal fun wrapBorrowed(handle: RawSegment): RDPipelineColorBlendStateAttachment? =
             if (handle.address() == 0L) null else RDPipelineColorBlendStateAttachment(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_AS_MIX_HASH = 3218959716L
-        private val setAsMixBind by lazy {
+        @JvmField
+        val setAsMixBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_as_mix", SET_AS_MIX_HASH)
-        }
 
         private const val SET_ENABLE_BLEND_HASH = 2586408642L
-        private val setEnableBlendBind by lazy {
+        @JvmField
+        val setEnableBlendBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_enable_blend", SET_ENABLE_BLEND_HASH)
-        }
 
         private const val GET_ENABLE_BLEND_HASH = 36873697L
-        private val getEnableBlendBind by lazy {
+        @JvmField
+        val getEnableBlendBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_enable_blend", GET_ENABLE_BLEND_HASH)
-        }
 
         private const val SET_SRC_COLOR_BLEND_FACTOR_HASH = 2251019273L
-        private val setSrcColorBlendFactorBind by lazy {
+        @JvmField
+        val setSrcColorBlendFactorBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_src_color_blend_factor", SET_SRC_COLOR_BLEND_FACTOR_HASH)
-        }
 
         private const val GET_SRC_COLOR_BLEND_FACTOR_HASH = 3691288359L
-        private val getSrcColorBlendFactorBind by lazy {
+        @JvmField
+        val getSrcColorBlendFactorBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_src_color_blend_factor", GET_SRC_COLOR_BLEND_FACTOR_HASH)
-        }
 
         private const val SET_DST_COLOR_BLEND_FACTOR_HASH = 2251019273L
-        private val setDstColorBlendFactorBind by lazy {
+        @JvmField
+        val setDstColorBlendFactorBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_dst_color_blend_factor", SET_DST_COLOR_BLEND_FACTOR_HASH)
-        }
 
         private const val GET_DST_COLOR_BLEND_FACTOR_HASH = 3691288359L
-        private val getDstColorBlendFactorBind by lazy {
+        @JvmField
+        val getDstColorBlendFactorBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_dst_color_blend_factor", GET_DST_COLOR_BLEND_FACTOR_HASH)
-        }
 
         private const val SET_COLOR_BLEND_OP_HASH = 3073022720L
-        private val setColorBlendOpBind by lazy {
+        @JvmField
+        val setColorBlendOpBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_color_blend_op", SET_COLOR_BLEND_OP_HASH)
-        }
 
         private const val GET_COLOR_BLEND_OP_HASH = 1385093561L
-        private val getColorBlendOpBind by lazy {
+        @JvmField
+        val getColorBlendOpBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_color_blend_op", GET_COLOR_BLEND_OP_HASH)
-        }
 
         private const val SET_SRC_ALPHA_BLEND_FACTOR_HASH = 2251019273L
-        private val setSrcAlphaBlendFactorBind by lazy {
+        @JvmField
+        val setSrcAlphaBlendFactorBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_src_alpha_blend_factor", SET_SRC_ALPHA_BLEND_FACTOR_HASH)
-        }
 
         private const val GET_SRC_ALPHA_BLEND_FACTOR_HASH = 3691288359L
-        private val getSrcAlphaBlendFactorBind by lazy {
+        @JvmField
+        val getSrcAlphaBlendFactorBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_src_alpha_blend_factor", GET_SRC_ALPHA_BLEND_FACTOR_HASH)
-        }
 
         private const val SET_DST_ALPHA_BLEND_FACTOR_HASH = 2251019273L
-        private val setDstAlphaBlendFactorBind by lazy {
+        @JvmField
+        val setDstAlphaBlendFactorBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_dst_alpha_blend_factor", SET_DST_ALPHA_BLEND_FACTOR_HASH)
-        }
 
         private const val GET_DST_ALPHA_BLEND_FACTOR_HASH = 3691288359L
-        private val getDstAlphaBlendFactorBind by lazy {
+        @JvmField
+        val getDstAlphaBlendFactorBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_dst_alpha_blend_factor", GET_DST_ALPHA_BLEND_FACTOR_HASH)
-        }
 
         private const val SET_ALPHA_BLEND_OP_HASH = 3073022720L
-        private val setAlphaBlendOpBind by lazy {
+        @JvmField
+        val setAlphaBlendOpBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_alpha_blend_op", SET_ALPHA_BLEND_OP_HASH)
-        }
 
         private const val GET_ALPHA_BLEND_OP_HASH = 1385093561L
-        private val getAlphaBlendOpBind by lazy {
+        @JvmField
+        val getAlphaBlendOpBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_alpha_blend_op", GET_ALPHA_BLEND_OP_HASH)
-        }
 
         private const val SET_WRITE_R_HASH = 2586408642L
-        private val setWriteRBind by lazy {
+        @JvmField
+        val setWriteRBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_write_r", SET_WRITE_R_HASH)
-        }
 
         private const val GET_WRITE_R_HASH = 36873697L
-        private val getWriteRBind by lazy {
+        @JvmField
+        val getWriteRBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_write_r", GET_WRITE_R_HASH)
-        }
 
         private const val SET_WRITE_G_HASH = 2586408642L
-        private val setWriteGBind by lazy {
+        @JvmField
+        val setWriteGBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_write_g", SET_WRITE_G_HASH)
-        }
 
         private const val GET_WRITE_G_HASH = 36873697L
-        private val getWriteGBind by lazy {
+        @JvmField
+        val getWriteGBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_write_g", GET_WRITE_G_HASH)
-        }
 
         private const val SET_WRITE_B_HASH = 2586408642L
-        private val setWriteBBind by lazy {
+        @JvmField
+        val setWriteBBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_write_b", SET_WRITE_B_HASH)
-        }
 
         private const val GET_WRITE_B_HASH = 36873697L
-        private val getWriteBBind by lazy {
+        @JvmField
+        val getWriteBBind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_write_b", GET_WRITE_B_HASH)
-        }
 
         private const val SET_WRITE_A_HASH = 2586408642L
-        private val setWriteABind by lazy {
+        @JvmField
+        val setWriteABind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "set_write_a", SET_WRITE_A_HASH)
-        }
 
         private const val GET_WRITE_A_HASH = 36873697L
-        private val getWriteABind by lazy {
+        @JvmField
+        val getWriteABind =
             ObjectCalls.getMethodBind("RDPipelineColorBlendStateAttachment", "get_write_a", GET_WRITE_A_HASH)
-        }
     }
 }

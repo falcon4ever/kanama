@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -121,7 +122,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_canvas_item
      */
     fun getCanvasItem(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasItemBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getCanvasItemBind, segment)
     }
 
     /**
@@ -134,7 +135,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_visible
      */
     fun setVisible(visible: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setVisibleBind, segment, visible)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setVisibleBind, segment, visible)
     }
 
     /**
@@ -147,7 +148,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_visible
      */
     fun isVisible(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleBind, segment)
     }
 
     /**
@@ -162,7 +163,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_visible_in_tree
      */
     fun isVisibleInTree(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isVisibleInTreeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVisibleInTreeBind, segment)
     }
 
     /**
@@ -173,7 +174,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.show
      */
     fun show() {
-        ObjectCalls.ptrcallNoArgs(showBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.showBind, segment)
     }
 
     /**
@@ -183,7 +184,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.hide
      */
     fun hide() {
-        ObjectCalls.ptrcallNoArgs(hideBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.hideBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.queue_redraw
      */
     fun queueRedraw() {
-        ObjectCalls.ptrcallNoArgs(queueRedrawBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.queueRedrawBind, segment)
     }
 
     /**
@@ -204,7 +205,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.move_to_front
      */
     fun moveToFront() {
-        ObjectCalls.ptrcallNoArgs(moveToFrontBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.moveToFrontBind, segment)
     }
 
     /**
@@ -216,7 +217,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_as_top_level
      */
     fun setAsTopLevel(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAsTopLevelBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAsTopLevelBind, segment, enable)
     }
 
     /**
@@ -228,7 +229,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_set_as_top_level
      */
     fun isSetAsTopLevel(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSetAsTopLevelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSetAsTopLevelBind, segment)
     }
 
     /**
@@ -237,7 +238,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_light_mask
      */
     fun setLightMask(lightMask: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLightMaskBind, segment, lightMask)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLightMaskBind, segment, lightMask)
     }
 
     /**
@@ -246,7 +247,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_light_mask
      */
     fun getLightMask(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLightMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLightMaskBind, segment)
     }
 
     /**
@@ -256,7 +257,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_modulate
      */
     fun setModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, modulate)
+        ObjectCalls.ptrcallWithColorArg(Binds.setModulateBind, segment, modulate)
     }
 
     /**
@@ -266,7 +267,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getModulateBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_self_modulate
      */
     fun setSelfModulate(selfModulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setSelfModulateBind, segment, selfModulate)
+        ObjectCalls.ptrcallWithColorArg(Binds.setSelfModulateBind, segment, selfModulate)
     }
 
     /**
@@ -292,7 +293,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_self_modulate
      */
     fun getSelfModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getSelfModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getSelfModulateBind, segment)
     }
 
     /**
@@ -305,7 +306,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_z_index
      */
     fun setZIndex(zIndex: Int) {
-        ObjectCalls.ptrcallWithIntArg(setZIndexBind, segment, zIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.setZIndexBind, segment, zIndex)
     }
 
     /**
@@ -318,7 +319,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_z_index
      */
     fun getZIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getZIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getZIndexBind, segment)
     }
 
     /**
@@ -329,7 +330,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_z_as_relative
      */
     fun setZAsRelative(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setZAsRelativeBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setZAsRelativeBind, segment, enable)
     }
 
     /**
@@ -340,7 +341,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_z_relative
      */
     fun isZRelative(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isZRelativeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isZRelativeBind, segment)
     }
 
     /**
@@ -355,7 +356,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_y_sort_enabled
      */
     fun setYSortEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setYSortEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setYSortEnabledBind, segment, enabled)
     }
 
     /**
@@ -370,7 +371,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_y_sort_enabled
      */
     fun isYSortEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isYSortEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isYSortEnabledBind, segment)
     }
 
     /**
@@ -379,7 +380,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_draw_behind_parent
      */
     fun setDrawBehindParent(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDrawBehindParentBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDrawBehindParentBind, segment, enable)
     }
 
     /**
@@ -388,7 +389,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_draw_behind_parent_enabled
      */
     fun isDrawBehindParentEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDrawBehindParentEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDrawBehindParentEnabledBind, segment)
     }
 
     /**
@@ -402,7 +403,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_line
      */
     fun drawLine(from: Vector2, to: Vector2, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoVector2ColorDoubleBoolArgs(drawLineBind, segment, from, to, color, width, antialiased)
+        ObjectCalls.ptrcallWithTwoVector2ColorDoubleBoolArgs(Binds.drawLineBind, segment, from, to, color, width, antialiased)
     }
 
     /**
@@ -423,7 +424,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_dashed_line
      */
     fun drawDashedLine(from: Vector2, to: Vector2, color: Color, width: Double = -1.0, dash: Double = 2.0, aligned: Boolean = true, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithTwoVector2ColorTwoDoubleTwoBoolArgs(drawDashedLineBind, segment, from, to, color, width, dash, aligned, antialiased)
+        ObjectCalls.ptrcallWithTwoVector2ColorTwoDoubleTwoBoolArgs(Binds.drawDashedLineBind, segment, from, to, color, width, dash, aligned, antialiased)
     }
 
     /**
@@ -439,7 +440,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_polyline
      */
     fun drawPolyline(points: List<Vector2>, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(drawPolylineBind, segment, points, color, width, antialiased)
+        ObjectCalls.ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(Binds.drawPolylineBind, segment, points, color, width, antialiased)
     }
 
     /**
@@ -456,7 +457,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_polyline_colors
      */
     fun drawPolylineColors(points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(drawPolylineColorsBind, segment, points, colors, width, antialiased)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(Binds.drawPolylineColorsBind, segment, points, colors, width, antialiased)
     }
 
     /**
@@ -475,7 +476,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_ellipse_arc
      */
     fun drawEllipseArc(center: Vector2, major: Double, minor: Double, startAngle: Double, endAngle: Double, pointCount: Int, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2FourDoubleIntColorDoubleBoolArgs(drawEllipseArcBind, segment, center, major, minor, startAngle, endAngle, pointCount, color, width, antialiased)
+        ObjectCalls.ptrcallWithVector2FourDoubleIntColorDoubleBoolArgs(Binds.drawEllipseArcBind, segment, center, major, minor, startAngle, endAngle, pointCount, color, width, antialiased)
     }
 
     /**
@@ -494,7 +495,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_arc
      */
     fun drawArc(center: Vector2, radius: Double, startAngle: Double, endAngle: Double, pointCount: Int, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2ThreeDoubleIntColorDoubleBoolArgs(drawArcBind, segment, center, radius, startAngle, endAngle, pointCount, color, width, antialiased)
+        ObjectCalls.ptrcallWithVector2ThreeDoubleIntColorDoubleBoolArgs(Binds.drawArcBind, segment, center, radius, startAngle, endAngle, pointCount, color, width, antialiased)
     }
 
     /**
@@ -510,7 +511,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multiline
      */
     fun drawMultiline(points: List<Vector2>, color: Color, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(drawMultilineBind, segment, points, color, width, antialiased)
+        ObjectCalls.ptrcallWithPackedVector2ListColorDoubleAndBoolArgs(Binds.drawMultilineBind, segment, points, color, width, antialiased)
     }
 
     /**
@@ -527,7 +528,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multiline_colors
      */
     fun drawMultilineColors(points: List<Vector2>, colors: List<Color>, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(drawMultilineColorsBind, segment, points, colors, width, antialiased)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs(Binds.drawMultilineColorsBind, segment, points, colors, width, antialiased)
     }
 
     /**
@@ -545,7 +546,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_rect
      */
     fun drawRect(rect: Rect2, color: Color, filled: Boolean = true, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithRect2ColorBoolDoubleBoolArgs(drawRectBind, segment, rect, color, filled, width, antialiased)
+        ObjectCalls.ptrcallWithRect2ColorBoolDoubleBoolArgs(Binds.drawRectBind, segment, rect, color, filled, width, antialiased)
     }
 
     /**
@@ -561,7 +562,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_circle
      */
     fun drawCircle(position: Vector2, radius: Double, color: Color, filled: Boolean = true, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2DoubleColorBoolDoubleBoolArgs(drawCircleBind, segment, position, radius, color, filled, width, antialiased)
+        ObjectCalls.ptrcallWithVector2DoubleColorBoolDoubleBoolArgs(Binds.drawCircleBind, segment, position, radius, color, filled, width, antialiased)
     }
 
     /**
@@ -578,7 +579,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_ellipse
      */
     fun drawEllipse(position: Vector2, major: Double, minor: Double, color: Color, filled: Boolean = true, width: Double = -1.0, antialiased: Boolean = false) {
-        ObjectCalls.ptrcallWithVector2TwoDoubleColorBoolDoubleBoolArgs(drawEllipseBind, segment, position, major, minor, color, filled, width, antialiased)
+        ObjectCalls.ptrcallWithVector2TwoDoubleColorBoolDoubleBoolArgs(Binds.drawEllipseBind, segment, position, major, minor, color, filled, width, antialiased)
     }
 
     /**
@@ -591,7 +592,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_texture
      */
     fun drawTexture(texture: Texture2D, position: Vector2, modulate: Color) {
-        ObjectCalls.ptrcallWithObjectVector2AndColorArgs(drawTextureBind, segment, texture.requireOpenHandle(), position, modulate)
+        ObjectCalls.ptrcallWithObjectVector2AndColorArgs(Binds.drawTextureBind, segment, texture.requireOpenHandle(), position, modulate)
     }
 
     /**
@@ -606,7 +607,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_texture_rect
      */
     fun drawTextureRect(texture: Texture2D, rect: Rect2, tile: Boolean, modulate: Color, transpose: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectRect2BoolColorBoolArgs(drawTextureRectBind, segment, texture.requireOpenHandle(), rect, tile, modulate, transpose)
+        ObjectCalls.ptrcallWithObjectRect2BoolColorBoolArgs(Binds.drawTextureRectBind, segment, texture.requireOpenHandle(), rect, tile, modulate, transpose)
     }
 
     /**
@@ -621,7 +622,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_texture_rect_region
      */
     fun drawTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color, transpose: Boolean = false, clipUv: Boolean = true) {
-        ObjectCalls.ptrcallWithObjectTwoRect2ColorTwoBoolArgs(drawTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate, transpose, clipUv)
+        ObjectCalls.ptrcallWithObjectTwoRect2ColorTwoBoolArgs(Binds.drawTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate, transpose, clipUv)
     }
 
     /**
@@ -639,7 +640,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_msdf_texture_rect_region
      */
     fun drawMsdfTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color, outline: Double = 0.0, pixelRange: Double = 4.0, scale: Double = 1.0) {
-        ObjectCalls.ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(drawMsdfTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate, outline, pixelRange, scale)
+        ObjectCalls.ptrcallWithObjectTwoRect2ColorThreeDoubleArgs(Binds.drawMsdfTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate, outline, pixelRange, scale)
     }
 
     /**
@@ -649,7 +650,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_lcd_texture_rect_region
      */
     fun drawLcdTextureRectRegion(texture: Texture2D, rect: Rect2, srcRect: Rect2, modulate: Color) {
-        ObjectCalls.ptrcallWithObjectTwoRect2AndColorArgs(drawLcdTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate)
+        ObjectCalls.ptrcallWithObjectTwoRect2AndColorArgs(Binds.drawLcdTextureRectRegionBind, segment, texture.requireOpenHandle(), rect, srcRect, modulate)
     }
 
     /**
@@ -662,7 +663,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_style_box
      */
     fun drawStyleBox(styleBox: StyleBox, rect: Rect2) {
-        ObjectCalls.ptrcallWithObjectAndRect2Arg(drawStyleBoxBind, segment, styleBox.requireOpenHandle(), rect)
+        ObjectCalls.ptrcallWithObjectAndRect2Arg(Binds.drawStyleBoxBind, segment, styleBox.requireOpenHandle(), rect)
     }
 
     /**
@@ -678,7 +679,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_primitive
      */
     fun drawPrimitive(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPrimitiveBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(Binds.drawPrimitiveBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -697,7 +698,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_polygon
      */
     fun drawPolygon(points: List<Vector2>, colors: List<Color>, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(drawPolygonBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs(Binds.drawPolygonBind, segment, points, colors, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -714,7 +715,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_colored_polygon
      */
     fun drawColoredPolygon(points: List<Vector2>, color: Color, uvs: List<Vector2>, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(drawColoredPolygonBind, segment, points, color, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs(Binds.drawColoredPolygonBind, segment, points, color, uvs, texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -727,7 +728,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_string
      */
     fun drawString(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(drawStringBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs(Binds.drawStringBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -740,7 +741,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multiline_string
      */
     fun drawMultilineString(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(drawMultilineStringBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, maxLines, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs(Binds.drawMultilineStringBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, maxLines, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -753,7 +754,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_string_outline
      */
     fun drawStringOutline(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, size: Int = 1, modulate: Color, justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(drawStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, size, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs(Binds.drawStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, size, modulate, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -766,7 +767,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multiline_string_outline
      */
     fun drawMultilineStringOutline(font: Font, pos: Vector2, text: String, alignment: HorizontalAlignment = HorizontalAlignment.LEFT, width: Double = -1.0, fontSize: Int = 16, maxLines: Int = -1, size: Int = 1, modulate: Color, brkFlags: TextServer.LineBreakFlag = TextServer.LineBreakFlag(3L), justificationFlags: TextServer.JustificationFlag = TextServer.JustificationFlag(3L), direction: TextServer.Direction = TextServer.Direction.AUTO, orientation: TextServer.Orientation = TextServer.Orientation.HORIZONTAL, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(drawMultilineStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, maxLines, size, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs(Binds.drawMultilineStringOutlineBind, segment, font.requireOpenHandle(), pos, text, alignment.value, width, fontSize, maxLines, size, modulate, brkFlags.value, justificationFlags.value, direction.value, orientation.value, oversampling)
     }
 
     /**
@@ -777,7 +778,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_char
      */
     fun drawChar(font: Font, pos: Vector2, char: String, fontSize: Int = 16, modulate: Color, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringIntColorDoubleArgs(drawCharBind, segment, font.requireOpenHandle(), pos, char, fontSize, modulate, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringIntColorDoubleArgs(Binds.drawCharBind, segment, font.requireOpenHandle(), pos, char, fontSize, modulate, oversampling)
     }
 
     /**
@@ -788,7 +789,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_char_outline
      */
     fun drawCharOutline(font: Font, pos: Vector2, char: String, fontSize: Int = 16, size: Int = -1, modulate: Color, oversampling: Double = 0.0) {
-        ObjectCalls.ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(drawCharOutlineBind, segment, font.requireOpenHandle(), pos, char, fontSize, size, modulate, oversampling)
+        ObjectCalls.ptrcallWithObjectVector2StringTwoIntColorDoubleArgs(Binds.drawCharOutlineBind, segment, font.requireOpenHandle(), pos, char, fontSize, size, modulate, oversampling)
     }
 
     /**
@@ -802,7 +803,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_mesh
      */
     fun drawMesh(mesh: Mesh, texture: Texture2D?, transform: Transform2D, modulate: Color) {
-        ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(drawMeshBind, segment, mesh.requireOpenHandle(), texture?.requireOpenHandle() ?: NULL_SEGMENT, transform, modulate)
+        ObjectCalls.ptrcallWithTwoObjectTransform2DColorArgs(Binds.drawMeshBind, segment, mesh.requireOpenHandle(), texture?.requireOpenHandle() ?: NULL_SEGMENT, transform, modulate)
     }
 
     /**
@@ -815,7 +816,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_multimesh
      */
     fun drawMultimesh(multimesh: MultiMesh, texture: Texture2D?) {
-        ObjectCalls.ptrcallWithTwoObjectArgs(drawMultimeshBind, segment, multimesh.requireOpenHandle(), texture?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoObjectArgs(Binds.drawMultimeshBind, segment, multimesh.requireOpenHandle(), texture?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -832,7 +833,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_set_transform
      */
     fun drawSetTransform(position: Vector2, rotation: Double = 0.0, scale: Vector2) {
-        ObjectCalls.ptrcallWithVector2DoubleVector2Args(drawSetTransformBind, segment, position, rotation, scale)
+        ObjectCalls.ptrcallWithVector2DoubleVector2Args(Binds.drawSetTransformBind, segment, position, rotation, scale)
     }
 
     /**
@@ -842,7 +843,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_set_transform_matrix
      */
     fun drawSetTransformMatrix(xform: Transform2D) {
-        ObjectCalls.ptrcallWithTransform2DArg(drawSetTransformMatrixBind, segment, xform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.drawSetTransformMatrixBind, segment, xform)
     }
 
     /**
@@ -853,7 +854,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_animation_slice
      */
     fun drawAnimationSlice(animationLength: Double, sliceBegin: Double, sliceEnd: Double, offset: Double = 0.0) {
-        ObjectCalls.ptrcallWithFourDoubleArgs(drawAnimationSliceBind, segment, animationLength, sliceBegin, sliceEnd, offset)
+        ObjectCalls.ptrcallWithFourDoubleArgs(Binds.drawAnimationSliceBind, segment, animationLength, sliceBegin, sliceEnd, offset)
     }
 
     /**
@@ -865,7 +866,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.draw_end_animation
      */
     fun drawEndAnimation() {
-        ObjectCalls.ptrcallNoArgs(drawEndAnimationBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.drawEndAnimationBind, segment)
     }
 
     /**
@@ -874,7 +875,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_transform
      */
     fun getTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getTransformBind, segment)
     }
 
     /**
@@ -885,7 +886,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_global_transform
      */
     fun getGlobalTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getGlobalTransformBind, segment)
     }
 
     /**
@@ -895,7 +896,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_global_transform_with_canvas
      */
     fun getGlobalTransformWithCanvas(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getGlobalTransformWithCanvasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getGlobalTransformWithCanvasBind, segment)
     }
 
     /**
@@ -906,7 +907,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_viewport_transform
      */
     fun getViewportTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getViewportTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getViewportTransformBind, segment)
     }
 
     /**
@@ -915,7 +916,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_viewport_rect
      */
     fun getViewportRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getViewportRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getViewportRectBind, segment)
     }
 
     /**
@@ -925,7 +926,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_canvas_transform
      */
     fun getCanvasTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getCanvasTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getCanvasTransformBind, segment)
     }
 
     /**
@@ -937,7 +938,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_screen_transform
      */
     fun getScreenTransform(): Transform2D {
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getScreenTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getScreenTransformBind, segment)
     }
 
     /**
@@ -947,7 +948,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_local_mouse_position
      */
     fun getLocalMousePosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getLocalMousePositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getLocalMousePositionBind, segment)
     }
 
     /**
@@ -958,7 +959,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_global_mouse_position
      */
     fun getGlobalMousePosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalMousePositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalMousePositionBind, segment)
     }
 
     /**
@@ -968,7 +969,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_canvas
      */
     fun getCanvas(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getCanvasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getCanvasBind, segment)
     }
 
     /**
@@ -978,7 +979,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_canvas_layer_node
      */
     fun getCanvasLayerNode(): CanvasLayer? {
-        return CanvasLayer.wrap(ObjectCalls.ptrcallNoArgsRetObject(getCanvasLayerNodeBind, segment))
+        return CanvasLayer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getCanvasLayerNodeBind, segment))
     }
 
     /**
@@ -988,7 +989,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_world_2d
      */
     fun getWorld2d(): World2D? {
-        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getWorld2dBind, segment))
+        return World2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getWorld2dBind, segment))
     }
 
     /**
@@ -997,7 +998,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_material
      */
     fun setMaterial(material: Material?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -1006,7 +1007,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_material
      */
     fun getMaterial(): Material? {
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
     /**
@@ -1021,7 +1022,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_instance_shader_parameter
      */
     fun setInstanceShaderParameter(name: String, value: Any?) {
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setInstanceShaderParameterBind, segment, name, value)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setInstanceShaderParameterBind, segment, name, value)
     }
 
     /**
@@ -1030,7 +1031,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_instance_shader_parameter
      */
     fun getInstanceShaderParameter(name: String): Any? {
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getInstanceShaderParameterBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getInstanceShaderParameterBind, segment, name)
     }
 
     /**
@@ -1039,7 +1040,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_use_parent_material
      */
     fun setUseParentMaterial(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseParentMaterialBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseParentMaterialBind, segment, enable)
     }
 
     /**
@@ -1048,7 +1049,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_use_parent_material
      */
     fun getUseParentMaterial(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUseParentMaterialBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUseParentMaterialBind, segment)
     }
 
     /**
@@ -1059,7 +1060,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_notify_local_transform
      */
     fun setNotifyLocalTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyLocalTransformBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNotifyLocalTransformBind, segment, enable)
     }
 
     /**
@@ -1069,7 +1070,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_local_transform_notification_enabled
      */
     fun isLocalTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isLocalTransformNotificationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLocalTransformNotificationEnabledBind, segment)
     }
 
     /**
@@ -1080,7 +1081,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_notify_transform
      */
     fun setNotifyTransform(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setNotifyTransformBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNotifyTransformBind, segment, enable)
     }
 
     /**
@@ -1090,7 +1091,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.is_transform_notification_enabled
      */
     fun isTransformNotificationEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isTransformNotificationEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isTransformNotificationEnabledBind, segment)
     }
 
     /**
@@ -1103,7 +1104,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.force_update_transform
      */
     fun forceUpdateTransform() {
-        ObjectCalls.ptrcallNoArgs(forceUpdateTransformBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceUpdateTransformBind, segment)
     }
 
     /**
@@ -1113,7 +1114,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.make_canvas_position_local
      */
     fun makeCanvasPositionLocal(viewportPoint: Vector2): Vector2 {
-        return ObjectCalls.ptrcallWithVector2ArgRetVector2(makeCanvasPositionLocalBind, segment, viewportPoint)
+        return ObjectCalls.ptrcallWithVector2ArgRetVector2(Binds.makeCanvasPositionLocalBind, segment, viewportPoint)
     }
 
     /**
@@ -1123,7 +1124,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.make_input_local
      */
     fun makeInputLocal(event: InputEvent): InputEvent {
-        return requireGodotReturn(InputEvent.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(makeInputLocalBind, segment, event.requireOpenHandle())), "CanvasItem.make_input_local")
+        return requireGodotReturn(InputEvent.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.makeInputLocalBind, segment, event.requireOpenHandle())), "CanvasItem.make_input_local")
     }
 
     /**
@@ -1140,7 +1141,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_visibility_layer
      */
     fun setVisibilityLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setVisibilityLayerBind, segment, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setVisibilityLayerBind, segment, layer)
     }
 
     /**
@@ -1157,7 +1158,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_visibility_layer
      */
     fun getVisibilityLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getVisibilityLayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getVisibilityLayerBind, segment)
     }
 
     /**
@@ -1167,7 +1168,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_visibility_layer_bit
      */
     fun setVisibilityLayerBit(layer: Long, enabled: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(setVisibilityLayerBitBind, segment, layer, enabled)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(Binds.setVisibilityLayerBitBind, segment, layer, enabled)
     }
 
     /**
@@ -1176,7 +1177,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_visibility_layer_bit
      */
     fun getVisibilityLayerBit(layer: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(getVisibilityLayerBitBind, segment, layer)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(Binds.getVisibilityLayerBitBind, segment, layer)
     }
 
     /**
@@ -1185,7 +1186,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_texture_filter
      */
     fun setTextureFilter(mode: CanvasItem.TextureFilter) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -1194,7 +1195,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_texture_filter
      */
     fun getTextureFilter(): CanvasItem.TextureFilter {
-        return CanvasItem.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
+        return CanvasItem.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
     }
 
     /**
@@ -1207,7 +1208,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_texture_repeat
      */
     fun setTextureRepeat(mode: CanvasItem.TextureRepeat) {
-        ObjectCalls.ptrcallWithLongArg(setTextureRepeatBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureRepeatBind, segment, mode.value)
     }
 
     /**
@@ -1220,7 +1221,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_texture_repeat
      */
     fun getTextureRepeat(): CanvasItem.TextureRepeat {
-        return CanvasItem.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(getTextureRepeatBind, segment))
+        return CanvasItem.TextureRepeat(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureRepeatBind, segment))
     }
 
     /**
@@ -1232,7 +1233,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_clip_children_mode
      */
     fun setClipChildrenMode(mode: CanvasItem.ClipChildrenMode) {
-        ObjectCalls.ptrcallWithLongArg(setClipChildrenModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setClipChildrenModeBind, segment, mode.value)
     }
 
     /**
@@ -1244,7 +1245,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_clip_children_mode
      */
     fun getClipChildrenMode(): CanvasItem.ClipChildrenMode {
-        return CanvasItem.ClipChildrenMode(ObjectCalls.ptrcallNoArgsRetLong(getClipChildrenModeBind, segment))
+        return CanvasItem.ClipChildrenMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getClipChildrenModeBind, segment))
     }
 
     /**
@@ -1253,7 +1254,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.set_oversampling_with_scale
      */
     fun setOversamplingWithScale(enabled: CanvasItem.OversamplingWithScale) {
-        ObjectCalls.ptrcallWithLongArg(setOversamplingWithScaleBind, segment, enabled.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setOversamplingWithScaleBind, segment, enabled.value)
     }
 
     /**
@@ -1262,7 +1263,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: CanvasItem.get_oversampling_with_scale
      */
     fun getOversamplingWithScale(): CanvasItem.OversamplingWithScale {
-        return CanvasItem.OversamplingWithScale(ObjectCalls.ptrcallNoArgsRetLong(getOversamplingWithScaleBind, segment))
+        return CanvasItem.OversamplingWithScale(ObjectCalls.ptrcallNoArgsRetLong(Binds.getOversamplingWithScaleBind, segment))
     }
 
     /** Signal `draw()`; see [TypedSignal]. */
@@ -1518,470 +1519,472 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): CanvasItem? =
             if (handle.address() == 0L) null else CanvasItem(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_CANVAS_ITEM_HASH = 2944877500L
-        private val getCanvasItemBind by lazy {
+        @JvmField
+        val getCanvasItemBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_canvas_item", GET_CANVAS_ITEM_HASH)
-        }
 
         private const val SET_VISIBLE_HASH = 2586408642L
-        private val setVisibleBind by lazy {
+        @JvmField
+        val setVisibleBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_visible", SET_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_HASH = 36873697L
-        private val isVisibleBind by lazy {
+        @JvmField
+        val isVisibleBind =
             ObjectCalls.getMethodBind("CanvasItem", "is_visible", IS_VISIBLE_HASH)
-        }
 
         private const val IS_VISIBLE_IN_TREE_HASH = 36873697L
-        private val isVisibleInTreeBind by lazy {
+        @JvmField
+        val isVisibleInTreeBind =
             ObjectCalls.getMethodBind("CanvasItem", "is_visible_in_tree", IS_VISIBLE_IN_TREE_HASH)
-        }
 
         private const val SHOW_HASH = 3218959716L
-        private val showBind by lazy {
+        @JvmField
+        val showBind =
             ObjectCalls.getMethodBind("CanvasItem", "show", SHOW_HASH)
-        }
 
         private const val HIDE_HASH = 3218959716L
-        private val hideBind by lazy {
+        @JvmField
+        val hideBind =
             ObjectCalls.getMethodBind("CanvasItem", "hide", HIDE_HASH)
-        }
 
         private const val QUEUE_REDRAW_HASH = 3218959716L
-        private val queueRedrawBind by lazy {
+        @JvmField
+        val queueRedrawBind =
             ObjectCalls.getMethodBind("CanvasItem", "queue_redraw", QUEUE_REDRAW_HASH)
-        }
 
         private const val MOVE_TO_FRONT_HASH = 3218959716L
-        private val moveToFrontBind by lazy {
+        @JvmField
+        val moveToFrontBind =
             ObjectCalls.getMethodBind("CanvasItem", "move_to_front", MOVE_TO_FRONT_HASH)
-        }
 
         private const val SET_AS_TOP_LEVEL_HASH = 2586408642L
-        private val setAsTopLevelBind by lazy {
+        @JvmField
+        val setAsTopLevelBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_as_top_level", SET_AS_TOP_LEVEL_HASH)
-        }
 
         private const val IS_SET_AS_TOP_LEVEL_HASH = 36873697L
-        private val isSetAsTopLevelBind by lazy {
+        @JvmField
+        val isSetAsTopLevelBind =
             ObjectCalls.getMethodBind("CanvasItem", "is_set_as_top_level", IS_SET_AS_TOP_LEVEL_HASH)
-        }
 
         private const val SET_LIGHT_MASK_HASH = 1286410249L
-        private val setLightMaskBind by lazy {
+        @JvmField
+        val setLightMaskBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_light_mask", SET_LIGHT_MASK_HASH)
-        }
 
         private const val GET_LIGHT_MASK_HASH = 3905245786L
-        private val getLightMaskBind by lazy {
+        @JvmField
+        val getLightMaskBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_light_mask", GET_LIGHT_MASK_HASH)
-        }
 
         private const val SET_MODULATE_HASH = 2920490490L
-        private val setModulateBind by lazy {
+        @JvmField
+        val setModulateBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_modulate", SET_MODULATE_HASH)
-        }
 
         private const val GET_MODULATE_HASH = 3444240500L
-        private val getModulateBind by lazy {
+        @JvmField
+        val getModulateBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_modulate", GET_MODULATE_HASH)
-        }
 
         private const val SET_SELF_MODULATE_HASH = 2920490490L
-        private val setSelfModulateBind by lazy {
+        @JvmField
+        val setSelfModulateBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_self_modulate", SET_SELF_MODULATE_HASH)
-        }
 
         private const val GET_SELF_MODULATE_HASH = 3444240500L
-        private val getSelfModulateBind by lazy {
+        @JvmField
+        val getSelfModulateBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_self_modulate", GET_SELF_MODULATE_HASH)
-        }
 
         private const val SET_Z_INDEX_HASH = 1286410249L
-        private val setZIndexBind by lazy {
+        @JvmField
+        val setZIndexBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_z_index", SET_Z_INDEX_HASH)
-        }
 
         private const val GET_Z_INDEX_HASH = 3905245786L
-        private val getZIndexBind by lazy {
+        @JvmField
+        val getZIndexBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_z_index", GET_Z_INDEX_HASH)
-        }
 
         private const val SET_Z_AS_RELATIVE_HASH = 2586408642L
-        private val setZAsRelativeBind by lazy {
+        @JvmField
+        val setZAsRelativeBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_z_as_relative", SET_Z_AS_RELATIVE_HASH)
-        }
 
         private const val IS_Z_RELATIVE_HASH = 36873697L
-        private val isZRelativeBind by lazy {
+        @JvmField
+        val isZRelativeBind =
             ObjectCalls.getMethodBind("CanvasItem", "is_z_relative", IS_Z_RELATIVE_HASH)
-        }
 
         private const val SET_Y_SORT_ENABLED_HASH = 2586408642L
-        private val setYSortEnabledBind by lazy {
+        @JvmField
+        val setYSortEnabledBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_y_sort_enabled", SET_Y_SORT_ENABLED_HASH)
-        }
 
         private const val IS_Y_SORT_ENABLED_HASH = 36873697L
-        private val isYSortEnabledBind by lazy {
+        @JvmField
+        val isYSortEnabledBind =
             ObjectCalls.getMethodBind("CanvasItem", "is_y_sort_enabled", IS_Y_SORT_ENABLED_HASH)
-        }
 
         private const val SET_DRAW_BEHIND_PARENT_HASH = 2586408642L
-        private val setDrawBehindParentBind by lazy {
+        @JvmField
+        val setDrawBehindParentBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_draw_behind_parent", SET_DRAW_BEHIND_PARENT_HASH)
-        }
 
         private const val IS_DRAW_BEHIND_PARENT_ENABLED_HASH = 36873697L
-        private val isDrawBehindParentEnabledBind by lazy {
+        @JvmField
+        val isDrawBehindParentEnabledBind =
             ObjectCalls.getMethodBind("CanvasItem", "is_draw_behind_parent_enabled", IS_DRAW_BEHIND_PARENT_ENABLED_HASH)
-        }
 
         private const val DRAW_LINE_HASH = 1562330099L
-        private val drawLineBind by lazy {
+        @JvmField
+        val drawLineBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_line", DRAW_LINE_HASH)
-        }
 
         private const val DRAW_DASHED_LINE_HASH = 3653831622L
-        private val drawDashedLineBind by lazy {
+        @JvmField
+        val drawDashedLineBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_dashed_line", DRAW_DASHED_LINE_HASH)
-        }
 
         private const val DRAW_POLYLINE_HASH = 3797364428L
-        private val drawPolylineBind by lazy {
+        @JvmField
+        val drawPolylineBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_polyline", DRAW_POLYLINE_HASH)
-        }
 
         private const val DRAW_POLYLINE_COLORS_HASH = 2311979562L
-        private val drawPolylineColorsBind by lazy {
+        @JvmField
+        val drawPolylineColorsBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_polyline_colors", DRAW_POLYLINE_COLORS_HASH)
-        }
 
         private const val DRAW_ELLIPSE_ARC_HASH = 936174114L
-        private val drawEllipseArcBind by lazy {
+        @JvmField
+        val drawEllipseArcBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_ellipse_arc", DRAW_ELLIPSE_ARC_HASH)
-        }
 
         private const val DRAW_ARC_HASH = 4140652635L
-        private val drawArcBind by lazy {
+        @JvmField
+        val drawArcBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_arc", DRAW_ARC_HASH)
-        }
 
         private const val DRAW_MULTILINE_HASH = 3797364428L
-        private val drawMultilineBind by lazy {
+        @JvmField
+        val drawMultilineBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_multiline", DRAW_MULTILINE_HASH)
-        }
 
         private const val DRAW_MULTILINE_COLORS_HASH = 2311979562L
-        private val drawMultilineColorsBind by lazy {
+        @JvmField
+        val drawMultilineColorsBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_multiline_colors", DRAW_MULTILINE_COLORS_HASH)
-        }
 
         private const val DRAW_RECT_HASH = 2773573813L
-        private val drawRectBind by lazy {
+        @JvmField
+        val drawRectBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_rect", DRAW_RECT_HASH)
-        }
 
         private const val DRAW_CIRCLE_HASH = 3153026596L
-        private val drawCircleBind by lazy {
+        @JvmField
+        val drawCircleBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_circle", DRAW_CIRCLE_HASH)
-        }
 
         private const val DRAW_ELLIPSE_HASH = 3790774806L
-        private val drawEllipseBind by lazy {
+        @JvmField
+        val drawEllipseBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_ellipse", DRAW_ELLIPSE_HASH)
-        }
 
         private const val DRAW_TEXTURE_HASH = 520200117L
-        private val drawTextureBind by lazy {
+        @JvmField
+        val drawTextureBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_texture", DRAW_TEXTURE_HASH)
-        }
 
         private const val DRAW_TEXTURE_RECT_HASH = 3832805018L
-        private val drawTextureRectBind by lazy {
+        @JvmField
+        val drawTextureRectBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_texture_rect", DRAW_TEXTURE_RECT_HASH)
-        }
 
         private const val DRAW_TEXTURE_RECT_REGION_HASH = 3883821411L
-        private val drawTextureRectRegionBind by lazy {
+        @JvmField
+        val drawTextureRectRegionBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_texture_rect_region", DRAW_TEXTURE_RECT_REGION_HASH)
-        }
 
         private const val DRAW_MSDF_TEXTURE_RECT_REGION_HASH = 4219163252L
-        private val drawMsdfTextureRectRegionBind by lazy {
+        @JvmField
+        val drawMsdfTextureRectRegionBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_msdf_texture_rect_region", DRAW_MSDF_TEXTURE_RECT_REGION_HASH)
-        }
 
         private const val DRAW_LCD_TEXTURE_RECT_REGION_HASH = 3212350954L
-        private val drawLcdTextureRectRegionBind by lazy {
+        @JvmField
+        val drawLcdTextureRectRegionBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_lcd_texture_rect_region", DRAW_LCD_TEXTURE_RECT_REGION_HASH)
-        }
 
         private const val DRAW_STYLE_BOX_HASH = 388176283L
-        private val drawStyleBoxBind by lazy {
+        @JvmField
+        val drawStyleBoxBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_style_box", DRAW_STYLE_BOX_HASH)
-        }
 
         private const val DRAW_PRIMITIVE_HASH = 3288481815L
-        private val drawPrimitiveBind by lazy {
+        @JvmField
+        val drawPrimitiveBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_primitive", DRAW_PRIMITIVE_HASH)
-        }
 
         private const val DRAW_POLYGON_HASH = 974537912L
-        private val drawPolygonBind by lazy {
+        @JvmField
+        val drawPolygonBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_polygon", DRAW_POLYGON_HASH)
-        }
 
         private const val DRAW_COLORED_POLYGON_HASH = 15245644L
-        private val drawColoredPolygonBind by lazy {
+        @JvmField
+        val drawColoredPolygonBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_colored_polygon", DRAW_COLORED_POLYGON_HASH)
-        }
 
         private const val DRAW_STRING_HASH = 719605945L
-        private val drawStringBind by lazy {
+        @JvmField
+        val drawStringBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_string", DRAW_STRING_HASH)
-        }
 
         private const val DRAW_MULTILINE_STRING_HASH = 2341488182L
-        private val drawMultilineStringBind by lazy {
+        @JvmField
+        val drawMultilineStringBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_multiline_string", DRAW_MULTILINE_STRING_HASH)
-        }
 
         private const val DRAW_STRING_OUTLINE_HASH = 707403449L
-        private val drawStringOutlineBind by lazy {
+        @JvmField
+        val drawStringOutlineBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_string_outline", DRAW_STRING_OUTLINE_HASH)
-        }
 
         private const val DRAW_MULTILINE_STRING_OUTLINE_HASH = 3050414441L
-        private val drawMultilineStringOutlineBind by lazy {
+        @JvmField
+        val drawMultilineStringOutlineBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_multiline_string_outline", DRAW_MULTILINE_STRING_OUTLINE_HASH)
-        }
 
         private const val DRAW_CHAR_HASH = 1336210142L
-        private val drawCharBind by lazy {
+        @JvmField
+        val drawCharBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_char", DRAW_CHAR_HASH)
-        }
 
         private const val DRAW_CHAR_OUTLINE_HASH = 1846384149L
-        private val drawCharOutlineBind by lazy {
+        @JvmField
+        val drawCharOutlineBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_char_outline", DRAW_CHAR_OUTLINE_HASH)
-        }
 
         private const val DRAW_MESH_HASH = 153818295L
-        private val drawMeshBind by lazy {
+        @JvmField
+        val drawMeshBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_mesh", DRAW_MESH_HASH)
-        }
 
         private const val DRAW_MULTIMESH_HASH = 937992368L
-        private val drawMultimeshBind by lazy {
+        @JvmField
+        val drawMultimeshBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_multimesh", DRAW_MULTIMESH_HASH)
-        }
 
         private const val DRAW_SET_TRANSFORM_HASH = 288975085L
-        private val drawSetTransformBind by lazy {
+        @JvmField
+        val drawSetTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_set_transform", DRAW_SET_TRANSFORM_HASH)
-        }
 
         private const val DRAW_SET_TRANSFORM_MATRIX_HASH = 2761652528L
-        private val drawSetTransformMatrixBind by lazy {
+        @JvmField
+        val drawSetTransformMatrixBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_set_transform_matrix", DRAW_SET_TRANSFORM_MATRIX_HASH)
-        }
 
         private const val DRAW_ANIMATION_SLICE_HASH = 3112831842L
-        private val drawAnimationSliceBind by lazy {
+        @JvmField
+        val drawAnimationSliceBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_animation_slice", DRAW_ANIMATION_SLICE_HASH)
-        }
 
         private const val DRAW_END_ANIMATION_HASH = 3218959716L
-        private val drawEndAnimationBind by lazy {
+        @JvmField
+        val drawEndAnimationBind =
             ObjectCalls.getMethodBind("CanvasItem", "draw_end_animation", DRAW_END_ANIMATION_HASH)
-        }
 
         private const val GET_TRANSFORM_HASH = 3814499831L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val GET_GLOBAL_TRANSFORM_HASH = 3814499831L
-        private val getGlobalTransformBind by lazy {
+        @JvmField
+        val getGlobalTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_global_transform", GET_GLOBAL_TRANSFORM_HASH)
-        }
 
         private const val GET_GLOBAL_TRANSFORM_WITH_CANVAS_HASH = 3814499831L
-        private val getGlobalTransformWithCanvasBind by lazy {
+        @JvmField
+        val getGlobalTransformWithCanvasBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_global_transform_with_canvas", GET_GLOBAL_TRANSFORM_WITH_CANVAS_HASH)
-        }
 
         private const val GET_VIEWPORT_TRANSFORM_HASH = 3814499831L
-        private val getViewportTransformBind by lazy {
+        @JvmField
+        val getViewportTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_viewport_transform", GET_VIEWPORT_TRANSFORM_HASH)
-        }
 
         private const val GET_VIEWPORT_RECT_HASH = 1639390495L
-        private val getViewportRectBind by lazy {
+        @JvmField
+        val getViewportRectBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_viewport_rect", GET_VIEWPORT_RECT_HASH)
-        }
 
         private const val GET_CANVAS_TRANSFORM_HASH = 3814499831L
-        private val getCanvasTransformBind by lazy {
+        @JvmField
+        val getCanvasTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_canvas_transform", GET_CANVAS_TRANSFORM_HASH)
-        }
 
         private const val GET_SCREEN_TRANSFORM_HASH = 3814499831L
-        private val getScreenTransformBind by lazy {
+        @JvmField
+        val getScreenTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_screen_transform", GET_SCREEN_TRANSFORM_HASH)
-        }
 
         private const val GET_LOCAL_MOUSE_POSITION_HASH = 3341600327L
-        private val getLocalMousePositionBind by lazy {
+        @JvmField
+        val getLocalMousePositionBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_local_mouse_position", GET_LOCAL_MOUSE_POSITION_HASH)
-        }
 
         private const val GET_GLOBAL_MOUSE_POSITION_HASH = 3341600327L
-        private val getGlobalMousePositionBind by lazy {
+        @JvmField
+        val getGlobalMousePositionBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_global_mouse_position", GET_GLOBAL_MOUSE_POSITION_HASH)
-        }
 
         private const val GET_CANVAS_HASH = 2944877500L
-        private val getCanvasBind by lazy {
+        @JvmField
+        val getCanvasBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_canvas", GET_CANVAS_HASH)
-        }
 
         private const val GET_CANVAS_LAYER_NODE_HASH = 2602762519L
-        private val getCanvasLayerNodeBind by lazy {
+        @JvmField
+        val getCanvasLayerNodeBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_canvas_layer_node", GET_CANVAS_LAYER_NODE_HASH)
-        }
 
         private const val GET_WORLD_2D_HASH = 2339128592L
-        private val getWorld2dBind by lazy {
+        @JvmField
+        val getWorld2dBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_world_2d", GET_WORLD_2D_HASH)
-        }
 
         private const val SET_MATERIAL_HASH = 2757459619L
-        private val setMaterialBind by lazy {
+        @JvmField
+        val setMaterialBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_material", SET_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 5934680L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_material", GET_MATERIAL_HASH)
-        }
 
         private const val SET_INSTANCE_SHADER_PARAMETER_HASH = 3776071444L
-        private val setInstanceShaderParameterBind by lazy {
+        @JvmField
+        val setInstanceShaderParameterBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_instance_shader_parameter", SET_INSTANCE_SHADER_PARAMETER_HASH)
-        }
 
         private const val GET_INSTANCE_SHADER_PARAMETER_HASH = 2760726917L
-        private val getInstanceShaderParameterBind by lazy {
+        @JvmField
+        val getInstanceShaderParameterBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_instance_shader_parameter", GET_INSTANCE_SHADER_PARAMETER_HASH)
-        }
 
         private const val SET_USE_PARENT_MATERIAL_HASH = 2586408642L
-        private val setUseParentMaterialBind by lazy {
+        @JvmField
+        val setUseParentMaterialBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_use_parent_material", SET_USE_PARENT_MATERIAL_HASH)
-        }
 
         private const val GET_USE_PARENT_MATERIAL_HASH = 36873697L
-        private val getUseParentMaterialBind by lazy {
+        @JvmField
+        val getUseParentMaterialBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_use_parent_material", GET_USE_PARENT_MATERIAL_HASH)
-        }
 
         private const val SET_NOTIFY_LOCAL_TRANSFORM_HASH = 2586408642L
-        private val setNotifyLocalTransformBind by lazy {
+        @JvmField
+        val setNotifyLocalTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_notify_local_transform", SET_NOTIFY_LOCAL_TRANSFORM_HASH)
-        }
 
         private const val IS_LOCAL_TRANSFORM_NOTIFICATION_ENABLED_HASH = 36873697L
-        private val isLocalTransformNotificationEnabledBind by lazy {
+        @JvmField
+        val isLocalTransformNotificationEnabledBind =
             ObjectCalls.getMethodBind("CanvasItem", "is_local_transform_notification_enabled", IS_LOCAL_TRANSFORM_NOTIFICATION_ENABLED_HASH)
-        }
 
         private const val SET_NOTIFY_TRANSFORM_HASH = 2586408642L
-        private val setNotifyTransformBind by lazy {
+        @JvmField
+        val setNotifyTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_notify_transform", SET_NOTIFY_TRANSFORM_HASH)
-        }
 
         private const val IS_TRANSFORM_NOTIFICATION_ENABLED_HASH = 36873697L
-        private val isTransformNotificationEnabledBind by lazy {
+        @JvmField
+        val isTransformNotificationEnabledBind =
             ObjectCalls.getMethodBind("CanvasItem", "is_transform_notification_enabled", IS_TRANSFORM_NOTIFICATION_ENABLED_HASH)
-        }
 
         private const val FORCE_UPDATE_TRANSFORM_HASH = 3218959716L
-        private val forceUpdateTransformBind by lazy {
+        @JvmField
+        val forceUpdateTransformBind =
             ObjectCalls.getMethodBind("CanvasItem", "force_update_transform", FORCE_UPDATE_TRANSFORM_HASH)
-        }
 
         private const val MAKE_CANVAS_POSITION_LOCAL_HASH = 2656412154L
-        private val makeCanvasPositionLocalBind by lazy {
+        @JvmField
+        val makeCanvasPositionLocalBind =
             ObjectCalls.getMethodBind("CanvasItem", "make_canvas_position_local", MAKE_CANVAS_POSITION_LOCAL_HASH)
-        }
 
         private const val MAKE_INPUT_LOCAL_HASH = 811130057L
-        private val makeInputLocalBind by lazy {
+        @JvmField
+        val makeInputLocalBind =
             ObjectCalls.getMethodBind("CanvasItem", "make_input_local", MAKE_INPUT_LOCAL_HASH)
-        }
 
         private const val SET_VISIBILITY_LAYER_HASH = 1286410249L
-        private val setVisibilityLayerBind by lazy {
+        @JvmField
+        val setVisibilityLayerBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_visibility_layer", SET_VISIBILITY_LAYER_HASH)
-        }
 
         private const val GET_VISIBILITY_LAYER_HASH = 3905245786L
-        private val getVisibilityLayerBind by lazy {
+        @JvmField
+        val getVisibilityLayerBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_visibility_layer", GET_VISIBILITY_LAYER_HASH)
-        }
 
         private const val SET_VISIBILITY_LAYER_BIT_HASH = 300928843L
-        private val setVisibilityLayerBitBind by lazy {
+        @JvmField
+        val setVisibilityLayerBitBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_visibility_layer_bit", SET_VISIBILITY_LAYER_BIT_HASH)
-        }
 
         private const val GET_VISIBILITY_LAYER_BIT_HASH = 1116898809L
-        private val getVisibilityLayerBitBind by lazy {
+        @JvmField
+        val getVisibilityLayerBitBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_visibility_layer_bit", GET_VISIBILITY_LAYER_BIT_HASH)
-        }
 
         private const val SET_TEXTURE_FILTER_HASH = 1037999706L
-        private val setTextureFilterBind by lazy {
+        @JvmField
+        val setTextureFilterBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_texture_filter", SET_TEXTURE_FILTER_HASH)
-        }
 
         private const val GET_TEXTURE_FILTER_HASH = 121960042L
-        private val getTextureFilterBind by lazy {
+        @JvmField
+        val getTextureFilterBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_texture_filter", GET_TEXTURE_FILTER_HASH)
-        }
 
         private const val SET_TEXTURE_REPEAT_HASH = 1716472974L
-        private val setTextureRepeatBind by lazy {
+        @JvmField
+        val setTextureRepeatBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_texture_repeat", SET_TEXTURE_REPEAT_HASH)
-        }
 
         private const val GET_TEXTURE_REPEAT_HASH = 2667158319L
-        private val getTextureRepeatBind by lazy {
+        @JvmField
+        val getTextureRepeatBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_texture_repeat", GET_TEXTURE_REPEAT_HASH)
-        }
 
         private const val SET_CLIP_CHILDREN_MODE_HASH = 1319393776L
-        private val setClipChildrenModeBind by lazy {
+        @JvmField
+        val setClipChildrenModeBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_clip_children_mode", SET_CLIP_CHILDREN_MODE_HASH)
-        }
 
         private const val GET_CLIP_CHILDREN_MODE_HASH = 3581808349L
-        private val getClipChildrenModeBind by lazy {
+        @JvmField
+        val getClipChildrenModeBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_clip_children_mode", GET_CLIP_CHILDREN_MODE_HASH)
-        }
 
         private const val SET_OVERSAMPLING_WITH_SCALE_HASH = 872218804L
-        private val setOversamplingWithScaleBind by lazy {
+        @JvmField
+        val setOversamplingWithScaleBind =
             ObjectCalls.getMethodBind("CanvasItem", "set_oversampling_with_scale", SET_OVERSAMPLING_WITH_SCALE_HASH)
-        }
 
         private const val GET_OVERSAMPLING_WITH_SCALE_HASH = 2026097197L
-        private val getOversamplingWithScaleBind by lazy {
+        @JvmField
+        val getOversamplingWithScaleBind =
             ObjectCalls.getMethodBind("CanvasItem", "get_oversampling_with_scale", GET_OVERSAMPLING_WITH_SCALE_HASH)
-        }
     }
 }

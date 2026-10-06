@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -43,7 +44,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.resource_changed
      */
     fun resourceChanged(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.resourceChangedBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -52,7 +53,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_shape
      */
     fun setShape(shape: Shape3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setShapeBind, segment, listOf(shape?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -61,7 +62,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.get_shape
      */
     fun getShape(): Shape3D? {
-        return Shape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getShapeBind, segment))
+        return Shape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getShapeBind, segment))
     }
 
     /**
@@ -71,7 +72,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_disabled
      */
     fun setDisabled(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDisabledBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisabledBind, segment, enable)
     }
 
     /**
@@ -81,7 +82,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.is_disabled
      */
     fun isDisabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDisabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDisabledBind, segment)
     }
 
     /**
@@ -91,7 +92,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.make_convex_from_siblings
      */
     fun makeConvexFromSiblings() {
-        ObjectCalls.ptrcallNoArgs(makeConvexFromSiblingsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.makeConvexFromSiblingsBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_debug_color
      */
     fun setDebugColor(color: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugColorBind, segment, color)
+        ObjectCalls.ptrcallWithColorArg(Binds.setDebugColorBind, segment, color)
     }
 
     /**
@@ -115,7 +116,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.get_debug_color
      */
     fun getDebugColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDebugColorBind, segment)
     }
 
     /**
@@ -125,7 +126,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.set_enable_debug_fill
      */
     fun setEnableDebugFill(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnableDebugFillBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnableDebugFillBind, segment, enable)
     }
 
     /**
@@ -135,7 +136,7 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: CollisionShape3D.get_enable_debug_fill
      */
     fun getEnableDebugFill(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getEnableDebugFillBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getEnableDebugFillBind, segment)
     }
 
     companion object {
@@ -145,55 +146,57 @@ class CollisionShape3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionShape3D? =
             if (handle.address() == 0L) null else CollisionShape3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val RESOURCE_CHANGED_HASH = 968641751L
-        private val resourceChangedBind by lazy {
+        @JvmField
+        val resourceChangedBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "resource_changed", RESOURCE_CHANGED_HASH)
-        }
 
         private const val SET_SHAPE_HASH = 1549710052L
-        private val setShapeBind by lazy {
+        @JvmField
+        val setShapeBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "set_shape", SET_SHAPE_HASH)
-        }
 
         private const val GET_SHAPE_HASH = 3214262478L
-        private val getShapeBind by lazy {
+        @JvmField
+        val getShapeBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "get_shape", GET_SHAPE_HASH)
-        }
 
         private const val SET_DISABLED_HASH = 2586408642L
-        private val setDisabledBind by lazy {
+        @JvmField
+        val setDisabledBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "set_disabled", SET_DISABLED_HASH)
-        }
 
         private const val IS_DISABLED_HASH = 36873697L
-        private val isDisabledBind by lazy {
+        @JvmField
+        val isDisabledBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "is_disabled", IS_DISABLED_HASH)
-        }
 
         private const val MAKE_CONVEX_FROM_SIBLINGS_HASH = 3218959716L
-        private val makeConvexFromSiblingsBind by lazy {
+        @JvmField
+        val makeConvexFromSiblingsBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "make_convex_from_siblings", MAKE_CONVEX_FROM_SIBLINGS_HASH)
-        }
 
         private const val SET_DEBUG_COLOR_HASH = 2920490490L
-        private val setDebugColorBind by lazy {
+        @JvmField
+        val setDebugColorBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "set_debug_color", SET_DEBUG_COLOR_HASH)
-        }
 
         private const val GET_DEBUG_COLOR_HASH = 3444240500L
-        private val getDebugColorBind by lazy {
+        @JvmField
+        val getDebugColorBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "get_debug_color", GET_DEBUG_COLOR_HASH)
-        }
 
         private const val SET_ENABLE_DEBUG_FILL_HASH = 2586408642L
-        private val setEnableDebugFillBind by lazy {
+        @JvmField
+        val setEnableDebugFillBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "set_enable_debug_fill", SET_ENABLE_DEBUG_FILL_HASH)
-        }
 
         private const val GET_ENABLE_DEBUG_FILL_HASH = 36873697L
-        private val getEnableDebugFillBind by lazy {
+        @JvmField
+        val getEnableDebugFillBind =
             ObjectCalls.getMethodBind("CollisionShape3D", "get_enable_debug_fill", GET_ENABLE_DEBUG_FILL_HASH)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -24,7 +25,7 @@ class GPUParticlesAttractorSphere3D(handle: GodotHandle) : GPUParticlesAttractor
      * Generated from Godot docs: GPUParticlesAttractorSphere3D.set_radius
      */
     fun setRadius(radius: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, radius)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, radius)
     }
 
     /**
@@ -34,7 +35,7 @@ class GPUParticlesAttractorSphere3D(handle: GodotHandle) : GPUParticlesAttractor
      * Generated from Godot docs: GPUParticlesAttractorSphere3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     companion object {
@@ -44,15 +45,17 @@ class GPUParticlesAttractorSphere3D(handle: GodotHandle) : GPUParticlesAttractor
 
         internal fun wrap(handle: RawSegment): GPUParticlesAttractorSphere3D? =
             if (handle.address() == 0L) null else GPUParticlesAttractorSphere3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractorSphere3D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("GPUParticlesAttractorSphere3D", "get_radius", GET_RADIUS_HASH)
-        }
     }
 }

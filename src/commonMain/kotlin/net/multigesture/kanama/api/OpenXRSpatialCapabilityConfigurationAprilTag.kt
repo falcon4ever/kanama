@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,17 +19,17 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
 
     fun getEnabledComponents(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getEnabledComponentsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getEnabledComponentsBind, segment)
     }
 
     fun setAprilDict(aprilDict: OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAprilDictBind, segment, aprilDict.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAprilDictBind, segment, aprilDict.value)
     }
 
     fun getAprilDict(): OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict {
         checkOpen()
-        return OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict(ObjectCalls.ptrcallNoArgsRetLong(getAprilDictBind, segment))
+        return OpenXRSpatialCapabilityConfigurationAprilTag.AprilTagDict(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAprilDictBind, segment))
     }
 
     @JvmInline
@@ -51,20 +52,22 @@ class OpenXRSpatialCapabilityConfigurationAprilTag(handle: GodotHandle) : OpenXR
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRSpatialCapabilityConfigurationAprilTag? =
             if (handle.address() == 0L) null else OpenXRSpatialCapabilityConfigurationAprilTag(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_ENABLED_COMPONENTS_HASH = 235988956L
-        private val getEnabledComponentsBind by lazy {
+        @JvmField
+        val getEnabledComponentsBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAprilTag", "get_enabled_components", GET_ENABLED_COMPONENTS_HASH)
-        }
 
         private const val SET_APRIL_DICT_HASH = 3902905799L
-        private val setAprilDictBind by lazy {
+        @JvmField
+        val setAprilDictBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAprilTag", "set_april_dict", SET_APRIL_DICT_HASH)
-        }
 
         private const val GET_APRIL_DICT_HASH = 440273016L
-        private val getAprilDictBind by lazy {
+        @JvmField
+        val getAprilDictBind =
             ObjectCalls.getMethodBind("OpenXRSpatialCapabilityConfigurationAprilTag", "get_april_dict", GET_APRIL_DICT_HASH)
-        }
     }
 }

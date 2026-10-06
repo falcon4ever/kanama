@@ -19,7 +19,5 @@ class RenderDataRD(handle: GodotHandle) : RenderData(handle) {
 
         internal fun wrap(handle: RawSegment): RenderDataRD? =
             if (handle.address() == 0L) null else RenderDataRD(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

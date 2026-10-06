@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,12 +19,12 @@ open class VisualShaderNodeResizableBase(handle: GodotHandle) : VisualShaderNode
 
     fun setSize(size: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setSizeBind, segment, size)
     }
 
     fun getSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getSizeBind, segment)
     }
 
     companion object {
@@ -36,15 +37,17 @@ open class VisualShaderNodeResizableBase(handle: GodotHandle) : VisualShaderNode
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeResizableBase? =
             if (handle.address() == 0L) null else VisualShaderNodeResizableBase(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 743155724L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeResizableBase", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3341600327L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("VisualShaderNodeResizableBase", "get_size", GET_SIZE_HASH)
-        }
     }
 }

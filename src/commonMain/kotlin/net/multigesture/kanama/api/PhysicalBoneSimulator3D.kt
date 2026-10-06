@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -19,7 +20,7 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: PhysicalBoneSimulator3D.is_simulating_physics
      */
     fun isSimulatingPhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSimulatingPhysicsBind, segment)
     }
 
     /**
@@ -28,7 +29,7 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: PhysicalBoneSimulator3D.physical_bones_stop_simulation
      */
     fun physicalBonesStopSimulation() {
-        ObjectCalls.ptrcallNoArgs(physicalBonesStopSimulationBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.physicalBonesStopSimulationBind, segment)
     }
 
     /**
@@ -39,7 +40,7 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: PhysicalBoneSimulator3D.physical_bones_start_simulation
      */
     fun physicalBonesStartSimulation(bones: List<String>) {
-        ObjectCalls.ptrcallWithStringNameListArg(physicalBonesStartSimulationBind, segment, bones)
+        ObjectCalls.ptrcallWithStringNameListArg(Binds.physicalBonesStartSimulationBind, segment, bones)
     }
 
     /**
@@ -48,7 +49,7 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: PhysicalBoneSimulator3D.physical_bones_add_collision_exception
      */
     fun physicalBonesAddCollisionException(exception: RID) {
-        ObjectCalls.ptrcallWithRIDArg(physicalBonesAddCollisionExceptionBind, segment, exception)
+        ObjectCalls.ptrcallWithRIDArg(Binds.physicalBonesAddCollisionExceptionBind, segment, exception)
     }
 
     /**
@@ -57,7 +58,7 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
      * Generated from Godot docs: PhysicalBoneSimulator3D.physical_bones_remove_collision_exception
      */
     fun physicalBonesRemoveCollisionException(exception: RID) {
-        ObjectCalls.ptrcallWithRIDArg(physicalBonesRemoveCollisionExceptionBind, segment, exception)
+        ObjectCalls.ptrcallWithRIDArg(Binds.physicalBonesRemoveCollisionExceptionBind, segment, exception)
     }
 
     companion object {
@@ -67,30 +68,32 @@ class PhysicalBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) 
 
         internal fun wrap(handle: RawSegment): PhysicalBoneSimulator3D? =
             if (handle.address() == 0L) null else PhysicalBoneSimulator3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val IS_SIMULATING_PHYSICS_HASH = 36873697L
-        private val isSimulatingPhysicsBind by lazy {
+        @JvmField
+        val isSimulatingPhysicsBind =
             ObjectCalls.getMethodBind("PhysicalBoneSimulator3D", "is_simulating_physics", IS_SIMULATING_PHYSICS_HASH)
-        }
 
         private const val PHYSICAL_BONES_STOP_SIMULATION_HASH = 3218959716L
-        private val physicalBonesStopSimulationBind by lazy {
+        @JvmField
+        val physicalBonesStopSimulationBind =
             ObjectCalls.getMethodBind("PhysicalBoneSimulator3D", "physical_bones_stop_simulation", PHYSICAL_BONES_STOP_SIMULATION_HASH)
-        }
 
         private const val PHYSICAL_BONES_START_SIMULATION_HASH = 2787316981L
-        private val physicalBonesStartSimulationBind by lazy {
+        @JvmField
+        val physicalBonesStartSimulationBind =
             ObjectCalls.getMethodBind("PhysicalBoneSimulator3D", "physical_bones_start_simulation", PHYSICAL_BONES_START_SIMULATION_HASH)
-        }
 
         private const val PHYSICAL_BONES_ADD_COLLISION_EXCEPTION_HASH = 2722037293L
-        private val physicalBonesAddCollisionExceptionBind by lazy {
+        @JvmField
+        val physicalBonesAddCollisionExceptionBind =
             ObjectCalls.getMethodBind("PhysicalBoneSimulator3D", "physical_bones_add_collision_exception", PHYSICAL_BONES_ADD_COLLISION_EXCEPTION_HASH)
-        }
 
         private const val PHYSICAL_BONES_REMOVE_COLLISION_EXCEPTION_HASH = 2722037293L
-        private val physicalBonesRemoveCollisionExceptionBind by lazy {
+        @JvmField
+        val physicalBonesRemoveCollisionExceptionBind =
             ObjectCalls.getMethodBind("PhysicalBoneSimulator3D", "physical_bones_remove_collision_exception", PHYSICAL_BONES_REMOVE_COLLISION_EXCEPTION_HASH)
-        }
     }
 }

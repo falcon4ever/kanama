@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -36,52 +37,52 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
 
     fun getOriginalName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getOriginalNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getOriginalNameBind, segment)
     }
 
     fun setOriginalName(originalName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setOriginalNameBind, segment, originalName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setOriginalNameBind, segment, originalName)
     }
 
     fun getMesh(): ImporterMesh? {
         checkOpen()
-        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
     fun setMesh(mesh: ImporterMesh?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getBlendWeights(): List<Float> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(getBlendWeightsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedFloat32List(Binds.getBlendWeightsBind, segment)
     }
 
     fun setBlendWeights(blendWeights: List<Float>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedFloat32ListArg(setBlendWeightsBind, segment, blendWeights)
+        ObjectCalls.ptrcallWithPackedFloat32ListArg(Binds.setBlendWeightsBind, segment, blendWeights)
     }
 
     fun getInstanceMaterials(): List<Material> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getInstanceMaterialsBind, segment, Material::wrapBorrowed)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getInstanceMaterialsBind, segment, Material::wrapBorrowed)
     }
 
     fun setInstanceMaterials(instanceMaterials: List<Material>) {
         checkOpen()
-        ObjectCalls.ptrcallWithTypedMaterialListArg(setInstanceMaterialsBind, segment, instanceMaterials)
+        ObjectCalls.ptrcallWithTypedMaterialListArg(Binds.setInstanceMaterialsBind, segment, instanceMaterials)
     }
 
     fun getAdditionalData(extensionName: String): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(getAdditionalDataBind, segment, extensionName)
+        return ObjectCalls.ptrcallWithStringNameArgRetVariantScalar(Binds.getAdditionalDataBind, segment, extensionName)
     }
 
     fun setAdditionalData(extensionName: String, additionalData: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndVariantArg(setAdditionalDataBind, segment, extensionName, additionalData)
+        ObjectCalls.ptrcallWithStringNameAndVariantArg(Binds.setAdditionalDataBind, segment, extensionName, additionalData)
     }
 
     companion object {
@@ -94,55 +95,57 @@ class GLTFMesh(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFMesh? =
             if (handle.address() == 0L) null else GLTFMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_ORIGINAL_NAME_HASH = 2841200299L
-        private val getOriginalNameBind by lazy {
+        @JvmField
+        val getOriginalNameBind =
             ObjectCalls.getMethodBind("GLTFMesh", "get_original_name", GET_ORIGINAL_NAME_HASH)
-        }
 
         private const val SET_ORIGINAL_NAME_HASH = 83702148L
-        private val setOriginalNameBind by lazy {
+        @JvmField
+        val setOriginalNameBind =
             ObjectCalls.getMethodBind("GLTFMesh", "set_original_name", SET_ORIGINAL_NAME_HASH)
-        }
 
         private const val GET_MESH_HASH = 3754628756L
-        private val getMeshBind by lazy {
+        @JvmField
+        val getMeshBind =
             ObjectCalls.getMethodBind("GLTFMesh", "get_mesh", GET_MESH_HASH)
-        }
 
         private const val SET_MESH_HASH = 2255166972L
-        private val setMeshBind by lazy {
+        @JvmField
+        val setMeshBind =
             ObjectCalls.getMethodBind("GLTFMesh", "set_mesh", SET_MESH_HASH)
-        }
 
         private const val GET_BLEND_WEIGHTS_HASH = 2445143706L
-        private val getBlendWeightsBind by lazy {
+        @JvmField
+        val getBlendWeightsBind =
             ObjectCalls.getMethodBind("GLTFMesh", "get_blend_weights", GET_BLEND_WEIGHTS_HASH)
-        }
 
         private const val SET_BLEND_WEIGHTS_HASH = 2899603908L
-        private val setBlendWeightsBind by lazy {
+        @JvmField
+        val setBlendWeightsBind =
             ObjectCalls.getMethodBind("GLTFMesh", "set_blend_weights", SET_BLEND_WEIGHTS_HASH)
-        }
 
         private const val GET_INSTANCE_MATERIALS_HASH = 2915620761L
-        private val getInstanceMaterialsBind by lazy {
+        @JvmField
+        val getInstanceMaterialsBind =
             ObjectCalls.getMethodBind("GLTFMesh", "get_instance_materials", GET_INSTANCE_MATERIALS_HASH)
-        }
 
         private const val SET_INSTANCE_MATERIALS_HASH = 381264803L
-        private val setInstanceMaterialsBind by lazy {
+        @JvmField
+        val setInstanceMaterialsBind =
             ObjectCalls.getMethodBind("GLTFMesh", "set_instance_materials", SET_INSTANCE_MATERIALS_HASH)
-        }
 
         private const val GET_ADDITIONAL_DATA_HASH = 2138907829L
-        private val getAdditionalDataBind by lazy {
+        @JvmField
+        val getAdditionalDataBind =
             ObjectCalls.getMethodBind("GLTFMesh", "get_additional_data", GET_ADDITIONAL_DATA_HASH)
-        }
 
         private const val SET_ADDITIONAL_DATA_HASH = 3776071444L
-        private val setAdditionalDataBind by lazy {
+        @JvmField
+        val setAdditionalDataBind =
             ObjectCalls.getMethodBind("GLTFMesh", "set_additional_data", SET_ADDITIONAL_DATA_HASH)
-        }
     }
 }

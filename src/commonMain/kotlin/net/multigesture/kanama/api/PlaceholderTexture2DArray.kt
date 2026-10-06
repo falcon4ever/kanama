@@ -22,7 +22,5 @@ class PlaceholderTexture2DArray(handle: GodotHandle) : PlaceholderTextureLayered
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderTexture2DArray? =
             if (handle.address() == 0L) null else PlaceholderTexture2DArray(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

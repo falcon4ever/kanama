@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -29,7 +30,7 @@ class ModifierBoneTarget3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: ModifierBoneTarget3D.set_bone_name
      */
     fun setBoneName(boneName: String) {
-        ObjectCalls.ptrcallWithStringArg(setBoneNameBind, segment, boneName)
+        ObjectCalls.ptrcallWithStringArg(Binds.setBoneNameBind, segment, boneName)
     }
 
     /**
@@ -38,7 +39,7 @@ class ModifierBoneTarget3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: ModifierBoneTarget3D.get_bone_name
      */
     fun getBoneName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBoneNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBoneNameBind, segment)
     }
 
     /**
@@ -47,7 +48,7 @@ class ModifierBoneTarget3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: ModifierBoneTarget3D.set_bone
      */
     fun setBone(bone: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBoneBind, segment, bone)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBoneBind, segment, bone)
     }
 
     /**
@@ -56,7 +57,7 @@ class ModifierBoneTarget3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Generated from Godot docs: ModifierBoneTarget3D.get_bone
      */
     fun getBone(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBoneBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBoneBind, segment)
     }
 
     companion object {
@@ -66,25 +67,27 @@ class ModifierBoneTarget3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
         internal fun wrap(handle: RawSegment): ModifierBoneTarget3D? =
             if (handle.address() == 0L) null else ModifierBoneTarget3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BONE_NAME_HASH = 83702148L
-        private val setBoneNameBind by lazy {
+        @JvmField
+        val setBoneNameBind =
             ObjectCalls.getMethodBind("ModifierBoneTarget3D", "set_bone_name", SET_BONE_NAME_HASH)
-        }
 
         private const val GET_BONE_NAME_HASH = 201670096L
-        private val getBoneNameBind by lazy {
+        @JvmField
+        val getBoneNameBind =
             ObjectCalls.getMethodBind("ModifierBoneTarget3D", "get_bone_name", GET_BONE_NAME_HASH)
-        }
 
         private const val SET_BONE_HASH = 1286410249L
-        private val setBoneBind by lazy {
+        @JvmField
+        val setBoneBind =
             ObjectCalls.getMethodBind("ModifierBoneTarget3D", "set_bone", SET_BONE_HASH)
-        }
 
         private const val GET_BONE_HASH = 3905245786L
-        private val getBoneBind by lazy {
+        @JvmField
+        val getBoneBind =
             ObjectCalls.getMethodBind("ModifierBoneTarget3D", "get_bone", GET_BONE_HASH)
-        }
     }
 }

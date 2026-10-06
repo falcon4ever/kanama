@@ -20,7 +20,5 @@ class VisualShaderNodeTextureParameterTriplanar(handle: GodotHandle) : VisualSha
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeTextureParameterTriplanar? =
             if (handle.address() == 0L) null else VisualShaderNodeTextureParameterTriplanar(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun getTilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTilesCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTilesCountBind, segment)
     }
 
     /**
@@ -28,7 +29,7 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileId(index: Int): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2i(getTileIdBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetVector2i(Binds.getTileIdBind, segment, index)
     }
 
     /**
@@ -38,7 +39,7 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun hasTile(atlasCoords: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(hasTileBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.hasTileBind, segment, atlasCoords)
     }
 
     /**
@@ -50,7 +51,7 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun getAlternativeTilesCount(atlasCoords: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetInt(getAlternativeTilesCountBind, segment, atlasCoords)
+        return ObjectCalls.ptrcallWithVector2iArgRetInt(Binds.getAlternativeTilesCountBind, segment, atlasCoords)
     }
 
     /**
@@ -60,7 +61,7 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun getAlternativeTileId(atlasCoords: Vector2i, index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(getAlternativeTileIdBind, segment, atlasCoords, index)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetInt(Binds.getAlternativeTileIdBind, segment, atlasCoords, index)
     }
 
     /**
@@ -71,7 +72,7 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
      */
     fun hasAlternativeTile(atlasCoords: Vector2i, alternativeTile: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iAndIntArgRetBool(hasAlternativeTileBind, segment, atlasCoords, alternativeTile)
+        return ObjectCalls.ptrcallWithVector2iAndIntArgRetBool(Binds.hasAlternativeTileBind, segment, atlasCoords, alternativeTile)
     }
 
     companion object {
@@ -84,35 +85,37 @@ open class TileSetSource(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TileSetSource? =
             if (handle.address() == 0L) null else TileSetSource(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TILES_COUNT_HASH = 3905245786L
-        private val getTilesCountBind by lazy {
+        @JvmField
+        val getTilesCountBind =
             ObjectCalls.getMethodBind("TileSetSource", "get_tiles_count", GET_TILES_COUNT_HASH)
-        }
 
         private const val GET_TILE_ID_HASH = 880721226L
-        private val getTileIdBind by lazy {
+        @JvmField
+        val getTileIdBind =
             ObjectCalls.getMethodBind("TileSetSource", "get_tile_id", GET_TILE_ID_HASH)
-        }
 
         private const val HAS_TILE_HASH = 3900751641L
-        private val hasTileBind by lazy {
+        @JvmField
+        val hasTileBind =
             ObjectCalls.getMethodBind("TileSetSource", "has_tile", HAS_TILE_HASH)
-        }
 
         private const val GET_ALTERNATIVE_TILES_COUNT_HASH = 2485466453L
-        private val getAlternativeTilesCountBind by lazy {
+        @JvmField
+        val getAlternativeTilesCountBind =
             ObjectCalls.getMethodBind("TileSetSource", "get_alternative_tiles_count", GET_ALTERNATIVE_TILES_COUNT_HASH)
-        }
 
         private const val GET_ALTERNATIVE_TILE_ID_HASH = 89881719L
-        private val getAlternativeTileIdBind by lazy {
+        @JvmField
+        val getAlternativeTileIdBind =
             ObjectCalls.getMethodBind("TileSetSource", "get_alternative_tile_id", GET_ALTERNATIVE_TILE_ID_HASH)
-        }
 
         private const val HAS_ALTERNATIVE_TILE_HASH = 1073731340L
-        private val hasAlternativeTileBind by lazy {
+        @JvmField
+        val hasAlternativeTileBind =
             ObjectCalls.getMethodBind("TileSetSource", "has_alternative_tile", HAS_ALTERNATIVE_TILE_HASH)
-        }
     }
 }

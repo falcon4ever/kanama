@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -72,7 +73,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.set_shadow_mode
      */
     fun setShadowMode(mode: DirectionalLight3D.ShadowMode) {
-        ObjectCalls.ptrcallWithLongArg(setShadowModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setShadowModeBind, segment, mode.value)
     }
 
     /**
@@ -81,7 +82,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.get_shadow_mode
      */
     fun getShadowMode(): DirectionalLight3D.ShadowMode {
-        return DirectionalLight3D.ShadowMode(ObjectCalls.ptrcallNoArgsRetLong(getShadowModeBind, segment))
+        return DirectionalLight3D.ShadowMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getShadowModeBind, segment))
     }
 
     /**
@@ -92,7 +93,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.set_blend_splits
      */
     fun setBlendSplits(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBlendSplitsBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBlendSplitsBind, segment, enabled)
     }
 
     /**
@@ -103,7 +104,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.is_blend_splits_enabled
      */
     fun isBlendSplitsEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBlendSplitsEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBlendSplitsEnabledBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.set_sky_mode
      */
     fun setSkyMode(mode: DirectionalLight3D.SkyMode) {
-        ObjectCalls.ptrcallWithLongArg(setSkyModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSkyModeBind, segment, mode.value)
     }
 
     /**
@@ -123,7 +124,7 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
      * Generated from Godot docs: DirectionalLight3D.get_sky_mode
      */
     fun getSkyMode(): DirectionalLight3D.SkyMode {
-        return DirectionalLight3D.SkyMode(ObjectCalls.ptrcallNoArgsRetLong(getSkyModeBind, segment))
+        return DirectionalLight3D.SkyMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSkyModeBind, segment))
     }
 
     /**
@@ -201,35 +202,37 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
 
         internal fun wrap(handle: RawSegment): DirectionalLight3D? =
             if (handle.address() == 0L) null else DirectionalLight3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SHADOW_MODE_HASH = 1261211726L
-        private val setShadowModeBind by lazy {
+        @JvmField
+        val setShadowModeBind =
             ObjectCalls.getMethodBind("DirectionalLight3D", "set_shadow_mode", SET_SHADOW_MODE_HASH)
-        }
 
         private const val GET_SHADOW_MODE_HASH = 2765228544L
-        private val getShadowModeBind by lazy {
+        @JvmField
+        val getShadowModeBind =
             ObjectCalls.getMethodBind("DirectionalLight3D", "get_shadow_mode", GET_SHADOW_MODE_HASH)
-        }
 
         private const val SET_BLEND_SPLITS_HASH = 2586408642L
-        private val setBlendSplitsBind by lazy {
+        @JvmField
+        val setBlendSplitsBind =
             ObjectCalls.getMethodBind("DirectionalLight3D", "set_blend_splits", SET_BLEND_SPLITS_HASH)
-        }
 
         private const val IS_BLEND_SPLITS_ENABLED_HASH = 36873697L
-        private val isBlendSplitsEnabledBind by lazy {
+        @JvmField
+        val isBlendSplitsEnabledBind =
             ObjectCalls.getMethodBind("DirectionalLight3D", "is_blend_splits_enabled", IS_BLEND_SPLITS_ENABLED_HASH)
-        }
 
         private const val SET_SKY_MODE_HASH = 2691194817L
-        private val setSkyModeBind by lazy {
+        @JvmField
+        val setSkyModeBind =
             ObjectCalls.getMethodBind("DirectionalLight3D", "set_sky_mode", SET_SKY_MODE_HASH)
-        }
 
         private const val GET_SKY_MODE_HASH = 3819982774L
-        private val getSkyModeBind by lazy {
+        @JvmField
+        val getSkyModeBind =
             ObjectCalls.getMethodBind("DirectionalLight3D", "get_sky_mode", GET_SKY_MODE_HASH)
-        }
     }
 }

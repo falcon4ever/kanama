@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -37,7 +38,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.set_tracker
      */
     fun setTracker(trackerName: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setTrackerBind, segment, trackerName)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setTrackerBind, segment, trackerName)
     }
 
     /**
@@ -48,7 +49,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_tracker
      */
     fun getTracker(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getTrackerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getTrackerBind, segment)
     }
 
     /**
@@ -59,7 +60,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.set_pose_name
      */
     fun setPoseName(pose: String) {
-        ObjectCalls.ptrcallWithStringNameArg(setPoseNameBind, segment, pose)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.setPoseNameBind, segment, pose)
     }
 
     /**
@@ -70,7 +71,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_pose_name
      */
     fun getPoseName(): String {
-        return ObjectCalls.ptrcallNoArgsRetStringName(getPoseNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringName(Binds.getPoseNameBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.set_show_when_tracked
      */
     fun setShowWhenTracked(show: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setShowWhenTrackedBind, segment, show)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setShowWhenTrackedBind, segment, show)
     }
 
     /**
@@ -88,7 +89,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_show_when_tracked
      */
     fun getShowWhenTracked(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getShowWhenTrackedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getShowWhenTrackedBind, segment)
     }
 
     /**
@@ -97,7 +98,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_is_active
      */
     fun getIsActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getIsActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getIsActiveBind, segment)
     }
 
     /**
@@ -106,7 +107,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_has_tracking_data
      */
     fun getHasTrackingData(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getHasTrackingDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getHasTrackingDataBind, segment)
     }
 
     /**
@@ -116,7 +117,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.get_pose
      */
     fun getPose(): XRPose? {
-        return XRPose.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getPoseBind, segment))
+        return XRPose.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getPoseBind, segment))
     }
 
     /**
@@ -129,7 +130,7 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: XRNode3D.trigger_haptic_pulse
      */
     fun triggerHapticPulse(actionName: String, frequency: Double, amplitude: Double, durationSec: Double, delaySec: Double) {
-        ObjectCalls.ptrcallWithStringFourDoubleArgs(triggerHapticPulseBind, segment, actionName, frequency, amplitude, durationSec, delaySec)
+        ObjectCalls.ptrcallWithStringFourDoubleArgs(Binds.triggerHapticPulseBind, segment, actionName, frequency, amplitude, durationSec, delaySec)
     }
 
     /** Signal `tracking_changed(tracking: bool)`; see [TypedSignal]. */
@@ -148,55 +149,57 @@ open class XRNode3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): XRNode3D? =
             if (handle.address() == 0L) null else XRNode3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TRACKER_HASH = 3304788590L
-        private val setTrackerBind by lazy {
+        @JvmField
+        val setTrackerBind =
             ObjectCalls.getMethodBind("XRNode3D", "set_tracker", SET_TRACKER_HASH)
-        }
 
         private const val GET_TRACKER_HASH = 2002593661L
-        private val getTrackerBind by lazy {
+        @JvmField
+        val getTrackerBind =
             ObjectCalls.getMethodBind("XRNode3D", "get_tracker", GET_TRACKER_HASH)
-        }
 
         private const val SET_POSE_NAME_HASH = 3304788590L
-        private val setPoseNameBind by lazy {
+        @JvmField
+        val setPoseNameBind =
             ObjectCalls.getMethodBind("XRNode3D", "set_pose_name", SET_POSE_NAME_HASH)
-        }
 
         private const val GET_POSE_NAME_HASH = 2002593661L
-        private val getPoseNameBind by lazy {
+        @JvmField
+        val getPoseNameBind =
             ObjectCalls.getMethodBind("XRNode3D", "get_pose_name", GET_POSE_NAME_HASH)
-        }
 
         private const val SET_SHOW_WHEN_TRACKED_HASH = 2586408642L
-        private val setShowWhenTrackedBind by lazy {
+        @JvmField
+        val setShowWhenTrackedBind =
             ObjectCalls.getMethodBind("XRNode3D", "set_show_when_tracked", SET_SHOW_WHEN_TRACKED_HASH)
-        }
 
         private const val GET_SHOW_WHEN_TRACKED_HASH = 36873697L
-        private val getShowWhenTrackedBind by lazy {
+        @JvmField
+        val getShowWhenTrackedBind =
             ObjectCalls.getMethodBind("XRNode3D", "get_show_when_tracked", GET_SHOW_WHEN_TRACKED_HASH)
-        }
 
         private const val GET_IS_ACTIVE_HASH = 36873697L
-        private val getIsActiveBind by lazy {
+        @JvmField
+        val getIsActiveBind =
             ObjectCalls.getMethodBind("XRNode3D", "get_is_active", GET_IS_ACTIVE_HASH)
-        }
 
         private const val GET_HAS_TRACKING_DATA_HASH = 36873697L
-        private val getHasTrackingDataBind by lazy {
+        @JvmField
+        val getHasTrackingDataBind =
             ObjectCalls.getMethodBind("XRNode3D", "get_has_tracking_data", GET_HAS_TRACKING_DATA_HASH)
-        }
 
         private const val GET_POSE_HASH = 2806551826L
-        private val getPoseBind by lazy {
+        @JvmField
+        val getPoseBind =
             ObjectCalls.getMethodBind("XRNode3D", "get_pose", GET_POSE_HASH)
-        }
 
         private const val TRIGGER_HAPTIC_PULSE_HASH = 508576839L
-        private val triggerHapticPulseBind by lazy {
+        @JvmField
+        val triggerHapticPulseBind =
             ObjectCalls.getMethodBind("XRNode3D", "trigger_haptic_pulse", TRIGGER_HAPTIC_PULSE_HASH)
-        }
     }
 }

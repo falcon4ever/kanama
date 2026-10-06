@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -83,7 +84,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.add_animation_library
      */
     fun addAnimationLibrary(name: String, library: AnimationLibrary?): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithStringNameAndObjectArgRetLong(Binds.addAnimationLibraryBind, segment, name, library?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -92,7 +93,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.remove_animation_library
      */
     fun removeAnimationLibrary(name: String) {
-        ObjectCalls.ptrcallWithStringNameArg(removeAnimationLibraryBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeAnimationLibraryBind, segment, name)
     }
 
     /**
@@ -101,7 +102,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.rename_animation_library
      */
     fun renameAnimationLibrary(name: String, newname: String) {
-        ObjectCalls.ptrcallWithTwoStringNameArgs(renameAnimationLibraryBind, segment, name, newname)
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.renameAnimationLibraryBind, segment, name, newname)
     }
 
     /**
@@ -110,7 +111,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.has_animation_library
      */
     fun hasAnimationLibrary(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationLibraryBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasAnimationLibraryBind, segment, name)
     }
 
     /**
@@ -120,7 +121,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation_library
      */
     fun getAnimationLibrary(name: String): AnimationLibrary? {
-        return AnimationLibrary.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationLibraryBind, segment, name))
+        return AnimationLibrary.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getAnimationLibraryBind, segment, name))
     }
 
     /**
@@ -129,7 +130,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation_library_list
      */
     fun getAnimationLibraryList(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetStringNameList(getAnimationLibraryListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetStringNameList(Binds.getAnimationLibraryListBind, segment)
     }
 
     /**
@@ -138,7 +139,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.has_animation
      */
     fun hasAnimation(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasAnimationBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasAnimationBind, segment, name)
     }
 
     /**
@@ -148,7 +149,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation
      */
     fun getAnimation(name: String): Animation? {
-        return Animation.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(getAnimationBind, segment, name))
+        return Animation.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getAnimationBind, segment, name))
     }
 
     /**
@@ -157,7 +158,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_animation_list
      */
     fun getAnimationList(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAnimationListBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getAnimationListBind, segment)
     }
 
     /**
@@ -166,7 +167,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_active
      */
     fun setActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setActiveBind, segment, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, segment, active)
     }
 
     /**
@@ -175,7 +176,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.is_active
      */
     fun isActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
     }
 
     /**
@@ -195,7 +196,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_deterministic
      */
     fun setDeterministic(deterministic: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeterministicBind, segment, deterministic)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeterministicBind, segment, deterministic)
     }
 
     /**
@@ -215,7 +216,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.is_deterministic
      */
     fun isDeterministic(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeterministicBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDeterministicBind, segment)
     }
 
     /**
@@ -224,7 +225,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_root_node
      */
     fun setRootNode(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootNodeBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setRootNodeBind, segment, path)
     }
 
     /**
@@ -233,7 +234,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_node
      */
     fun getRootNode(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootNodeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRootNodeBind, segment)
     }
 
     /**
@@ -242,7 +243,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_callback_mode_process
      */
     fun setCallbackModeProcess(mode: AnimationMixer.AnimationCallbackModeProcess) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeProcessBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCallbackModeProcessBind, segment, mode.value)
     }
 
     /**
@@ -251,7 +252,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_callback_mode_process
      */
     fun getCallbackModeProcess(): AnimationMixer.AnimationCallbackModeProcess {
-        return AnimationMixer.AnimationCallbackModeProcess(ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeProcessBind, segment))
+        return AnimationMixer.AnimationCallbackModeProcess(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCallbackModeProcessBind, segment))
     }
 
     /**
@@ -260,7 +261,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_callback_mode_method
      */
     fun setCallbackModeMethod(mode: AnimationMixer.AnimationCallbackModeMethod) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeMethodBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCallbackModeMethodBind, segment, mode.value)
     }
 
     /**
@@ -269,7 +270,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_callback_mode_method
      */
     fun getCallbackModeMethod(): AnimationMixer.AnimationCallbackModeMethod {
-        return AnimationMixer.AnimationCallbackModeMethod(ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeMethodBind, segment))
+        return AnimationMixer.AnimationCallbackModeMethod(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCallbackModeMethodBind, segment))
     }
 
     /**
@@ -284,7 +285,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_callback_mode_discrete
      */
     fun setCallbackModeDiscrete(mode: AnimationMixer.AnimationCallbackModeDiscrete) {
-        ObjectCalls.ptrcallWithLongArg(setCallbackModeDiscreteBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCallbackModeDiscreteBind, segment, mode.value)
     }
 
     /**
@@ -299,7 +300,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_callback_mode_discrete
      */
     fun getCallbackModeDiscrete(): AnimationMixer.AnimationCallbackModeDiscrete {
-        return AnimationMixer.AnimationCallbackModeDiscrete(ObjectCalls.ptrcallNoArgsRetLong(getCallbackModeDiscreteBind, segment))
+        return AnimationMixer.AnimationCallbackModeDiscrete(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCallbackModeDiscreteBind, segment))
     }
 
     /**
@@ -310,7 +311,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_audio_max_polyphony
      */
     fun setAudioMaxPolyphony(maxPolyphony: Int) {
-        ObjectCalls.ptrcallWithIntArg(setAudioMaxPolyphonyBind, segment, maxPolyphony)
+        ObjectCalls.ptrcallWithIntArg(Binds.setAudioMaxPolyphonyBind, segment, maxPolyphony)
     }
 
     /**
@@ -321,7 +322,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_audio_max_polyphony
      */
     fun getAudioMaxPolyphony(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getAudioMaxPolyphonyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getAudioMaxPolyphonyBind, segment)
     }
 
     /**
@@ -337,7 +338,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_root_motion_track
      */
     fun setRootMotionTrack(path: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setRootMotionTrackBind, segment, path)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setRootMotionTrackBind, segment, path)
     }
 
     /**
@@ -353,7 +354,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_track
      */
     fun getRootMotionTrack(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getRootMotionTrackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getRootMotionTrackBind, segment)
     }
 
     /**
@@ -363,7 +364,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_root_motion_local
      */
     fun setRootMotionLocal(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setRootMotionLocalBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setRootMotionLocalBind, segment, enabled)
     }
 
     /**
@@ -373,7 +374,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.is_root_motion_local
      */
     fun isRootMotionLocal(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRootMotionLocalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRootMotionLocalBind, segment)
     }
 
     /**
@@ -385,7 +386,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_position
      */
     fun getRootMotionPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRootMotionPositionBind, segment)
     }
 
     /**
@@ -397,7 +398,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_rotation
      */
     fun getRootMotionRotation(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRootMotionRotationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getRootMotionRotationBind, segment)
     }
 
     /**
@@ -409,7 +410,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_scale
      */
     fun getRootMotionScale(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRootMotionScaleBind, segment)
     }
 
     /**
@@ -420,7 +421,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_position_accumulator
      */
     fun getRootMotionPositionAccumulator(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionPositionAccumulatorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRootMotionPositionAccumulatorBind, segment)
     }
 
     /**
@@ -432,7 +433,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_rotation_accumulator
      */
     fun getRootMotionRotationAccumulator(): Quaternion {
-        return ObjectCalls.ptrcallNoArgsRetQuaternion(getRootMotionRotationAccumulatorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getRootMotionRotationAccumulatorBind, segment)
     }
 
     /**
@@ -442,7 +443,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.get_root_motion_scale_accumulator
      */
     fun getRootMotionScaleAccumulator(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getRootMotionScaleAccumulatorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getRootMotionScaleAccumulatorBind, segment)
     }
 
     /**
@@ -452,7 +453,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.clear_caches
      */
     fun clearCaches() {
-        ObjectCalls.ptrcallNoArgs(clearCachesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearCachesBind, segment)
     }
 
     /**
@@ -461,7 +462,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.advance
      */
     fun advance(delta: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(advanceBind, segment, delta)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.advanceBind, segment, delta)
     }
 
     /**
@@ -477,7 +478,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.capture
      */
     fun capture(name: String, duration: Double, transType: Tween.TransitionType = Tween.TransitionType.LINEAR, easeType: Tween.EaseType = Tween.EaseType.IN) {
-        ObjectCalls.ptrcallWithStringNameDoubleTwoLongArgs(captureBind, segment, name, duration, transType.value, easeType.value)
+        ObjectCalls.ptrcallWithStringNameDoubleTwoLongArgs(Binds.captureBind, segment, name, duration, transType.value, easeType.value)
     }
 
     /**
@@ -490,7 +491,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.set_reset_on_save_enabled
      */
     fun setResetOnSaveEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setResetOnSaveEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setResetOnSaveEnabledBind, segment, enabled)
     }
 
     /**
@@ -503,7 +504,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.is_reset_on_save_enabled
      */
     fun isResetOnSaveEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isResetOnSaveEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isResetOnSaveEnabledBind, segment)
     }
 
     /**
@@ -512,7 +513,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.find_animation
      */
     fun findAnimation(animation: Animation?): String {
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.findAnimationBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -522,7 +523,7 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
      * Generated from Godot docs: AnimationMixer.find_animation_library
      */
     fun findAnimationLibrary(animation: Animation?): String {
-        return ObjectCalls.ptrcallWithObjectArgRetStringName(findAnimationLibraryBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
+        return ObjectCalls.ptrcallWithObjectArgRetStringName(Binds.findAnimationLibraryBind, segment, animation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /** Signal `animation_list_changed()`; see [TypedSignal]. */
@@ -684,205 +685,207 @@ open class AnimationMixer(handle: GodotHandle) : Node(handle) {
 
         internal fun wrap(handle: RawSegment): AnimationMixer? =
             if (handle.address() == 0L) null else AnimationMixer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_ANIMATION_LIBRARY_HASH = 618909818L
-        private val addAnimationLibraryBind by lazy {
+        @JvmField
+        val addAnimationLibraryBind =
             ObjectCalls.getMethodBind("AnimationMixer", "add_animation_library", ADD_ANIMATION_LIBRARY_HASH)
-        }
 
         private const val REMOVE_ANIMATION_LIBRARY_HASH = 3304788590L
-        private val removeAnimationLibraryBind by lazy {
+        @JvmField
+        val removeAnimationLibraryBind =
             ObjectCalls.getMethodBind("AnimationMixer", "remove_animation_library", REMOVE_ANIMATION_LIBRARY_HASH)
-        }
 
         private const val RENAME_ANIMATION_LIBRARY_HASH = 3740211285L
-        private val renameAnimationLibraryBind by lazy {
+        @JvmField
+        val renameAnimationLibraryBind =
             ObjectCalls.getMethodBind("AnimationMixer", "rename_animation_library", RENAME_ANIMATION_LIBRARY_HASH)
-        }
 
         private const val HAS_ANIMATION_LIBRARY_HASH = 2619796661L
-        private val hasAnimationLibraryBind by lazy {
+        @JvmField
+        val hasAnimationLibraryBind =
             ObjectCalls.getMethodBind("AnimationMixer", "has_animation_library", HAS_ANIMATION_LIBRARY_HASH)
-        }
 
         private const val GET_ANIMATION_LIBRARY_HASH = 147342321L
-        private val getAnimationLibraryBind by lazy {
+        @JvmField
+        val getAnimationLibraryBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_animation_library", GET_ANIMATION_LIBRARY_HASH)
-        }
 
         private const val GET_ANIMATION_LIBRARY_LIST_HASH = 3995934104L
-        private val getAnimationLibraryListBind by lazy {
+        @JvmField
+        val getAnimationLibraryListBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_animation_library_list", GET_ANIMATION_LIBRARY_LIST_HASH)
-        }
 
         private const val HAS_ANIMATION_HASH = 2619796661L
-        private val hasAnimationBind by lazy {
+        @JvmField
+        val hasAnimationBind =
             ObjectCalls.getMethodBind("AnimationMixer", "has_animation", HAS_ANIMATION_HASH)
-        }
 
         private const val GET_ANIMATION_HASH = 2933122410L
-        private val getAnimationBind by lazy {
+        @JvmField
+        val getAnimationBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_animation", GET_ANIMATION_HASH)
-        }
 
         private const val GET_ANIMATION_LIST_HASH = 1139954409L
-        private val getAnimationListBind by lazy {
+        @JvmField
+        val getAnimationListBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_animation_list", GET_ANIMATION_LIST_HASH)
-        }
 
         private const val SET_ACTIVE_HASH = 2586408642L
-        private val setActiveBind by lazy {
+        @JvmField
+        val setActiveBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_active", SET_ACTIVE_HASH)
-        }
 
         private const val IS_ACTIVE_HASH = 36873697L
-        private val isActiveBind by lazy {
+        @JvmField
+        val isActiveBind =
             ObjectCalls.getMethodBind("AnimationMixer", "is_active", IS_ACTIVE_HASH)
-        }
 
         private const val SET_DETERMINISTIC_HASH = 2586408642L
-        private val setDeterministicBind by lazy {
+        @JvmField
+        val setDeterministicBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_deterministic", SET_DETERMINISTIC_HASH)
-        }
 
         private const val IS_DETERMINISTIC_HASH = 36873697L
-        private val isDeterministicBind by lazy {
+        @JvmField
+        val isDeterministicBind =
             ObjectCalls.getMethodBind("AnimationMixer", "is_deterministic", IS_DETERMINISTIC_HASH)
-        }
 
         private const val SET_ROOT_NODE_HASH = 1348162250L
-        private val setRootNodeBind by lazy {
+        @JvmField
+        val setRootNodeBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_root_node", SET_ROOT_NODE_HASH)
-        }
 
         private const val GET_ROOT_NODE_HASH = 4075236667L
-        private val getRootNodeBind by lazy {
+        @JvmField
+        val getRootNodeBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_root_node", GET_ROOT_NODE_HASH)
-        }
 
         private const val SET_CALLBACK_MODE_PROCESS_HASH = 2153733086L
-        private val setCallbackModeProcessBind by lazy {
+        @JvmField
+        val setCallbackModeProcessBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_callback_mode_process", SET_CALLBACK_MODE_PROCESS_HASH)
-        }
 
         private const val GET_CALLBACK_MODE_PROCESS_HASH = 1394468472L
-        private val getCallbackModeProcessBind by lazy {
+        @JvmField
+        val getCallbackModeProcessBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_callback_mode_process", GET_CALLBACK_MODE_PROCESS_HASH)
-        }
 
         private const val SET_CALLBACK_MODE_METHOD_HASH = 742218271L
-        private val setCallbackModeMethodBind by lazy {
+        @JvmField
+        val setCallbackModeMethodBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_callback_mode_method", SET_CALLBACK_MODE_METHOD_HASH)
-        }
 
         private const val GET_CALLBACK_MODE_METHOD_HASH = 489449656L
-        private val getCallbackModeMethodBind by lazy {
+        @JvmField
+        val getCallbackModeMethodBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_callback_mode_method", GET_CALLBACK_MODE_METHOD_HASH)
-        }
 
         private const val SET_CALLBACK_MODE_DISCRETE_HASH = 1998944670L
-        private val setCallbackModeDiscreteBind by lazy {
+        @JvmField
+        val setCallbackModeDiscreteBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_callback_mode_discrete", SET_CALLBACK_MODE_DISCRETE_HASH)
-        }
 
         private const val GET_CALLBACK_MODE_DISCRETE_HASH = 3493168860L
-        private val getCallbackModeDiscreteBind by lazy {
+        @JvmField
+        val getCallbackModeDiscreteBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_callback_mode_discrete", GET_CALLBACK_MODE_DISCRETE_HASH)
-        }
 
         private const val SET_AUDIO_MAX_POLYPHONY_HASH = 1286410249L
-        private val setAudioMaxPolyphonyBind by lazy {
+        @JvmField
+        val setAudioMaxPolyphonyBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_audio_max_polyphony", SET_AUDIO_MAX_POLYPHONY_HASH)
-        }
 
         private const val GET_AUDIO_MAX_POLYPHONY_HASH = 3905245786L
-        private val getAudioMaxPolyphonyBind by lazy {
+        @JvmField
+        val getAudioMaxPolyphonyBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_audio_max_polyphony", GET_AUDIO_MAX_POLYPHONY_HASH)
-        }
 
         private const val SET_ROOT_MOTION_TRACK_HASH = 1348162250L
-        private val setRootMotionTrackBind by lazy {
+        @JvmField
+        val setRootMotionTrackBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_root_motion_track", SET_ROOT_MOTION_TRACK_HASH)
-        }
 
         private const val GET_ROOT_MOTION_TRACK_HASH = 4075236667L
-        private val getRootMotionTrackBind by lazy {
+        @JvmField
+        val getRootMotionTrackBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_root_motion_track", GET_ROOT_MOTION_TRACK_HASH)
-        }
 
         private const val SET_ROOT_MOTION_LOCAL_HASH = 2586408642L
-        private val setRootMotionLocalBind by lazy {
+        @JvmField
+        val setRootMotionLocalBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_root_motion_local", SET_ROOT_MOTION_LOCAL_HASH)
-        }
 
         private const val IS_ROOT_MOTION_LOCAL_HASH = 36873697L
-        private val isRootMotionLocalBind by lazy {
+        @JvmField
+        val isRootMotionLocalBind =
             ObjectCalls.getMethodBind("AnimationMixer", "is_root_motion_local", IS_ROOT_MOTION_LOCAL_HASH)
-        }
 
         private const val GET_ROOT_MOTION_POSITION_HASH = 3360562783L
-        private val getRootMotionPositionBind by lazy {
+        @JvmField
+        val getRootMotionPositionBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_root_motion_position", GET_ROOT_MOTION_POSITION_HASH)
-        }
 
         private const val GET_ROOT_MOTION_ROTATION_HASH = 1222331677L
-        private val getRootMotionRotationBind by lazy {
+        @JvmField
+        val getRootMotionRotationBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_root_motion_rotation", GET_ROOT_MOTION_ROTATION_HASH)
-        }
 
         private const val GET_ROOT_MOTION_SCALE_HASH = 3360562783L
-        private val getRootMotionScaleBind by lazy {
+        @JvmField
+        val getRootMotionScaleBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_root_motion_scale", GET_ROOT_MOTION_SCALE_HASH)
-        }
 
         private const val GET_ROOT_MOTION_POSITION_ACCUMULATOR_HASH = 3360562783L
-        private val getRootMotionPositionAccumulatorBind by lazy {
+        @JvmField
+        val getRootMotionPositionAccumulatorBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_root_motion_position_accumulator", GET_ROOT_MOTION_POSITION_ACCUMULATOR_HASH)
-        }
 
         private const val GET_ROOT_MOTION_ROTATION_ACCUMULATOR_HASH = 1222331677L
-        private val getRootMotionRotationAccumulatorBind by lazy {
+        @JvmField
+        val getRootMotionRotationAccumulatorBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_root_motion_rotation_accumulator", GET_ROOT_MOTION_ROTATION_ACCUMULATOR_HASH)
-        }
 
         private const val GET_ROOT_MOTION_SCALE_ACCUMULATOR_HASH = 3360562783L
-        private val getRootMotionScaleAccumulatorBind by lazy {
+        @JvmField
+        val getRootMotionScaleAccumulatorBind =
             ObjectCalls.getMethodBind("AnimationMixer", "get_root_motion_scale_accumulator", GET_ROOT_MOTION_SCALE_ACCUMULATOR_HASH)
-        }
 
         private const val CLEAR_CACHES_HASH = 3218959716L
-        private val clearCachesBind by lazy {
+        @JvmField
+        val clearCachesBind =
             ObjectCalls.getMethodBind("AnimationMixer", "clear_caches", CLEAR_CACHES_HASH)
-        }
 
         private const val ADVANCE_HASH = 373806689L
-        private val advanceBind by lazy {
+        @JvmField
+        val advanceBind =
             ObjectCalls.getMethodBind("AnimationMixer", "advance", ADVANCE_HASH)
-        }
 
         private const val CAPTURE_HASH = 1333632127L
-        private val captureBind by lazy {
+        @JvmField
+        val captureBind =
             ObjectCalls.getMethodBind("AnimationMixer", "capture", CAPTURE_HASH)
-        }
 
         private const val SET_RESET_ON_SAVE_ENABLED_HASH = 2586408642L
-        private val setResetOnSaveEnabledBind by lazy {
+        @JvmField
+        val setResetOnSaveEnabledBind =
             ObjectCalls.getMethodBind("AnimationMixer", "set_reset_on_save_enabled", SET_RESET_ON_SAVE_ENABLED_HASH)
-        }
 
         private const val IS_RESET_ON_SAVE_ENABLED_HASH = 36873697L
-        private val isResetOnSaveEnabledBind by lazy {
+        @JvmField
+        val isResetOnSaveEnabledBind =
             ObjectCalls.getMethodBind("AnimationMixer", "is_reset_on_save_enabled", IS_RESET_ON_SAVE_ENABLED_HASH)
-        }
 
         private const val FIND_ANIMATION_HASH = 1559484580L
-        private val findAnimationBind by lazy {
+        @JvmField
+        val findAnimationBind =
             ObjectCalls.getMethodBind("AnimationMixer", "find_animation", FIND_ANIMATION_HASH)
-        }
 
         private const val FIND_ANIMATION_LIBRARY_HASH = 1559484580L
-        private val findAnimationLibraryBind by lazy {
+        @JvmField
+        val findAnimationLibraryBind =
             ObjectCalls.getMethodBind("AnimationMixer", "find_animation_library", FIND_ANIMATION_LIBRARY_HASH)
-        }
     }
 }

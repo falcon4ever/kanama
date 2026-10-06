@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -20,7 +21,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
     }
 
     /**
@@ -31,7 +32,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun isMonophonic(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMonophonicBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMonophonicBind, segment)
     }
 
     /**
@@ -44,7 +45,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun instantiatePlayback(): AudioStreamPlayback? {
         checkOpen()
-        return AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(instantiatePlaybackBind, segment))
+        return AudioStreamPlayback.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.instantiatePlaybackBind, segment))
     }
 
     /**
@@ -55,7 +56,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun canBeSampled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(canBeSampledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.canBeSampledBind, segment)
     }
 
     /**
@@ -65,7 +66,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun generateSample(): AudioSample? {
         checkOpen()
-        return AudioSample.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateSampleBind, segment))
+        return AudioSample.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateSampleBind, segment))
     }
 
     /**
@@ -75,7 +76,7 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
      */
     fun isMetaStream(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMetaStreamBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMetaStreamBind, segment)
     }
 
     /** Signal `parameter_list_changed()`; see [TypedSignal]. */
@@ -97,35 +98,37 @@ open class AudioStream(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStream? =
             if (handle.address() == 0L) null else AudioStream(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_LENGTH_HASH = 1740695150L
-        private val getLengthBind by lazy {
+        @JvmField
+        val getLengthBind =
             ObjectCalls.getMethodBind("AudioStream", "get_length", GET_LENGTH_HASH)
-        }
 
         private const val IS_MONOPHONIC_HASH = 36873697L
-        private val isMonophonicBind by lazy {
+        @JvmField
+        val isMonophonicBind =
             ObjectCalls.getMethodBind("AudioStream", "is_monophonic", IS_MONOPHONIC_HASH)
-        }
 
         private const val INSTANTIATE_PLAYBACK_HASH = 210135309L
-        private val instantiatePlaybackBind by lazy {
+        @JvmField
+        val instantiatePlaybackBind =
             ObjectCalls.getMethodBind("AudioStream", "instantiate_playback", INSTANTIATE_PLAYBACK_HASH)
-        }
 
         private const val CAN_BE_SAMPLED_HASH = 36873697L
-        private val canBeSampledBind by lazy {
+        @JvmField
+        val canBeSampledBind =
             ObjectCalls.getMethodBind("AudioStream", "can_be_sampled", CAN_BE_SAMPLED_HASH)
-        }
 
         private const val GENERATE_SAMPLE_HASH = 2646048999L
-        private val generateSampleBind by lazy {
+        @JvmField
+        val generateSampleBind =
             ObjectCalls.getMethodBind("AudioStream", "generate_sample", GENERATE_SAMPLE_HASH)
-        }
 
         private const val IS_META_STREAM_HASH = 36873697L
-        private val isMetaStreamBind by lazy {
+        @JvmField
+        val isMetaStreamBind =
             ObjectCalls.getMethodBind("AudioStream", "is_meta_stream", IS_META_STREAM_HASH)
-        }
     }
 }

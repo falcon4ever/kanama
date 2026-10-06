@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -53,7 +54,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPath(path: List<Vector3>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedVector3ListArg(setPathBind, segment, path)
+        ObjectCalls.ptrcallWithPackedVector3ListArg(Binds.setPathBind, segment, path)
     }
 
     /**
@@ -65,7 +66,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPath(): List<Vector3> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(getPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedVector3List(Binds.getPathBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPathTypes(pathTypes: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt32ListArg(setPathTypesBind, segment, pathTypes)
+        ObjectCalls.ptrcallWithPackedInt32ListArg(Binds.setPathTypesBind, segment, pathTypes)
     }
 
     /**
@@ -85,7 +86,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathTypes(): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getPathTypesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getPathTypesBind, segment)
     }
 
     /**
@@ -95,7 +96,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPathRids(pathRids: List<RID>) {
         checkOpen()
-        ObjectCalls.ptrcallWithRIDListArg(setPathRidsBind, segment, pathRids)
+        ObjectCalls.ptrcallWithRIDListArg(Binds.setPathRidsBind, segment, pathRids)
     }
 
     /**
@@ -105,7 +106,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathRids(): List<RID> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRIDList(getPathRidsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRIDList(Binds.getPathRidsBind, segment)
     }
 
     /**
@@ -116,7 +117,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPathOwnerIds(pathOwnerIds: List<Long>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedInt64ListArg(setPathOwnerIdsBind, segment, pathOwnerIds)
+        ObjectCalls.ptrcallWithPackedInt64ListArg(Binds.setPathOwnerIdsBind, segment, pathOwnerIds)
     }
 
     /**
@@ -127,7 +128,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathOwnerIds(): List<Long> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(getPathOwnerIdsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt64List(Binds.getPathOwnerIdsBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPathLength(length: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setPathLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPathLengthBind, segment, length)
     }
 
     /**
@@ -147,7 +148,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPathLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPathLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPathLengthBind, segment)
     }
 
     /**
@@ -158,7 +159,7 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun reset() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(resetBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.resetBind, segment)
     }
 
     /**
@@ -196,60 +197,62 @@ class NavigationPathQueryResult3D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): NavigationPathQueryResult3D? =
             if (handle.address() == 0L) null else NavigationPathQueryResult3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PATH_HASH = 334873810L
-        private val setPathBind by lazy {
+        @JvmField
+        val setPathBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "set_path", SET_PATH_HASH)
-        }
 
         private const val GET_PATH_HASH = 497664490L
-        private val getPathBind by lazy {
+        @JvmField
+        val getPathBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "get_path", GET_PATH_HASH)
-        }
 
         private const val SET_PATH_TYPES_HASH = 3614634198L
-        private val setPathTypesBind by lazy {
+        @JvmField
+        val setPathTypesBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "set_path_types", SET_PATH_TYPES_HASH)
-        }
 
         private const val GET_PATH_TYPES_HASH = 1930428628L
-        private val getPathTypesBind by lazy {
+        @JvmField
+        val getPathTypesBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "get_path_types", GET_PATH_TYPES_HASH)
-        }
 
         private const val SET_PATH_RIDS_HASH = 381264803L
-        private val setPathRidsBind by lazy {
+        @JvmField
+        val setPathRidsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "set_path_rids", SET_PATH_RIDS_HASH)
-        }
 
         private const val GET_PATH_RIDS_HASH = 3995934104L
-        private val getPathRidsBind by lazy {
+        @JvmField
+        val getPathRidsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "get_path_rids", GET_PATH_RIDS_HASH)
-        }
 
         private const val SET_PATH_OWNER_IDS_HASH = 3709968205L
-        private val setPathOwnerIdsBind by lazy {
+        @JvmField
+        val setPathOwnerIdsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "set_path_owner_ids", SET_PATH_OWNER_IDS_HASH)
-        }
 
         private const val GET_PATH_OWNER_IDS_HASH = 235988956L
-        private val getPathOwnerIdsBind by lazy {
+        @JvmField
+        val getPathOwnerIdsBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "get_path_owner_ids", GET_PATH_OWNER_IDS_HASH)
-        }
 
         private const val SET_PATH_LENGTH_HASH = 373806689L
-        private val setPathLengthBind by lazy {
+        @JvmField
+        val setPathLengthBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "set_path_length", SET_PATH_LENGTH_HASH)
-        }
 
         private const val GET_PATH_LENGTH_HASH = 1740695150L
-        private val getPathLengthBind by lazy {
+        @JvmField
+        val getPathLengthBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "get_path_length", GET_PATH_LENGTH_HASH)
-        }
 
         private const val RESET_HASH = 3218959716L
-        private val resetBind by lazy {
+        @JvmField
+        val resetBind =
             ObjectCalls.getMethodBind("NavigationPathQueryResult3D", "reset", RESET_HASH)
-        }
     }
 }

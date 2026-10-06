@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -48,87 +49,87 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
     fun createClient(url: String, tlsClientOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithStringAndObjectArgRetLong(Binds.createClientBind, segment, url, tlsClientOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun createServer(port: Int, bindAddress: String = "*", tlsServerOptions: TLSOptions?): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT))
+        return GodotError(ObjectCalls.ptrcallWithIntStringObjectArgsRetLong(Binds.createServerBind, segment, port, bindAddress, tlsServerOptions?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getPeer(peerId: Int): WebSocketPeer? {
         checkOpen()
-        return WebSocketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getPeerBind, segment, peerId))
+        return WebSocketPeer.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPeerBind, segment, peerId))
     }
 
     fun getPeerAddress(id: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getPeerAddressBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getPeerAddressBind, segment, id)
     }
 
     fun getPeerPort(id: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getPeerPortBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getPeerPortBind, segment, id)
     }
 
     fun getSupportedProtocols(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSupportedProtocolsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSupportedProtocolsBind, segment)
     }
 
     fun setSupportedProtocols(protocols: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setSupportedProtocolsBind, segment, protocols)
+        ObjectCalls.ptrcallWithPackedStringListArg(Binds.setSupportedProtocolsBind, segment, protocols)
     }
 
     fun getHandshakeHeaders(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getHandshakeHeadersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getHandshakeHeadersBind, segment)
     }
 
     fun setHandshakeHeaders(protocols: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithPackedStringListArg(setHandshakeHeadersBind, segment, protocols)
+        ObjectCalls.ptrcallWithPackedStringListArg(Binds.setHandshakeHeadersBind, segment, protocols)
     }
 
     fun getInboundBufferSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getInboundBufferSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getInboundBufferSizeBind, segment)
     }
 
     fun setInboundBufferSize(bufferSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setInboundBufferSizeBind, segment, bufferSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setInboundBufferSizeBind, segment, bufferSize)
     }
 
     fun getOutboundBufferSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOutboundBufferSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOutboundBufferSizeBind, segment)
     }
 
     fun setOutboundBufferSize(bufferSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setOutboundBufferSizeBind, segment, bufferSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setOutboundBufferSizeBind, segment, bufferSize)
     }
 
     fun getHandshakeTimeout(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getHandshakeTimeoutBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getHandshakeTimeoutBind, segment)
     }
 
     fun setHandshakeTimeout(timeout: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setHandshakeTimeoutBind, segment, timeout)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setHandshakeTimeoutBind, segment, timeout)
     }
 
     fun setMaxQueuedPackets(maxQueuedPackets: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxQueuedPacketsBind, segment, maxQueuedPackets)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxQueuedPacketsBind, segment, maxQueuedPackets)
     }
 
     fun getMaxQueuedPackets(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxQueuedPacketsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxQueuedPacketsBind, segment)
     }
 
     companion object {
@@ -141,90 +142,92 @@ class WebSocketMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WebSocketMultiplayerPeer? =
             if (handle.address() == 0L) null else WebSocketMultiplayerPeer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_CLIENT_HASH = 1966198364L
-        private val createClientBind by lazy {
+        @JvmField
+        val createClientBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "create_client", CREATE_CLIENT_HASH)
-        }
 
         private const val CREATE_SERVER_HASH = 2400822951L
-        private val createServerBind by lazy {
+        @JvmField
+        val createServerBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "create_server", CREATE_SERVER_HASH)
-        }
 
         private const val GET_PEER_HASH = 1381378851L
-        private val getPeerBind by lazy {
+        @JvmField
+        val getPeerBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_peer", GET_PEER_HASH)
-        }
 
         private const val GET_PEER_ADDRESS_HASH = 844755477L
-        private val getPeerAddressBind by lazy {
+        @JvmField
+        val getPeerAddressBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_peer_address", GET_PEER_ADDRESS_HASH)
-        }
 
         private const val GET_PEER_PORT_HASH = 923996154L
-        private val getPeerPortBind by lazy {
+        @JvmField
+        val getPeerPortBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_peer_port", GET_PEER_PORT_HASH)
-        }
 
         private const val GET_SUPPORTED_PROTOCOLS_HASH = 1139954409L
-        private val getSupportedProtocolsBind by lazy {
+        @JvmField
+        val getSupportedProtocolsBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_supported_protocols", GET_SUPPORTED_PROTOCOLS_HASH)
-        }
 
         private const val SET_SUPPORTED_PROTOCOLS_HASH = 4015028928L
-        private val setSupportedProtocolsBind by lazy {
+        @JvmField
+        val setSupportedProtocolsBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "set_supported_protocols", SET_SUPPORTED_PROTOCOLS_HASH)
-        }
 
         private const val GET_HANDSHAKE_HEADERS_HASH = 1139954409L
-        private val getHandshakeHeadersBind by lazy {
+        @JvmField
+        val getHandshakeHeadersBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_handshake_headers", GET_HANDSHAKE_HEADERS_HASH)
-        }
 
         private const val SET_HANDSHAKE_HEADERS_HASH = 4015028928L
-        private val setHandshakeHeadersBind by lazy {
+        @JvmField
+        val setHandshakeHeadersBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "set_handshake_headers", SET_HANDSHAKE_HEADERS_HASH)
-        }
 
         private const val GET_INBOUND_BUFFER_SIZE_HASH = 3905245786L
-        private val getInboundBufferSizeBind by lazy {
+        @JvmField
+        val getInboundBufferSizeBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_inbound_buffer_size", GET_INBOUND_BUFFER_SIZE_HASH)
-        }
 
         private const val SET_INBOUND_BUFFER_SIZE_HASH = 1286410249L
-        private val setInboundBufferSizeBind by lazy {
+        @JvmField
+        val setInboundBufferSizeBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "set_inbound_buffer_size", SET_INBOUND_BUFFER_SIZE_HASH)
-        }
 
         private const val GET_OUTBOUND_BUFFER_SIZE_HASH = 3905245786L
-        private val getOutboundBufferSizeBind by lazy {
+        @JvmField
+        val getOutboundBufferSizeBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_outbound_buffer_size", GET_OUTBOUND_BUFFER_SIZE_HASH)
-        }
 
         private const val SET_OUTBOUND_BUFFER_SIZE_HASH = 1286410249L
-        private val setOutboundBufferSizeBind by lazy {
+        @JvmField
+        val setOutboundBufferSizeBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "set_outbound_buffer_size", SET_OUTBOUND_BUFFER_SIZE_HASH)
-        }
 
         private const val GET_HANDSHAKE_TIMEOUT_HASH = 1740695150L
-        private val getHandshakeTimeoutBind by lazy {
+        @JvmField
+        val getHandshakeTimeoutBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_handshake_timeout", GET_HANDSHAKE_TIMEOUT_HASH)
-        }
 
         private const val SET_HANDSHAKE_TIMEOUT_HASH = 373806689L
-        private val setHandshakeTimeoutBind by lazy {
+        @JvmField
+        val setHandshakeTimeoutBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "set_handshake_timeout", SET_HANDSHAKE_TIMEOUT_HASH)
-        }
 
         private const val SET_MAX_QUEUED_PACKETS_HASH = 1286410249L
-        private val setMaxQueuedPacketsBind by lazy {
+        @JvmField
+        val setMaxQueuedPacketsBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "set_max_queued_packets", SET_MAX_QUEUED_PACKETS_HASH)
-        }
 
         private const val GET_MAX_QUEUED_PACKETS_HASH = 3905245786L
-        private val getMaxQueuedPacketsBind by lazy {
+        @JvmField
+        val getMaxQueuedPacketsBind =
             ObjectCalls.getMethodBind("WebSocketMultiplayerPeer", "get_max_queued_packets", GET_MAX_QUEUED_PACKETS_HASH)
-        }
     }
 }

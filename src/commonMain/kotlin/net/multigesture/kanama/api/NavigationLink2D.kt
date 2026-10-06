@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -61,7 +62,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -81,7 +82,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
     /**
@@ -92,7 +93,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_navigation_map
      */
     fun setNavigationMap(navigationMap: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setNavigationMapBind, segment, navigationMap)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setNavigationMapBind, segment, navigationMap)
     }
 
     /**
@@ -101,7 +102,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_navigation_map
      */
     fun getNavigationMap(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getNavigationMapBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getNavigationMapBind, segment)
     }
 
     /**
@@ -111,7 +112,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_bidirectional
      */
     fun setBidirectional(bidirectional: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setBidirectionalBind, segment, bidirectional)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setBidirectionalBind, segment, bidirectional)
     }
 
     /**
@@ -121,7 +122,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.is_bidirectional
      */
     fun isBidirectional(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isBidirectionalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isBidirectionalBind, segment)
     }
 
     /**
@@ -131,7 +132,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_navigation_layers
      */
     fun setNavigationLayers(navigationLayers: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setNavigationLayersBind, segment, navigationLayers)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setNavigationLayersBind, segment, navigationLayers)
     }
 
     /**
@@ -141,7 +142,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_navigation_layers
      */
     fun getNavigationLayers(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getNavigationLayersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getNavigationLayersBind, segment)
     }
 
     /**
@@ -151,7 +152,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_navigation_layer_value
      */
     fun setNavigationLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setNavigationLayerValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setNavigationLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -161,7 +162,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_navigation_layer_value
      */
     fun getNavigationLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getNavigationLayerValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getNavigationLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -172,7 +173,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_start_position
      */
     fun setStartPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setStartPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setStartPositionBind, segment, position)
     }
 
     /**
@@ -183,7 +184,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_start_position
      */
     fun getStartPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getStartPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getStartPositionBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_end_position
      */
     fun setEndPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setEndPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setEndPositionBind, segment, position)
     }
 
     /**
@@ -205,7 +206,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_end_position
      */
     fun getEndPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getEndPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getEndPositionBind, segment)
     }
 
     /**
@@ -214,7 +215,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_global_start_position
      */
     fun setGlobalStartPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGlobalStartPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGlobalStartPositionBind, segment, position)
     }
 
     /**
@@ -223,7 +224,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_global_start_position
      */
     fun getGlobalStartPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalStartPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalStartPositionBind, segment)
     }
 
     /**
@@ -232,7 +233,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_global_end_position
      */
     fun setGlobalEndPosition(position: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setGlobalEndPositionBind, segment, position)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setGlobalEndPositionBind, segment, position)
     }
 
     /**
@@ -241,7 +242,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_global_end_position
      */
     fun getGlobalEndPosition(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getGlobalEndPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getGlobalEndPositionBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_enter_cost
      */
     fun setEnterCost(enterCost: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEnterCostBind, segment, enterCost)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEnterCostBind, segment, enterCost)
     }
 
     /**
@@ -261,7 +262,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_enter_cost
      */
     fun getEnterCost(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEnterCostBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEnterCostBind, segment)
     }
 
     /**
@@ -271,7 +272,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.set_travel_cost
      */
     fun setTravelCost(travelCost: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTravelCostBind, segment, travelCost)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTravelCostBind, segment, travelCost)
     }
 
     /**
@@ -281,7 +282,7 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: NavigationLink2D.get_travel_cost
      */
     fun getTravelCost(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTravelCostBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTravelCostBind, segment)
     }
 
     companion object {
@@ -291,120 +292,122 @@ class NavigationLink2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): NavigationLink2D? =
             if (handle.address() == 0L) null else NavigationLink2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_rid", GET_RID_HASH)
-        }
 
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val IS_ENABLED_HASH = 36873697L
-        private val isEnabledBind by lazy {
+        @JvmField
+        val isEnabledBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "is_enabled", IS_ENABLED_HASH)
-        }
 
         private const val SET_NAVIGATION_MAP_HASH = 2722037293L
-        private val setNavigationMapBind by lazy {
+        @JvmField
+        val setNavigationMapBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_navigation_map", SET_NAVIGATION_MAP_HASH)
-        }
 
         private const val GET_NAVIGATION_MAP_HASH = 2944877500L
-        private val getNavigationMapBind by lazy {
+        @JvmField
+        val getNavigationMapBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_navigation_map", GET_NAVIGATION_MAP_HASH)
-        }
 
         private const val SET_BIDIRECTIONAL_HASH = 2586408642L
-        private val setBidirectionalBind by lazy {
+        @JvmField
+        val setBidirectionalBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_bidirectional", SET_BIDIRECTIONAL_HASH)
-        }
 
         private const val IS_BIDIRECTIONAL_HASH = 36873697L
-        private val isBidirectionalBind by lazy {
+        @JvmField
+        val isBidirectionalBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "is_bidirectional", IS_BIDIRECTIONAL_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYERS_HASH = 1286410249L
-        private val setNavigationLayersBind by lazy {
+        @JvmField
+        val setNavigationLayersBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_navigation_layers", SET_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYERS_HASH = 3905245786L
-        private val getNavigationLayersBind by lazy {
+        @JvmField
+        val getNavigationLayersBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_navigation_layers", GET_NAVIGATION_LAYERS_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYER_VALUE_HASH = 300928843L
-        private val setNavigationLayerValueBind by lazy {
+        @JvmField
+        val setNavigationLayerValueBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_navigation_layer_value", SET_NAVIGATION_LAYER_VALUE_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYER_VALUE_HASH = 1116898809L
-        private val getNavigationLayerValueBind by lazy {
+        @JvmField
+        val getNavigationLayerValueBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_navigation_layer_value", GET_NAVIGATION_LAYER_VALUE_HASH)
-        }
 
         private const val SET_START_POSITION_HASH = 743155724L
-        private val setStartPositionBind by lazy {
+        @JvmField
+        val setStartPositionBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_start_position", SET_START_POSITION_HASH)
-        }
 
         private const val GET_START_POSITION_HASH = 3341600327L
-        private val getStartPositionBind by lazy {
+        @JvmField
+        val getStartPositionBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_start_position", GET_START_POSITION_HASH)
-        }
 
         private const val SET_END_POSITION_HASH = 743155724L
-        private val setEndPositionBind by lazy {
+        @JvmField
+        val setEndPositionBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_end_position", SET_END_POSITION_HASH)
-        }
 
         private const val GET_END_POSITION_HASH = 3341600327L
-        private val getEndPositionBind by lazy {
+        @JvmField
+        val getEndPositionBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_end_position", GET_END_POSITION_HASH)
-        }
 
         private const val SET_GLOBAL_START_POSITION_HASH = 743155724L
-        private val setGlobalStartPositionBind by lazy {
+        @JvmField
+        val setGlobalStartPositionBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_global_start_position", SET_GLOBAL_START_POSITION_HASH)
-        }
 
         private const val GET_GLOBAL_START_POSITION_HASH = 3341600327L
-        private val getGlobalStartPositionBind by lazy {
+        @JvmField
+        val getGlobalStartPositionBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_global_start_position", GET_GLOBAL_START_POSITION_HASH)
-        }
 
         private const val SET_GLOBAL_END_POSITION_HASH = 743155724L
-        private val setGlobalEndPositionBind by lazy {
+        @JvmField
+        val setGlobalEndPositionBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_global_end_position", SET_GLOBAL_END_POSITION_HASH)
-        }
 
         private const val GET_GLOBAL_END_POSITION_HASH = 3341600327L
-        private val getGlobalEndPositionBind by lazy {
+        @JvmField
+        val getGlobalEndPositionBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_global_end_position", GET_GLOBAL_END_POSITION_HASH)
-        }
 
         private const val SET_ENTER_COST_HASH = 373806689L
-        private val setEnterCostBind by lazy {
+        @JvmField
+        val setEnterCostBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_enter_cost", SET_ENTER_COST_HASH)
-        }
 
         private const val GET_ENTER_COST_HASH = 1740695150L
-        private val getEnterCostBind by lazy {
+        @JvmField
+        val getEnterCostBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_enter_cost", GET_ENTER_COST_HASH)
-        }
 
         private const val SET_TRAVEL_COST_HASH = 373806689L
-        private val setTravelCostBind by lazy {
+        @JvmField
+        val setTravelCostBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "set_travel_cost", SET_TRAVEL_COST_HASH)
-        }
 
         private const val GET_TRAVEL_COST_HASH = 1740695150L
-        private val getTravelCostBind by lazy {
+        @JvmField
+        val getTravelCostBind =
             ObjectCalls.getMethodBind("NavigationLink2D", "get_travel_cost", GET_TRAVEL_COST_HASH)
-        }
     }
 }

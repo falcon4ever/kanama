@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Vector2i
@@ -20,7 +21,7 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setImage(image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setImageBind, segment, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setImageBind, segment, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -34,7 +35,7 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun update(image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(updateBind, segment, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.updateBind, segment, listOf(image?.requireOpenHandle() ?: MemorySegment.NULL))
     }
 
     /**
@@ -44,7 +45,7 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
      */
     fun setSizeOverride(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeOverrideBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeOverrideBind, segment, size)
     }
 
     companion object {
@@ -55,7 +56,7 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
          * Generated from Godot docs: ImageTexture.create_from_image
          */
         fun createFromImage(image: Image?): ImageTexture? {
-            return ImageTexture.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(createFromImageBind, MemorySegment.NULL, image?.requireOpenHandle() ?: MemorySegment.NULL))
+            return ImageTexture.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createFromImageBind, MemorySegment.NULL, image?.requireOpenHandle() ?: MemorySegment.NULL))
         }
 
         @JvmStatic
@@ -67,25 +68,27 @@ class ImageTexture(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: MemorySegment): ImageTexture? =
             if (handle.address() == 0L) null else ImageTexture(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val CREATE_FROM_IMAGE_HASH = 2775144163L
-        private val createFromImageBind by lazy {
+        @JvmField
+        val createFromImageBind =
             ObjectCalls.getMethodBind("ImageTexture", "create_from_image", CREATE_FROM_IMAGE_HASH)
-        }
 
         private const val SET_IMAGE_HASH = 532598488L
-        private val setImageBind by lazy {
+        @JvmField
+        val setImageBind =
             ObjectCalls.getMethodBind("ImageTexture", "set_image", SET_IMAGE_HASH)
-        }
 
         private const val UPDATE_HASH = 532598488L
-        private val updateBind by lazy {
+        @JvmField
+        val updateBind =
             ObjectCalls.getMethodBind("ImageTexture", "update", UPDATE_HASH)
-        }
 
         private const val SET_SIZE_OVERRIDE_HASH = 1130785943L
-        private val setSizeOverrideBind by lazy {
+        @JvmField
+        val setSizeOverrideBind =
             ObjectCalls.getMethodBind("ImageTexture", "set_size_override", SET_SIZE_OVERRIDE_HASH)
-        }
     }
 }

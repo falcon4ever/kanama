@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -53,7 +54,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getNextSourceId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getNextSourceIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNextSourceIdBind, segment)
     }
 
     /**
@@ -67,7 +68,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addSource(source: TileSetSource?, atlasSourceIdOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addSourceBind, segment, source?.requireOpenHandle() ?: NULL_SEGMENT, atlasSourceIdOverride)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.addSourceBind, segment, source?.requireOpenHandle() ?: NULL_SEGMENT, atlasSourceIdOverride)
     }
 
     /**
@@ -77,7 +78,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeSource(sourceId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeSourceBind, segment, sourceId)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeSourceBind, segment, sourceId)
     }
 
     /**
@@ -87,7 +88,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setSourceId(sourceId: Int, newSourceId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setSourceIdBind, segment, sourceId, newSourceId)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSourceIdBind, segment, sourceId, newSourceId)
     }
 
     /**
@@ -97,7 +98,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSourceCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSourceCountBind, segment)
     }
 
     /**
@@ -107,7 +108,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceId(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSourceIdBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSourceIdBind, segment, index)
     }
 
     /**
@@ -117,7 +118,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasSource(sourceId: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceBind, segment, sourceId)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSourceBind, segment, sourceId)
     }
 
     /**
@@ -127,7 +128,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSource(sourceId: Int): TileSetSource? {
         checkOpen()
-        return TileSetSource.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSourceBind, segment, sourceId))
+        return TileSetSource.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSourceBind, segment, sourceId))
     }
 
     /**
@@ -137,7 +138,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setTileShape(shape: TileSet.TileShape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileShapeBind, segment, shape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTileShapeBind, segment, shape.value)
     }
 
     /**
@@ -147,7 +148,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileShape(): TileSet.TileShape {
         checkOpen()
-        return TileSet.TileShape(ObjectCalls.ptrcallNoArgsRetLong(getTileShapeBind, segment))
+        return TileSet.TileShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileShapeBind, segment))
     }
 
     /**
@@ -158,7 +159,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setTileLayout(layout: TileSet.TileLayout) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileLayoutBind, segment, layout.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTileLayoutBind, segment, layout.value)
     }
 
     /**
@@ -169,7 +170,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileLayout(): TileSet.TileLayout {
         checkOpen()
-        return TileSet.TileLayout(ObjectCalls.ptrcallNoArgsRetLong(getTileLayoutBind, segment))
+        return TileSet.TileLayout(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileLayoutBind, segment))
     }
 
     /**
@@ -180,7 +181,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setTileOffsetAxis(alignment: TileSet.TileOffsetAxis) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setTileOffsetAxisBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTileOffsetAxisBind, segment, alignment.value)
     }
 
     /**
@@ -191,7 +192,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileOffsetAxis(): TileSet.TileOffsetAxis {
         checkOpen()
-        return TileSet.TileOffsetAxis(ObjectCalls.ptrcallNoArgsRetLong(getTileOffsetAxisBind, segment))
+        return TileSet.TileOffsetAxis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTileOffsetAxisBind, segment))
     }
 
     /**
@@ -202,7 +203,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setTileSize(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setTileSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setTileSizeBind, segment, size)
     }
 
     /**
@@ -213,7 +214,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTileSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getTileSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getTileSizeBind, segment)
     }
 
     /**
@@ -223,7 +224,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setUvClipping(uvClipping: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setUvClippingBind, segment, uvClipping)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUvClippingBind, segment, uvClipping)
     }
 
     /**
@@ -233,7 +234,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun isUvClipping(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isUvClippingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUvClippingBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getOcclusionLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getOcclusionLayersCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getOcclusionLayersCountBind, segment)
     }
 
     /**
@@ -255,7 +256,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addOcclusionLayer(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addOcclusionLayerBind, segment, toPosition)
+        ObjectCalls.ptrcallWithIntArg(Binds.addOcclusionLayerBind, segment, toPosition)
     }
 
     /**
@@ -266,7 +267,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun moveOcclusionLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveOcclusionLayerBind, segment, layerIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveOcclusionLayerBind, segment, layerIndex, toPosition)
     }
 
     /**
@@ -276,7 +277,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeOcclusionLayer(layerIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeOcclusionLayerBind, segment, layerIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeOcclusionLayerBind, segment, layerIndex)
     }
 
     /**
@@ -287,7 +288,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setOcclusionLayerLightMask(layerIndex: Int, lightMask: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setOcclusionLayerLightMaskBind, segment, layerIndex, lightMask)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setOcclusionLayerLightMaskBind, segment, layerIndex, lightMask)
     }
 
     /**
@@ -297,7 +298,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getOcclusionLayerLightMask(layerIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getOcclusionLayerLightMaskBind, segment, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getOcclusionLayerLightMaskBind, segment, layerIndex)
     }
 
     /**
@@ -307,7 +308,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setOcclusionLayerSdfCollision(layerIndex: Int, sdfCollision: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setOcclusionLayerSdfCollisionBind, segment, layerIndex, sdfCollision)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setOcclusionLayerSdfCollisionBind, segment, layerIndex, sdfCollision)
     }
 
     /**
@@ -317,7 +318,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getOcclusionLayerSdfCollision(layerIndex: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getOcclusionLayerSdfCollisionBind, segment, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getOcclusionLayerSdfCollisionBind, segment, layerIndex)
     }
 
     /**
@@ -327,7 +328,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicsLayersCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicsLayersCountBind, segment)
     }
 
     /**
@@ -339,7 +340,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addPhysicsLayer(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addPhysicsLayerBind, segment, toPosition)
+        ObjectCalls.ptrcallWithIntArg(Binds.addPhysicsLayerBind, segment, toPosition)
     }
 
     /**
@@ -350,7 +351,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun movePhysicsLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(movePhysicsLayerBind, segment, layerIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.movePhysicsLayerBind, segment, layerIndex, toPosition)
     }
 
     /**
@@ -360,7 +361,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removePhysicsLayer(layerIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePhysicsLayerBind, segment, layerIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.removePhysicsLayerBind, segment, layerIndex)
     }
 
     /**
@@ -371,7 +372,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setPhysicsLayerCollisionLayer(layerIndex: Int, layer: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionLayerBind, segment, layerIndex, layer)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(Binds.setPhysicsLayerCollisionLayerBind, segment, layerIndex, layer)
     }
 
     /**
@@ -382,7 +383,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionLayer(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionLayerBind, segment, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getPhysicsLayerCollisionLayerBind, segment, layerIndex)
     }
 
     /**
@@ -392,7 +393,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setPhysicsLayerCollisionMask(layerIndex: Int, mask: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setPhysicsLayerCollisionMaskBind, segment, layerIndex, mask)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(Binds.setPhysicsLayerCollisionMaskBind, segment, layerIndex, mask)
     }
 
     /**
@@ -402,7 +403,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionMask(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getPhysicsLayerCollisionMaskBind, segment, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getPhysicsLayerCollisionMaskBind, segment, layerIndex)
     }
 
     /**
@@ -412,7 +413,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setPhysicsLayerCollisionPriority(layerIndex: Int, priority: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setPhysicsLayerCollisionPriorityBind, segment, layerIndex, priority)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setPhysicsLayerCollisionPriorityBind, segment, layerIndex, priority)
     }
 
     /**
@@ -422,7 +423,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerCollisionPriority(layerIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getPhysicsLayerCollisionPriorityBind, segment, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getPhysicsLayerCollisionPriorityBind, segment, layerIndex)
     }
 
     /**
@@ -432,7 +433,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setPhysicsLayerPhysicsMaterial(layerIndex: Int, physicsMaterial: PhysicsMaterial?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setPhysicsLayerPhysicsMaterialBind, segment, layerIndex, physicsMaterial?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setPhysicsLayerPhysicsMaterialBind, segment, layerIndex, physicsMaterial?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -442,7 +443,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPhysicsLayerPhysicsMaterial(layerIndex: Int): PhysicsMaterial? {
         checkOpen()
-        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getPhysicsLayerPhysicsMaterialBind, segment, layerIndex))
+        return PhysicsMaterial.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPhysicsLayerPhysicsMaterialBind, segment, layerIndex))
     }
 
     /**
@@ -452,7 +453,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainSetsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTerrainSetsCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTerrainSetsCountBind, segment)
     }
 
     /**
@@ -463,7 +464,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addTerrainSet(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addTerrainSetBind, segment, toPosition)
+        ObjectCalls.ptrcallWithIntArg(Binds.addTerrainSetBind, segment, toPosition)
     }
 
     /**
@@ -474,7 +475,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun moveTerrainSet(terrainSet: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveTerrainSetBind, segment, terrainSet, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveTerrainSetBind, segment, terrainSet, toPosition)
     }
 
     /**
@@ -484,7 +485,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeTerrainSet(terrainSet: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeTerrainSetBind, segment, terrainSet)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeTerrainSetBind, segment, terrainSet)
     }
 
     /**
@@ -495,7 +496,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setTerrainSetMode(terrainSet: Int, mode: TileSet.TerrainMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setTerrainSetModeBind, segment, terrainSet, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setTerrainSetModeBind, segment, terrainSet, mode.value)
     }
 
     /**
@@ -505,7 +506,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainSetMode(terrainSet: Int): TileSet.TerrainMode {
         checkOpen()
-        return TileSet.TerrainMode(ObjectCalls.ptrcallWithIntArgRetLong(getTerrainSetModeBind, segment, terrainSet))
+        return TileSet.TerrainMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getTerrainSetModeBind, segment, terrainSet))
     }
 
     /**
@@ -515,7 +516,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainsCount(terrainSet: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getTerrainsCountBind, segment, terrainSet)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getTerrainsCountBind, segment, terrainSet)
     }
 
     /**
@@ -526,7 +527,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addTerrain(terrainSet: Int, toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(addTerrainBind, segment, terrainSet, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.addTerrainBind, segment, terrainSet, toPosition)
     }
 
     /**
@@ -537,7 +538,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun moveTerrain(terrainSet: Int, terrainIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeIntArgs(moveTerrainBind, segment, terrainSet, terrainIndex, toPosition)
+        ObjectCalls.ptrcallWithThreeIntArgs(Binds.moveTerrainBind, segment, terrainSet, terrainIndex, toPosition)
     }
 
     /**
@@ -548,7 +549,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeTerrain(terrainSet: Int, terrainIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(removeTerrainBind, segment, terrainSet, terrainIndex)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.removeTerrainBind, segment, terrainSet, terrainIndex)
     }
 
     /**
@@ -558,7 +559,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun clearTerrains(terrainSet: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(clearTerrainsBind, segment, terrainSet)
+        ObjectCalls.ptrcallWithIntArg(Binds.clearTerrainsBind, segment, terrainSet)
     }
 
     /**
@@ -568,7 +569,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setTerrainName(terrainSet: Int, terrainIndex: Int, name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndStringArgs(setTerrainNameBind, segment, terrainSet, terrainIndex, name)
+        ObjectCalls.ptrcallWithTwoIntAndStringArgs(Binds.setTerrainNameBind, segment, terrainSet, terrainIndex, name)
     }
 
     /**
@@ -578,7 +579,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainName(terrainSet: Int, terrainIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetString(getTerrainNameBind, segment, terrainSet, terrainIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetString(Binds.getTerrainNameBind, segment, terrainSet, terrainIndex)
     }
 
     /**
@@ -589,7 +590,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setTerrainColor(terrainSet: Int, terrainIndex: Int, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndColorArg(setTerrainColorBind, segment, terrainSet, terrainIndex, color)
+        ObjectCalls.ptrcallWithTwoIntAndColorArg(Binds.setTerrainColorBind, segment, terrainSet, terrainIndex, color)
     }
 
     /**
@@ -599,7 +600,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getTerrainColor(terrainSet: Int, terrainIndex: Int): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(getTerrainColorBind, segment, terrainSet, terrainIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetColor(Binds.getTerrainColorBind, segment, terrainSet, terrainIndex)
     }
 
     /**
@@ -609,7 +610,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getNavigationLayersCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNavigationLayersCountBind, segment)
     }
 
     /**
@@ -621,7 +622,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addNavigationLayer(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addNavigationLayerBind, segment, toPosition)
+        ObjectCalls.ptrcallWithIntArg(Binds.addNavigationLayerBind, segment, toPosition)
     }
 
     /**
@@ -632,7 +633,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun moveNavigationLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveNavigationLayerBind, segment, layerIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveNavigationLayerBind, segment, layerIndex, toPosition)
     }
 
     /**
@@ -642,7 +643,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeNavigationLayer(layerIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeNavigationLayerBind, segment, layerIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeNavigationLayerBind, segment, layerIndex)
     }
 
     /**
@@ -653,7 +654,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setNavigationLayerLayers(layerIndex: Int, layers: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndUInt32Args(setNavigationLayerLayersBind, segment, layerIndex, layers)
+        ObjectCalls.ptrcallWithIntAndUInt32Args(Binds.setNavigationLayerLayersBind, segment, layerIndex, layers)
     }
 
     /**
@@ -664,7 +665,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationLayerLayers(layerIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(getNavigationLayerLayersBind, segment, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.getNavigationLayerLayersBind, segment, layerIndex)
     }
 
     /**
@@ -676,7 +677,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int, value: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(setNavigationLayerLayerValueBind, segment, layerIndex, layerNumber, value)
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(Binds.setNavigationLayerLayerValueBind, segment, layerIndex, layerNumber, value)
     }
 
     /**
@@ -688,7 +689,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getNavigationLayerLayerValue(layerIndex: Int, layerNumber: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(getNavigationLayerLayerValueBind, segment, layerIndex, layerNumber)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.getNavigationLayerLayerValueBind, segment, layerIndex, layerNumber)
     }
 
     /**
@@ -698,7 +699,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomDataLayersCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCustomDataLayersCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCustomDataLayersCountBind, segment)
     }
 
     /**
@@ -710,7 +711,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addCustomDataLayer(toPosition: Int = -1) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(addCustomDataLayerBind, segment, toPosition)
+        ObjectCalls.ptrcallWithIntArg(Binds.addCustomDataLayerBind, segment, toPosition)
     }
 
     /**
@@ -721,7 +722,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun moveCustomDataLayer(layerIndex: Int, toPosition: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(moveCustomDataLayerBind, segment, layerIndex, toPosition)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.moveCustomDataLayerBind, segment, layerIndex, toPosition)
     }
 
     /**
@@ -731,7 +732,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeCustomDataLayer(layerIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeCustomDataLayerBind, segment, layerIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeCustomDataLayerBind, segment, layerIndex)
     }
 
     /**
@@ -741,7 +742,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomDataLayerByName(layerName: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetInt(getCustomDataLayerByNameBind, segment, layerName)
+        return ObjectCalls.ptrcallWithStringArgRetInt(Binds.getCustomDataLayerByNameBind, segment, layerName)
     }
 
     /**
@@ -752,7 +753,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setCustomDataLayerName(layerIndex: Int, layerName: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndStringArg(setCustomDataLayerNameBind, segment, layerIndex, layerName)
+        ObjectCalls.ptrcallWithIntAndStringArg(Binds.setCustomDataLayerNameBind, segment, layerIndex, layerName)
     }
 
     /**
@@ -762,7 +763,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasCustomDataLayerByName(layerName: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasCustomDataLayerByNameBind, segment, layerName)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasCustomDataLayerByNameBind, segment, layerName)
     }
 
     /**
@@ -772,7 +773,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomDataLayerName(layerIndex: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getCustomDataLayerNameBind, segment, layerIndex)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getCustomDataLayerNameBind, segment, layerIndex)
     }
 
     /**
@@ -782,7 +783,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setCustomDataLayerType(layerIndex: Int, layerType: VariantType) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setCustomDataLayerTypeBind, segment, layerIndex, layerType.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setCustomDataLayerTypeBind, segment, layerIndex, layerType.value)
     }
 
     /**
@@ -792,7 +793,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCustomDataLayerType(layerIndex: Int): VariantType {
         checkOpen()
-        return VariantType(ObjectCalls.ptrcallWithIntArgRetLong(getCustomDataLayerTypeBind, segment, layerIndex))
+        return VariantType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.getCustomDataLayerTypeBind, segment, layerIndex))
     }
 
     /**
@@ -805,7 +806,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setSourceLevelTileProxy(sourceFrom: Int, sourceTo: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setSourceLevelTileProxyBind, segment, sourceFrom, sourceTo)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSourceLevelTileProxyBind, segment, sourceFrom, sourceTo)
     }
 
     /**
@@ -816,7 +817,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getSourceLevelTileProxy(sourceFrom: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSourceLevelTileProxyBind, segment, sourceFrom)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSourceLevelTileProxyBind, segment, sourceFrom)
     }
 
     /**
@@ -826,7 +827,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasSourceLevelTileProxy(sourceFrom: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasSourceLevelTileProxyBind, segment, sourceFrom)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSourceLevelTileProxyBind, segment, sourceFrom)
     }
 
     /**
@@ -836,7 +837,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeSourceLevelTileProxy(sourceFrom: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeSourceLevelTileProxyBind, segment, sourceFrom)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeSourceLevelTileProxyBind, segment, sourceFrom)
     }
 
     /**
@@ -849,7 +850,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, sourceTo: Int, coordsTo: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntVector2iArgs(setCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom, sourceTo, coordsTo)
+        ObjectCalls.ptrcallWithIntVector2iIntVector2iArgs(Binds.setCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom, sourceTo, coordsTo)
     }
 
     /**
@@ -861,7 +862,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iArgsRetArray(getCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
+        return ObjectCalls.ptrcallWithIntVector2iArgsRetArray(Binds.getCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
     }
 
     /**
@@ -871,7 +872,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(hasCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
+        return ObjectCalls.ptrcallWithIntAndVector2iArgRetBool(Binds.hasCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
     }
 
     /**
@@ -881,7 +882,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeCoordsLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2iArg(removeCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
+        ObjectCalls.ptrcallWithIntAndVector2iArg(Binds.removeCoordsLevelTileProxyBind, segment, sourceFrom, coordsFrom)
     }
 
     /**
@@ -893,7 +894,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun setAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int, sourceTo: Int, coordsTo: Vector2i, alternativeTo: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iTwoIntVector2iIntArgs(setAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom, sourceTo, coordsTo, alternativeTo)
+        ObjectCalls.ptrcallWithIntVector2iTwoIntVector2iIntArgs(Binds.setAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom, sourceTo, coordsTo, alternativeTo)
     }
 
     /**
@@ -905,7 +906,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(getAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(Binds.getAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     /**
@@ -915,7 +916,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun hasAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(hasAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetBool(Binds.hasAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     /**
@@ -925,7 +926,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removeAlternativeLevelTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        ObjectCalls.ptrcallWithIntVector2iAndIntArg(Binds.removeAlternativeLevelTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     /**
@@ -939,7 +940,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun mapTileProxy(sourceFrom: Int, coordsFrom: Vector2i, alternativeFrom: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(mapTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetArray(Binds.mapTileProxyBind, segment, sourceFrom, coordsFrom, alternativeFrom)
     }
 
     /**
@@ -949,7 +950,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun cleanupInvalidTileProxies() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(cleanupInvalidTileProxiesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.cleanupInvalidTileProxiesBind, segment)
     }
 
     /**
@@ -959,7 +960,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun clearTileProxies() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearTileProxiesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearTileProxiesBind, segment)
     }
 
     /**
@@ -970,7 +971,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun addPattern(pattern: TileMapPattern?, index: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(addPatternBind, segment, pattern?.requireOpenHandle() ?: NULL_SEGMENT, index)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.addPatternBind, segment, pattern?.requireOpenHandle() ?: NULL_SEGMENT, index)
     }
 
     /**
@@ -980,7 +981,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPattern(index: Int = -1): TileMapPattern? {
         checkOpen()
-        return TileMapPattern.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getPatternBind, segment, index))
+        return TileMapPattern.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getPatternBind, segment, index))
     }
 
     /**
@@ -990,7 +991,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun removePattern(index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removePatternBind, segment, index)
+        ObjectCalls.ptrcallWithIntArg(Binds.removePatternBind, segment, index)
     }
 
     /**
@@ -1000,7 +1001,7 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
      */
     fun getPatternsCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPatternsCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPatternsCountBind, segment)
     }
 
     /**
@@ -1265,455 +1266,457 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TileSet? =
             if (handle.address() == 0L) null else TileSet(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_NEXT_SOURCE_ID_HASH = 3905245786L
-        private val getNextSourceIdBind by lazy {
+        @JvmField
+        val getNextSourceIdBind =
             ObjectCalls.getMethodBind("TileSet", "get_next_source_id", GET_NEXT_SOURCE_ID_HASH)
-        }
 
         private const val ADD_SOURCE_HASH = 1059186179L
-        private val addSourceBind by lazy {
+        @JvmField
+        val addSourceBind =
             ObjectCalls.getMethodBind("TileSet", "add_source", ADD_SOURCE_HASH)
-        }
 
         private const val REMOVE_SOURCE_HASH = 1286410249L
-        private val removeSourceBind by lazy {
+        @JvmField
+        val removeSourceBind =
             ObjectCalls.getMethodBind("TileSet", "remove_source", REMOVE_SOURCE_HASH)
-        }
 
         private const val SET_SOURCE_ID_HASH = 3937882851L
-        private val setSourceIdBind by lazy {
+        @JvmField
+        val setSourceIdBind =
             ObjectCalls.getMethodBind("TileSet", "set_source_id", SET_SOURCE_ID_HASH)
-        }
 
         private const val GET_SOURCE_COUNT_HASH = 3905245786L
-        private val getSourceCountBind by lazy {
+        @JvmField
+        val getSourceCountBind =
             ObjectCalls.getMethodBind("TileSet", "get_source_count", GET_SOURCE_COUNT_HASH)
-        }
 
         private const val GET_SOURCE_ID_HASH = 923996154L
-        private val getSourceIdBind by lazy {
+        @JvmField
+        val getSourceIdBind =
             ObjectCalls.getMethodBind("TileSet", "get_source_id", GET_SOURCE_ID_HASH)
-        }
 
         private const val HAS_SOURCE_HASH = 1116898809L
-        private val hasSourceBind by lazy {
+        @JvmField
+        val hasSourceBind =
             ObjectCalls.getMethodBind("TileSet", "has_source", HAS_SOURCE_HASH)
-        }
 
         private const val GET_SOURCE_HASH = 1763540252L
-        private val getSourceBind by lazy {
+        @JvmField
+        val getSourceBind =
             ObjectCalls.getMethodBind("TileSet", "get_source", GET_SOURCE_HASH)
-        }
 
         private const val SET_TILE_SHAPE_HASH = 2131427112L
-        private val setTileShapeBind by lazy {
+        @JvmField
+        val setTileShapeBind =
             ObjectCalls.getMethodBind("TileSet", "set_tile_shape", SET_TILE_SHAPE_HASH)
-        }
 
         private const val GET_TILE_SHAPE_HASH = 716918169L
-        private val getTileShapeBind by lazy {
+        @JvmField
+        val getTileShapeBind =
             ObjectCalls.getMethodBind("TileSet", "get_tile_shape", GET_TILE_SHAPE_HASH)
-        }
 
         private const val SET_TILE_LAYOUT_HASH = 1071216679L
-        private val setTileLayoutBind by lazy {
+        @JvmField
+        val setTileLayoutBind =
             ObjectCalls.getMethodBind("TileSet", "set_tile_layout", SET_TILE_LAYOUT_HASH)
-        }
 
         private const val GET_TILE_LAYOUT_HASH = 194628839L
-        private val getTileLayoutBind by lazy {
+        @JvmField
+        val getTileLayoutBind =
             ObjectCalls.getMethodBind("TileSet", "get_tile_layout", GET_TILE_LAYOUT_HASH)
-        }
 
         private const val SET_TILE_OFFSET_AXIS_HASH = 3300198521L
-        private val setTileOffsetAxisBind by lazy {
+        @JvmField
+        val setTileOffsetAxisBind =
             ObjectCalls.getMethodBind("TileSet", "set_tile_offset_axis", SET_TILE_OFFSET_AXIS_HASH)
-        }
 
         private const val GET_TILE_OFFSET_AXIS_HASH = 762494114L
-        private val getTileOffsetAxisBind by lazy {
+        @JvmField
+        val getTileOffsetAxisBind =
             ObjectCalls.getMethodBind("TileSet", "get_tile_offset_axis", GET_TILE_OFFSET_AXIS_HASH)
-        }
 
         private const val SET_TILE_SIZE_HASH = 1130785943L
-        private val setTileSizeBind by lazy {
+        @JvmField
+        val setTileSizeBind =
             ObjectCalls.getMethodBind("TileSet", "set_tile_size", SET_TILE_SIZE_HASH)
-        }
 
         private const val GET_TILE_SIZE_HASH = 3690982128L
-        private val getTileSizeBind by lazy {
+        @JvmField
+        val getTileSizeBind =
             ObjectCalls.getMethodBind("TileSet", "get_tile_size", GET_TILE_SIZE_HASH)
-        }
 
         private const val SET_UV_CLIPPING_HASH = 2586408642L
-        private val setUvClippingBind by lazy {
+        @JvmField
+        val setUvClippingBind =
             ObjectCalls.getMethodBind("TileSet", "set_uv_clipping", SET_UV_CLIPPING_HASH)
-        }
 
         private const val IS_UV_CLIPPING_HASH = 36873697L
-        private val isUvClippingBind by lazy {
+        @JvmField
+        val isUvClippingBind =
             ObjectCalls.getMethodBind("TileSet", "is_uv_clipping", IS_UV_CLIPPING_HASH)
-        }
 
         private const val GET_OCCLUSION_LAYERS_COUNT_HASH = 3905245786L
-        private val getOcclusionLayersCountBind by lazy {
+        @JvmField
+        val getOcclusionLayersCountBind =
             ObjectCalls.getMethodBind("TileSet", "get_occlusion_layers_count", GET_OCCLUSION_LAYERS_COUNT_HASH)
-        }
 
         private const val ADD_OCCLUSION_LAYER_HASH = 1025054187L
-        private val addOcclusionLayerBind by lazy {
+        @JvmField
+        val addOcclusionLayerBind =
             ObjectCalls.getMethodBind("TileSet", "add_occlusion_layer", ADD_OCCLUSION_LAYER_HASH)
-        }
 
         private const val MOVE_OCCLUSION_LAYER_HASH = 3937882851L
-        private val moveOcclusionLayerBind by lazy {
+        @JvmField
+        val moveOcclusionLayerBind =
             ObjectCalls.getMethodBind("TileSet", "move_occlusion_layer", MOVE_OCCLUSION_LAYER_HASH)
-        }
 
         private const val REMOVE_OCCLUSION_LAYER_HASH = 1286410249L
-        private val removeOcclusionLayerBind by lazy {
+        @JvmField
+        val removeOcclusionLayerBind =
             ObjectCalls.getMethodBind("TileSet", "remove_occlusion_layer", REMOVE_OCCLUSION_LAYER_HASH)
-        }
 
         private const val SET_OCCLUSION_LAYER_LIGHT_MASK_HASH = 3937882851L
-        private val setOcclusionLayerLightMaskBind by lazy {
+        @JvmField
+        val setOcclusionLayerLightMaskBind =
             ObjectCalls.getMethodBind("TileSet", "set_occlusion_layer_light_mask", SET_OCCLUSION_LAYER_LIGHT_MASK_HASH)
-        }
 
         private const val GET_OCCLUSION_LAYER_LIGHT_MASK_HASH = 923996154L
-        private val getOcclusionLayerLightMaskBind by lazy {
+        @JvmField
+        val getOcclusionLayerLightMaskBind =
             ObjectCalls.getMethodBind("TileSet", "get_occlusion_layer_light_mask", GET_OCCLUSION_LAYER_LIGHT_MASK_HASH)
-        }
 
         private const val SET_OCCLUSION_LAYER_SDF_COLLISION_HASH = 300928843L
-        private val setOcclusionLayerSdfCollisionBind by lazy {
+        @JvmField
+        val setOcclusionLayerSdfCollisionBind =
             ObjectCalls.getMethodBind("TileSet", "set_occlusion_layer_sdf_collision", SET_OCCLUSION_LAYER_SDF_COLLISION_HASH)
-        }
 
         private const val GET_OCCLUSION_LAYER_SDF_COLLISION_HASH = 1116898809L
-        private val getOcclusionLayerSdfCollisionBind by lazy {
+        @JvmField
+        val getOcclusionLayerSdfCollisionBind =
             ObjectCalls.getMethodBind("TileSet", "get_occlusion_layer_sdf_collision", GET_OCCLUSION_LAYER_SDF_COLLISION_HASH)
-        }
 
         private const val GET_PHYSICS_LAYERS_COUNT_HASH = 3905245786L
-        private val getPhysicsLayersCountBind by lazy {
+        @JvmField
+        val getPhysicsLayersCountBind =
             ObjectCalls.getMethodBind("TileSet", "get_physics_layers_count", GET_PHYSICS_LAYERS_COUNT_HASH)
-        }
 
         private const val ADD_PHYSICS_LAYER_HASH = 1025054187L
-        private val addPhysicsLayerBind by lazy {
+        @JvmField
+        val addPhysicsLayerBind =
             ObjectCalls.getMethodBind("TileSet", "add_physics_layer", ADD_PHYSICS_LAYER_HASH)
-        }
 
         private const val MOVE_PHYSICS_LAYER_HASH = 3937882851L
-        private val movePhysicsLayerBind by lazy {
+        @JvmField
+        val movePhysicsLayerBind =
             ObjectCalls.getMethodBind("TileSet", "move_physics_layer", MOVE_PHYSICS_LAYER_HASH)
-        }
 
         private const val REMOVE_PHYSICS_LAYER_HASH = 1286410249L
-        private val removePhysicsLayerBind by lazy {
+        @JvmField
+        val removePhysicsLayerBind =
             ObjectCalls.getMethodBind("TileSet", "remove_physics_layer", REMOVE_PHYSICS_LAYER_HASH)
-        }
 
         private const val SET_PHYSICS_LAYER_COLLISION_LAYER_HASH = 3937882851L
-        private val setPhysicsLayerCollisionLayerBind by lazy {
+        @JvmField
+        val setPhysicsLayerCollisionLayerBind =
             ObjectCalls.getMethodBind("TileSet", "set_physics_layer_collision_layer", SET_PHYSICS_LAYER_COLLISION_LAYER_HASH)
-        }
 
         private const val GET_PHYSICS_LAYER_COLLISION_LAYER_HASH = 923996154L
-        private val getPhysicsLayerCollisionLayerBind by lazy {
+        @JvmField
+        val getPhysicsLayerCollisionLayerBind =
             ObjectCalls.getMethodBind("TileSet", "get_physics_layer_collision_layer", GET_PHYSICS_LAYER_COLLISION_LAYER_HASH)
-        }
 
         private const val SET_PHYSICS_LAYER_COLLISION_MASK_HASH = 3937882851L
-        private val setPhysicsLayerCollisionMaskBind by lazy {
+        @JvmField
+        val setPhysicsLayerCollisionMaskBind =
             ObjectCalls.getMethodBind("TileSet", "set_physics_layer_collision_mask", SET_PHYSICS_LAYER_COLLISION_MASK_HASH)
-        }
 
         private const val GET_PHYSICS_LAYER_COLLISION_MASK_HASH = 923996154L
-        private val getPhysicsLayerCollisionMaskBind by lazy {
+        @JvmField
+        val getPhysicsLayerCollisionMaskBind =
             ObjectCalls.getMethodBind("TileSet", "get_physics_layer_collision_mask", GET_PHYSICS_LAYER_COLLISION_MASK_HASH)
-        }
 
         private const val SET_PHYSICS_LAYER_COLLISION_PRIORITY_HASH = 1602489585L
-        private val setPhysicsLayerCollisionPriorityBind by lazy {
+        @JvmField
+        val setPhysicsLayerCollisionPriorityBind =
             ObjectCalls.getMethodBind("TileSet", "set_physics_layer_collision_priority", SET_PHYSICS_LAYER_COLLISION_PRIORITY_HASH)
-        }
 
         private const val GET_PHYSICS_LAYER_COLLISION_PRIORITY_HASH = 2339986948L
-        private val getPhysicsLayerCollisionPriorityBind by lazy {
+        @JvmField
+        val getPhysicsLayerCollisionPriorityBind =
             ObjectCalls.getMethodBind("TileSet", "get_physics_layer_collision_priority", GET_PHYSICS_LAYER_COLLISION_PRIORITY_HASH)
-        }
 
         private const val SET_PHYSICS_LAYER_PHYSICS_MATERIAL_HASH = 1018687357L
-        private val setPhysicsLayerPhysicsMaterialBind by lazy {
+        @JvmField
+        val setPhysicsLayerPhysicsMaterialBind =
             ObjectCalls.getMethodBind("TileSet", "set_physics_layer_physics_material", SET_PHYSICS_LAYER_PHYSICS_MATERIAL_HASH)
-        }
 
         private const val GET_PHYSICS_LAYER_PHYSICS_MATERIAL_HASH = 788318639L
-        private val getPhysicsLayerPhysicsMaterialBind by lazy {
+        @JvmField
+        val getPhysicsLayerPhysicsMaterialBind =
             ObjectCalls.getMethodBind("TileSet", "get_physics_layer_physics_material", GET_PHYSICS_LAYER_PHYSICS_MATERIAL_HASH)
-        }
 
         private const val GET_TERRAIN_SETS_COUNT_HASH = 3905245786L
-        private val getTerrainSetsCountBind by lazy {
+        @JvmField
+        val getTerrainSetsCountBind =
             ObjectCalls.getMethodBind("TileSet", "get_terrain_sets_count", GET_TERRAIN_SETS_COUNT_HASH)
-        }
 
         private const val ADD_TERRAIN_SET_HASH = 1025054187L
-        private val addTerrainSetBind by lazy {
+        @JvmField
+        val addTerrainSetBind =
             ObjectCalls.getMethodBind("TileSet", "add_terrain_set", ADD_TERRAIN_SET_HASH)
-        }
 
         private const val MOVE_TERRAIN_SET_HASH = 3937882851L
-        private val moveTerrainSetBind by lazy {
+        @JvmField
+        val moveTerrainSetBind =
             ObjectCalls.getMethodBind("TileSet", "move_terrain_set", MOVE_TERRAIN_SET_HASH)
-        }
 
         private const val REMOVE_TERRAIN_SET_HASH = 1286410249L
-        private val removeTerrainSetBind by lazy {
+        @JvmField
+        val removeTerrainSetBind =
             ObjectCalls.getMethodBind("TileSet", "remove_terrain_set", REMOVE_TERRAIN_SET_HASH)
-        }
 
         private const val SET_TERRAIN_SET_MODE_HASH = 3943003916L
-        private val setTerrainSetModeBind by lazy {
+        @JvmField
+        val setTerrainSetModeBind =
             ObjectCalls.getMethodBind("TileSet", "set_terrain_set_mode", SET_TERRAIN_SET_MODE_HASH)
-        }
 
         private const val GET_TERRAIN_SET_MODE_HASH = 2084469411L
-        private val getTerrainSetModeBind by lazy {
+        @JvmField
+        val getTerrainSetModeBind =
             ObjectCalls.getMethodBind("TileSet", "get_terrain_set_mode", GET_TERRAIN_SET_MODE_HASH)
-        }
 
         private const val GET_TERRAINS_COUNT_HASH = 923996154L
-        private val getTerrainsCountBind by lazy {
+        @JvmField
+        val getTerrainsCountBind =
             ObjectCalls.getMethodBind("TileSet", "get_terrains_count", GET_TERRAINS_COUNT_HASH)
-        }
 
         private const val ADD_TERRAIN_HASH = 1230568737L
-        private val addTerrainBind by lazy {
+        @JvmField
+        val addTerrainBind =
             ObjectCalls.getMethodBind("TileSet", "add_terrain", ADD_TERRAIN_HASH)
-        }
 
         private const val MOVE_TERRAIN_HASH = 1649997291L
-        private val moveTerrainBind by lazy {
+        @JvmField
+        val moveTerrainBind =
             ObjectCalls.getMethodBind("TileSet", "move_terrain", MOVE_TERRAIN_HASH)
-        }
 
         private const val REMOVE_TERRAIN_HASH = 3937882851L
-        private val removeTerrainBind by lazy {
+        @JvmField
+        val removeTerrainBind =
             ObjectCalls.getMethodBind("TileSet", "remove_terrain", REMOVE_TERRAIN_HASH)
-        }
 
         private const val CLEAR_TERRAINS_HASH = 1286410249L
-        private val clearTerrainsBind by lazy {
+        @JvmField
+        val clearTerrainsBind =
             ObjectCalls.getMethodBind("TileSet", "clear_terrains", CLEAR_TERRAINS_HASH)
-        }
 
         private const val SET_TERRAIN_NAME_HASH = 2285447957L
-        private val setTerrainNameBind by lazy {
+        @JvmField
+        val setTerrainNameBind =
             ObjectCalls.getMethodBind("TileSet", "set_terrain_name", SET_TERRAIN_NAME_HASH)
-        }
 
         private const val GET_TERRAIN_NAME_HASH = 1391810591L
-        private val getTerrainNameBind by lazy {
+        @JvmField
+        val getTerrainNameBind =
             ObjectCalls.getMethodBind("TileSet", "get_terrain_name", GET_TERRAIN_NAME_HASH)
-        }
 
         private const val SET_TERRAIN_COLOR_HASH = 3733378741L
-        private val setTerrainColorBind by lazy {
+        @JvmField
+        val setTerrainColorBind =
             ObjectCalls.getMethodBind("TileSet", "set_terrain_color", SET_TERRAIN_COLOR_HASH)
-        }
 
         private const val GET_TERRAIN_COLOR_HASH = 2165839948L
-        private val getTerrainColorBind by lazy {
+        @JvmField
+        val getTerrainColorBind =
             ObjectCalls.getMethodBind("TileSet", "get_terrain_color", GET_TERRAIN_COLOR_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYERS_COUNT_HASH = 3905245786L
-        private val getNavigationLayersCountBind by lazy {
+        @JvmField
+        val getNavigationLayersCountBind =
             ObjectCalls.getMethodBind("TileSet", "get_navigation_layers_count", GET_NAVIGATION_LAYERS_COUNT_HASH)
-        }
 
         private const val ADD_NAVIGATION_LAYER_HASH = 1025054187L
-        private val addNavigationLayerBind by lazy {
+        @JvmField
+        val addNavigationLayerBind =
             ObjectCalls.getMethodBind("TileSet", "add_navigation_layer", ADD_NAVIGATION_LAYER_HASH)
-        }
 
         private const val MOVE_NAVIGATION_LAYER_HASH = 3937882851L
-        private val moveNavigationLayerBind by lazy {
+        @JvmField
+        val moveNavigationLayerBind =
             ObjectCalls.getMethodBind("TileSet", "move_navigation_layer", MOVE_NAVIGATION_LAYER_HASH)
-        }
 
         private const val REMOVE_NAVIGATION_LAYER_HASH = 1286410249L
-        private val removeNavigationLayerBind by lazy {
+        @JvmField
+        val removeNavigationLayerBind =
             ObjectCalls.getMethodBind("TileSet", "remove_navigation_layer", REMOVE_NAVIGATION_LAYER_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYER_LAYERS_HASH = 3937882851L
-        private val setNavigationLayerLayersBind by lazy {
+        @JvmField
+        val setNavigationLayerLayersBind =
             ObjectCalls.getMethodBind("TileSet", "set_navigation_layer_layers", SET_NAVIGATION_LAYER_LAYERS_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYER_LAYERS_HASH = 923996154L
-        private val getNavigationLayerLayersBind by lazy {
+        @JvmField
+        val getNavigationLayerLayersBind =
             ObjectCalls.getMethodBind("TileSet", "get_navigation_layer_layers", GET_NAVIGATION_LAYER_LAYERS_HASH)
-        }
 
         private const val SET_NAVIGATION_LAYER_LAYER_VALUE_HASH = 1383440665L
-        private val setNavigationLayerLayerValueBind by lazy {
+        @JvmField
+        val setNavigationLayerLayerValueBind =
             ObjectCalls.getMethodBind("TileSet", "set_navigation_layer_layer_value", SET_NAVIGATION_LAYER_LAYER_VALUE_HASH)
-        }
 
         private const val GET_NAVIGATION_LAYER_LAYER_VALUE_HASH = 2522259332L
-        private val getNavigationLayerLayerValueBind by lazy {
+        @JvmField
+        val getNavigationLayerLayerValueBind =
             ObjectCalls.getMethodBind("TileSet", "get_navigation_layer_layer_value", GET_NAVIGATION_LAYER_LAYER_VALUE_HASH)
-        }
 
         private const val GET_CUSTOM_DATA_LAYERS_COUNT_HASH = 3905245786L
-        private val getCustomDataLayersCountBind by lazy {
+        @JvmField
+        val getCustomDataLayersCountBind =
             ObjectCalls.getMethodBind("TileSet", "get_custom_data_layers_count", GET_CUSTOM_DATA_LAYERS_COUNT_HASH)
-        }
 
         private const val ADD_CUSTOM_DATA_LAYER_HASH = 1025054187L
-        private val addCustomDataLayerBind by lazy {
+        @JvmField
+        val addCustomDataLayerBind =
             ObjectCalls.getMethodBind("TileSet", "add_custom_data_layer", ADD_CUSTOM_DATA_LAYER_HASH)
-        }
 
         private const val MOVE_CUSTOM_DATA_LAYER_HASH = 3937882851L
-        private val moveCustomDataLayerBind by lazy {
+        @JvmField
+        val moveCustomDataLayerBind =
             ObjectCalls.getMethodBind("TileSet", "move_custom_data_layer", MOVE_CUSTOM_DATA_LAYER_HASH)
-        }
 
         private const val REMOVE_CUSTOM_DATA_LAYER_HASH = 1286410249L
-        private val removeCustomDataLayerBind by lazy {
+        @JvmField
+        val removeCustomDataLayerBind =
             ObjectCalls.getMethodBind("TileSet", "remove_custom_data_layer", REMOVE_CUSTOM_DATA_LAYER_HASH)
-        }
 
         private const val GET_CUSTOM_DATA_LAYER_BY_NAME_HASH = 1321353865L
-        private val getCustomDataLayerByNameBind by lazy {
+        @JvmField
+        val getCustomDataLayerByNameBind =
             ObjectCalls.getMethodBind("TileSet", "get_custom_data_layer_by_name", GET_CUSTOM_DATA_LAYER_BY_NAME_HASH)
-        }
 
         private const val SET_CUSTOM_DATA_LAYER_NAME_HASH = 501894301L
-        private val setCustomDataLayerNameBind by lazy {
+        @JvmField
+        val setCustomDataLayerNameBind =
             ObjectCalls.getMethodBind("TileSet", "set_custom_data_layer_name", SET_CUSTOM_DATA_LAYER_NAME_HASH)
-        }
 
         private const val HAS_CUSTOM_DATA_LAYER_BY_NAME_HASH = 3927539163L
-        private val hasCustomDataLayerByNameBind by lazy {
+        @JvmField
+        val hasCustomDataLayerByNameBind =
             ObjectCalls.getMethodBind("TileSet", "has_custom_data_layer_by_name", HAS_CUSTOM_DATA_LAYER_BY_NAME_HASH)
-        }
 
         private const val GET_CUSTOM_DATA_LAYER_NAME_HASH = 844755477L
-        private val getCustomDataLayerNameBind by lazy {
+        @JvmField
+        val getCustomDataLayerNameBind =
             ObjectCalls.getMethodBind("TileSet", "get_custom_data_layer_name", GET_CUSTOM_DATA_LAYER_NAME_HASH)
-        }
 
         private const val SET_CUSTOM_DATA_LAYER_TYPE_HASH = 3492912874L
-        private val setCustomDataLayerTypeBind by lazy {
+        @JvmField
+        val setCustomDataLayerTypeBind =
             ObjectCalls.getMethodBind("TileSet", "set_custom_data_layer_type", SET_CUSTOM_DATA_LAYER_TYPE_HASH)
-        }
 
         private const val GET_CUSTOM_DATA_LAYER_TYPE_HASH = 2990820875L
-        private val getCustomDataLayerTypeBind by lazy {
+        @JvmField
+        val getCustomDataLayerTypeBind =
             ObjectCalls.getMethodBind("TileSet", "get_custom_data_layer_type", GET_CUSTOM_DATA_LAYER_TYPE_HASH)
-        }
 
         private const val SET_SOURCE_LEVEL_TILE_PROXY_HASH = 3937882851L
-        private val setSourceLevelTileProxyBind by lazy {
+        @JvmField
+        val setSourceLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "set_source_level_tile_proxy", SET_SOURCE_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val GET_SOURCE_LEVEL_TILE_PROXY_HASH = 3744713108L
-        private val getSourceLevelTileProxyBind by lazy {
+        @JvmField
+        val getSourceLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "get_source_level_tile_proxy", GET_SOURCE_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val HAS_SOURCE_LEVEL_TILE_PROXY_HASH = 3067735520L
-        private val hasSourceLevelTileProxyBind by lazy {
+        @JvmField
+        val hasSourceLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "has_source_level_tile_proxy", HAS_SOURCE_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val REMOVE_SOURCE_LEVEL_TILE_PROXY_HASH = 1286410249L
-        private val removeSourceLevelTileProxyBind by lazy {
+        @JvmField
+        val removeSourceLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "remove_source_level_tile_proxy", REMOVE_SOURCE_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val SET_COORDS_LEVEL_TILE_PROXY_HASH = 1769939278L
-        private val setCoordsLevelTileProxyBind by lazy {
+        @JvmField
+        val setCoordsLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "set_coords_level_tile_proxy", SET_COORDS_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val GET_COORDS_LEVEL_TILE_PROXY_HASH = 2856536371L
-        private val getCoordsLevelTileProxyBind by lazy {
+        @JvmField
+        val getCoordsLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "get_coords_level_tile_proxy", GET_COORDS_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val HAS_COORDS_LEVEL_TILE_PROXY_HASH = 3957903770L
-        private val hasCoordsLevelTileProxyBind by lazy {
+        @JvmField
+        val hasCoordsLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "has_coords_level_tile_proxy", HAS_COORDS_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val REMOVE_COORDS_LEVEL_TILE_PROXY_HASH = 2311374912L
-        private val removeCoordsLevelTileProxyBind by lazy {
+        @JvmField
+        val removeCoordsLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "remove_coords_level_tile_proxy", REMOVE_COORDS_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val SET_ALTERNATIVE_LEVEL_TILE_PROXY_HASH = 3862385460L
-        private val setAlternativeLevelTileProxyBind by lazy {
+        @JvmField
+        val setAlternativeLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "set_alternative_level_tile_proxy", SET_ALTERNATIVE_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val GET_ALTERNATIVE_LEVEL_TILE_PROXY_HASH = 2303761075L
-        private val getAlternativeLevelTileProxyBind by lazy {
+        @JvmField
+        val getAlternativeLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "get_alternative_level_tile_proxy", GET_ALTERNATIVE_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val HAS_ALTERNATIVE_LEVEL_TILE_PROXY_HASH = 180086755L
-        private val hasAlternativeLevelTileProxyBind by lazy {
+        @JvmField
+        val hasAlternativeLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "has_alternative_level_tile_proxy", HAS_ALTERNATIVE_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val REMOVE_ALTERNATIVE_LEVEL_TILE_PROXY_HASH = 2328951467L
-        private val removeAlternativeLevelTileProxyBind by lazy {
+        @JvmField
+        val removeAlternativeLevelTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "remove_alternative_level_tile_proxy", REMOVE_ALTERNATIVE_LEVEL_TILE_PROXY_HASH)
-        }
 
         private const val MAP_TILE_PROXY_HASH = 4267935328L
-        private val mapTileProxyBind by lazy {
+        @JvmField
+        val mapTileProxyBind =
             ObjectCalls.getMethodBind("TileSet", "map_tile_proxy", MAP_TILE_PROXY_HASH)
-        }
 
         private const val CLEANUP_INVALID_TILE_PROXIES_HASH = 3218959716L
-        private val cleanupInvalidTileProxiesBind by lazy {
+        @JvmField
+        val cleanupInvalidTileProxiesBind =
             ObjectCalls.getMethodBind("TileSet", "cleanup_invalid_tile_proxies", CLEANUP_INVALID_TILE_PROXIES_HASH)
-        }
 
         private const val CLEAR_TILE_PROXIES_HASH = 3218959716L
-        private val clearTileProxiesBind by lazy {
+        @JvmField
+        val clearTileProxiesBind =
             ObjectCalls.getMethodBind("TileSet", "clear_tile_proxies", CLEAR_TILE_PROXIES_HASH)
-        }
 
         private const val ADD_PATTERN_HASH = 763712015L
-        private val addPatternBind by lazy {
+        @JvmField
+        val addPatternBind =
             ObjectCalls.getMethodBind("TileSet", "add_pattern", ADD_PATTERN_HASH)
-        }
 
         private const val GET_PATTERN_HASH = 4207737510L
-        private val getPatternBind by lazy {
+        @JvmField
+        val getPatternBind =
             ObjectCalls.getMethodBind("TileSet", "get_pattern", GET_PATTERN_HASH)
-        }
 
         private const val REMOVE_PATTERN_HASH = 1286410249L
-        private val removePatternBind by lazy {
+        @JvmField
+        val removePatternBind =
             ObjectCalls.getMethodBind("TileSet", "remove_pattern", REMOVE_PATTERN_HASH)
-        }
 
         private const val GET_PATTERNS_COUNT_HASH = 2455072627L
-        private val getPatternsCountBind by lazy {
+        @JvmField
+        val getPatternsCountBind =
             ObjectCalls.getMethodBind("TileSet", "get_patterns_count", GET_PATTERNS_COUNT_HASH)
-        }
     }
 }

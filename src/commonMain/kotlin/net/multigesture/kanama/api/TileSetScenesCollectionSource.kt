@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTilesCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSceneTilesCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSceneTilesCountBind, segment)
     }
 
     /**
@@ -28,7 +29,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTileId(index: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getSceneTileIdBind, segment, index)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getSceneTileIdBind, segment, index)
     }
 
     /**
@@ -38,7 +39,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun hasSceneTileId(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(hasSceneTileIdBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.hasSceneTileIdBind, segment, id)
     }
 
     /**
@@ -48,7 +49,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun createSceneTile(packedScene: PackedScene?, idOverride: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(createSceneTileBind, segment, packedScene?.requireOpenHandle() ?: NULL_SEGMENT, idOverride)
+        return ObjectCalls.ptrcallWithObjectAndIntArgRetInt(Binds.createSceneTileBind, segment, packedScene?.requireOpenHandle() ?: NULL_SEGMENT, idOverride)
     }
 
     /**
@@ -59,7 +60,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun setSceneTileId(id: Int, newId: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setSceneTileIdBind, segment, id, newId)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setSceneTileIdBind, segment, id, newId)
     }
 
     /**
@@ -71,7 +72,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun setSceneTileScene(id: Int, packedScene: PackedScene?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSceneTileSceneBind, segment, id, packedScene?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSceneTileSceneBind, segment, id, packedScene?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -81,7 +82,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTileScene(id: Int): PackedScene? {
         checkOpen()
-        return PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getSceneTileSceneBind, segment, id))
+        return PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSceneTileSceneBind, segment, id))
     }
 
     /**
@@ -92,7 +93,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun setSceneTileDisplayPlaceholder(id: Int, displayPlaceholder: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setSceneTileDisplayPlaceholderBind, segment, id, displayPlaceholder)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setSceneTileDisplayPlaceholderBind, segment, id, displayPlaceholder)
     }
 
     /**
@@ -102,7 +103,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getSceneTileDisplayPlaceholder(id: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(getSceneTileDisplayPlaceholderBind, segment, id)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getSceneTileDisplayPlaceholderBind, segment, id)
     }
 
     /**
@@ -112,7 +113,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun removeSceneTile(id: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeSceneTileBind, segment, id)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeSceneTileBind, segment, id)
     }
 
     /**
@@ -122,7 +123,7 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
      */
     fun getNextSceneTileId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getNextSceneTileIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNextSceneTileIdBind, segment)
     }
 
     companion object {
@@ -135,60 +136,62 @@ class TileSetScenesCollectionSource(handle: GodotHandle) : TileSetSource(handle)
 
         internal fun wrapBorrowed(handle: RawSegment): TileSetScenesCollectionSource? =
             if (handle.address() == 0L) null else TileSetScenesCollectionSource(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SCENE_TILES_COUNT_HASH = 2455072627L
-        private val getSceneTilesCountBind by lazy {
+        @JvmField
+        val getSceneTilesCountBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "get_scene_tiles_count", GET_SCENE_TILES_COUNT_HASH)
-        }
 
         private const val GET_SCENE_TILE_ID_HASH = 3744713108L
-        private val getSceneTileIdBind by lazy {
+        @JvmField
+        val getSceneTileIdBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "get_scene_tile_id", GET_SCENE_TILE_ID_HASH)
-        }
 
         private const val HAS_SCENE_TILE_ID_HASH = 3067735520L
-        private val hasSceneTileIdBind by lazy {
+        @JvmField
+        val hasSceneTileIdBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "has_scene_tile_id", HAS_SCENE_TILE_ID_HASH)
-        }
 
         private const val CREATE_SCENE_TILE_HASH = 1117465415L
-        private val createSceneTileBind by lazy {
+        @JvmField
+        val createSceneTileBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "create_scene_tile", CREATE_SCENE_TILE_HASH)
-        }
 
         private const val SET_SCENE_TILE_ID_HASH = 3937882851L
-        private val setSceneTileIdBind by lazy {
+        @JvmField
+        val setSceneTileIdBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "set_scene_tile_id", SET_SCENE_TILE_ID_HASH)
-        }
 
         private const val SET_SCENE_TILE_SCENE_HASH = 3435852839L
-        private val setSceneTileSceneBind by lazy {
+        @JvmField
+        val setSceneTileSceneBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "set_scene_tile_scene", SET_SCENE_TILE_SCENE_HASH)
-        }
 
         private const val GET_SCENE_TILE_SCENE_HASH = 511017218L
-        private val getSceneTileSceneBind by lazy {
+        @JvmField
+        val getSceneTileSceneBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "get_scene_tile_scene", GET_SCENE_TILE_SCENE_HASH)
-        }
 
         private const val SET_SCENE_TILE_DISPLAY_PLACEHOLDER_HASH = 300928843L
-        private val setSceneTileDisplayPlaceholderBind by lazy {
+        @JvmField
+        val setSceneTileDisplayPlaceholderBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "set_scene_tile_display_placeholder", SET_SCENE_TILE_DISPLAY_PLACEHOLDER_HASH)
-        }
 
         private const val GET_SCENE_TILE_DISPLAY_PLACEHOLDER_HASH = 1116898809L
-        private val getSceneTileDisplayPlaceholderBind by lazy {
+        @JvmField
+        val getSceneTileDisplayPlaceholderBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "get_scene_tile_display_placeholder", GET_SCENE_TILE_DISPLAY_PLACEHOLDER_HASH)
-        }
 
         private const val REMOVE_SCENE_TILE_HASH = 1286410249L
-        private val removeSceneTileBind by lazy {
+        @JvmField
+        val removeSceneTileBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "remove_scene_tile", REMOVE_SCENE_TILE_HASH)
-        }
 
         private const val GET_NEXT_SCENE_TILE_ID_HASH = 3905245786L
-        private val getNextSceneTileIdBind by lazy {
+        @JvmField
+        val getNextSceneTileIdBind =
             ObjectCalls.getMethodBind("TileSetScenesCollectionSource", "get_next_scene_tile_id", GET_NEXT_SCENE_TILE_ID_HASH)
-        }
     }
 }

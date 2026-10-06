@@ -20,7 +20,5 @@ open class OpenXRHapticBase(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OpenXRHapticBase? =
             if (handle.address() == 0L) null else OpenXRHapticBase(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

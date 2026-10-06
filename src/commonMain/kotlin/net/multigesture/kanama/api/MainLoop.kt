@@ -42,7 +42,5 @@ open class MainLoop(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): MainLoop? =
             if (handle.address() == 0L) null else MainLoop(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

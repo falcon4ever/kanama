@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -49,7 +50,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.set_ticks
      */
     fun setTicks(count: Int) {
-        ObjectCalls.ptrcallWithIntArg(setTicksBind, segment, count)
+        ObjectCalls.ptrcallWithIntArg(Binds.setTicksBind, segment, count)
     }
 
     /**
@@ -59,7 +60,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.get_ticks
      */
     fun getTicks(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getTicksBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTicksBind, segment)
     }
 
     /**
@@ -68,7 +69,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.get_ticks_on_borders
      */
     fun getTicksOnBorders(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getTicksOnBordersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getTicksOnBordersBind, segment)
     }
 
     /**
@@ -77,7 +78,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.set_ticks_on_borders
      */
     fun setTicksOnBorders(ticksOnBorder: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTicksOnBordersBind, segment, ticksOnBorder)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTicksOnBordersBind, segment, ticksOnBorder)
     }
 
     /**
@@ -86,7 +87,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.get_ticks_position
      */
     fun getTicksPosition(): Slider.TickPosition {
-        return Slider.TickPosition(ObjectCalls.ptrcallNoArgsRetLong(getTicksPositionBind, segment))
+        return Slider.TickPosition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTicksPositionBind, segment))
     }
 
     /**
@@ -95,7 +96,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.set_ticks_position
      */
     fun setTicksPosition(ticksOnBorder: Slider.TickPosition) {
-        ObjectCalls.ptrcallWithLongArg(setTicksPositionBind, segment, ticksOnBorder.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTicksPositionBind, segment, ticksOnBorder.value)
     }
 
     /**
@@ -104,7 +105,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.set_editable
      */
     fun setEditable(editable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, editable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditableBind, segment, editable)
     }
 
     /**
@@ -113,7 +114,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.is_editable
      */
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditableBind, segment)
     }
 
     /**
@@ -122,7 +123,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.set_scrollable
      */
     fun setScrollable(scrollable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setScrollableBind, segment, scrollable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setScrollableBind, segment, scrollable)
     }
 
     /**
@@ -131,7 +132,7 @@ open class Slider(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: Slider.is_scrollable
      */
     fun isScrollable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isScrollableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isScrollableBind, segment)
     }
 
     /** Signal `drag_started()`; see [TypedSignal]. */
@@ -192,55 +193,57 @@ open class Slider(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): Slider? =
             if (handle.address() == 0L) null else Slider(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TICKS_HASH = 1286410249L
-        private val setTicksBind by lazy {
+        @JvmField
+        val setTicksBind =
             ObjectCalls.getMethodBind("Slider", "set_ticks", SET_TICKS_HASH)
-        }
 
         private const val GET_TICKS_HASH = 3905245786L
-        private val getTicksBind by lazy {
+        @JvmField
+        val getTicksBind =
             ObjectCalls.getMethodBind("Slider", "get_ticks", GET_TICKS_HASH)
-        }
 
         private const val GET_TICKS_ON_BORDERS_HASH = 36873697L
-        private val getTicksOnBordersBind by lazy {
+        @JvmField
+        val getTicksOnBordersBind =
             ObjectCalls.getMethodBind("Slider", "get_ticks_on_borders", GET_TICKS_ON_BORDERS_HASH)
-        }
 
         private const val SET_TICKS_ON_BORDERS_HASH = 2586408642L
-        private val setTicksOnBordersBind by lazy {
+        @JvmField
+        val setTicksOnBordersBind =
             ObjectCalls.getMethodBind("Slider", "set_ticks_on_borders", SET_TICKS_ON_BORDERS_HASH)
-        }
 
         private const val GET_TICKS_POSITION_HASH = 3567635531L
-        private val getTicksPositionBind by lazy {
+        @JvmField
+        val getTicksPositionBind =
             ObjectCalls.getMethodBind("Slider", "get_ticks_position", GET_TICKS_POSITION_HASH)
-        }
 
         private const val SET_TICKS_POSITION_HASH = 2952822224L
-        private val setTicksPositionBind by lazy {
+        @JvmField
+        val setTicksPositionBind =
             ObjectCalls.getMethodBind("Slider", "set_ticks_position", SET_TICKS_POSITION_HASH)
-        }
 
         private const val SET_EDITABLE_HASH = 2586408642L
-        private val setEditableBind by lazy {
+        @JvmField
+        val setEditableBind =
             ObjectCalls.getMethodBind("Slider", "set_editable", SET_EDITABLE_HASH)
-        }
 
         private const val IS_EDITABLE_HASH = 36873697L
-        private val isEditableBind by lazy {
+        @JvmField
+        val isEditableBind =
             ObjectCalls.getMethodBind("Slider", "is_editable", IS_EDITABLE_HASH)
-        }
 
         private const val SET_SCROLLABLE_HASH = 2586408642L
-        private val setScrollableBind by lazy {
+        @JvmField
+        val setScrollableBind =
             ObjectCalls.getMethodBind("Slider", "set_scrollable", SET_SCROLLABLE_HASH)
-        }
 
         private const val IS_SCROLLABLE_HASH = 36873697L
-        private val isScrollableBind by lazy {
+        @JvmField
+        val isScrollableBind =
             ObjectCalls.getMethodBind("Slider", "is_scrollable", IS_SCROLLABLE_HASH)
-        }
     }
 }

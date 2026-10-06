@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -47,7 +48,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun addTrack(type: Animation.TrackType, atPosition: Int = -1): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(addTrackBind, segment, type.value, atPosition)
+        return ObjectCalls.ptrcallWithLongAndIntArgsRetInt(Binds.addTrackBind, segment, type.value, atPosition)
     }
 
     /**
@@ -57,7 +58,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun removeTrack(trackIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeTrackBind, segment, trackIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeTrackBind, segment, trackIdx)
     }
 
     /**
@@ -67,7 +68,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getTrackCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getTrackCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTrackCountBind, segment)
     }
 
     /**
@@ -77,7 +78,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetType(trackIdx: Int): Animation.TrackType {
         checkOpen()
-        return Animation.TrackType(ObjectCalls.ptrcallWithIntArgRetLong(trackGetTypeBind, segment, trackIdx))
+        return Animation.TrackType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.trackGetTypeBind, segment, trackIdx))
     }
 
     /**
@@ -87,7 +88,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetPath(trackIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(trackGetPathBind, segment, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.trackGetPathBind, segment, trackIdx)
     }
 
     /**
@@ -100,7 +101,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSetPath(trackIdx: Int, path: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(trackSetPathBind, segment, trackIdx, path)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.trackSetPathBind, segment, trackIdx, path)
     }
 
     /**
@@ -110,7 +111,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun findTrack(path: NodePath, type: Animation.TrackType): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(findTrackBind, segment, path, type.value)
+        return ObjectCalls.ptrcallWithNodePathAndLongArgRetInt(Binds.findTrackBind, segment, path, type.value)
     }
 
     /**
@@ -120,7 +121,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackMoveUp(trackIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(trackMoveUpBind, segment, trackIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.trackMoveUpBind, segment, trackIdx)
     }
 
     /**
@@ -130,7 +131,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackMoveDown(trackIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(trackMoveDownBind, segment, trackIdx)
+        ObjectCalls.ptrcallWithIntArg(Binds.trackMoveDownBind, segment, trackIdx)
     }
 
     /**
@@ -140,7 +141,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackMoveTo(trackIdx: Int, toIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(trackMoveToBind, segment, trackIdx, toIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.trackMoveToBind, segment, trackIdx, toIdx)
     }
 
     /**
@@ -150,7 +151,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSwap(trackIdx: Int, withIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(trackSwapBind, segment, trackIdx, withIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.trackSwapBind, segment, trackIdx, withIdx)
     }
 
     /**
@@ -160,7 +161,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSetImported(trackIdx: Int, imported: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetImportedBind, segment, trackIdx, imported)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.trackSetImportedBind, segment, trackIdx, imported)
     }
 
     /**
@@ -170,7 +171,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackIsImported(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsImportedBind, segment, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsImportedBind, segment, trackIdx)
     }
 
     /**
@@ -180,7 +181,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSetEnabled(trackIdx: Int, enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetEnabledBind, segment, trackIdx, enabled)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.trackSetEnabledBind, segment, trackIdx, enabled)
     }
 
     /**
@@ -190,7 +191,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackIsEnabled(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsEnabledBind, segment, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsEnabledBind, segment, trackIdx)
     }
 
     /**
@@ -200,7 +201,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun positionTrackInsertKey(trackIdx: Int, time: Double, position: Vector3): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(positionTrackInsertKeyBind, segment, trackIdx, time, position)
+        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(Binds.positionTrackInsertKeyBind, segment, trackIdx, time, position)
     }
 
     /**
@@ -210,7 +211,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun rotationTrackInsertKey(trackIdx: Int, time: Double, rotation: Quaternion): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleQuaternionArgsRetInt(rotationTrackInsertKeyBind, segment, trackIdx, time, rotation)
+        return ObjectCalls.ptrcallWithIntDoubleQuaternionArgsRetInt(Binds.rotationTrackInsertKeyBind, segment, trackIdx, time, rotation)
     }
 
     /**
@@ -220,7 +221,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun scaleTrackInsertKey(trackIdx: Int, time: Double, scale: Vector3): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(scaleTrackInsertKeyBind, segment, trackIdx, time, scale)
+        return ObjectCalls.ptrcallWithIntDoubleVector3ArgsRetInt(Binds.scaleTrackInsertKeyBind, segment, trackIdx, time, scale)
     }
 
     /**
@@ -230,7 +231,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun blendShapeTrackInsertKey(trackIdx: Int, time: Double, amount: Double): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndTwoDoubleArgsRetInt(blendShapeTrackInsertKeyBind, segment, trackIdx, time, amount)
+        return ObjectCalls.ptrcallWithIntAndTwoDoubleArgsRetInt(Binds.blendShapeTrackInsertKeyBind, segment, trackIdx, time, amount)
     }
 
     /**
@@ -241,7 +242,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun positionTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(positionTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(Binds.positionTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -252,7 +253,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun rotationTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Quaternion {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetQuaternion(rotationTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetQuaternion(Binds.rotationTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -263,7 +264,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun scaleTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(scaleTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVector3(Binds.scaleTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -274,7 +275,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun blendShapeTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetDouble(blendShapeTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetDouble(Binds.blendShapeTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -284,7 +285,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackInsertKey(trackIdx: Int, time: Double, key: Any?, transition: Double = 1.0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleVariantDoubleArgsRetInt(trackInsertKeyBind, segment, trackIdx, time, key, transition)
+        return ObjectCalls.ptrcallWithIntDoubleVariantDoubleArgsRetInt(Binds.trackInsertKeyBind, segment, trackIdx, time, key, transition)
     }
 
     /**
@@ -294,7 +295,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackRemoveKey(trackIdx: Int, keyIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(trackRemoveKeyBind, segment, trackIdx, keyIdx)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.trackRemoveKeyBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -304,7 +305,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackRemoveKeyAtTime(trackIdx: Int, time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(trackRemoveKeyAtTimeBind, segment, trackIdx, time)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.trackRemoveKeyAtTimeBind, segment, trackIdx, time)
     }
 
     /**
@@ -314,7 +315,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSetKeyValue(trackIdx: Int, key: Int, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndVariantArg(trackSetKeyValueBind, segment, trackIdx, key, value)
+        ObjectCalls.ptrcallWithTwoIntAndVariantArg(Binds.trackSetKeyValueBind, segment, trackIdx, key, value)
     }
 
     /**
@@ -325,7 +326,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSetKeyTransition(trackIdx: Int, keyIdx: Int, transition: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTransitionBind, segment, trackIdx, keyIdx, transition)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.trackSetKeyTransitionBind, segment, trackIdx, keyIdx, transition)
     }
 
     /**
@@ -335,7 +336,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSetKeyTime(trackIdx: Int, keyIdx: Int, time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(trackSetKeyTimeBind, segment, trackIdx, keyIdx, time)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.trackSetKeyTimeBind, segment, trackIdx, keyIdx, time)
     }
 
     /**
@@ -346,7 +347,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetKeyTransition(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTransitionBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.trackGetKeyTransitionBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -356,7 +357,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetKeyCount(trackIdx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(trackGetKeyCountBind, segment, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.trackGetKeyCountBind, segment, trackIdx)
     }
 
     /**
@@ -366,7 +367,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetKeyValue(trackIdx: Int, keyIdx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(trackGetKeyValueBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.trackGetKeyValueBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -376,7 +377,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetKeyTime(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(trackGetKeyTimeBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.trackGetKeyTimeBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -391,7 +392,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackFindKey(trackIdx: Int, time: Double, findMode: Animation.FindMode = Animation.FindMode.NEAREST, limit: Boolean = false, backward: Boolean = false): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(trackFindKeyBind, segment, trackIdx, time, findMode.value, limit, backward)
+        return ObjectCalls.ptrcallWithIntDoubleLongTwoBoolArgsRetInt(Binds.trackFindKeyBind, segment, trackIdx, time, findMode.value, limit, backward)
     }
 
     /**
@@ -401,7 +402,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSetInterpolationType(trackIdx: Int, interpolation: Animation.InterpolationType) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(trackSetInterpolationTypeBind, segment, trackIdx, interpolation.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.trackSetInterpolationTypeBind, segment, trackIdx, interpolation.value)
     }
 
     /**
@@ -411,7 +412,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetInterpolationType(trackIdx: Int): Animation.InterpolationType {
         checkOpen()
-        return Animation.InterpolationType(ObjectCalls.ptrcallWithIntArgRetLong(trackGetInterpolationTypeBind, segment, trackIdx))
+        return Animation.InterpolationType(ObjectCalls.ptrcallWithIntArgRetLong(Binds.trackGetInterpolationTypeBind, segment, trackIdx))
     }
 
     /**
@@ -421,7 +422,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackSetInterpolationLoopWrap(trackIdx: Int, interpolation: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(trackSetInterpolationLoopWrapBind, segment, trackIdx, interpolation)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.trackSetInterpolationLoopWrapBind, segment, trackIdx, interpolation)
     }
 
     /**
@@ -432,7 +433,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackGetInterpolationLoopWrap(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(trackGetInterpolationLoopWrapBind, segment, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackGetInterpolationLoopWrapBind, segment, trackIdx)
     }
 
     /**
@@ -442,7 +443,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun trackIsCompressed(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(trackIsCompressedBind, segment, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.trackIsCompressedBind, segment, trackIdx)
     }
 
     /**
@@ -452,7 +453,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun valueTrackSetUpdateMode(trackIdx: Int, mode: Animation.UpdateMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(valueTrackSetUpdateModeBind, segment, trackIdx, mode.value)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.valueTrackSetUpdateModeBind, segment, trackIdx, mode.value)
     }
 
     /**
@@ -462,7 +463,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun valueTrackGetUpdateMode(trackIdx: Int): Animation.UpdateMode {
         checkOpen()
-        return Animation.UpdateMode(ObjectCalls.ptrcallWithIntArgRetLong(valueTrackGetUpdateModeBind, segment, trackIdx))
+        return Animation.UpdateMode(ObjectCalls.ptrcallWithIntArgRetLong(Binds.valueTrackGetUpdateModeBind, segment, trackIdx))
     }
 
     /**
@@ -476,7 +477,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun valueTrackInterpolate(trackIdx: Int, timeSec: Double, backward: Boolean = false): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(valueTrackInterpolateBind, segment, trackIdx, timeSec, backward)
+        return ObjectCalls.ptrcallWithIntDoubleBoolArgsRetVariantScalar(Binds.valueTrackInterpolateBind, segment, trackIdx, timeSec, backward)
     }
 
     /**
@@ -486,7 +487,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun methodTrackGetName(trackIdx: Int, keyIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(methodTrackGetNameBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.methodTrackGetNameBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -496,7 +497,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun methodTrackGetParams(trackIdx: Int, keyIdx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(methodTrackGetParamsBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetArray(Binds.methodTrackGetParamsBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -508,7 +509,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackInsertKey(trackIdx: Int, time: Double, value: Double, inHandle: Vector2 = Vector2(0.0, 0.0), outHandle: Vector2 = Vector2(0.0, 0.0)): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(bezierTrackInsertKeyBind, segment, trackIdx, time, value, inHandle, outHandle)
+        return ObjectCalls.ptrcallWithIntTwoDoubleTwoVector2ArgsRetInt(Binds.bezierTrackInsertKeyBind, segment, trackIdx, time, value, inHandle, outHandle)
     }
 
     /**
@@ -519,7 +520,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackSetKeyValue(trackIdx: Int, keyIdx: Int, value: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(bezierTrackSetKeyValueBind, segment, trackIdx, keyIdx, value)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.bezierTrackSetKeyValueBind, segment, trackIdx, keyIdx, value)
     }
 
     /**
@@ -530,7 +531,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackSetKeyInHandle(trackIdx: Int, keyIdx: Int, inHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyInHandleBind, segment, trackIdx, keyIdx, inHandle, balancedValueTimeRatio)
+        ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(Binds.bezierTrackSetKeyInHandleBind, segment, trackIdx, keyIdx, inHandle, balancedValueTimeRatio)
     }
 
     /**
@@ -541,7 +542,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackSetKeyOutHandle(trackIdx: Int, keyIdx: Int, outHandle: Vector2, balancedValueTimeRatio: Double = 1.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(bezierTrackSetKeyOutHandleBind, segment, trackIdx, keyIdx, outHandle, balancedValueTimeRatio)
+        ObjectCalls.ptrcallWithTwoIntVector2DoubleArgs(Binds.bezierTrackSetKeyOutHandleBind, segment, trackIdx, keyIdx, outHandle, balancedValueTimeRatio)
     }
 
     /**
@@ -552,7 +553,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackGetKeyValue(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(bezierTrackGetKeyValueBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.bezierTrackGetKeyValueBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -563,7 +564,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackGetKeyInHandle(trackIdx: Int, keyIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyInHandleBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.bezierTrackGetKeyInHandleBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -574,7 +575,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackGetKeyOutHandle(trackIdx: Int, keyIdx: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(bezierTrackGetKeyOutHandleBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2(Binds.bezierTrackGetKeyOutHandleBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -585,7 +586,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun bezierTrackInterpolate(trackIdx: Int, time: Double): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDoubleArgRetDouble(bezierTrackInterpolateBind, segment, trackIdx, time)
+        return ObjectCalls.ptrcallWithIntAndDoubleArgRetDouble(Binds.bezierTrackInterpolateBind, segment, trackIdx, time)
     }
 
     /**
@@ -597,7 +598,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackInsertKey(trackIdx: Int, time: Double, stream: Resource?, startOffset: Double = 0.0, endOffset: Double = 0.0): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(audioTrackInsertKeyBind, segment, trackIdx, time, stream?.requireOpenHandle() ?: NULL_SEGMENT, startOffset, endOffset)
+        return ObjectCalls.ptrcallWithIntDoubleObjectTwoDoubleArgsRetInt(Binds.audioTrackInsertKeyBind, segment, trackIdx, time, stream?.requireOpenHandle() ?: NULL_SEGMENT, startOffset, endOffset)
     }
 
     /**
@@ -608,7 +609,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackSetKeyStream(trackIdx: Int, keyIdx: Int, stream: Resource?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndObjectArg(audioTrackSetKeyStreamBind, segment, trackIdx, keyIdx, stream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoIntAndObjectArg(Binds.audioTrackSetKeyStreamBind, segment, trackIdx, keyIdx, stream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -619,7 +620,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackSetKeyStartOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyStartOffsetBind, segment, trackIdx, keyIdx, offset)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.audioTrackSetKeyStartOffsetBind, segment, trackIdx, keyIdx, offset)
     }
 
     /**
@@ -630,7 +631,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackSetKeyEndOffset(trackIdx: Int, keyIdx: Int, offset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(audioTrackSetKeyEndOffsetBind, segment, trackIdx, keyIdx, offset)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.audioTrackSetKeyEndOffsetBind, segment, trackIdx, keyIdx, offset)
     }
 
     /**
@@ -641,7 +642,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackGetKeyStream(trackIdx: Int, keyIdx: Int): Resource? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetObject(audioTrackGetKeyStreamBind, segment, trackIdx, keyIdx)
+        val ret = ObjectCalls.ptrcallWithTwoIntArgsRetObject(Binds.audioTrackGetKeyStreamBind, segment, trackIdx, keyIdx)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -658,7 +659,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackGetKeyStartOffset(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyStartOffsetBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.audioTrackGetKeyStartOffsetBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -669,7 +670,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackGetKeyEndOffset(trackIdx: Int, keyIdx: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(audioTrackGetKeyEndOffsetBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.audioTrackGetKeyEndOffsetBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -680,7 +681,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackSetUseBlend(trackIdx: Int, enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndBoolArgs(audioTrackSetUseBlendBind, segment, trackIdx, enable)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.audioTrackSetUseBlendBind, segment, trackIdx, enable)
     }
 
     /**
@@ -690,7 +691,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun audioTrackIsUseBlend(trackIdx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(audioTrackIsUseBlendBind, segment, trackIdx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.audioTrackIsUseBlendBind, segment, trackIdx)
     }
 
     /**
@@ -701,7 +702,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun animationTrackInsertKey(trackIdx: Int, time: Double, animation: String): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntDoubleStringNameArgsRetInt(animationTrackInsertKeyBind, segment, trackIdx, time, animation)
+        return ObjectCalls.ptrcallWithIntDoubleStringNameArgsRetInt(Binds.animationTrackInsertKeyBind, segment, trackIdx, time, animation)
     }
 
     /**
@@ -712,7 +713,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun animationTrackSetKeyAnimation(trackIdx: Int, keyIdx: Int, animation: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndStringNameArg(animationTrackSetKeyAnimationBind, segment, trackIdx, keyIdx, animation)
+        ObjectCalls.ptrcallWithTwoIntAndStringNameArg(Binds.animationTrackSetKeyAnimationBind, segment, trackIdx, keyIdx, animation)
     }
 
     /**
@@ -723,7 +724,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun animationTrackGetKeyAnimation(trackIdx: Int, keyIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(animationTrackGetKeyAnimationBind, segment, trackIdx, keyIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.animationTrackGetKeyAnimationBind, segment, trackIdx, keyIdx)
     }
 
     /**
@@ -733,7 +734,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun addMarker(name: String, time: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndDoubleArg(addMarkerBind, segment, name, time)
+        ObjectCalls.ptrcallWithStringNameAndDoubleArg(Binds.addMarkerBind, segment, name, time)
     }
 
     /**
@@ -743,7 +744,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun removeMarker(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameArg(removeMarkerBind, segment, name)
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeMarkerBind, segment, name)
     }
 
     /**
@@ -753,7 +754,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun hasMarker(name: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetBool(hasMarkerBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasMarkerBind, segment, name)
     }
 
     /**
@@ -763,7 +764,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMarkerAtTime(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(getMarkerAtTimeBind, segment, time)
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getMarkerAtTimeBind, segment, time)
     }
 
     /**
@@ -774,7 +775,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getNextMarker(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(getNextMarkerBind, segment, time)
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getNextMarkerBind, segment, time)
     }
 
     /**
@@ -785,7 +786,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getPrevMarker(time: Double): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithFloatArgRetStringName(getPrevMarkerBind, segment, time)
+        return ObjectCalls.ptrcallWithFloatArgRetStringName(Binds.getPrevMarkerBind, segment, time)
     }
 
     /**
@@ -795,7 +796,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMarkerTime(name: String): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetDouble(getMarkerTimeBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetDouble(Binds.getMarkerTimeBind, segment, name)
     }
 
     /**
@@ -805,7 +806,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMarkerNames(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getMarkerNamesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getMarkerNamesBind, segment)
     }
 
     /**
@@ -815,7 +816,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getMarkerColor(name: String): Color {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringNameArgRetColor(getMarkerColorBind, segment, name)
+        return ObjectCalls.ptrcallWithStringNameArgRetColor(Binds.getMarkerColorBind, segment, name)
     }
 
     /**
@@ -825,7 +826,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun setMarkerColor(name: String, color: Color) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameAndColorArg(setMarkerColorBind, segment, name, color)
+        ObjectCalls.ptrcallWithStringNameAndColorArg(Binds.setMarkerColorBind, segment, name, color)
     }
 
     /**
@@ -836,7 +837,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun setLength(timeSec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setLengthBind, segment, timeSec)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setLengthBind, segment, timeSec)
     }
 
     /**
@@ -847,7 +848,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getLength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getLengthBind, segment)
     }
 
     /**
@@ -859,7 +860,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun setLoopMode(loopMode: Animation.LoopMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setLoopModeBind, segment, loopMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setLoopModeBind, segment, loopMode.value)
     }
 
     /**
@@ -871,7 +872,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getLoopMode(): Animation.LoopMode {
         checkOpen()
-        return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(getLoopModeBind, segment))
+        return Animation.LoopMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getLoopModeBind, segment))
     }
 
     /**
@@ -881,7 +882,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun setStep(sizeSec: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setStepBind, segment, sizeSec)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setStepBind, segment, sizeSec)
     }
 
     /**
@@ -891,7 +892,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun getStep(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getStepBind, segment)
     }
 
     /**
@@ -901,7 +902,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -911,7 +912,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun copyTrack(trackIdx: Int, toAnimation: Animation?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(copyTrackBind, segment, trackIdx, toAnimation?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.copyTrackBind, segment, trackIdx, toAnimation?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -922,7 +923,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun optimize(allowedVelocityErr: Double = 0.01, allowedAngularErr: Double = 0.01, precision: Int = 3) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoDoubleAndIntArgs(optimizeBind, segment, allowedVelocityErr, allowedAngularErr, precision)
+        ObjectCalls.ptrcallWithTwoDoubleAndIntArgs(Binds.optimizeBind, segment, allowedVelocityErr, allowedAngularErr, precision)
     }
 
     /**
@@ -937,7 +938,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun compress(pageSize: Long = 8192L, fps: Long = 120L, splitTolerance: Double = 4.0) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoUInt32AndDoubleArg(compressBind, segment, pageSize, fps, splitTolerance)
+        ObjectCalls.ptrcallWithTwoUInt32AndDoubleArg(Binds.compressBind, segment, pageSize, fps, splitTolerance)
     }
 
     /**
@@ -948,7 +949,7 @@ class Animation(handle: GodotHandle) : Resource(handle) {
      */
     fun isCaptureIncluded(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isCaptureIncludedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCaptureIncludedBind, segment)
     }
 
     /**
@@ -1203,430 +1204,432 @@ class Animation(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): Animation? =
             if (handle.address() == 0L) null else Animation(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val ADD_TRACK_HASH = 3843682357L
-        private val addTrackBind by lazy {
+        @JvmField
+        val addTrackBind =
             ObjectCalls.getMethodBind("Animation", "add_track", ADD_TRACK_HASH)
-        }
 
         private const val REMOVE_TRACK_HASH = 1286410249L
-        private val removeTrackBind by lazy {
+        @JvmField
+        val removeTrackBind =
             ObjectCalls.getMethodBind("Animation", "remove_track", REMOVE_TRACK_HASH)
-        }
 
         private const val GET_TRACK_COUNT_HASH = 3905245786L
-        private val getTrackCountBind by lazy {
+        @JvmField
+        val getTrackCountBind =
             ObjectCalls.getMethodBind("Animation", "get_track_count", GET_TRACK_COUNT_HASH)
-        }
 
         private const val TRACK_GET_TYPE_HASH = 3445944217L
-        private val trackGetTypeBind by lazy {
+        @JvmField
+        val trackGetTypeBind =
             ObjectCalls.getMethodBind("Animation", "track_get_type", TRACK_GET_TYPE_HASH)
-        }
 
         private const val TRACK_GET_PATH_HASH = 408788394L
-        private val trackGetPathBind by lazy {
+        @JvmField
+        val trackGetPathBind =
             ObjectCalls.getMethodBind("Animation", "track_get_path", TRACK_GET_PATH_HASH)
-        }
 
         private const val TRACK_SET_PATH_HASH = 2761262315L
-        private val trackSetPathBind by lazy {
+        @JvmField
+        val trackSetPathBind =
             ObjectCalls.getMethodBind("Animation", "track_set_path", TRACK_SET_PATH_HASH)
-        }
 
         private const val FIND_TRACK_HASH = 245376003L
-        private val findTrackBind by lazy {
+        @JvmField
+        val findTrackBind =
             ObjectCalls.getMethodBind("Animation", "find_track", FIND_TRACK_HASH)
-        }
 
         private const val TRACK_MOVE_UP_HASH = 1286410249L
-        private val trackMoveUpBind by lazy {
+        @JvmField
+        val trackMoveUpBind =
             ObjectCalls.getMethodBind("Animation", "track_move_up", TRACK_MOVE_UP_HASH)
-        }
 
         private const val TRACK_MOVE_DOWN_HASH = 1286410249L
-        private val trackMoveDownBind by lazy {
+        @JvmField
+        val trackMoveDownBind =
             ObjectCalls.getMethodBind("Animation", "track_move_down", TRACK_MOVE_DOWN_HASH)
-        }
 
         private const val TRACK_MOVE_TO_HASH = 3937882851L
-        private val trackMoveToBind by lazy {
+        @JvmField
+        val trackMoveToBind =
             ObjectCalls.getMethodBind("Animation", "track_move_to", TRACK_MOVE_TO_HASH)
-        }
 
         private const val TRACK_SWAP_HASH = 3937882851L
-        private val trackSwapBind by lazy {
+        @JvmField
+        val trackSwapBind =
             ObjectCalls.getMethodBind("Animation", "track_swap", TRACK_SWAP_HASH)
-        }
 
         private const val TRACK_SET_IMPORTED_HASH = 300928843L
-        private val trackSetImportedBind by lazy {
+        @JvmField
+        val trackSetImportedBind =
             ObjectCalls.getMethodBind("Animation", "track_set_imported", TRACK_SET_IMPORTED_HASH)
-        }
 
         private const val TRACK_IS_IMPORTED_HASH = 1116898809L
-        private val trackIsImportedBind by lazy {
+        @JvmField
+        val trackIsImportedBind =
             ObjectCalls.getMethodBind("Animation", "track_is_imported", TRACK_IS_IMPORTED_HASH)
-        }
 
         private const val TRACK_SET_ENABLED_HASH = 300928843L
-        private val trackSetEnabledBind by lazy {
+        @JvmField
+        val trackSetEnabledBind =
             ObjectCalls.getMethodBind("Animation", "track_set_enabled", TRACK_SET_ENABLED_HASH)
-        }
 
         private const val TRACK_IS_ENABLED_HASH = 1116898809L
-        private val trackIsEnabledBind by lazy {
+        @JvmField
+        val trackIsEnabledBind =
             ObjectCalls.getMethodBind("Animation", "track_is_enabled", TRACK_IS_ENABLED_HASH)
-        }
 
         private const val POSITION_TRACK_INSERT_KEY_HASH = 2540608232L
-        private val positionTrackInsertKeyBind by lazy {
+        @JvmField
+        val positionTrackInsertKeyBind =
             ObjectCalls.getMethodBind("Animation", "position_track_insert_key", POSITION_TRACK_INSERT_KEY_HASH)
-        }
 
         private const val ROTATION_TRACK_INSERT_KEY_HASH = 4165004800L
-        private val rotationTrackInsertKeyBind by lazy {
+        @JvmField
+        val rotationTrackInsertKeyBind =
             ObjectCalls.getMethodBind("Animation", "rotation_track_insert_key", ROTATION_TRACK_INSERT_KEY_HASH)
-        }
 
         private const val SCALE_TRACK_INSERT_KEY_HASH = 2540608232L
-        private val scaleTrackInsertKeyBind by lazy {
+        @JvmField
+        val scaleTrackInsertKeyBind =
             ObjectCalls.getMethodBind("Animation", "scale_track_insert_key", SCALE_TRACK_INSERT_KEY_HASH)
-        }
 
         private const val BLEND_SHAPE_TRACK_INSERT_KEY_HASH = 1534913637L
-        private val blendShapeTrackInsertKeyBind by lazy {
+        @JvmField
+        val blendShapeTrackInsertKeyBind =
             ObjectCalls.getMethodBind("Animation", "blend_shape_track_insert_key", BLEND_SHAPE_TRACK_INSERT_KEY_HASH)
-        }
 
         private const val POSITION_TRACK_INTERPOLATE_HASH = 3530011197L
-        private val positionTrackInterpolateBind by lazy {
+        @JvmField
+        val positionTrackInterpolateBind =
             ObjectCalls.getMethodBind("Animation", "position_track_interpolate", POSITION_TRACK_INTERPOLATE_HASH)
-        }
 
         private const val ROTATION_TRACK_INTERPOLATE_HASH = 2915876792L
-        private val rotationTrackInterpolateBind by lazy {
+        @JvmField
+        val rotationTrackInterpolateBind =
             ObjectCalls.getMethodBind("Animation", "rotation_track_interpolate", ROTATION_TRACK_INTERPOLATE_HASH)
-        }
 
         private const val SCALE_TRACK_INTERPOLATE_HASH = 3530011197L
-        private val scaleTrackInterpolateBind by lazy {
+        @JvmField
+        val scaleTrackInterpolateBind =
             ObjectCalls.getMethodBind("Animation", "scale_track_interpolate", SCALE_TRACK_INTERPOLATE_HASH)
-        }
 
         private const val BLEND_SHAPE_TRACK_INTERPOLATE_HASH = 2482365182L
-        private val blendShapeTrackInterpolateBind by lazy {
+        @JvmField
+        val blendShapeTrackInterpolateBind =
             ObjectCalls.getMethodBind("Animation", "blend_shape_track_interpolate", BLEND_SHAPE_TRACK_INTERPOLATE_HASH)
-        }
 
         private const val TRACK_INSERT_KEY_HASH = 808952278L
-        private val trackInsertKeyBind by lazy {
+        @JvmField
+        val trackInsertKeyBind =
             ObjectCalls.getMethodBind("Animation", "track_insert_key", TRACK_INSERT_KEY_HASH)
-        }
 
         private const val TRACK_REMOVE_KEY_HASH = 3937882851L
-        private val trackRemoveKeyBind by lazy {
+        @JvmField
+        val trackRemoveKeyBind =
             ObjectCalls.getMethodBind("Animation", "track_remove_key", TRACK_REMOVE_KEY_HASH)
-        }
 
         private const val TRACK_REMOVE_KEY_AT_TIME_HASH = 1602489585L
-        private val trackRemoveKeyAtTimeBind by lazy {
+        @JvmField
+        val trackRemoveKeyAtTimeBind =
             ObjectCalls.getMethodBind("Animation", "track_remove_key_at_time", TRACK_REMOVE_KEY_AT_TIME_HASH)
-        }
 
         private const val TRACK_SET_KEY_VALUE_HASH = 2060538656L
-        private val trackSetKeyValueBind by lazy {
+        @JvmField
+        val trackSetKeyValueBind =
             ObjectCalls.getMethodBind("Animation", "track_set_key_value", TRACK_SET_KEY_VALUE_HASH)
-        }
 
         private const val TRACK_SET_KEY_TRANSITION_HASH = 3506521499L
-        private val trackSetKeyTransitionBind by lazy {
+        @JvmField
+        val trackSetKeyTransitionBind =
             ObjectCalls.getMethodBind("Animation", "track_set_key_transition", TRACK_SET_KEY_TRANSITION_HASH)
-        }
 
         private const val TRACK_SET_KEY_TIME_HASH = 3506521499L
-        private val trackSetKeyTimeBind by lazy {
+        @JvmField
+        val trackSetKeyTimeBind =
             ObjectCalls.getMethodBind("Animation", "track_set_key_time", TRACK_SET_KEY_TIME_HASH)
-        }
 
         private const val TRACK_GET_KEY_TRANSITION_HASH = 3085491603L
-        private val trackGetKeyTransitionBind by lazy {
+        @JvmField
+        val trackGetKeyTransitionBind =
             ObjectCalls.getMethodBind("Animation", "track_get_key_transition", TRACK_GET_KEY_TRANSITION_HASH)
-        }
 
         private const val TRACK_GET_KEY_COUNT_HASH = 923996154L
-        private val trackGetKeyCountBind by lazy {
+        @JvmField
+        val trackGetKeyCountBind =
             ObjectCalls.getMethodBind("Animation", "track_get_key_count", TRACK_GET_KEY_COUNT_HASH)
-        }
 
         private const val TRACK_GET_KEY_VALUE_HASH = 678354945L
-        private val trackGetKeyValueBind by lazy {
+        @JvmField
+        val trackGetKeyValueBind =
             ObjectCalls.getMethodBind("Animation", "track_get_key_value", TRACK_GET_KEY_VALUE_HASH)
-        }
 
         private const val TRACK_GET_KEY_TIME_HASH = 3085491603L
-        private val trackGetKeyTimeBind by lazy {
+        @JvmField
+        val trackGetKeyTimeBind =
             ObjectCalls.getMethodBind("Animation", "track_get_key_time", TRACK_GET_KEY_TIME_HASH)
-        }
 
         private const val TRACK_FIND_KEY_HASH = 4230953007L
-        private val trackFindKeyBind by lazy {
+        @JvmField
+        val trackFindKeyBind =
             ObjectCalls.getMethodBind("Animation", "track_find_key", TRACK_FIND_KEY_HASH)
-        }
 
         private const val TRACK_SET_INTERPOLATION_TYPE_HASH = 4112932513L
-        private val trackSetInterpolationTypeBind by lazy {
+        @JvmField
+        val trackSetInterpolationTypeBind =
             ObjectCalls.getMethodBind("Animation", "track_set_interpolation_type", TRACK_SET_INTERPOLATION_TYPE_HASH)
-        }
 
         private const val TRACK_GET_INTERPOLATION_TYPE_HASH = 1530756894L
-        private val trackGetInterpolationTypeBind by lazy {
+        @JvmField
+        val trackGetInterpolationTypeBind =
             ObjectCalls.getMethodBind("Animation", "track_get_interpolation_type", TRACK_GET_INTERPOLATION_TYPE_HASH)
-        }
 
         private const val TRACK_SET_INTERPOLATION_LOOP_WRAP_HASH = 300928843L
-        private val trackSetInterpolationLoopWrapBind by lazy {
+        @JvmField
+        val trackSetInterpolationLoopWrapBind =
             ObjectCalls.getMethodBind("Animation", "track_set_interpolation_loop_wrap", TRACK_SET_INTERPOLATION_LOOP_WRAP_HASH)
-        }
 
         private const val TRACK_GET_INTERPOLATION_LOOP_WRAP_HASH = 1116898809L
-        private val trackGetInterpolationLoopWrapBind by lazy {
+        @JvmField
+        val trackGetInterpolationLoopWrapBind =
             ObjectCalls.getMethodBind("Animation", "track_get_interpolation_loop_wrap", TRACK_GET_INTERPOLATION_LOOP_WRAP_HASH)
-        }
 
         private const val TRACK_IS_COMPRESSED_HASH = 1116898809L
-        private val trackIsCompressedBind by lazy {
+        @JvmField
+        val trackIsCompressedBind =
             ObjectCalls.getMethodBind("Animation", "track_is_compressed", TRACK_IS_COMPRESSED_HASH)
-        }
 
         private const val VALUE_TRACK_SET_UPDATE_MODE_HASH = 2854058312L
-        private val valueTrackSetUpdateModeBind by lazy {
+        @JvmField
+        val valueTrackSetUpdateModeBind =
             ObjectCalls.getMethodBind("Animation", "value_track_set_update_mode", VALUE_TRACK_SET_UPDATE_MODE_HASH)
-        }
 
         private const val VALUE_TRACK_GET_UPDATE_MODE_HASH = 1440326473L
-        private val valueTrackGetUpdateModeBind by lazy {
+        @JvmField
+        val valueTrackGetUpdateModeBind =
             ObjectCalls.getMethodBind("Animation", "value_track_get_update_mode", VALUE_TRACK_GET_UPDATE_MODE_HASH)
-        }
 
         private const val VALUE_TRACK_INTERPOLATE_HASH = 747269075L
-        private val valueTrackInterpolateBind by lazy {
+        @JvmField
+        val valueTrackInterpolateBind =
             ObjectCalls.getMethodBind("Animation", "value_track_interpolate", VALUE_TRACK_INTERPOLATE_HASH)
-        }
 
         private const val METHOD_TRACK_GET_NAME_HASH = 351665558L
-        private val methodTrackGetNameBind by lazy {
+        @JvmField
+        val methodTrackGetNameBind =
             ObjectCalls.getMethodBind("Animation", "method_track_get_name", METHOD_TRACK_GET_NAME_HASH)
-        }
 
         private const val METHOD_TRACK_GET_PARAMS_HASH = 2345056839L
-        private val methodTrackGetParamsBind by lazy {
+        @JvmField
+        val methodTrackGetParamsBind =
             ObjectCalls.getMethodBind("Animation", "method_track_get_params", METHOD_TRACK_GET_PARAMS_HASH)
-        }
 
         private const val BEZIER_TRACK_INSERT_KEY_HASH = 3656773645L
-        private val bezierTrackInsertKeyBind by lazy {
+        @JvmField
+        val bezierTrackInsertKeyBind =
             ObjectCalls.getMethodBind("Animation", "bezier_track_insert_key", BEZIER_TRACK_INSERT_KEY_HASH)
-        }
 
         private const val BEZIER_TRACK_SET_KEY_VALUE_HASH = 3506521499L
-        private val bezierTrackSetKeyValueBind by lazy {
+        @JvmField
+        val bezierTrackSetKeyValueBind =
             ObjectCalls.getMethodBind("Animation", "bezier_track_set_key_value", BEZIER_TRACK_SET_KEY_VALUE_HASH)
-        }
 
         private const val BEZIER_TRACK_SET_KEY_IN_HANDLE_HASH = 1719223284L
-        private val bezierTrackSetKeyInHandleBind by lazy {
+        @JvmField
+        val bezierTrackSetKeyInHandleBind =
             ObjectCalls.getMethodBind("Animation", "bezier_track_set_key_in_handle", BEZIER_TRACK_SET_KEY_IN_HANDLE_HASH)
-        }
 
         private const val BEZIER_TRACK_SET_KEY_OUT_HANDLE_HASH = 1719223284L
-        private val bezierTrackSetKeyOutHandleBind by lazy {
+        @JvmField
+        val bezierTrackSetKeyOutHandleBind =
             ObjectCalls.getMethodBind("Animation", "bezier_track_set_key_out_handle", BEZIER_TRACK_SET_KEY_OUT_HANDLE_HASH)
-        }
 
         private const val BEZIER_TRACK_GET_KEY_VALUE_HASH = 3085491603L
-        private val bezierTrackGetKeyValueBind by lazy {
+        @JvmField
+        val bezierTrackGetKeyValueBind =
             ObjectCalls.getMethodBind("Animation", "bezier_track_get_key_value", BEZIER_TRACK_GET_KEY_VALUE_HASH)
-        }
 
         private const val BEZIER_TRACK_GET_KEY_IN_HANDLE_HASH = 3016396712L
-        private val bezierTrackGetKeyInHandleBind by lazy {
+        @JvmField
+        val bezierTrackGetKeyInHandleBind =
             ObjectCalls.getMethodBind("Animation", "bezier_track_get_key_in_handle", BEZIER_TRACK_GET_KEY_IN_HANDLE_HASH)
-        }
 
         private const val BEZIER_TRACK_GET_KEY_OUT_HANDLE_HASH = 3016396712L
-        private val bezierTrackGetKeyOutHandleBind by lazy {
+        @JvmField
+        val bezierTrackGetKeyOutHandleBind =
             ObjectCalls.getMethodBind("Animation", "bezier_track_get_key_out_handle", BEZIER_TRACK_GET_KEY_OUT_HANDLE_HASH)
-        }
 
         private const val BEZIER_TRACK_INTERPOLATE_HASH = 1900462983L
-        private val bezierTrackInterpolateBind by lazy {
+        @JvmField
+        val bezierTrackInterpolateBind =
             ObjectCalls.getMethodBind("Animation", "bezier_track_interpolate", BEZIER_TRACK_INTERPOLATE_HASH)
-        }
 
         private const val AUDIO_TRACK_INSERT_KEY_HASH = 4021027286L
-        private val audioTrackInsertKeyBind by lazy {
+        @JvmField
+        val audioTrackInsertKeyBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_insert_key", AUDIO_TRACK_INSERT_KEY_HASH)
-        }
 
         private const val AUDIO_TRACK_SET_KEY_STREAM_HASH = 3886397084L
-        private val audioTrackSetKeyStreamBind by lazy {
+        @JvmField
+        val audioTrackSetKeyStreamBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_set_key_stream", AUDIO_TRACK_SET_KEY_STREAM_HASH)
-        }
 
         private const val AUDIO_TRACK_SET_KEY_START_OFFSET_HASH = 3506521499L
-        private val audioTrackSetKeyStartOffsetBind by lazy {
+        @JvmField
+        val audioTrackSetKeyStartOffsetBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_set_key_start_offset", AUDIO_TRACK_SET_KEY_START_OFFSET_HASH)
-        }
 
         private const val AUDIO_TRACK_SET_KEY_END_OFFSET_HASH = 3506521499L
-        private val audioTrackSetKeyEndOffsetBind by lazy {
+        @JvmField
+        val audioTrackSetKeyEndOffsetBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_set_key_end_offset", AUDIO_TRACK_SET_KEY_END_OFFSET_HASH)
-        }
 
         private const val AUDIO_TRACK_GET_KEY_STREAM_HASH = 635277205L
-        private val audioTrackGetKeyStreamBind by lazy {
+        @JvmField
+        val audioTrackGetKeyStreamBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_get_key_stream", AUDIO_TRACK_GET_KEY_STREAM_HASH)
-        }
 
         private const val AUDIO_TRACK_GET_KEY_START_OFFSET_HASH = 3085491603L
-        private val audioTrackGetKeyStartOffsetBind by lazy {
+        @JvmField
+        val audioTrackGetKeyStartOffsetBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_get_key_start_offset", AUDIO_TRACK_GET_KEY_START_OFFSET_HASH)
-        }
 
         private const val AUDIO_TRACK_GET_KEY_END_OFFSET_HASH = 3085491603L
-        private val audioTrackGetKeyEndOffsetBind by lazy {
+        @JvmField
+        val audioTrackGetKeyEndOffsetBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_get_key_end_offset", AUDIO_TRACK_GET_KEY_END_OFFSET_HASH)
-        }
 
         private const val AUDIO_TRACK_SET_USE_BLEND_HASH = 300928843L
-        private val audioTrackSetUseBlendBind by lazy {
+        @JvmField
+        val audioTrackSetUseBlendBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_set_use_blend", AUDIO_TRACK_SET_USE_BLEND_HASH)
-        }
 
         private const val AUDIO_TRACK_IS_USE_BLEND_HASH = 1116898809L
-        private val audioTrackIsUseBlendBind by lazy {
+        @JvmField
+        val audioTrackIsUseBlendBind =
             ObjectCalls.getMethodBind("Animation", "audio_track_is_use_blend", AUDIO_TRACK_IS_USE_BLEND_HASH)
-        }
 
         private const val ANIMATION_TRACK_INSERT_KEY_HASH = 158676774L
-        private val animationTrackInsertKeyBind by lazy {
+        @JvmField
+        val animationTrackInsertKeyBind =
             ObjectCalls.getMethodBind("Animation", "animation_track_insert_key", ANIMATION_TRACK_INSERT_KEY_HASH)
-        }
 
         private const val ANIMATION_TRACK_SET_KEY_ANIMATION_HASH = 117615382L
-        private val animationTrackSetKeyAnimationBind by lazy {
+        @JvmField
+        val animationTrackSetKeyAnimationBind =
             ObjectCalls.getMethodBind("Animation", "animation_track_set_key_animation", ANIMATION_TRACK_SET_KEY_ANIMATION_HASH)
-        }
 
         private const val ANIMATION_TRACK_GET_KEY_ANIMATION_HASH = 351665558L
-        private val animationTrackGetKeyAnimationBind by lazy {
+        @JvmField
+        val animationTrackGetKeyAnimationBind =
             ObjectCalls.getMethodBind("Animation", "animation_track_get_key_animation", ANIMATION_TRACK_GET_KEY_ANIMATION_HASH)
-        }
 
         private const val ADD_MARKER_HASH = 4135858297L
-        private val addMarkerBind by lazy {
+        @JvmField
+        val addMarkerBind =
             ObjectCalls.getMethodBind("Animation", "add_marker", ADD_MARKER_HASH)
-        }
 
         private const val REMOVE_MARKER_HASH = 3304788590L
-        private val removeMarkerBind by lazy {
+        @JvmField
+        val removeMarkerBind =
             ObjectCalls.getMethodBind("Animation", "remove_marker", REMOVE_MARKER_HASH)
-        }
 
         private const val HAS_MARKER_HASH = 2619796661L
-        private val hasMarkerBind by lazy {
+        @JvmField
+        val hasMarkerBind =
             ObjectCalls.getMethodBind("Animation", "has_marker", HAS_MARKER_HASH)
-        }
 
         private const val GET_MARKER_AT_TIME_HASH = 4079494655L
-        private val getMarkerAtTimeBind by lazy {
+        @JvmField
+        val getMarkerAtTimeBind =
             ObjectCalls.getMethodBind("Animation", "get_marker_at_time", GET_MARKER_AT_TIME_HASH)
-        }
 
         private const val GET_NEXT_MARKER_HASH = 4079494655L
-        private val getNextMarkerBind by lazy {
+        @JvmField
+        val getNextMarkerBind =
             ObjectCalls.getMethodBind("Animation", "get_next_marker", GET_NEXT_MARKER_HASH)
-        }
 
         private const val GET_PREV_MARKER_HASH = 4079494655L
-        private val getPrevMarkerBind by lazy {
+        @JvmField
+        val getPrevMarkerBind =
             ObjectCalls.getMethodBind("Animation", "get_prev_marker", GET_PREV_MARKER_HASH)
-        }
 
         private const val GET_MARKER_TIME_HASH = 2349060816L
-        private val getMarkerTimeBind by lazy {
+        @JvmField
+        val getMarkerTimeBind =
             ObjectCalls.getMethodBind("Animation", "get_marker_time", GET_MARKER_TIME_HASH)
-        }
 
         private const val GET_MARKER_NAMES_HASH = 1139954409L
-        private val getMarkerNamesBind by lazy {
+        @JvmField
+        val getMarkerNamesBind =
             ObjectCalls.getMethodBind("Animation", "get_marker_names", GET_MARKER_NAMES_HASH)
-        }
 
         private const val GET_MARKER_COLOR_HASH = 3742943038L
-        private val getMarkerColorBind by lazy {
+        @JvmField
+        val getMarkerColorBind =
             ObjectCalls.getMethodBind("Animation", "get_marker_color", GET_MARKER_COLOR_HASH)
-        }
 
         private const val SET_MARKER_COLOR_HASH = 4260178595L
-        private val setMarkerColorBind by lazy {
+        @JvmField
+        val setMarkerColorBind =
             ObjectCalls.getMethodBind("Animation", "set_marker_color", SET_MARKER_COLOR_HASH)
-        }
 
         private const val SET_LENGTH_HASH = 373806689L
-        private val setLengthBind by lazy {
+        @JvmField
+        val setLengthBind =
             ObjectCalls.getMethodBind("Animation", "set_length", SET_LENGTH_HASH)
-        }
 
         private const val GET_LENGTH_HASH = 1740695150L
-        private val getLengthBind by lazy {
+        @JvmField
+        val getLengthBind =
             ObjectCalls.getMethodBind("Animation", "get_length", GET_LENGTH_HASH)
-        }
 
         private const val SET_LOOP_MODE_HASH = 3155355575L
-        private val setLoopModeBind by lazy {
+        @JvmField
+        val setLoopModeBind =
             ObjectCalls.getMethodBind("Animation", "set_loop_mode", SET_LOOP_MODE_HASH)
-        }
 
         private const val GET_LOOP_MODE_HASH = 1988889481L
-        private val getLoopModeBind by lazy {
+        @JvmField
+        val getLoopModeBind =
             ObjectCalls.getMethodBind("Animation", "get_loop_mode", GET_LOOP_MODE_HASH)
-        }
 
         private const val SET_STEP_HASH = 373806689L
-        private val setStepBind by lazy {
+        @JvmField
+        val setStepBind =
             ObjectCalls.getMethodBind("Animation", "set_step", SET_STEP_HASH)
-        }
 
         private const val GET_STEP_HASH = 1740695150L
-        private val getStepBind by lazy {
+        @JvmField
+        val getStepBind =
             ObjectCalls.getMethodBind("Animation", "get_step", GET_STEP_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("Animation", "clear", CLEAR_HASH)
-        }
 
         private const val COPY_TRACK_HASH = 148001024L
-        private val copyTrackBind by lazy {
+        @JvmField
+        val copyTrackBind =
             ObjectCalls.getMethodBind("Animation", "copy_track", COPY_TRACK_HASH)
-        }
 
         private const val OPTIMIZE_HASH = 3303583852L
-        private val optimizeBind by lazy {
+        @JvmField
+        val optimizeBind =
             ObjectCalls.getMethodBind("Animation", "optimize", OPTIMIZE_HASH)
-        }
 
         private const val COMPRESS_HASH = 3608408117L
-        private val compressBind by lazy {
+        @JvmField
+        val compressBind =
             ObjectCalls.getMethodBind("Animation", "compress", COMPRESS_HASH)
-        }
 
         private const val IS_CAPTURE_INCLUDED_HASH = 36873697L
-        private val isCaptureIncludedBind by lazy {
+        @JvmField
+        val isCaptureIncludedBind =
             ObjectCalls.getMethodBind("Animation", "is_capture_included", IS_CAPTURE_INCLUDED_HASH)
-        }
     }
 }

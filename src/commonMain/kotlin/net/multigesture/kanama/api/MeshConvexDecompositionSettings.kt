@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -97,7 +98,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMaxConcavity(maxConcavity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMaxConcavityBind, segment, maxConcavity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMaxConcavityBind, segment, maxConcavity)
     }
 
     /**
@@ -107,7 +108,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMaxConcavity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMaxConcavityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMaxConcavityBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setSymmetryPlanesClippingBias(symmetryPlanesClippingBias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSymmetryPlanesClippingBiasBind, segment, symmetryPlanesClippingBias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSymmetryPlanesClippingBiasBind, segment, symmetryPlanesClippingBias)
     }
 
     /**
@@ -127,7 +128,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getSymmetryPlanesClippingBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSymmetryPlanesClippingBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSymmetryPlanesClippingBiasBind, segment)
     }
 
     /**
@@ -137,7 +138,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setRevolutionAxesClippingBias(revolutionAxesClippingBias: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setRevolutionAxesClippingBiasBind, segment, revolutionAxesClippingBias)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRevolutionAxesClippingBiasBind, segment, revolutionAxesClippingBias)
     }
 
     /**
@@ -147,7 +148,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getRevolutionAxesClippingBias(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRevolutionAxesClippingBiasBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRevolutionAxesClippingBiasBind, segment)
     }
 
     /**
@@ -157,7 +158,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMinVolumePerConvexHull(minVolumePerConvexHull: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setMinVolumePerConvexHullBind, segment, minVolumePerConvexHull)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setMinVolumePerConvexHullBind, segment, minVolumePerConvexHull)
     }
 
     /**
@@ -167,7 +168,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMinVolumePerConvexHull(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getMinVolumePerConvexHullBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getMinVolumePerConvexHullBind, segment)
     }
 
     /**
@@ -177,7 +178,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setResolution(minVolumePerConvexHull: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setResolutionBind, segment, minVolumePerConvexHull)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setResolutionBind, segment, minVolumePerConvexHull)
     }
 
     /**
@@ -187,7 +188,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getResolution(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getResolutionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getResolutionBind, segment)
     }
 
     /**
@@ -197,7 +198,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMaxNumVerticesPerConvexHull(maxNumVerticesPerConvexHull: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setMaxNumVerticesPerConvexHullBind, segment, maxNumVerticesPerConvexHull)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setMaxNumVerticesPerConvexHullBind, segment, maxNumVerticesPerConvexHull)
     }
 
     /**
@@ -207,7 +208,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMaxNumVerticesPerConvexHull(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxNumVerticesPerConvexHullBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMaxNumVerticesPerConvexHullBind, segment)
     }
 
     /**
@@ -217,7 +218,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setPlaneDownsampling(planeDownsampling: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setPlaneDownsamplingBind, segment, planeDownsampling)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setPlaneDownsamplingBind, segment, planeDownsampling)
     }
 
     /**
@@ -227,7 +228,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getPlaneDownsampling(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getPlaneDownsamplingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPlaneDownsamplingBind, segment)
     }
 
     /**
@@ -238,7 +239,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setConvexHullDownsampling(convexHullDownsampling: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setConvexHullDownsamplingBind, segment, convexHullDownsampling)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setConvexHullDownsamplingBind, segment, convexHullDownsampling)
     }
 
     /**
@@ -249,7 +250,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getConvexHullDownsampling(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getConvexHullDownsamplingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getConvexHullDownsamplingBind, segment)
     }
 
     /**
@@ -259,7 +260,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setNormalizeMesh(normalizeMesh: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setNormalizeMeshBind, segment, normalizeMesh)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setNormalizeMeshBind, segment, normalizeMesh)
     }
 
     /**
@@ -269,7 +270,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getNormalizeMesh(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getNormalizeMeshBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getNormalizeMeshBind, segment)
     }
 
     /**
@@ -279,7 +280,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMode(mode: MeshConvexDecompositionSettings.Mode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setModeBind, segment, mode.value)
     }
 
     /**
@@ -289,7 +290,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMode(): MeshConvexDecompositionSettings.Mode {
         checkOpen()
-        return MeshConvexDecompositionSettings.Mode(ObjectCalls.ptrcallNoArgsRetLong(getModeBind, segment))
+        return MeshConvexDecompositionSettings.Mode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getModeBind, segment))
     }
 
     /**
@@ -299,7 +300,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setConvexHullApproximation(convexHullApproximation: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setConvexHullApproximationBind, segment, convexHullApproximation)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setConvexHullApproximationBind, segment, convexHullApproximation)
     }
 
     /**
@@ -309,7 +310,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getConvexHullApproximation(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getConvexHullApproximationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getConvexHullApproximationBind, segment)
     }
 
     /**
@@ -319,7 +320,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setMaxConvexHulls(maxConvexHulls: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithUInt32Arg(setMaxConvexHullsBind, segment, maxConvexHulls)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setMaxConvexHullsBind, segment, maxConvexHulls)
     }
 
     /**
@@ -329,7 +330,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getMaxConvexHulls(): Long {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getMaxConvexHullsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getMaxConvexHullsBind, segment)
     }
 
     /**
@@ -340,7 +341,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun setProjectHullVertices(projectHullVertices: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setProjectHullVerticesBind, segment, projectHullVertices)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setProjectHullVerticesBind, segment, projectHullVertices)
     }
 
     /**
@@ -351,7 +352,7 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
      */
     fun getProjectHullVertices(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getProjectHullVerticesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getProjectHullVerticesBind, segment)
     }
 
     /**
@@ -389,135 +390,137 @@ class MeshConvexDecompositionSettings(handle: GodotHandle) : RefCounted(handle) 
 
         internal fun wrapBorrowed(handle: RawSegment): MeshConvexDecompositionSettings? =
             if (handle.address() == 0L) null else MeshConvexDecompositionSettings(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MAX_CONCAVITY_HASH = 373806689L
-        private val setMaxConcavityBind by lazy {
+        @JvmField
+        val setMaxConcavityBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_max_concavity", SET_MAX_CONCAVITY_HASH)
-        }
 
         private const val GET_MAX_CONCAVITY_HASH = 1740695150L
-        private val getMaxConcavityBind by lazy {
+        @JvmField
+        val getMaxConcavityBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_max_concavity", GET_MAX_CONCAVITY_HASH)
-        }
 
         private const val SET_SYMMETRY_PLANES_CLIPPING_BIAS_HASH = 373806689L
-        private val setSymmetryPlanesClippingBiasBind by lazy {
+        @JvmField
+        val setSymmetryPlanesClippingBiasBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_symmetry_planes_clipping_bias", SET_SYMMETRY_PLANES_CLIPPING_BIAS_HASH)
-        }
 
         private const val GET_SYMMETRY_PLANES_CLIPPING_BIAS_HASH = 1740695150L
-        private val getSymmetryPlanesClippingBiasBind by lazy {
+        @JvmField
+        val getSymmetryPlanesClippingBiasBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_symmetry_planes_clipping_bias", GET_SYMMETRY_PLANES_CLIPPING_BIAS_HASH)
-        }
 
         private const val SET_REVOLUTION_AXES_CLIPPING_BIAS_HASH = 373806689L
-        private val setRevolutionAxesClippingBiasBind by lazy {
+        @JvmField
+        val setRevolutionAxesClippingBiasBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_revolution_axes_clipping_bias", SET_REVOLUTION_AXES_CLIPPING_BIAS_HASH)
-        }
 
         private const val GET_REVOLUTION_AXES_CLIPPING_BIAS_HASH = 1740695150L
-        private val getRevolutionAxesClippingBiasBind by lazy {
+        @JvmField
+        val getRevolutionAxesClippingBiasBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_revolution_axes_clipping_bias", GET_REVOLUTION_AXES_CLIPPING_BIAS_HASH)
-        }
 
         private const val SET_MIN_VOLUME_PER_CONVEX_HULL_HASH = 373806689L
-        private val setMinVolumePerConvexHullBind by lazy {
+        @JvmField
+        val setMinVolumePerConvexHullBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_min_volume_per_convex_hull", SET_MIN_VOLUME_PER_CONVEX_HULL_HASH)
-        }
 
         private const val GET_MIN_VOLUME_PER_CONVEX_HULL_HASH = 1740695150L
-        private val getMinVolumePerConvexHullBind by lazy {
+        @JvmField
+        val getMinVolumePerConvexHullBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_min_volume_per_convex_hull", GET_MIN_VOLUME_PER_CONVEX_HULL_HASH)
-        }
 
         private const val SET_RESOLUTION_HASH = 1286410249L
-        private val setResolutionBind by lazy {
+        @JvmField
+        val setResolutionBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_resolution", SET_RESOLUTION_HASH)
-        }
 
         private const val GET_RESOLUTION_HASH = 3905245786L
-        private val getResolutionBind by lazy {
+        @JvmField
+        val getResolutionBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_resolution", GET_RESOLUTION_HASH)
-        }
 
         private const val SET_MAX_NUM_VERTICES_PER_CONVEX_HULL_HASH = 1286410249L
-        private val setMaxNumVerticesPerConvexHullBind by lazy {
+        @JvmField
+        val setMaxNumVerticesPerConvexHullBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_max_num_vertices_per_convex_hull", SET_MAX_NUM_VERTICES_PER_CONVEX_HULL_HASH)
-        }
 
         private const val GET_MAX_NUM_VERTICES_PER_CONVEX_HULL_HASH = 3905245786L
-        private val getMaxNumVerticesPerConvexHullBind by lazy {
+        @JvmField
+        val getMaxNumVerticesPerConvexHullBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_max_num_vertices_per_convex_hull", GET_MAX_NUM_VERTICES_PER_CONVEX_HULL_HASH)
-        }
 
         private const val SET_PLANE_DOWNSAMPLING_HASH = 1286410249L
-        private val setPlaneDownsamplingBind by lazy {
+        @JvmField
+        val setPlaneDownsamplingBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_plane_downsampling", SET_PLANE_DOWNSAMPLING_HASH)
-        }
 
         private const val GET_PLANE_DOWNSAMPLING_HASH = 3905245786L
-        private val getPlaneDownsamplingBind by lazy {
+        @JvmField
+        val getPlaneDownsamplingBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_plane_downsampling", GET_PLANE_DOWNSAMPLING_HASH)
-        }
 
         private const val SET_CONVEX_HULL_DOWNSAMPLING_HASH = 1286410249L
-        private val setConvexHullDownsamplingBind by lazy {
+        @JvmField
+        val setConvexHullDownsamplingBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_convex_hull_downsampling", SET_CONVEX_HULL_DOWNSAMPLING_HASH)
-        }
 
         private const val GET_CONVEX_HULL_DOWNSAMPLING_HASH = 3905245786L
-        private val getConvexHullDownsamplingBind by lazy {
+        @JvmField
+        val getConvexHullDownsamplingBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_convex_hull_downsampling", GET_CONVEX_HULL_DOWNSAMPLING_HASH)
-        }
 
         private const val SET_NORMALIZE_MESH_HASH = 2586408642L
-        private val setNormalizeMeshBind by lazy {
+        @JvmField
+        val setNormalizeMeshBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_normalize_mesh", SET_NORMALIZE_MESH_HASH)
-        }
 
         private const val GET_NORMALIZE_MESH_HASH = 36873697L
-        private val getNormalizeMeshBind by lazy {
+        @JvmField
+        val getNormalizeMeshBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_normalize_mesh", GET_NORMALIZE_MESH_HASH)
-        }
 
         private const val SET_MODE_HASH = 1668072869L
-        private val setModeBind by lazy {
+        @JvmField
+        val setModeBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_mode", SET_MODE_HASH)
-        }
 
         private const val GET_MODE_HASH = 23479454L
-        private val getModeBind by lazy {
+        @JvmField
+        val getModeBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_mode", GET_MODE_HASH)
-        }
 
         private const val SET_CONVEX_HULL_APPROXIMATION_HASH = 2586408642L
-        private val setConvexHullApproximationBind by lazy {
+        @JvmField
+        val setConvexHullApproximationBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_convex_hull_approximation", SET_CONVEX_HULL_APPROXIMATION_HASH)
-        }
 
         private const val GET_CONVEX_HULL_APPROXIMATION_HASH = 36873697L
-        private val getConvexHullApproximationBind by lazy {
+        @JvmField
+        val getConvexHullApproximationBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_convex_hull_approximation", GET_CONVEX_HULL_APPROXIMATION_HASH)
-        }
 
         private const val SET_MAX_CONVEX_HULLS_HASH = 1286410249L
-        private val setMaxConvexHullsBind by lazy {
+        @JvmField
+        val setMaxConvexHullsBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_max_convex_hulls", SET_MAX_CONVEX_HULLS_HASH)
-        }
 
         private const val GET_MAX_CONVEX_HULLS_HASH = 3905245786L
-        private val getMaxConvexHullsBind by lazy {
+        @JvmField
+        val getMaxConvexHullsBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_max_convex_hulls", GET_MAX_CONVEX_HULLS_HASH)
-        }
 
         private const val SET_PROJECT_HULL_VERTICES_HASH = 2586408642L
-        private val setProjectHullVerticesBind by lazy {
+        @JvmField
+        val setProjectHullVerticesBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "set_project_hull_vertices", SET_PROJECT_HULL_VERTICES_HASH)
-        }
 
         private const val GET_PROJECT_HULL_VERTICES_HASH = 36873697L
-        private val getProjectHullVerticesBind by lazy {
+        @JvmField
+        val getProjectHullVerticesBind =
             ObjectCalls.getMethodBind("MeshConvexDecompositionSettings", "get_project_hull_vertices", GET_PROJECT_HULL_VERTICES_HASH)
-        }
     }
 }

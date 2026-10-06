@@ -22,7 +22,5 @@ class ResourceImporterBMFont(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterBMFont? =
             if (handle.address() == 0L) null else ResourceImporterBMFont(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

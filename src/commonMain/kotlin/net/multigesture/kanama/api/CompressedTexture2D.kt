@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -22,7 +23,7 @@ class CompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun load(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
     }
 
     /**
@@ -32,7 +33,7 @@ class CompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
      */
     fun getLoadPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getLoadPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLoadPathBind, segment)
     }
 
     companion object {
@@ -45,15 +46,17 @@ class CompressedTexture2D(handle: GodotHandle) : Texture2D(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CompressedTexture2D? =
             if (handle.address() == 0L) null else CompressedTexture2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LOAD_HASH = 166001499L
-        private val loadBind by lazy {
+        @JvmField
+        val loadBind =
             ObjectCalls.getMethodBind("CompressedTexture2D", "load", LOAD_HASH)
-        }
 
         private const val GET_LOAD_PATH_HASH = 201670096L
-        private val getLoadPathBind by lazy {
+        @JvmField
+        val getLoadPathBind =
             ObjectCalls.getMethodBind("CompressedTexture2D", "get_load_path", GET_LOAD_PATH_HASH)
-        }
     }
 }

@@ -20,7 +20,5 @@ class ResourceImporterMP3(handle: GodotHandle) : ResourceImporter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ResourceImporterMP3? =
             if (handle.address() == 0L) null else ResourceImporterMP3(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

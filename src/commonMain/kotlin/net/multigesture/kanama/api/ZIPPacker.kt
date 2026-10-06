@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -18,42 +19,42 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
 
     fun open(path: String, append: ZIPPacker.ZipAppend = ZIPPacker.ZipAppend.CREATE): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(openBind, segment, path, append.value))
+        return GodotError(ObjectCalls.ptrcallWithStringAndLongArgRetLong(Binds.openBind, segment, path, append.value))
     }
 
     fun setCompressionLevel(compressionLevel: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setCompressionLevelBind, segment, compressionLevel)
+        ObjectCalls.ptrcallWithIntArg(Binds.setCompressionLevelBind, segment, compressionLevel)
     }
 
     fun getCompressionLevel(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCompressionLevelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCompressionLevelBind, segment)
     }
 
     fun addDirectory(path: String, permissions: FileAccess.UnixPermissionFlags = FileAccess.UnixPermissionFlags(493L), modifiedTime: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(addDirectoryBind, segment, path, permissions.value, modifiedTime))
+        return GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(Binds.addDirectoryBind, segment, path, permissions.value, modifiedTime))
     }
 
     fun startFile(path: String, permissions: FileAccess.UnixPermissionFlags = FileAccess.UnixPermissionFlags(420L), modifiedTime: Long = 0L): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(startFileBind, segment, path, permissions.value, modifiedTime))
+        return GodotError(ObjectCalls.ptrcallWithStringTwoLongArgsRetLong(Binds.startFileBind, segment, path, permissions.value, modifiedTime))
     }
 
     fun writeFile(data: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(writeFileBind, segment, data))
+        return GodotError(ObjectCalls.ptrcallWithByteArrayArgRetLong(Binds.writeFileBind, segment, data))
     }
 
     fun closeFile(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(closeFileBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeFileBind, segment))
     }
 
     fun closeArchive(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(closeArchiveBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.closeArchiveBind, segment))
     }
 
     @JvmInline
@@ -85,45 +86,47 @@ class ZIPPacker(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): ZIPPacker? =
             if (handle.address() == 0L) null else ZIPPacker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val OPEN_HASH = 1936816515L
-        private val openBind by lazy {
+        @JvmField
+        val openBind =
             ObjectCalls.getMethodBind("ZIPPacker", "open", OPEN_HASH)
-        }
 
         private const val SET_COMPRESSION_LEVEL_HASH = 1286410249L
-        private val setCompressionLevelBind by lazy {
+        @JvmField
+        val setCompressionLevelBind =
             ObjectCalls.getMethodBind("ZIPPacker", "set_compression_level", SET_COMPRESSION_LEVEL_HASH)
-        }
 
         private const val GET_COMPRESSION_LEVEL_HASH = 3905245786L
-        private val getCompressionLevelBind by lazy {
+        @JvmField
+        val getCompressionLevelBind =
             ObjectCalls.getMethodBind("ZIPPacker", "get_compression_level", GET_COMPRESSION_LEVEL_HASH)
-        }
 
         private const val ADD_DIRECTORY_HASH = 934773537L
-        private val addDirectoryBind by lazy {
+        @JvmField
+        val addDirectoryBind =
             ObjectCalls.getMethodBind("ZIPPacker", "add_directory", ADD_DIRECTORY_HASH)
-        }
 
         private const val START_FILE_HASH = 4260848715L
-        private val startFileBind by lazy {
+        @JvmField
+        val startFileBind =
             ObjectCalls.getMethodBind("ZIPPacker", "start_file", START_FILE_HASH)
-        }
 
         private const val WRITE_FILE_HASH = 680677267L
-        private val writeFileBind by lazy {
+        @JvmField
+        val writeFileBind =
             ObjectCalls.getMethodBind("ZIPPacker", "write_file", WRITE_FILE_HASH)
-        }
 
         private const val CLOSE_FILE_HASH = 166280745L
-        private val closeFileBind by lazy {
+        @JvmField
+        val closeFileBind =
             ObjectCalls.getMethodBind("ZIPPacker", "close_file", CLOSE_FILE_HASH)
-        }
 
         private const val CLOSE_HASH = 166280745L
-        private val closeArchiveBind by lazy {
+        @JvmField
+        val closeArchiveBind =
             ObjectCalls.getMethodBind("ZIPPacker", "close", CLOSE_HASH)
-        }
     }
 }

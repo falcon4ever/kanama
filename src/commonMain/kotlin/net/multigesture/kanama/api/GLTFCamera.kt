@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -42,71 +43,71 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
 
     fun toNode(): Camera3D? {
         checkOpen()
-        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(toNodeBind, segment))
+        return Camera3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.toNodeBind, segment))
     }
 
     fun toDictionary(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(toDictionaryBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.toDictionaryBind, segment)
     }
 
     fun getPerspective(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getPerspectiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getPerspectiveBind, segment)
     }
 
     fun setPerspective(perspective: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setPerspectiveBind, segment, perspective)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPerspectiveBind, segment, perspective)
     }
 
     fun getFov(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFovBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFovBind, segment)
     }
 
     fun setFov(fov: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFovBind, segment, fov)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFovBind, segment, fov)
     }
 
     fun getSizeMag(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSizeMagBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSizeMagBind, segment)
     }
 
     fun setSizeMag(sizeMag: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setSizeMagBind, segment, sizeMag)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSizeMagBind, segment, sizeMag)
     }
 
     fun getDepthFar(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthFarBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthFarBind, segment)
     }
 
     fun setDepthFar(zdepthFar: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthFarBind, segment, zdepthFar)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthFarBind, segment, zdepthFar)
     }
 
     fun getDepthNear(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDepthNearBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDepthNearBind, segment)
     }
 
     fun setDepthNear(zdepthNear: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDepthNearBind, segment, zdepthNear)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDepthNearBind, segment, zdepthNear)
     }
 
     companion object {
         fun fromNode(cameraNode: Camera3D): GLTFCamera? {
-            return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(fromNodeBind, NULL_SEGMENT, cameraNode.segment))
+            return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.fromNodeBind, NULL_SEGMENT, cameraNode.segment))
         }
 
         fun fromDictionary(dictionary: Map<String, Any?>): GLTFCamera? {
-            return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(fromDictionaryBind, NULL_SEGMENT, dictionary))
+            return GLTFCamera.wrapOwned(ObjectCalls.ptrcallWithDictionaryArgRetObject(Binds.fromDictionaryBind, NULL_SEGMENT, dictionary))
         }
 
         @JvmStatic
@@ -118,75 +119,77 @@ class GLTFCamera(handle: GodotHandle) : Resource(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): GLTFCamera? =
             if (handle.address() == 0L) null else GLTFCamera(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val FROM_NODE_HASH = 237784L
-        private val fromNodeBind by lazy {
+        @JvmField
+        val fromNodeBind =
             ObjectCalls.getMethodBind("GLTFCamera", "from_node", FROM_NODE_HASH)
-        }
 
         private const val TO_NODE_HASH = 2285090890L
-        private val toNodeBind by lazy {
+        @JvmField
+        val toNodeBind =
             ObjectCalls.getMethodBind("GLTFCamera", "to_node", TO_NODE_HASH)
-        }
 
         private const val FROM_DICTIONARY_HASH = 2495512509L
-        private val fromDictionaryBind by lazy {
+        @JvmField
+        val fromDictionaryBind =
             ObjectCalls.getMethodBind("GLTFCamera", "from_dictionary", FROM_DICTIONARY_HASH)
-        }
 
         private const val TO_DICTIONARY_HASH = 3102165223L
-        private val toDictionaryBind by lazy {
+        @JvmField
+        val toDictionaryBind =
             ObjectCalls.getMethodBind("GLTFCamera", "to_dictionary", TO_DICTIONARY_HASH)
-        }
 
         private const val GET_PERSPECTIVE_HASH = 36873697L
-        private val getPerspectiveBind by lazy {
+        @JvmField
+        val getPerspectiveBind =
             ObjectCalls.getMethodBind("GLTFCamera", "get_perspective", GET_PERSPECTIVE_HASH)
-        }
 
         private const val SET_PERSPECTIVE_HASH = 2586408642L
-        private val setPerspectiveBind by lazy {
+        @JvmField
+        val setPerspectiveBind =
             ObjectCalls.getMethodBind("GLTFCamera", "set_perspective", SET_PERSPECTIVE_HASH)
-        }
 
         private const val GET_FOV_HASH = 1740695150L
-        private val getFovBind by lazy {
+        @JvmField
+        val getFovBind =
             ObjectCalls.getMethodBind("GLTFCamera", "get_fov", GET_FOV_HASH)
-        }
 
         private const val SET_FOV_HASH = 373806689L
-        private val setFovBind by lazy {
+        @JvmField
+        val setFovBind =
             ObjectCalls.getMethodBind("GLTFCamera", "set_fov", SET_FOV_HASH)
-        }
 
         private const val GET_SIZE_MAG_HASH = 1740695150L
-        private val getSizeMagBind by lazy {
+        @JvmField
+        val getSizeMagBind =
             ObjectCalls.getMethodBind("GLTFCamera", "get_size_mag", GET_SIZE_MAG_HASH)
-        }
 
         private const val SET_SIZE_MAG_HASH = 373806689L
-        private val setSizeMagBind by lazy {
+        @JvmField
+        val setSizeMagBind =
             ObjectCalls.getMethodBind("GLTFCamera", "set_size_mag", SET_SIZE_MAG_HASH)
-        }
 
         private const val GET_DEPTH_FAR_HASH = 1740695150L
-        private val getDepthFarBind by lazy {
+        @JvmField
+        val getDepthFarBind =
             ObjectCalls.getMethodBind("GLTFCamera", "get_depth_far", GET_DEPTH_FAR_HASH)
-        }
 
         private const val SET_DEPTH_FAR_HASH = 373806689L
-        private val setDepthFarBind by lazy {
+        @JvmField
+        val setDepthFarBind =
             ObjectCalls.getMethodBind("GLTFCamera", "set_depth_far", SET_DEPTH_FAR_HASH)
-        }
 
         private const val GET_DEPTH_NEAR_HASH = 1740695150L
-        private val getDepthNearBind by lazy {
+        @JvmField
+        val getDepthNearBind =
             ObjectCalls.getMethodBind("GLTFCamera", "get_depth_near", GET_DEPTH_NEAR_HASH)
-        }
 
         private const val SET_DEPTH_NEAR_HASH = 373806689L
-        private val setDepthNearBind by lazy {
+        @JvmField
+        val setDepthNearBind =
             ObjectCalls.getMethodBind("GLTFCamera", "set_depth_near", SET_DEPTH_NEAR_HASH)
-        }
     }
 }

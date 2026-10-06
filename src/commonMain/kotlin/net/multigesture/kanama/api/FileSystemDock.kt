@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -19,7 +20,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
      * Generated from Godot docs: FileSystemDock.navigate_to_path
      */
     fun navigateToPath(path: String) {
-        ObjectCalls.ptrcallWithStringArg(navigateToPathBind, segment, path)
+        ObjectCalls.ptrcallWithStringArg(Binds.navigateToPathBind, segment, path)
     }
 
     /**
@@ -28,7 +29,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
      * Generated from Godot docs: FileSystemDock.add_resource_tooltip_plugin
      */
     fun addResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(addResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -37,7 +38,7 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
      * Generated from Godot docs: FileSystemDock.remove_resource_tooltip_plugin
      */
     fun removeResourceTooltipPlugin(plugin: EditorResourceTooltipPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(removeResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeResourceTooltipPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /** Signal `inherit(file: String)`; see [TypedSignal]. */
@@ -110,20 +111,22 @@ class FileSystemDock(handle: GodotHandle) : EditorDock(handle) {
 
         internal fun wrap(handle: RawSegment): FileSystemDock? =
             if (handle.address() == 0L) null else FileSystemDock(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val NAVIGATE_TO_PATH_HASH = 83702148L
-        private val navigateToPathBind by lazy {
+        @JvmField
+        val navigateToPathBind =
             ObjectCalls.getMethodBind("FileSystemDock", "navigate_to_path", NAVIGATE_TO_PATH_HASH)
-        }
 
         private const val ADD_RESOURCE_TOOLTIP_PLUGIN_HASH = 2258356838L
-        private val addResourceTooltipPluginBind by lazy {
+        @JvmField
+        val addResourceTooltipPluginBind =
             ObjectCalls.getMethodBind("FileSystemDock", "add_resource_tooltip_plugin", ADD_RESOURCE_TOOLTIP_PLUGIN_HASH)
-        }
 
         private const val REMOVE_RESOURCE_TOOLTIP_PLUGIN_HASH = 2258356838L
-        private val removeResourceTooltipPluginBind by lazy {
+        @JvmField
+        val removeResourceTooltipPluginBind =
             ObjectCalls.getMethodBind("FileSystemDock", "remove_resource_tooltip_plugin", REMOVE_RESOURCE_TOOLTIP_PLUGIN_HASH)
-        }
     }
 }

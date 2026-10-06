@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -49,7 +50,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_joint
      */
     fun getJoint(): Joint2D? {
-        return Joint2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getJointBind, segment))
+        return Joint2D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getJointBind, segment))
     }
 
     /**
@@ -60,7 +61,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_auto_configure_joint
      */
     fun getAutoConfigureJoint(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getAutoConfigureJointBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAutoConfigureJointBind, segment)
     }
 
     /**
@@ -71,7 +72,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_auto_configure_joint
      */
     fun setAutoConfigureJoint(autoConfigureJoint: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setAutoConfigureJointBind, segment, autoConfigureJoint)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAutoConfigureJointBind, segment, autoConfigureJoint)
     }
 
     /**
@@ -83,7 +84,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_simulate_physics
      */
     fun setSimulatePhysics(simulatePhysics: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSimulatePhysicsBind, segment, simulatePhysics)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSimulatePhysicsBind, segment, simulatePhysics)
     }
 
     /**
@@ -95,7 +96,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_simulate_physics
      */
     fun getSimulatePhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getSimulatePhysicsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getSimulatePhysicsBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.is_simulating_physics
      */
     fun isSimulatingPhysics(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSimulatingPhysicsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSimulatingPhysicsBind, segment)
     }
 
     /**
@@ -114,7 +115,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_bone2d_nodepath
      */
     fun setBone2dNodepath(nodepath: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setBone2dNodepathBind, segment, nodepath)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setBone2dNodepathBind, segment, nodepath)
     }
 
     /**
@@ -123,7 +124,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_bone2d_nodepath
      */
     fun getBone2dNodepath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getBone2dNodepathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getBone2dNodepathBind, segment)
     }
 
     /**
@@ -132,7 +133,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_bone2d_index
      */
     fun setBone2dIndex(boneIndex: Int) {
-        ObjectCalls.ptrcallWithIntArg(setBone2dIndexBind, segment, boneIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.setBone2dIndexBind, segment, boneIndex)
     }
 
     /**
@@ -141,7 +142,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_bone2d_index
      */
     fun getBone2dIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getBone2dIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getBone2dIndexBind, segment)
     }
 
     /**
@@ -151,7 +152,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.set_follow_bone_when_simulating
      */
     fun setFollowBoneWhenSimulating(followBone: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFollowBoneWhenSimulatingBind, segment, followBone)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFollowBoneWhenSimulatingBind, segment, followBone)
     }
 
     /**
@@ -161,7 +162,7 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
      * Generated from Godot docs: PhysicalBone2D.get_follow_bone_when_simulating
      */
     fun getFollowBoneWhenSimulating(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getFollowBoneWhenSimulatingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFollowBoneWhenSimulatingBind, segment)
     }
 
     companion object {
@@ -171,65 +172,67 @@ class PhysicalBone2D(handle: GodotHandle) : RigidBody2D(handle) {
 
         internal fun wrap(handle: RawSegment): PhysicalBone2D? =
             if (handle.address() == 0L) null else PhysicalBone2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_JOINT_HASH = 3582132112L
-        private val getJointBind by lazy {
+        @JvmField
+        val getJointBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "get_joint", GET_JOINT_HASH)
-        }
 
         private const val GET_AUTO_CONFIGURE_JOINT_HASH = 36873697L
-        private val getAutoConfigureJointBind by lazy {
+        @JvmField
+        val getAutoConfigureJointBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "get_auto_configure_joint", GET_AUTO_CONFIGURE_JOINT_HASH)
-        }
 
         private const val SET_AUTO_CONFIGURE_JOINT_HASH = 2586408642L
-        private val setAutoConfigureJointBind by lazy {
+        @JvmField
+        val setAutoConfigureJointBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "set_auto_configure_joint", SET_AUTO_CONFIGURE_JOINT_HASH)
-        }
 
         private const val SET_SIMULATE_PHYSICS_HASH = 2586408642L
-        private val setSimulatePhysicsBind by lazy {
+        @JvmField
+        val setSimulatePhysicsBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "set_simulate_physics", SET_SIMULATE_PHYSICS_HASH)
-        }
 
         private const val GET_SIMULATE_PHYSICS_HASH = 36873697L
-        private val getSimulatePhysicsBind by lazy {
+        @JvmField
+        val getSimulatePhysicsBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "get_simulate_physics", GET_SIMULATE_PHYSICS_HASH)
-        }
 
         private const val IS_SIMULATING_PHYSICS_HASH = 36873697L
-        private val isSimulatingPhysicsBind by lazy {
+        @JvmField
+        val isSimulatingPhysicsBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "is_simulating_physics", IS_SIMULATING_PHYSICS_HASH)
-        }
 
         private const val SET_BONE2D_NODEPATH_HASH = 1348162250L
-        private val setBone2dNodepathBind by lazy {
+        @JvmField
+        val setBone2dNodepathBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "set_bone2d_nodepath", SET_BONE2D_NODEPATH_HASH)
-        }
 
         private const val GET_BONE2D_NODEPATH_HASH = 4075236667L
-        private val getBone2dNodepathBind by lazy {
+        @JvmField
+        val getBone2dNodepathBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "get_bone2d_nodepath", GET_BONE2D_NODEPATH_HASH)
-        }
 
         private const val SET_BONE2D_INDEX_HASH = 1286410249L
-        private val setBone2dIndexBind by lazy {
+        @JvmField
+        val setBone2dIndexBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "set_bone2d_index", SET_BONE2D_INDEX_HASH)
-        }
 
         private const val GET_BONE2D_INDEX_HASH = 3905245786L
-        private val getBone2dIndexBind by lazy {
+        @JvmField
+        val getBone2dIndexBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "get_bone2d_index", GET_BONE2D_INDEX_HASH)
-        }
 
         private const val SET_FOLLOW_BONE_WHEN_SIMULATING_HASH = 2586408642L
-        private val setFollowBoneWhenSimulatingBind by lazy {
+        @JvmField
+        val setFollowBoneWhenSimulatingBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "set_follow_bone_when_simulating", SET_FOLLOW_BONE_WHEN_SIMULATING_HASH)
-        }
 
         private const val GET_FOLLOW_BONE_WHEN_SIMULATING_HASH = 36873697L
-        private val getFollowBoneWhenSimulatingBind by lazy {
+        @JvmField
+        val getFollowBoneWhenSimulatingBind =
             ObjectCalls.getMethodBind("PhysicalBone2D", "get_follow_bone_when_simulating", GET_FOLLOW_BONE_WHEN_SIMULATING_HASH)
-        }
     }
 }

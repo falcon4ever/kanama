@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -142,7 +143,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_centered
      */
     fun setCentered(centered: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCenteredBind, segment, centered)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCenteredBind, segment, centered)
     }
 
     /**
@@ -151,7 +152,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.is_centered
      */
     fun isCentered(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCenteredBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCenteredBind, segment)
     }
 
     /**
@@ -161,7 +162,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_offset
      */
     fun setOffset(offset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
     }
 
     /**
@@ -171,7 +172,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_offset
      */
     fun getOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -180,7 +181,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_flip_h
      */
     fun setFlipH(flipH: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipHBind, segment, flipH)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipHBind, segment, flipH)
     }
 
     /**
@@ -189,7 +190,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.is_flipped_h
      */
     fun isFlippedH(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedHBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlippedHBind, segment)
     }
 
     /**
@@ -198,7 +199,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_flip_v
      */
     fun setFlipV(flipV: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setFlipVBind, segment, flipV)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipVBind, segment, flipV)
     }
 
     /**
@@ -207,7 +208,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.is_flipped_v
      */
     fun isFlippedV(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isFlippedVBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFlippedVBind, segment)
     }
 
     /**
@@ -223,7 +224,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_modulate
      */
     fun setModulate(modulate: Color) {
-        ObjectCalls.ptrcallWithColorArg(setModulateBind, segment, modulate)
+        ObjectCalls.ptrcallWithColorArg(Binds.setModulateBind, segment, modulate)
     }
 
     /**
@@ -239,7 +240,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_modulate
      */
     fun getModulate(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getModulateBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getModulateBind, segment)
     }
 
     /**
@@ -252,7 +253,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_render_priority
      */
     fun setRenderPriority(priority: Int) {
-        ObjectCalls.ptrcallWithIntArg(setRenderPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithIntArg(Binds.setRenderPriorityBind, segment, priority)
     }
 
     /**
@@ -265,7 +266,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_render_priority
      */
     fun getRenderPriority(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getRenderPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRenderPriorityBind, segment)
     }
 
     /**
@@ -274,7 +275,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_pixel_size
      */
     fun setPixelSize(pixelSize: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setPixelSizeBind, segment, pixelSize)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setPixelSizeBind, segment, pixelSize)
     }
 
     /**
@@ -283,7 +284,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_pixel_size
      */
     fun getPixelSize(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getPixelSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getPixelSizeBind, segment)
     }
 
     /**
@@ -292,7 +293,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_axis
      */
     fun setAxis(axis: Vector3.Axis) {
-        ObjectCalls.ptrcallWithLongArg(setAxisBind, segment, axis.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAxisBind, segment, axis.value)
     }
 
     /**
@@ -301,7 +302,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_axis
      */
     fun getAxis(): Vector3.Axis {
-        return Vector3.Axis(ObjectCalls.ptrcallNoArgsRetLong(getAxisBind, segment))
+        return Vector3.Axis(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAxisBind, segment))
     }
 
     /**
@@ -311,7 +312,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_draw_flag
      */
     fun setDrawFlag(flag: SpriteBase3D.DrawFlags, enabled: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setDrawFlagBind, segment, flag.value, enabled)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setDrawFlagBind, segment, flag.value, enabled)
     }
 
     /**
@@ -321,7 +322,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_draw_flag
      */
     fun getDrawFlag(flag: SpriteBase3D.DrawFlags): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getDrawFlagBind, segment, flag.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getDrawFlagBind, segment, flag.value)
     }
 
     /**
@@ -330,7 +331,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_cut_mode
      */
     fun setAlphaCutMode(mode: SpriteBase3D.AlphaCutMode) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaCutModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlphaCutModeBind, segment, mode.value)
     }
 
     /**
@@ -339,7 +340,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_cut_mode
      */
     fun getAlphaCutMode(): SpriteBase3D.AlphaCutMode {
-        return SpriteBase3D.AlphaCutMode(ObjectCalls.ptrcallNoArgsRetLong(getAlphaCutModeBind, segment))
+        return SpriteBase3D.AlphaCutMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaCutModeBind, segment))
     }
 
     /**
@@ -348,7 +349,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_scissor_threshold
      */
     fun setAlphaScissorThreshold(threshold: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaScissorThresholdBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaScissorThresholdBind, segment, threshold)
     }
 
     /**
@@ -357,7 +358,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_scissor_threshold
      */
     fun getAlphaScissorThreshold(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaScissorThresholdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaScissorThresholdBind, segment)
     }
 
     /**
@@ -366,7 +367,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_hash_scale
      */
     fun setAlphaHashScale(threshold: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaHashScaleBind, segment, threshold)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaHashScaleBind, segment, threshold)
     }
 
     /**
@@ -375,7 +376,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_hash_scale
      */
     fun getAlphaHashScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaHashScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaHashScaleBind, segment)
     }
 
     /**
@@ -384,7 +385,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_antialiasing
      */
     fun setAlphaAntialiasing(alphaAa: BaseMaterial3D.AlphaAntiAliasing) {
-        ObjectCalls.ptrcallWithLongArg(setAlphaAntialiasingBind, segment, alphaAa.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAlphaAntialiasingBind, segment, alphaAa.value)
     }
 
     /**
@@ -393,7 +394,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_antialiasing
      */
     fun getAlphaAntialiasing(): BaseMaterial3D.AlphaAntiAliasing {
-        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(getAlphaAntialiasingBind, segment))
+        return BaseMaterial3D.AlphaAntiAliasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAlphaAntialiasingBind, segment))
     }
 
     /**
@@ -402,7 +403,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_alpha_antialiasing_edge
      */
     fun setAlphaAntialiasingEdge(edge: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setAlphaAntialiasingEdgeBind, segment, edge)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setAlphaAntialiasingEdgeBind, segment, edge)
     }
 
     /**
@@ -411,7 +412,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_alpha_antialiasing_edge
      */
     fun getAlphaAntialiasingEdge(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getAlphaAntialiasingEdgeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getAlphaAntialiasingEdgeBind, segment)
     }
 
     /**
@@ -424,7 +425,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_billboard_mode
      */
     fun setBillboardMode(mode: BaseMaterial3D.BillboardMode) {
-        ObjectCalls.ptrcallWithLongArg(setBillboardModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setBillboardModeBind, segment, mode.value)
     }
 
     /**
@@ -437,7 +438,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_billboard_mode
      */
     fun getBillboardMode(): BaseMaterial3D.BillboardMode {
-        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(getBillboardModeBind, segment))
+        return BaseMaterial3D.BillboardMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBillboardModeBind, segment))
     }
 
     /**
@@ -448,7 +449,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.set_texture_filter
      */
     fun setTextureFilter(mode: BaseMaterial3D.TextureFilter) {
-        ObjectCalls.ptrcallWithLongArg(setTextureFilterBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextureFilterBind, segment, mode.value)
     }
 
     /**
@@ -459,7 +460,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_texture_filter
      */
     fun getTextureFilter(): BaseMaterial3D.TextureFilter {
-        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(getTextureFilterBind, segment))
+        return BaseMaterial3D.TextureFilter(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextureFilterBind, segment))
     }
 
     /**
@@ -468,7 +469,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.get_item_rect
      */
     fun getItemRect(): Rect2 {
-        return ObjectCalls.ptrcallNoArgsRetRect2(getItemRectBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2(Binds.getItemRectBind, segment)
     }
 
     /**
@@ -478,7 +479,7 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
      * Generated from Godot docs: SpriteBase3D.generate_triangle_mesh
      */
     fun generateTriangleMesh(): TriangleMesh? {
-        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(generateTriangleMeshBind, segment))
+        return TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateTriangleMeshBind, segment))
     }
 
     /**
@@ -583,175 +584,177 @@ open class SpriteBase3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
         internal fun wrap(handle: RawSegment): SpriteBase3D? =
             if (handle.address() == 0L) null else SpriteBase3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CENTERED_HASH = 2586408642L
-        private val setCenteredBind by lazy {
+        @JvmField
+        val setCenteredBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_centered", SET_CENTERED_HASH)
-        }
 
         private const val IS_CENTERED_HASH = 36873697L
-        private val isCenteredBind by lazy {
+        @JvmField
+        val isCenteredBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "is_centered", IS_CENTERED_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 743155724L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3341600327L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_FLIP_H_HASH = 2586408642L
-        private val setFlipHBind by lazy {
+        @JvmField
+        val setFlipHBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_flip_h", SET_FLIP_H_HASH)
-        }
 
         private const val IS_FLIPPED_H_HASH = 36873697L
-        private val isFlippedHBind by lazy {
+        @JvmField
+        val isFlippedHBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "is_flipped_h", IS_FLIPPED_H_HASH)
-        }
 
         private const val SET_FLIP_V_HASH = 2586408642L
-        private val setFlipVBind by lazy {
+        @JvmField
+        val setFlipVBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_flip_v", SET_FLIP_V_HASH)
-        }
 
         private const val IS_FLIPPED_V_HASH = 36873697L
-        private val isFlippedVBind by lazy {
+        @JvmField
+        val isFlippedVBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "is_flipped_v", IS_FLIPPED_V_HASH)
-        }
 
         private const val SET_MODULATE_HASH = 2920490490L
-        private val setModulateBind by lazy {
+        @JvmField
+        val setModulateBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_modulate", SET_MODULATE_HASH)
-        }
 
         private const val GET_MODULATE_HASH = 3444240500L
-        private val getModulateBind by lazy {
+        @JvmField
+        val getModulateBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_modulate", GET_MODULATE_HASH)
-        }
 
         private const val SET_RENDER_PRIORITY_HASH = 1286410249L
-        private val setRenderPriorityBind by lazy {
+        @JvmField
+        val setRenderPriorityBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_render_priority", SET_RENDER_PRIORITY_HASH)
-        }
 
         private const val GET_RENDER_PRIORITY_HASH = 3905245786L
-        private val getRenderPriorityBind by lazy {
+        @JvmField
+        val getRenderPriorityBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_render_priority", GET_RENDER_PRIORITY_HASH)
-        }
 
         private const val SET_PIXEL_SIZE_HASH = 373806689L
-        private val setPixelSizeBind by lazy {
+        @JvmField
+        val setPixelSizeBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_pixel_size", SET_PIXEL_SIZE_HASH)
-        }
 
         private const val GET_PIXEL_SIZE_HASH = 1740695150L
-        private val getPixelSizeBind by lazy {
+        @JvmField
+        val getPixelSizeBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_pixel_size", GET_PIXEL_SIZE_HASH)
-        }
 
         private const val SET_AXIS_HASH = 1144690656L
-        private val setAxisBind by lazy {
+        @JvmField
+        val setAxisBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_axis", SET_AXIS_HASH)
-        }
 
         private const val GET_AXIS_HASH = 3050976882L
-        private val getAxisBind by lazy {
+        @JvmField
+        val getAxisBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_axis", GET_AXIS_HASH)
-        }
 
         private const val SET_DRAW_FLAG_HASH = 1135633219L
-        private val setDrawFlagBind by lazy {
+        @JvmField
+        val setDrawFlagBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_draw_flag", SET_DRAW_FLAG_HASH)
-        }
 
         private const val GET_DRAW_FLAG_HASH = 1733036628L
-        private val getDrawFlagBind by lazy {
+        @JvmField
+        val getDrawFlagBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_draw_flag", GET_DRAW_FLAG_HASH)
-        }
 
         private const val SET_ALPHA_CUT_MODE_HASH = 227561226L
-        private val setAlphaCutModeBind by lazy {
+        @JvmField
+        val setAlphaCutModeBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_alpha_cut_mode", SET_ALPHA_CUT_MODE_HASH)
-        }
 
         private const val GET_ALPHA_CUT_MODE_HASH = 336003791L
-        private val getAlphaCutModeBind by lazy {
+        @JvmField
+        val getAlphaCutModeBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_alpha_cut_mode", GET_ALPHA_CUT_MODE_HASH)
-        }
 
         private const val SET_ALPHA_SCISSOR_THRESHOLD_HASH = 373806689L
-        private val setAlphaScissorThresholdBind by lazy {
+        @JvmField
+        val setAlphaScissorThresholdBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_alpha_scissor_threshold", SET_ALPHA_SCISSOR_THRESHOLD_HASH)
-        }
 
         private const val GET_ALPHA_SCISSOR_THRESHOLD_HASH = 1740695150L
-        private val getAlphaScissorThresholdBind by lazy {
+        @JvmField
+        val getAlphaScissorThresholdBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_alpha_scissor_threshold", GET_ALPHA_SCISSOR_THRESHOLD_HASH)
-        }
 
         private const val SET_ALPHA_HASH_SCALE_HASH = 373806689L
-        private val setAlphaHashScaleBind by lazy {
+        @JvmField
+        val setAlphaHashScaleBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_alpha_hash_scale", SET_ALPHA_HASH_SCALE_HASH)
-        }
 
         private const val GET_ALPHA_HASH_SCALE_HASH = 1740695150L
-        private val getAlphaHashScaleBind by lazy {
+        @JvmField
+        val getAlphaHashScaleBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_alpha_hash_scale", GET_ALPHA_HASH_SCALE_HASH)
-        }
 
         private const val SET_ALPHA_ANTIALIASING_HASH = 3212649852L
-        private val setAlphaAntialiasingBind by lazy {
+        @JvmField
+        val setAlphaAntialiasingBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_alpha_antialiasing", SET_ALPHA_ANTIALIASING_HASH)
-        }
 
         private const val GET_ALPHA_ANTIALIASING_HASH = 2889939400L
-        private val getAlphaAntialiasingBind by lazy {
+        @JvmField
+        val getAlphaAntialiasingBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_alpha_antialiasing", GET_ALPHA_ANTIALIASING_HASH)
-        }
 
         private const val SET_ALPHA_ANTIALIASING_EDGE_HASH = 373806689L
-        private val setAlphaAntialiasingEdgeBind by lazy {
+        @JvmField
+        val setAlphaAntialiasingEdgeBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_alpha_antialiasing_edge", SET_ALPHA_ANTIALIASING_EDGE_HASH)
-        }
 
         private const val GET_ALPHA_ANTIALIASING_EDGE_HASH = 1740695150L
-        private val getAlphaAntialiasingEdgeBind by lazy {
+        @JvmField
+        val getAlphaAntialiasingEdgeBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_alpha_antialiasing_edge", GET_ALPHA_ANTIALIASING_EDGE_HASH)
-        }
 
         private const val SET_BILLBOARD_MODE_HASH = 4202036497L
-        private val setBillboardModeBind by lazy {
+        @JvmField
+        val setBillboardModeBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_billboard_mode", SET_BILLBOARD_MODE_HASH)
-        }
 
         private const val GET_BILLBOARD_MODE_HASH = 1283840139L
-        private val getBillboardModeBind by lazy {
+        @JvmField
+        val getBillboardModeBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_billboard_mode", GET_BILLBOARD_MODE_HASH)
-        }
 
         private const val SET_TEXTURE_FILTER_HASH = 22904437L
-        private val setTextureFilterBind by lazy {
+        @JvmField
+        val setTextureFilterBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "set_texture_filter", SET_TEXTURE_FILTER_HASH)
-        }
 
         private const val GET_TEXTURE_FILTER_HASH = 3289213076L
-        private val getTextureFilterBind by lazy {
+        @JvmField
+        val getTextureFilterBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_texture_filter", GET_TEXTURE_FILTER_HASH)
-        }
 
         private const val GET_ITEM_RECT_HASH = 1639390495L
-        private val getItemRectBind by lazy {
+        @JvmField
+        val getItemRectBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "get_item_rect", GET_ITEM_RECT_HASH)
-        }
 
         private const val GENERATE_TRIANGLE_MESH_HASH = 3476533166L
-        private val generateTriangleMeshBind by lazy {
+        @JvmField
+        val generateTriangleMeshBind =
             ObjectCalls.getMethodBind("SpriteBase3D", "generate_triangle_mesh", GENERATE_TRIANGLE_MESH_HASH)
-        }
     }
 }

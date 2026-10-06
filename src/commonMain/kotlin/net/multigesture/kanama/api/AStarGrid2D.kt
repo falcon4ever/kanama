@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -77,7 +78,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRegion(region: Rect2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iArg(setRegionBind, segment, region)
+        ObjectCalls.ptrcallWithRect2iArg(Binds.setRegionBind, segment, region)
     }
 
     /**
@@ -88,7 +89,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRegion(): Rect2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetRect2i(getRegionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getRegionBind, segment)
     }
 
     /**
@@ -99,7 +100,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setSize(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -110,7 +111,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
     }
 
     /**
@@ -121,7 +122,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setOffset(offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setOffsetBind, segment, offset)
     }
 
     /**
@@ -132,7 +133,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getOffset(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getOffsetBind, segment)
     }
 
     /**
@@ -144,7 +145,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCellSize(cellSize: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2Arg(setCellSizeBind, segment, cellSize)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setCellSizeBind, segment, cellSize)
     }
 
     /**
@@ -156,7 +157,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCellSize(): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2(getCellSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getCellSizeBind, segment)
     }
 
     /**
@@ -167,7 +168,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setCellShape(cellShape: AStarGrid2D.CellShape) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellShapeBind, segment, cellShape.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCellShapeBind, segment, cellShape.value)
     }
 
     /**
@@ -178,7 +179,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getCellShape(): AStarGrid2D.CellShape {
         checkOpen()
-        return AStarGrid2D.CellShape(ObjectCalls.ptrcallNoArgsRetLong(getCellShapeBind, segment))
+        return AStarGrid2D.CellShape(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellShapeBind, segment))
     }
 
     /**
@@ -189,7 +190,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isInBounds(x: Int, y: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(isInBoundsBind, segment, x, y)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isInBoundsBind, segment, x, y)
     }
 
     /**
@@ -200,7 +201,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isInBoundsv(id: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isInBoundsvBind, segment, id)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isInBoundsvBind, segment, id)
     }
 
     /**
@@ -210,7 +211,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isDirty(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDirtyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDirtyBind, segment)
     }
 
     /**
@@ -223,7 +224,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun update() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(updateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.updateBind, segment)
     }
 
     /**
@@ -235,7 +236,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setJumpingEnabled(enabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setJumpingEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setJumpingEnabledBind, segment, enabled)
     }
 
     /**
@@ -247,7 +248,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isJumpingEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isJumpingEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isJumpingEnabledBind, segment)
     }
 
     /**
@@ -258,7 +259,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDiagonalMode(mode: AStarGrid2D.DiagonalMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDiagonalModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDiagonalModeBind, segment, mode.value)
     }
 
     /**
@@ -269,7 +270,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDiagonalMode(): AStarGrid2D.DiagonalMode {
         checkOpen()
-        return AStarGrid2D.DiagonalMode(ObjectCalls.ptrcallNoArgsRetLong(getDiagonalModeBind, segment))
+        return AStarGrid2D.DiagonalMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDiagonalModeBind, segment))
     }
 
     /**
@@ -280,7 +281,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDefaultComputeHeuristic(heuristic: AStarGrid2D.Heuristic) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDefaultComputeHeuristicBind, segment, heuristic.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDefaultComputeHeuristicBind, segment, heuristic.value)
     }
 
     /**
@@ -291,7 +292,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDefaultComputeHeuristic(): AStarGrid2D.Heuristic {
         checkOpen()
-        return AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(getDefaultComputeHeuristicBind, segment))
+        return AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultComputeHeuristicBind, segment))
     }
 
     /**
@@ -302,7 +303,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setDefaultEstimateHeuristic(heuristic: AStarGrid2D.Heuristic) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDefaultEstimateHeuristicBind, segment, heuristic.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDefaultEstimateHeuristicBind, segment, heuristic.value)
     }
 
     /**
@@ -313,7 +314,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDefaultEstimateHeuristic(): AStarGrid2D.Heuristic {
         checkOpen()
-        return AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(getDefaultEstimateHeuristicBind, segment))
+        return AStarGrid2D.Heuristic(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDefaultEstimateHeuristicBind, segment))
     }
 
     /**
@@ -325,7 +326,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPointSolid(id: Vector2i, solid: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndBoolArg(setPointSolidBind, segment, id, solid)
+        ObjectCalls.ptrcallWithVector2iAndBoolArg(Binds.setPointSolidBind, segment, id, solid)
     }
 
     /**
@@ -335,7 +336,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isPointSolid(id: Vector2i): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetBool(isPointSolidBind, segment, id)
+        return ObjectCalls.ptrcallWithVector2iArgRetBool(Binds.isPointSolidBind, segment, id)
     }
 
     /**
@@ -348,7 +349,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPointWeightScale(id: Vector2i, weightScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iAndDoubleArg(setPointWeightScaleBind, segment, id, weightScale)
+        ObjectCalls.ptrcallWithVector2iAndDoubleArg(Binds.setPointWeightScaleBind, segment, id, weightScale)
     }
 
     /**
@@ -358,7 +359,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointWeightScale(id: Vector2i): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetDouble(getPointWeightScaleBind, segment, id)
+        return ObjectCalls.ptrcallWithVector2iArgRetDouble(Binds.getPointWeightScaleBind, segment, id)
     }
 
     /**
@@ -369,7 +370,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fillSolidRegion(region: Rect2i, solid: Boolean = true) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iAndBoolArg(fillSolidRegionBind, segment, region, solid)
+        ObjectCalls.ptrcallWithRect2iAndBoolArg(Binds.fillSolidRegionBind, segment, region, solid)
     }
 
     /**
@@ -380,7 +381,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun fillWeightScaleRegion(region: Rect2i, weightScale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithRect2iAndDoubleArg(fillWeightScaleRegionBind, segment, region, weightScale)
+        ObjectCalls.ptrcallWithRect2iAndDoubleArg(Binds.fillWeightScaleRegionBind, segment, region, weightScale)
     }
 
     /**
@@ -390,7 +391,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     /**
@@ -400,7 +401,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointPosition(id: Vector2i): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithVector2iArgRetVector2(getPointPositionBind, segment, id)
+        return ObjectCalls.ptrcallWithVector2iArgRetVector2(Binds.getPointPositionBind, segment, id)
     }
 
     /**
@@ -411,7 +412,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointDataInRegion(region: Rect2i): List<Map<String, Any?>> {
         checkOpen()
-        return ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(getPointDataInRegionBind, segment, region)
+        return ObjectCalls.ptrcallWithRect2iArgRetDictionaryList(Binds.getPointDataInRegionBind, segment, region)
     }
 
     /**
@@ -429,7 +430,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPointPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(getPointPathBind, segment, fromId, toId, allowPartialPath)
+        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List(Binds.getPointPathBind, segment, fromId, toId, allowPartialPath)
     }
 
     /**
@@ -445,7 +446,7 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getIdPath(fromId: Vector2i, toId: Vector2i, allowPartialPath: Boolean = false): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(getIdPathBind, segment, fromId, toId, allowPartialPath)
+        return ObjectCalls.ptrcallWithTwoVector2iAndBoolArgsRetVector2iList(Binds.getIdPathBind, segment, fromId, toId, allowPartialPath)
     }
 
     /**
@@ -586,170 +587,172 @@ class AStarGrid2D(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AStarGrid2D? =
             if (handle.address() == 0L) null else AStarGrid2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_REGION_HASH = 1763793166L
-        private val setRegionBind by lazy {
+        @JvmField
+        val setRegionBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_region", SET_REGION_HASH)
-        }
 
         private const val GET_REGION_HASH = 410525958L
-        private val getRegionBind by lazy {
+        @JvmField
+        val getRegionBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_region", GET_REGION_HASH)
-        }
 
         private const val SET_SIZE_HASH = 1130785943L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3690982128L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 743155724L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3341600327L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_CELL_SIZE_HASH = 743155724L
-        private val setCellSizeBind by lazy {
+        @JvmField
+        val setCellSizeBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_cell_size", SET_CELL_SIZE_HASH)
-        }
 
         private const val GET_CELL_SIZE_HASH = 3341600327L
-        private val getCellSizeBind by lazy {
+        @JvmField
+        val getCellSizeBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_cell_size", GET_CELL_SIZE_HASH)
-        }
 
         private const val SET_CELL_SHAPE_HASH = 4130591146L
-        private val setCellShapeBind by lazy {
+        @JvmField
+        val setCellShapeBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_cell_shape", SET_CELL_SHAPE_HASH)
-        }
 
         private const val GET_CELL_SHAPE_HASH = 3293463634L
-        private val getCellShapeBind by lazy {
+        @JvmField
+        val getCellShapeBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_cell_shape", GET_CELL_SHAPE_HASH)
-        }
 
         private const val IS_IN_BOUNDS_HASH = 2522259332L
-        private val isInBoundsBind by lazy {
+        @JvmField
+        val isInBoundsBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "is_in_bounds", IS_IN_BOUNDS_HASH)
-        }
 
         private const val IS_IN_BOUNDSV_HASH = 3900751641L
-        private val isInBoundsvBind by lazy {
+        @JvmField
+        val isInBoundsvBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "is_in_boundsv", IS_IN_BOUNDSV_HASH)
-        }
 
         private const val IS_DIRTY_HASH = 36873697L
-        private val isDirtyBind by lazy {
+        @JvmField
+        val isDirtyBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "is_dirty", IS_DIRTY_HASH)
-        }
 
         private const val UPDATE_HASH = 3218959716L
-        private val updateBind by lazy {
+        @JvmField
+        val updateBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "update", UPDATE_HASH)
-        }
 
         private const val SET_JUMPING_ENABLED_HASH = 2586408642L
-        private val setJumpingEnabledBind by lazy {
+        @JvmField
+        val setJumpingEnabledBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_jumping_enabled", SET_JUMPING_ENABLED_HASH)
-        }
 
         private const val IS_JUMPING_ENABLED_HASH = 36873697L
-        private val isJumpingEnabledBind by lazy {
+        @JvmField
+        val isJumpingEnabledBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "is_jumping_enabled", IS_JUMPING_ENABLED_HASH)
-        }
 
         private const val SET_DIAGONAL_MODE_HASH = 1017829798L
-        private val setDiagonalModeBind by lazy {
+        @JvmField
+        val setDiagonalModeBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_diagonal_mode", SET_DIAGONAL_MODE_HASH)
-        }
 
         private const val GET_DIAGONAL_MODE_HASH = 3129282674L
-        private val getDiagonalModeBind by lazy {
+        @JvmField
+        val getDiagonalModeBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_diagonal_mode", GET_DIAGONAL_MODE_HASH)
-        }
 
         private const val SET_DEFAULT_COMPUTE_HEURISTIC_HASH = 1044375519L
-        private val setDefaultComputeHeuristicBind by lazy {
+        @JvmField
+        val setDefaultComputeHeuristicBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_default_compute_heuristic", SET_DEFAULT_COMPUTE_HEURISTIC_HASH)
-        }
 
         private const val GET_DEFAULT_COMPUTE_HEURISTIC_HASH = 2074731422L
-        private val getDefaultComputeHeuristicBind by lazy {
+        @JvmField
+        val getDefaultComputeHeuristicBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_default_compute_heuristic", GET_DEFAULT_COMPUTE_HEURISTIC_HASH)
-        }
 
         private const val SET_DEFAULT_ESTIMATE_HEURISTIC_HASH = 1044375519L
-        private val setDefaultEstimateHeuristicBind by lazy {
+        @JvmField
+        val setDefaultEstimateHeuristicBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_default_estimate_heuristic", SET_DEFAULT_ESTIMATE_HEURISTIC_HASH)
-        }
 
         private const val GET_DEFAULT_ESTIMATE_HEURISTIC_HASH = 2074731422L
-        private val getDefaultEstimateHeuristicBind by lazy {
+        @JvmField
+        val getDefaultEstimateHeuristicBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_default_estimate_heuristic", GET_DEFAULT_ESTIMATE_HEURISTIC_HASH)
-        }
 
         private const val SET_POINT_SOLID_HASH = 1765703753L
-        private val setPointSolidBind by lazy {
+        @JvmField
+        val setPointSolidBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_point_solid", SET_POINT_SOLID_HASH)
-        }
 
         private const val IS_POINT_SOLID_HASH = 3900751641L
-        private val isPointSolidBind by lazy {
+        @JvmField
+        val isPointSolidBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "is_point_solid", IS_POINT_SOLID_HASH)
-        }
 
         private const val SET_POINT_WEIGHT_SCALE_HASH = 2262553149L
-        private val setPointWeightScaleBind by lazy {
+        @JvmField
+        val setPointWeightScaleBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "set_point_weight_scale", SET_POINT_WEIGHT_SCALE_HASH)
-        }
 
         private const val GET_POINT_WEIGHT_SCALE_HASH = 719993801L
-        private val getPointWeightScaleBind by lazy {
+        @JvmField
+        val getPointWeightScaleBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_point_weight_scale", GET_POINT_WEIGHT_SCALE_HASH)
-        }
 
         private const val FILL_SOLID_REGION_HASH = 2261970063L
-        private val fillSolidRegionBind by lazy {
+        @JvmField
+        val fillSolidRegionBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "fill_solid_region", FILL_SOLID_REGION_HASH)
-        }
 
         private const val FILL_WEIGHT_SCALE_REGION_HASH = 2793244083L
-        private val fillWeightScaleRegionBind by lazy {
+        @JvmField
+        val fillWeightScaleRegionBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "fill_weight_scale_region", FILL_WEIGHT_SCALE_REGION_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "clear", CLEAR_HASH)
-        }
 
         private const val GET_POINT_POSITION_HASH = 108438297L
-        private val getPointPositionBind by lazy {
+        @JvmField
+        val getPointPositionBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_point_position", GET_POINT_POSITION_HASH)
-        }
 
         private const val GET_POINT_DATA_IN_REGION_HASH = 3893818462L
-        private val getPointDataInRegionBind by lazy {
+        @JvmField
+        val getPointDataInRegionBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_point_data_in_region", GET_POINT_DATA_IN_REGION_HASH)
-        }
 
         private const val GET_POINT_PATH_HASH = 1641925693L
-        private val getPointPathBind by lazy {
+        @JvmField
+        val getPointPathBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_point_path", GET_POINT_PATH_HASH)
-        }
 
         private const val GET_ID_PATH_HASH = 1918132273L
-        private val getIdPathBind by lazy {
+        @JvmField
+        val getIdPathBind =
             ObjectCalls.getMethodBind("AStarGrid2D", "get_id_path", GET_ID_PATH_HASH)
-        }
     }
 }

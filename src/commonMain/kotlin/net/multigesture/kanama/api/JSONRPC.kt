@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -18,7 +19,7 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.set_method
      */
     fun setMethod(name: String, callback: GodotCallable) {
-        ObjectCalls.ptrcallWithStringCallableArgs(setMethodBind, segment, name, callback.target.segment, callback.method)
+        ObjectCalls.ptrcallWithStringCallableArgs(Binds.setMethodBind, segment, name, callback.target.segment, callback.method)
     }
 
     /**
@@ -31,11 +32,11 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.process_action
      */
     fun processAction(action: Any?, recurse: Boolean = false): Any? {
-        return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(processActionBind, segment, action, recurse)
+        return ObjectCalls.ptrcallWithVariantAndBoolArgRetVariantScalar(Binds.processActionBind, segment, action, recurse)
     }
 
     fun processString(action: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(processStringBind, segment, action)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.processStringBind, segment, action)
     }
 
     /**
@@ -48,7 +49,7 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.make_request
      */
     fun makeRequest(method: String, params: Any?, id: Any?): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringAndTwoVariantArgsRetDictionary(makeRequestBind, segment, method, params, id)
+        return ObjectCalls.ptrcallWithStringAndTwoVariantArgsRetDictionary(Binds.makeRequestBind, segment, method, params, id)
     }
 
     /**
@@ -60,7 +61,7 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.make_response
      */
     fun makeResponse(result: Any?, id: Any?): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithTwoVariantArgsRetDictionary(makeResponseBind, segment, result, id)
+        return ObjectCalls.ptrcallWithTwoVariantArgsRetDictionary(Binds.makeResponseBind, segment, result, id)
     }
 
     /**
@@ -71,7 +72,7 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.make_notification
      */
     fun makeNotification(method: String, params: Any?): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringAndVariantArgRetDictionary(makeNotificationBind, segment, method, params)
+        return ObjectCalls.ptrcallWithStringAndVariantArgRetDictionary(Binds.makeNotificationBind, segment, method, params)
     }
 
     /**
@@ -82,7 +83,7 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
      * Generated from Godot docs: JSONRPC.make_response_error
      */
     fun makeResponseError(code: Int, message: String, id: Any? = null): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithIntStringVariantArgsRetDictionary(makeResponseErrorBind, segment, code, message, id)
+        return ObjectCalls.ptrcallWithIntStringVariantArgsRetDictionary(Binds.makeResponseErrorBind, segment, code, message, id)
     }
 
     /**
@@ -135,40 +136,42 @@ open class JSONRPC(handle: GodotHandle) : GodotObject(handle) {
 
         internal fun wrap(handle: RawSegment): JSONRPC? =
             if (handle.address() == 0L) null else JSONRPC(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_METHOD_HASH = 2137474292L
-        private val setMethodBind by lazy {
+        @JvmField
+        val setMethodBind =
             ObjectCalls.getMethodBind("JSONRPC", "set_method", SET_METHOD_HASH)
-        }
 
         private const val PROCESS_ACTION_HASH = 2963479484L
-        private val processActionBind by lazy {
+        @JvmField
+        val processActionBind =
             ObjectCalls.getMethodBind("JSONRPC", "process_action", PROCESS_ACTION_HASH)
-        }
 
         private const val PROCESS_STRING_HASH = 1703090593L
-        private val processStringBind by lazy {
+        @JvmField
+        val processStringBind =
             ObjectCalls.getMethodBind("JSONRPC", "process_string", PROCESS_STRING_HASH)
-        }
 
         private const val MAKE_REQUEST_HASH = 3423508980L
-        private val makeRequestBind by lazy {
+        @JvmField
+        val makeRequestBind =
             ObjectCalls.getMethodBind("JSONRPC", "make_request", MAKE_REQUEST_HASH)
-        }
 
         private const val MAKE_RESPONSE_HASH = 5053918L
-        private val makeResponseBind by lazy {
+        @JvmField
+        val makeResponseBind =
             ObjectCalls.getMethodBind("JSONRPC", "make_response", MAKE_RESPONSE_HASH)
-        }
 
         private const val MAKE_NOTIFICATION_HASH = 2949127017L
-        private val makeNotificationBind by lazy {
+        @JvmField
+        val makeNotificationBind =
             ObjectCalls.getMethodBind("JSONRPC", "make_notification", MAKE_NOTIFICATION_HASH)
-        }
 
         private const val MAKE_RESPONSE_ERROR_HASH = 928596297L
-        private val makeResponseErrorBind by lazy {
+        @JvmField
+        val makeResponseErrorBind =
             ObjectCalls.getMethodBind("JSONRPC", "make_response_error", MAKE_RESPONSE_ERROR_HASH)
-        }
     }
 }

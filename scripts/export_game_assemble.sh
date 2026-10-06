@@ -30,6 +30,10 @@ Options:
                       platform must match the export's.
   --kanama-jar FILE   Kanama runtime jar (default: <repo>/build/libs/kanama.jar)
   --scripts-jar FILE  The project's compiled kanama-scripts.jar (required).
+  --jvm-options TEXT  JVM options the game starts with, written to
+                      kanama-jvm-options.txt next to kanama.jar (default: the
+                      project setting kanama/jvm/options of the project.godot two
+                      levels above the scripts jar, if any; "" writes none).
   --help, -h          Show this help.
 EOF
 }
@@ -38,6 +42,8 @@ runtime_dir="$ROOT_DIR/build/game-runtime/runtime"
 kanama_jar="$ROOT_DIR/build/libs/kanama.jar"
 scripts_jar=""
 export_target=""
+jvm_options=""
+jvm_options_given=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -51,6 +57,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     --scripts-jar)
       scripts_jar="${2:-}"
+      shift 2
+      ;;
+    --jvm-options)
+      jvm_options="${2:-}"
+      jvm_options_given=1
       shift 2
       ;;
     --help|-h)
@@ -170,6 +181,24 @@ cp "$scripts_jar" "$dest_dir/kanama-scripts.jar"
 rm -rf "$dest_dir/runtime"
 cp -R "$runtime_dir" "$dest_dir/runtime"
 
+# JVM options (task 131 item 18): an exported game has no project.godot on disk and players set no
+# environment variables, so the bootstrap reads kanama-jvm-options.txt next to kanama.jar. By
+# default it carries the project setting kanama/jvm/options (a Godot string: quotes and \" / \\
+# escapes removed here).
+if [[ "$jvm_options_given" == 0 ]]; then
+  project_godot="$(cd "$(dirname "$scripts_jar")/../.." && pwd)/project.godot"
+  if [[ -f "$project_godot" ]]; then
+    jvm_options="$(awk '/^\[/ { in_kanama = ($0 == "[kanama]") } in_kanama && /^jvm\/options[ \t]*=/ { sub(/^jvm\/options[ \t]*=[ \t]*/, ""); print; exit }' "$project_godot")"
+    jvm_options="${jvm_options#\"}"
+    jvm_options="${jvm_options%\"}"
+    jvm_options="$(printf '%s' "$jvm_options" | sed -e 's/\\"/"/g' -e 's/\\\\/\\/g')"
+  fi
+fi
+rm -f "$dest_dir/kanama-jvm-options.txt"
+if [[ -n "$jvm_options" ]]; then
+  printf '%s\n' "$jvm_options" >"$dest_dir/kanama-jvm-options.txt"
+fi
+
 if [[ ! -f "$dest_dir/runtime/$jvm_server_lib" ]]; then
   echo "[export_game_assemble] assembly failed: missing $dest_dir/runtime/$jvm_server_lib" >&2
   exit 1
@@ -179,6 +208,9 @@ echo "[export_game_assemble] assembled:"
 echo "  $dest_dir/kanama.jar"
 echo "  $dest_dir/kanama-scripts.jar"
 echo "  $dest_dir/runtime/$jvm_server_lib"
+if [[ -n "$jvm_options" ]]; then
+  echo "  $dest_dir/kanama-jvm-options.txt: $jvm_options"
+fi
 
 case "$bootstrap_lib" in
   *.dylib)

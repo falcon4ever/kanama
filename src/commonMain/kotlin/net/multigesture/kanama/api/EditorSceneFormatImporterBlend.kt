@@ -20,7 +20,5 @@ class EditorSceneFormatImporterBlend(handle: GodotHandle) : EditorSceneFormatImp
 
         internal fun wrapBorrowed(handle: RawSegment): EditorSceneFormatImporterBlend? =
             if (handle.address() == 0L) null else EditorSceneFormatImporterBlend(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

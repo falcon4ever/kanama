@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import java.lang.foreign.MemorySegment
+import kotlin.jvm.JvmField
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.Transform3D
 
@@ -14,20 +15,22 @@ import net.multigesture.kanama.types.Transform3D
 
 fun OpenXRAPIExtension.transformFromPose(pose: MemorySegment): Transform3D {
     checkOpen()
-    return ObjectCalls.ptrcallWithConstVoidPtrArgRetTransform3D(transformFromPoseBind, segment, pose)
+    return ObjectCalls.ptrcallWithConstVoidPtrArgRetTransform3D(OpenXRAPIExtensionJvmBinds.transformFromPoseBind, segment, pose)
 }
 
 fun OpenXRAPIExtension.setCustomPlaySpace(space: MemorySegment) {
     checkOpen()
-    ObjectCalls.ptrcallWithConstVoidPtrArg(setCustomPlaySpaceBind, segment, space)
+    ObjectCalls.ptrcallWithConstVoidPtrArg(OpenXRAPIExtensionJvmBinds.setCustomPlaySpaceBind, segment, space)
 }
 
-private const val TRANSFORM_FROM_POSE_HASH = 2963875352L
-private val transformFromPoseBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRAPIExtension", "transform_from_pose", TRANSFORM_FROM_POSE_HASH)
-}
+private object OpenXRAPIExtensionJvmBinds {
+    private const val TRANSFORM_FROM_POSE_HASH = 2963875352L
+    @JvmField
+    val transformFromPoseBind =
+        ObjectCalls.getMethodBind("OpenXRAPIExtension", "transform_from_pose", TRANSFORM_FROM_POSE_HASH)
 
-private const val SET_CUSTOM_PLAY_SPACE_HASH = 1286410249L
-private val setCustomPlaySpaceBind by lazy {
-    ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_custom_play_space", SET_CUSTOM_PLAY_SPACE_HASH)
+    private const val SET_CUSTOM_PLAY_SPACE_HASH = 1286410249L
+    @JvmField
+    val setCustomPlaySpaceBind =
+        ObjectCalls.getMethodBind("OpenXRAPIExtension", "set_custom_play_space", SET_CUSTOM_PLAY_SPACE_HASH)
 }

@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -37,7 +38,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getId(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getIdBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getIdBind, segment)
     }
 
     /**
@@ -47,7 +48,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isActive(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
     }
 
     /**
@@ -57,7 +58,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setActive(active: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setActiveBind, segment, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, segment, active)
     }
 
     /**
@@ -67,7 +68,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getName(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, segment)
     }
 
     /**
@@ -77,7 +78,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setNameBind, segment, name)
     }
 
     /**
@@ -87,7 +88,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPosition(): CameraFeed.FeedPosition {
         checkOpen()
-        return CameraFeed.FeedPosition(ObjectCalls.ptrcallNoArgsRetLong(getPositionBind, segment))
+        return CameraFeed.FeedPosition(ObjectCalls.ptrcallNoArgsRetLong(Binds.getPositionBind, segment))
     }
 
     /**
@@ -97,7 +98,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setPosition(position: CameraFeed.FeedPosition) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setPositionBind, segment, position.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setPositionBind, segment, position.value)
     }
 
     /**
@@ -107,7 +108,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTransform(): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetTransform2D(getTransformBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetTransform2D(Binds.getTransformBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setTransform(transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithTransform2DArg(setTransformBind, segment, transform)
+        ObjectCalls.ptrcallWithTransform2DArg(Binds.setTransformBind, segment, transform)
     }
 
     /**
@@ -127,7 +128,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setRgbImage(rgbImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setRgbImageBind, segment, listOf(rgbImage?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setRgbImageBind, segment, listOf(rgbImage?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -137,7 +138,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setYcbcrImage(ycbcrImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setYcbcrImageBind, segment, listOf(ycbcrImage?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setYcbcrImageBind, segment, listOf(ycbcrImage?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -147,7 +148,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setYcbcrImages(yImage: Image?, cbcrImage: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoObjectArgs(setYcbcrImagesBind, segment, yImage?.requireOpenHandle() ?: NULL_SEGMENT, cbcrImage?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithTwoObjectArgs(Binds.setYcbcrImagesBind, segment, yImage?.requireOpenHandle() ?: NULL_SEGMENT, cbcrImage?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -157,7 +158,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setExternal(width: Int, height: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(setExternalBind, segment, width, height)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.setExternalBind, segment, width, height)
     }
 
     /**
@@ -168,7 +169,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getTextureTexId(feedImageType: CameraServer.FeedImage): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithLongArgRetLong(getTextureTexIdBind, segment, feedImageType.value)
+        return ObjectCalls.ptrcallWithLongArgRetLong(Binds.getTextureTexIdBind, segment, feedImageType.value)
     }
 
     /**
@@ -178,7 +179,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getDatatype(): CameraFeed.FeedDataType {
         checkOpen()
-        return CameraFeed.FeedDataType(ObjectCalls.ptrcallNoArgsRetLong(getDatatypeBind, segment))
+        return CameraFeed.FeedDataType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDatatypeBind, segment))
     }
 
     /**
@@ -188,7 +189,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getFormats(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getFormatsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getFormatsBind, segment)
     }
 
     /**
@@ -202,7 +203,7 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setFormat(index: Int, parameters: Map<String, Any?>): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(setFormatBind, segment, index, parameters)
+        return ObjectCalls.ptrcallWithIntAndDictionaryArgRetBool(Binds.setFormatBind, segment, index, parameters)
     }
 
     /** Signal `frame_changed()`; see [TypedSignal]. */
@@ -302,90 +303,92 @@ class CameraFeed(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): CameraFeed? =
             if (handle.address() == 0L) null else CameraFeed(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_ID_HASH = 3905245786L
-        private val getIdBind by lazy {
+        @JvmField
+        val getIdBind =
             ObjectCalls.getMethodBind("CameraFeed", "get_id", GET_ID_HASH)
-        }
 
         private const val IS_ACTIVE_HASH = 36873697L
-        private val isActiveBind by lazy {
+        @JvmField
+        val isActiveBind =
             ObjectCalls.getMethodBind("CameraFeed", "is_active", IS_ACTIVE_HASH)
-        }
 
         private const val SET_ACTIVE_HASH = 2586408642L
-        private val setActiveBind by lazy {
+        @JvmField
+        val setActiveBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_active", SET_ACTIVE_HASH)
-        }
 
         private const val GET_NAME_HASH = 201670096L
-        private val getNameBind by lazy {
+        @JvmField
+        val getNameBind =
             ObjectCalls.getMethodBind("CameraFeed", "get_name", GET_NAME_HASH)
-        }
 
         private const val SET_NAME_HASH = 83702148L
-        private val setNameBind by lazy {
+        @JvmField
+        val setNameBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_name", SET_NAME_HASH)
-        }
 
         private const val GET_POSITION_HASH = 2711679033L
-        private val getPositionBind by lazy {
+        @JvmField
+        val getPositionBind =
             ObjectCalls.getMethodBind("CameraFeed", "get_position", GET_POSITION_HASH)
-        }
 
         private const val SET_POSITION_HASH = 611162623L
-        private val setPositionBind by lazy {
+        @JvmField
+        val setPositionBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_position", SET_POSITION_HASH)
-        }
 
         private const val GET_TRANSFORM_HASH = 3814499831L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("CameraFeed", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val SET_TRANSFORM_HASH = 2761652528L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val SET_RGB_IMAGE_HASH = 532598488L
-        private val setRgbImageBind by lazy {
+        @JvmField
+        val setRgbImageBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_rgb_image", SET_RGB_IMAGE_HASH)
-        }
 
         private const val SET_YCBCR_IMAGE_HASH = 532598488L
-        private val setYcbcrImageBind by lazy {
+        @JvmField
+        val setYcbcrImageBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_ycbcr_image", SET_YCBCR_IMAGE_HASH)
-        }
 
         private const val SET_YCBCR_IMAGES_HASH = 1986484629L
-        private val setYcbcrImagesBind by lazy {
+        @JvmField
+        val setYcbcrImagesBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_ycbcr_images", SET_YCBCR_IMAGES_HASH)
-        }
 
         private const val SET_EXTERNAL_HASH = 3937882851L
-        private val setExternalBind by lazy {
+        @JvmField
+        val setExternalBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_external", SET_EXTERNAL_HASH)
-        }
 
         private const val GET_TEXTURE_TEX_ID_HASH = 1135699418L
-        private val getTextureTexIdBind by lazy {
+        @JvmField
+        val getTextureTexIdBind =
             ObjectCalls.getMethodBind("CameraFeed", "get_texture_tex_id", GET_TEXTURE_TEX_ID_HASH)
-        }
 
         private const val GET_DATATYPE_HASH = 1477782850L
-        private val getDatatypeBind by lazy {
+        @JvmField
+        val getDatatypeBind =
             ObjectCalls.getMethodBind("CameraFeed", "get_datatype", GET_DATATYPE_HASH)
-        }
 
         private const val GET_FORMATS_HASH = 3995934104L
-        private val getFormatsBind by lazy {
+        @JvmField
+        val getFormatsBind =
             ObjectCalls.getMethodBind("CameraFeed", "get_formats", GET_FORMATS_HASH)
-        }
 
         private const val SET_FORMAT_HASH = 31872775L
-        private val setFormatBind by lazy {
+        @JvmField
+        val setFormatBind =
             ObjectCalls.getMethodBind("CameraFeed", "set_format", SET_FORMAT_HASH)
-        }
     }
 }

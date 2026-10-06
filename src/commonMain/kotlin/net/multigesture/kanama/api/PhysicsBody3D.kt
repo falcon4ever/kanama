@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -65,7 +66,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.move_and_collide
      */
     fun moveAndCollide(motion: Vector3, testOnly: Boolean = false, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): KinematicCollision3D? {
-        return KinematicCollision3D.wrapOwned(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
+        return KinematicCollision3D.wrapOwned(ObjectCalls.ptrcallWithVector3BoolFloatBoolIntArgsRetObject(Binds.moveAndCollideBind, segment, motion, testOnly, safeMargin, recoveryAsCollision, maxCollisions))
     }
 
     /**
@@ -84,7 +85,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.test_move
      */
     fun testMove(from: Transform3D, motion: Vector3, collision: KinematicCollision3D?, safeMargin: Double = 0.001, recoveryAsCollision: Boolean = false, maxCollisions: Int = 1): Boolean {
-        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: NULL_SEGMENT, safeMargin, recoveryAsCollision, maxCollisions)
+        return ObjectCalls.ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool(Binds.testMoveBind, segment, from, motion, collision?.requireOpenHandle() ?: NULL_SEGMENT, safeMargin, recoveryAsCollision, maxCollisions)
     }
 
     /**
@@ -94,7 +95,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.get_gravity
      */
     fun getGravity(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getGravityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getGravityBind, segment)
     }
 
     /**
@@ -103,7 +104,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.set_axis_lock
      */
     fun setAxisLock(axis: PhysicsServer3D.BodyAxis, lock: Boolean) {
-        ObjectCalls.ptrcallWithLongAndBoolArgs(setAxisLockBind, segment, axis.value, lock)
+        ObjectCalls.ptrcallWithLongAndBoolArgs(Binds.setAxisLockBind, segment, axis.value, lock)
     }
 
     /**
@@ -112,7 +113,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.get_axis_lock
      */
     fun getAxisLock(axis: PhysicsServer3D.BodyAxis): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(getAxisLockBind, segment, axis.value)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.getAxisLockBind, segment, axis.value)
     }
 
     /**
@@ -121,7 +122,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.get_collision_exceptions
      */
     fun getCollisionExceptions(): List<PhysicsBody3D> {
-        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(getCollisionExceptionsBind, segment, PhysicsBody3D::wrap)
+        return ObjectCalls.ptrcallNoArgsRetTypedObjectList(Binds.getCollisionExceptionsBind, segment, PhysicsBody3D::wrap)
     }
 
     /**
@@ -130,7 +131,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.add_collision_exception_with
      */
     fun addCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(addCollisionExceptionWithBind, segment, listOf(body.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     /**
@@ -139,7 +140,7 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * Generated from Godot docs: PhysicsBody3D.remove_collision_exception_with
      */
     fun removeCollisionExceptionWith(body: Node) {
-        ObjectCalls.ptrcallWithObjectArgs(removeCollisionExceptionWithBind, segment, listOf(body.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeCollisionExceptionWithBind, segment, listOf(body.segment))
     }
 
     companion object {
@@ -149,45 +150,47 @@ open class PhysicsBody3D(handle: GodotHandle) : CollisionObject3D(handle) {
 
         internal fun wrap(handle: RawSegment): PhysicsBody3D? =
             if (handle.address() == 0L) null else PhysicsBody3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val MOVE_AND_COLLIDE_HASH = 3208792678L
-        private val moveAndCollideBind by lazy {
+        @JvmField
+        val moveAndCollideBind =
             ObjectCalls.getMethodBind("PhysicsBody3D", "move_and_collide", MOVE_AND_COLLIDE_HASH)
-        }
 
         private const val TEST_MOVE_HASH = 2481691619L
-        private val testMoveBind by lazy {
+        @JvmField
+        val testMoveBind =
             ObjectCalls.getMethodBind("PhysicsBody3D", "test_move", TEST_MOVE_HASH)
-        }
 
         private const val GET_GRAVITY_HASH = 3360562783L
-        private val getGravityBind by lazy {
+        @JvmField
+        val getGravityBind =
             ObjectCalls.getMethodBind("PhysicsBody3D", "get_gravity", GET_GRAVITY_HASH)
-        }
 
         private const val SET_AXIS_LOCK_HASH = 1787895195L
-        private val setAxisLockBind by lazy {
+        @JvmField
+        val setAxisLockBind =
             ObjectCalls.getMethodBind("PhysicsBody3D", "set_axis_lock", SET_AXIS_LOCK_HASH)
-        }
 
         private const val GET_AXIS_LOCK_HASH = 2264617709L
-        private val getAxisLockBind by lazy {
+        @JvmField
+        val getAxisLockBind =
             ObjectCalls.getMethodBind("PhysicsBody3D", "get_axis_lock", GET_AXIS_LOCK_HASH)
-        }
 
         private const val GET_COLLISION_EXCEPTIONS_HASH = 2915620761L
-        private val getCollisionExceptionsBind by lazy {
+        @JvmField
+        val getCollisionExceptionsBind =
             ObjectCalls.getMethodBind("PhysicsBody3D", "get_collision_exceptions", GET_COLLISION_EXCEPTIONS_HASH)
-        }
 
         private const val ADD_COLLISION_EXCEPTION_WITH_HASH = 1078189570L
-        private val addCollisionExceptionWithBind by lazy {
+        @JvmField
+        val addCollisionExceptionWithBind =
             ObjectCalls.getMethodBind("PhysicsBody3D", "add_collision_exception_with", ADD_COLLISION_EXCEPTION_WITH_HASH)
-        }
 
         private const val REMOVE_COLLISION_EXCEPTION_WITH_HASH = 1078189570L
-        private val removeCollisionExceptionWithBind by lazy {
+        @JvmField
+        val removeCollisionExceptionWithBind =
             ObjectCalls.getMethodBind("PhysicsBody3D", "remove_collision_exception_with", REMOVE_COLLISION_EXCEPTION_WITH_HASH)
-        }
     }
 }

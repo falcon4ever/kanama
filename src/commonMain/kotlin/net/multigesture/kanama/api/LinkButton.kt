@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -72,7 +73,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_text
      */
     fun setText(text: String) {
-        ObjectCalls.ptrcallWithStringArg(setTextBind, segment, text)
+        ObjectCalls.ptrcallWithStringArg(Binds.setTextBind, segment, text)
     }
 
     /**
@@ -81,7 +82,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_text
      */
     fun getText(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTextBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_text_overrun_behavior
      */
     fun setTextOverrunBehavior(overrunBehavior: TextServer.OverrunBehavior) {
-        ObjectCalls.ptrcallWithLongArg(setTextOverrunBehaviorBind, segment, overrunBehavior.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextOverrunBehaviorBind, segment, overrunBehavior.value)
     }
 
     /**
@@ -99,7 +100,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_text_overrun_behavior
      */
     fun getTextOverrunBehavior(): TextServer.OverrunBehavior {
-        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(getTextOverrunBehaviorBind, segment))
+        return TextServer.OverrunBehavior(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextOverrunBehaviorBind, segment))
     }
 
     /**
@@ -108,7 +109,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_ellipsis_char
      */
     fun setEllipsisChar(char: String) {
-        ObjectCalls.ptrcallWithStringArg(setEllipsisCharBind, segment, char)
+        ObjectCalls.ptrcallWithStringArg(Binds.setEllipsisCharBind, segment, char)
     }
 
     /**
@@ -117,7 +118,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_ellipsis_char
      */
     fun getEllipsisChar(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getEllipsisCharBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getEllipsisCharBind, segment)
     }
 
     /**
@@ -126,7 +127,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_text_direction
      */
     fun setTextDirection(direction: Control.TextDirection) {
-        ObjectCalls.ptrcallWithLongArg(setTextDirectionBind, segment, direction.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setTextDirectionBind, segment, direction.value)
     }
 
     /**
@@ -135,7 +136,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_text_direction
      */
     fun getTextDirection(): Control.TextDirection {
-        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(getTextDirectionBind, segment))
+        return Control.TextDirection(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTextDirectionBind, segment))
     }
 
     /**
@@ -145,7 +146,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_language
      */
     fun setLanguage(language: String) {
-        ObjectCalls.ptrcallWithStringArg(setLanguageBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.setLanguageBind, segment, language)
     }
 
     /**
@@ -155,7 +156,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_language
      */
     fun getLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLanguageBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLanguageBind, segment)
     }
 
     /**
@@ -167,7 +168,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_uri
      */
     fun setUri(uri: String) {
-        ObjectCalls.ptrcallWithStringArg(setUriBind, segment, uri)
+        ObjectCalls.ptrcallWithStringArg(Binds.setUriBind, segment, uri)
     }
 
     /**
@@ -179,7 +180,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_uri
      */
     fun getUri(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getUriBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getUriBind, segment)
     }
 
     /**
@@ -188,7 +189,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_underline_mode
      */
     fun setUnderlineMode(underlineMode: LinkButton.UnderlineMode) {
-        ObjectCalls.ptrcallWithLongArg(setUnderlineModeBind, segment, underlineMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setUnderlineModeBind, segment, underlineMode.value)
     }
 
     /**
@@ -197,7 +198,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_underline_mode
      */
     fun getUnderlineMode(): LinkButton.UnderlineMode {
-        return LinkButton.UnderlineMode(ObjectCalls.ptrcallNoArgsRetLong(getUnderlineModeBind, segment))
+        return LinkButton.UnderlineMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getUnderlineModeBind, segment))
     }
 
     /**
@@ -206,7 +207,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_structured_text_bidi_override
      */
     fun setStructuredTextBidiOverride(parser: TextServer.StructuredTextParser) {
-        ObjectCalls.ptrcallWithLongArg(setStructuredTextBidiOverrideBind, segment, parser.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setStructuredTextBidiOverrideBind, segment, parser.value)
     }
 
     /**
@@ -215,7 +216,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_structured_text_bidi_override
      */
     fun getStructuredTextBidiOverride(): TextServer.StructuredTextParser {
-        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(getStructuredTextBidiOverrideBind, segment))
+        return TextServer.StructuredTextParser(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStructuredTextBidiOverrideBind, segment))
     }
 
     /**
@@ -224,7 +225,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.set_structured_text_bidi_override_options
      */
     fun setStructuredTextBidiOverrideOptions(args: List<Any?>) {
-        ObjectCalls.ptrcallWithArrayArg(setStructuredTextBidiOverrideOptionsBind, segment, args)
+        ObjectCalls.ptrcallWithArrayArg(Binds.setStructuredTextBidiOverrideOptionsBind, segment, args)
     }
 
     /**
@@ -233,7 +234,7 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
      * Generated from Godot docs: LinkButton.get_structured_text_bidi_override_options
      */
     fun getStructuredTextBidiOverrideOptions(): List<Any?> {
-        return ObjectCalls.ptrcallNoArgsRetArray(getStructuredTextBidiOverrideOptionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getStructuredTextBidiOverrideOptionsBind, segment)
     }
 
     /**
@@ -274,95 +275,97 @@ class LinkButton(handle: GodotHandle) : BaseButton(handle) {
 
         internal fun wrap(handle: RawSegment): LinkButton? =
             if (handle.address() == 0L) null else LinkButton(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXT_HASH = 83702148L
-        private val setTextBind by lazy {
+        @JvmField
+        val setTextBind =
             ObjectCalls.getMethodBind("LinkButton", "set_text", SET_TEXT_HASH)
-        }
 
         private const val GET_TEXT_HASH = 201670096L
-        private val getTextBind by lazy {
+        @JvmField
+        val getTextBind =
             ObjectCalls.getMethodBind("LinkButton", "get_text", GET_TEXT_HASH)
-        }
 
         private const val SET_TEXT_OVERRUN_BEHAVIOR_HASH = 1008890932L
-        private val setTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val setTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("LinkButton", "set_text_overrun_behavior", SET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val GET_TEXT_OVERRUN_BEHAVIOR_HASH = 3779142101L
-        private val getTextOverrunBehaviorBind by lazy {
+        @JvmField
+        val getTextOverrunBehaviorBind =
             ObjectCalls.getMethodBind("LinkButton", "get_text_overrun_behavior", GET_TEXT_OVERRUN_BEHAVIOR_HASH)
-        }
 
         private const val SET_ELLIPSIS_CHAR_HASH = 83702148L
-        private val setEllipsisCharBind by lazy {
+        @JvmField
+        val setEllipsisCharBind =
             ObjectCalls.getMethodBind("LinkButton", "set_ellipsis_char", SET_ELLIPSIS_CHAR_HASH)
-        }
 
         private const val GET_ELLIPSIS_CHAR_HASH = 201670096L
-        private val getEllipsisCharBind by lazy {
+        @JvmField
+        val getEllipsisCharBind =
             ObjectCalls.getMethodBind("LinkButton", "get_ellipsis_char", GET_ELLIPSIS_CHAR_HASH)
-        }
 
         private const val SET_TEXT_DIRECTION_HASH = 119160795L
-        private val setTextDirectionBind by lazy {
+        @JvmField
+        val setTextDirectionBind =
             ObjectCalls.getMethodBind("LinkButton", "set_text_direction", SET_TEXT_DIRECTION_HASH)
-        }
 
         private const val GET_TEXT_DIRECTION_HASH = 797257663L
-        private val getTextDirectionBind by lazy {
+        @JvmField
+        val getTextDirectionBind =
             ObjectCalls.getMethodBind("LinkButton", "get_text_direction", GET_TEXT_DIRECTION_HASH)
-        }
 
         private const val SET_LANGUAGE_HASH = 83702148L
-        private val setLanguageBind by lazy {
+        @JvmField
+        val setLanguageBind =
             ObjectCalls.getMethodBind("LinkButton", "set_language", SET_LANGUAGE_HASH)
-        }
 
         private const val GET_LANGUAGE_HASH = 201670096L
-        private val getLanguageBind by lazy {
+        @JvmField
+        val getLanguageBind =
             ObjectCalls.getMethodBind("LinkButton", "get_language", GET_LANGUAGE_HASH)
-        }
 
         private const val SET_URI_HASH = 83702148L
-        private val setUriBind by lazy {
+        @JvmField
+        val setUriBind =
             ObjectCalls.getMethodBind("LinkButton", "set_uri", SET_URI_HASH)
-        }
 
         private const val GET_URI_HASH = 201670096L
-        private val getUriBind by lazy {
+        @JvmField
+        val getUriBind =
             ObjectCalls.getMethodBind("LinkButton", "get_uri", GET_URI_HASH)
-        }
 
         private const val SET_UNDERLINE_MODE_HASH = 4032947085L
-        private val setUnderlineModeBind by lazy {
+        @JvmField
+        val setUnderlineModeBind =
             ObjectCalls.getMethodBind("LinkButton", "set_underline_mode", SET_UNDERLINE_MODE_HASH)
-        }
 
         private const val GET_UNDERLINE_MODE_HASH = 568343738L
-        private val getUnderlineModeBind by lazy {
+        @JvmField
+        val getUnderlineModeBind =
             ObjectCalls.getMethodBind("LinkButton", "get_underline_mode", GET_UNDERLINE_MODE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 55961453L
-        private val setStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("LinkButton", "set_structured_text_bidi_override", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH = 3385126229L
-        private val getStructuredTextBidiOverrideBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideBind =
             ObjectCalls.getMethodBind("LinkButton", "get_structured_text_bidi_override", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_HASH)
-        }
 
         private const val SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 381264803L
-        private val setStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val setStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("LinkButton", "set_structured_text_bidi_override_options", SET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
 
         private const val GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH = 3995934104L
-        private val getStructuredTextBidiOverrideOptionsBind by lazy {
+        @JvmField
+        val getStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("LinkButton", "get_structured_text_bidi_override_options", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
-        }
     }
 }

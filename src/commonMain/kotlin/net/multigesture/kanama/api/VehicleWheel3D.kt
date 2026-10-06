@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -102,7 +103,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_radius
      */
     fun setRadius(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRadiusBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRadiusBind, segment, length)
     }
 
     /**
@@ -111,7 +112,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_radius
      */
     fun getRadius(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRadiusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRadiusBind, segment)
     }
 
     /**
@@ -123,7 +124,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_suspension_rest_length
      */
     fun setSuspensionRestLength(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSuspensionRestLengthBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSuspensionRestLengthBind, segment, length)
     }
 
     /**
@@ -135,7 +136,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_suspension_rest_length
      */
     fun getSuspensionRestLength(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionRestLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSuspensionRestLengthBind, segment)
     }
 
     /**
@@ -145,7 +146,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_suspension_travel
      */
     fun setSuspensionTravel(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSuspensionTravelBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSuspensionTravelBind, segment, length)
     }
 
     /**
@@ -155,7 +156,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_suspension_travel
      */
     fun getSuspensionTravel(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionTravelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSuspensionTravelBind, segment)
     }
 
     /**
@@ -166,7 +167,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_suspension_stiffness
      */
     fun setSuspensionStiffness(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSuspensionStiffnessBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSuspensionStiffnessBind, segment, length)
     }
 
     /**
@@ -177,7 +178,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_suspension_stiffness
      */
     fun getSuspensionStiffness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionStiffnessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSuspensionStiffnessBind, segment)
     }
 
     /**
@@ -188,7 +189,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_suspension_max_force
      */
     fun setSuspensionMaxForce(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSuspensionMaxForceBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSuspensionMaxForceBind, segment, length)
     }
 
     /**
@@ -199,7 +200,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_suspension_max_force
      */
     fun getSuspensionMaxForce(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSuspensionMaxForceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSuspensionMaxForceBind, segment)
     }
 
     /**
@@ -212,7 +213,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_damping_compression
      */
     fun setDampingCompression(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDampingCompressionBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDampingCompressionBind, segment, length)
     }
 
     /**
@@ -225,7 +226,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_damping_compression
      */
     fun getDampingCompression(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingCompressionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDampingCompressionBind, segment)
     }
 
     /**
@@ -238,7 +239,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_damping_relaxation
      */
     fun setDampingRelaxation(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setDampingRelaxationBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDampingRelaxationBind, segment, length)
     }
 
     /**
@@ -251,7 +252,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_damping_relaxation
      */
     fun getDampingRelaxation(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDampingRelaxationBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDampingRelaxationBind, segment)
     }
 
     /**
@@ -262,7 +263,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_use_as_traction
      */
     fun setUseAsTraction(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAsTractionBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseAsTractionBind, segment, enable)
     }
 
     /**
@@ -273,7 +274,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.is_used_as_traction
      */
     fun isUsedAsTraction(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsedAsTractionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsedAsTractionBind, segment)
     }
 
     /**
@@ -283,7 +284,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_use_as_steering
      */
     fun setUseAsSteering(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseAsSteeringBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseAsSteeringBind, segment, enable)
     }
 
     /**
@@ -293,7 +294,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.is_used_as_steering
      */
     fun isUsedAsSteering(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUsedAsSteeringBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsedAsSteeringBind, segment)
     }
 
     /**
@@ -305,7 +306,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_friction_slip
      */
     fun setFrictionSlip(length: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setFrictionSlipBind, segment, length)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFrictionSlipBind, segment, length)
     }
 
     /**
@@ -317,7 +318,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_friction_slip
      */
     fun getFrictionSlip(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrictionSlipBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrictionSlipBind, segment)
     }
 
     /**
@@ -326,7 +327,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.is_in_contact
      */
     fun isInContact(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInContactBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInContactBind, segment)
     }
 
     /**
@@ -337,7 +338,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_contact_body
      */
     fun getContactBody(): Node3D? {
-        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getContactBodyBind, segment))
+        return Node3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getContactBodyBind, segment))
     }
 
     /**
@@ -348,7 +349,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_contact_point
      */
     fun getContactPoint(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getContactPointBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getContactPointBind, segment)
     }
 
     /**
@@ -359,7 +360,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_contact_normal
      */
     fun getContactNormal(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getContactNormalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getContactNormalBind, segment)
     }
 
     /**
@@ -369,7 +370,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_roll_influence
      */
     fun setRollInfluence(rollInfluence: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setRollInfluenceBind, segment, rollInfluence)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setRollInfluenceBind, segment, rollInfluence)
     }
 
     /**
@@ -379,7 +380,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_roll_influence
      */
     fun getRollInfluence(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRollInfluenceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRollInfluenceBind, segment)
     }
 
     /**
@@ -390,7 +391,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_skidinfo
      */
     fun getSkidinfo(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSkidinfoBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSkidinfoBind, segment)
     }
 
     /**
@@ -399,7 +400,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_rpm
      */
     fun getRpm(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getRpmBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getRpmBind, segment)
     }
 
     /**
@@ -413,7 +414,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_engine_force
      */
     fun setEngineForce(engineForce: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setEngineForceBind, segment, engineForce)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setEngineForceBind, segment, engineForce)
     }
 
     /**
@@ -427,7 +428,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_engine_force
      */
     fun getEngineForce(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getEngineForceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getEngineForceBind, segment)
     }
 
     /**
@@ -439,7 +440,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_brake
      */
     fun setBrake(brake: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setBrakeBind, segment, brake)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setBrakeBind, segment, brake)
     }
 
     /**
@@ -451,7 +452,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_brake
      */
     fun getBrake(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getBrakeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getBrakeBind, segment)
     }
 
     /**
@@ -461,7 +462,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.set_steering
      */
     fun setSteering(steering: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setSteeringBind, segment, steering)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSteeringBind, segment, steering)
     }
 
     /**
@@ -471,7 +472,7 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: VehicleWheel3D.get_steering
      */
     fun getSteering(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getSteeringBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSteeringBind, segment)
     }
 
     companion object {
@@ -481,175 +482,177 @@ class VehicleWheel3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): VehicleWheel3D? =
             if (handle.address() == 0L) null else VehicleWheel3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_RADIUS_HASH = 373806689L
-        private val setRadiusBind by lazy {
+        @JvmField
+        val setRadiusBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_radius", SET_RADIUS_HASH)
-        }
 
         private const val GET_RADIUS_HASH = 1740695150L
-        private val getRadiusBind by lazy {
+        @JvmField
+        val getRadiusBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_radius", GET_RADIUS_HASH)
-        }
 
         private const val SET_SUSPENSION_REST_LENGTH_HASH = 373806689L
-        private val setSuspensionRestLengthBind by lazy {
+        @JvmField
+        val setSuspensionRestLengthBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_suspension_rest_length", SET_SUSPENSION_REST_LENGTH_HASH)
-        }
 
         private const val GET_SUSPENSION_REST_LENGTH_HASH = 1740695150L
-        private val getSuspensionRestLengthBind by lazy {
+        @JvmField
+        val getSuspensionRestLengthBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_suspension_rest_length", GET_SUSPENSION_REST_LENGTH_HASH)
-        }
 
         private const val SET_SUSPENSION_TRAVEL_HASH = 373806689L
-        private val setSuspensionTravelBind by lazy {
+        @JvmField
+        val setSuspensionTravelBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_suspension_travel", SET_SUSPENSION_TRAVEL_HASH)
-        }
 
         private const val GET_SUSPENSION_TRAVEL_HASH = 1740695150L
-        private val getSuspensionTravelBind by lazy {
+        @JvmField
+        val getSuspensionTravelBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_suspension_travel", GET_SUSPENSION_TRAVEL_HASH)
-        }
 
         private const val SET_SUSPENSION_STIFFNESS_HASH = 373806689L
-        private val setSuspensionStiffnessBind by lazy {
+        @JvmField
+        val setSuspensionStiffnessBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_suspension_stiffness", SET_SUSPENSION_STIFFNESS_HASH)
-        }
 
         private const val GET_SUSPENSION_STIFFNESS_HASH = 1740695150L
-        private val getSuspensionStiffnessBind by lazy {
+        @JvmField
+        val getSuspensionStiffnessBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_suspension_stiffness", GET_SUSPENSION_STIFFNESS_HASH)
-        }
 
         private const val SET_SUSPENSION_MAX_FORCE_HASH = 373806689L
-        private val setSuspensionMaxForceBind by lazy {
+        @JvmField
+        val setSuspensionMaxForceBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_suspension_max_force", SET_SUSPENSION_MAX_FORCE_HASH)
-        }
 
         private const val GET_SUSPENSION_MAX_FORCE_HASH = 1740695150L
-        private val getSuspensionMaxForceBind by lazy {
+        @JvmField
+        val getSuspensionMaxForceBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_suspension_max_force", GET_SUSPENSION_MAX_FORCE_HASH)
-        }
 
         private const val SET_DAMPING_COMPRESSION_HASH = 373806689L
-        private val setDampingCompressionBind by lazy {
+        @JvmField
+        val setDampingCompressionBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_damping_compression", SET_DAMPING_COMPRESSION_HASH)
-        }
 
         private const val GET_DAMPING_COMPRESSION_HASH = 1740695150L
-        private val getDampingCompressionBind by lazy {
+        @JvmField
+        val getDampingCompressionBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_damping_compression", GET_DAMPING_COMPRESSION_HASH)
-        }
 
         private const val SET_DAMPING_RELAXATION_HASH = 373806689L
-        private val setDampingRelaxationBind by lazy {
+        @JvmField
+        val setDampingRelaxationBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_damping_relaxation", SET_DAMPING_RELAXATION_HASH)
-        }
 
         private const val GET_DAMPING_RELAXATION_HASH = 1740695150L
-        private val getDampingRelaxationBind by lazy {
+        @JvmField
+        val getDampingRelaxationBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_damping_relaxation", GET_DAMPING_RELAXATION_HASH)
-        }
 
         private const val SET_USE_AS_TRACTION_HASH = 2586408642L
-        private val setUseAsTractionBind by lazy {
+        @JvmField
+        val setUseAsTractionBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_use_as_traction", SET_USE_AS_TRACTION_HASH)
-        }
 
         private const val IS_USED_AS_TRACTION_HASH = 36873697L
-        private val isUsedAsTractionBind by lazy {
+        @JvmField
+        val isUsedAsTractionBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "is_used_as_traction", IS_USED_AS_TRACTION_HASH)
-        }
 
         private const val SET_USE_AS_STEERING_HASH = 2586408642L
-        private val setUseAsSteeringBind by lazy {
+        @JvmField
+        val setUseAsSteeringBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_use_as_steering", SET_USE_AS_STEERING_HASH)
-        }
 
         private const val IS_USED_AS_STEERING_HASH = 36873697L
-        private val isUsedAsSteeringBind by lazy {
+        @JvmField
+        val isUsedAsSteeringBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "is_used_as_steering", IS_USED_AS_STEERING_HASH)
-        }
 
         private const val SET_FRICTION_SLIP_HASH = 373806689L
-        private val setFrictionSlipBind by lazy {
+        @JvmField
+        val setFrictionSlipBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_friction_slip", SET_FRICTION_SLIP_HASH)
-        }
 
         private const val GET_FRICTION_SLIP_HASH = 1740695150L
-        private val getFrictionSlipBind by lazy {
+        @JvmField
+        val getFrictionSlipBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_friction_slip", GET_FRICTION_SLIP_HASH)
-        }
 
         private const val IS_IN_CONTACT_HASH = 36873697L
-        private val isInContactBind by lazy {
+        @JvmField
+        val isInContactBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "is_in_contact", IS_IN_CONTACT_HASH)
-        }
 
         private const val GET_CONTACT_BODY_HASH = 151077316L
-        private val getContactBodyBind by lazy {
+        @JvmField
+        val getContactBodyBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_contact_body", GET_CONTACT_BODY_HASH)
-        }
 
         private const val GET_CONTACT_POINT_HASH = 3360562783L
-        private val getContactPointBind by lazy {
+        @JvmField
+        val getContactPointBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_contact_point", GET_CONTACT_POINT_HASH)
-        }
 
         private const val GET_CONTACT_NORMAL_HASH = 3360562783L
-        private val getContactNormalBind by lazy {
+        @JvmField
+        val getContactNormalBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_contact_normal", GET_CONTACT_NORMAL_HASH)
-        }
 
         private const val SET_ROLL_INFLUENCE_HASH = 373806689L
-        private val setRollInfluenceBind by lazy {
+        @JvmField
+        val setRollInfluenceBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_roll_influence", SET_ROLL_INFLUENCE_HASH)
-        }
 
         private const val GET_ROLL_INFLUENCE_HASH = 1740695150L
-        private val getRollInfluenceBind by lazy {
+        @JvmField
+        val getRollInfluenceBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_roll_influence", GET_ROLL_INFLUENCE_HASH)
-        }
 
         private const val GET_SKIDINFO_HASH = 1740695150L
-        private val getSkidinfoBind by lazy {
+        @JvmField
+        val getSkidinfoBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_skidinfo", GET_SKIDINFO_HASH)
-        }
 
         private const val GET_RPM_HASH = 1740695150L
-        private val getRpmBind by lazy {
+        @JvmField
+        val getRpmBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_rpm", GET_RPM_HASH)
-        }
 
         private const val SET_ENGINE_FORCE_HASH = 373806689L
-        private val setEngineForceBind by lazy {
+        @JvmField
+        val setEngineForceBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_engine_force", SET_ENGINE_FORCE_HASH)
-        }
 
         private const val GET_ENGINE_FORCE_HASH = 1740695150L
-        private val getEngineForceBind by lazy {
+        @JvmField
+        val getEngineForceBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_engine_force", GET_ENGINE_FORCE_HASH)
-        }
 
         private const val SET_BRAKE_HASH = 373806689L
-        private val setBrakeBind by lazy {
+        @JvmField
+        val setBrakeBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_brake", SET_BRAKE_HASH)
-        }
 
         private const val GET_BRAKE_HASH = 1740695150L
-        private val getBrakeBind by lazy {
+        @JvmField
+        val getBrakeBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_brake", GET_BRAKE_HASH)
-        }
 
         private const val SET_STEERING_HASH = 373806689L
-        private val setSteeringBind by lazy {
+        @JvmField
+        val setSteeringBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "set_steering", SET_STEERING_HASH)
-        }
 
         private const val GET_STEERING_HASH = 1740695150L
-        private val getSteeringBind by lazy {
+        @JvmField
+        val getSteeringBind =
             ObjectCalls.getMethodBind("VehicleWheel3D", "get_steering", GET_STEERING_HASH)
-        }
     }
 }

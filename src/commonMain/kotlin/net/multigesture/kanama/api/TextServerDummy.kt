@@ -22,7 +22,5 @@ class TextServerDummy(handle: GodotHandle) : TextServerExtension(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextServerDummy? =
             if (handle.address() == 0L) null else TextServerDummy(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

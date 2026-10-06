@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -127,7 +128,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun loadBitmapFont(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBitmapFontBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBitmapFontBind, segment, path))
     }
 
     /**
@@ -140,7 +141,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun loadDynamicFont(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadDynamicFontBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadDynamicFontBind, segment, path))
     }
 
     /**
@@ -150,7 +151,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setData(data: ByteArray) {
         checkOpen()
-        ObjectCalls.ptrcallWithByteArrayArg(setDataBind, segment, data)
+        ObjectCalls.ptrcallWithByteArrayArg(Binds.setDataBind, segment, data)
     }
 
     /**
@@ -160,7 +161,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getData(): ByteArray {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetByteArray(getDataBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetByteArray(Binds.getDataBind, segment)
     }
 
     /**
@@ -170,7 +171,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setFontName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFontNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setFontNameBind, segment, name)
     }
 
     /**
@@ -180,7 +181,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setFontStyleName(name: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(setFontStyleNameBind, segment, name)
+        ObjectCalls.ptrcallWithStringArg(Binds.setFontStyleNameBind, segment, name)
     }
 
     /**
@@ -190,7 +191,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setFontStyle(style: TextServer.FontStyle) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFontStyleBind, segment, style.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFontStyleBind, segment, style.value)
     }
 
     /**
@@ -201,7 +202,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setFontWeight(weight: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontWeightBind, segment, weight)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFontWeightBind, segment, weight)
     }
 
     /**
@@ -211,7 +212,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setFontStretch(stretch: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFontStretchBind, segment, stretch)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFontStretchBind, segment, stretch)
     }
 
     /**
@@ -221,7 +222,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setAntialiasing(antialiasing: TextServer.FontAntialiasing) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setAntialiasingBind, segment, antialiasing.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setAntialiasingBind, segment, antialiasing.value)
     }
 
     /**
@@ -231,7 +232,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getAntialiasing(): TextServer.FontAntialiasing {
         checkOpen()
-        return TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(getAntialiasingBind, segment))
+        return TextServer.FontAntialiasing(ObjectCalls.ptrcallNoArgsRetLong(Binds.getAntialiasingBind, segment))
     }
 
     /**
@@ -242,7 +243,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setDisableEmbeddedBitmaps(disableEmbeddedBitmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDisableEmbeddedBitmapsBind, segment, disableEmbeddedBitmaps)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableEmbeddedBitmapsBind, segment, disableEmbeddedBitmaps)
     }
 
     /**
@@ -253,7 +254,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getDisableEmbeddedBitmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getDisableEmbeddedBitmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDisableEmbeddedBitmapsBind, segment)
     }
 
     /**
@@ -263,7 +264,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setGenerateMipmaps(generateMipmaps: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setGenerateMipmapsBind, segment, generateMipmaps)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setGenerateMipmapsBind, segment, generateMipmaps)
     }
 
     /**
@@ -273,7 +274,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGenerateMipmaps(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getGenerateMipmapsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getGenerateMipmapsBind, segment)
     }
 
     /**
@@ -294,7 +295,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setMultichannelSignedDistanceField(msdf: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setMultichannelSignedDistanceFieldBind, segment, msdf)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setMultichannelSignedDistanceFieldBind, segment, msdf)
     }
 
     /**
@@ -315,7 +316,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun isMultichannelSignedDistanceField(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isMultichannelSignedDistanceFieldBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMultichannelSignedDistanceFieldBind, segment)
     }
 
     /**
@@ -328,7 +329,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setMsdfPixelRange(msdfPixelRange: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMsdfPixelRangeBind, segment, msdfPixelRange)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMsdfPixelRangeBind, segment, msdfPixelRange)
     }
 
     /**
@@ -341,7 +342,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getMsdfPixelRange(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfPixelRangeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfPixelRangeBind, segment)
     }
 
     /**
@@ -353,7 +354,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setMsdfSize(msdfSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMsdfSizeBind, segment, msdfSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMsdfSizeBind, segment, msdfSize)
     }
 
     /**
@@ -365,7 +366,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getMsdfSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMsdfSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMsdfSizeBind, segment)
     }
 
     /**
@@ -375,7 +376,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setFixedSize(fixedSize: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFixedSizeBind, segment, fixedSize)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFixedSizeBind, segment, fixedSize)
     }
 
     /**
@@ -385,7 +386,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getFixedSize(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFixedSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFixedSizeBind, segment)
     }
 
     /**
@@ -395,7 +396,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setFixedSizeScaleMode(fixedSizeScaleMode: TextServer.FixedSizeScaleMode) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFixedSizeScaleModeBind, segment, fixedSizeScaleMode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFixedSizeScaleModeBind, segment, fixedSizeScaleMode.value)
     }
 
     /**
@@ -405,7 +406,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getFixedSizeScaleMode(): TextServer.FixedSizeScaleMode {
         checkOpen()
-        return TextServer.FixedSizeScaleMode(ObjectCalls.ptrcallNoArgsRetLong(getFixedSizeScaleModeBind, segment))
+        return TextServer.FixedSizeScaleMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFixedSizeScaleModeBind, segment))
     }
 
     /**
@@ -415,7 +416,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setAllowSystemFallback(allowSystemFallback: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAllowSystemFallbackBind, segment, allowSystemFallback)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowSystemFallbackBind, segment, allowSystemFallback)
     }
 
     /**
@@ -425,7 +426,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun isAllowSystemFallback(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isAllowSystemFallbackBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowSystemFallbackBind, segment)
     }
 
     /**
@@ -436,7 +437,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setForceAutohinter(forceAutohinter: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setForceAutohinterBind, segment, forceAutohinter)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setForceAutohinterBind, segment, forceAutohinter)
     }
 
     /**
@@ -447,7 +448,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun isForceAutohinter(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isForceAutohinterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isForceAutohinterBind, segment)
     }
 
     /**
@@ -458,7 +459,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setModulateColorGlyphs(modulate: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setModulateColorGlyphsBind, segment, modulate)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setModulateColorGlyphsBind, segment, modulate)
     }
 
     /**
@@ -469,7 +470,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun isModulateColorGlyphs(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isModulateColorGlyphsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isModulateColorGlyphsBind, segment)
     }
 
     /**
@@ -479,7 +480,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setHinting(hinting: TextServer.Hinting) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setHintingBind, segment, hinting.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHintingBind, segment, hinting.value)
     }
 
     /**
@@ -489,7 +490,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getHinting(): TextServer.Hinting {
         checkOpen()
-        return TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(getHintingBind, segment))
+        return TextServer.Hinting(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHintingBind, segment))
     }
 
     /**
@@ -502,7 +503,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setSubpixelPositioning(subpixelPositioning: TextServer.SubpixelPositioning) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setSubpixelPositioningBind, segment, subpixelPositioning.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setSubpixelPositioningBind, segment, subpixelPositioning.value)
     }
 
     /**
@@ -515,7 +516,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getSubpixelPositioning(): TextServer.SubpixelPositioning {
         checkOpen()
-        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(getSubpixelPositioningBind, segment))
+        return TextServer.SubpixelPositioning(ObjectCalls.ptrcallNoArgsRetLong(Binds.getSubpixelPositioningBind, segment))
     }
 
     /**
@@ -527,7 +528,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setKeepRoundingRemainders(keepRoundingRemainders: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setKeepRoundingRemaindersBind, segment, keepRoundingRemainders)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setKeepRoundingRemaindersBind, segment, keepRoundingRemainders)
     }
 
     /**
@@ -539,7 +540,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getKeepRoundingRemainders(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getKeepRoundingRemaindersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getKeepRoundingRemaindersBind, segment)
     }
 
     /**
@@ -551,7 +552,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setOversampling(oversampling: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setOversamplingBind, segment, oversampling)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setOversamplingBind, segment, oversampling)
     }
 
     /**
@@ -563,7 +564,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getOversampling(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getOversamplingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getOversamplingBind, segment)
     }
 
     /**
@@ -573,7 +574,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getCacheCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCacheCountBind, segment)
     }
 
     /**
@@ -583,7 +584,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun clearCache() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearCacheBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearCacheBind, segment)
     }
 
     /**
@@ -593,7 +594,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun removeCache(cacheIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(removeCacheBind, segment, cacheIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.removeCacheBind, segment, cacheIndex)
     }
 
     /**
@@ -604,7 +605,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getSizeCacheList(cacheIndex: Int): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetVector2iList(getSizeCacheListBind, segment, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetVector2iList(Binds.getSizeCacheListBind, segment, cacheIndex)
     }
 
     /**
@@ -614,7 +615,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun clearSizeCache(cacheIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(clearSizeCacheBind, segment, cacheIndex)
+        ObjectCalls.ptrcallWithIntArg(Binds.clearSizeCacheBind, segment, cacheIndex)
     }
 
     /**
@@ -624,7 +625,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun removeSizeCache(cacheIndex: Int, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2iArg(removeSizeCacheBind, segment, cacheIndex, size)
+        ObjectCalls.ptrcallWithIntAndVector2iArg(Binds.removeSizeCacheBind, segment, cacheIndex, size)
     }
 
     /**
@@ -635,7 +636,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setVariationCoordinates(cacheIndex: Int, variationCoordinates: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDictionaryArg(setVariationCoordinatesBind, segment, cacheIndex, variationCoordinates)
+        ObjectCalls.ptrcallWithIntAndDictionaryArg(Binds.setVariationCoordinatesBind, segment, cacheIndex, variationCoordinates)
     }
 
     /**
@@ -646,7 +647,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getVariationCoordinates(cacheIndex: Int): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDictionary(getVariationCoordinatesBind, segment, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDictionary(Binds.getVariationCoordinatesBind, segment, cacheIndex)
     }
 
     /**
@@ -657,7 +658,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setEmbolden(cacheIndex: Int, strength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setEmboldenBind, segment, cacheIndex, strength)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setEmboldenBind, segment, cacheIndex, strength)
     }
 
     /**
@@ -668,7 +669,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getEmbolden(cacheIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getEmboldenBind, segment, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getEmboldenBind, segment, cacheIndex)
     }
 
     /**
@@ -679,7 +680,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setTransform(cacheIndex: Int, transform: Transform2D) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndTransform2DArg(setTransformBind, segment, cacheIndex, transform)
+        ObjectCalls.ptrcallWithIntAndTransform2DArg(Binds.setTransformBind, segment, cacheIndex, transform)
     }
 
     /**
@@ -690,7 +691,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTransform(cacheIndex: Int): Transform2D {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetTransform2D(getTransformBind, segment, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetTransform2D(Binds.getTransformBind, segment, cacheIndex)
     }
 
     /**
@@ -700,7 +701,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setExtraSpacing(cacheIndex: Int, spacing: TextServer.SpacingType, value: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntTwoLongArgs(setExtraSpacingBind, segment, cacheIndex, spacing.value, value)
+        ObjectCalls.ptrcallWithIntTwoLongArgs(Binds.setExtraSpacingBind, segment, cacheIndex, spacing.value, value)
     }
 
     /**
@@ -710,7 +711,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getExtraSpacing(cacheIndex: Int, spacing: TextServer.SpacingType): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(getExtraSpacingBind, segment, cacheIndex, spacing.value)
+        return ObjectCalls.ptrcallWithIntAndLongArgsRetLong(Binds.getExtraSpacingBind, segment, cacheIndex, spacing.value)
     }
 
     /**
@@ -720,7 +721,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setExtraBaselineOffset(cacheIndex: Int, baselineOffset: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setExtraBaselineOffsetBind, segment, cacheIndex, baselineOffset)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setExtraBaselineOffsetBind, segment, cacheIndex, baselineOffset)
     }
 
     /**
@@ -730,7 +731,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getExtraBaselineOffset(cacheIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getExtraBaselineOffsetBind, segment, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getExtraBaselineOffsetBind, segment, cacheIndex)
     }
 
     /**
@@ -740,7 +741,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setFaceIndex(cacheIndex: Int, faceIndex: Long) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndLongArgs(setFaceIndexBind, segment, cacheIndex, faceIndex)
+        ObjectCalls.ptrcallWithIntAndLongArgs(Binds.setFaceIndexBind, segment, cacheIndex, faceIndex)
     }
 
     /**
@@ -750,7 +751,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getFaceIndex(cacheIndex: Int): Long {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetLong(getFaceIndexBind, segment, cacheIndex)
+        return ObjectCalls.ptrcallWithIntArgRetLong(Binds.getFaceIndexBind, segment, cacheIndex)
     }
 
     /**
@@ -760,7 +761,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setCacheAscent(cacheIndex: Int, size: Int, ascent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheAscentBind, segment, cacheIndex, size, ascent)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheAscentBind, segment, cacheIndex, size, ascent)
     }
 
     /**
@@ -770,7 +771,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheAscent(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheAscentBind, segment, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheAscentBind, segment, cacheIndex, size)
     }
 
     /**
@@ -780,7 +781,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setCacheDescent(cacheIndex: Int, size: Int, descent: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheDescentBind, segment, cacheIndex, size, descent)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheDescentBind, segment, cacheIndex, size, descent)
     }
 
     /**
@@ -790,7 +791,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheDescent(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheDescentBind, segment, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheDescentBind, segment, cacheIndex, size)
     }
 
     /**
@@ -800,7 +801,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setCacheUnderlinePosition(cacheIndex: Int, size: Int, underlinePosition: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlinePositionBind, segment, cacheIndex, size, underlinePosition)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheUnderlinePositionBind, segment, cacheIndex, size, underlinePosition)
     }
 
     /**
@@ -810,7 +811,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheUnderlinePosition(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlinePositionBind, segment, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheUnderlinePositionBind, segment, cacheIndex, size)
     }
 
     /**
@@ -820,7 +821,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setCacheUnderlineThickness(cacheIndex: Int, size: Int, underlineThickness: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheUnderlineThicknessBind, segment, cacheIndex, size, underlineThickness)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheUnderlineThicknessBind, segment, cacheIndex, size, underlineThickness)
     }
 
     /**
@@ -830,7 +831,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheUnderlineThickness(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheUnderlineThicknessBind, segment, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheUnderlineThicknessBind, segment, cacheIndex, size)
     }
 
     /**
@@ -840,7 +841,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setCacheScale(cacheIndex: Int, size: Int, scale: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(setCacheScaleBind, segment, cacheIndex, size, scale)
+        ObjectCalls.ptrcallWithTwoIntAndDoubleArgs(Binds.setCacheScaleBind, segment, cacheIndex, size, scale)
     }
 
     /**
@@ -850,7 +851,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCacheScale(cacheIndex: Int, size: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(getCacheScaleBind, segment, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetDouble(Binds.getCacheScaleBind, segment, cacheIndex, size)
     }
 
     /**
@@ -860,7 +861,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTextureCount(cacheIndex: Int, size: Vector2i): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(getTextureCountBind, segment, cacheIndex, size)
+        return ObjectCalls.ptrcallWithIntAndVector2iArgRetInt(Binds.getTextureCountBind, segment, cacheIndex, size)
     }
 
     /**
@@ -871,7 +872,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun clearTextures(cacheIndex: Int, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2iArg(clearTexturesBind, segment, cacheIndex, size)
+        ObjectCalls.ptrcallWithIntAndVector2iArg(Binds.clearTexturesBind, segment, cacheIndex, size)
     }
 
     /**
@@ -882,7 +883,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun removeTexture(cacheIndex: Int, size: Vector2i, textureIndex: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeTextureBind, segment, cacheIndex, size, textureIndex)
+        ObjectCalls.ptrcallWithIntVector2iAndIntArg(Binds.removeTextureBind, segment, cacheIndex, size, textureIndex)
     }
 
     /**
@@ -892,7 +893,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int, image: Image?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(setTextureImageBind, segment, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntVector2iIntObjectArgs(Binds.setTextureImageBind, segment, cacheIndex, size, textureIndex, image?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     /**
@@ -902,7 +903,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTextureImage(cacheIndex: Int, size: Vector2i, textureIndex: Int): Image? {
         checkOpen()
-        return Image.wrapOwned(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(getTextureImageBind, segment, cacheIndex, size, textureIndex))
+        return Image.wrapOwned(ObjectCalls.ptrcallWithIntVector2iIntArgsRetObject(Binds.getTextureImageBind, segment, cacheIndex, size, textureIndex))
     }
 
     /**
@@ -912,7 +913,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int, offset: List<Int>) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntPackedInt32ListArgs(setTextureOffsetsBind, segment, cacheIndex, size, textureIndex, offset)
+        ObjectCalls.ptrcallWithIntVector2iIntPackedInt32ListArgs(Binds.setTextureOffsetsBind, segment, cacheIndex, size, textureIndex, offset)
     }
 
     /**
@@ -922,7 +923,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getTextureOffsets(cacheIndex: Int, size: Vector2i, textureIndex: Int): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(getTextureOffsetsBind, segment, cacheIndex, size, textureIndex)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetPackedInt32List(Binds.getTextureOffsetsBind, segment, cacheIndex, size, textureIndex)
     }
 
     /**
@@ -932,7 +933,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphList(cacheIndex: Int, size: Vector2i): List<Int> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(getGlyphListBind, segment, cacheIndex, size)
+        return ObjectCalls.ptrcallWithIntVector2iArgsRetPackedInt32List(Binds.getGlyphListBind, segment, cacheIndex, size)
     }
 
     /**
@@ -943,7 +944,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun clearGlyphs(cacheIndex: Int, size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndVector2iArg(clearGlyphsBind, segment, cacheIndex, size)
+        ObjectCalls.ptrcallWithIntAndVector2iArg(Binds.clearGlyphsBind, segment, cacheIndex, size)
     }
 
     /**
@@ -954,7 +955,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun removeGlyph(cacheIndex: Int, size: Vector2i, glyph: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iAndIntArg(removeGlyphBind, segment, cacheIndex, size, glyph)
+        ObjectCalls.ptrcallWithIntVector2iAndIntArg(Binds.removeGlyphBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -965,7 +966,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int, advance: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithThreeIntAndVector2Arg(setGlyphAdvanceBind, segment, cacheIndex, size, glyph, advance)
+        ObjectCalls.ptrcallWithThreeIntAndVector2Arg(Binds.setGlyphAdvanceBind, segment, cacheIndex, size, glyph, advance)
     }
 
     /**
@@ -976,7 +977,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphAdvance(cacheIndex: Int, size: Int, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(getGlyphAdvanceBind, segment, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(Binds.getGlyphAdvanceBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -986,7 +987,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int, offset: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphOffsetBind, segment, cacheIndex, size, glyph, offset)
+        ObjectCalls.ptrcallWithIntVector2iIntVector2Args(Binds.setGlyphOffsetBind, segment, cacheIndex, size, glyph, offset)
     }
 
     /**
@@ -996,7 +997,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphOffset(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphOffsetBind, segment, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(Binds.getGlyphOffsetBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -1006,7 +1007,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int, glSize: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntVector2Args(setGlyphSizeBind, segment, cacheIndex, size, glyph, glSize)
+        ObjectCalls.ptrcallWithIntVector2iIntVector2Args(Binds.setGlyphSizeBind, segment, cacheIndex, size, glyph, glSize)
     }
 
     /**
@@ -1016,7 +1017,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphSize(cacheIndex: Int, size: Vector2i, glyph: Int): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(getGlyphSizeBind, segment, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetVector2(Binds.getGlyphSizeBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -1026,7 +1027,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int, uvRect: Rect2) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iIntRect2Args(setGlyphUvRectBind, segment, cacheIndex, size, glyph, uvRect)
+        ObjectCalls.ptrcallWithIntVector2iIntRect2Args(Binds.setGlyphUvRectBind, segment, cacheIndex, size, glyph, uvRect)
     }
 
     /**
@@ -1036,7 +1037,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphUvRect(cacheIndex: Int, size: Vector2i, glyph: Int): Rect2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(getGlyphUvRectBind, segment, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetRect2(Binds.getGlyphUvRectBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -1046,7 +1047,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int, textureIdx: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(setGlyphTextureIdxBind, segment, cacheIndex, size, glyph, textureIdx)
+        ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(Binds.setGlyphTextureIdxBind, segment, cacheIndex, size, glyph, textureIdx)
     }
 
     /**
@@ -1056,7 +1057,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphTextureIdx(cacheIndex: Int, size: Vector2i, glyph: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(getGlyphTextureIdxBind, segment, cacheIndex, size, glyph)
+        return ObjectCalls.ptrcallWithIntVector2iIntArgsRetInt(Binds.getGlyphTextureIdxBind, segment, cacheIndex, size, glyph)
     }
 
     /**
@@ -1066,7 +1067,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getKerningList(cacheIndex: Int, size: Int): List<Vector2i> {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(getKerningListBind, segment, cacheIndex, size)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVector2iList(Binds.getKerningListBind, segment, cacheIndex, size)
     }
 
     /**
@@ -1076,7 +1077,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun clearKerningMap(cacheIndex: Int, size: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntArgs(clearKerningMapBind, segment, cacheIndex, size)
+        ObjectCalls.ptrcallWithTwoIntArgs(Binds.clearKerningMapBind, segment, cacheIndex, size)
     }
 
     /**
@@ -1086,7 +1087,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun removeKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntAndVector2iArg(removeKerningBind, segment, cacheIndex, size, glyphPair)
+        ObjectCalls.ptrcallWithTwoIntAndVector2iArg(Binds.removeKerningBind, segment, cacheIndex, size, glyphPair)
     }
 
     /**
@@ -1096,7 +1097,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i, kerning: Vector2) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoIntVector2iVector2Args(setKerningBind, segment, cacheIndex, size, glyphPair, kerning)
+        ObjectCalls.ptrcallWithTwoIntVector2iVector2Args(Binds.setKerningBind, segment, cacheIndex, size, glyphPair, kerning)
     }
 
     /**
@@ -1106,7 +1107,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getKerning(cacheIndex: Int, size: Int, glyphPair: Vector2i): Vector2 {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(getKerningBind, segment, cacheIndex, size, glyphPair)
+        return ObjectCalls.ptrcallWithTwoIntVector2iArgRetVector2(Binds.getKerningBind, segment, cacheIndex, size, glyphPair)
     }
 
     /**
@@ -1116,7 +1117,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun renderRange(cacheIndex: Int, size: Vector2i, start: Int, end: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(renderRangeBind, segment, cacheIndex, size, start, end)
+        ObjectCalls.ptrcallWithIntVector2iTwoIntArgs(Binds.renderRangeBind, segment, cacheIndex, size, start, end)
     }
 
     /**
@@ -1126,7 +1127,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun renderGlyph(cacheIndex: Int, size: Vector2i, index: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntVector2iAndIntArg(renderGlyphBind, segment, cacheIndex, size, index)
+        ObjectCalls.ptrcallWithIntVector2iAndIntArg(Binds.renderGlyphBind, segment, cacheIndex, size, index)
     }
 
     /**
@@ -1136,7 +1137,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setLanguageSupportOverride(language: String, supported: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndBoolArg(setLanguageSupportOverrideBind, segment, language, supported)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setLanguageSupportOverrideBind, segment, language, supported)
     }
 
     /**
@@ -1146,7 +1147,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getLanguageSupportOverride(language: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(getLanguageSupportOverrideBind, segment, language)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.getLanguageSupportOverrideBind, segment, language)
     }
 
     /**
@@ -1156,7 +1157,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun removeLanguageSupportOverride(language: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeLanguageSupportOverrideBind, segment, language)
+        ObjectCalls.ptrcallWithStringArg(Binds.removeLanguageSupportOverrideBind, segment, language)
     }
 
     /**
@@ -1166,7 +1167,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getLanguageSupportOverrides(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getLanguageSupportOverridesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getLanguageSupportOverridesBind, segment)
     }
 
     /**
@@ -1176,7 +1177,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setScriptSupportOverride(script: String, supported: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringAndBoolArg(setScriptSupportOverrideBind, segment, script, supported)
+        ObjectCalls.ptrcallWithStringAndBoolArg(Binds.setScriptSupportOverrideBind, segment, script, supported)
     }
 
     /**
@@ -1186,7 +1187,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getScriptSupportOverride(script: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(getScriptSupportOverrideBind, segment, script)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.getScriptSupportOverrideBind, segment, script)
     }
 
     /**
@@ -1196,7 +1197,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun removeScriptSupportOverride(script: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(removeScriptSupportOverrideBind, segment, script)
+        ObjectCalls.ptrcallWithStringArg(Binds.removeScriptSupportOverrideBind, segment, script)
     }
 
     /**
@@ -1206,7 +1207,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getScriptSupportOverrides(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getScriptSupportOverridesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getScriptSupportOverridesBind, segment)
     }
 
     /**
@@ -1216,7 +1217,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun setOpentypeFeatureOverrides(overrides: Map<String, Any?>) {
         checkOpen()
-        ObjectCalls.ptrcallWithDictionaryArg(setOpentypeFeatureOverridesBind, segment, overrides)
+        ObjectCalls.ptrcallWithDictionaryArg(Binds.setOpentypeFeatureOverridesBind, segment, overrides)
     }
 
     /**
@@ -1226,7 +1227,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getOpentypeFeatureOverrides(): Map<String, Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getOpentypeFeatureOverridesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getOpentypeFeatureOverridesBind, segment)
     }
 
     /**
@@ -1236,7 +1237,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getGlyphIndex(size: Int, char: Int, variationSelector: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithThreeIntArgsRetInt(getGlyphIndexBind, segment, size, char, variationSelector)
+        return ObjectCalls.ptrcallWithThreeIntArgsRetInt(Binds.getGlyphIndexBind, segment, size, char, variationSelector)
     }
 
     /**
@@ -1247,7 +1248,7 @@ class FontFile(handle: GodotHandle) : Font(handle) {
      */
     fun getCharFromGlyphIndex(size: Int, glyphIndex: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(getCharFromGlyphIndexBind, segment, size, glyphIndex)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetInt(Binds.getCharFromGlyphIndexBind, segment, size, glyphIndex)
     }
 
     companion object {
@@ -1260,535 +1261,537 @@ class FontFile(handle: GodotHandle) : Font(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): FontFile? =
             if (handle.address() == 0L) null else FontFile(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LOAD_BITMAP_FONT_HASH = 166001499L
-        private val loadBitmapFontBind by lazy {
+        @JvmField
+        val loadBitmapFontBind =
             ObjectCalls.getMethodBind("FontFile", "load_bitmap_font", LOAD_BITMAP_FONT_HASH)
-        }
 
         private const val LOAD_DYNAMIC_FONT_HASH = 166001499L
-        private val loadDynamicFontBind by lazy {
+        @JvmField
+        val loadDynamicFontBind =
             ObjectCalls.getMethodBind("FontFile", "load_dynamic_font", LOAD_DYNAMIC_FONT_HASH)
-        }
 
         private const val SET_DATA_HASH = 2971499966L
-        private val setDataBind by lazy {
+        @JvmField
+        val setDataBind =
             ObjectCalls.getMethodBind("FontFile", "set_data", SET_DATA_HASH)
-        }
 
         private const val GET_DATA_HASH = 2362200018L
-        private val getDataBind by lazy {
+        @JvmField
+        val getDataBind =
             ObjectCalls.getMethodBind("FontFile", "get_data", GET_DATA_HASH)
-        }
 
         private const val SET_FONT_NAME_HASH = 83702148L
-        private val setFontNameBind by lazy {
+        @JvmField
+        val setFontNameBind =
             ObjectCalls.getMethodBind("FontFile", "set_font_name", SET_FONT_NAME_HASH)
-        }
 
         private const val SET_FONT_STYLE_NAME_HASH = 83702148L
-        private val setFontStyleNameBind by lazy {
+        @JvmField
+        val setFontStyleNameBind =
             ObjectCalls.getMethodBind("FontFile", "set_font_style_name", SET_FONT_STYLE_NAME_HASH)
-        }
 
         private const val SET_FONT_STYLE_HASH = 918070724L
-        private val setFontStyleBind by lazy {
+        @JvmField
+        val setFontStyleBind =
             ObjectCalls.getMethodBind("FontFile", "set_font_style", SET_FONT_STYLE_HASH)
-        }
 
         private const val SET_FONT_WEIGHT_HASH = 1286410249L
-        private val setFontWeightBind by lazy {
+        @JvmField
+        val setFontWeightBind =
             ObjectCalls.getMethodBind("FontFile", "set_font_weight", SET_FONT_WEIGHT_HASH)
-        }
 
         private const val SET_FONT_STRETCH_HASH = 1286410249L
-        private val setFontStretchBind by lazy {
+        @JvmField
+        val setFontStretchBind =
             ObjectCalls.getMethodBind("FontFile", "set_font_stretch", SET_FONT_STRETCH_HASH)
-        }
 
         private const val SET_ANTIALIASING_HASH = 1669900L
-        private val setAntialiasingBind by lazy {
+        @JvmField
+        val setAntialiasingBind =
             ObjectCalls.getMethodBind("FontFile", "set_antialiasing", SET_ANTIALIASING_HASH)
-        }
 
         private const val GET_ANTIALIASING_HASH = 4262718649L
-        private val getAntialiasingBind by lazy {
+        @JvmField
+        val getAntialiasingBind =
             ObjectCalls.getMethodBind("FontFile", "get_antialiasing", GET_ANTIALIASING_HASH)
-        }
 
         private const val SET_DISABLE_EMBEDDED_BITMAPS_HASH = 2586408642L
-        private val setDisableEmbeddedBitmapsBind by lazy {
+        @JvmField
+        val setDisableEmbeddedBitmapsBind =
             ObjectCalls.getMethodBind("FontFile", "set_disable_embedded_bitmaps", SET_DISABLE_EMBEDDED_BITMAPS_HASH)
-        }
 
         private const val GET_DISABLE_EMBEDDED_BITMAPS_HASH = 36873697L
-        private val getDisableEmbeddedBitmapsBind by lazy {
+        @JvmField
+        val getDisableEmbeddedBitmapsBind =
             ObjectCalls.getMethodBind("FontFile", "get_disable_embedded_bitmaps", GET_DISABLE_EMBEDDED_BITMAPS_HASH)
-        }
 
         private const val SET_GENERATE_MIPMAPS_HASH = 2586408642L
-        private val setGenerateMipmapsBind by lazy {
+        @JvmField
+        val setGenerateMipmapsBind =
             ObjectCalls.getMethodBind("FontFile", "set_generate_mipmaps", SET_GENERATE_MIPMAPS_HASH)
-        }
 
         private const val GET_GENERATE_MIPMAPS_HASH = 36873697L
-        private val getGenerateMipmapsBind by lazy {
+        @JvmField
+        val getGenerateMipmapsBind =
             ObjectCalls.getMethodBind("FontFile", "get_generate_mipmaps", GET_GENERATE_MIPMAPS_HASH)
-        }
 
         private const val SET_MULTICHANNEL_SIGNED_DISTANCE_FIELD_HASH = 2586408642L
-        private val setMultichannelSignedDistanceFieldBind by lazy {
+        @JvmField
+        val setMultichannelSignedDistanceFieldBind =
             ObjectCalls.getMethodBind("FontFile", "set_multichannel_signed_distance_field", SET_MULTICHANNEL_SIGNED_DISTANCE_FIELD_HASH)
-        }
 
         private const val IS_MULTICHANNEL_SIGNED_DISTANCE_FIELD_HASH = 36873697L
-        private val isMultichannelSignedDistanceFieldBind by lazy {
+        @JvmField
+        val isMultichannelSignedDistanceFieldBind =
             ObjectCalls.getMethodBind("FontFile", "is_multichannel_signed_distance_field", IS_MULTICHANNEL_SIGNED_DISTANCE_FIELD_HASH)
-        }
 
         private const val SET_MSDF_PIXEL_RANGE_HASH = 1286410249L
-        private val setMsdfPixelRangeBind by lazy {
+        @JvmField
+        val setMsdfPixelRangeBind =
             ObjectCalls.getMethodBind("FontFile", "set_msdf_pixel_range", SET_MSDF_PIXEL_RANGE_HASH)
-        }
 
         private const val GET_MSDF_PIXEL_RANGE_HASH = 3905245786L
-        private val getMsdfPixelRangeBind by lazy {
+        @JvmField
+        val getMsdfPixelRangeBind =
             ObjectCalls.getMethodBind("FontFile", "get_msdf_pixel_range", GET_MSDF_PIXEL_RANGE_HASH)
-        }
 
         private const val SET_MSDF_SIZE_HASH = 1286410249L
-        private val setMsdfSizeBind by lazy {
+        @JvmField
+        val setMsdfSizeBind =
             ObjectCalls.getMethodBind("FontFile", "set_msdf_size", SET_MSDF_SIZE_HASH)
-        }
 
         private const val GET_MSDF_SIZE_HASH = 3905245786L
-        private val getMsdfSizeBind by lazy {
+        @JvmField
+        val getMsdfSizeBind =
             ObjectCalls.getMethodBind("FontFile", "get_msdf_size", GET_MSDF_SIZE_HASH)
-        }
 
         private const val SET_FIXED_SIZE_HASH = 1286410249L
-        private val setFixedSizeBind by lazy {
+        @JvmField
+        val setFixedSizeBind =
             ObjectCalls.getMethodBind("FontFile", "set_fixed_size", SET_FIXED_SIZE_HASH)
-        }
 
         private const val GET_FIXED_SIZE_HASH = 3905245786L
-        private val getFixedSizeBind by lazy {
+        @JvmField
+        val getFixedSizeBind =
             ObjectCalls.getMethodBind("FontFile", "get_fixed_size", GET_FIXED_SIZE_HASH)
-        }
 
         private const val SET_FIXED_SIZE_SCALE_MODE_HASH = 1660989956L
-        private val setFixedSizeScaleModeBind by lazy {
+        @JvmField
+        val setFixedSizeScaleModeBind =
             ObjectCalls.getMethodBind("FontFile", "set_fixed_size_scale_mode", SET_FIXED_SIZE_SCALE_MODE_HASH)
-        }
 
         private const val GET_FIXED_SIZE_SCALE_MODE_HASH = 753873478L
-        private val getFixedSizeScaleModeBind by lazy {
+        @JvmField
+        val getFixedSizeScaleModeBind =
             ObjectCalls.getMethodBind("FontFile", "get_fixed_size_scale_mode", GET_FIXED_SIZE_SCALE_MODE_HASH)
-        }
 
         private const val SET_ALLOW_SYSTEM_FALLBACK_HASH = 2586408642L
-        private val setAllowSystemFallbackBind by lazy {
+        @JvmField
+        val setAllowSystemFallbackBind =
             ObjectCalls.getMethodBind("FontFile", "set_allow_system_fallback", SET_ALLOW_SYSTEM_FALLBACK_HASH)
-        }
 
         private const val IS_ALLOW_SYSTEM_FALLBACK_HASH = 36873697L
-        private val isAllowSystemFallbackBind by lazy {
+        @JvmField
+        val isAllowSystemFallbackBind =
             ObjectCalls.getMethodBind("FontFile", "is_allow_system_fallback", IS_ALLOW_SYSTEM_FALLBACK_HASH)
-        }
 
         private const val SET_FORCE_AUTOHINTER_HASH = 2586408642L
-        private val setForceAutohinterBind by lazy {
+        @JvmField
+        val setForceAutohinterBind =
             ObjectCalls.getMethodBind("FontFile", "set_force_autohinter", SET_FORCE_AUTOHINTER_HASH)
-        }
 
         private const val IS_FORCE_AUTOHINTER_HASH = 36873697L
-        private val isForceAutohinterBind by lazy {
+        @JvmField
+        val isForceAutohinterBind =
             ObjectCalls.getMethodBind("FontFile", "is_force_autohinter", IS_FORCE_AUTOHINTER_HASH)
-        }
 
         private const val SET_MODULATE_COLOR_GLYPHS_HASH = 2586408642L
-        private val setModulateColorGlyphsBind by lazy {
+        @JvmField
+        val setModulateColorGlyphsBind =
             ObjectCalls.getMethodBind("FontFile", "set_modulate_color_glyphs", SET_MODULATE_COLOR_GLYPHS_HASH)
-        }
 
         private const val IS_MODULATE_COLOR_GLYPHS_HASH = 36873697L
-        private val isModulateColorGlyphsBind by lazy {
+        @JvmField
+        val isModulateColorGlyphsBind =
             ObjectCalls.getMethodBind("FontFile", "is_modulate_color_glyphs", IS_MODULATE_COLOR_GLYPHS_HASH)
-        }
 
         private const val SET_HINTING_HASH = 1827459492L
-        private val setHintingBind by lazy {
+        @JvmField
+        val setHintingBind =
             ObjectCalls.getMethodBind("FontFile", "set_hinting", SET_HINTING_HASH)
-        }
 
         private const val GET_HINTING_HASH = 3683214614L
-        private val getHintingBind by lazy {
+        @JvmField
+        val getHintingBind =
             ObjectCalls.getMethodBind("FontFile", "get_hinting", GET_HINTING_HASH)
-        }
 
         private const val SET_SUBPIXEL_POSITIONING_HASH = 4225742182L
-        private val setSubpixelPositioningBind by lazy {
+        @JvmField
+        val setSubpixelPositioningBind =
             ObjectCalls.getMethodBind("FontFile", "set_subpixel_positioning", SET_SUBPIXEL_POSITIONING_HASH)
-        }
 
         private const val GET_SUBPIXEL_POSITIONING_HASH = 1069238588L
-        private val getSubpixelPositioningBind by lazy {
+        @JvmField
+        val getSubpixelPositioningBind =
             ObjectCalls.getMethodBind("FontFile", "get_subpixel_positioning", GET_SUBPIXEL_POSITIONING_HASH)
-        }
 
         private const val SET_KEEP_ROUNDING_REMAINDERS_HASH = 2586408642L
-        private val setKeepRoundingRemaindersBind by lazy {
+        @JvmField
+        val setKeepRoundingRemaindersBind =
             ObjectCalls.getMethodBind("FontFile", "set_keep_rounding_remainders", SET_KEEP_ROUNDING_REMAINDERS_HASH)
-        }
 
         private const val GET_KEEP_ROUNDING_REMAINDERS_HASH = 36873697L
-        private val getKeepRoundingRemaindersBind by lazy {
+        @JvmField
+        val getKeepRoundingRemaindersBind =
             ObjectCalls.getMethodBind("FontFile", "get_keep_rounding_remainders", GET_KEEP_ROUNDING_REMAINDERS_HASH)
-        }
 
         private const val SET_OVERSAMPLING_HASH = 373806689L
-        private val setOversamplingBind by lazy {
+        @JvmField
+        val setOversamplingBind =
             ObjectCalls.getMethodBind("FontFile", "set_oversampling", SET_OVERSAMPLING_HASH)
-        }
 
         private const val GET_OVERSAMPLING_HASH = 1740695150L
-        private val getOversamplingBind by lazy {
+        @JvmField
+        val getOversamplingBind =
             ObjectCalls.getMethodBind("FontFile", "get_oversampling", GET_OVERSAMPLING_HASH)
-        }
 
         private const val GET_CACHE_COUNT_HASH = 3905245786L
-        private val getCacheCountBind by lazy {
+        @JvmField
+        val getCacheCountBind =
             ObjectCalls.getMethodBind("FontFile", "get_cache_count", GET_CACHE_COUNT_HASH)
-        }
 
         private const val CLEAR_CACHE_HASH = 3218959716L
-        private val clearCacheBind by lazy {
+        @JvmField
+        val clearCacheBind =
             ObjectCalls.getMethodBind("FontFile", "clear_cache", CLEAR_CACHE_HASH)
-        }
 
         private const val REMOVE_CACHE_HASH = 1286410249L
-        private val removeCacheBind by lazy {
+        @JvmField
+        val removeCacheBind =
             ObjectCalls.getMethodBind("FontFile", "remove_cache", REMOVE_CACHE_HASH)
-        }
 
         private const val GET_SIZE_CACHE_LIST_HASH = 663333327L
-        private val getSizeCacheListBind by lazy {
+        @JvmField
+        val getSizeCacheListBind =
             ObjectCalls.getMethodBind("FontFile", "get_size_cache_list", GET_SIZE_CACHE_LIST_HASH)
-        }
 
         private const val CLEAR_SIZE_CACHE_HASH = 1286410249L
-        private val clearSizeCacheBind by lazy {
+        @JvmField
+        val clearSizeCacheBind =
             ObjectCalls.getMethodBind("FontFile", "clear_size_cache", CLEAR_SIZE_CACHE_HASH)
-        }
 
         private const val REMOVE_SIZE_CACHE_HASH = 2311374912L
-        private val removeSizeCacheBind by lazy {
+        @JvmField
+        val removeSizeCacheBind =
             ObjectCalls.getMethodBind("FontFile", "remove_size_cache", REMOVE_SIZE_CACHE_HASH)
-        }
 
         private const val SET_VARIATION_COORDINATES_HASH = 64545446L
-        private val setVariationCoordinatesBind by lazy {
+        @JvmField
+        val setVariationCoordinatesBind =
             ObjectCalls.getMethodBind("FontFile", "set_variation_coordinates", SET_VARIATION_COORDINATES_HASH)
-        }
 
         private const val GET_VARIATION_COORDINATES_HASH = 3485342025L
-        private val getVariationCoordinatesBind by lazy {
+        @JvmField
+        val getVariationCoordinatesBind =
             ObjectCalls.getMethodBind("FontFile", "get_variation_coordinates", GET_VARIATION_COORDINATES_HASH)
-        }
 
         private const val SET_EMBOLDEN_HASH = 1602489585L
-        private val setEmboldenBind by lazy {
+        @JvmField
+        val setEmboldenBind =
             ObjectCalls.getMethodBind("FontFile", "set_embolden", SET_EMBOLDEN_HASH)
-        }
 
         private const val GET_EMBOLDEN_HASH = 2339986948L
-        private val getEmboldenBind by lazy {
+        @JvmField
+        val getEmboldenBind =
             ObjectCalls.getMethodBind("FontFile", "get_embolden", GET_EMBOLDEN_HASH)
-        }
 
         private const val SET_TRANSFORM_HASH = 30160968L
-        private val setTransformBind by lazy {
+        @JvmField
+        val setTransformBind =
             ObjectCalls.getMethodBind("FontFile", "set_transform", SET_TRANSFORM_HASH)
-        }
 
         private const val GET_TRANSFORM_HASH = 3836996910L
-        private val getTransformBind by lazy {
+        @JvmField
+        val getTransformBind =
             ObjectCalls.getMethodBind("FontFile", "get_transform", GET_TRANSFORM_HASH)
-        }
 
         private const val SET_EXTRA_SPACING_HASH = 62942285L
-        private val setExtraSpacingBind by lazy {
+        @JvmField
+        val setExtraSpacingBind =
             ObjectCalls.getMethodBind("FontFile", "set_extra_spacing", SET_EXTRA_SPACING_HASH)
-        }
 
         private const val GET_EXTRA_SPACING_HASH = 1924257185L
-        private val getExtraSpacingBind by lazy {
+        @JvmField
+        val getExtraSpacingBind =
             ObjectCalls.getMethodBind("FontFile", "get_extra_spacing", GET_EXTRA_SPACING_HASH)
-        }
 
         private const val SET_EXTRA_BASELINE_OFFSET_HASH = 1602489585L
-        private val setExtraBaselineOffsetBind by lazy {
+        @JvmField
+        val setExtraBaselineOffsetBind =
             ObjectCalls.getMethodBind("FontFile", "set_extra_baseline_offset", SET_EXTRA_BASELINE_OFFSET_HASH)
-        }
 
         private const val GET_EXTRA_BASELINE_OFFSET_HASH = 2339986948L
-        private val getExtraBaselineOffsetBind by lazy {
+        @JvmField
+        val getExtraBaselineOffsetBind =
             ObjectCalls.getMethodBind("FontFile", "get_extra_baseline_offset", GET_EXTRA_BASELINE_OFFSET_HASH)
-        }
 
         private const val SET_FACE_INDEX_HASH = 3937882851L
-        private val setFaceIndexBind by lazy {
+        @JvmField
+        val setFaceIndexBind =
             ObjectCalls.getMethodBind("FontFile", "set_face_index", SET_FACE_INDEX_HASH)
-        }
 
         private const val GET_FACE_INDEX_HASH = 923996154L
-        private val getFaceIndexBind by lazy {
+        @JvmField
+        val getFaceIndexBind =
             ObjectCalls.getMethodBind("FontFile", "get_face_index", GET_FACE_INDEX_HASH)
-        }
 
         private const val SET_CACHE_ASCENT_HASH = 3506521499L
-        private val setCacheAscentBind by lazy {
+        @JvmField
+        val setCacheAscentBind =
             ObjectCalls.getMethodBind("FontFile", "set_cache_ascent", SET_CACHE_ASCENT_HASH)
-        }
 
         private const val GET_CACHE_ASCENT_HASH = 3085491603L
-        private val getCacheAscentBind by lazy {
+        @JvmField
+        val getCacheAscentBind =
             ObjectCalls.getMethodBind("FontFile", "get_cache_ascent", GET_CACHE_ASCENT_HASH)
-        }
 
         private const val SET_CACHE_DESCENT_HASH = 3506521499L
-        private val setCacheDescentBind by lazy {
+        @JvmField
+        val setCacheDescentBind =
             ObjectCalls.getMethodBind("FontFile", "set_cache_descent", SET_CACHE_DESCENT_HASH)
-        }
 
         private const val GET_CACHE_DESCENT_HASH = 3085491603L
-        private val getCacheDescentBind by lazy {
+        @JvmField
+        val getCacheDescentBind =
             ObjectCalls.getMethodBind("FontFile", "get_cache_descent", GET_CACHE_DESCENT_HASH)
-        }
 
         private const val SET_CACHE_UNDERLINE_POSITION_HASH = 3506521499L
-        private val setCacheUnderlinePositionBind by lazy {
+        @JvmField
+        val setCacheUnderlinePositionBind =
             ObjectCalls.getMethodBind("FontFile", "set_cache_underline_position", SET_CACHE_UNDERLINE_POSITION_HASH)
-        }
 
         private const val GET_CACHE_UNDERLINE_POSITION_HASH = 3085491603L
-        private val getCacheUnderlinePositionBind by lazy {
+        @JvmField
+        val getCacheUnderlinePositionBind =
             ObjectCalls.getMethodBind("FontFile", "get_cache_underline_position", GET_CACHE_UNDERLINE_POSITION_HASH)
-        }
 
         private const val SET_CACHE_UNDERLINE_THICKNESS_HASH = 3506521499L
-        private val setCacheUnderlineThicknessBind by lazy {
+        @JvmField
+        val setCacheUnderlineThicknessBind =
             ObjectCalls.getMethodBind("FontFile", "set_cache_underline_thickness", SET_CACHE_UNDERLINE_THICKNESS_HASH)
-        }
 
         private const val GET_CACHE_UNDERLINE_THICKNESS_HASH = 3085491603L
-        private val getCacheUnderlineThicknessBind by lazy {
+        @JvmField
+        val getCacheUnderlineThicknessBind =
             ObjectCalls.getMethodBind("FontFile", "get_cache_underline_thickness", GET_CACHE_UNDERLINE_THICKNESS_HASH)
-        }
 
         private const val SET_CACHE_SCALE_HASH = 3506521499L
-        private val setCacheScaleBind by lazy {
+        @JvmField
+        val setCacheScaleBind =
             ObjectCalls.getMethodBind("FontFile", "set_cache_scale", SET_CACHE_SCALE_HASH)
-        }
 
         private const val GET_CACHE_SCALE_HASH = 3085491603L
-        private val getCacheScaleBind by lazy {
+        @JvmField
+        val getCacheScaleBind =
             ObjectCalls.getMethodBind("FontFile", "get_cache_scale", GET_CACHE_SCALE_HASH)
-        }
 
         private const val GET_TEXTURE_COUNT_HASH = 1987661582L
-        private val getTextureCountBind by lazy {
+        @JvmField
+        val getTextureCountBind =
             ObjectCalls.getMethodBind("FontFile", "get_texture_count", GET_TEXTURE_COUNT_HASH)
-        }
 
         private const val CLEAR_TEXTURES_HASH = 2311374912L
-        private val clearTexturesBind by lazy {
+        @JvmField
+        val clearTexturesBind =
             ObjectCalls.getMethodBind("FontFile", "clear_textures", CLEAR_TEXTURES_HASH)
-        }
 
         private const val REMOVE_TEXTURE_HASH = 2328951467L
-        private val removeTextureBind by lazy {
+        @JvmField
+        val removeTextureBind =
             ObjectCalls.getMethodBind("FontFile", "remove_texture", REMOVE_TEXTURE_HASH)
-        }
 
         private const val SET_TEXTURE_IMAGE_HASH = 4157974066L
-        private val setTextureImageBind by lazy {
+        @JvmField
+        val setTextureImageBind =
             ObjectCalls.getMethodBind("FontFile", "set_texture_image", SET_TEXTURE_IMAGE_HASH)
-        }
 
         private const val GET_TEXTURE_IMAGE_HASH = 3878418953L
-        private val getTextureImageBind by lazy {
+        @JvmField
+        val getTextureImageBind =
             ObjectCalls.getMethodBind("FontFile", "get_texture_image", GET_TEXTURE_IMAGE_HASH)
-        }
 
         private const val SET_TEXTURE_OFFSETS_HASH = 2849993437L
-        private val setTextureOffsetsBind by lazy {
+        @JvmField
+        val setTextureOffsetsBind =
             ObjectCalls.getMethodBind("FontFile", "set_texture_offsets", SET_TEXTURE_OFFSETS_HASH)
-        }
 
         private const val GET_TEXTURE_OFFSETS_HASH = 3703444828L
-        private val getTextureOffsetsBind by lazy {
+        @JvmField
+        val getTextureOffsetsBind =
             ObjectCalls.getMethodBind("FontFile", "get_texture_offsets", GET_TEXTURE_OFFSETS_HASH)
-        }
 
         private const val GET_GLYPH_LIST_HASH = 681709689L
-        private val getGlyphListBind by lazy {
+        @JvmField
+        val getGlyphListBind =
             ObjectCalls.getMethodBind("FontFile", "get_glyph_list", GET_GLYPH_LIST_HASH)
-        }
 
         private const val CLEAR_GLYPHS_HASH = 2311374912L
-        private val clearGlyphsBind by lazy {
+        @JvmField
+        val clearGlyphsBind =
             ObjectCalls.getMethodBind("FontFile", "clear_glyphs", CLEAR_GLYPHS_HASH)
-        }
 
         private const val REMOVE_GLYPH_HASH = 2328951467L
-        private val removeGlyphBind by lazy {
+        @JvmField
+        val removeGlyphBind =
             ObjectCalls.getMethodBind("FontFile", "remove_glyph", REMOVE_GLYPH_HASH)
-        }
 
         private const val SET_GLYPH_ADVANCE_HASH = 947991729L
-        private val setGlyphAdvanceBind by lazy {
+        @JvmField
+        val setGlyphAdvanceBind =
             ObjectCalls.getMethodBind("FontFile", "set_glyph_advance", SET_GLYPH_ADVANCE_HASH)
-        }
 
         private const val GET_GLYPH_ADVANCE_HASH = 1601573536L
-        private val getGlyphAdvanceBind by lazy {
+        @JvmField
+        val getGlyphAdvanceBind =
             ObjectCalls.getMethodBind("FontFile", "get_glyph_advance", GET_GLYPH_ADVANCE_HASH)
-        }
 
         private const val SET_GLYPH_OFFSET_HASH = 921719850L
-        private val setGlyphOffsetBind by lazy {
+        @JvmField
+        val setGlyphOffsetBind =
             ObjectCalls.getMethodBind("FontFile", "set_glyph_offset", SET_GLYPH_OFFSET_HASH)
-        }
 
         private const val GET_GLYPH_OFFSET_HASH = 3205412300L
-        private val getGlyphOffsetBind by lazy {
+        @JvmField
+        val getGlyphOffsetBind =
             ObjectCalls.getMethodBind("FontFile", "get_glyph_offset", GET_GLYPH_OFFSET_HASH)
-        }
 
         private const val SET_GLYPH_SIZE_HASH = 921719850L
-        private val setGlyphSizeBind by lazy {
+        @JvmField
+        val setGlyphSizeBind =
             ObjectCalls.getMethodBind("FontFile", "set_glyph_size", SET_GLYPH_SIZE_HASH)
-        }
 
         private const val GET_GLYPH_SIZE_HASH = 3205412300L
-        private val getGlyphSizeBind by lazy {
+        @JvmField
+        val getGlyphSizeBind =
             ObjectCalls.getMethodBind("FontFile", "get_glyph_size", GET_GLYPH_SIZE_HASH)
-        }
 
         private const val SET_GLYPH_UV_RECT_HASH = 3821620992L
-        private val setGlyphUvRectBind by lazy {
+        @JvmField
+        val setGlyphUvRectBind =
             ObjectCalls.getMethodBind("FontFile", "set_glyph_uv_rect", SET_GLYPH_UV_RECT_HASH)
-        }
 
         private const val GET_GLYPH_UV_RECT_HASH = 3927917900L
-        private val getGlyphUvRectBind by lazy {
+        @JvmField
+        val getGlyphUvRectBind =
             ObjectCalls.getMethodBind("FontFile", "get_glyph_uv_rect", GET_GLYPH_UV_RECT_HASH)
-        }
 
         private const val SET_GLYPH_TEXTURE_IDX_HASH = 355564111L
-        private val setGlyphTextureIdxBind by lazy {
+        @JvmField
+        val setGlyphTextureIdxBind =
             ObjectCalls.getMethodBind("FontFile", "set_glyph_texture_idx", SET_GLYPH_TEXTURE_IDX_HASH)
-        }
 
         private const val GET_GLYPH_TEXTURE_IDX_HASH = 1629411054L
-        private val getGlyphTextureIdxBind by lazy {
+        @JvmField
+        val getGlyphTextureIdxBind =
             ObjectCalls.getMethodBind("FontFile", "get_glyph_texture_idx", GET_GLYPH_TEXTURE_IDX_HASH)
-        }
 
         private const val GET_KERNING_LIST_HASH = 2345056839L
-        private val getKerningListBind by lazy {
+        @JvmField
+        val getKerningListBind =
             ObjectCalls.getMethodBind("FontFile", "get_kerning_list", GET_KERNING_LIST_HASH)
-        }
 
         private const val CLEAR_KERNING_MAP_HASH = 3937882851L
-        private val clearKerningMapBind by lazy {
+        @JvmField
+        val clearKerningMapBind =
             ObjectCalls.getMethodBind("FontFile", "clear_kerning_map", CLEAR_KERNING_MAP_HASH)
-        }
 
         private const val REMOVE_KERNING_HASH = 3930204747L
-        private val removeKerningBind by lazy {
+        @JvmField
+        val removeKerningBind =
             ObjectCalls.getMethodBind("FontFile", "remove_kerning", REMOVE_KERNING_HASH)
-        }
 
         private const val SET_KERNING_HASH = 3182200918L
-        private val setKerningBind by lazy {
+        @JvmField
+        val setKerningBind =
             ObjectCalls.getMethodBind("FontFile", "set_kerning", SET_KERNING_HASH)
-        }
 
         private const val GET_KERNING_HASH = 1611912865L
-        private val getKerningBind by lazy {
+        @JvmField
+        val getKerningBind =
             ObjectCalls.getMethodBind("FontFile", "get_kerning", GET_KERNING_HASH)
-        }
 
         private const val RENDER_RANGE_HASH = 355564111L
-        private val renderRangeBind by lazy {
+        @JvmField
+        val renderRangeBind =
             ObjectCalls.getMethodBind("FontFile", "render_range", RENDER_RANGE_HASH)
-        }
 
         private const val RENDER_GLYPH_HASH = 2328951467L
-        private val renderGlyphBind by lazy {
+        @JvmField
+        val renderGlyphBind =
             ObjectCalls.getMethodBind("FontFile", "render_glyph", RENDER_GLYPH_HASH)
-        }
 
         private const val SET_LANGUAGE_SUPPORT_OVERRIDE_HASH = 2678287736L
-        private val setLanguageSupportOverrideBind by lazy {
+        @JvmField
+        val setLanguageSupportOverrideBind =
             ObjectCalls.getMethodBind("FontFile", "set_language_support_override", SET_LANGUAGE_SUPPORT_OVERRIDE_HASH)
-        }
 
         private const val GET_LANGUAGE_SUPPORT_OVERRIDE_HASH = 3927539163L
-        private val getLanguageSupportOverrideBind by lazy {
+        @JvmField
+        val getLanguageSupportOverrideBind =
             ObjectCalls.getMethodBind("FontFile", "get_language_support_override", GET_LANGUAGE_SUPPORT_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_LANGUAGE_SUPPORT_OVERRIDE_HASH = 83702148L
-        private val removeLanguageSupportOverrideBind by lazy {
+        @JvmField
+        val removeLanguageSupportOverrideBind =
             ObjectCalls.getMethodBind("FontFile", "remove_language_support_override", REMOVE_LANGUAGE_SUPPORT_OVERRIDE_HASH)
-        }
 
         private const val GET_LANGUAGE_SUPPORT_OVERRIDES_HASH = 1139954409L
-        private val getLanguageSupportOverridesBind by lazy {
+        @JvmField
+        val getLanguageSupportOverridesBind =
             ObjectCalls.getMethodBind("FontFile", "get_language_support_overrides", GET_LANGUAGE_SUPPORT_OVERRIDES_HASH)
-        }
 
         private const val SET_SCRIPT_SUPPORT_OVERRIDE_HASH = 2678287736L
-        private val setScriptSupportOverrideBind by lazy {
+        @JvmField
+        val setScriptSupportOverrideBind =
             ObjectCalls.getMethodBind("FontFile", "set_script_support_override", SET_SCRIPT_SUPPORT_OVERRIDE_HASH)
-        }
 
         private const val GET_SCRIPT_SUPPORT_OVERRIDE_HASH = 3927539163L
-        private val getScriptSupportOverrideBind by lazy {
+        @JvmField
+        val getScriptSupportOverrideBind =
             ObjectCalls.getMethodBind("FontFile", "get_script_support_override", GET_SCRIPT_SUPPORT_OVERRIDE_HASH)
-        }
 
         private const val REMOVE_SCRIPT_SUPPORT_OVERRIDE_HASH = 83702148L
-        private val removeScriptSupportOverrideBind by lazy {
+        @JvmField
+        val removeScriptSupportOverrideBind =
             ObjectCalls.getMethodBind("FontFile", "remove_script_support_override", REMOVE_SCRIPT_SUPPORT_OVERRIDE_HASH)
-        }
 
         private const val GET_SCRIPT_SUPPORT_OVERRIDES_HASH = 1139954409L
-        private val getScriptSupportOverridesBind by lazy {
+        @JvmField
+        val getScriptSupportOverridesBind =
             ObjectCalls.getMethodBind("FontFile", "get_script_support_overrides", GET_SCRIPT_SUPPORT_OVERRIDES_HASH)
-        }
 
         private const val SET_OPENTYPE_FEATURE_OVERRIDES_HASH = 4155329257L
-        private val setOpentypeFeatureOverridesBind by lazy {
+        @JvmField
+        val setOpentypeFeatureOverridesBind =
             ObjectCalls.getMethodBind("FontFile", "set_opentype_feature_overrides", SET_OPENTYPE_FEATURE_OVERRIDES_HASH)
-        }
 
         private const val GET_OPENTYPE_FEATURE_OVERRIDES_HASH = 3102165223L
-        private val getOpentypeFeatureOverridesBind by lazy {
+        @JvmField
+        val getOpentypeFeatureOverridesBind =
             ObjectCalls.getMethodBind("FontFile", "get_opentype_feature_overrides", GET_OPENTYPE_FEATURE_OVERRIDES_HASH)
-        }
 
         private const val GET_GLYPH_INDEX_HASH = 864943070L
-        private val getGlyphIndexBind by lazy {
+        @JvmField
+        val getGlyphIndexBind =
             ObjectCalls.getMethodBind("FontFile", "get_glyph_index", GET_GLYPH_INDEX_HASH)
-        }
 
         private const val GET_CHAR_FROM_GLYPH_INDEX_HASH = 3175239445L
-        private val getCharFromGlyphIndexBind by lazy {
+        @JvmField
+        val getCharFromGlyphIndexBind =
             ObjectCalls.getMethodBind("FontFile", "get_char_from_glyph_index", GET_CHAR_FROM_GLYPH_INDEX_HASH)
-        }
     }
 }

@@ -22,7 +22,5 @@ open class TextServerExtension(handle: GodotHandle) : TextServer(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): TextServerExtension? =
             if (handle.address() == 0L) null else TextServerExtension(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

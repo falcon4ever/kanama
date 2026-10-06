@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -10,9 +11,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: WorkerThreadPool
  */
 object WorkerThreadPool {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("WorkerThreadPool")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     /**
      * Adds `action` as a task to be executed by a worker thread. `high_priority` determines if the
@@ -26,7 +26,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun addTask(action: GodotCallable, highPriority: Boolean = false, description: String = ""): Long {
-        return ObjectCalls.ptrcallWithCallableBoolStringArgsRetLong(addTaskBind, singleton, action.target.segment, action.method, highPriority, description)
+        return ObjectCalls.ptrcallWithCallableBoolStringArgsRetLong(Binds.addTaskBind, singleton, action.target.segment, action.method, highPriority, description)
     }
 
     /**
@@ -37,7 +37,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun isTaskCompleted(taskId: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isTaskCompletedBind, singleton, taskId)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isTaskCompletedBind, singleton, taskId)
     }
 
     /**
@@ -54,7 +54,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun waitForTaskCompletion(taskId: Long): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(waitForTaskCompletionBind, singleton, taskId))
+        return GodotError(ObjectCalls.ptrcallWithLongArgRetLong(Binds.waitForTaskCompletionBind, singleton, taskId))
     }
 
     /**
@@ -68,7 +68,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun getCallerTaskId(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCallerTaskIdBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCallerTaskIdBind, singleton)
     }
 
     /**
@@ -87,7 +87,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun addGroupTask(action: GodotCallable, elements: Int, tasksNeeded: Int = -1, highPriority: Boolean = false, description: String = ""): Long {
-        return ObjectCalls.ptrcallWithCallableTwoIntBoolStringArgsRetLong(addGroupTaskBind, singleton, action.target.segment, action.method, elements, tasksNeeded, highPriority, description)
+        return ObjectCalls.ptrcallWithCallableTwoIntBoolStringArgsRetLong(Binds.addGroupTaskBind, singleton, action.target.segment, action.method, elements, tasksNeeded, highPriority, description)
     }
 
     /**
@@ -98,7 +98,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun isGroupTaskCompleted(groupId: Long): Boolean {
-        return ObjectCalls.ptrcallWithLongArgRetBool(isGroupTaskCompletedBind, singleton, groupId)
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.isGroupTaskCompletedBind, singleton, groupId)
     }
 
     /**
@@ -110,7 +110,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun getGroupProcessedElementCount(groupId: Long): Long {
-        return ObjectCalls.ptrcallWithLongArgRetUInt32(getGroupProcessedElementCountBind, singleton, groupId)
+        return ObjectCalls.ptrcallWithLongArgRetUInt32(Binds.getGroupProcessedElementCountBind, singleton, groupId)
     }
 
     /**
@@ -120,7 +120,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun waitForGroupTaskCompletion(groupId: Long) {
-        ObjectCalls.ptrcallWithLongArg(waitForGroupTaskCompletionBind, singleton, groupId)
+        ObjectCalls.ptrcallWithLongArg(Binds.waitForGroupTaskCompletionBind, singleton, groupId)
     }
 
     /**
@@ -131,7 +131,7 @@ object WorkerThreadPool {
      */
     @JvmStatic
     fun getCallerGroupId(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getCallerGroupIdBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getCallerGroupIdBind, singleton)
     }
 
     @JvmStatic
@@ -141,48 +141,53 @@ object WorkerThreadPool {
     internal fun wrap(handle: RawSegment): WorkerThreadPool? =
         if (handle.address() == 0L) null else this
 
-    private const val ADD_TASK_HASH = 3745067146L
-    private val addTaskBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "add_task", ADD_TASK_HASH)
-    }
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("WorkerThreadPool")
 
-    private const val IS_TASK_COMPLETED_HASH = 1116898809L
-    private val isTaskCompletedBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "is_task_completed", IS_TASK_COMPLETED_HASH)
-    }
+        private const val ADD_TASK_HASH = 3745067146L
+        @JvmField
+        val addTaskBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "add_task", ADD_TASK_HASH)
 
-    private const val WAIT_FOR_TASK_COMPLETION_HASH = 844576869L
-    private val waitForTaskCompletionBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "wait_for_task_completion", WAIT_FOR_TASK_COMPLETION_HASH)
-    }
+        private const val IS_TASK_COMPLETED_HASH = 1116898809L
+        @JvmField
+        val isTaskCompletedBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "is_task_completed", IS_TASK_COMPLETED_HASH)
 
-    private const val GET_CALLER_TASK_ID_HASH = 3905245786L
-    private val getCallerTaskIdBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "get_caller_task_id", GET_CALLER_TASK_ID_HASH)
-    }
+        private const val WAIT_FOR_TASK_COMPLETION_HASH = 844576869L
+        @JvmField
+        val waitForTaskCompletionBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "wait_for_task_completion", WAIT_FOR_TASK_COMPLETION_HASH)
 
-    private const val ADD_GROUP_TASK_HASH = 1801953219L
-    private val addGroupTaskBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "add_group_task", ADD_GROUP_TASK_HASH)
-    }
+        private const val GET_CALLER_TASK_ID_HASH = 3905245786L
+        @JvmField
+        val getCallerTaskIdBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "get_caller_task_id", GET_CALLER_TASK_ID_HASH)
 
-    private const val IS_GROUP_TASK_COMPLETED_HASH = 1116898809L
-    private val isGroupTaskCompletedBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "is_group_task_completed", IS_GROUP_TASK_COMPLETED_HASH)
-    }
+        private const val ADD_GROUP_TASK_HASH = 1801953219L
+        @JvmField
+        val addGroupTaskBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "add_group_task", ADD_GROUP_TASK_HASH)
 
-    private const val GET_GROUP_PROCESSED_ELEMENT_COUNT_HASH = 923996154L
-    private val getGroupProcessedElementCountBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "get_group_processed_element_count", GET_GROUP_PROCESSED_ELEMENT_COUNT_HASH)
-    }
+        private const val IS_GROUP_TASK_COMPLETED_HASH = 1116898809L
+        @JvmField
+        val isGroupTaskCompletedBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "is_group_task_completed", IS_GROUP_TASK_COMPLETED_HASH)
 
-    private const val WAIT_FOR_GROUP_TASK_COMPLETION_HASH = 1286410249L
-    private val waitForGroupTaskCompletionBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "wait_for_group_task_completion", WAIT_FOR_GROUP_TASK_COMPLETION_HASH)
-    }
+        private const val GET_GROUP_PROCESSED_ELEMENT_COUNT_HASH = 923996154L
+        @JvmField
+        val getGroupProcessedElementCountBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "get_group_processed_element_count", GET_GROUP_PROCESSED_ELEMENT_COUNT_HASH)
 
-    private const val GET_CALLER_GROUP_ID_HASH = 3905245786L
-    private val getCallerGroupIdBind by lazy {
-        ObjectCalls.getMethodBind("WorkerThreadPool", "get_caller_group_id", GET_CALLER_GROUP_ID_HASH)
+        private const val WAIT_FOR_GROUP_TASK_COMPLETION_HASH = 1286410249L
+        @JvmField
+        val waitForGroupTaskCompletionBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "wait_for_group_task_completion", WAIT_FOR_GROUP_TASK_COMPLETION_HASH)
+
+        private const val GET_CALLER_GROUP_ID_HASH = 3905245786L
+        @JvmField
+        val getCallerGroupIdBind =
+            ObjectCalls.getMethodBind("WorkerThreadPool", "get_caller_group_id", GET_CALLER_GROUP_ID_HASH)
     }
 }

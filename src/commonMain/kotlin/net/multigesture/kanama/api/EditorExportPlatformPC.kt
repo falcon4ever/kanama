@@ -22,7 +22,5 @@ open class EditorExportPlatformPC(handle: GodotHandle) : EditorExportPlatform(ha
 
         internal fun wrapBorrowed(handle: RawSegment): EditorExportPlatformPC? =
             if (handle.address() == 0L) null else EditorExportPlatformPC(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

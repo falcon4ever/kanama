@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -18,22 +19,22 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
 
     fun setStreamCount(streamCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setStreamCountBind, segment, streamCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setStreamCountBind, segment, streamCount)
     }
 
     fun getStreamCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getStreamCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getStreamCountBind, segment)
     }
 
     fun setSyncStream(streamIndex: Int, audioStream: AudioStream?) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndObjectArg(setSyncStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.ptrcallWithIntAndObjectArg(Binds.setSyncStreamBind, segment, streamIndex, audioStream?.requireOpenHandle() ?: NULL_SEGMENT)
     }
 
     fun getSyncStream(streamIndex: Int): AudioStream? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallWithIntArgRetObject(getSyncStreamBind, segment, streamIndex)
+        val ret = ObjectCalls.ptrcallWithIntArgRetObject(Binds.getSyncStreamBind, segment, streamIndex)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -43,12 +44,12 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
 
     fun setSyncStreamVolume(streamIndex: Int, volumeDb: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndDoubleArg(setSyncStreamVolumeBind, segment, streamIndex, volumeDb)
+        ObjectCalls.ptrcallWithIntAndDoubleArg(Binds.setSyncStreamVolumeBind, segment, streamIndex, volumeDb)
     }
 
     fun getSyncStreamVolume(streamIndex: Int): Double {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetDouble(getSyncStreamVolumeBind, segment, streamIndex)
+        return ObjectCalls.ptrcallWithIntArgRetDouble(Binds.getSyncStreamVolumeBind, segment, streamIndex)
     }
 
     companion object {
@@ -63,35 +64,37 @@ class AudioStreamSynchronized(handle: GodotHandle) : AudioStream(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioStreamSynchronized? =
             if (handle.address() == 0L) null else AudioStreamSynchronized(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_STREAM_COUNT_HASH = 1286410249L
-        private val setStreamCountBind by lazy {
+        @JvmField
+        val setStreamCountBind =
             ObjectCalls.getMethodBind("AudioStreamSynchronized", "set_stream_count", SET_STREAM_COUNT_HASH)
-        }
 
         private const val GET_STREAM_COUNT_HASH = 3905245786L
-        private val getStreamCountBind by lazy {
+        @JvmField
+        val getStreamCountBind =
             ObjectCalls.getMethodBind("AudioStreamSynchronized", "get_stream_count", GET_STREAM_COUNT_HASH)
-        }
 
         private const val SET_SYNC_STREAM_HASH = 111075094L
-        private val setSyncStreamBind by lazy {
+        @JvmField
+        val setSyncStreamBind =
             ObjectCalls.getMethodBind("AudioStreamSynchronized", "set_sync_stream", SET_SYNC_STREAM_HASH)
-        }
 
         private const val GET_SYNC_STREAM_HASH = 2739380747L
-        private val getSyncStreamBind by lazy {
+        @JvmField
+        val getSyncStreamBind =
             ObjectCalls.getMethodBind("AudioStreamSynchronized", "get_sync_stream", GET_SYNC_STREAM_HASH)
-        }
 
         private const val SET_SYNC_STREAM_VOLUME_HASH = 1602489585L
-        private val setSyncStreamVolumeBind by lazy {
+        @JvmField
+        val setSyncStreamVolumeBind =
             ObjectCalls.getMethodBind("AudioStreamSynchronized", "set_sync_stream_volume", SET_SYNC_STREAM_VOLUME_HASH)
-        }
 
         private const val GET_SYNC_STREAM_VOLUME_HASH = 2339986948L
-        private val getSyncStreamVolumeBind by lazy {
+        @JvmField
+        val getSyncStreamVolumeBind =
             ObjectCalls.getMethodBind("AudioStreamSynchronized", "get_sync_stream_volume", GET_SYNC_STREAM_VOLUME_HASH)
-        }
     }
 }

@@ -19,7 +19,5 @@ open class PanelContainer(handle: GodotHandle) : Container(handle) {
 
         internal fun wrap(handle: RawSegment): PanelContainer? =
             if (handle.address() == 0L) null else PanelContainer(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

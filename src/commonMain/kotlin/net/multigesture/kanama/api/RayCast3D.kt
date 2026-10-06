@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -80,7 +81,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_enabled
      */
     fun setEnabled(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEnabledBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEnabledBind, segment, enabled)
     }
 
     /**
@@ -89,7 +90,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.is_enabled
      */
     fun isEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEnabledBind, segment)
     }
 
     /**
@@ -98,7 +99,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_target_position
      */
     fun setTargetPosition(localPoint: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setTargetPositionBind, segment, localPoint)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setTargetPositionBind, segment, localPoint)
     }
 
     /**
@@ -107,7 +108,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_target_position
      */
     fun getTargetPosition(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getTargetPositionBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getTargetPositionBind, segment)
     }
 
     /**
@@ -117,7 +118,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.is_colliding
      */
     fun isColliding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollidingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollidingBind, segment)
     }
 
     /**
@@ -128,7 +129,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.force_raycast_update
      */
     fun forceRaycastUpdate() {
-        ObjectCalls.ptrcallNoArgs(forceRaycastUpdateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.forceRaycastUpdateBind, segment)
     }
 
     /**
@@ -140,7 +141,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_collider
      */
     fun getCollider(): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getColliderBind, segment))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getColliderBind, segment))
     }
 
     /**
@@ -150,7 +151,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_collider_rid
      */
     fun getColliderRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getColliderRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getColliderRidBind, segment)
     }
 
     /**
@@ -160,7 +161,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_collider_shape
      */
     fun getColliderShape(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getColliderShapeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getColliderShapeBind, segment)
     }
 
     /**
@@ -172,7 +173,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_collision_point
      */
     fun getCollisionPoint(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCollisionPointBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCollisionPointBind, segment)
     }
 
     /**
@@ -184,7 +185,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_collision_normal
      */
     fun getCollisionNormal(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getCollisionNormalBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getCollisionNormalBind, segment)
     }
 
     /**
@@ -194,7 +195,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_collision_face_index
      */
     fun getCollisionFaceIndex(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getCollisionFaceIndexBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getCollisionFaceIndexBind, segment)
     }
 
     /**
@@ -203,7 +204,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.add_exception_rid
      */
     fun addExceptionRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(addExceptionRidBind, segment, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.addExceptionRidBind, segment, rid)
     }
 
     /**
@@ -212,7 +213,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.add_exception
      */
     fun addException(node: CollisionObject3D) {
-        ObjectCalls.ptrcallWithObjectArgs(addExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addExceptionBind, segment, listOf(node.segment))
     }
 
     /**
@@ -221,7 +222,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.remove_exception_rid
      */
     fun removeExceptionRid(rid: RID) {
-        ObjectCalls.ptrcallWithRIDArg(removeExceptionRidBind, segment, rid)
+        ObjectCalls.ptrcallWithRIDArg(Binds.removeExceptionRidBind, segment, rid)
     }
 
     /**
@@ -230,7 +231,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.remove_exception
      */
     fun removeException(node: CollisionObject3D) {
-        ObjectCalls.ptrcallWithObjectArgs(removeExceptionBind, segment, listOf(node.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeExceptionBind, segment, listOf(node.segment))
     }
 
     /**
@@ -239,7 +240,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.clear_exceptions
      */
     fun clearExceptions() {
-        ObjectCalls.ptrcallNoArgs(clearExceptionsBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearExceptionsBind, segment)
     }
 
     /**
@@ -251,7 +252,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -263,7 +264,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
     }
 
     /**
@@ -273,7 +274,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_collision_mask_value
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -283,7 +284,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_collision_mask_value
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -294,7 +295,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_exclude_parent_body
      */
     fun setExcludeParentBody(mask: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setExcludeParentBodyBind, segment, mask)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setExcludeParentBodyBind, segment, mask)
     }
 
     /**
@@ -305,7 +306,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_exclude_parent_body
      */
     fun getExcludeParentBody(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getExcludeParentBodyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getExcludeParentBodyBind, segment)
     }
 
     /**
@@ -314,7 +315,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_collide_with_areas
      */
     fun setCollideWithAreas(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithAreasBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollideWithAreasBind, segment, enable)
     }
 
     /**
@@ -323,7 +324,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.is_collide_with_areas_enabled
      */
     fun isCollideWithAreasEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithAreasEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideWithAreasEnabledBind, segment)
     }
 
     /**
@@ -332,7 +333,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_collide_with_bodies
      */
     fun setCollideWithBodies(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCollideWithBodiesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCollideWithBodiesBind, segment, enable)
     }
 
     /**
@@ -341,7 +342,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.is_collide_with_bodies_enabled
      */
     fun isCollideWithBodiesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCollideWithBodiesEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCollideWithBodiesEnabledBind, segment)
     }
 
     /**
@@ -352,7 +353,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_hit_from_inside
      */
     fun setHitFromInside(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHitFromInsideBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHitFromInsideBind, segment, enable)
     }
 
     /**
@@ -363,7 +364,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.is_hit_from_inside_enabled
      */
     fun isHitFromInsideEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHitFromInsideEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHitFromInsideEnabledBind, segment)
     }
 
     /**
@@ -373,7 +374,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_hit_back_faces
      */
     fun setHitBackFaces(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setHitBackFacesBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setHitBackFacesBind, segment, enable)
     }
 
     /**
@@ -383,7 +384,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.is_hit_back_faces_enabled
      */
     fun isHitBackFacesEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isHitBackFacesEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isHitBackFacesEnabledBind, segment)
     }
 
     /**
@@ -395,7 +396,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_debug_shape_custom_color
      */
     fun setDebugShapeCustomColor(debugShapeCustomColor: Color) {
-        ObjectCalls.ptrcallWithColorArg(setDebugShapeCustomColorBind, segment, debugShapeCustomColor)
+        ObjectCalls.ptrcallWithColorArg(Binds.setDebugShapeCustomColorBind, segment, debugShapeCustomColor)
     }
 
     /**
@@ -407,7 +408,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_debug_shape_custom_color
      */
     fun getDebugShapeCustomColor(): Color {
-        return ObjectCalls.ptrcallNoArgsRetColor(getDebugShapeCustomColorBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDebugShapeCustomColorBind, segment)
     }
 
     /**
@@ -418,7 +419,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.set_debug_shape_thickness
      */
     fun setDebugShapeThickness(debugShapeThickness: Int) {
-        ObjectCalls.ptrcallWithIntArg(setDebugShapeThicknessBind, segment, debugShapeThickness)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDebugShapeThicknessBind, segment, debugShapeThickness)
     }
 
     /**
@@ -429,7 +430,7 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: RayCast3D.get_debug_shape_thickness
      */
     fun getDebugShapeThickness(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getDebugShapeThicknessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDebugShapeThicknessBind, segment)
     }
 
     companion object {
@@ -439,180 +440,182 @@ class RayCast3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): RayCast3D? =
             if (handle.address() == 0L) null else RayCast3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_ENABLED_HASH = 2586408642L
-        private val setEnabledBind by lazy {
+        @JvmField
+        val setEnabledBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_enabled", SET_ENABLED_HASH)
-        }
 
         private const val IS_ENABLED_HASH = 36873697L
-        private val isEnabledBind by lazy {
+        @JvmField
+        val isEnabledBind =
             ObjectCalls.getMethodBind("RayCast3D", "is_enabled", IS_ENABLED_HASH)
-        }
 
         private const val SET_TARGET_POSITION_HASH = 3460891852L
-        private val setTargetPositionBind by lazy {
+        @JvmField
+        val setTargetPositionBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_target_position", SET_TARGET_POSITION_HASH)
-        }
 
         private const val GET_TARGET_POSITION_HASH = 3360562783L
-        private val getTargetPositionBind by lazy {
+        @JvmField
+        val getTargetPositionBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_target_position", GET_TARGET_POSITION_HASH)
-        }
 
         private const val IS_COLLIDING_HASH = 36873697L
-        private val isCollidingBind by lazy {
+        @JvmField
+        val isCollidingBind =
             ObjectCalls.getMethodBind("RayCast3D", "is_colliding", IS_COLLIDING_HASH)
-        }
 
         private const val FORCE_RAYCAST_UPDATE_HASH = 3218959716L
-        private val forceRaycastUpdateBind by lazy {
+        @JvmField
+        val forceRaycastUpdateBind =
             ObjectCalls.getMethodBind("RayCast3D", "force_raycast_update", FORCE_RAYCAST_UPDATE_HASH)
-        }
 
         private const val GET_COLLIDER_HASH = 1981248198L
-        private val getColliderBind by lazy {
+        @JvmField
+        val getColliderBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_collider", GET_COLLIDER_HASH)
-        }
 
         private const val GET_COLLIDER_RID_HASH = 2944877500L
-        private val getColliderRidBind by lazy {
+        @JvmField
+        val getColliderRidBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_collider_rid", GET_COLLIDER_RID_HASH)
-        }
 
         private const val GET_COLLIDER_SHAPE_HASH = 3905245786L
-        private val getColliderShapeBind by lazy {
+        @JvmField
+        val getColliderShapeBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_collider_shape", GET_COLLIDER_SHAPE_HASH)
-        }
 
         private const val GET_COLLISION_POINT_HASH = 3360562783L
-        private val getCollisionPointBind by lazy {
+        @JvmField
+        val getCollisionPointBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_collision_point", GET_COLLISION_POINT_HASH)
-        }
 
         private const val GET_COLLISION_NORMAL_HASH = 3360562783L
-        private val getCollisionNormalBind by lazy {
+        @JvmField
+        val getCollisionNormalBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_collision_normal", GET_COLLISION_NORMAL_HASH)
-        }
 
         private const val GET_COLLISION_FACE_INDEX_HASH = 3905245786L
-        private val getCollisionFaceIndexBind by lazy {
+        @JvmField
+        val getCollisionFaceIndexBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_collision_face_index", GET_COLLISION_FACE_INDEX_HASH)
-        }
 
         private const val ADD_EXCEPTION_RID_HASH = 2722037293L
-        private val addExceptionRidBind by lazy {
+        @JvmField
+        val addExceptionRidBind =
             ObjectCalls.getMethodBind("RayCast3D", "add_exception_rid", ADD_EXCEPTION_RID_HASH)
-        }
 
         private const val ADD_EXCEPTION_HASH = 1976431078L
-        private val addExceptionBind by lazy {
+        @JvmField
+        val addExceptionBind =
             ObjectCalls.getMethodBind("RayCast3D", "add_exception", ADD_EXCEPTION_HASH)
-        }
 
         private const val REMOVE_EXCEPTION_RID_HASH = 2722037293L
-        private val removeExceptionRidBind by lazy {
+        @JvmField
+        val removeExceptionRidBind =
             ObjectCalls.getMethodBind("RayCast3D", "remove_exception_rid", REMOVE_EXCEPTION_RID_HASH)
-        }
 
         private const val REMOVE_EXCEPTION_HASH = 1976431078L
-        private val removeExceptionBind by lazy {
+        @JvmField
+        val removeExceptionBind =
             ObjectCalls.getMethodBind("RayCast3D", "remove_exception", REMOVE_EXCEPTION_HASH)
-        }
 
         private const val CLEAR_EXCEPTIONS_HASH = 3218959716L
-        private val clearExceptionsBind by lazy {
+        @JvmField
+        val clearExceptionsBind =
             ObjectCalls.getMethodBind("RayCast3D", "clear_exceptions", CLEAR_EXCEPTIONS_HASH)
-        }
 
         private const val SET_COLLISION_MASK_HASH = 1286410249L
-        private val setCollisionMaskBind by lazy {
+        @JvmField
+        val setCollisionMaskBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_collision_mask", SET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
-        private val getCollisionMaskBind by lazy {
+        @JvmField
+        val getCollisionMaskBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_collision_mask", GET_COLLISION_MASK_HASH)
-        }
 
         private const val SET_COLLISION_MASK_VALUE_HASH = 300928843L
-        private val setCollisionMaskValueBind by lazy {
+        @JvmField
+        val setCollisionMaskValueBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_collision_mask_value", SET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val GET_COLLISION_MASK_VALUE_HASH = 1116898809L
-        private val getCollisionMaskValueBind by lazy {
+        @JvmField
+        val getCollisionMaskValueBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_collision_mask_value", GET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val SET_EXCLUDE_PARENT_BODY_HASH = 2586408642L
-        private val setExcludeParentBodyBind by lazy {
+        @JvmField
+        val setExcludeParentBodyBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_exclude_parent_body", SET_EXCLUDE_PARENT_BODY_HASH)
-        }
 
         private const val GET_EXCLUDE_PARENT_BODY_HASH = 36873697L
-        private val getExcludeParentBodyBind by lazy {
+        @JvmField
+        val getExcludeParentBodyBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_exclude_parent_body", GET_EXCLUDE_PARENT_BODY_HASH)
-        }
 
         private const val SET_COLLIDE_WITH_AREAS_HASH = 2586408642L
-        private val setCollideWithAreasBind by lazy {
+        @JvmField
+        val setCollideWithAreasBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_collide_with_areas", SET_COLLIDE_WITH_AREAS_HASH)
-        }
 
         private const val IS_COLLIDE_WITH_AREAS_ENABLED_HASH = 36873697L
-        private val isCollideWithAreasEnabledBind by lazy {
+        @JvmField
+        val isCollideWithAreasEnabledBind =
             ObjectCalls.getMethodBind("RayCast3D", "is_collide_with_areas_enabled", IS_COLLIDE_WITH_AREAS_ENABLED_HASH)
-        }
 
         private const val SET_COLLIDE_WITH_BODIES_HASH = 2586408642L
-        private val setCollideWithBodiesBind by lazy {
+        @JvmField
+        val setCollideWithBodiesBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_collide_with_bodies", SET_COLLIDE_WITH_BODIES_HASH)
-        }
 
         private const val IS_COLLIDE_WITH_BODIES_ENABLED_HASH = 36873697L
-        private val isCollideWithBodiesEnabledBind by lazy {
+        @JvmField
+        val isCollideWithBodiesEnabledBind =
             ObjectCalls.getMethodBind("RayCast3D", "is_collide_with_bodies_enabled", IS_COLLIDE_WITH_BODIES_ENABLED_HASH)
-        }
 
         private const val SET_HIT_FROM_INSIDE_HASH = 2586408642L
-        private val setHitFromInsideBind by lazy {
+        @JvmField
+        val setHitFromInsideBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_hit_from_inside", SET_HIT_FROM_INSIDE_HASH)
-        }
 
         private const val IS_HIT_FROM_INSIDE_ENABLED_HASH = 36873697L
-        private val isHitFromInsideEnabledBind by lazy {
+        @JvmField
+        val isHitFromInsideEnabledBind =
             ObjectCalls.getMethodBind("RayCast3D", "is_hit_from_inside_enabled", IS_HIT_FROM_INSIDE_ENABLED_HASH)
-        }
 
         private const val SET_HIT_BACK_FACES_HASH = 2586408642L
-        private val setHitBackFacesBind by lazy {
+        @JvmField
+        val setHitBackFacesBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_hit_back_faces", SET_HIT_BACK_FACES_HASH)
-        }
 
         private const val IS_HIT_BACK_FACES_ENABLED_HASH = 36873697L
-        private val isHitBackFacesEnabledBind by lazy {
+        @JvmField
+        val isHitBackFacesEnabledBind =
             ObjectCalls.getMethodBind("RayCast3D", "is_hit_back_faces_enabled", IS_HIT_BACK_FACES_ENABLED_HASH)
-        }
 
         private const val SET_DEBUG_SHAPE_CUSTOM_COLOR_HASH = 2920490490L
-        private val setDebugShapeCustomColorBind by lazy {
+        @JvmField
+        val setDebugShapeCustomColorBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_debug_shape_custom_color", SET_DEBUG_SHAPE_CUSTOM_COLOR_HASH)
-        }
 
         private const val GET_DEBUG_SHAPE_CUSTOM_COLOR_HASH = 3444240500L
-        private val getDebugShapeCustomColorBind by lazy {
+        @JvmField
+        val getDebugShapeCustomColorBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_debug_shape_custom_color", GET_DEBUG_SHAPE_CUSTOM_COLOR_HASH)
-        }
 
         private const val SET_DEBUG_SHAPE_THICKNESS_HASH = 1286410249L
-        private val setDebugShapeThicknessBind by lazy {
+        @JvmField
+        val setDebugShapeThicknessBind =
             ObjectCalls.getMethodBind("RayCast3D", "set_debug_shape_thickness", SET_DEBUG_SHAPE_THICKNESS_HASH)
-        }
 
         private const val GET_DEBUG_SHAPE_THICKNESS_HASH = 3905245786L
-        private val getDebugShapeThicknessBind by lazy {
+        @JvmField
+        val getDebugShapeThicknessBind =
             ObjectCalls.getMethodBind("RayCast3D", "get_debug_shape_thickness", GET_DEBUG_SHAPE_THICKNESS_HASH)
-        }
     }
 }

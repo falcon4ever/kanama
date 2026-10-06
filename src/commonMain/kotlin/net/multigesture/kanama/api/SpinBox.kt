@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -65,7 +66,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_horizontal_alignment
      */
     fun setHorizontalAlignment(alignment: HorizontalAlignment) {
-        ObjectCalls.ptrcallWithLongArg(setHorizontalAlignmentBind, segment, alignment.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setHorizontalAlignmentBind, segment, alignment.value)
     }
 
     /**
@@ -74,7 +75,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_horizontal_alignment
      */
     fun getHorizontalAlignment(): HorizontalAlignment {
-        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(getHorizontalAlignmentBind, segment))
+        return HorizontalAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getHorizontalAlignmentBind, segment))
     }
 
     /**
@@ -83,7 +84,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_suffix
      */
     fun setSuffix(suffix: String) {
-        ObjectCalls.ptrcallWithStringArg(setSuffixBind, segment, suffix)
+        ObjectCalls.ptrcallWithStringArg(Binds.setSuffixBind, segment, suffix)
     }
 
     /**
@@ -92,7 +93,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_suffix
      */
     fun getSuffix(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSuffixBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSuffixBind, segment)
     }
 
     /**
@@ -101,7 +102,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_prefix
      */
     fun setPrefix(prefix: String) {
-        ObjectCalls.ptrcallWithStringArg(setPrefixBind, segment, prefix)
+        ObjectCalls.ptrcallWithStringArg(Binds.setPrefixBind, segment, prefix)
     }
 
     /**
@@ -110,7 +111,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_prefix
      */
     fun getPrefix(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getPrefixBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPrefixBind, segment)
     }
 
     /**
@@ -119,7 +120,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_editable
      */
     fun setEditable(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditableBind, segment, enabled)
     }
 
     /**
@@ -129,7 +130,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_custom_arrow_step
      */
     fun setCustomArrowStep(arrowStep: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCustomArrowStepBind, segment, arrowStep)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCustomArrowStepBind, segment, arrowStep)
     }
 
     /**
@@ -139,7 +140,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_custom_arrow_step
      */
     fun getCustomArrowStep(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCustomArrowStepBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCustomArrowStepBind, segment)
     }
 
     /**
@@ -150,7 +151,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_custom_arrow_round
      */
     fun setCustomArrowRound(round: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setCustomArrowRoundBind, segment, round)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCustomArrowRoundBind, segment, round)
     }
 
     /**
@@ -161,7 +162,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.is_custom_arrow_rounding
      */
     fun isCustomArrowRounding(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isCustomArrowRoundingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCustomArrowRoundingBind, segment)
     }
 
     /**
@@ -170,7 +171,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.is_editable
      */
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditableBind, segment)
     }
 
     /**
@@ -183,7 +184,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_update_on_text_changed
      */
     fun setUpdateOnTextChanged(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUpdateOnTextChangedBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUpdateOnTextChangedBind, segment, enabled)
     }
 
     /**
@@ -196,7 +197,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_update_on_text_changed
      */
     fun getUpdateOnTextChanged(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(getUpdateOnTextChangedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getUpdateOnTextChangedBind, segment)
     }
 
     /**
@@ -206,7 +207,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.set_select_all_on_focus
      */
     fun setSelectAllOnFocus(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setSelectAllOnFocusBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSelectAllOnFocusBind, segment, enabled)
     }
 
     /**
@@ -216,7 +217,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.is_select_all_on_focus
      */
     fun isSelectAllOnFocus(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSelectAllOnFocusBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectAllOnFocusBind, segment)
     }
 
     /**
@@ -227,7 +228,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.apply
      */
     fun apply() {
-        ObjectCalls.ptrcallNoArgs(applyBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.applyBind, segment)
     }
 
     /**
@@ -239,7 +240,7 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * Generated from Godot docs: SpinBox.get_line_edit
      */
     fun getLineEdit(): LineEdit? {
-        return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(getLineEditBind, segment))
+        return LineEdit.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getLineEditBind, segment))
     }
 
     companion object {
@@ -249,95 +250,97 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
 
         internal fun wrap(handle: RawSegment): SpinBox? =
             if (handle.address() == 0L) null else SpinBox(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_HORIZONTAL_ALIGNMENT_HASH = 2312603777L
-        private val setHorizontalAlignmentBind by lazy {
+        @JvmField
+        val setHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("SpinBox", "set_horizontal_alignment", SET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val GET_HORIZONTAL_ALIGNMENT_HASH = 341400642L
-        private val getHorizontalAlignmentBind by lazy {
+        @JvmField
+        val getHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("SpinBox", "get_horizontal_alignment", GET_HORIZONTAL_ALIGNMENT_HASH)
-        }
 
         private const val SET_SUFFIX_HASH = 83702148L
-        private val setSuffixBind by lazy {
+        @JvmField
+        val setSuffixBind =
             ObjectCalls.getMethodBind("SpinBox", "set_suffix", SET_SUFFIX_HASH)
-        }
 
         private const val GET_SUFFIX_HASH = 201670096L
-        private val getSuffixBind by lazy {
+        @JvmField
+        val getSuffixBind =
             ObjectCalls.getMethodBind("SpinBox", "get_suffix", GET_SUFFIX_HASH)
-        }
 
         private const val SET_PREFIX_HASH = 83702148L
-        private val setPrefixBind by lazy {
+        @JvmField
+        val setPrefixBind =
             ObjectCalls.getMethodBind("SpinBox", "set_prefix", SET_PREFIX_HASH)
-        }
 
         private const val GET_PREFIX_HASH = 201670096L
-        private val getPrefixBind by lazy {
+        @JvmField
+        val getPrefixBind =
             ObjectCalls.getMethodBind("SpinBox", "get_prefix", GET_PREFIX_HASH)
-        }
 
         private const val SET_EDITABLE_HASH = 2586408642L
-        private val setEditableBind by lazy {
+        @JvmField
+        val setEditableBind =
             ObjectCalls.getMethodBind("SpinBox", "set_editable", SET_EDITABLE_HASH)
-        }
 
         private const val SET_CUSTOM_ARROW_STEP_HASH = 373806689L
-        private val setCustomArrowStepBind by lazy {
+        @JvmField
+        val setCustomArrowStepBind =
             ObjectCalls.getMethodBind("SpinBox", "set_custom_arrow_step", SET_CUSTOM_ARROW_STEP_HASH)
-        }
 
         private const val GET_CUSTOM_ARROW_STEP_HASH = 1740695150L
-        private val getCustomArrowStepBind by lazy {
+        @JvmField
+        val getCustomArrowStepBind =
             ObjectCalls.getMethodBind("SpinBox", "get_custom_arrow_step", GET_CUSTOM_ARROW_STEP_HASH)
-        }
 
         private const val SET_CUSTOM_ARROW_ROUND_HASH = 2586408642L
-        private val setCustomArrowRoundBind by lazy {
+        @JvmField
+        val setCustomArrowRoundBind =
             ObjectCalls.getMethodBind("SpinBox", "set_custom_arrow_round", SET_CUSTOM_ARROW_ROUND_HASH)
-        }
 
         private const val IS_CUSTOM_ARROW_ROUNDING_HASH = 36873697L
-        private val isCustomArrowRoundingBind by lazy {
+        @JvmField
+        val isCustomArrowRoundingBind =
             ObjectCalls.getMethodBind("SpinBox", "is_custom_arrow_rounding", IS_CUSTOM_ARROW_ROUNDING_HASH)
-        }
 
         private const val IS_EDITABLE_HASH = 36873697L
-        private val isEditableBind by lazy {
+        @JvmField
+        val isEditableBind =
             ObjectCalls.getMethodBind("SpinBox", "is_editable", IS_EDITABLE_HASH)
-        }
 
         private const val SET_UPDATE_ON_TEXT_CHANGED_HASH = 2586408642L
-        private val setUpdateOnTextChangedBind by lazy {
+        @JvmField
+        val setUpdateOnTextChangedBind =
             ObjectCalls.getMethodBind("SpinBox", "set_update_on_text_changed", SET_UPDATE_ON_TEXT_CHANGED_HASH)
-        }
 
         private const val GET_UPDATE_ON_TEXT_CHANGED_HASH = 36873697L
-        private val getUpdateOnTextChangedBind by lazy {
+        @JvmField
+        val getUpdateOnTextChangedBind =
             ObjectCalls.getMethodBind("SpinBox", "get_update_on_text_changed", GET_UPDATE_ON_TEXT_CHANGED_HASH)
-        }
 
         private const val SET_SELECT_ALL_ON_FOCUS_HASH = 2586408642L
-        private val setSelectAllOnFocusBind by lazy {
+        @JvmField
+        val setSelectAllOnFocusBind =
             ObjectCalls.getMethodBind("SpinBox", "set_select_all_on_focus", SET_SELECT_ALL_ON_FOCUS_HASH)
-        }
 
         private const val IS_SELECT_ALL_ON_FOCUS_HASH = 36873697L
-        private val isSelectAllOnFocusBind by lazy {
+        @JvmField
+        val isSelectAllOnFocusBind =
             ObjectCalls.getMethodBind("SpinBox", "is_select_all_on_focus", IS_SELECT_ALL_ON_FOCUS_HASH)
-        }
 
         private const val APPLY_HASH = 3218959716L
-        private val applyBind by lazy {
+        @JvmField
+        val applyBind =
             ObjectCalls.getMethodBind("SpinBox", "apply", APPLY_HASH)
-        }
 
         private const val GET_LINE_EDIT_HASH = 4071694264L
-        private val getLineEditBind by lazy {
+        @JvmField
+        val getLineEditBind =
             ObjectCalls.getMethodBind("SpinBox", "get_line_edit", GET_LINE_EDIT_HASH)
-        }
     }
 }

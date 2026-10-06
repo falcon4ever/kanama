@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -37,7 +38,7 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.set_texture
      */
     fun setTexture(texture: Texture2D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -46,7 +47,7 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.get_texture
      */
     fun getTexture(): Texture2D? {
-        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture2D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -55,7 +56,7 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.set_texture_offset
      */
     fun setTextureOffset(textureOffset: Vector2) {
-        ObjectCalls.ptrcallWithVector2Arg(setTextureOffsetBind, segment, textureOffset)
+        ObjectCalls.ptrcallWithVector2Arg(Binds.setTextureOffsetBind, segment, textureOffset)
     }
 
     /**
@@ -64,7 +65,7 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.get_texture_offset
      */
     fun getTextureOffset(): Vector2 {
-        return ObjectCalls.ptrcallNoArgsRetVector2(getTextureOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2(Binds.getTextureOffsetBind, segment)
     }
 
     /**
@@ -73,7 +74,7 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.set_texture_scale
      */
     fun setTextureScale(textureScale: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setTextureScaleBind, segment, textureScale)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setTextureScaleBind, segment, textureScale)
     }
 
     /**
@@ -82,7 +83,7 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
      * Generated from Godot docs: PointLight2D.get_texture_scale
      */
     fun getTextureScale(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getTextureScaleBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getTextureScaleBind, segment)
     }
 
     companion object {
@@ -92,35 +93,37 @@ class PointLight2D(handle: GodotHandle) : Light2D(handle) {
 
         internal fun wrap(handle: RawSegment): PointLight2D? =
             if (handle.address() == 0L) null else PointLight2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_TEXTURE_HASH = 4051416890L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("PointLight2D", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 3635182373L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("PointLight2D", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_TEXTURE_OFFSET_HASH = 743155724L
-        private val setTextureOffsetBind by lazy {
+        @JvmField
+        val setTextureOffsetBind =
             ObjectCalls.getMethodBind("PointLight2D", "set_texture_offset", SET_TEXTURE_OFFSET_HASH)
-        }
 
         private const val GET_TEXTURE_OFFSET_HASH = 3341600327L
-        private val getTextureOffsetBind by lazy {
+        @JvmField
+        val getTextureOffsetBind =
             ObjectCalls.getMethodBind("PointLight2D", "get_texture_offset", GET_TEXTURE_OFFSET_HASH)
-        }
 
         private const val SET_TEXTURE_SCALE_HASH = 373806689L
-        private val setTextureScaleBind by lazy {
+        @JvmField
+        val setTextureScaleBind =
             ObjectCalls.getMethodBind("PointLight2D", "set_texture_scale", SET_TEXTURE_SCALE_HASH)
-        }
 
         private const val GET_TEXTURE_SCALE_HASH = 1740695150L
-        private val getTextureScaleBind by lazy {
+        @JvmField
+        val getTextureScaleBind =
             ObjectCalls.getMethodBind("PointLight2D", "get_texture_scale", GET_TEXTURE_SCALE_HASH)
-        }
     }
 }

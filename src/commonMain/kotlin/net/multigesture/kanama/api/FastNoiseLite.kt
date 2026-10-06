@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -139,212 +140,212 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
 
     fun setNoiseType(type: FastNoiseLite.NoiseType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setNoiseTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setNoiseTypeBind, segment, type.value)
     }
 
     fun getNoiseType(): FastNoiseLite.NoiseType {
         checkOpen()
-        return FastNoiseLite.NoiseType(ObjectCalls.ptrcallNoArgsRetLong(getNoiseTypeBind, segment))
+        return FastNoiseLite.NoiseType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getNoiseTypeBind, segment))
     }
 
     fun setSeed(seed: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setSeedBind, segment, seed)
+        ObjectCalls.ptrcallWithIntArg(Binds.setSeedBind, segment, seed)
     }
 
     fun getSeed(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getSeedBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getSeedBind, segment)
     }
 
     fun setFrequency(freq: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFrequencyBind, segment, freq)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFrequencyBind, segment, freq)
     }
 
     fun getFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFrequencyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFrequencyBind, segment)
     }
 
     fun setOffset(offset: Vector3) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector3Arg(setOffsetBind, segment, offset)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setOffsetBind, segment, offset)
     }
 
     fun getOffset(): Vector3 {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector3(getOffsetBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getOffsetBind, segment)
     }
 
     fun setFractalType(type: FastNoiseLite.FractalType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setFractalTypeBind, segment, type.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setFractalTypeBind, segment, type.value)
     }
 
     fun getFractalType(): FastNoiseLite.FractalType {
         checkOpen()
-        return FastNoiseLite.FractalType(ObjectCalls.ptrcallNoArgsRetLong(getFractalTypeBind, segment))
+        return FastNoiseLite.FractalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFractalTypeBind, segment))
     }
 
     fun setFractalOctaves(octaveCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setFractalOctavesBind, segment, octaveCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setFractalOctavesBind, segment, octaveCount)
     }
 
     fun getFractalOctaves(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getFractalOctavesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getFractalOctavesBind, segment)
     }
 
     fun setFractalLacunarity(lacunarity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFractalLacunarityBind, segment, lacunarity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalLacunarityBind, segment, lacunarity)
     }
 
     fun getFractalLacunarity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalLacunarityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalLacunarityBind, segment)
     }
 
     fun setFractalGain(gain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFractalGainBind, segment, gain)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalGainBind, segment, gain)
     }
 
     fun getFractalGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalGainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalGainBind, segment)
     }
 
     fun setFractalWeightedStrength(weightedStrength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFractalWeightedStrengthBind, segment, weightedStrength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalWeightedStrengthBind, segment, weightedStrength)
     }
 
     fun getFractalWeightedStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalWeightedStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalWeightedStrengthBind, segment)
     }
 
     fun setFractalPingPongStrength(pingPongStrength: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setFractalPingPongStrengthBind, segment, pingPongStrength)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setFractalPingPongStrengthBind, segment, pingPongStrength)
     }
 
     fun getFractalPingPongStrength(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getFractalPingPongStrengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getFractalPingPongStrengthBind, segment)
     }
 
     fun setCellularDistanceFunction(func: FastNoiseLite.CellularDistanceFunction) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellularDistanceFunctionBind, segment, func.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCellularDistanceFunctionBind, segment, func.value)
     }
 
     fun getCellularDistanceFunction(): FastNoiseLite.CellularDistanceFunction {
         checkOpen()
-        return FastNoiseLite.CellularDistanceFunction(ObjectCalls.ptrcallNoArgsRetLong(getCellularDistanceFunctionBind, segment))
+        return FastNoiseLite.CellularDistanceFunction(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellularDistanceFunctionBind, segment))
     }
 
     fun setCellularJitter(jitter: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setCellularJitterBind, segment, jitter)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCellularJitterBind, segment, jitter)
     }
 
     fun getCellularJitter(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCellularJitterBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCellularJitterBind, segment)
     }
 
     fun setCellularReturnType(ret: FastNoiseLite.CellularReturnType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setCellularReturnTypeBind, segment, ret.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCellularReturnTypeBind, segment, ret.value)
     }
 
     fun getCellularReturnType(): FastNoiseLite.CellularReturnType {
         checkOpen()
-        return FastNoiseLite.CellularReturnType(ObjectCalls.ptrcallNoArgsRetLong(getCellularReturnTypeBind, segment))
+        return FastNoiseLite.CellularReturnType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCellularReturnTypeBind, segment))
     }
 
     fun setDomainWarpEnabled(domainWarpEnabled: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setDomainWarpEnabledBind, segment, domainWarpEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDomainWarpEnabledBind, segment, domainWarpEnabled)
     }
 
     fun isDomainWarpEnabled(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isDomainWarpEnabledBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDomainWarpEnabledBind, segment)
     }
 
     fun setDomainWarpType(domainWarpType: FastNoiseLite.DomainWarpType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDomainWarpTypeBind, segment, domainWarpType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDomainWarpTypeBind, segment, domainWarpType.value)
     }
 
     fun getDomainWarpType(): FastNoiseLite.DomainWarpType {
         checkOpen()
-        return FastNoiseLite.DomainWarpType(ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpTypeBind, segment))
+        return FastNoiseLite.DomainWarpType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDomainWarpTypeBind, segment))
     }
 
     fun setDomainWarpAmplitude(domainWarpAmplitude: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpAmplitudeBind, segment, domainWarpAmplitude)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpAmplitudeBind, segment, domainWarpAmplitude)
     }
 
     fun getDomainWarpAmplitude(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpAmplitudeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpAmplitudeBind, segment)
     }
 
     fun setDomainWarpFrequency(domainWarpFrequency: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFrequencyBind, segment, domainWarpFrequency)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFrequencyBind, segment, domainWarpFrequency)
     }
 
     fun getDomainWarpFrequency(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFrequencyBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFrequencyBind, segment)
     }
 
     fun setDomainWarpFractalType(domainWarpFractalType: FastNoiseLite.DomainWarpFractalType) {
         checkOpen()
-        ObjectCalls.ptrcallWithLongArg(setDomainWarpFractalTypeBind, segment, domainWarpFractalType.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDomainWarpFractalTypeBind, segment, domainWarpFractalType.value)
     }
 
     fun getDomainWarpFractalType(): FastNoiseLite.DomainWarpFractalType {
         checkOpen()
-        return FastNoiseLite.DomainWarpFractalType(ObjectCalls.ptrcallNoArgsRetLong(getDomainWarpFractalTypeBind, segment))
+        return FastNoiseLite.DomainWarpFractalType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDomainWarpFractalTypeBind, segment))
     }
 
     fun setDomainWarpFractalOctaves(domainWarpOctaveCount: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setDomainWarpFractalOctavesBind, segment, domainWarpOctaveCount)
+        ObjectCalls.ptrcallWithIntArg(Binds.setDomainWarpFractalOctavesBind, segment, domainWarpOctaveCount)
     }
 
     fun getDomainWarpFractalOctaves(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getDomainWarpFractalOctavesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getDomainWarpFractalOctavesBind, segment)
     }
 
     fun setDomainWarpFractalLacunarity(domainWarpLacunarity: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFractalLacunarityBind, segment, domainWarpLacunarity)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFractalLacunarityBind, segment, domainWarpLacunarity)
     }
 
     fun getDomainWarpFractalLacunarity(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFractalLacunarityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFractalLacunarityBind, segment)
     }
 
     fun setDomainWarpFractalGain(domainWarpGain: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setDomainWarpFractalGainBind, segment, domainWarpGain)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setDomainWarpFractalGainBind, segment, domainWarpGain)
     }
 
     fun getDomainWarpFractalGain(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getDomainWarpFractalGainBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getDomainWarpFractalGainBind, segment)
     }
 
     @JvmInline
@@ -430,215 +431,217 @@ class FastNoiseLite(handle: GodotHandle) : Noise(handle) {
         @JvmStatic
         fun fromResource(value: Resource): FastNoiseLite? =
             if (value.isClass("FastNoiseLite")) RefCounted.retained(FastNoiseLite(value.handle)) else null
+    }
 
+    private object Binds {
         private const val SET_NOISE_TYPE_HASH = 2624461392L
-        private val setNoiseTypeBind by lazy {
+        @JvmField
+        val setNoiseTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_noise_type", SET_NOISE_TYPE_HASH)
-        }
 
         private const val GET_NOISE_TYPE_HASH = 1458108610L
-        private val getNoiseTypeBind by lazy {
+        @JvmField
+        val getNoiseTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_noise_type", GET_NOISE_TYPE_HASH)
-        }
 
         private const val SET_SEED_HASH = 1286410249L
-        private val setSeedBind by lazy {
+        @JvmField
+        val setSeedBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_seed", SET_SEED_HASH)
-        }
 
         private const val GET_SEED_HASH = 3905245786L
-        private val getSeedBind by lazy {
+        @JvmField
+        val getSeedBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_seed", GET_SEED_HASH)
-        }
 
         private const val SET_FREQUENCY_HASH = 373806689L
-        private val setFrequencyBind by lazy {
+        @JvmField
+        val setFrequencyBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_frequency", SET_FREQUENCY_HASH)
-        }
 
         private const val GET_FREQUENCY_HASH = 1740695150L
-        private val getFrequencyBind by lazy {
+        @JvmField
+        val getFrequencyBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_frequency", GET_FREQUENCY_HASH)
-        }
 
         private const val SET_OFFSET_HASH = 3460891852L
-        private val setOffsetBind by lazy {
+        @JvmField
+        val setOffsetBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_offset", SET_OFFSET_HASH)
-        }
 
         private const val GET_OFFSET_HASH = 3360562783L
-        private val getOffsetBind by lazy {
+        @JvmField
+        val getOffsetBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_offset", GET_OFFSET_HASH)
-        }
 
         private const val SET_FRACTAL_TYPE_HASH = 4132731174L
-        private val setFractalTypeBind by lazy {
+        @JvmField
+        val setFractalTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_fractal_type", SET_FRACTAL_TYPE_HASH)
-        }
 
         private const val GET_FRACTAL_TYPE_HASH = 1036889279L
-        private val getFractalTypeBind by lazy {
+        @JvmField
+        val getFractalTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_fractal_type", GET_FRACTAL_TYPE_HASH)
-        }
 
         private const val SET_FRACTAL_OCTAVES_HASH = 1286410249L
-        private val setFractalOctavesBind by lazy {
+        @JvmField
+        val setFractalOctavesBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_fractal_octaves", SET_FRACTAL_OCTAVES_HASH)
-        }
 
         private const val GET_FRACTAL_OCTAVES_HASH = 3905245786L
-        private val getFractalOctavesBind by lazy {
+        @JvmField
+        val getFractalOctavesBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_fractal_octaves", GET_FRACTAL_OCTAVES_HASH)
-        }
 
         private const val SET_FRACTAL_LACUNARITY_HASH = 373806689L
-        private val setFractalLacunarityBind by lazy {
+        @JvmField
+        val setFractalLacunarityBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_fractal_lacunarity", SET_FRACTAL_LACUNARITY_HASH)
-        }
 
         private const val GET_FRACTAL_LACUNARITY_HASH = 1740695150L
-        private val getFractalLacunarityBind by lazy {
+        @JvmField
+        val getFractalLacunarityBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_fractal_lacunarity", GET_FRACTAL_LACUNARITY_HASH)
-        }
 
         private const val SET_FRACTAL_GAIN_HASH = 373806689L
-        private val setFractalGainBind by lazy {
+        @JvmField
+        val setFractalGainBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_fractal_gain", SET_FRACTAL_GAIN_HASH)
-        }
 
         private const val GET_FRACTAL_GAIN_HASH = 1740695150L
-        private val getFractalGainBind by lazy {
+        @JvmField
+        val getFractalGainBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_fractal_gain", GET_FRACTAL_GAIN_HASH)
-        }
 
         private const val SET_FRACTAL_WEIGHTED_STRENGTH_HASH = 373806689L
-        private val setFractalWeightedStrengthBind by lazy {
+        @JvmField
+        val setFractalWeightedStrengthBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_fractal_weighted_strength", SET_FRACTAL_WEIGHTED_STRENGTH_HASH)
-        }
 
         private const val GET_FRACTAL_WEIGHTED_STRENGTH_HASH = 1740695150L
-        private val getFractalWeightedStrengthBind by lazy {
+        @JvmField
+        val getFractalWeightedStrengthBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_fractal_weighted_strength", GET_FRACTAL_WEIGHTED_STRENGTH_HASH)
-        }
 
         private const val SET_FRACTAL_PING_PONG_STRENGTH_HASH = 373806689L
-        private val setFractalPingPongStrengthBind by lazy {
+        @JvmField
+        val setFractalPingPongStrengthBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_fractal_ping_pong_strength", SET_FRACTAL_PING_PONG_STRENGTH_HASH)
-        }
 
         private const val GET_FRACTAL_PING_PONG_STRENGTH_HASH = 1740695150L
-        private val getFractalPingPongStrengthBind by lazy {
+        @JvmField
+        val getFractalPingPongStrengthBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_fractal_ping_pong_strength", GET_FRACTAL_PING_PONG_STRENGTH_HASH)
-        }
 
         private const val SET_CELLULAR_DISTANCE_FUNCTION_HASH = 1006013267L
-        private val setCellularDistanceFunctionBind by lazy {
+        @JvmField
+        val setCellularDistanceFunctionBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_cellular_distance_function", SET_CELLULAR_DISTANCE_FUNCTION_HASH)
-        }
 
         private const val GET_CELLULAR_DISTANCE_FUNCTION_HASH = 2021274088L
-        private val getCellularDistanceFunctionBind by lazy {
+        @JvmField
+        val getCellularDistanceFunctionBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_cellular_distance_function", GET_CELLULAR_DISTANCE_FUNCTION_HASH)
-        }
 
         private const val SET_CELLULAR_JITTER_HASH = 373806689L
-        private val setCellularJitterBind by lazy {
+        @JvmField
+        val setCellularJitterBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_cellular_jitter", SET_CELLULAR_JITTER_HASH)
-        }
 
         private const val GET_CELLULAR_JITTER_HASH = 1740695150L
-        private val getCellularJitterBind by lazy {
+        @JvmField
+        val getCellularJitterBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_cellular_jitter", GET_CELLULAR_JITTER_HASH)
-        }
 
         private const val SET_CELLULAR_RETURN_TYPE_HASH = 2654169698L
-        private val setCellularReturnTypeBind by lazy {
+        @JvmField
+        val setCellularReturnTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_cellular_return_type", SET_CELLULAR_RETURN_TYPE_HASH)
-        }
 
         private const val GET_CELLULAR_RETURN_TYPE_HASH = 3699796343L
-        private val getCellularReturnTypeBind by lazy {
+        @JvmField
+        val getCellularReturnTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_cellular_return_type", GET_CELLULAR_RETURN_TYPE_HASH)
-        }
 
         private const val SET_DOMAIN_WARP_ENABLED_HASH = 2586408642L
-        private val setDomainWarpEnabledBind by lazy {
+        @JvmField
+        val setDomainWarpEnabledBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_domain_warp_enabled", SET_DOMAIN_WARP_ENABLED_HASH)
-        }
 
         private const val IS_DOMAIN_WARP_ENABLED_HASH = 36873697L
-        private val isDomainWarpEnabledBind by lazy {
+        @JvmField
+        val isDomainWarpEnabledBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "is_domain_warp_enabled", IS_DOMAIN_WARP_ENABLED_HASH)
-        }
 
         private const val SET_DOMAIN_WARP_TYPE_HASH = 3629692980L
-        private val setDomainWarpTypeBind by lazy {
+        @JvmField
+        val setDomainWarpTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_domain_warp_type", SET_DOMAIN_WARP_TYPE_HASH)
-        }
 
         private const val GET_DOMAIN_WARP_TYPE_HASH = 2980162020L
-        private val getDomainWarpTypeBind by lazy {
+        @JvmField
+        val getDomainWarpTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_domain_warp_type", GET_DOMAIN_WARP_TYPE_HASH)
-        }
 
         private const val SET_DOMAIN_WARP_AMPLITUDE_HASH = 373806689L
-        private val setDomainWarpAmplitudeBind by lazy {
+        @JvmField
+        val setDomainWarpAmplitudeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_domain_warp_amplitude", SET_DOMAIN_WARP_AMPLITUDE_HASH)
-        }
 
         private const val GET_DOMAIN_WARP_AMPLITUDE_HASH = 1740695150L
-        private val getDomainWarpAmplitudeBind by lazy {
+        @JvmField
+        val getDomainWarpAmplitudeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_domain_warp_amplitude", GET_DOMAIN_WARP_AMPLITUDE_HASH)
-        }
 
         private const val SET_DOMAIN_WARP_FREQUENCY_HASH = 373806689L
-        private val setDomainWarpFrequencyBind by lazy {
+        @JvmField
+        val setDomainWarpFrequencyBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_domain_warp_frequency", SET_DOMAIN_WARP_FREQUENCY_HASH)
-        }
 
         private const val GET_DOMAIN_WARP_FREQUENCY_HASH = 1740695150L
-        private val getDomainWarpFrequencyBind by lazy {
+        @JvmField
+        val getDomainWarpFrequencyBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_domain_warp_frequency", GET_DOMAIN_WARP_FREQUENCY_HASH)
-        }
 
         private const val SET_DOMAIN_WARP_FRACTAL_TYPE_HASH = 3999408287L
-        private val setDomainWarpFractalTypeBind by lazy {
+        @JvmField
+        val setDomainWarpFractalTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_domain_warp_fractal_type", SET_DOMAIN_WARP_FRACTAL_TYPE_HASH)
-        }
 
         private const val GET_DOMAIN_WARP_FRACTAL_TYPE_HASH = 407716934L
-        private val getDomainWarpFractalTypeBind by lazy {
+        @JvmField
+        val getDomainWarpFractalTypeBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_domain_warp_fractal_type", GET_DOMAIN_WARP_FRACTAL_TYPE_HASH)
-        }
 
         private const val SET_DOMAIN_WARP_FRACTAL_OCTAVES_HASH = 1286410249L
-        private val setDomainWarpFractalOctavesBind by lazy {
+        @JvmField
+        val setDomainWarpFractalOctavesBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_domain_warp_fractal_octaves", SET_DOMAIN_WARP_FRACTAL_OCTAVES_HASH)
-        }
 
         private const val GET_DOMAIN_WARP_FRACTAL_OCTAVES_HASH = 3905245786L
-        private val getDomainWarpFractalOctavesBind by lazy {
+        @JvmField
+        val getDomainWarpFractalOctavesBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_domain_warp_fractal_octaves", GET_DOMAIN_WARP_FRACTAL_OCTAVES_HASH)
-        }
 
         private const val SET_DOMAIN_WARP_FRACTAL_LACUNARITY_HASH = 373806689L
-        private val setDomainWarpFractalLacunarityBind by lazy {
+        @JvmField
+        val setDomainWarpFractalLacunarityBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_domain_warp_fractal_lacunarity", SET_DOMAIN_WARP_FRACTAL_LACUNARITY_HASH)
-        }
 
         private const val GET_DOMAIN_WARP_FRACTAL_LACUNARITY_HASH = 1740695150L
-        private val getDomainWarpFractalLacunarityBind by lazy {
+        @JvmField
+        val getDomainWarpFractalLacunarityBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_domain_warp_fractal_lacunarity", GET_DOMAIN_WARP_FRACTAL_LACUNARITY_HASH)
-        }
 
         private const val SET_DOMAIN_WARP_FRACTAL_GAIN_HASH = 373806689L
-        private val setDomainWarpFractalGainBind by lazy {
+        @JvmField
+        val setDomainWarpFractalGainBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "set_domain_warp_fractal_gain", SET_DOMAIN_WARP_FRACTAL_GAIN_HASH)
-        }
 
         private const val GET_DOMAIN_WARP_FRACTAL_GAIN_HASH = 1740695150L
-        private val getDomainWarpFractalGainBind by lazy {
+        @JvmField
+        val getDomainWarpFractalGainBind =
             ObjectCalls.getMethodBind("FastNoiseLite", "get_domain_warp_fractal_gain", GET_DOMAIN_WARP_FRACTAL_GAIN_HASH)
-        }
     }
 }

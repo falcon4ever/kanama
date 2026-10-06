@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -18,7 +19,7 @@ class WeakRef(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getRef(): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVariantScalar(getRefBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getRefBind, segment)
     }
 
     companion object {
@@ -31,10 +32,12 @@ class WeakRef(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): WeakRef? =
             if (handle.address() == 0L) null else WeakRef(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_REF_HASH = 1214101251L
-        private val getRefBind by lazy {
+        @JvmField
+        val getRefBind =
             ObjectCalls.getMethodBind("WeakRef", "get_ref", GET_REF_HASH)
-        }
     }
 }

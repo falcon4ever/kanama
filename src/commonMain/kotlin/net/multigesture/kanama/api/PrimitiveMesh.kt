@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -50,7 +51,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun setMaterial(material: Material?) {
         checkOpen()
-        ObjectCalls.ptrcallWithObjectArgs(setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMaterialBind, segment, listOf(material?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -60,7 +61,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getMaterial(): Material? {
         checkOpen()
-        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMaterialBind, segment))
+        return Material.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMaterialBind, segment))
     }
 
     /**
@@ -70,7 +71,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getMeshArrays(): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetArray(getMeshArraysBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetArray(Binds.getMeshArraysBind, segment)
     }
 
     /**
@@ -81,7 +82,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun setCustomAabb(aabb: AABB) {
         checkOpen()
-        ObjectCalls.ptrcallWithAABBArg(setCustomAabbBind, segment, aabb)
+        ObjectCalls.ptrcallWithAABBArg(Binds.setCustomAabbBind, segment, aabb)
     }
 
     /**
@@ -92,7 +93,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getCustomAabb(): AABB {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetAABB(getCustomAabbBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetAABB(Binds.getCustomAabbBind, segment)
     }
 
     /**
@@ -104,7 +105,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun setFlipFaces(flipFaces: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setFlipFacesBind, segment, flipFaces)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFlipFacesBind, segment, flipFaces)
     }
 
     /**
@@ -116,7 +117,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getFlipFaces(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getFlipFacesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getFlipFacesBind, segment)
     }
 
     /**
@@ -127,7 +128,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun setAddUv2(addUv2: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setAddUv2Bind, segment, addUv2)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAddUv2Bind, segment, addUv2)
     }
 
     /**
@@ -138,7 +139,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getAddUv2(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(getAddUv2Bind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAddUv2Bind, segment)
     }
 
     /**
@@ -152,7 +153,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun setUv2Padding(uv2Padding: Double) {
         checkOpen()
-        ObjectCalls.ptrcallWithDoubleArg(setUv2PaddingBind, segment, uv2Padding)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setUv2PaddingBind, segment, uv2Padding)
     }
 
     /**
@@ -166,7 +167,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun getUv2Padding(): Double {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetDouble(getUv2PaddingBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getUv2PaddingBind, segment)
     }
 
     /**
@@ -176,7 +177,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      */
     fun requestUpdate() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(requestUpdateBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.requestUpdateBind, segment)
     }
 
     companion object {
@@ -189,65 +190,67 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): PrimitiveMesh? =
             if (handle.address() == 0L) null else PrimitiveMesh(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MATERIAL_HASH = 2757459619L
-        private val setMaterialBind by lazy {
+        @JvmField
+        val setMaterialBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "set_material", SET_MATERIAL_HASH)
-        }
 
         private const val GET_MATERIAL_HASH = 5934680L
-        private val getMaterialBind by lazy {
+        @JvmField
+        val getMaterialBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "get_material", GET_MATERIAL_HASH)
-        }
 
         private const val GET_MESH_ARRAYS_HASH = 3995934104L
-        private val getMeshArraysBind by lazy {
+        @JvmField
+        val getMeshArraysBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "get_mesh_arrays", GET_MESH_ARRAYS_HASH)
-        }
 
         private const val SET_CUSTOM_AABB_HASH = 259215842L
-        private val setCustomAabbBind by lazy {
+        @JvmField
+        val setCustomAabbBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "set_custom_aabb", SET_CUSTOM_AABB_HASH)
-        }
 
         private const val GET_CUSTOM_AABB_HASH = 1068685055L
-        private val getCustomAabbBind by lazy {
+        @JvmField
+        val getCustomAabbBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "get_custom_aabb", GET_CUSTOM_AABB_HASH)
-        }
 
         private const val SET_FLIP_FACES_HASH = 2586408642L
-        private val setFlipFacesBind by lazy {
+        @JvmField
+        val setFlipFacesBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "set_flip_faces", SET_FLIP_FACES_HASH)
-        }
 
         private const val GET_FLIP_FACES_HASH = 36873697L
-        private val getFlipFacesBind by lazy {
+        @JvmField
+        val getFlipFacesBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "get_flip_faces", GET_FLIP_FACES_HASH)
-        }
 
         private const val SET_ADD_UV2_HASH = 2586408642L
-        private val setAddUv2Bind by lazy {
+        @JvmField
+        val setAddUv2Bind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "set_add_uv2", SET_ADD_UV2_HASH)
-        }
 
         private const val GET_ADD_UV2_HASH = 36873697L
-        private val getAddUv2Bind by lazy {
+        @JvmField
+        val getAddUv2Bind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "get_add_uv2", GET_ADD_UV2_HASH)
-        }
 
         private const val SET_UV2_PADDING_HASH = 373806689L
-        private val setUv2PaddingBind by lazy {
+        @JvmField
+        val setUv2PaddingBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "set_uv2_padding", SET_UV2_PADDING_HASH)
-        }
 
         private const val GET_UV2_PADDING_HASH = 1740695150L
-        private val getUv2PaddingBind by lazy {
+        @JvmField
+        val getUv2PaddingBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "get_uv2_padding", GET_UV2_PADDING_HASH)
-        }
 
         private const val REQUEST_UPDATE_HASH = 3218959716L
-        private val requestUpdateBind by lazy {
+        @JvmField
+        val requestUpdateBind =
             ObjectCalls.getMethodBind("PrimitiveMesh", "request_update", REQUEST_UPDATE_HASH)
-        }
     }
 }

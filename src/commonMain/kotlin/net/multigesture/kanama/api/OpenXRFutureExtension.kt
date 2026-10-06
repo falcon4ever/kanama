@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
@@ -9,15 +10,15 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  */
 class OpenXRFutureExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle) {
     fun isActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
     }
 
     fun registerFuture(future: Long, onSuccess: GodotCallable): OpenXRFutureResult? {
-        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithLongCallableArgsRetObject(registerFutureBind, segment, future, onSuccess.target.segment, onSuccess.method))
+        return OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithLongCallableArgsRetObject(Binds.registerFutureBind, segment, future, onSuccess.target.segment, onSuccess.method))
     }
 
     fun cancelFuture(future: Long) {
-        ObjectCalls.ptrcallWithLongArg(cancelFutureBind, segment, future)
+        ObjectCalls.ptrcallWithLongArg(Binds.cancelFutureBind, segment, future)
     }
 
     companion object {
@@ -27,20 +28,22 @@ class OpenXRFutureExtension(handle: GodotHandle) : OpenXRExtensionWrapper(handle
 
         internal fun wrap(handle: RawSegment): OpenXRFutureExtension? =
             if (handle.address() == 0L) null else OpenXRFutureExtension(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val IS_ACTIVE_HASH = 36873697L
-        private val isActiveBind by lazy {
+        @JvmField
+        val isActiveBind =
             ObjectCalls.getMethodBind("OpenXRFutureExtension", "is_active", IS_ACTIVE_HASH)
-        }
 
         private const val REGISTER_FUTURE_HASH = 1038012256L
-        private val registerFutureBind by lazy {
+        @JvmField
+        val registerFutureBind =
             ObjectCalls.getMethodBind("OpenXRFutureExtension", "register_future", REGISTER_FUTURE_HASH)
-        }
 
         private const val CANCEL_FUTURE_HASH = 1286410249L
-        private val cancelFutureBind by lazy {
+        @JvmField
+        val cancelFutureBind =
             ObjectCalls.getMethodBind("OpenXRFutureExtension", "cancel_future", CANCEL_FUTURE_HASH)
-        }
     }
 }

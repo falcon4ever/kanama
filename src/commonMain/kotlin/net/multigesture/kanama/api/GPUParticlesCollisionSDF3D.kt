@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -51,7 +52,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_size
      */
     fun setSize(size: Vector3) {
-        ObjectCalls.ptrcallWithVector3Arg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector3Arg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -61,7 +62,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_size
      */
     fun getSize(): Vector3 {
-        return ObjectCalls.ptrcallNoArgsRetVector3(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector3(Binds.getSizeBind, segment)
     }
 
     /**
@@ -75,7 +76,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_resolution
      */
     fun setResolution(resolution: GPUParticlesCollisionSDF3D.Resolution) {
-        ObjectCalls.ptrcallWithLongArg(setResolutionBind, segment, resolution.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setResolutionBind, segment, resolution.value)
     }
 
     /**
@@ -89,7 +90,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_resolution
      */
     fun getResolution(): GPUParticlesCollisionSDF3D.Resolution {
-        return GPUParticlesCollisionSDF3D.Resolution(ObjectCalls.ptrcallNoArgsRetLong(getResolutionBind, segment))
+        return GPUParticlesCollisionSDF3D.Resolution(ObjectCalls.ptrcallNoArgsRetLong(Binds.getResolutionBind, segment))
     }
 
     /**
@@ -98,7 +99,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_texture
      */
     fun setTexture(texture: Texture3D?) {
-        ObjectCalls.ptrcallWithObjectArgs(setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setTextureBind, segment, listOf(texture?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -107,7 +108,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_texture
      */
     fun getTexture(): Texture3D? {
-        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getTextureBind, segment))
+        return Texture3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getTextureBind, segment))
     }
 
     /**
@@ -119,7 +120,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_thickness
      */
     fun setThickness(thickness: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setThicknessBind, segment, thickness)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setThicknessBind, segment, thickness)
     }
 
     /**
@@ -131,7 +132,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_thickness
      */
     fun getThickness(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getThicknessBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getThicknessBind, segment)
     }
 
     /**
@@ -143,7 +144,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_bake_mask
      */
     fun setBakeMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setBakeMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setBakeMaskBind, segment, mask)
     }
 
     /**
@@ -155,7 +156,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_bake_mask
      */
     fun getBakeMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getBakeMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getBakeMaskBind, segment)
     }
 
     /**
@@ -165,7 +166,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.set_bake_mask_value
      */
     fun setBakeMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setBakeMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setBakeMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -175,7 +176,7 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
      * Generated from Godot docs: GPUParticlesCollisionSDF3D.get_bake_mask_value
      */
     fun getBakeMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getBakeMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getBakeMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -240,65 +241,67 @@ class GPUParticlesCollisionSDF3D(handle: GodotHandle) : GPUParticlesCollision3D(
 
         internal fun wrap(handle: RawSegment): GPUParticlesCollisionSDF3D? =
             if (handle.address() == 0L) null else GPUParticlesCollisionSDF3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 3460891852L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3360562783L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_RESOLUTION_HASH = 1155629297L
-        private val setResolutionBind by lazy {
+        @JvmField
+        val setResolutionBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "set_resolution", SET_RESOLUTION_HASH)
-        }
 
         private const val GET_RESOLUTION_HASH = 2919555867L
-        private val getResolutionBind by lazy {
+        @JvmField
+        val getResolutionBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "get_resolution", GET_RESOLUTION_HASH)
-        }
 
         private const val SET_TEXTURE_HASH = 1188404210L
-        private val setTextureBind by lazy {
+        @JvmField
+        val setTextureBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "set_texture", SET_TEXTURE_HASH)
-        }
 
         private const val GET_TEXTURE_HASH = 373985333L
-        private val getTextureBind by lazy {
+        @JvmField
+        val getTextureBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "get_texture", GET_TEXTURE_HASH)
-        }
 
         private const val SET_THICKNESS_HASH = 373806689L
-        private val setThicknessBind by lazy {
+        @JvmField
+        val setThicknessBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "set_thickness", SET_THICKNESS_HASH)
-        }
 
         private const val GET_THICKNESS_HASH = 1740695150L
-        private val getThicknessBind by lazy {
+        @JvmField
+        val getThicknessBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "get_thickness", GET_THICKNESS_HASH)
-        }
 
         private const val SET_BAKE_MASK_HASH = 1286410249L
-        private val setBakeMaskBind by lazy {
+        @JvmField
+        val setBakeMaskBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "set_bake_mask", SET_BAKE_MASK_HASH)
-        }
 
         private const val GET_BAKE_MASK_HASH = 3905245786L
-        private val getBakeMaskBind by lazy {
+        @JvmField
+        val getBakeMaskBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "get_bake_mask", GET_BAKE_MASK_HASH)
-        }
 
         private const val SET_BAKE_MASK_VALUE_HASH = 300928843L
-        private val setBakeMaskValueBind by lazy {
+        @JvmField
+        val setBakeMaskValueBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "set_bake_mask_value", SET_BAKE_MASK_VALUE_HASH)
-        }
 
         private const val GET_BAKE_MASK_VALUE_HASH = 1116898809L
-        private val getBakeMaskValueBind by lazy {
+        @JvmField
+        val getBakeMaskValueBind =
             ObjectCalls.getMethodBind("GPUParticlesCollisionSDF3D", "get_bake_mask_value", GET_BAKE_MASK_VALUE_HASH)
-        }
     }
 }

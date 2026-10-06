@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun setPhysicalBoneChainLength(length: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setPhysicalBoneChainLengthBind, segment, length)
+        ObjectCalls.ptrcallWithIntArg(Binds.setPhysicalBoneChainLengthBind, segment, length)
     }
 
     /**
@@ -35,7 +36,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun getPhysicalBoneChainLength(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getPhysicalBoneChainLengthBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPhysicalBoneChainLengthBind, segment)
     }
 
     /**
@@ -46,7 +47,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun setPhysicalBoneNode(jointIdx: Int, physicalbone2dNode: NodePath) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntAndNodePathArg(setPhysicalBoneNodeBind, segment, jointIdx, physicalbone2dNode)
+        ObjectCalls.ptrcallWithIntAndNodePathArg(Binds.setPhysicalBoneNodeBind, segment, jointIdx, physicalbone2dNode)
     }
 
     /**
@@ -56,7 +57,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun getPhysicalBoneNode(jointIdx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getPhysicalBoneNodeBind, segment, jointIdx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getPhysicalBoneNodeBind, segment, jointIdx)
     }
 
     /**
@@ -67,7 +68,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun fetchPhysicalBones() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(fetchPhysicalBonesBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.fetchPhysicalBonesBind, segment)
     }
 
     /**
@@ -79,7 +80,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun startSimulation(bones: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameListArg(startSimulationBind, segment, bones)
+        ObjectCalls.ptrcallWithStringNameListArg(Binds.startSimulationBind, segment, bones)
     }
 
     /**
@@ -91,7 +92,7 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
      */
     fun stopSimulation(bones: List<String>) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringNameListArg(stopSimulationBind, segment, bones)
+        ObjectCalls.ptrcallWithStringNameListArg(Binds.stopSimulationBind, segment, bones)
     }
 
     companion object {
@@ -104,40 +105,42 @@ class SkeletonModification2DPhysicalBones(handle: GodotHandle) : SkeletonModific
 
         internal fun wrapBorrowed(handle: RawSegment): SkeletonModification2DPhysicalBones? =
             if (handle.address() == 0L) null else SkeletonModification2DPhysicalBones(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_PHYSICAL_BONE_CHAIN_LENGTH_HASH = 1286410249L
-        private val setPhysicalBoneChainLengthBind by lazy {
+        @JvmField
+        val setPhysicalBoneChainLengthBind =
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "set_physical_bone_chain_length", SET_PHYSICAL_BONE_CHAIN_LENGTH_HASH)
-        }
 
         private const val GET_PHYSICAL_BONE_CHAIN_LENGTH_HASH = 2455072627L
-        private val getPhysicalBoneChainLengthBind by lazy {
+        @JvmField
+        val getPhysicalBoneChainLengthBind =
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "get_physical_bone_chain_length", GET_PHYSICAL_BONE_CHAIN_LENGTH_HASH)
-        }
 
         private const val SET_PHYSICAL_BONE_NODE_HASH = 2761262315L
-        private val setPhysicalBoneNodeBind by lazy {
+        @JvmField
+        val setPhysicalBoneNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "set_physical_bone_node", SET_PHYSICAL_BONE_NODE_HASH)
-        }
 
         private const val GET_PHYSICAL_BONE_NODE_HASH = 408788394L
-        private val getPhysicalBoneNodeBind by lazy {
+        @JvmField
+        val getPhysicalBoneNodeBind =
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "get_physical_bone_node", GET_PHYSICAL_BONE_NODE_HASH)
-        }
 
         private const val FETCH_PHYSICAL_BONES_HASH = 3218959716L
-        private val fetchPhysicalBonesBind by lazy {
+        @JvmField
+        val fetchPhysicalBonesBind =
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "fetch_physical_bones", FETCH_PHYSICAL_BONES_HASH)
-        }
 
         private const val START_SIMULATION_HASH = 2787316981L
-        private val startSimulationBind by lazy {
+        @JvmField
+        val startSimulationBind =
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "start_simulation", START_SIMULATION_HASH)
-        }
 
         private const val STOP_SIMULATION_HASH = 2787316981L
-        private val stopSimulationBind by lazy {
+        @JvmField
+        val stopSimulationBind =
             ObjectCalls.getMethodBind("SkeletonModification2DPhysicalBones", "stop_simulation", STOP_SIMULATION_HASH)
-        }
     }
 }

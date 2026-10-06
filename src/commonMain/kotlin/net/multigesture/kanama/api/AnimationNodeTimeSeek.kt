@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
      */
     fun setExplicitElapse(enable: Boolean) {
         checkOpen()
-        ObjectCalls.ptrcallWithBoolArg(setExplicitElapseBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setExplicitElapseBind, segment, enable)
     }
 
     /**
@@ -36,7 +37,7 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
      */
     fun isExplicitElapse(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isExplicitElapseBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isExplicitElapseBind, segment)
     }
 
     companion object {
@@ -49,15 +50,17 @@ class AnimationNodeTimeSeek(handle: GodotHandle) : AnimationNode(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AnimationNodeTimeSeek? =
             if (handle.address() == 0L) null else AnimationNodeTimeSeek(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_EXPLICIT_ELAPSE_HASH = 2586408642L
-        private val setExplicitElapseBind by lazy {
+        @JvmField
+        val setExplicitElapseBind =
             ObjectCalls.getMethodBind("AnimationNodeTimeSeek", "set_explicit_elapse", SET_EXPLICIT_ELAPSE_HASH)
-        }
 
         private const val IS_EXPLICIT_ELAPSE_HASH = 36873697L
-        private val isExplicitElapseBind by lazy {
+        @JvmField
+        val isExplicitElapseBind =
             ObjectCalls.getMethodBind("AnimationNodeTimeSeek", "is_explicit_elapse", IS_EXPLICIT_ELAPSE_HASH)
-        }
     }
 }

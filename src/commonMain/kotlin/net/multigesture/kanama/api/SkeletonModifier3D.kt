@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -30,7 +31,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SkeletonModifier3D.get_skeleton
      */
     fun getSkeleton(): Skeleton3D? {
-        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(getSkeletonBind, segment))
+        return Skeleton3D.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkeletonBind, segment))
     }
 
     /**
@@ -39,7 +40,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SkeletonModifier3D.set_active
      */
     fun setActive(active: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setActiveBind, segment, active)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setActiveBind, segment, active)
     }
 
     /**
@@ -48,7 +49,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SkeletonModifier3D.is_active
      */
     fun isActive(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isActiveBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isActiveBind, segment)
     }
 
     /**
@@ -58,7 +59,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SkeletonModifier3D.set_influence
      */
     fun setInfluence(influence: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setInfluenceBind, segment, influence)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setInfluenceBind, segment, influence)
     }
 
     /**
@@ -68,7 +69,7 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
      * Generated from Godot docs: SkeletonModifier3D.get_influence
      */
     fun getInfluence(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getInfluenceBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getInfluenceBind, segment)
     }
 
     /** Signal `modification_processed()`; see [TypedSignal]. */
@@ -293,30 +294,32 @@ open class SkeletonModifier3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): SkeletonModifier3D? =
             if (handle.address() == 0L) null else SkeletonModifier3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_SKELETON_HASH = 1488626673L
-        private val getSkeletonBind by lazy {
+        @JvmField
+        val getSkeletonBind =
             ObjectCalls.getMethodBind("SkeletonModifier3D", "get_skeleton", GET_SKELETON_HASH)
-        }
 
         private const val SET_ACTIVE_HASH = 2586408642L
-        private val setActiveBind by lazy {
+        @JvmField
+        val setActiveBind =
             ObjectCalls.getMethodBind("SkeletonModifier3D", "set_active", SET_ACTIVE_HASH)
-        }
 
         private const val IS_ACTIVE_HASH = 36873697L
-        private val isActiveBind by lazy {
+        @JvmField
+        val isActiveBind =
             ObjectCalls.getMethodBind("SkeletonModifier3D", "is_active", IS_ACTIVE_HASH)
-        }
 
         private const val SET_INFLUENCE_HASH = 373806689L
-        private val setInfluenceBind by lazy {
+        @JvmField
+        val setInfluenceBind =
             ObjectCalls.getMethodBind("SkeletonModifier3D", "set_influence", SET_INFLUENCE_HASH)
-        }
 
         private const val GET_INFLUENCE_HASH = 1740695150L
-        private val getInfluenceBind by lazy {
+        @JvmField
+        val getInfluenceBind =
             ObjectCalls.getMethodBind("SkeletonModifier3D", "get_influence", GET_INFLUENCE_HASH)
-        }
     }
 }

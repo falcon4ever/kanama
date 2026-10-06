@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -17,15 +18,15 @@ class OpenXRRenderModel(handle: GodotHandle) : Node3D(handle) {
         set(value) = setRenderModel(value)
 
     fun getTopLevelPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTopLevelPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTopLevelPathBind, segment)
     }
 
     fun getRenderModel(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRenderModelBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRenderModelBind, segment)
     }
 
     fun setRenderModel(renderModel: RID) {
-        ObjectCalls.ptrcallWithRIDArg(setRenderModelBind, segment, renderModel)
+        ObjectCalls.ptrcallWithRIDArg(Binds.setRenderModelBind, segment, renderModel)
     }
 
     /** Signal `render_model_top_level_path_changed()`; see [TypedSignal]. */
@@ -44,20 +45,22 @@ class OpenXRRenderModel(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): OpenXRRenderModel? =
             if (handle.address() == 0L) null else OpenXRRenderModel(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_TOP_LEVEL_PATH_HASH = 201670096L
-        private val getTopLevelPathBind by lazy {
+        @JvmField
+        val getTopLevelPathBind =
             ObjectCalls.getMethodBind("OpenXRRenderModel", "get_top_level_path", GET_TOP_LEVEL_PATH_HASH)
-        }
 
         private const val GET_RENDER_MODEL_HASH = 2944877500L
-        private val getRenderModelBind by lazy {
+        @JvmField
+        val getRenderModelBind =
             ObjectCalls.getMethodBind("OpenXRRenderModel", "get_render_model", GET_RENDER_MODEL_HASH)
-        }
 
         private const val SET_RENDER_MODEL_HASH = 2722037293L
-        private val setRenderModelBind by lazy {
+        @JvmField
+        val setRenderModelBind =
             ObjectCalls.getMethodBind("OpenXRRenderModel", "set_render_model", SET_RENDER_MODEL_HASH)
-        }
     }
 }

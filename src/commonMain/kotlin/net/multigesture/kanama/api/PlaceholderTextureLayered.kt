@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -25,7 +26,7 @@ open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handl
      */
     fun setSize(size: Vector2i) {
         checkOpen()
-        ObjectCalls.ptrcallWithVector2iArg(setSizeBind, segment, size)
+        ObjectCalls.ptrcallWithVector2iArg(Binds.setSizeBind, segment, size)
     }
 
     /**
@@ -35,7 +36,7 @@ open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handl
      */
     fun getSize(): Vector2i {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetVector2i(getSizeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetVector2i(Binds.getSizeBind, segment)
     }
 
     /**
@@ -45,7 +46,7 @@ open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handl
      */
     fun setLayers(layers: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setLayersBind, segment, layers)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLayersBind, segment, layers)
     }
 
     companion object {
@@ -58,20 +59,22 @@ open class PlaceholderTextureLayered(handle: GodotHandle) : TextureLayered(handl
 
         internal fun wrapBorrowed(handle: RawSegment): PlaceholderTextureLayered? =
             if (handle.address() == 0L) null else PlaceholderTextureLayered(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_SIZE_HASH = 1130785943L
-        private val setSizeBind by lazy {
+        @JvmField
+        val setSizeBind =
             ObjectCalls.getMethodBind("PlaceholderTextureLayered", "set_size", SET_SIZE_HASH)
-        }
 
         private const val GET_SIZE_HASH = 3690982128L
-        private val getSizeBind by lazy {
+        @JvmField
+        val getSizeBind =
             ObjectCalls.getMethodBind("PlaceholderTextureLayered", "get_size", GET_SIZE_HASH)
-        }
 
         private const val SET_LAYERS_HASH = 1286410249L
-        private val setLayersBind by lazy {
+        @JvmField
+        val setLayersBind =
             ObjectCalls.getMethodBind("PlaceholderTextureLayered", "set_layers", SET_LAYERS_HASH)
-        }
     }
 }

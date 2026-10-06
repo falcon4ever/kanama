@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -31,7 +32,7 @@ open class GPUParticlesCollision3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesCollision3D.set_cull_mask
      */
     fun setCullMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCullMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCullMaskBind, segment, mask)
     }
 
     /**
@@ -48,7 +49,7 @@ open class GPUParticlesCollision3D(handle: GodotHandle) : VisualInstance3D(handl
      * Generated from Godot docs: GPUParticlesCollision3D.get_cull_mask
      */
     fun getCullMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCullMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCullMaskBind, segment)
     }
 
     companion object {
@@ -58,15 +59,17 @@ open class GPUParticlesCollision3D(handle: GodotHandle) : VisualInstance3D(handl
 
         internal fun wrap(handle: RawSegment): GPUParticlesCollision3D? =
             if (handle.address() == 0L) null else GPUParticlesCollision3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_CULL_MASK_HASH = 1286410249L
-        private val setCullMaskBind by lazy {
+        @JvmField
+        val setCullMaskBind =
             ObjectCalls.getMethodBind("GPUParticlesCollision3D", "set_cull_mask", SET_CULL_MASK_HASH)
-        }
 
         private const val GET_CULL_MASK_HASH = 3905245786L
-        private val getCullMaskBind by lazy {
+        @JvmField
+        val getCullMaskBind =
             ObjectCalls.getMethodBind("GPUParticlesCollision3D", "get_cull_mask", GET_CULL_MASK_HASH)
-        }
     }
 }

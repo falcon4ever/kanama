@@ -22,7 +22,5 @@ class AudioEffectNotchFilter(handle: GodotHandle) : AudioEffectFilter(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): AudioEffectNotchFilter? =
             if (handle.address() == 0L) null else AudioEffectNotchFilter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

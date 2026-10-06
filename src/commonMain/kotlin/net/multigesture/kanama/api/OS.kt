@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -12,9 +13,8 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  * Generated from Godot docs: OS
  */
 object OS {
-    private val singleton: RawSegment by lazy {
-        ObjectCalls.getSingleton("OS")
-    }
+    private inline val singleton: RawSegment
+        get() = Binds.singleton
 
     var lowProcessorUsageMode: Boolean
         @JvmName("lowProcessorUsageModeProperty")
@@ -44,7 +44,7 @@ object OS {
      */
     @JvmStatic
     fun getEntropy(size: Int): ByteArray {
-        return ObjectCalls.ptrcallWithIntArgRetByteArray(getEntropyBind, singleton, size)
+        return ObjectCalls.ptrcallWithIntArgRetByteArray(Binds.getEntropyBind, singleton, size)
     }
 
     /**
@@ -55,7 +55,7 @@ object OS {
      */
     @JvmStatic
     fun getSystemCaCertificates(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSystemCaCertificatesBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSystemCaCertificatesBind, singleton)
     }
 
     /**
@@ -72,7 +72,7 @@ object OS {
      */
     @JvmStatic
     fun getConnectedMidiInputs(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getConnectedMidiInputsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getConnectedMidiInputsBind, singleton)
     }
 
     /**
@@ -89,7 +89,7 @@ object OS {
      */
     @JvmStatic
     fun openMidiInputs() {
-        ObjectCalls.ptrcallNoArgs(openMidiInputsBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.openMidiInputsBind, singleton)
     }
 
     /**
@@ -101,7 +101,7 @@ object OS {
      */
     @JvmStatic
     fun closeMidiInputs() {
-        ObjectCalls.ptrcallNoArgs(closeMidiInputsBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.closeMidiInputsBind, singleton)
     }
 
     /**
@@ -112,7 +112,7 @@ object OS {
      */
     @JvmStatic
     fun alert(text: String, title: String = "Alert!") {
-        ObjectCalls.ptrcallWithTwoStringArgs(alertBind, singleton, text, title)
+        ObjectCalls.ptrcallWithTwoStringArgs(Binds.alertBind, singleton, text, title)
     }
 
     /**
@@ -125,7 +125,7 @@ object OS {
      */
     @JvmStatic
     fun crash(message: String) {
-        ObjectCalls.ptrcallWithStringArg(crashBind, singleton, message)
+        ObjectCalls.ptrcallWithStringArg(Binds.crashBind, singleton, message)
     }
 
     /**
@@ -137,7 +137,7 @@ object OS {
      */
     @JvmStatic
     fun setLowProcessorUsageMode(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setLowProcessorUsageModeBind, singleton, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLowProcessorUsageModeBind, singleton, enable)
     }
 
     /**
@@ -149,7 +149,7 @@ object OS {
      */
     @JvmStatic
     fun isInLowProcessorUsageMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isInLowProcessorUsageModeBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isInLowProcessorUsageModeBind, singleton)
     }
 
     /**
@@ -162,7 +162,7 @@ object OS {
      */
     @JvmStatic
     fun setLowProcessorUsageModeSleepUsec(usec: Int) {
-        ObjectCalls.ptrcallWithIntArg(setLowProcessorUsageModeSleepUsecBind, singleton, usec)
+        ObjectCalls.ptrcallWithIntArg(Binds.setLowProcessorUsageModeSleepUsecBind, singleton, usec)
     }
 
     /**
@@ -175,7 +175,7 @@ object OS {
      */
     @JvmStatic
     fun getLowProcessorUsageModeSleepUsec(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getLowProcessorUsageModeSleepUsecBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLowProcessorUsageModeSleepUsecBind, singleton)
     }
 
     /**
@@ -187,7 +187,7 @@ object OS {
      */
     @JvmStatic
     fun setDeltaSmoothing(deltaSmoothingEnabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setDeltaSmoothingBind, singleton, deltaSmoothingEnabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDeltaSmoothingBind, singleton, deltaSmoothingEnabled)
     }
 
     /**
@@ -199,7 +199,7 @@ object OS {
      */
     @JvmStatic
     fun isDeltaSmoothingEnabled(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDeltaSmoothingEnabledBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDeltaSmoothingEnabledBind, singleton)
     }
 
     /**
@@ -210,7 +210,7 @@ object OS {
      */
     @JvmStatic
     fun getProcessorCount(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getProcessorCountBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getProcessorCountBind, singleton)
     }
 
     /**
@@ -222,7 +222,7 @@ object OS {
      */
     @JvmStatic
     fun getProcessorName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getProcessorNameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getProcessorNameBind, singleton)
     }
 
     /**
@@ -233,7 +233,7 @@ object OS {
      */
     @JvmStatic
     fun getSystemFonts(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSystemFontsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSystemFontsBind, singleton)
     }
 
     /**
@@ -247,7 +247,7 @@ object OS {
      */
     @JvmStatic
     fun getSystemFontPath(fontName: String, weight: Int = 400, stretch: Int = 100, italic: Boolean = false): String {
-        return ObjectCalls.ptrcallWithStringTwoIntBoolArgsRetString(getSystemFontPathBind, singleton, fontName, weight, stretch, italic)
+        return ObjectCalls.ptrcallWithStringTwoIntBoolArgsRetString(Binds.getSystemFontPathBind, singleton, fontName, weight, stretch, italic)
     }
 
     /**
@@ -265,7 +265,7 @@ object OS {
      */
     @JvmStatic
     fun getSystemFontPathForText(fontName: String, text: String, locale: String = "", script: String = "", weight: Int = 400, stretch: Int = 100, italic: Boolean = false): List<String> {
-        return ObjectCalls.ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList(getSystemFontPathForTextBind, singleton, fontName, text, locale, script, weight, stretch, italic)
+        return ObjectCalls.ptrcallWithFourStringTwoIntBoolArgsRetPackedStringList(Binds.getSystemFontPathForTextBind, singleton, fontName, text, locale, script, weight, stretch, italic)
     }
 
     /**
@@ -277,7 +277,7 @@ object OS {
      */
     @JvmStatic
     fun getExecutablePath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getExecutablePathBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getExecutablePathBind, singleton)
     }
 
     /**
@@ -300,7 +300,7 @@ object OS {
      */
     @JvmStatic
     fun readStringFromStdin(bufferSize: Long = 1024L): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(readStringFromStdinBind, singleton, bufferSize)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.readStringFromStdinBind, singleton, bufferSize)
     }
 
     /**
@@ -321,7 +321,7 @@ object OS {
      */
     @JvmStatic
     fun readBufferFromStdin(bufferSize: Long = 1024L): ByteArray {
-        return ObjectCalls.ptrcallWithLongArgRetByteArray(readBufferFromStdinBind, singleton, bufferSize)
+        return ObjectCalls.ptrcallWithLongArgRetByteArray(Binds.readBufferFromStdinBind, singleton, bufferSize)
     }
 
     /**
@@ -334,7 +334,7 @@ object OS {
      */
     @JvmStatic
     fun getStdinType(): OS.StdHandleType {
-        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(getStdinTypeBind, singleton))
+        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStdinTypeBind, singleton))
     }
 
     /**
@@ -345,7 +345,7 @@ object OS {
      */
     @JvmStatic
     fun getStdoutType(): OS.StdHandleType {
-        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(getStdoutTypeBind, singleton))
+        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStdoutTypeBind, singleton))
     }
 
     /**
@@ -356,7 +356,7 @@ object OS {
      */
     @JvmStatic
     fun getStderrType(): OS.StdHandleType {
-        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(getStderrTypeBind, singleton))
+        return OS.StdHandleType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getStderrTypeBind, singleton))
     }
 
     /**
@@ -375,7 +375,7 @@ object OS {
      */
     @JvmStatic
     fun execute(path: String, arguments: List<String>, output: List<Any?> = emptyList(), readStderr: Boolean = false, openConsole: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt(executeBind, singleton, path, arguments, output, readStderr, openConsole)
+        return ObjectCalls.ptrcallWithStringPackedStringListArrayTwoBoolArgsRetInt(Binds.executeBind, singleton, path, arguments, output, readStderr, openConsole)
     }
 
     /**
@@ -403,7 +403,7 @@ object OS {
      */
     @JvmStatic
     fun executeWithPipe(path: String, arguments: List<String>, blocking: Boolean = true): Map<String, Any?> {
-        return ObjectCalls.ptrcallWithStringPackedStringListBoolArgsRetDictionary(executeWithPipeBind, singleton, path, arguments, blocking)
+        return ObjectCalls.ptrcallWithStringPackedStringListBoolArgsRetDictionary(Binds.executeWithPipeBind, singleton, path, arguments, blocking)
     }
 
     /**
@@ -419,7 +419,7 @@ object OS {
      */
     @JvmStatic
     fun createProcess(path: String, arguments: List<String>, openConsole: Boolean = false): Int {
-        return ObjectCalls.ptrcallWithStringPackedStringListBoolArgsRetInt(createProcessBind, singleton, path, arguments, openConsole)
+        return ObjectCalls.ptrcallWithStringPackedStringListBoolArgsRetInt(Binds.createProcessBind, singleton, path, arguments, openConsole)
     }
 
     /**
@@ -434,7 +434,7 @@ object OS {
      */
     @JvmStatic
     fun createInstance(arguments: List<String>): Int {
-        return ObjectCalls.ptrcallWithPackedStringListArgRetInt(createInstanceBind, singleton, arguments)
+        return ObjectCalls.ptrcallWithPackedStringListArgRetInt(Binds.createInstanceBind, singleton, arguments)
     }
 
     /**
@@ -448,7 +448,7 @@ object OS {
      */
     @JvmStatic
     fun openWithProgram(programPath: String, paths: List<String>): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(openWithProgramBind, singleton, programPath, paths))
+        return GodotError(ObjectCalls.ptrcallWithStringAndPackedStringListArgRetLong(Binds.openWithProgramBind, singleton, programPath, paths))
     }
 
     /**
@@ -461,7 +461,7 @@ object OS {
      */
     @JvmStatic
     fun kill(pid: Int): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(killBind, singleton, pid))
+        return GodotError(ObjectCalls.ptrcallWithIntArgRetLong(Binds.killBind, singleton, pid))
     }
 
     /**
@@ -483,7 +483,7 @@ object OS {
      */
     @JvmStatic
     fun shellOpen(uri: String): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(shellOpenBind, singleton, uri))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.shellOpenBind, singleton, uri))
     }
 
     /**
@@ -499,7 +499,7 @@ object OS {
      */
     @JvmStatic
     fun shellShowInFileManager(fileOrDirPath: String, openFolder: Boolean = true): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(shellShowInFileManagerBind, singleton, fileOrDirPath, openFolder))
+        return GodotError(ObjectCalls.ptrcallWithStringAndBoolArgRetLong(Binds.shellShowInFileManagerBind, singleton, fileOrDirPath, openFolder))
     }
 
     /**
@@ -511,7 +511,7 @@ object OS {
      */
     @JvmStatic
     fun isProcessRunning(pid: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isProcessRunningBind, singleton, pid)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isProcessRunningBind, singleton, pid)
     }
 
     /**
@@ -525,7 +525,7 @@ object OS {
      */
     @JvmStatic
     fun getProcessExitCode(pid: Int): Int {
-        return ObjectCalls.ptrcallWithIntArgRetInt(getProcessExitCodeBind, singleton, pid)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getProcessExitCodeBind, singleton, pid)
     }
 
     /**
@@ -536,7 +536,7 @@ object OS {
      */
     @JvmStatic
     fun getProcessId(): Int {
-        return ObjectCalls.ptrcallNoArgsRetInt(getProcessIdBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getProcessIdBind, singleton)
     }
 
     /**
@@ -548,7 +548,7 @@ object OS {
      */
     @JvmStatic
     fun hasEnvironment(variable: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasEnvironmentBind, singleton, variable)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasEnvironmentBind, singleton, variable)
     }
 
     /**
@@ -561,7 +561,7 @@ object OS {
      */
     @JvmStatic
     fun getEnvironment(variable: String): String {
-        return ObjectCalls.ptrcallWithStringArgRetString(getEnvironmentBind, singleton, variable)
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getEnvironmentBind, singleton, variable)
     }
 
     /**
@@ -577,7 +577,7 @@ object OS {
      */
     @JvmStatic
     fun setEnvironment(variable: String, value: String) {
-        ObjectCalls.ptrcallWithTwoStringArgs(setEnvironmentBind, singleton, variable, value)
+        ObjectCalls.ptrcallWithTwoStringArgs(Binds.setEnvironmentBind, singleton, variable, value)
     }
 
     /**
@@ -592,7 +592,7 @@ object OS {
      */
     @JvmStatic
     fun unsetEnvironment(variable: String) {
-        ObjectCalls.ptrcallWithStringArg(unsetEnvironmentBind, singleton, variable)
+        ObjectCalls.ptrcallWithStringArg(Binds.unsetEnvironmentBind, singleton, variable)
     }
 
     /**
@@ -607,7 +607,7 @@ object OS {
      */
     @JvmStatic
     fun getName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getNameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getNameBind, singleton)
     }
 
     /**
@@ -621,7 +621,7 @@ object OS {
      */
     @JvmStatic
     fun getDistributionName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDistributionNameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDistributionNameBind, singleton)
     }
 
     /**
@@ -639,7 +639,7 @@ object OS {
      */
     @JvmStatic
     fun getVersion(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getVersionBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVersionBind, singleton)
     }
 
     /**
@@ -656,7 +656,7 @@ object OS {
      */
     @JvmStatic
     fun getVersionAlias(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getVersionAliasBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getVersionAliasBind, singleton)
     }
 
     /**
@@ -667,7 +667,7 @@ object OS {
      */
     @JvmStatic
     fun getCmdlineArgs(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getCmdlineArgsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getCmdlineArgsBind, singleton)
     }
 
     /**
@@ -679,7 +679,7 @@ object OS {
      */
     @JvmStatic
     fun getCmdlineUserArgs(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getCmdlineUserArgsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getCmdlineUserArgsBind, singleton)
     }
 
     /**
@@ -700,7 +700,7 @@ object OS {
      */
     @JvmStatic
     fun getVideoAdapterDriverInfo(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getVideoAdapterDriverInfoBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getVideoAdapterDriverInfoBind, singleton)
     }
 
     /**
@@ -719,7 +719,7 @@ object OS {
      */
     @JvmStatic
     fun setRestartOnExit(restart: Boolean, arguments: List<String>) {
-        ObjectCalls.ptrcallWithBoolAndPackedStringArrayArgs(setRestartOnExitBind, singleton, restart, arguments)
+        ObjectCalls.ptrcallWithBoolAndPackedStringArrayArgs(Binds.setRestartOnExitBind, singleton, restart, arguments)
     }
 
     /**
@@ -730,7 +730,7 @@ object OS {
      */
     @JvmStatic
     fun isRestartOnExitSet(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isRestartOnExitSetBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isRestartOnExitSetBind, singleton)
     }
 
     /**
@@ -741,7 +741,7 @@ object OS {
      */
     @JvmStatic
     fun getRestartOnExitArguments(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getRestartOnExitArgumentsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getRestartOnExitArgumentsBind, singleton)
     }
 
     /**
@@ -760,7 +760,7 @@ object OS {
      */
     @JvmStatic
     fun delayUsec(usec: Int) {
-        ObjectCalls.ptrcallWithIntArg(delayUsecBind, singleton, usec)
+        ObjectCalls.ptrcallWithIntArg(Binds.delayUsecBind, singleton, usec)
     }
 
     /**
@@ -779,7 +779,7 @@ object OS {
      */
     @JvmStatic
     fun delayMsec(msec: Int) {
-        ObjectCalls.ptrcallWithIntArg(delayMsecBind, singleton, msec)
+        ObjectCalls.ptrcallWithIntArg(Binds.delayMsecBind, singleton, msec)
     }
 
     /**
@@ -797,7 +797,7 @@ object OS {
      */
     @JvmStatic
     fun getLocale(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLocaleBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleBind, singleton)
     }
 
     /**
@@ -812,7 +812,7 @@ object OS {
      */
     @JvmStatic
     fun getLocaleLanguage(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getLocaleLanguageBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleLanguageBind, singleton)
     }
 
     /**
@@ -823,7 +823,7 @@ object OS {
      */
     @JvmStatic
     fun getModelName(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getModelNameBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getModelNameBind, singleton)
     }
 
     /**
@@ -835,7 +835,7 @@ object OS {
      */
     @JvmStatic
     fun isUserfsPersistent(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isUserfsPersistentBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUserfsPersistentBind, singleton)
     }
 
     /**
@@ -847,7 +847,7 @@ object OS {
      */
     @JvmStatic
     fun isStdoutVerbose(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isStdoutVerboseBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isStdoutVerboseBind, singleton)
     }
 
     /**
@@ -860,7 +860,7 @@ object OS {
      */
     @JvmStatic
     fun isDebugBuild(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isDebugBuildBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isDebugBuildBind, singleton)
     }
 
     /**
@@ -871,7 +871,7 @@ object OS {
      */
     @JvmStatic
     fun getStaticMemoryUsage(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStaticMemoryUsageBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getStaticMemoryUsageBind, singleton)
     }
 
     /**
@@ -881,7 +881,7 @@ object OS {
      */
     @JvmStatic
     fun getStaticMemoryPeakUsage(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getStaticMemoryPeakUsageBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getStaticMemoryPeakUsageBind, singleton)
     }
 
     /**
@@ -899,7 +899,7 @@ object OS {
      */
     @JvmStatic
     fun getMemoryInfo(): Map<String, Any?> {
-        return ObjectCalls.ptrcallNoArgsRetDictionary(getMemoryInfoBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetDictionary(Binds.getMemoryInfoBind, singleton)
     }
 
     /**
@@ -913,7 +913,7 @@ object OS {
      */
     @JvmStatic
     fun moveToTrash(path: String): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(moveToTrashBind, singleton, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.moveToTrashBind, singleton, path))
     }
 
     /**
@@ -935,7 +935,7 @@ object OS {
      */
     @JvmStatic
     fun getUserDataDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getUserDataDirBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getUserDataDirBind, singleton)
     }
 
     /**
@@ -949,7 +949,7 @@ object OS {
      */
     @JvmStatic
     fun getSystemDir(dir: OS.SystemDir, sharedStorage: Boolean = true): String {
-        return ObjectCalls.ptrcallWithLongAndBoolArgRetString(getSystemDirBind, singleton, dir.value, sharedStorage)
+        return ObjectCalls.ptrcallWithLongAndBoolArgRetString(Binds.getSystemDirBind, singleton, dir.value, sharedStorage)
     }
 
     /**
@@ -964,7 +964,7 @@ object OS {
      */
     @JvmStatic
     fun getConfigDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getConfigDirBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getConfigDirBind, singleton)
     }
 
     /**
@@ -979,7 +979,7 @@ object OS {
      */
     @JvmStatic
     fun getDataDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getDataDirBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getDataDirBind, singleton)
     }
 
     /**
@@ -994,7 +994,7 @@ object OS {
      */
     @JvmStatic
     fun getCacheDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getCacheDirBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getCacheDirBind, singleton)
     }
 
     /**
@@ -1004,7 +1004,7 @@ object OS {
      */
     @JvmStatic
     fun getTempDir(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getTempDirBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getTempDirBind, singleton)
     }
 
     /**
@@ -1020,7 +1020,7 @@ object OS {
      */
     @JvmStatic
     fun getUniqueId(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getUniqueIdBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getUniqueIdBind, singleton)
     }
 
     /**
@@ -1030,7 +1030,7 @@ object OS {
      */
     @JvmStatic
     fun getKeycodeString(code: Key): String {
-        return ObjectCalls.ptrcallWithLongArgRetString(getKeycodeStringBind, singleton, code.value)
+        return ObjectCalls.ptrcallWithLongArgRetString(Binds.getKeycodeStringBind, singleton, code.value)
     }
 
     /**
@@ -1041,7 +1041,7 @@ object OS {
      */
     @JvmStatic
     fun isKeycodeUnicode(code: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(isKeycodeUnicodeBind, singleton, code)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isKeycodeUnicodeBind, singleton, code)
     }
 
     /**
@@ -1052,7 +1052,7 @@ object OS {
      */
     @JvmStatic
     fun findKeycodeFromString(string: String): Key {
-        return Key(ObjectCalls.ptrcallWithStringArgRetLong(findKeycodeFromStringBind, singleton, string))
+        return Key(ObjectCalls.ptrcallWithStringArgRetLong(Binds.findKeycodeFromStringBind, singleton, string))
     }
 
     /**
@@ -1065,7 +1065,7 @@ object OS {
      */
     @JvmStatic
     fun setUseFileAccessSaveAndSwap(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setUseFileAccessSaveAndSwapBind, singleton, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseFileAccessSaveAndSwapBind, singleton, enabled)
     }
 
     /**
@@ -1076,7 +1076,7 @@ object OS {
      */
     @JvmStatic
     fun setThreadName(name: String): GodotError {
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(setThreadNameBind, singleton, name))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.setThreadNameBind, singleton, name))
     }
 
     /**
@@ -1088,7 +1088,7 @@ object OS {
      */
     @JvmStatic
     fun getThreadCallerId(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getThreadCallerIdBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getThreadCallerIdBind, singleton)
     }
 
     /**
@@ -1099,7 +1099,7 @@ object OS {
      */
     @JvmStatic
     fun getMainThreadId(): Long {
-        return ObjectCalls.ptrcallNoArgsRetLong(getMainThreadIdBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetLong(Binds.getMainThreadIdBind, singleton)
     }
 
     /**
@@ -1115,7 +1115,7 @@ object OS {
      */
     @JvmStatic
     fun hasFeature(tagName: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasFeatureBind, singleton, tagName)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasFeatureBind, singleton, tagName)
     }
 
     /**
@@ -1126,7 +1126,7 @@ object OS {
      */
     @JvmStatic
     fun isSandboxed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isSandboxedBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSandboxedBind, singleton)
     }
 
     /**
@@ -1144,7 +1144,7 @@ object OS {
      */
     @JvmStatic
     fun requestPermission(name: String): Boolean {
-        return ObjectCalls.ptrcallWithStringArgRetBool(requestPermissionBind, singleton, name)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.requestPermissionBind, singleton, name)
     }
 
     /**
@@ -1157,7 +1157,7 @@ object OS {
      */
     @JvmStatic
     fun requestPermissions(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(requestPermissionsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.requestPermissionsBind, singleton)
     }
 
     /**
@@ -1170,7 +1170,7 @@ object OS {
      */
     @JvmStatic
     fun getGrantedPermissions(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getGrantedPermissionsBind, singleton)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getGrantedPermissionsBind, singleton)
     }
 
     /**
@@ -1181,7 +1181,7 @@ object OS {
      */
     @JvmStatic
     fun revokeGrantedPermissions() {
-        ObjectCalls.ptrcallNoArgs(revokeGrantedPermissionsBind, singleton)
+        ObjectCalls.ptrcallNoArgs(Binds.revokeGrantedPermissionsBind, singleton)
     }
 
     /**
@@ -1191,7 +1191,7 @@ object OS {
      */
     @JvmStatic
     fun addLogger(logger: Logger) {
-        ObjectCalls.ptrcallWithObjectArgs(addLoggerBind, singleton, listOf(logger.requireOpenHandle()))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addLoggerBind, singleton, listOf(logger.requireOpenHandle()))
     }
 
     /**
@@ -1201,7 +1201,7 @@ object OS {
      */
     @JvmStatic
     fun removeLogger(logger: Logger) {
-        ObjectCalls.ptrcallWithObjectArgs(removeLoggerBind, singleton, listOf(logger.requireOpenHandle()))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeLoggerBind, singleton, listOf(logger.requireOpenHandle()))
     }
 
     /**
@@ -1357,418 +1357,423 @@ object OS {
     internal fun wrap(handle: RawSegment): OS? =
         if (handle.address() == 0L) null else this
 
-    private const val GET_ENTROPY_HASH = 47165747L
-    private val getEntropyBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_entropy", GET_ENTROPY_HASH)
-    }
-
-    private const val GET_SYSTEM_CA_CERTIFICATES_HASH = 2841200299L
-    private val getSystemCaCertificatesBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_system_ca_certificates", GET_SYSTEM_CA_CERTIFICATES_HASH)
-    }
-
-    private const val GET_CONNECTED_MIDI_INPUTS_HASH = 2981934095L
-    private val getConnectedMidiInputsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_connected_midi_inputs", GET_CONNECTED_MIDI_INPUTS_HASH)
-    }
-
-    private const val OPEN_MIDI_INPUTS_HASH = 3218959716L
-    private val openMidiInputsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "open_midi_inputs", OPEN_MIDI_INPUTS_HASH)
-    }
-
-    private const val CLOSE_MIDI_INPUTS_HASH = 3218959716L
-    private val closeMidiInputsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "close_midi_inputs", CLOSE_MIDI_INPUTS_HASH)
-    }
-
-    private const val ALERT_HASH = 1783970740L
-    private val alertBind by lazy {
-        ObjectCalls.getMethodBind("OS", "alert", ALERT_HASH)
-    }
-
-    private const val CRASH_HASH = 83702148L
-    private val crashBind by lazy {
-        ObjectCalls.getMethodBind("OS", "crash", CRASH_HASH)
-    }
-
-    private const val SET_LOW_PROCESSOR_USAGE_MODE_HASH = 2586408642L
-    private val setLowProcessorUsageModeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "set_low_processor_usage_mode", SET_LOW_PROCESSOR_USAGE_MODE_HASH)
-    }
-
-    private const val IS_IN_LOW_PROCESSOR_USAGE_MODE_HASH = 36873697L
-    private val isInLowProcessorUsageModeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_in_low_processor_usage_mode", IS_IN_LOW_PROCESSOR_USAGE_MODE_HASH)
-    }
-
-    private const val SET_LOW_PROCESSOR_USAGE_MODE_SLEEP_USEC_HASH = 1286410249L
-    private val setLowProcessorUsageModeSleepUsecBind by lazy {
-        ObjectCalls.getMethodBind("OS", "set_low_processor_usage_mode_sleep_usec", SET_LOW_PROCESSOR_USAGE_MODE_SLEEP_USEC_HASH)
-    }
-
-    private const val GET_LOW_PROCESSOR_USAGE_MODE_SLEEP_USEC_HASH = 3905245786L
-    private val getLowProcessorUsageModeSleepUsecBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_low_processor_usage_mode_sleep_usec", GET_LOW_PROCESSOR_USAGE_MODE_SLEEP_USEC_HASH)
-    }
-
-    private const val SET_DELTA_SMOOTHING_HASH = 2586408642L
-    private val setDeltaSmoothingBind by lazy {
-        ObjectCalls.getMethodBind("OS", "set_delta_smoothing", SET_DELTA_SMOOTHING_HASH)
-    }
-
-    private const val IS_DELTA_SMOOTHING_ENABLED_HASH = 36873697L
-    private val isDeltaSmoothingEnabledBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_delta_smoothing_enabled", IS_DELTA_SMOOTHING_ENABLED_HASH)
-    }
-
-    private const val GET_PROCESSOR_COUNT_HASH = 3905245786L
-    private val getProcessorCountBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_processor_count", GET_PROCESSOR_COUNT_HASH)
-    }
-
-    private const val GET_PROCESSOR_NAME_HASH = 201670096L
-    private val getProcessorNameBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_processor_name", GET_PROCESSOR_NAME_HASH)
-    }
-
-    private const val GET_SYSTEM_FONTS_HASH = 1139954409L
-    private val getSystemFontsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_system_fonts", GET_SYSTEM_FONTS_HASH)
-    }
-
-    private const val GET_SYSTEM_FONT_PATH_HASH = 626580860L
-    private val getSystemFontPathBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_system_font_path", GET_SYSTEM_FONT_PATH_HASH)
-    }
-
-    private const val GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH = 197317981L
-    private val getSystemFontPathForTextBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_system_font_path_for_text", GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH)
-    }
-
-    private const val GET_EXECUTABLE_PATH_HASH = 201670096L
-    private val getExecutablePathBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_executable_path", GET_EXECUTABLE_PATH_HASH)
-    }
-
-    private const val READ_STRING_FROM_STDIN_HASH = 723587915L
-    private val readStringFromStdinBind by lazy {
-        ObjectCalls.getMethodBind("OS", "read_string_from_stdin", READ_STRING_FROM_STDIN_HASH)
-    }
-
-    private const val READ_BUFFER_FROM_STDIN_HASH = 3249455752L
-    private val readBufferFromStdinBind by lazy {
-        ObjectCalls.getMethodBind("OS", "read_buffer_from_stdin", READ_BUFFER_FROM_STDIN_HASH)
-    }
-
-    private const val GET_STDIN_TYPE_HASH = 1704816237L
-    private val getStdinTypeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_stdin_type", GET_STDIN_TYPE_HASH)
-    }
-
-    private const val GET_STDOUT_TYPE_HASH = 1704816237L
-    private val getStdoutTypeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_stdout_type", GET_STDOUT_TYPE_HASH)
-    }
-
-    private const val GET_STDERR_TYPE_HASH = 1704816237L
-    private val getStderrTypeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_stderr_type", GET_STDERR_TYPE_HASH)
-    }
-
-    private const val EXECUTE_HASH = 1488299882L
-    private val executeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "execute", EXECUTE_HASH)
-    }
-
-    private const val EXECUTE_WITH_PIPE_HASH = 2851312030L
-    private val executeWithPipeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "execute_with_pipe", EXECUTE_WITH_PIPE_HASH)
-    }
-
-    private const val CREATE_PROCESS_HASH = 2903767230L
-    private val createProcessBind by lazy {
-        ObjectCalls.getMethodBind("OS", "create_process", CREATE_PROCESS_HASH)
-    }
-
-    private const val CREATE_INSTANCE_HASH = 1080601263L
-    private val createInstanceBind by lazy {
-        ObjectCalls.getMethodBind("OS", "create_instance", CREATE_INSTANCE_HASH)
-    }
-
-    private const val OPEN_WITH_PROGRAM_HASH = 2848259907L
-    private val openWithProgramBind by lazy {
-        ObjectCalls.getMethodBind("OS", "open_with_program", OPEN_WITH_PROGRAM_HASH)
-    }
-
-    private const val KILL_HASH = 844576869L
-    private val killBind by lazy {
-        ObjectCalls.getMethodBind("OS", "kill", KILL_HASH)
-    }
-
-    private const val SHELL_OPEN_HASH = 166001499L
-    private val shellOpenBind by lazy {
-        ObjectCalls.getMethodBind("OS", "shell_open", SHELL_OPEN_HASH)
-    }
-
-    private const val SHELL_SHOW_IN_FILE_MANAGER_HASH = 3565188097L
-    private val shellShowInFileManagerBind by lazy {
-        ObjectCalls.getMethodBind("OS", "shell_show_in_file_manager", SHELL_SHOW_IN_FILE_MANAGER_HASH)
-    }
-
-    private const val IS_PROCESS_RUNNING_HASH = 1116898809L
-    private val isProcessRunningBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_process_running", IS_PROCESS_RUNNING_HASH)
-    }
-
-    private const val GET_PROCESS_EXIT_CODE_HASH = 923996154L
-    private val getProcessExitCodeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_process_exit_code", GET_PROCESS_EXIT_CODE_HASH)
-    }
-
-    private const val GET_PROCESS_ID_HASH = 3905245786L
-    private val getProcessIdBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_process_id", GET_PROCESS_ID_HASH)
-    }
-
-    private const val HAS_ENVIRONMENT_HASH = 3927539163L
-    private val hasEnvironmentBind by lazy {
-        ObjectCalls.getMethodBind("OS", "has_environment", HAS_ENVIRONMENT_HASH)
-    }
-
-    private const val GET_ENVIRONMENT_HASH = 3135753539L
-    private val getEnvironmentBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_environment", GET_ENVIRONMENT_HASH)
-    }
-
-    private const val SET_ENVIRONMENT_HASH = 3605043004L
-    private val setEnvironmentBind by lazy {
-        ObjectCalls.getMethodBind("OS", "set_environment", SET_ENVIRONMENT_HASH)
-    }
-
-    private const val UNSET_ENVIRONMENT_HASH = 3089850668L
-    private val unsetEnvironmentBind by lazy {
-        ObjectCalls.getMethodBind("OS", "unset_environment", UNSET_ENVIRONMENT_HASH)
-    }
-
-    private const val GET_NAME_HASH = 201670096L
-    private val getNameBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_name", GET_NAME_HASH)
-    }
-
-    private const val GET_DISTRIBUTION_NAME_HASH = 201670096L
-    private val getDistributionNameBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_distribution_name", GET_DISTRIBUTION_NAME_HASH)
-    }
-
-    private const val GET_VERSION_HASH = 201670096L
-    private val getVersionBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_version", GET_VERSION_HASH)
-    }
-
-    private const val GET_VERSION_ALIAS_HASH = 201670096L
-    private val getVersionAliasBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_version_alias", GET_VERSION_ALIAS_HASH)
-    }
-
-    private const val GET_CMDLINE_ARGS_HASH = 2981934095L
-    private val getCmdlineArgsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_cmdline_args", GET_CMDLINE_ARGS_HASH)
-    }
-
-    private const val GET_CMDLINE_USER_ARGS_HASH = 2981934095L
-    private val getCmdlineUserArgsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_cmdline_user_args", GET_CMDLINE_USER_ARGS_HASH)
-    }
-
-    private const val GET_VIDEO_ADAPTER_DRIVER_INFO_HASH = 1139954409L
-    private val getVideoAdapterDriverInfoBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_video_adapter_driver_info", GET_VIDEO_ADAPTER_DRIVER_INFO_HASH)
-    }
-
-    private const val SET_RESTART_ON_EXIT_HASH = 3331453935L
-    private val setRestartOnExitBind by lazy {
-        ObjectCalls.getMethodBind("OS", "set_restart_on_exit", SET_RESTART_ON_EXIT_HASH)
-    }
-
-    private const val IS_RESTART_ON_EXIT_SET_HASH = 36873697L
-    private val isRestartOnExitSetBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_restart_on_exit_set", IS_RESTART_ON_EXIT_SET_HASH)
-    }
-
-    private const val GET_RESTART_ON_EXIT_ARGUMENTS_HASH = 1139954409L
-    private val getRestartOnExitArgumentsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_restart_on_exit_arguments", GET_RESTART_ON_EXIT_ARGUMENTS_HASH)
-    }
-
-    private const val DELAY_USEC_HASH = 998575451L
-    private val delayUsecBind by lazy {
-        ObjectCalls.getMethodBind("OS", "delay_usec", DELAY_USEC_HASH)
-    }
-
-    private const val DELAY_MSEC_HASH = 998575451L
-    private val delayMsecBind by lazy {
-        ObjectCalls.getMethodBind("OS", "delay_msec", DELAY_MSEC_HASH)
-    }
-
-    private const val GET_LOCALE_HASH = 201670096L
-    private val getLocaleBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_locale", GET_LOCALE_HASH)
-    }
-
-    private const val GET_LOCALE_LANGUAGE_HASH = 201670096L
-    private val getLocaleLanguageBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_locale_language", GET_LOCALE_LANGUAGE_HASH)
-    }
-
-    private const val GET_MODEL_NAME_HASH = 201670096L
-    private val getModelNameBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_model_name", GET_MODEL_NAME_HASH)
-    }
-
-    private const val IS_USERFS_PERSISTENT_HASH = 36873697L
-    private val isUserfsPersistentBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_userfs_persistent", IS_USERFS_PERSISTENT_HASH)
-    }
-
-    private const val IS_STDOUT_VERBOSE_HASH = 36873697L
-    private val isStdoutVerboseBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_stdout_verbose", IS_STDOUT_VERBOSE_HASH)
-    }
-
-    private const val IS_DEBUG_BUILD_HASH = 36873697L
-    private val isDebugBuildBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_debug_build", IS_DEBUG_BUILD_HASH)
-    }
-
-    private const val GET_STATIC_MEMORY_USAGE_HASH = 3905245786L
-    private val getStaticMemoryUsageBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_static_memory_usage", GET_STATIC_MEMORY_USAGE_HASH)
-    }
-
-    private const val GET_STATIC_MEMORY_PEAK_USAGE_HASH = 3905245786L
-    private val getStaticMemoryPeakUsageBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_static_memory_peak_usage", GET_STATIC_MEMORY_PEAK_USAGE_HASH)
-    }
-
-    private const val GET_MEMORY_INFO_HASH = 3102165223L
-    private val getMemoryInfoBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_memory_info", GET_MEMORY_INFO_HASH)
-    }
-
-    private const val MOVE_TO_TRASH_HASH = 2113323047L
-    private val moveToTrashBind by lazy {
-        ObjectCalls.getMethodBind("OS", "move_to_trash", MOVE_TO_TRASH_HASH)
-    }
-
-    private const val GET_USER_DATA_DIR_HASH = 201670096L
-    private val getUserDataDirBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_user_data_dir", GET_USER_DATA_DIR_HASH)
-    }
-
-    private const val GET_SYSTEM_DIR_HASH = 3073895123L
-    private val getSystemDirBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_system_dir", GET_SYSTEM_DIR_HASH)
-    }
-
-    private const val GET_CONFIG_DIR_HASH = 201670096L
-    private val getConfigDirBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_config_dir", GET_CONFIG_DIR_HASH)
-    }
-
-    private const val GET_DATA_DIR_HASH = 201670096L
-    private val getDataDirBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_data_dir", GET_DATA_DIR_HASH)
-    }
-
-    private const val GET_CACHE_DIR_HASH = 201670096L
-    private val getCacheDirBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_cache_dir", GET_CACHE_DIR_HASH)
-    }
-
-    private const val GET_TEMP_DIR_HASH = 201670096L
-    private val getTempDirBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_temp_dir", GET_TEMP_DIR_HASH)
-    }
-
-    private const val GET_UNIQUE_ID_HASH = 201670096L
-    private val getUniqueIdBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_unique_id", GET_UNIQUE_ID_HASH)
-    }
-
-    private const val GET_KEYCODE_STRING_HASH = 2261993717L
-    private val getKeycodeStringBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_keycode_string", GET_KEYCODE_STRING_HASH)
-    }
-
-    private const val IS_KEYCODE_UNICODE_HASH = 1116898809L
-    private val isKeycodeUnicodeBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_keycode_unicode", IS_KEYCODE_UNICODE_HASH)
-    }
-
-    private const val FIND_KEYCODE_FROM_STRING_HASH = 1084858572L
-    private val findKeycodeFromStringBind by lazy {
-        ObjectCalls.getMethodBind("OS", "find_keycode_from_string", FIND_KEYCODE_FROM_STRING_HASH)
-    }
-
-    private const val SET_USE_FILE_ACCESS_SAVE_AND_SWAP_HASH = 2586408642L
-    private val setUseFileAccessSaveAndSwapBind by lazy {
-        ObjectCalls.getMethodBind("OS", "set_use_file_access_save_and_swap", SET_USE_FILE_ACCESS_SAVE_AND_SWAP_HASH)
-    }
-
-    private const val SET_THREAD_NAME_HASH = 166001499L
-    private val setThreadNameBind by lazy {
-        ObjectCalls.getMethodBind("OS", "set_thread_name", SET_THREAD_NAME_HASH)
-    }
-
-    private const val GET_THREAD_CALLER_ID_HASH = 3905245786L
-    private val getThreadCallerIdBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_thread_caller_id", GET_THREAD_CALLER_ID_HASH)
-    }
-
-    private const val GET_MAIN_THREAD_ID_HASH = 3905245786L
-    private val getMainThreadIdBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_main_thread_id", GET_MAIN_THREAD_ID_HASH)
-    }
-
-    private const val HAS_FEATURE_HASH = 3927539163L
-    private val hasFeatureBind by lazy {
-        ObjectCalls.getMethodBind("OS", "has_feature", HAS_FEATURE_HASH)
-    }
-
-    private const val IS_SANDBOXED_HASH = 36873697L
-    private val isSandboxedBind by lazy {
-        ObjectCalls.getMethodBind("OS", "is_sandboxed", IS_SANDBOXED_HASH)
-    }
-
-    private const val REQUEST_PERMISSION_HASH = 2323990056L
-    private val requestPermissionBind by lazy {
-        ObjectCalls.getMethodBind("OS", "request_permission", REQUEST_PERMISSION_HASH)
-    }
-
-    private const val REQUEST_PERMISSIONS_HASH = 2240911060L
-    private val requestPermissionsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "request_permissions", REQUEST_PERMISSIONS_HASH)
-    }
-
-    private const val GET_GRANTED_PERMISSIONS_HASH = 1139954409L
-    private val getGrantedPermissionsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "get_granted_permissions", GET_GRANTED_PERMISSIONS_HASH)
-    }
-
-    private const val REVOKE_GRANTED_PERMISSIONS_HASH = 3218959716L
-    private val revokeGrantedPermissionsBind by lazy {
-        ObjectCalls.getMethodBind("OS", "revoke_granted_permissions", REVOKE_GRANTED_PERMISSIONS_HASH)
-    }
-
-    private const val ADD_LOGGER_HASH = 4261188958L
-    private val addLoggerBind by lazy {
-        ObjectCalls.getMethodBind("OS", "add_logger", ADD_LOGGER_HASH)
-    }
-
-    private const val REMOVE_LOGGER_HASH = 4261188958L
-    private val removeLoggerBind by lazy {
-        ObjectCalls.getMethodBind("OS", "remove_logger", REMOVE_LOGGER_HASH)
+    private object Binds {
+        @JvmField
+        val singleton = ObjectCalls.getSingleton("OS")
+
+        private const val GET_ENTROPY_HASH = 47165747L
+        @JvmField
+        val getEntropyBind =
+            ObjectCalls.getMethodBind("OS", "get_entropy", GET_ENTROPY_HASH)
+
+        private const val GET_SYSTEM_CA_CERTIFICATES_HASH = 2841200299L
+        @JvmField
+        val getSystemCaCertificatesBind =
+            ObjectCalls.getMethodBind("OS", "get_system_ca_certificates", GET_SYSTEM_CA_CERTIFICATES_HASH)
+
+        private const val GET_CONNECTED_MIDI_INPUTS_HASH = 2981934095L
+        @JvmField
+        val getConnectedMidiInputsBind =
+            ObjectCalls.getMethodBind("OS", "get_connected_midi_inputs", GET_CONNECTED_MIDI_INPUTS_HASH)
+
+        private const val OPEN_MIDI_INPUTS_HASH = 3218959716L
+        @JvmField
+        val openMidiInputsBind =
+            ObjectCalls.getMethodBind("OS", "open_midi_inputs", OPEN_MIDI_INPUTS_HASH)
+
+        private const val CLOSE_MIDI_INPUTS_HASH = 3218959716L
+        @JvmField
+        val closeMidiInputsBind =
+            ObjectCalls.getMethodBind("OS", "close_midi_inputs", CLOSE_MIDI_INPUTS_HASH)
+
+        private const val ALERT_HASH = 1783970740L
+        @JvmField
+        val alertBind =
+            ObjectCalls.getMethodBind("OS", "alert", ALERT_HASH)
+
+        private const val CRASH_HASH = 83702148L
+        @JvmField
+        val crashBind =
+            ObjectCalls.getMethodBind("OS", "crash", CRASH_HASH)
+
+        private const val SET_LOW_PROCESSOR_USAGE_MODE_HASH = 2586408642L
+        @JvmField
+        val setLowProcessorUsageModeBind =
+            ObjectCalls.getMethodBind("OS", "set_low_processor_usage_mode", SET_LOW_PROCESSOR_USAGE_MODE_HASH)
+
+        private const val IS_IN_LOW_PROCESSOR_USAGE_MODE_HASH = 36873697L
+        @JvmField
+        val isInLowProcessorUsageModeBind =
+            ObjectCalls.getMethodBind("OS", "is_in_low_processor_usage_mode", IS_IN_LOW_PROCESSOR_USAGE_MODE_HASH)
+
+        private const val SET_LOW_PROCESSOR_USAGE_MODE_SLEEP_USEC_HASH = 1286410249L
+        @JvmField
+        val setLowProcessorUsageModeSleepUsecBind =
+            ObjectCalls.getMethodBind("OS", "set_low_processor_usage_mode_sleep_usec", SET_LOW_PROCESSOR_USAGE_MODE_SLEEP_USEC_HASH)
+
+        private const val GET_LOW_PROCESSOR_USAGE_MODE_SLEEP_USEC_HASH = 3905245786L
+        @JvmField
+        val getLowProcessorUsageModeSleepUsecBind =
+            ObjectCalls.getMethodBind("OS", "get_low_processor_usage_mode_sleep_usec", GET_LOW_PROCESSOR_USAGE_MODE_SLEEP_USEC_HASH)
+
+        private const val SET_DELTA_SMOOTHING_HASH = 2586408642L
+        @JvmField
+        val setDeltaSmoothingBind =
+            ObjectCalls.getMethodBind("OS", "set_delta_smoothing", SET_DELTA_SMOOTHING_HASH)
+
+        private const val IS_DELTA_SMOOTHING_ENABLED_HASH = 36873697L
+        @JvmField
+        val isDeltaSmoothingEnabledBind =
+            ObjectCalls.getMethodBind("OS", "is_delta_smoothing_enabled", IS_DELTA_SMOOTHING_ENABLED_HASH)
+
+        private const val GET_PROCESSOR_COUNT_HASH = 3905245786L
+        @JvmField
+        val getProcessorCountBind =
+            ObjectCalls.getMethodBind("OS", "get_processor_count", GET_PROCESSOR_COUNT_HASH)
+
+        private const val GET_PROCESSOR_NAME_HASH = 201670096L
+        @JvmField
+        val getProcessorNameBind =
+            ObjectCalls.getMethodBind("OS", "get_processor_name", GET_PROCESSOR_NAME_HASH)
+
+        private const val GET_SYSTEM_FONTS_HASH = 1139954409L
+        @JvmField
+        val getSystemFontsBind =
+            ObjectCalls.getMethodBind("OS", "get_system_fonts", GET_SYSTEM_FONTS_HASH)
+
+        private const val GET_SYSTEM_FONT_PATH_HASH = 626580860L
+        @JvmField
+        val getSystemFontPathBind =
+            ObjectCalls.getMethodBind("OS", "get_system_font_path", GET_SYSTEM_FONT_PATH_HASH)
+
+        private const val GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH = 197317981L
+        @JvmField
+        val getSystemFontPathForTextBind =
+            ObjectCalls.getMethodBind("OS", "get_system_font_path_for_text", GET_SYSTEM_FONT_PATH_FOR_TEXT_HASH)
+
+        private const val GET_EXECUTABLE_PATH_HASH = 201670096L
+        @JvmField
+        val getExecutablePathBind =
+            ObjectCalls.getMethodBind("OS", "get_executable_path", GET_EXECUTABLE_PATH_HASH)
+
+        private const val READ_STRING_FROM_STDIN_HASH = 723587915L
+        @JvmField
+        val readStringFromStdinBind =
+            ObjectCalls.getMethodBind("OS", "read_string_from_stdin", READ_STRING_FROM_STDIN_HASH)
+
+        private const val READ_BUFFER_FROM_STDIN_HASH = 3249455752L
+        @JvmField
+        val readBufferFromStdinBind =
+            ObjectCalls.getMethodBind("OS", "read_buffer_from_stdin", READ_BUFFER_FROM_STDIN_HASH)
+
+        private const val GET_STDIN_TYPE_HASH = 1704816237L
+        @JvmField
+        val getStdinTypeBind =
+            ObjectCalls.getMethodBind("OS", "get_stdin_type", GET_STDIN_TYPE_HASH)
+
+        private const val GET_STDOUT_TYPE_HASH = 1704816237L
+        @JvmField
+        val getStdoutTypeBind =
+            ObjectCalls.getMethodBind("OS", "get_stdout_type", GET_STDOUT_TYPE_HASH)
+
+        private const val GET_STDERR_TYPE_HASH = 1704816237L
+        @JvmField
+        val getStderrTypeBind =
+            ObjectCalls.getMethodBind("OS", "get_stderr_type", GET_STDERR_TYPE_HASH)
+
+        private const val EXECUTE_HASH = 1488299882L
+        @JvmField
+        val executeBind =
+            ObjectCalls.getMethodBind("OS", "execute", EXECUTE_HASH)
+
+        private const val EXECUTE_WITH_PIPE_HASH = 2851312030L
+        @JvmField
+        val executeWithPipeBind =
+            ObjectCalls.getMethodBind("OS", "execute_with_pipe", EXECUTE_WITH_PIPE_HASH)
+
+        private const val CREATE_PROCESS_HASH = 2903767230L
+        @JvmField
+        val createProcessBind =
+            ObjectCalls.getMethodBind("OS", "create_process", CREATE_PROCESS_HASH)
+
+        private const val CREATE_INSTANCE_HASH = 1080601263L
+        @JvmField
+        val createInstanceBind =
+            ObjectCalls.getMethodBind("OS", "create_instance", CREATE_INSTANCE_HASH)
+
+        private const val OPEN_WITH_PROGRAM_HASH = 2848259907L
+        @JvmField
+        val openWithProgramBind =
+            ObjectCalls.getMethodBind("OS", "open_with_program", OPEN_WITH_PROGRAM_HASH)
+
+        private const val KILL_HASH = 844576869L
+        @JvmField
+        val killBind =
+            ObjectCalls.getMethodBind("OS", "kill", KILL_HASH)
+
+        private const val SHELL_OPEN_HASH = 166001499L
+        @JvmField
+        val shellOpenBind =
+            ObjectCalls.getMethodBind("OS", "shell_open", SHELL_OPEN_HASH)
+
+        private const val SHELL_SHOW_IN_FILE_MANAGER_HASH = 3565188097L
+        @JvmField
+        val shellShowInFileManagerBind =
+            ObjectCalls.getMethodBind("OS", "shell_show_in_file_manager", SHELL_SHOW_IN_FILE_MANAGER_HASH)
+
+        private const val IS_PROCESS_RUNNING_HASH = 1116898809L
+        @JvmField
+        val isProcessRunningBind =
+            ObjectCalls.getMethodBind("OS", "is_process_running", IS_PROCESS_RUNNING_HASH)
+
+        private const val GET_PROCESS_EXIT_CODE_HASH = 923996154L
+        @JvmField
+        val getProcessExitCodeBind =
+            ObjectCalls.getMethodBind("OS", "get_process_exit_code", GET_PROCESS_EXIT_CODE_HASH)
+
+        private const val GET_PROCESS_ID_HASH = 3905245786L
+        @JvmField
+        val getProcessIdBind =
+            ObjectCalls.getMethodBind("OS", "get_process_id", GET_PROCESS_ID_HASH)
+
+        private const val HAS_ENVIRONMENT_HASH = 3927539163L
+        @JvmField
+        val hasEnvironmentBind =
+            ObjectCalls.getMethodBind("OS", "has_environment", HAS_ENVIRONMENT_HASH)
+
+        private const val GET_ENVIRONMENT_HASH = 3135753539L
+        @JvmField
+        val getEnvironmentBind =
+            ObjectCalls.getMethodBind("OS", "get_environment", GET_ENVIRONMENT_HASH)
+
+        private const val SET_ENVIRONMENT_HASH = 3605043004L
+        @JvmField
+        val setEnvironmentBind =
+            ObjectCalls.getMethodBind("OS", "set_environment", SET_ENVIRONMENT_HASH)
+
+        private const val UNSET_ENVIRONMENT_HASH = 3089850668L
+        @JvmField
+        val unsetEnvironmentBind =
+            ObjectCalls.getMethodBind("OS", "unset_environment", UNSET_ENVIRONMENT_HASH)
+
+        private const val GET_NAME_HASH = 201670096L
+        @JvmField
+        val getNameBind =
+            ObjectCalls.getMethodBind("OS", "get_name", GET_NAME_HASH)
+
+        private const val GET_DISTRIBUTION_NAME_HASH = 201670096L
+        @JvmField
+        val getDistributionNameBind =
+            ObjectCalls.getMethodBind("OS", "get_distribution_name", GET_DISTRIBUTION_NAME_HASH)
+
+        private const val GET_VERSION_HASH = 201670096L
+        @JvmField
+        val getVersionBind =
+            ObjectCalls.getMethodBind("OS", "get_version", GET_VERSION_HASH)
+
+        private const val GET_VERSION_ALIAS_HASH = 201670096L
+        @JvmField
+        val getVersionAliasBind =
+            ObjectCalls.getMethodBind("OS", "get_version_alias", GET_VERSION_ALIAS_HASH)
+
+        private const val GET_CMDLINE_ARGS_HASH = 2981934095L
+        @JvmField
+        val getCmdlineArgsBind =
+            ObjectCalls.getMethodBind("OS", "get_cmdline_args", GET_CMDLINE_ARGS_HASH)
+
+        private const val GET_CMDLINE_USER_ARGS_HASH = 2981934095L
+        @JvmField
+        val getCmdlineUserArgsBind =
+            ObjectCalls.getMethodBind("OS", "get_cmdline_user_args", GET_CMDLINE_USER_ARGS_HASH)
+
+        private const val GET_VIDEO_ADAPTER_DRIVER_INFO_HASH = 1139954409L
+        @JvmField
+        val getVideoAdapterDriverInfoBind =
+            ObjectCalls.getMethodBind("OS", "get_video_adapter_driver_info", GET_VIDEO_ADAPTER_DRIVER_INFO_HASH)
+
+        private const val SET_RESTART_ON_EXIT_HASH = 3331453935L
+        @JvmField
+        val setRestartOnExitBind =
+            ObjectCalls.getMethodBind("OS", "set_restart_on_exit", SET_RESTART_ON_EXIT_HASH)
+
+        private const val IS_RESTART_ON_EXIT_SET_HASH = 36873697L
+        @JvmField
+        val isRestartOnExitSetBind =
+            ObjectCalls.getMethodBind("OS", "is_restart_on_exit_set", IS_RESTART_ON_EXIT_SET_HASH)
+
+        private const val GET_RESTART_ON_EXIT_ARGUMENTS_HASH = 1139954409L
+        @JvmField
+        val getRestartOnExitArgumentsBind =
+            ObjectCalls.getMethodBind("OS", "get_restart_on_exit_arguments", GET_RESTART_ON_EXIT_ARGUMENTS_HASH)
+
+        private const val DELAY_USEC_HASH = 998575451L
+        @JvmField
+        val delayUsecBind =
+            ObjectCalls.getMethodBind("OS", "delay_usec", DELAY_USEC_HASH)
+
+        private const val DELAY_MSEC_HASH = 998575451L
+        @JvmField
+        val delayMsecBind =
+            ObjectCalls.getMethodBind("OS", "delay_msec", DELAY_MSEC_HASH)
+
+        private const val GET_LOCALE_HASH = 201670096L
+        @JvmField
+        val getLocaleBind =
+            ObjectCalls.getMethodBind("OS", "get_locale", GET_LOCALE_HASH)
+
+        private const val GET_LOCALE_LANGUAGE_HASH = 201670096L
+        @JvmField
+        val getLocaleLanguageBind =
+            ObjectCalls.getMethodBind("OS", "get_locale_language", GET_LOCALE_LANGUAGE_HASH)
+
+        private const val GET_MODEL_NAME_HASH = 201670096L
+        @JvmField
+        val getModelNameBind =
+            ObjectCalls.getMethodBind("OS", "get_model_name", GET_MODEL_NAME_HASH)
+
+        private const val IS_USERFS_PERSISTENT_HASH = 36873697L
+        @JvmField
+        val isUserfsPersistentBind =
+            ObjectCalls.getMethodBind("OS", "is_userfs_persistent", IS_USERFS_PERSISTENT_HASH)
+
+        private const val IS_STDOUT_VERBOSE_HASH = 36873697L
+        @JvmField
+        val isStdoutVerboseBind =
+            ObjectCalls.getMethodBind("OS", "is_stdout_verbose", IS_STDOUT_VERBOSE_HASH)
+
+        private const val IS_DEBUG_BUILD_HASH = 36873697L
+        @JvmField
+        val isDebugBuildBind =
+            ObjectCalls.getMethodBind("OS", "is_debug_build", IS_DEBUG_BUILD_HASH)
+
+        private const val GET_STATIC_MEMORY_USAGE_HASH = 3905245786L
+        @JvmField
+        val getStaticMemoryUsageBind =
+            ObjectCalls.getMethodBind("OS", "get_static_memory_usage", GET_STATIC_MEMORY_USAGE_HASH)
+
+        private const val GET_STATIC_MEMORY_PEAK_USAGE_HASH = 3905245786L
+        @JvmField
+        val getStaticMemoryPeakUsageBind =
+            ObjectCalls.getMethodBind("OS", "get_static_memory_peak_usage", GET_STATIC_MEMORY_PEAK_USAGE_HASH)
+
+        private const val GET_MEMORY_INFO_HASH = 3102165223L
+        @JvmField
+        val getMemoryInfoBind =
+            ObjectCalls.getMethodBind("OS", "get_memory_info", GET_MEMORY_INFO_HASH)
+
+        private const val MOVE_TO_TRASH_HASH = 2113323047L
+        @JvmField
+        val moveToTrashBind =
+            ObjectCalls.getMethodBind("OS", "move_to_trash", MOVE_TO_TRASH_HASH)
+
+        private const val GET_USER_DATA_DIR_HASH = 201670096L
+        @JvmField
+        val getUserDataDirBind =
+            ObjectCalls.getMethodBind("OS", "get_user_data_dir", GET_USER_DATA_DIR_HASH)
+
+        private const val GET_SYSTEM_DIR_HASH = 3073895123L
+        @JvmField
+        val getSystemDirBind =
+            ObjectCalls.getMethodBind("OS", "get_system_dir", GET_SYSTEM_DIR_HASH)
+
+        private const val GET_CONFIG_DIR_HASH = 201670096L
+        @JvmField
+        val getConfigDirBind =
+            ObjectCalls.getMethodBind("OS", "get_config_dir", GET_CONFIG_DIR_HASH)
+
+        private const val GET_DATA_DIR_HASH = 201670096L
+        @JvmField
+        val getDataDirBind =
+            ObjectCalls.getMethodBind("OS", "get_data_dir", GET_DATA_DIR_HASH)
+
+        private const val GET_CACHE_DIR_HASH = 201670096L
+        @JvmField
+        val getCacheDirBind =
+            ObjectCalls.getMethodBind("OS", "get_cache_dir", GET_CACHE_DIR_HASH)
+
+        private const val GET_TEMP_DIR_HASH = 201670096L
+        @JvmField
+        val getTempDirBind =
+            ObjectCalls.getMethodBind("OS", "get_temp_dir", GET_TEMP_DIR_HASH)
+
+        private const val GET_UNIQUE_ID_HASH = 201670096L
+        @JvmField
+        val getUniqueIdBind =
+            ObjectCalls.getMethodBind("OS", "get_unique_id", GET_UNIQUE_ID_HASH)
+
+        private const val GET_KEYCODE_STRING_HASH = 2261993717L
+        @JvmField
+        val getKeycodeStringBind =
+            ObjectCalls.getMethodBind("OS", "get_keycode_string", GET_KEYCODE_STRING_HASH)
+
+        private const val IS_KEYCODE_UNICODE_HASH = 1116898809L
+        @JvmField
+        val isKeycodeUnicodeBind =
+            ObjectCalls.getMethodBind("OS", "is_keycode_unicode", IS_KEYCODE_UNICODE_HASH)
+
+        private const val FIND_KEYCODE_FROM_STRING_HASH = 1084858572L
+        @JvmField
+        val findKeycodeFromStringBind =
+            ObjectCalls.getMethodBind("OS", "find_keycode_from_string", FIND_KEYCODE_FROM_STRING_HASH)
+
+        private const val SET_USE_FILE_ACCESS_SAVE_AND_SWAP_HASH = 2586408642L
+        @JvmField
+        val setUseFileAccessSaveAndSwapBind =
+            ObjectCalls.getMethodBind("OS", "set_use_file_access_save_and_swap", SET_USE_FILE_ACCESS_SAVE_AND_SWAP_HASH)
+
+        private const val SET_THREAD_NAME_HASH = 166001499L
+        @JvmField
+        val setThreadNameBind =
+            ObjectCalls.getMethodBind("OS", "set_thread_name", SET_THREAD_NAME_HASH)
+
+        private const val GET_THREAD_CALLER_ID_HASH = 3905245786L
+        @JvmField
+        val getThreadCallerIdBind =
+            ObjectCalls.getMethodBind("OS", "get_thread_caller_id", GET_THREAD_CALLER_ID_HASH)
+
+        private const val GET_MAIN_THREAD_ID_HASH = 3905245786L
+        @JvmField
+        val getMainThreadIdBind =
+            ObjectCalls.getMethodBind("OS", "get_main_thread_id", GET_MAIN_THREAD_ID_HASH)
+
+        private const val HAS_FEATURE_HASH = 3927539163L
+        @JvmField
+        val hasFeatureBind =
+            ObjectCalls.getMethodBind("OS", "has_feature", HAS_FEATURE_HASH)
+
+        private const val IS_SANDBOXED_HASH = 36873697L
+        @JvmField
+        val isSandboxedBind =
+            ObjectCalls.getMethodBind("OS", "is_sandboxed", IS_SANDBOXED_HASH)
+
+        private const val REQUEST_PERMISSION_HASH = 2323990056L
+        @JvmField
+        val requestPermissionBind =
+            ObjectCalls.getMethodBind("OS", "request_permission", REQUEST_PERMISSION_HASH)
+
+        private const val REQUEST_PERMISSIONS_HASH = 2240911060L
+        @JvmField
+        val requestPermissionsBind =
+            ObjectCalls.getMethodBind("OS", "request_permissions", REQUEST_PERMISSIONS_HASH)
+
+        private const val GET_GRANTED_PERMISSIONS_HASH = 1139954409L
+        @JvmField
+        val getGrantedPermissionsBind =
+            ObjectCalls.getMethodBind("OS", "get_granted_permissions", GET_GRANTED_PERMISSIONS_HASH)
+
+        private const val REVOKE_GRANTED_PERMISSIONS_HASH = 3218959716L
+        @JvmField
+        val revokeGrantedPermissionsBind =
+            ObjectCalls.getMethodBind("OS", "revoke_granted_permissions", REVOKE_GRANTED_PERMISSIONS_HASH)
+
+        private const val ADD_LOGGER_HASH = 4261188958L
+        @JvmField
+        val addLoggerBind =
+            ObjectCalls.getMethodBind("OS", "add_logger", ADD_LOGGER_HASH)
+
+        private const val REMOVE_LOGGER_HASH = 4261188958L
+        @JvmField
+        val removeLoggerBind =
+            ObjectCalls.getMethodBind("OS", "remove_logger", REMOVE_LOGGER_HASH)
     }
 }

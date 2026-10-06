@@ -20,7 +20,5 @@ class OggPacketSequencePlayback(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): OggPacketSequencePlayback? =
             if (handle.address() == 0L) null else OggPacketSequencePlayback(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

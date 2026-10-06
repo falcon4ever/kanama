@@ -20,7 +20,5 @@ class VisualShaderNodeSDFToScreenUV(handle: GodotHandle) : VisualShaderNode(hand
 
         internal fun wrapBorrowed(handle: RawSegment): VisualShaderNodeSDFToScreenUV? =
             if (handle.address() == 0L) null else VisualShaderNodeSDFToScreenUV(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

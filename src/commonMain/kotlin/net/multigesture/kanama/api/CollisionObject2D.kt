@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
@@ -51,7 +52,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_rid
      */
     fun getRid(): RID {
-        return ObjectCalls.ptrcallNoArgsRetRID(getRidBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getRidBind, segment)
     }
 
     /**
@@ -64,7 +65,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_layer
      */
     fun setCollisionLayer(layer: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionLayerBind, segment, layer)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionLayerBind, segment, layer)
     }
 
     /**
@@ -77,7 +78,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_layer
      */
     fun getCollisionLayer(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionLayerBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionLayerBind, segment)
     }
 
     /**
@@ -90,7 +91,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_mask
      */
     fun setCollisionMask(mask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setCollisionMaskBind, segment, mask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setCollisionMaskBind, segment, mask)
     }
 
     /**
@@ -103,7 +104,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_mask
      */
     fun getCollisionMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getCollisionMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getCollisionMaskBind, segment)
     }
 
     /**
@@ -113,7 +114,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_layer_value
      */
     fun setCollisionLayerValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionLayerValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionLayerValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -123,7 +124,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_layer_value
      */
     fun getCollisionLayerValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionLayerValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionLayerValueBind, segment, layerNumber)
     }
 
     /**
@@ -133,7 +134,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_mask_value
      */
     fun setCollisionMaskValue(layerNumber: Int, value: Boolean) {
-        ObjectCalls.ptrcallWithIntAndBoolArgs(setCollisionMaskValueBind, segment, layerNumber, value)
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setCollisionMaskValueBind, segment, layerNumber, value)
     }
 
     /**
@@ -143,7 +144,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_mask_value
      */
     fun getCollisionMaskValue(layerNumber: Int): Boolean {
-        return ObjectCalls.ptrcallWithIntArgRetBool(getCollisionMaskValueBind, segment, layerNumber)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.getCollisionMaskValueBind, segment, layerNumber)
     }
 
     /**
@@ -154,7 +155,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_collision_priority
      */
     fun setCollisionPriority(priority: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setCollisionPriorityBind, segment, priority)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setCollisionPriorityBind, segment, priority)
     }
 
     /**
@@ -165,7 +166,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_collision_priority
      */
     fun getCollisionPriority(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getCollisionPriorityBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getCollisionPriorityBind, segment)
     }
 
     /**
@@ -174,7 +175,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_disable_mode
      */
     fun setDisableMode(mode: CollisionObject2D.DisableMode) {
-        ObjectCalls.ptrcallWithLongArg(setDisableModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setDisableModeBind, segment, mode.value)
     }
 
     /**
@@ -183,7 +184,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_disable_mode
      */
     fun getDisableMode(): CollisionObject2D.DisableMode {
-        return CollisionObject2D.DisableMode(ObjectCalls.ptrcallNoArgsRetLong(getDisableModeBind, segment))
+        return CollisionObject2D.DisableMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getDisableModeBind, segment))
     }
 
     /**
@@ -194,7 +195,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.set_pickable
      */
     fun setPickable(enabled: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setPickableBind, segment, enabled)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setPickableBind, segment, enabled)
     }
 
     /**
@@ -205,7 +206,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.is_pickable
      */
     fun isPickable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isPickableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPickableBind, segment)
     }
 
     /**
@@ -215,7 +216,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.create_shape_owner
      */
     fun createShapeOwner(owner: GodotObject): Long {
-        return ObjectCalls.ptrcallWithObjectArgRetUInt32(createShapeOwnerBind, segment, owner.segment)
+        return ObjectCalls.ptrcallWithObjectArgRetUInt32(Binds.createShapeOwnerBind, segment, owner.segment)
     }
 
     /**
@@ -224,7 +225,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.remove_shape_owner
      */
     fun removeShapeOwner(ownerId: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(removeShapeOwnerBind, segment, ownerId)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.removeShapeOwnerBind, segment, ownerId)
     }
 
     /**
@@ -234,7 +235,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_shape_owners
      */
     fun getShapeOwners(): List<Int> {
-        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(getShapeOwnersBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getShapeOwnersBind, segment)
     }
 
     /**
@@ -243,7 +244,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_transform
      */
     fun shapeOwnerSetTransform(ownerId: Long, transform: Transform2D) {
-        ObjectCalls.ptrcallWithUInt32AndTransform2DArg(shapeOwnerSetTransformBind, segment, ownerId, transform)
+        ObjectCalls.ptrcallWithUInt32AndTransform2DArg(Binds.shapeOwnerSetTransformBind, segment, ownerId, transform)
     }
 
     /**
@@ -252,7 +253,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_transform
      */
     fun shapeOwnerGetTransform(ownerId: Long): Transform2D {
-        return ObjectCalls.ptrcallWithUInt32ArgRetTransform2D(shapeOwnerGetTransformBind, segment, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetTransform2D(Binds.shapeOwnerGetTransformBind, segment, ownerId)
     }
 
     /**
@@ -261,7 +262,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_owner
      */
     fun shapeOwnerGetOwner(ownerId: Long): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallWithUInt32ArgRetObject(shapeOwnerGetOwnerBind, segment, ownerId))
+        return GodotObject.wrap(ObjectCalls.ptrcallWithUInt32ArgRetObject(Binds.shapeOwnerGetOwnerBind, segment, ownerId))
     }
 
     /**
@@ -270,7 +271,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_disabled
      */
     fun shapeOwnerSetDisabled(ownerId: Long, disabled: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(shapeOwnerSetDisabledBind, segment, ownerId, disabled)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(Binds.shapeOwnerSetDisabledBind, segment, ownerId, disabled)
     }
 
     /**
@@ -279,7 +280,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.is_shape_owner_disabled
      */
     fun isShapeOwnerDisabled(ownerId: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerDisabledBind, segment, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(Binds.isShapeOwnerDisabledBind, segment, ownerId)
     }
 
     /**
@@ -289,7 +290,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_one_way_collision
      */
     fun shapeOwnerSetOneWayCollision(ownerId: Long, enable: Boolean) {
-        ObjectCalls.ptrcallWithUInt32AndBoolArgs(shapeOwnerSetOneWayCollisionBind, segment, ownerId, enable)
+        ObjectCalls.ptrcallWithUInt32AndBoolArgs(Binds.shapeOwnerSetOneWayCollisionBind, segment, ownerId, enable)
     }
 
     /**
@@ -299,7 +300,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.is_shape_owner_one_way_collision_enabled
      */
     fun isShapeOwnerOneWayCollisionEnabled(ownerId: Long): Boolean {
-        return ObjectCalls.ptrcallWithUInt32ArgRetBool(isShapeOwnerOneWayCollisionEnabledBind, segment, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetBool(Binds.isShapeOwnerOneWayCollisionEnabledBind, segment, ownerId)
     }
 
     /**
@@ -309,7 +310,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_one_way_collision_margin
      */
     fun shapeOwnerSetOneWayCollisionMargin(ownerId: Long, margin: Double) {
-        ObjectCalls.ptrcallWithUInt32AndDoubleArg(shapeOwnerSetOneWayCollisionMarginBind, segment, ownerId, margin)
+        ObjectCalls.ptrcallWithUInt32AndDoubleArg(Binds.shapeOwnerSetOneWayCollisionMarginBind, segment, ownerId, margin)
     }
 
     /**
@@ -318,7 +319,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_shape_owner_one_way_collision_margin
      */
     fun getShapeOwnerOneWayCollisionMargin(ownerId: Long): Double {
-        return ObjectCalls.ptrcallWithUInt32ArgRetDouble(getShapeOwnerOneWayCollisionMarginBind, segment, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetDouble(Binds.getShapeOwnerOneWayCollisionMarginBind, segment, ownerId)
     }
 
     /**
@@ -327,7 +328,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.get_shape_owner_one_way_collision_direction
      */
     fun getShapeOwnerOneWayCollisionDirection(ownerId: Long): Vector2 {
-        return ObjectCalls.ptrcallWithUInt32ArgRetVector2(getShapeOwnerOneWayCollisionDirectionBind, segment, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetVector2(Binds.getShapeOwnerOneWayCollisionDirectionBind, segment, ownerId)
     }
 
     /**
@@ -337,7 +338,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_set_one_way_collision_direction
      */
     fun shapeOwnerSetOneWayCollisionDirection(ownerId: Long, direction: Vector2) {
-        ObjectCalls.ptrcallWithUInt32AndVector2Args(shapeOwnerSetOneWayCollisionDirectionBind, segment, ownerId, direction)
+        ObjectCalls.ptrcallWithUInt32AndVector2Args(Binds.shapeOwnerSetOneWayCollisionDirectionBind, segment, ownerId, direction)
     }
 
     /**
@@ -346,7 +347,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_add_shape
      */
     fun shapeOwnerAddShape(ownerId: Long, shape: Shape2D) {
-        ObjectCalls.ptrcallWithUInt32AndObjectArg(shapeOwnerAddShapeBind, segment, ownerId, shape.requireOpenHandle())
+        ObjectCalls.ptrcallWithUInt32AndObjectArg(Binds.shapeOwnerAddShapeBind, segment, ownerId, shape.requireOpenHandle())
     }
 
     /**
@@ -355,7 +356,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_shape_count
      */
     fun shapeOwnerGetShapeCount(ownerId: Long): Int {
-        return ObjectCalls.ptrcallWithUInt32ArgRetInt(shapeOwnerGetShapeCountBind, segment, ownerId)
+        return ObjectCalls.ptrcallWithUInt32ArgRetInt(Binds.shapeOwnerGetShapeCountBind, segment, ownerId)
     }
 
     /**
@@ -364,7 +365,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_shape
      */
     fun shapeOwnerGetShape(ownerId: Long, shapeId: Int): Shape2D? {
-        return Shape2D.wrapOwned(ObjectCalls.ptrcallWithUInt32AndIntArgRetObject(shapeOwnerGetShapeBind, segment, ownerId, shapeId))
+        return Shape2D.wrapOwned(ObjectCalls.ptrcallWithUInt32AndIntArgRetObject(Binds.shapeOwnerGetShapeBind, segment, ownerId, shapeId))
     }
 
     /**
@@ -373,7 +374,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_get_shape_index
      */
     fun shapeOwnerGetShapeIndex(ownerId: Long, shapeId: Int): Int {
-        return ObjectCalls.ptrcallWithUInt32AndIntArgRetInt(shapeOwnerGetShapeIndexBind, segment, ownerId, shapeId)
+        return ObjectCalls.ptrcallWithUInt32AndIntArgRetInt(Binds.shapeOwnerGetShapeIndexBind, segment, ownerId, shapeId)
     }
 
     /**
@@ -382,7 +383,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_remove_shape
      */
     fun shapeOwnerRemoveShape(ownerId: Long, shapeId: Int) {
-        ObjectCalls.ptrcallWithUInt32AndIntArg(shapeOwnerRemoveShapeBind, segment, ownerId, shapeId)
+        ObjectCalls.ptrcallWithUInt32AndIntArg(Binds.shapeOwnerRemoveShapeBind, segment, ownerId, shapeId)
     }
 
     /**
@@ -391,7 +392,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_owner_clear_shapes
      */
     fun shapeOwnerClearShapes(ownerId: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(shapeOwnerClearShapesBind, segment, ownerId)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.shapeOwnerClearShapesBind, segment, ownerId)
     }
 
     /**
@@ -400,7 +401,7 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
      * Generated from Godot docs: CollisionObject2D.shape_find_owner
      */
     fun shapeFindOwner(shapeIndex: Int): Long {
-        return ObjectCalls.ptrcallWithIntArgRetUInt32(shapeFindOwnerBind, segment, shapeIndex)
+        return ObjectCalls.ptrcallWithIntArgRetUInt32(Binds.shapeFindOwnerBind, segment, shapeIndex)
     }
 
     /** Signal `input_event(viewport: Node, event: InputEvent, shape_idx: int)`; see [TypedSignal]. */
@@ -478,185 +479,187 @@ open class CollisionObject2D(handle: GodotHandle) : Node2D(handle) {
 
         internal fun wrap(handle: RawSegment): CollisionObject2D? =
             if (handle.address() == 0L) null else CollisionObject2D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_RID_HASH = 2944877500L
-        private val getRidBind by lazy {
+        @JvmField
+        val getRidBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_rid", GET_RID_HASH)
-        }
 
         private const val SET_COLLISION_LAYER_HASH = 1286410249L
-        private val setCollisionLayerBind by lazy {
+        @JvmField
+        val setCollisionLayerBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "set_collision_layer", SET_COLLISION_LAYER_HASH)
-        }
 
         private const val GET_COLLISION_LAYER_HASH = 3905245786L
-        private val getCollisionLayerBind by lazy {
+        @JvmField
+        val getCollisionLayerBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_collision_layer", GET_COLLISION_LAYER_HASH)
-        }
 
         private const val SET_COLLISION_MASK_HASH = 1286410249L
-        private val setCollisionMaskBind by lazy {
+        @JvmField
+        val setCollisionMaskBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "set_collision_mask", SET_COLLISION_MASK_HASH)
-        }
 
         private const val GET_COLLISION_MASK_HASH = 3905245786L
-        private val getCollisionMaskBind by lazy {
+        @JvmField
+        val getCollisionMaskBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_collision_mask", GET_COLLISION_MASK_HASH)
-        }
 
         private const val SET_COLLISION_LAYER_VALUE_HASH = 300928843L
-        private val setCollisionLayerValueBind by lazy {
+        @JvmField
+        val setCollisionLayerValueBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "set_collision_layer_value", SET_COLLISION_LAYER_VALUE_HASH)
-        }
 
         private const val GET_COLLISION_LAYER_VALUE_HASH = 1116898809L
-        private val getCollisionLayerValueBind by lazy {
+        @JvmField
+        val getCollisionLayerValueBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_collision_layer_value", GET_COLLISION_LAYER_VALUE_HASH)
-        }
 
         private const val SET_COLLISION_MASK_VALUE_HASH = 300928843L
-        private val setCollisionMaskValueBind by lazy {
+        @JvmField
+        val setCollisionMaskValueBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "set_collision_mask_value", SET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val GET_COLLISION_MASK_VALUE_HASH = 1116898809L
-        private val getCollisionMaskValueBind by lazy {
+        @JvmField
+        val getCollisionMaskValueBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_collision_mask_value", GET_COLLISION_MASK_VALUE_HASH)
-        }
 
         private const val SET_COLLISION_PRIORITY_HASH = 373806689L
-        private val setCollisionPriorityBind by lazy {
+        @JvmField
+        val setCollisionPriorityBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "set_collision_priority", SET_COLLISION_PRIORITY_HASH)
-        }
 
         private const val GET_COLLISION_PRIORITY_HASH = 1740695150L
-        private val getCollisionPriorityBind by lazy {
+        @JvmField
+        val getCollisionPriorityBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_collision_priority", GET_COLLISION_PRIORITY_HASH)
-        }
 
         private const val SET_DISABLE_MODE_HASH = 1919204045L
-        private val setDisableModeBind by lazy {
+        @JvmField
+        val setDisableModeBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "set_disable_mode", SET_DISABLE_MODE_HASH)
-        }
 
         private const val GET_DISABLE_MODE_HASH = 3172846349L
-        private val getDisableModeBind by lazy {
+        @JvmField
+        val getDisableModeBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_disable_mode", GET_DISABLE_MODE_HASH)
-        }
 
         private const val SET_PICKABLE_HASH = 2586408642L
-        private val setPickableBind by lazy {
+        @JvmField
+        val setPickableBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "set_pickable", SET_PICKABLE_HASH)
-        }
 
         private const val IS_PICKABLE_HASH = 36873697L
-        private val isPickableBind by lazy {
+        @JvmField
+        val isPickableBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "is_pickable", IS_PICKABLE_HASH)
-        }
 
         private const val CREATE_SHAPE_OWNER_HASH = 3429307534L
-        private val createShapeOwnerBind by lazy {
+        @JvmField
+        val createShapeOwnerBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "create_shape_owner", CREATE_SHAPE_OWNER_HASH)
-        }
 
         private const val REMOVE_SHAPE_OWNER_HASH = 1286410249L
-        private val removeShapeOwnerBind by lazy {
+        @JvmField
+        val removeShapeOwnerBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "remove_shape_owner", REMOVE_SHAPE_OWNER_HASH)
-        }
 
         private const val GET_SHAPE_OWNERS_HASH = 969006518L
-        private val getShapeOwnersBind by lazy {
+        @JvmField
+        val getShapeOwnersBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_shape_owners", GET_SHAPE_OWNERS_HASH)
-        }
 
         private const val SHAPE_OWNER_SET_TRANSFORM_HASH = 30160968L
-        private val shapeOwnerSetTransformBind by lazy {
+        @JvmField
+        val shapeOwnerSetTransformBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_set_transform", SHAPE_OWNER_SET_TRANSFORM_HASH)
-        }
 
         private const val SHAPE_OWNER_GET_TRANSFORM_HASH = 3836996910L
-        private val shapeOwnerGetTransformBind by lazy {
+        @JvmField
+        val shapeOwnerGetTransformBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_get_transform", SHAPE_OWNER_GET_TRANSFORM_HASH)
-        }
 
         private const val SHAPE_OWNER_GET_OWNER_HASH = 3332903315L
-        private val shapeOwnerGetOwnerBind by lazy {
+        @JvmField
+        val shapeOwnerGetOwnerBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_get_owner", SHAPE_OWNER_GET_OWNER_HASH)
-        }
 
         private const val SHAPE_OWNER_SET_DISABLED_HASH = 300928843L
-        private val shapeOwnerSetDisabledBind by lazy {
+        @JvmField
+        val shapeOwnerSetDisabledBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_set_disabled", SHAPE_OWNER_SET_DISABLED_HASH)
-        }
 
         private const val IS_SHAPE_OWNER_DISABLED_HASH = 1116898809L
-        private val isShapeOwnerDisabledBind by lazy {
+        @JvmField
+        val isShapeOwnerDisabledBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "is_shape_owner_disabled", IS_SHAPE_OWNER_DISABLED_HASH)
-        }
 
         private const val SHAPE_OWNER_SET_ONE_WAY_COLLISION_HASH = 300928843L
-        private val shapeOwnerSetOneWayCollisionBind by lazy {
+        @JvmField
+        val shapeOwnerSetOneWayCollisionBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_set_one_way_collision", SHAPE_OWNER_SET_ONE_WAY_COLLISION_HASH)
-        }
 
         private const val IS_SHAPE_OWNER_ONE_WAY_COLLISION_ENABLED_HASH = 1116898809L
-        private val isShapeOwnerOneWayCollisionEnabledBind by lazy {
+        @JvmField
+        val isShapeOwnerOneWayCollisionEnabledBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "is_shape_owner_one_way_collision_enabled", IS_SHAPE_OWNER_ONE_WAY_COLLISION_ENABLED_HASH)
-        }
 
         private const val SHAPE_OWNER_SET_ONE_WAY_COLLISION_MARGIN_HASH = 1602489585L
-        private val shapeOwnerSetOneWayCollisionMarginBind by lazy {
+        @JvmField
+        val shapeOwnerSetOneWayCollisionMarginBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_set_one_way_collision_margin", SHAPE_OWNER_SET_ONE_WAY_COLLISION_MARGIN_HASH)
-        }
 
         private const val GET_SHAPE_OWNER_ONE_WAY_COLLISION_MARGIN_HASH = 2339986948L
-        private val getShapeOwnerOneWayCollisionMarginBind by lazy {
+        @JvmField
+        val getShapeOwnerOneWayCollisionMarginBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_shape_owner_one_way_collision_margin", GET_SHAPE_OWNER_ONE_WAY_COLLISION_MARGIN_HASH)
-        }
 
         private const val GET_SHAPE_OWNER_ONE_WAY_COLLISION_DIRECTION_HASH = 2299179447L
-        private val getShapeOwnerOneWayCollisionDirectionBind by lazy {
+        @JvmField
+        val getShapeOwnerOneWayCollisionDirectionBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "get_shape_owner_one_way_collision_direction", GET_SHAPE_OWNER_ONE_WAY_COLLISION_DIRECTION_HASH)
-        }
 
         private const val SHAPE_OWNER_SET_ONE_WAY_COLLISION_DIRECTION_HASH = 163021252L
-        private val shapeOwnerSetOneWayCollisionDirectionBind by lazy {
+        @JvmField
+        val shapeOwnerSetOneWayCollisionDirectionBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_set_one_way_collision_direction", SHAPE_OWNER_SET_ONE_WAY_COLLISION_DIRECTION_HASH)
-        }
 
         private const val SHAPE_OWNER_ADD_SHAPE_HASH = 2077425081L
-        private val shapeOwnerAddShapeBind by lazy {
+        @JvmField
+        val shapeOwnerAddShapeBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_add_shape", SHAPE_OWNER_ADD_SHAPE_HASH)
-        }
 
         private const val SHAPE_OWNER_GET_SHAPE_COUNT_HASH = 923996154L
-        private val shapeOwnerGetShapeCountBind by lazy {
+        @JvmField
+        val shapeOwnerGetShapeCountBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_get_shape_count", SHAPE_OWNER_GET_SHAPE_COUNT_HASH)
-        }
 
         private const val SHAPE_OWNER_GET_SHAPE_HASH = 3106725749L
-        private val shapeOwnerGetShapeBind by lazy {
+        @JvmField
+        val shapeOwnerGetShapeBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_get_shape", SHAPE_OWNER_GET_SHAPE_HASH)
-        }
 
         private const val SHAPE_OWNER_GET_SHAPE_INDEX_HASH = 3175239445L
-        private val shapeOwnerGetShapeIndexBind by lazy {
+        @JvmField
+        val shapeOwnerGetShapeIndexBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_get_shape_index", SHAPE_OWNER_GET_SHAPE_INDEX_HASH)
-        }
 
         private const val SHAPE_OWNER_REMOVE_SHAPE_HASH = 3937882851L
-        private val shapeOwnerRemoveShapeBind by lazy {
+        @JvmField
+        val shapeOwnerRemoveShapeBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_remove_shape", SHAPE_OWNER_REMOVE_SHAPE_HASH)
-        }
 
         private const val SHAPE_OWNER_CLEAR_SHAPES_HASH = 1286410249L
-        private val shapeOwnerClearShapesBind by lazy {
+        @JvmField
+        val shapeOwnerClearShapesBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_owner_clear_shapes", SHAPE_OWNER_CLEAR_SHAPES_HASH)
-        }
 
         private const val SHAPE_FIND_OWNER_HASH = 923996154L
-        private val shapeFindOwnerBind by lazy {
+        @JvmField
+        val shapeFindOwnerBind =
             ObjectCalls.getMethodBind("CollisionObject2D", "shape_find_owner", SHAPE_FIND_OWNER_HASH)
-        }
     }
 }

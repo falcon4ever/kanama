@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -42,7 +43,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_base_type
      */
     fun setBaseType(baseType: String) {
-        ObjectCalls.ptrcallWithStringArg(setBaseTypeBind, segment, baseType)
+        ObjectCalls.ptrcallWithStringArg(Binds.setBaseTypeBind, segment, baseType)
     }
 
     /**
@@ -51,7 +52,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.get_base_type
      */
     fun getBaseType(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getBaseTypeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getBaseTypeBind, segment)
     }
 
     /**
@@ -61,7 +62,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.get_allowed_types
      */
     fun getAllowedTypes(): List<String> {
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getAllowedTypesBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getAllowedTypesBind, segment)
     }
 
     /**
@@ -70,7 +71,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_edited_resource
      */
     fun setEditedResource(resource: Resource?) {
-        ObjectCalls.ptrcallWithObjectArgs(setEditedResourceBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setEditedResourceBind, segment, listOf(resource?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     /**
@@ -79,7 +80,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.get_edited_resource
      */
     fun getEditedResource(): Resource? {
-        return Resource.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getEditedResourceBind, segment))
+        return Resource.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditedResourceBind, segment))
     }
 
     /**
@@ -89,7 +90,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_toggle_mode
      */
     fun setToggleMode(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setToggleModeBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setToggleModeBind, segment, enable)
     }
 
     /**
@@ -99,7 +100,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.is_toggle_mode
      */
     fun isToggleMode(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isToggleModeBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isToggleModeBind, segment)
     }
 
     /**
@@ -108,7 +109,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_toggle_pressed
      */
     fun setTogglePressed(pressed: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setTogglePressedBind, segment, pressed)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setTogglePressedBind, segment, pressed)
     }
 
     /**
@@ -117,7 +118,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.set_editable
      */
     fun setEditable(enable: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(setEditableBind, segment, enable)
+        ObjectCalls.ptrcallWithBoolArg(Binds.setEditableBind, segment, enable)
     }
 
     /**
@@ -126,7 +127,7 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
      * Generated from Godot docs: EditorResourcePicker.is_editable
      */
     fun isEditable(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(isEditableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isEditableBind, segment)
     }
 
     /** Signal `resource_selected(resource: Resource, inspect: bool)`; see [TypedSignal]. */
@@ -151,55 +152,57 @@ open class EditorResourcePicker(handle: GodotHandle) : HBoxContainer(handle) {
 
         internal fun wrap(handle: RawSegment): EditorResourcePicker? =
             if (handle.address() == 0L) null else EditorResourcePicker(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_BASE_TYPE_HASH = 83702148L
-        private val setBaseTypeBind by lazy {
+        @JvmField
+        val setBaseTypeBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "set_base_type", SET_BASE_TYPE_HASH)
-        }
 
         private const val GET_BASE_TYPE_HASH = 201670096L
-        private val getBaseTypeBind by lazy {
+        @JvmField
+        val getBaseTypeBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "get_base_type", GET_BASE_TYPE_HASH)
-        }
 
         private const val GET_ALLOWED_TYPES_HASH = 1139954409L
-        private val getAllowedTypesBind by lazy {
+        @JvmField
+        val getAllowedTypesBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "get_allowed_types", GET_ALLOWED_TYPES_HASH)
-        }
 
         private const val SET_EDITED_RESOURCE_HASH = 968641751L
-        private val setEditedResourceBind by lazy {
+        @JvmField
+        val setEditedResourceBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "set_edited_resource", SET_EDITED_RESOURCE_HASH)
-        }
 
         private const val GET_EDITED_RESOURCE_HASH = 2674603643L
-        private val getEditedResourceBind by lazy {
+        @JvmField
+        val getEditedResourceBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "get_edited_resource", GET_EDITED_RESOURCE_HASH)
-        }
 
         private const val SET_TOGGLE_MODE_HASH = 2586408642L
-        private val setToggleModeBind by lazy {
+        @JvmField
+        val setToggleModeBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "set_toggle_mode", SET_TOGGLE_MODE_HASH)
-        }
 
         private const val IS_TOGGLE_MODE_HASH = 36873697L
-        private val isToggleModeBind by lazy {
+        @JvmField
+        val isToggleModeBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "is_toggle_mode", IS_TOGGLE_MODE_HASH)
-        }
 
         private const val SET_TOGGLE_PRESSED_HASH = 2586408642L
-        private val setTogglePressedBind by lazy {
+        @JvmField
+        val setTogglePressedBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "set_toggle_pressed", SET_TOGGLE_PRESSED_HASH)
-        }
 
         private const val SET_EDITABLE_HASH = 2586408642L
-        private val setEditableBind by lazy {
+        @JvmField
+        val setEditableBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "set_editable", SET_EDITABLE_HASH)
-        }
 
         private const val IS_EDITABLE_HASH = 36873697L
-        private val isEditableBind by lazy {
+        @JvmField
+        val isEditableBind =
             ObjectCalls.getMethodBind("EditorResourcePicker", "is_editable", IS_EDITABLE_HASH)
-        }
     }
 }

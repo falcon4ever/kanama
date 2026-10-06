@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -20,7 +21,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.edit
      */
     fun edit(objectValue: GodotObject) {
-        ObjectCalls.ptrcallWithObjectArgs(editBind, segment, listOf(objectValue.segment))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.editBind, segment, listOf(objectValue.segment))
     }
 
     /**
@@ -29,7 +30,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.get_selected_path
      */
     fun getSelectedPath(): String {
-        return ObjectCalls.ptrcallNoArgsRetString(getSelectedPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getSelectedPathBind, segment)
     }
 
     /**
@@ -38,7 +39,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.get_edited_object
      */
     fun getEditedObject(): GodotObject? {
-        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(getEditedObjectBind, segment))
+        return GodotObject.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditedObjectBind, segment))
     }
 
     /**
@@ -47,7 +48,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.collapse_all_folding
      */
     fun collapseAllFolding() {
-        ObjectCalls.ptrcallNoArgs(collapseAllFoldingBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.collapseAllFoldingBind, segment)
     }
 
     /**
@@ -56,7 +57,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.expand_all_folding
      */
     fun expandAllFolding() {
-        ObjectCalls.ptrcallNoArgs(expandAllFoldingBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.expandAllFoldingBind, segment)
     }
 
     /**
@@ -65,7 +66,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
      * Generated from Godot docs: EditorInspector.expand_revertable
      */
     fun expandRevertable() {
-        ObjectCalls.ptrcallNoArgs(expandRevertableBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.expandRevertableBind, segment)
     }
 
     /** Signal `property_selected(property: String)`; see [TypedSignal]. */
@@ -133,7 +134,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
          * Generated from Godot docs: EditorInspector.instantiate_property_editor
          */
         fun instantiatePropertyEditor(objectValue: GodotObject, type: VariantType, path: String, hint: GodotPropertyHint, hintText: String, usage: Long, wide: Boolean = false): EditorProperty? {
-            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(instantiatePropertyEditorBind, NULL_SEGMENT, objectValue.segment, type.value, path, hint.value, hintText, usage, wide))
+            return EditorProperty.wrap(ObjectCalls.ptrcallWithObjectLongStringLongStringUInt32BoolArgsRetObject(Binds.instantiatePropertyEditorBind, NULL_SEGMENT, objectValue.segment, type.value, path, hint.value, hintText, usage, wide))
         }
 
         /**
@@ -144,7 +145,7 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
          * Generated from Godot docs: EditorInspector.create_default_inspector
          */
         fun createDefaultInspector(filterLineEdit: LineEdit): EditorInspector? {
-            return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(createDefaultInspectorBind, NULL_SEGMENT, filterLineEdit.segment))
+            return EditorInspector.wrap(ObjectCalls.ptrcallWithObjectArgRetObject(Binds.createDefaultInspectorBind, NULL_SEGMENT, filterLineEdit.segment))
         }
 
         @JvmStatic
@@ -153,45 +154,47 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
 
         internal fun wrap(handle: RawSegment): EditorInspector? =
             if (handle.address() == 0L) null else EditorInspector(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val EDIT_HASH = 3975164845L
-        private val editBind by lazy {
+        @JvmField
+        val editBind =
             ObjectCalls.getMethodBind("EditorInspector", "edit", EDIT_HASH)
-        }
 
         private const val GET_SELECTED_PATH_HASH = 201670096L
-        private val getSelectedPathBind by lazy {
+        @JvmField
+        val getSelectedPathBind =
             ObjectCalls.getMethodBind("EditorInspector", "get_selected_path", GET_SELECTED_PATH_HASH)
-        }
 
         private const val GET_EDITED_OBJECT_HASH = 2050059866L
-        private val getEditedObjectBind by lazy {
+        @JvmField
+        val getEditedObjectBind =
             ObjectCalls.getMethodBind("EditorInspector", "get_edited_object", GET_EDITED_OBJECT_HASH)
-        }
 
         private const val COLLAPSE_ALL_FOLDING_HASH = 3218959716L
-        private val collapseAllFoldingBind by lazy {
+        @JvmField
+        val collapseAllFoldingBind =
             ObjectCalls.getMethodBind("EditorInspector", "collapse_all_folding", COLLAPSE_ALL_FOLDING_HASH)
-        }
 
         private const val EXPAND_ALL_FOLDING_HASH = 3218959716L
-        private val expandAllFoldingBind by lazy {
+        @JvmField
+        val expandAllFoldingBind =
             ObjectCalls.getMethodBind("EditorInspector", "expand_all_folding", EXPAND_ALL_FOLDING_HASH)
-        }
 
         private const val EXPAND_REVERTABLE_HASH = 3218959716L
-        private val expandRevertableBind by lazy {
+        @JvmField
+        val expandRevertableBind =
             ObjectCalls.getMethodBind("EditorInspector", "expand_revertable", EXPAND_REVERTABLE_HASH)
-        }
 
         private const val INSTANTIATE_PROPERTY_EDITOR_HASH = 1429914152L
-        private val instantiatePropertyEditorBind by lazy {
+        @JvmField
+        val instantiatePropertyEditorBind =
             ObjectCalls.getMethodBind("EditorInspector", "instantiate_property_editor", INSTANTIATE_PROPERTY_EDITOR_HASH)
-        }
 
         private const val CREATE_DEFAULT_INSPECTOR_HASH = 2419746798L
-        private val createDefaultInspectorBind by lazy {
+        @JvmField
+        val createDefaultInspectorBind =
             ObjectCalls.getMethodBind("EditorInspector", "create_default_inspector", CREATE_DEFAULT_INSPECTOR_HASH)
-        }
     }
 }

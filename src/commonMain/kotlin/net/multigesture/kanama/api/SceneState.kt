@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -19,7 +20,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getPath(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(getPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPathBind, segment)
     }
 
     /**
@@ -30,7 +31,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getBaseSceneState(): SceneState? {
         checkOpen()
-        val ret = ObjectCalls.ptrcallNoArgsRetObject(getBaseSceneStateBind, segment)
+        val ret = ObjectCalls.ptrcallNoArgsRetObject(Binds.getBaseSceneStateBind, segment)
         if (ret.address() == segment.address()) {
             RefCounted.releaseHandle(ret)
             return this
@@ -46,7 +47,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getNodeCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getNodeCountBind, segment)
     }
 
     /**
@@ -56,7 +57,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeType(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeTypeBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getNodeTypeBind, segment, idx)
     }
 
     /**
@@ -66,7 +67,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeName(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getNodeNameBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getNodeNameBind, segment, idx)
     }
 
     /**
@@ -77,7 +78,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePath(idx: Int, forParent: Boolean = false): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(getNodePathBind, segment, idx, forParent)
+        return ObjectCalls.ptrcallWithIntAndBoolArgRetNodePath(Binds.getNodePathBind, segment, idx, forParent)
     }
 
     /**
@@ -87,7 +88,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeOwnerPath(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getNodeOwnerPathBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getNodeOwnerPathBind, segment, idx)
     }
 
     /**
@@ -97,7 +98,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isNodeInstancePlaceholder(idx: Int): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetBool(isNodeInstancePlaceholderBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isNodeInstancePlaceholderBind, segment, idx)
     }
 
     /**
@@ -107,7 +108,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeInstancePlaceholder(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetString(getNodeInstancePlaceholderBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetString(Binds.getNodeInstancePlaceholderBind, segment, idx)
     }
 
     /**
@@ -118,7 +119,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeInstance(idx: Int): PackedScene? {
         checkOpen()
-        return PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(getNodeInstanceBind, segment, idx))
+        return PackedScene.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getNodeInstanceBind, segment, idx))
     }
 
     /**
@@ -128,7 +129,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeGroups(idx: Int): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(getNodeGroupsBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetPackedStringList(Binds.getNodeGroupsBind, segment, idx)
     }
 
     /**
@@ -141,7 +142,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodeIndex(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getNodeIndexBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getNodeIndexBind, segment, idx)
     }
 
     /**
@@ -153,7 +154,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePropertyCount(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getNodePropertyCountBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getNodePropertyCountBind, segment, idx)
     }
 
     /**
@@ -163,7 +164,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePropertyName(idx: Int, propIdx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(getNodePropertyNameBind, segment, idx, propIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetStringName(Binds.getNodePropertyNameBind, segment, idx, propIdx)
     }
 
     /**
@@ -173,7 +174,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getNodePropertyValue(idx: Int, propIdx: Int): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(getNodePropertyValueBind, segment, idx, propIdx)
+        return ObjectCalls.ptrcallWithTwoIntArgsRetVariantScalar(Binds.getNodePropertyValueBind, segment, idx, propIdx)
     }
 
     /**
@@ -185,7 +186,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionCount(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getConnectionCountBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getConnectionCountBind, segment)
     }
 
     /**
@@ -195,7 +196,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionSource(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionSourceBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getConnectionSourceBind, segment, idx)
     }
 
     /**
@@ -205,7 +206,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionSignal(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionSignalBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getConnectionSignalBind, segment, idx)
     }
 
     /**
@@ -216,7 +217,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionTarget(idx: Int): NodePath {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetNodePath(getConnectionTargetBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetNodePath(Binds.getConnectionTargetBind, segment, idx)
     }
 
     /**
@@ -226,7 +227,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionMethod(idx: Int): String {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetStringName(getConnectionMethodBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getConnectionMethodBind, segment, idx)
     }
 
     /**
@@ -236,7 +237,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionFlags(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionFlagsBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getConnectionFlagsBind, segment, idx)
     }
 
     /**
@@ -246,7 +247,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionBinds(idx: Int): List<Any?> {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetArray(getConnectionBindsBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetArray(Binds.getConnectionBindsBind, segment, idx)
     }
 
     /**
@@ -256,7 +257,7 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getConnectionUnbinds(idx: Int): Int {
         checkOpen()
-        return ObjectCalls.ptrcallWithIntArgRetInt(getConnectionUnbindsBind, segment, idx)
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getConnectionUnbindsBind, segment, idx)
     }
 
     /**
@@ -309,120 +310,122 @@ class SceneState(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): SceneState? =
             if (handle.address() == 0L) null else SceneState(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val GET_PATH_HASH = 201670096L
-        private val getPathBind by lazy {
+        @JvmField
+        val getPathBind =
             ObjectCalls.getMethodBind("SceneState", "get_path", GET_PATH_HASH)
-        }
 
         private const val GET_BASE_SCENE_STATE_HASH = 3479783971L
-        private val getBaseSceneStateBind by lazy {
+        @JvmField
+        val getBaseSceneStateBind =
             ObjectCalls.getMethodBind("SceneState", "get_base_scene_state", GET_BASE_SCENE_STATE_HASH)
-        }
 
         private const val GET_NODE_COUNT_HASH = 3905245786L
-        private val getNodeCountBind by lazy {
+        @JvmField
+        val getNodeCountBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_count", GET_NODE_COUNT_HASH)
-        }
 
         private const val GET_NODE_TYPE_HASH = 659327637L
-        private val getNodeTypeBind by lazy {
+        @JvmField
+        val getNodeTypeBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_type", GET_NODE_TYPE_HASH)
-        }
 
         private const val GET_NODE_NAME_HASH = 659327637L
-        private val getNodeNameBind by lazy {
+        @JvmField
+        val getNodeNameBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_name", GET_NODE_NAME_HASH)
-        }
 
         private const val GET_NODE_PATH_HASH = 2272487792L
-        private val getNodePathBind by lazy {
+        @JvmField
+        val getNodePathBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_path", GET_NODE_PATH_HASH)
-        }
 
         private const val GET_NODE_OWNER_PATH_HASH = 408788394L
-        private val getNodeOwnerPathBind by lazy {
+        @JvmField
+        val getNodeOwnerPathBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_owner_path", GET_NODE_OWNER_PATH_HASH)
-        }
 
         private const val IS_NODE_INSTANCE_PLACEHOLDER_HASH = 1116898809L
-        private val isNodeInstancePlaceholderBind by lazy {
+        @JvmField
+        val isNodeInstancePlaceholderBind =
             ObjectCalls.getMethodBind("SceneState", "is_node_instance_placeholder", IS_NODE_INSTANCE_PLACEHOLDER_HASH)
-        }
 
         private const val GET_NODE_INSTANCE_PLACEHOLDER_HASH = 844755477L
-        private val getNodeInstancePlaceholderBind by lazy {
+        @JvmField
+        val getNodeInstancePlaceholderBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_instance_placeholder", GET_NODE_INSTANCE_PLACEHOLDER_HASH)
-        }
 
         private const val GET_NODE_INSTANCE_HASH = 511017218L
-        private val getNodeInstanceBind by lazy {
+        @JvmField
+        val getNodeInstanceBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_instance", GET_NODE_INSTANCE_HASH)
-        }
 
         private const val GET_NODE_GROUPS_HASH = 647634434L
-        private val getNodeGroupsBind by lazy {
+        @JvmField
+        val getNodeGroupsBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_groups", GET_NODE_GROUPS_HASH)
-        }
 
         private const val GET_NODE_INDEX_HASH = 923996154L
-        private val getNodeIndexBind by lazy {
+        @JvmField
+        val getNodeIndexBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_index", GET_NODE_INDEX_HASH)
-        }
 
         private const val GET_NODE_PROPERTY_COUNT_HASH = 923996154L
-        private val getNodePropertyCountBind by lazy {
+        @JvmField
+        val getNodePropertyCountBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_property_count", GET_NODE_PROPERTY_COUNT_HASH)
-        }
 
         private const val GET_NODE_PROPERTY_NAME_HASH = 351665558L
-        private val getNodePropertyNameBind by lazy {
+        @JvmField
+        val getNodePropertyNameBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_property_name", GET_NODE_PROPERTY_NAME_HASH)
-        }
 
         private const val GET_NODE_PROPERTY_VALUE_HASH = 678354945L
-        private val getNodePropertyValueBind by lazy {
+        @JvmField
+        val getNodePropertyValueBind =
             ObjectCalls.getMethodBind("SceneState", "get_node_property_value", GET_NODE_PROPERTY_VALUE_HASH)
-        }
 
         private const val GET_CONNECTION_COUNT_HASH = 3905245786L
-        private val getConnectionCountBind by lazy {
+        @JvmField
+        val getConnectionCountBind =
             ObjectCalls.getMethodBind("SceneState", "get_connection_count", GET_CONNECTION_COUNT_HASH)
-        }
 
         private const val GET_CONNECTION_SOURCE_HASH = 408788394L
-        private val getConnectionSourceBind by lazy {
+        @JvmField
+        val getConnectionSourceBind =
             ObjectCalls.getMethodBind("SceneState", "get_connection_source", GET_CONNECTION_SOURCE_HASH)
-        }
 
         private const val GET_CONNECTION_SIGNAL_HASH = 659327637L
-        private val getConnectionSignalBind by lazy {
+        @JvmField
+        val getConnectionSignalBind =
             ObjectCalls.getMethodBind("SceneState", "get_connection_signal", GET_CONNECTION_SIGNAL_HASH)
-        }
 
         private const val GET_CONNECTION_TARGET_HASH = 408788394L
-        private val getConnectionTargetBind by lazy {
+        @JvmField
+        val getConnectionTargetBind =
             ObjectCalls.getMethodBind("SceneState", "get_connection_target", GET_CONNECTION_TARGET_HASH)
-        }
 
         private const val GET_CONNECTION_METHOD_HASH = 659327637L
-        private val getConnectionMethodBind by lazy {
+        @JvmField
+        val getConnectionMethodBind =
             ObjectCalls.getMethodBind("SceneState", "get_connection_method", GET_CONNECTION_METHOD_HASH)
-        }
 
         private const val GET_CONNECTION_FLAGS_HASH = 923996154L
-        private val getConnectionFlagsBind by lazy {
+        @JvmField
+        val getConnectionFlagsBind =
             ObjectCalls.getMethodBind("SceneState", "get_connection_flags", GET_CONNECTION_FLAGS_HASH)
-        }
 
         private const val GET_CONNECTION_BINDS_HASH = 663333327L
-        private val getConnectionBindsBind by lazy {
+        @JvmField
+        val getConnectionBindsBind =
             ObjectCalls.getMethodBind("SceneState", "get_connection_binds", GET_CONNECTION_BINDS_HASH)
-        }
 
         private const val GET_CONNECTION_UNBINDS_HASH = 923996154L
-        private val getConnectionUnbindsBind by lazy {
+        @JvmField
+        val getConnectionUnbindsBind =
             ObjectCalls.getMethodBind("SceneState", "get_connection_unbinds", GET_CONNECTION_UNBINDS_HASH)
-        }
     }
 }

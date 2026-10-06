@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
@@ -72,83 +73,83 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
         set(value) = setVisibilityRangeFadeMode(value)
 
     fun setMesh(mesh: ImporterMesh?) {
-        ObjectCalls.ptrcallWithObjectArgs(setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setMeshBind, segment, listOf(mesh?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getMesh(): ImporterMesh? {
-        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getMeshBind, segment))
+        return ImporterMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getMeshBind, segment))
     }
 
     fun setSkin(skin: Skin?) {
-        ObjectCalls.ptrcallWithObjectArgs(setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
     }
 
     fun getSkin(): Skin? {
-        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(getSkinBind, segment))
+        return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkinBind, segment))
     }
 
     fun setSkeletonPath(skeletonPath: NodePath) {
-        ObjectCalls.ptrcallWithNodePathArg(setSkeletonPathBind, segment, skeletonPath)
+        ObjectCalls.ptrcallWithNodePathArg(Binds.setSkeletonPathBind, segment, skeletonPath)
     }
 
     fun getSkeletonPath(): NodePath {
-        return ObjectCalls.ptrcallNoArgsRetNodePath(getSkeletonPathBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetNodePath(Binds.getSkeletonPathBind, segment)
     }
 
     fun setLayerMask(layerMask: Long) {
-        ObjectCalls.ptrcallWithUInt32Arg(setLayerMaskBind, segment, layerMask)
+        ObjectCalls.ptrcallWithUInt32Arg(Binds.setLayerMaskBind, segment, layerMask)
     }
 
     fun getLayerMask(): Long {
-        return ObjectCalls.ptrcallNoArgsRetUInt32(getLayerMaskBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getLayerMaskBind, segment)
     }
 
     fun setCastShadowsSetting(shadowCastingSetting: GeometryInstance3D.ShadowCastingSetting) {
-        ObjectCalls.ptrcallWithLongArg(setCastShadowsSettingBind, segment, shadowCastingSetting.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setCastShadowsSettingBind, segment, shadowCastingSetting.value)
     }
 
     fun getCastShadowsSetting(): GeometryInstance3D.ShadowCastingSetting {
-        return GeometryInstance3D.ShadowCastingSetting(ObjectCalls.ptrcallNoArgsRetLong(getCastShadowsSettingBind, segment))
+        return GeometryInstance3D.ShadowCastingSetting(ObjectCalls.ptrcallNoArgsRetLong(Binds.getCastShadowsSettingBind, segment))
     }
 
     fun setVisibilityRangeEndMargin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndMarginBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibilityRangeEndMarginBind, segment, distance)
     }
 
     fun getVisibilityRangeEndMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibilityRangeEndMarginBind, segment)
     }
 
     fun setVisibilityRangeEnd(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeEndBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibilityRangeEndBind, segment, distance)
     }
 
     fun getVisibilityRangeEnd(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeEndBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibilityRangeEndBind, segment)
     }
 
     fun setVisibilityRangeBeginMargin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginMarginBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibilityRangeBeginMarginBind, segment, distance)
     }
 
     fun getVisibilityRangeBeginMargin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginMarginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibilityRangeBeginMarginBind, segment)
     }
 
     fun setVisibilityRangeBegin(distance: Double) {
-        ObjectCalls.ptrcallWithDoubleArg(setVisibilityRangeBeginBind, segment, distance)
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setVisibilityRangeBeginBind, segment, distance)
     }
 
     fun getVisibilityRangeBegin(): Double {
-        return ObjectCalls.ptrcallNoArgsRetDouble(getVisibilityRangeBeginBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getVisibilityRangeBeginBind, segment)
     }
 
     fun setVisibilityRangeFadeMode(mode: GeometryInstance3D.VisibilityRangeFadeMode) {
-        ObjectCalls.ptrcallWithLongArg(setVisibilityRangeFadeModeBind, segment, mode.value)
+        ObjectCalls.ptrcallWithLongArg(Binds.setVisibilityRangeFadeModeBind, segment, mode.value)
     }
 
     fun getVisibilityRangeFadeMode(): GeometryInstance3D.VisibilityRangeFadeMode {
-        return GeometryInstance3D.VisibilityRangeFadeMode(ObjectCalls.ptrcallNoArgsRetLong(getVisibilityRangeFadeModeBind, segment))
+        return GeometryInstance3D.VisibilityRangeFadeMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getVisibilityRangeFadeModeBind, segment))
     }
 
     companion object {
@@ -158,105 +159,107 @@ class ImporterMeshInstance3D(handle: GodotHandle) : Node3D(handle) {
 
         internal fun wrap(handle: RawSegment): ImporterMeshInstance3D? =
             if (handle.address() == 0L) null else ImporterMeshInstance3D(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val SET_MESH_HASH = 2255166972L
-        private val setMeshBind by lazy {
+        @JvmField
+        val setMeshBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_mesh", SET_MESH_HASH)
-        }
 
         private const val GET_MESH_HASH = 3161779525L
-        private val getMeshBind by lazy {
+        @JvmField
+        val getMeshBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_mesh", GET_MESH_HASH)
-        }
 
         private const val SET_SKIN_HASH = 3971435618L
-        private val setSkinBind by lazy {
+        @JvmField
+        val setSkinBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_skin", SET_SKIN_HASH)
-        }
 
         private const val GET_SKIN_HASH = 2074563878L
-        private val getSkinBind by lazy {
+        @JvmField
+        val getSkinBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_skin", GET_SKIN_HASH)
-        }
 
         private const val SET_SKELETON_PATH_HASH = 1348162250L
-        private val setSkeletonPathBind by lazy {
+        @JvmField
+        val setSkeletonPathBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_skeleton_path", SET_SKELETON_PATH_HASH)
-        }
 
         private const val GET_SKELETON_PATH_HASH = 4075236667L
-        private val getSkeletonPathBind by lazy {
+        @JvmField
+        val getSkeletonPathBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_skeleton_path", GET_SKELETON_PATH_HASH)
-        }
 
         private const val SET_LAYER_MASK_HASH = 1286410249L
-        private val setLayerMaskBind by lazy {
+        @JvmField
+        val setLayerMaskBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_layer_mask", SET_LAYER_MASK_HASH)
-        }
 
         private const val GET_LAYER_MASK_HASH = 3905245786L
-        private val getLayerMaskBind by lazy {
+        @JvmField
+        val getLayerMaskBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_layer_mask", GET_LAYER_MASK_HASH)
-        }
 
         private const val SET_CAST_SHADOWS_SETTING_HASH = 856677339L
-        private val setCastShadowsSettingBind by lazy {
+        @JvmField
+        val setCastShadowsSettingBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_cast_shadows_setting", SET_CAST_SHADOWS_SETTING_HASH)
-        }
 
         private const val GET_CAST_SHADOWS_SETTING_HASH = 3383019359L
-        private val getCastShadowsSettingBind by lazy {
+        @JvmField
+        val getCastShadowsSettingBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_cast_shadows_setting", GET_CAST_SHADOWS_SETTING_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_END_MARGIN_HASH = 373806689L
-        private val setVisibilityRangeEndMarginBind by lazy {
+        @JvmField
+        val setVisibilityRangeEndMarginBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_visibility_range_end_margin", SET_VISIBILITY_RANGE_END_MARGIN_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_END_MARGIN_HASH = 1740695150L
-        private val getVisibilityRangeEndMarginBind by lazy {
+        @JvmField
+        val getVisibilityRangeEndMarginBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_visibility_range_end_margin", GET_VISIBILITY_RANGE_END_MARGIN_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_END_HASH = 373806689L
-        private val setVisibilityRangeEndBind by lazy {
+        @JvmField
+        val setVisibilityRangeEndBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_visibility_range_end", SET_VISIBILITY_RANGE_END_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_END_HASH = 1740695150L
-        private val getVisibilityRangeEndBind by lazy {
+        @JvmField
+        val getVisibilityRangeEndBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_visibility_range_end", GET_VISIBILITY_RANGE_END_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_BEGIN_MARGIN_HASH = 373806689L
-        private val setVisibilityRangeBeginMarginBind by lazy {
+        @JvmField
+        val setVisibilityRangeBeginMarginBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_visibility_range_begin_margin", SET_VISIBILITY_RANGE_BEGIN_MARGIN_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_BEGIN_MARGIN_HASH = 1740695150L
-        private val getVisibilityRangeBeginMarginBind by lazy {
+        @JvmField
+        val getVisibilityRangeBeginMarginBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_visibility_range_begin_margin", GET_VISIBILITY_RANGE_BEGIN_MARGIN_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_BEGIN_HASH = 373806689L
-        private val setVisibilityRangeBeginBind by lazy {
+        @JvmField
+        val setVisibilityRangeBeginBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_visibility_range_begin", SET_VISIBILITY_RANGE_BEGIN_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_BEGIN_HASH = 1740695150L
-        private val getVisibilityRangeBeginBind by lazy {
+        @JvmField
+        val getVisibilityRangeBeginBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_visibility_range_begin", GET_VISIBILITY_RANGE_BEGIN_HASH)
-        }
 
         private const val SET_VISIBILITY_RANGE_FADE_MODE_HASH = 1440117808L
-        private val setVisibilityRangeFadeModeBind by lazy {
+        @JvmField
+        val setVisibilityRangeFadeModeBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "set_visibility_range_fade_mode", SET_VISIBILITY_RANGE_FADE_MODE_HASH)
-        }
 
         private const val GET_VISIBILITY_RANGE_FADE_MODE_HASH = 2067221882L
-        private val getVisibilityRangeFadeModeBind by lazy {
+        @JvmField
+        val getVisibilityRangeFadeModeBind =
             ObjectCalls.getMethodBind("ImporterMeshInstance3D", "get_visibility_range_fade_mode", GET_VISIBILITY_RANGE_FADE_MODE_HASH)
-        }
     }
 }

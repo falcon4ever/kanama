@@ -19,7 +19,5 @@ class HScrollBar(handle: GodotHandle) : ScrollBar(handle) {
 
         internal fun wrap(handle: RawSegment): HScrollBar? =
             if (handle.address() == 0L) null else HScrollBar(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }

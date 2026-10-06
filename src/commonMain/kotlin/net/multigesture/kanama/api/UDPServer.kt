@@ -1,5 +1,6 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -26,7 +27,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun listen(port: Int, bindAddress: String = "*"): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(listenBind, segment, port, bindAddress))
+        return GodotError(ObjectCalls.ptrcallWithIntAndStringArgRetLong(Binds.listenBind, segment, port, bindAddress))
     }
 
     /**
@@ -40,7 +41,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun poll(): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(pollBind, segment))
+        return GodotError(ObjectCalls.ptrcallNoArgsRetLong(Binds.pollBind, segment))
     }
 
     /**
@@ -50,7 +51,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isConnectionAvailable(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isConnectionAvailableBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isConnectionAvailableBind, segment)
     }
 
     /**
@@ -60,7 +61,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getLocalPort(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getLocalPortBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getLocalPortBind, segment)
     }
 
     /**
@@ -70,7 +71,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun isListening(): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetBool(isListeningBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isListeningBind, segment)
     }
 
     /**
@@ -82,7 +83,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun takeConnection(): PacketPeerUDP? {
         checkOpen()
-        return PacketPeerUDP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(takeConnectionBind, segment))
+        return PacketPeerUDP.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.takeConnectionBind, segment))
     }
 
     /**
@@ -93,7 +94,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun stop() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(stopBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.stopBind, segment)
     }
 
     /**
@@ -105,7 +106,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setMaxPendingConnections(maxPendingConnections: Int) {
         checkOpen()
-        ObjectCalls.ptrcallWithIntArg(setMaxPendingConnectionsBind, segment, maxPendingConnections)
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaxPendingConnectionsBind, segment, maxPendingConnections)
     }
 
     /**
@@ -117,7 +118,7 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getMaxPendingConnections(): Int {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetInt(getMaxPendingConnectionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaxPendingConnectionsBind, segment)
     }
 
     companion object {
@@ -130,50 +131,52 @@ class UDPServer(handle: GodotHandle) : RefCounted(handle) {
 
         internal fun wrapBorrowed(handle: RawSegment): UDPServer? =
             if (handle.address() == 0L) null else UDPServer(GodotHandle(handle))
+    }
 
+    private object Binds {
         private const val LISTEN_HASH = 3167955072L
-        private val listenBind by lazy {
+        @JvmField
+        val listenBind =
             ObjectCalls.getMethodBind("UDPServer", "listen", LISTEN_HASH)
-        }
 
         private const val POLL_HASH = 166280745L
-        private val pollBind by lazy {
+        @JvmField
+        val pollBind =
             ObjectCalls.getMethodBind("UDPServer", "poll", POLL_HASH)
-        }
 
         private const val IS_CONNECTION_AVAILABLE_HASH = 36873697L
-        private val isConnectionAvailableBind by lazy {
+        @JvmField
+        val isConnectionAvailableBind =
             ObjectCalls.getMethodBind("UDPServer", "is_connection_available", IS_CONNECTION_AVAILABLE_HASH)
-        }
 
         private const val GET_LOCAL_PORT_HASH = 3905245786L
-        private val getLocalPortBind by lazy {
+        @JvmField
+        val getLocalPortBind =
             ObjectCalls.getMethodBind("UDPServer", "get_local_port", GET_LOCAL_PORT_HASH)
-        }
 
         private const val IS_LISTENING_HASH = 36873697L
-        private val isListeningBind by lazy {
+        @JvmField
+        val isListeningBind =
             ObjectCalls.getMethodBind("UDPServer", "is_listening", IS_LISTENING_HASH)
-        }
 
         private const val TAKE_CONNECTION_HASH = 808734560L
-        private val takeConnectionBind by lazy {
+        @JvmField
+        val takeConnectionBind =
             ObjectCalls.getMethodBind("UDPServer", "take_connection", TAKE_CONNECTION_HASH)
-        }
 
         private const val STOP_HASH = 3218959716L
-        private val stopBind by lazy {
+        @JvmField
+        val stopBind =
             ObjectCalls.getMethodBind("UDPServer", "stop", STOP_HASH)
-        }
 
         private const val SET_MAX_PENDING_CONNECTIONS_HASH = 1286410249L
-        private val setMaxPendingConnectionsBind by lazy {
+        @JvmField
+        val setMaxPendingConnectionsBind =
             ObjectCalls.getMethodBind("UDPServer", "set_max_pending_connections", SET_MAX_PENDING_CONNECTIONS_HASH)
-        }
 
         private const val GET_MAX_PENDING_CONNECTIONS_HASH = 3905245786L
-        private val getMaxPendingConnectionsBind by lazy {
+        @JvmField
+        val getMaxPendingConnectionsBind =
             ObjectCalls.getMethodBind("UDPServer", "get_max_pending_connections", GET_MAX_PENDING_CONNECTIONS_HASH)
-        }
     }
 }

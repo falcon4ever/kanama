@@ -20,7 +20,5 @@ class GDScriptSyntaxHighlighter(handle: GodotHandle) : EditorSyntaxHighlighter(h
 
         internal fun wrapBorrowed(handle: RawSegment): GDScriptSyntaxHighlighter? =
             if (handle.address() == 0L) null else GDScriptSyntaxHighlighter(GodotHandle(handle))
-
-        // No MethodBinds emitted yet.
     }
 }
