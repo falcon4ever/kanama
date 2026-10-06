@@ -40,7 +40,7 @@ abstract class KanamaScript<T : GodotObject>(
   inline fun <R> selfAs(ctor: (GodotHandle) -> R): R = ctor(godotObject)
 
   // The script coroutine scope (task 133), as on desktop, Android and iOS. Scripts are constructed
-  // inside their own owner scope (WebInstanceRegistry.create), so the owner is captured here and the
+  // inside their own owner scope (WebInstanceRegistry.construct), so the owner is captured here and the
   // scope, created on first use, binds to this script and not to whichever callback launches.
   private val scopeOwner: Int = WebFrameScheduler.currentOwnerOrZero()
   private var scopeOrNull: KanamaScope? = null

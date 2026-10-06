@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 32;
+  const KANAMA_WEB_PROTOCOL_VERSION = 33;
   // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
   const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
@@ -307,6 +307,10 @@
     finishCalls: 0,
     callbackErrors: 0,
     lastCallbackError: null,
+    // Every boundary failure's message, oldest first, capped: lastCallbackError alone hides the
+    // FIRST failure behind whatever it caused (an autoload that failed to construct surfaced only
+    // as the later script that read it).
+    callbackErrorLog: [],
     drawCalls: 0,
     drawCommands: 0,
     drawBatches: 0,
@@ -532,6 +536,7 @@
         );
         this.callbackErrors += 1;
         this.lastCallbackError = contextual.message;
+        if (this.callbackErrorLog.length < 8) this.callbackErrorLog.push(contextual.message);
         globalThis.failKanamaWeb(contextual);
         return fallback;
       } finally {
@@ -593,9 +598,30 @@
       this.match3DeferredMethods[key] = (this.match3DeferredMethods[key] ?? 0) + 1;
     },
 
-    create(scriptId) {
-      const handle = this.invoke(0, "create", `script#${scriptId}`, () => this.api.kanamaWebCreate(scriptId), 0);
-      return handle;
+    /**
+     * Script creation is two steps so a script's property initializers can call the engine, as
+     * GDScript's `var x = ...` initializers can. `reserve` mints the handle; the proxy then installs
+     * its callbacks under it (installProxyCallbacks); `construct` runs the Kotlin constructor with
+     * that handle as the active owner, so an engine call from an initializer is applied through the
+     * proxy. Returns 1, or 0 after a failed constructor (the callbacks it installed are cleared).
+     */
+    reserve(scriptId) {
+      return this.invoke(0, "create", `script#${scriptId}`, () => this.api.kanamaWebReserve(scriptId), 0);
+    },
+    construct(handle) {
+      // Checked before anything can be torn down: a handle that is already constructed is a live
+      // script, and the failure teardown below must never run on one.
+      if (this.api.kanamaWebIsConstructed(handle) === 1) {
+        globalThis.failKanamaWeb(new Error(`Kanama Web handle=${handle} is already constructed`));
+        return 1;
+      }
+      const constructed = this.invoke(handle, "create", "construct", () => this.api.kanamaWebConstruct(handle), 0);
+      if (constructed !== handle) {
+        this.teardownScriptHandles(handle, this.match3ScriptNamesByHandle.get(handle));
+        this.clearProxyCallbacks(handle);
+        return 0;
+      }
+      return 1;
     },
     ready(handle) {
       return this.invoke(handle, "_ready", "_ready", () => this.api.kanamaWebReady(handle), 0);
@@ -1125,6 +1151,47 @@
         0,
       );
     },
+    /**
+     * Everything the bridge holds on behalf of one script handle, released in the order a finished
+     * script's `free` needs: shared-handle ownership first (a handle another script still holds
+     * survives), then its node handles, then the match3 and census bookkeeping, then the browser
+     * handles it owns. A script whose constructor failed runs the same teardown: it may already
+     * have resolved node handles in its initializers. The proxy clears its callbacks AFTER this
+     * (the release path needs them).
+     */
+    teardownScriptHandles(handle, scriptName) {
+      // Shared handles first: this script stops holding every one it shared; those another
+      // script still holds survive (re-routed to that script when this one was their router).
+      const stillHeld = this.releaseSharedHandleOwnership(handle);
+      const childNodeHandles = this.browserNodeHandlesByScript.get(handle);
+      if (childNodeHandles) {
+        for (const childHandle of childNodeHandles) {
+          if (this.browserHandleSlot(childHandle)?.kind !== "Node") continue;
+          if (stillHeld.has(childHandle)) continue;
+          this.eraseObjectHandleEntry(childHandle, handle);
+          this.api.kanamaWebDiscardNodeHandle(childHandle);
+          this.releaseBrowserHandle(childHandle, "Node");
+        }
+        this.browserNodeHandlesByScript.delete(handle);
+      }
+      if (scriptName?.endsWith(".Tile")) {
+        const spriteHandle = this.match3TileSpriteByRoot.get(handle);
+        if (spriteHandle !== undefined) {
+          this.match3TileRootBySprite.delete(spriteHandle);
+        }
+        this.match3TileSpriteByRoot.delete(handle);
+        this.match3TileTypeByHandle.delete(handle);
+        this.match3NodePositions.delete(handle);
+        this.match3TileScriptFrees += 1;
+      }
+      this.match3ScriptNamesByHandle.delete(handle);
+      const liveScriptName = this.scriptNameByHandle[handle];
+      if (liveScriptName !== undefined) {
+        const remaining = (this.liveScriptsByClass[liveScriptName] ?? 0) - 1;
+        this.liveScriptsByClass[liveScriptName] = remaining > 0 ? remaining : 0;
+      }
+      this.releaseBrowserHandlesOwnedBy(handle);
+    },
     free(handle) {
       const scriptName = this.match3ScriptNamesByHandle.get(handle);
       const result = this.invoke(
@@ -1136,39 +1203,7 @@
       );
       if (result === 1 && handle === this.match3MainHandle) this.match3MainHandle = 0;
       if (result === 1 && handle === this.match3AudioHandle) this.match3AudioHandle = 0;
-      if (result === 1) {
-        // Shared handles first: this script stops holding every one it shared; those another
-        // script still holds survive (re-routed to that script when this one was their router).
-        const stillHeld = this.releaseSharedHandleOwnership(handle);
-        const childNodeHandles = this.browserNodeHandlesByScript.get(handle);
-        if (childNodeHandles) {
-          for (const childHandle of childNodeHandles) {
-            if (this.browserHandleSlot(childHandle)?.kind !== "Node") continue;
-            if (stillHeld.has(childHandle)) continue;
-            this.eraseObjectHandleEntry(childHandle, handle);
-            this.api.kanamaWebDiscardNodeHandle(childHandle);
-            this.releaseBrowserHandle(childHandle, "Node");
-          }
-          this.browserNodeHandlesByScript.delete(handle);
-        }
-        if (scriptName?.endsWith(".Tile")) {
-          const spriteHandle = this.match3TileSpriteByRoot.get(handle);
-          if (spriteHandle !== undefined) {
-            this.match3TileRootBySprite.delete(spriteHandle);
-          }
-          this.match3TileSpriteByRoot.delete(handle);
-          this.match3TileTypeByHandle.delete(handle);
-          this.match3NodePositions.delete(handle);
-          this.match3TileScriptFrees += 1;
-        }
-        this.match3ScriptNamesByHandle.delete(handle);
-        const liveScriptName = this.scriptNameByHandle[handle];
-        if (liveScriptName !== undefined) {
-          const remaining = (this.liveScriptsByClass[liveScriptName] ?? 0) - 1;
-          this.liveScriptsByClass[liveScriptName] = remaining > 0 ? remaining : 0;
-        }
-        this.releaseBrowserHandlesOwnedBy(handle);
-      }
+      if (result === 1) this.teardownScriptHandles(handle, scriptName);
       return result;
     },
     installProxyCallbacks(handle, apply, immediate, resource, signal, release, construct, nodeLookup, packedScene, noArgsObject, inputCursor, connect, objectQuery, noArgsVector2, signalVector2i, tween, noArgsVector3) {
@@ -1227,7 +1262,19 @@
     },
     ownerForHandle(handle) {
       const owner = this.handleOwners.get(handle);
-      if (!owner) throw new Error(`No Kanama Web proxy owns handle=${handle}`);
+      if (!owner) {
+        // handle=0 is "no script is running". A script's own constructor and property initializers
+        // are NOT that case (they run with their handle active, see construct above). What remains
+        // is an engine call with no script running at all; a companion-object or top-level
+        // initializer is not it, since it runs on first access inside some script's callback (and
+        // bills its engine objects to that script). Name the cause.
+        const hint =
+          handle === 0
+            ? " (a Godot call ran with no script running -- on Web an engine call needs a running" +
+              " script or constructor; do it from a script callback or a property initializer)"
+            : "";
+        throw new Error(`No Kanama Web proxy owns handle=${handle}${hint}`);
+      }
       return owner;
     },
     internCommandStringName(value) {

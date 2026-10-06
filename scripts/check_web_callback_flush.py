@@ -63,6 +63,11 @@ EXEMPT_PREFIXES = ("kanamaWebGet", "kanamaWebSet")
 
 FLUSH = "commands.flush()"
 
+# Boundaries that run user Kotlin WITHOUT going through `webCallbackBoundary` (the script does not
+# exist yet, so there is no record to resolve): the constructor, whose property initializers can
+# queue engine mutations. They must flush too, or the next pump's `commands.clear()` drops them.
+CONSTRUCT_BOUNDARIES = ("kanamaWebConstruct",)
+
 
 def boundaries(source: str) -> list[tuple[str, int, str]]:
     """Return (name, 1-based line, body) for every top-level kanamaWeb* function."""
@@ -120,6 +125,24 @@ def main() -> int:
             violations.append(
                 f"  {path}:{line}  {name} dispatches into user Kotlin but never calls "
                 f"{FLUSH}; every queued mutation it issues is discarded by the next "
+                f"commands.clear()"
+            )
+
+    by_name = {name: (line, body) for name, line, body in found}
+    for name in CONSTRUCT_BOUNDARIES:
+        if name not in by_name:
+            print(
+                f"check_web_callback_flush: FAIL — constructor boundary {name} not found in "
+                f"{path}; CONSTRUCT_BOUNDARIES has drifted from the source",
+                file=sys.stderr,
+            )
+            return 1
+        line, body = by_name[name]
+        checked += 1
+        if FLUSH not in body:
+            violations.append(
+                f"  {path}:{line}  {name} runs a script constructor (property initializers can "
+                f"queue engine mutations) but never calls {FLUSH}; they are discarded by the next "
                 f"commands.clear()"
             )
 

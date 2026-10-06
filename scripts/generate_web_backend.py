@@ -2528,7 +2528,7 @@ import net.multigesture.kanama.backend.InternalKanamaBackendApi
 internal object WebCommonGodotBackend : GodotBackendSpi {
   override fun requireLive(handle: GodotHandle) {
     val token = handle.webId()
-    if (!instances.isLive(token)) {
+    if (!instances.isLiveOrConstructing(token)) {
       check(containsWebBrowserHandle(token)) { "Stale Kanama Web browser handle=$token" }
     }
   }

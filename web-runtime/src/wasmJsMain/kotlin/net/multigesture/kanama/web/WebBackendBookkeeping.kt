@@ -156,7 +156,7 @@ internal fun registerReturnedNode(token: Int): GodotHandle? =
       // A handle already tracked under another kind keeps it: a node that was first
       // property-pushed (RESOURCE by convention) may later return from a node lookup
       // (City-Builder's view camera is both an exported property and a requireAs child).
-      if (!instances.isLive(it) && !containsWebBrowserHandle(it)) {
+      if (!instances.isLiveOrConstructing(it) && !containsWebBrowserHandle(it)) {
         registerWebBrowserHandle(it, WebBrowserHandleKind.NODE)
       }
       GodotHandle.fromBackendToken(it.toLong())
@@ -241,7 +241,7 @@ internal fun requireWebBrowserHandle(handle: Int, expectedKind: WebBrowserHandle
 }
 
 internal fun requireWebNodeHandle(handle: Int) {
-  if (instances.isLive(handle)) return
+  if (instances.isLiveOrConstructing(handle)) return
   requireWebBrowserHandle(handle, WebBrowserHandleKind.NODE)
 }
 
@@ -256,7 +256,7 @@ internal fun containsWebBrowserHandle(handle: Int): Boolean = browserHandles.con
  * Player queue_frees itself from body_entered, then ticks once more).
  */
 internal fun onWebQueueFree(objectId: Int) {
-  if (!instances.isLive(objectId)) {
+  if (!instances.isLiveOrConstructing(objectId)) {
     clearWebPositionSnapshot(objectId)
     unregisterWebBrowserHandle(objectId, WebBrowserHandleKind.NODE)
   }
@@ -272,7 +272,10 @@ internal fun discardWebBrowserHandle(handle: Int): Boolean {
 // ---------------------------------------------------------------------------
 
 internal fun loadWebPositionSnapshot(objectId: Int, x: Double, y: Double) {
-  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
+  check(
+    instances.isLiveOrConstructing(objectId) ||
+      browserHandles[objectId] == WebBrowserHandleKind.NODE
+  ) {
     "Cannot snapshot unknown Kanama Web node handle=$objectId"
   }
   positionSnapshots[objectId] = GodotVector2(x.toFloat(), y.toFloat())
@@ -318,7 +321,7 @@ internal fun loadWebNode3DSnapshot(
 ) {
   // Any known handle may carry a Node3D snapshot: property pushes register node references
   // under the RESOURCE kind before their transform seed arrives.
-  check(instances.isLive(objectId) || browserHandles.containsKey(objectId)) {
+  check(instances.isLiveOrConstructing(objectId) || browserHandles.containsKey(objectId)) {
     "Cannot snapshot unknown Kanama Web Node3D handle=$objectId"
   }
   position3Snapshots[objectId] =
@@ -349,7 +352,10 @@ internal fun loadWebViewportRectSnapshot(
   width: Double,
   height: Double,
 ) {
-  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
+  check(
+    instances.isLiveOrConstructing(objectId) ||
+      browserHandles[objectId] == WebBrowserHandleKind.NODE
+  ) {
     "Cannot snapshot unknown Kanama Web node handle=$objectId"
   }
   viewportRectSnapshots[objectId] =
@@ -360,7 +366,10 @@ internal fun loadWebViewportRectSnapshot(
 }
 
 internal fun loadWebParticlesSnapshot(objectId: Int, emitting: Boolean, lifetime: Double) {
-  check(instances.isLive(objectId) || browserHandles[objectId] == WebBrowserHandleKind.NODE) {
+  check(
+    instances.isLiveOrConstructing(objectId) ||
+      browserHandles[objectId] == WebBrowserHandleKind.NODE
+  ) {
     "Cannot snapshot unknown Kanama Web GPUParticles2D handle=$objectId"
   }
   require(lifetime.isFinite() && lifetime >= 0.0) {
