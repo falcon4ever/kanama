@@ -428,12 +428,6 @@ static GDExtensionMethodBindPtr g_node_set_process_unhandled_key_input_bind = NU
 static GDExtensionMethodBindPtr g_object_is_class_bind = NULL;
 static GDExtensionMethodBindPtr g_ref_counted_reference_bind = NULL;
 static GDExtensionMethodBindPtr g_resource_loader_load_bind = NULL;
-static GDExtensionMethodBindPtr g_audio_set_stream_bind = NULL;
-static GDExtensionMethodBindPtr g_audio_set_volume_db_bind = NULL;
-static GDExtensionMethodBindPtr g_audio_set_pitch_scale_bind = NULL;
-static GDExtensionMethodBindPtr g_audio_set_bus_bind = NULL;
-static GDExtensionMethodBindPtr g_audio_set_stream_paused_bind = NULL;
-static GDExtensionMethodBindPtr g_audio_play_bind = NULL;
 static GDExtensionMethodBindPtr g_object_emit_signal_bind = NULL;
 static GDExtensionMethodBindPtr g_object_connect_bind = NULL;
 static GDExtensionMethodBindPtr g_object_disconnect_bind = NULL;
@@ -878,11 +872,6 @@ enum {
     KANAMA_IOS_CALLABLE_BINDV_HASH = 3564560322U,
     KANAMA_IOS_REF_COUNTED_NOARGS_HASH = 2240911060U,
     KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH = 3358495409U,
-    KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_STREAM_HASH = 2210767741U,
-    KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_FLOAT_HASH = 373806689U, // set_volume_db / set_pitch_scale (float)->void
-    KANAMA_IOS_AUDIO_STREAM_PLAYER_PLAY_HASH = 1958160172U,
-    KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_BUS_HASH = 3304788590U,
-    KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_STREAM_PAUSED_HASH = 2586408642U,
     KANAMA_IOS_OBJECT_EMIT_SIGNAL_HASH = 4047867050U,
     KANAMA_IOS_OBJECT_CONNECT_HASH = 1518946055U,
     KANAMA_IOS_OBJECT_DISCONNECT_HASH = 1874754934U,
@@ -5726,60 +5715,6 @@ static void kanama_ios_godot_ptrcall_bool_arg(
     g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
 }
 
-// Single 32-bit float argument. Godot methods like set_volume_db(float) take a
-// C++ float (4 bytes) in ptrcall, so the incoming double must be narrowed.
-static void kanama_ios_godot_ptrcall_float_arg(
-    GDExtensionMethodBindPtr method_bind,
-    GDExtensionObjectPtr instance,
-    double value
-) {
-    if (method_bind == NULL) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return;
-    }
-    if (instance == NULL) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return;
-    }
-    // SCALAR float methods take a `double` (8 bytes) at the ptrcall boundary:
-    // Godot's PtrToArg<float> == PtrToArgConvert<float,double>. Passing a 4-byte
-    // float here made Godot read 8 bytes from a 4-byte cell → garbage (this was the
-    // inaudible-audio bug: set_volume_db got a garbage dB). Pass the full double.
-    double value_cell = value;
-    const GDExtensionConstTypePtr args[1] = {
-        (GDExtensionConstTypePtr)&value_cell,
-    };
-    g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
-}
-
-// Single StringName argument (void return). Builds the StringName, ptrcalls with
-// a pointer to it, then destroys it.
-static void kanama_ios_godot_ptrcall_string_name_arg(
-    GDExtensionMethodBindPtr method_bind,
-    GDExtensionObjectPtr instance,
-    const char *value
-) {
-    if (method_bind == NULL) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return;
-    }
-    if (instance == NULL) {
-        kanama_ios_fault(__func__, "null-instance", NULL);
-        return;
-    }
-    if (value == NULL) {
-        kanama_ios_fault(__func__, "null-arg", "value");
-        return;
-    }
-    uint64_t storage = 0;
-    kanama_ios_init_string_name(&storage, value);
-    const GDExtensionConstTypePtr args[1] = {
-        (GDExtensionConstTypePtr)&storage,
-    };
-    g_object_method_bind_ptrcall(method_bind, instance, args, NULL);
-    kanama_ios_destroy_string_name(&storage);
-}
-
 static int32_t kanama_ios_godot_ptrcall_string_name_arg_ret_bool(
     GDExtensionMethodBindPtr method_bind,
     GDExtensionObjectPtr instance,
@@ -6061,48 +5996,6 @@ static void kanama_ios_retain_refcounted_element(GDExtensionObjectPtr object) {
     g_object_method_bind_ptrcall(reference_bind, object, NULL, &referenced);
 }
 
-int64_t kanama_ios_godot_resource_loader_load(const char *path, const char *type_hint) {
-    if (!kanama_ios_resolve_godot_api()) {
-        kanama_ios_fault(__func__, "api-unresolved", NULL);
-        return 0;
-    }
-    if (path == NULL) {
-        kanama_ios_fault(__func__, "null-arg", "path");
-        return 0;
-    }
-    GDExtensionObjectPtr resource_loader = kanama_ios_resource_loader_singleton();
-    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
-        &g_resource_loader_load_bind,
-        "ResourceLoader",
-        "load",
-        KANAMA_IOS_RESOURCE_LOADER_LOAD_HASH
-    );
-    if (resource_loader == NULL) {
-        kanama_ios_fault(__func__, "api-unresolved", "ResourceLoader singleton");
-        return 0;
-    }
-    if (method_bind == NULL) {
-        kanama_ios_fault(__func__, "null-bind", NULL);
-        return 0;
-    }
-
-    uint64_t path_storage = 0;
-    uint64_t type_hint_storage = 0;
-    int64_t cache_mode = 1; // CACHE_MODE_REUSE; enum arguments are 64-bit cells in ptrcall (task 132)
-    kanama_ios_init_string(&path_storage, path);
-    kanama_ios_init_string(&type_hint_storage, type_hint != NULL ? type_hint : "");
-    const GDExtensionConstTypePtr args[3] = {
-        (GDExtensionConstTypePtr)&path_storage,
-        (GDExtensionConstTypePtr)&type_hint_storage,
-        (GDExtensionConstTypePtr)&cache_mode,
-    };
-    GDExtensionObjectPtr ret = NULL;
-    g_object_method_bind_ptrcall(method_bind, resource_loader, args, &ret);
-    kanama_ios_destroy_string(&type_hint_storage);
-    kanama_ios_destroy_string(&path_storage);
-    return (int64_t)(intptr_t)ret;
-}
-
 // Task 132: ResourceLoader.load(path, type_hint, CACHE_MODE_IGNORE) -- a fresh copy of the file,
 // never the cached object (the refill of a script instance rebuilt after a collection). The
 // returned object carries the +1 of the Ref return slot; the caller releases it.
@@ -6165,74 +6058,6 @@ int64_t kanama_ios_godot_create_script_object(const char *path) {
     GDExtensionObjectPtr script_object = kanama_ios_construct_extension_object(KANAMA_IOS_CLASS_SCRIPT);
     g_pending_script_resource_path = NULL;
     return (int64_t)(intptr_t)script_object;
-}
-
-void kanama_ios_godot_audio_stream_player_set_stream(int64_t player, int64_t stream) {
-    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
-        &g_audio_set_stream_bind,
-        "AudioStreamPlayer",
-        "set_stream",
-        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_STREAM_HASH
-    );
-    kanama_ios_godot_ptrcall_object_arg(
-        method_bind,
-        (GDExtensionObjectPtr)(intptr_t)player,
-        (GDExtensionObjectPtr)(intptr_t)stream
-    );
-}
-
-void kanama_ios_godot_audio_stream_player_set_volume_db(int64_t player, double volume_db) {
-    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
-        &g_audio_set_volume_db_bind,
-        "AudioStreamPlayer",
-        "set_volume_db",
-        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_FLOAT_HASH
-    );
-    kanama_ios_godot_ptrcall_float_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)player, volume_db);
-}
-
-void kanama_ios_godot_audio_stream_player_set_pitch_scale(int64_t player, double pitch_scale) {
-    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
-        &g_audio_set_pitch_scale_bind,
-        "AudioStreamPlayer",
-        "set_pitch_scale",
-        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_FLOAT_HASH
-    );
-    kanama_ios_godot_ptrcall_float_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)player, pitch_scale);
-}
-
-void kanama_ios_godot_audio_stream_player_set_bus(int64_t player, const char *bus) {
-    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
-        &g_audio_set_bus_bind,
-        "AudioStreamPlayer",
-        "set_bus",
-        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_BUS_HASH
-    );
-    kanama_ios_godot_ptrcall_string_name_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)player, bus);
-}
-
-void kanama_ios_godot_audio_stream_player_set_stream_paused(int64_t player, int32_t paused) {
-    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
-        &g_audio_set_stream_paused_bind,
-        "AudioStreamPlayer",
-        "set_stream_paused",
-        KANAMA_IOS_AUDIO_STREAM_PLAYER_SET_STREAM_PAUSED_HASH
-    );
-    kanama_ios_godot_ptrcall_bool_arg(
-        method_bind,
-        (GDExtensionObjectPtr)(intptr_t)player,
-        paused != 0 ? 1 : 0
-    );
-}
-
-void kanama_ios_godot_audio_stream_player_play(int64_t player, double from_position) {
-    GDExtensionMethodBindPtr method_bind = kanama_ios_get_method_bind_cached(
-        &g_audio_play_bind,
-        "AudioStreamPlayer",
-        "play",
-        KANAMA_IOS_AUDIO_STREAM_PLAYER_PLAY_HASH
-    );
-    kanama_ios_godot_ptrcall_float_arg(method_bind, (GDExtensionObjectPtr)(intptr_t)player, from_position);
 }
 
 int32_t kanama_ios_godot_object_emit_signal_int(

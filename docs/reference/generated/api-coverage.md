@@ -28,14 +28,14 @@ These numbers count only checked-in Kotlin API wrappers. Class coverage may incl
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
 - Classes: 1036 / 1036 `████████████` 100.0%
-- Methods: 15379 / 15385 `████████████` 100.0% (callable methods; engine virtuals excluded — see below)
+- Methods: 15381 / 15385 `████████████` 100.0% (callable methods; engine virtuals excluded — see below)
 
 ### Per-Platform Class Sets
 
 One generated tree, held to the single-tree drift gate (`check_single_tree`: committed == fresh regen for every generated file; see wrapper-maintenance.md).
 
-- Shared tree (`src/commonMain/kotlin/.../api`, common code): 1013 classes compiled by desktop, Android and iOS. 3 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
-- Per-platform (`PER_PLATFORM_WRAPPERS`, 22 classes): desktop generates 4 and hand-shapes 18; iOS generates 11, hand-shapes 5, hand-writes 5 collision classes, and does not host `DirAccess`. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
+- Shared tree (`src/commonMain/kotlin/.../api`, common code): 1033 classes compiled by desktop, Android and iOS. 3 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
+- Per-platform (`PER_PLATFORM_WRAPPERS`, 2 classes): desktop generates 0 and hand-shapes 2; iOS generates 0, hand-shapes 0, hand-writes 1 collision classes, and does not host `DirAccess`. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
 
 ## Virtual Methods
 
@@ -45,7 +45,7 @@ One generated tree, held to the single-tree drift gate (`check_single_tree`: com
 
 | Area | Classes | Class Coverage | Methods | Method Coverage |
 | --- | ---: | --- | ---: | --- |
-| Core | 226/226 | `████████████` 100.0% | 2964/2970 | `████████████` 99.8% |
+| Core | 226/226 | `████████████` 100.0% | 2966/2970 | `████████████` 99.9% |
 | Scene | 26/26 | `████████████` 100.0% | 923/923 | `████████████` 100.0% |
 | Resources | 306/306 | `████████████` 100.0% | 2891/2891 | `████████████` 100.0% |
 | Input | 20/20 | `████████████` 100.0% | 238/238 | `████████████` 100.0% |
@@ -597,7 +597,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `OpenXRRenderModel` | 3D | 3/3 | `████████` 100.0% |
 | `OpenXRRenderModelExtension` | Core | 13/13 | `████████` 100.0% |
 | `OpenXRRenderModelManager` | 3D | 4/4 | `████████` 100.0% |
-| `OpenXRSpatialAnchorCapability` | Core | 11/13 | `███████░` 84.6% |
+| `OpenXRSpatialAnchorCapability` | Core | 13/13 | `████████` 100.0% |
 | `OpenXRSpatialCapabilityConfigurationAnchor` | Core | 1/1 | `████████` 100.0% |
 | `OpenXRSpatialCapabilityConfigurationAprilTag` | Core | 3/3 | `████████` 100.0% |
 | `OpenXRSpatialCapabilityConfigurationAruco` | Core | 3/3 | `████████` 100.0% |

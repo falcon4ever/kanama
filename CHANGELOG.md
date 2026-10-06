@@ -38,6 +38,85 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — 20 more per-platform classes generated once for every platform (task 129 C) — BREAKING
+
+Desktop, Android and iOS. Twenty classes were still written per platform: by hand on desktop and
+generated on iOS (`ConfigFile`, `ENetMultiplayerPeer`, `InputEventKey`, `InputEventMouseMotion`,
+`LightmapGI`, `MeshDataTool`, `NoiseTexture2D`, `OpenXRSpatialAnchorCapability`,
+`SceneMultiplayer`, `ShaderMaterial`, `SurfaceTool`), generated on desktop and by hand on iOS
+(`ImageTexture`, `ParticleProcessMaterial`, `ProceduralSkyMaterial`, `ProjectSettings`), or by hand
+on both (`BoxMesh`, `BoxShape3D`, `AudioStreamPlayer`, `ResourceLoader`, `Engine`). Each is now
+generated once into the shared API from `extension_api.json`, like the other 1,012 classes, so a
+member compiles on every native platform or on none; the desktop names, overloads and factories
+are kept. Only `FileAccess` and `DirAccess` are still per-platform (task 129 parcel 8).
+
+- **iOS gains what it lacked:** `AudioStreamPlayer` 35 members (every getter, `isPlaying`, `seek`,
+  `setPlaying`, `setAutoplay`, `setMixTarget`, `setMaxPolyphony`, `setPlaybackType`,
+  `setVolumeLinear`, `getStreamPlayback`, and the Kotlin properties `stream`, `volumeDb`,
+  `pitchScale`, `bus`, ...); `Engine` 43 (`getTimeScale` / `setTimeScale`, the physics tick and
+  frame counters, `getSingleton` / `hasSingleton` / `registerSingleton`, the version, author and
+  license info, ...); `ProjectSettings` 38 (`getSetting`, `setSetting`, `hasSetting`,
+  `globalizePath`, `localizePath`, `save`, and the typed `getSettingString` / `getSettingBool` /
+  `getSettingLong` / ... readers); `ResourceLoader` 12 (`exists`, `hasCached`, `getCachedRef`,
+  `getDependencies`, `listDirectory`, `getResourceUid`, `loadThreadedGetStatus`,
+  `addResourceFormatLoader`, ...); `ParticleProcessMaterial` its 71 Kotlin properties
+  (`angleMin`, `initialVelocityMax`, `scaleCurve`, `turbulenceEnabled`, the `particleFlag*` flags,
+  ...); `ProceduralSkyMaterial.skyCover`; `BoxShape3D.fromResource`; `NoiseTexture2D.fromObject` /
+  `fromResource`; `ShaderMaterial.fromObject`.
+- **Desktop gains** the Kotlin properties the hand files lacked (`AudioStreamPlayer.stream`,
+  `volumeDb`, `autoplay`, ... (12), `BoxMesh.size` / `subdivideWidth` / ..., `BoxShape3D.size`),
+  `OpenXRSpatialAnchorCapability.createDefaultPersistenceContext` / `startEntityDiscovery` (the hand
+  copy predated them), the typed `SceneMultiplayer.peerAuthenticating` / `peerAuthenticationFailed`
+  / `peerPacket` signals, and `fromHandle` and a public `(GodotHandle)` constructor on each class.
+- `Engine.registerSingleton` still rejects a `RefCounted` instance before Godot sees it (Godot's
+  singleton table holds no reference): the check is a precondition row in the generator
+  (`METHOD_PRECONDITIONS`), on every platform now, and throws `IllegalArgumentException` (the
+  desktop hand file threw `IllegalStateException`). `SceneTree.active()` and `delaySeconds` call
+  `Engine.getMainLoop()` / `Engine.getTimeScale()` instead of their own copies of those binds.
+- **Source break:** `Engine` — `registerSingleton(name, instance: GodotObject)` takes the object
+  (it took `objectArg: GodotHandle` on desktop): write `Engine.registerSingleton("Name", obj)`
+  instead of `Engine.registerSingleton("Name", obj.handle)`. On iOS `Engine.getMainLoop()` returns
+  `MainLoop?` (it returned a `GodotHandle`): use `Engine.getMainLoop()?.handle` where a handle is
+  needed.
+- **Source break:** `BoxMesh` and `AudioStreamPlayer` — `BoxMesh.subdivideWidth` /
+  `subdivideHeight` / `subdivideDepth` and `AudioStreamPlayer.maxPolyphony` (and their
+  `get`/`set` functions) are `Int` (they were `Long` on desktop), as Godot types them `int32`: pass
+  `n.toInt()`. On iOS `AudioStreamPlayer.play()` is `play(fromPosition: Double = 0.0)` and
+  `setStreamFromPath(path)` gains desktop's `cacheMode` parameter (calls compile), and `setBus` / `setPitchScale` / `setVolumeDb` / `setStreamPaused` name their parameter
+  `bus` / `pitchScale` / `volumeDb` / `paused` (it was `value`), which matters only to a call that
+  names its argument.
+- **Source break:** `ResourceLoader` — `addResourceFormatLoader` / `removeResourceFormatLoader` take a
+  non-null `ResourceFormatLoader` (desktop took a nullable one; Godot rejects null). On iOS
+  `ResourceLoader.load(path)` and the typed loaders gain desktop's `typeHint` / `cacheMode`
+  parameters with defaults (calls compile), and `ThreadLoadProgress` is unchanged.
+- **Source break:** `ShaderMaterial`, `ParticleProcessMaterial`, `ProceduralSkyMaterial` — on iOS
+  `fromResource(value)` takes a non-null `Resource`, as on desktop (`res?.let { X.fromResource(it) }`).
+- **Source break:** `NoiseTexture2D`, `ProjectSettings`, `SurfaceTool` — iOS only, every call
+  compiles as before: `NoiseTexture2D.setGenerateMipmaps` names its parameter `generate` (Godot's
+  `extension_api.json` calls it `invert`; desktop's name is kept); `ProjectSettings.getSettingDouble(name)`
+  gains `defaultValue: Double = 0.0`; `SurfaceTool.commit()` is `commit(existing: ArrayMesh? = null,
+  flags: Long = 0)` instead of an overload (a function reference `SurfaceTool::commit` changes).
+- Dead hand-written code removed with the hand copies: the iOS C shim's
+  `kanama_ios_godot_resource_loader_load` and six `kanama_ios_godot_audio_stream_player_*` entry
+  points (with their `kanama_ios.h` declarations, two static helpers, six bind caches and five hash
+  constants), the matching `IosGodot` facade functions, and the desktop
+  `ptrcallWithStringAndArrayArgRetLongAndArray` helper (replaced by `ptrcallLoadStatusWithProgress`,
+  the one helper both platforms implement for `ResourceLoader.loadThreadedGetStatusWithProgress`).
+  Hand-written lines for these classes: desktop 6,333 → 0 (16 files), iOS 2,812 → 0 (7 files and
+  280 lines of `IosGodotApi.kt`); the sugar they carried is 52 new lines of shared generator
+  sections, plus `ProjectSettings`' 77, moved from a desktop-only section.
+- The 20 classes read their MethodBinds from the generated per-class `Binds` holders, like every
+  other generated class (the task 131 item 18 entry below lists the hand-kept desktop wrappers and
+  the iOS per-platform files as still `by lazy`; of those only `FileAccess` and `DirAccess` remain).
+- iOS self-test: the frame-1 OBJECTCALLS phase gains 18 rows (`WrappersOnceSelfTest.kt`), one
+  representative member per class whose iOS path is new (`AudioStreamPlayer` setters and getters,
+  `setStreamFromPath`, the typed and threaded `ResourceLoader` loads of resources saved to `user://`,
+  `Engine.registerSingleton` with its guard, `ProjectSettings` against `Engine`, the
+  `ParticleProcessMaterial` properties, ...).
+- `scripts/check_public_signature_changes.py` treats a declaration that left `jvm.txt` / `ios.txt`
+  and is in `common.txt` now (unchanged, or source-compatibly) as moved, not removed: every native
+  platform still compiles it. Only a real change of a moved declaration needs a Source break line.
+
 ### Changed — iOS: no silent method skips; script errors name the Kotlin line on the device (task 131 item 13, N7)
 
 - **Source break:** iOS builds (no API declaration changes) — a script method iOS cannot dispatch

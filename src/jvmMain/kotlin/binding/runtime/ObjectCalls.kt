@@ -368,7 +368,7 @@ actual object ObjectCalls {
    * Calls [methodBind] with (Object*, int32, String) args and no return value. Object args use
    * ptrcall's pointer-to-pointer convention.
    */
-  fun ptrcallWithObjectIntStringArgs(
+  actual fun ptrcallWithObjectIntStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -2751,7 +2751,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringNamePackedStringListArgRetVariantScalar(
+  actual fun ptrcallWithStringNamePackedStringListArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     name: String,
@@ -3229,7 +3229,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringAndVariantArgRetVariantScalar(
+  actual fun ptrcallWithStringAndVariantArgRetVariantScalar(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -8503,7 +8503,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (String, String, int64) args and Object return value. */
-  fun ptrcallWithTwoStringAndLongArgsRetObject(
+  actual fun ptrcallWithTwoStringAndLongArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -9037,7 +9037,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Object*, uint64) args and Object return value. */
-  fun ptrcallWithObjectAndLongArgsRetObject(
+  actual fun ptrcallWithObjectAndLongArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -9705,7 +9705,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with two String args and bool return value. */
-  fun ptrcallWithTwoStringArgsRetBool(
+  actual fun ptrcallWithTwoStringArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -10907,7 +10907,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithArrayLongArgs(
+  actual fun ptrcallWithArrayLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Any?>,
@@ -11403,7 +11403,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTransform3DRIDObjectArgsRetObject(
+  actual fun ptrcallWithTransform3DRIDObjectArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -11613,7 +11613,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringAndArrayArgRetLong(
+  actual fun ptrcallWithStringAndArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -11638,24 +11638,28 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringAndArrayArgRetLongAndArray(
+  // ResourceLoader.load_threaded_get_status(path, r_progress): Godot writes the progress into the
+  // out-Array it is handed, which a generated call cannot read back (it converts a List). The one
+  // out-array helper of the shared tree (task 129 C); iOS reads it through the C shim.
+  actual fun ptrcallLoadStatusWithProgress(
     methodBind: MemorySegment,
     instance: MemorySegment,
-    text: String,
-    values: List<Any?>,
-  ): Pair<Long, List<Any?>> {
+    path: String,
+  ): Pair<Long, Double> {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       val argArray = arena.allocate(8L, 8L)
       try {
-        GodotStrings.initString(stringCell, text)
-        BuiltinTypes.initArray(argArray, values)
+        GodotStrings.initString(stringCell, path)
+        BuiltinTypes.initArray(argArray, listOf(0.0))
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, argArray)
         val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_LONG, 0) to BuiltinTypes.readArrayScalars(argArray)
+        val progress =
+          (BuiltinTypes.readArrayScalars(argArray).firstOrNull() as? Number)?.toDouble() ?: 0.0
+        return ret.get(JAVA_LONG, 0) to progress
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, argArray)
         GodotStrings.destroyString(stringCell)
@@ -12406,7 +12410,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (String, bool, int32) and bool return value. */
-  fun ptrcallWithStringBoolIntArgsRetBool(
+  actual fun ptrcallWithStringBoolIntArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -13787,7 +13791,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithStringAndByteArrayArgRetLong(
+  actual fun ptrcallWithStringAndByteArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -15878,7 +15882,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithFiveIntArgsRetLong(
+  actual fun ptrcallWithFiveIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -16789,7 +16793,7 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (Object*, int32) args and int64 return value. */
-  fun ptrcallWithObjectAndIntArgRetLong(
+  actual fun ptrcallWithObjectAndIntArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -17631,7 +17635,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithDoubleAndIntArgsRetPackedInt32List(
+  actual fun ptrcallWithDoubleAndIntArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     doubleArg: Double,
@@ -22278,7 +22282,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectRIDCallableArgsRetObject(
+  actual fun ptrcallWithObjectRIDCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -24302,7 +24306,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntAndPlaneArg(
+  actual fun ptrcallWithIntAndPlaneArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -24790,7 +24794,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntArgRetPlane(
+  actual fun ptrcallWithIntArgRetPlane(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -29356,7 +29360,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntAndByteArrayArgRetLong(
+  actual fun ptrcallWithIntAndByteArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -29404,7 +29408,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithByteArrayIntLongIntArgsRetLong(
+  actual fun ptrcallWithByteArrayIntLongIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     bytes: ByteArray,
@@ -29509,7 +29513,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntAndPackedInt32ListArgs(
+  actual fun ptrcallWithIntAndPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -30921,7 +30925,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithIntAndObjectArgRetLong(
+  actual fun ptrcallWithIntAndObjectArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -35920,7 +35924,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectAndLongArgRetLong(
+  actual fun ptrcallWithObjectAndLongArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -38528,7 +38532,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(
+  actual fun ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vertices: List<Vector3>,
@@ -38747,7 +38751,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithTwoStringBoolLongArgsRetLong(
+  actual fun ptrcallWithTwoStringBoolLongArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,

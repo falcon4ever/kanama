@@ -96,8 +96,8 @@ task, then use targeted `rg` searches.
 - `android`: the Godot Android plugin (runtime + scripts AARs) and the
   PanamaPort source remap.
 - `ios`: the iOS C shim and headers. The Kotlin/Native runtime lives in
-  `src/iosMain` with its per-platform wrappers (hand-shaped, iOS-only generated,
-  collision classes, `<Class>.ios.kt` companions, the iOS `actual`s); the shared tree
+  `src/iosMain` with its per-platform wrappers (the hand-written `FileAccess` facade,
+  `<Class>.ios.kt` companions, the iOS `actual`s); the shared tree
   and the seams come from `src/commonMain`.
 - `web-runtime`: the Kotlin/Wasm Web backend, the Web API wrappers (one
   generated file per Godot class under `api/generated/`, plus the hand-shaped

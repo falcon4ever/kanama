@@ -418,8 +418,11 @@ case("audit_runtime_node_lookups.py", py("audit_runtime_node_lookups.py", "examp
              'import net.multigesture.kanama.annotations.OnProcess\nclass ZzRedRun {\n  @OnProcess\n  fun tick(delta: Double) {\n    self.requireAs("Child", ::Node)\n  }\n}\n')],
      "runtime_node_lookup] FAIL", "a per-frame callback resolves a node path")
 case("audit_singleton_refcounted_policy.py", py("audit_singleton_refcounted_policy.py"),
-     [Edit(f"{JVM}/net/multigesture/kanama/api/Engine.kt", "fun registerSingleton(name: String, objectArg: GodotHandle)", "fun registerSingletonRedRun(name: String, objectArg: GodotHandle)")],
+     [Edit(f"{COMMON}/api/Engine.kt", "fun registerSingleton(name: String, instance: GodotObject)", "fun registerSingletonRedRun(name: String, instance: GodotObject)")],
      "Engine.registerSingleton wrapper not found", "the Engine wrapper loses registerSingleton")
+case("audit_singleton_refcounted_policy.py", py("audit_singleton_refcounted_policy.py"),
+     [Edit("scripts/generate_api_wrapper.py", 'require(!instance.isClass("RefCounted"))', 'require(!instance.isClass("Node"))')],
+     "METHOD_PRECONDITIONS has no", "the generator's precondition row loses the RefCounted guard")
 case("audit_stale_blockers.py", py("audit_stale_blockers.py"),
      [Edit("CONTRIBUTING.md", "# Contributing to Kanama", "# Contributing to Kanama\n<!-- " + BLOCKED_MARKER + " -->")],
      "stale_blockers] FAIL", "a stale-blocker marker whose blocker no longer holds")

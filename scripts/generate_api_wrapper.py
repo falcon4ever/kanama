@@ -533,79 +533,17 @@ class WrapperHome:
 
 
 PER_PLATFORM_WRAPPERS: dict[str, WrapperHome] = {
-    "AudioStreamPlayer": WrapperHome("hand", "collision",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit; iOS: hand-written cinterop-glue Node subclass in IosGodotApi.kt"),
-    "BoxMesh": WrapperHome("hand", "hand",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
-        "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
-        "validated 114/114)"),
-    "BoxShape3D": WrapperHome("hand", "hand",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit; iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, "
-        "PackedByteArray traffic, desktop-parity create()/fromResource() factories (30c949a1, device- "
-        "validated 114/114)"),
-    "ConfigFile": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
+    # Task 129 C left these two; their handle model (a generated RefCounted class with companion
+    # statics instead of the hand-shaped *Handle policy classes) is task 129 parcel 8.
     "DirAccess": WrapperHome("hand", "unsupported",
-        "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit; "
-        "iOS: desktop hosts DirAccess as a hand-shaped static facade; the generated draft references the "
-        "hand-authored DirAccessHandle alias class iOS does not carry"),
-    "ENetMultiplayerPeer": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "Engine": WrapperHome("hand", "collision",
-        "desktop: hand-written singleton: registerSingleton keeps a RefCounted-rejection lifetime guard "
-        "(audit_singleton_refcounted_policy); iOS: hand-written singleton (get_main_loop -> MainLoop, no "
-        "wrapper class) in Engine.kt"),
+        "desktop: hand-written static facade plus the DirAccessHandle lifetime/handle class the "
+        "generator does not emit; iOS: not hosted, the generated draft references DirAccessHandle, "
+        "which iOS does not carry (task 129 parcel 8 decides the handle model)"),
     "FileAccess": WrapperHome("hand", "collision",
-        "desktop: hand-authored static facade / lifetime and handle policy the generator does not emit; "
-        "iOS: hand-written static facade + FileAccessHandle glue in FileAccess.kt (static-method dispatch "
-        "subset); the generated draft would clash and still references the desktop hand-shaped "
-        "FileAccessHandle surface"),
-    "ImageTexture": WrapperHome("generated", "hand",
-        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
-        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
-    "InputEventKey": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "InputEventMouseMotion": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "LightmapGI": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "MeshDataTool": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "NoiseTexture2D": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "OpenXRSpatialAnchorCapability": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "ParticleProcessMaterial": WrapperHome("generated", "hand",
-        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
-        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
-    "ProceduralSkyMaterial": WrapperHome("generated", "hand",
-        "iOS: iOS hand sugar the generator does not emit: static-method dispatch bodies, PackedByteArray "
-        "traffic, desktop-parity create()/fromResource() factories (30c949a1, device-validated 114/114)"),
-    "ProjectSettings": WrapperHome("generated", "collision",
-        "iOS: hand-written singleton (getSettingDouble Variant->Double coercion) in ProjectSettings.kt"),
-    "ResourceLoader": WrapperHome("hand", "collision",
-        "desktop: hand-written Tween/SceneTree runtime glue (bespoke sites, task 10 registry); iOS: hand- "
-        "written typed-loader glue (loadTexture2D/AudioStream/PackedScene) in IosGodotApi.kt"),
-    "SceneMultiplayer": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "ShaderMaterial": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
-    "SurfaceTool": WrapperHome("hand", "generated",
-        "desktop: hand factory/downcast helpers (create / from* / node) the desktop generator does not "
-        "emit"),
+        "desktop: hand-written static facade plus the FileAccessHandle lifetime/handle class and the "
+        "path one-shot helpers the generator does not emit; iOS: a hand-written subset facade with "
+        "its own FileAccessHandle in FileAccess.kt, so the generated draft would clash (task 129 "
+        "parcel 8 decides the handle model)"),
 }
 
 # Godot classes whose wrapper is written ONCE, by hand, in the shared tree (task 117 P3', D20):
@@ -822,6 +760,13 @@ PARAMETER_NAME_OVERRIDES = {
     # named-argument call (`tweenProperty(target = ..., finalValue = ...)`) keeps compiling.
     ("Tween", "tween_property", "object"): "target",
     ("Tween", "tween_property", "final_val"): "finalValue",
+    # Godot's extension_api.json names NoiseTexture2D.set_generate_mipmaps' argument `invert` (a
+    # copy of set_invert's); the retired desktop hand file called it `generate` (task 129 C).
+    ("NoiseTexture2D", "set_generate_mipmaps", "invert"): "generate",
+    # The retired desktop hand AudioStreamPlayer's parameter names (task 129 C), so a named-argument
+    # call keeps compiling.
+    ("AudioStreamPlayer", "set_autoplay", "enable"): "enabled",
+    ("AudioStreamPlayer", "set_stream_paused", "pause"): "paused",
 }
 PROPERTY_NAME_OVERRIDES = {
     ("Curve3D", "closed"): "curveClosed",
@@ -873,6 +818,31 @@ METHOD_CALL_SHAPE_OVERRIDES = {
     ("ClassDB", "class_call_static"): CallShape("callWithVariantArgsOwned", "Any?", "null"),
 }
 
+# Preconditions a generated method checks before it calls Godot, by (class, Godot method): Kotlin
+# statements in terms of the method's Kotlin parameter names, emitted after the receiver guard. The
+# generator's hook for a lifetime rule `extension_api.json` cannot express (task 129 C: the rule used
+# to live in a hand-written desktop `Engine`). scripts/audit_singleton_refcounted_policy.py checks the
+# Engine row and the generated Engine.kt.
+#   Engine.register_singleton: Godot's singleton table holds no reference, so a RefCounted singleton
+#   is freed under it (Godot 4.7 warns); reject it before Godot sees the instance.
+METHOD_PRECONDITIONS: dict[tuple[str, str], tuple[str, ...]] = {
+    ("Engine", "register_singleton"): (
+        'require(!instance.isClass("RefCounted")) {\n'
+        '    "Engine.registerSingleton does not accept RefCounted instances; use an Object-derived singleton"\n'
+        "}",
+    ),
+}
+
+
+def precondition_lines(class_name: str, method_name: str) -> list[str]:
+    """The METHOD_PRECONDITIONS statements of one method, at method-body indent."""
+    return [
+        f"        {line}"
+        for statement in METHOD_PRECONDITIONS.get((class_name, method_name), ())
+        for line in statement.split("\n")
+    ]
+
+
 # Final Kotlin default expressions injected by (class, method, arg), bypassing
 # kotlin_default_expression. Use for composite defaults the generic renderer can't express but that
 # a wrapper needs — kept surgical (per exact arg) so no other method silently gains a default.
@@ -881,6 +851,10 @@ METHOD_CALL_SHAPE_OVERRIDES = {
 KOTLIN_DEFAULT_EXPRESSION_OVERRIDES = {
     ("Node3D", "look_at", "up"): "Vector3.UP",
     ("Node3D", "look_at_from_position", "up"): "Vector3.UP",
+    # Godot's `commit(existing: ArrayMesh = null, flags = 0)`: a null Object default is not emitted
+    # in general, but the desktop hand SurfaceTool had `commit()` and the iOS copy an overload for it
+    # (task 129 C: generated once, the default keeps both call shapes).
+    ("SurfaceTool", "commit", "existing"): "null",
 }
 # (class, method, argument) object parameters that accept Kotlin `null` even though they are not
 # Resource/RefCounted-derived (which are nullable by legacy policy) and are not marked
@@ -900,7 +874,117 @@ CLASS_EXTRA_SUPERTYPES: dict[str, tuple[str, ...]] = {}
 # kept the generated iOS `RefCounted.unreference()` internal, and the shared hand-written RefCounted
 # has no such member (close() calls the bind directly, like desktop always did).
 METHOD_VISIBILITY_OVERRIDES: dict[tuple[str, str], str] = {}
-DESKTOP_MEMBER_SECTIONS = {
+# Empty since task 129 C: its one entry (ProjectSettings' typed getSetting* readers) is a
+# SHARED_MEMBER_SECTIONS entry now that ProjectSettings is generated once.
+DESKTOP_MEMBER_SECTIONS: dict[str, str] = {}
+# Empty since task 119 item 33: every entry this table held was a `from*` downcast helper, and
+# those are rows in FACTORY_HELPERS now. Non-factory desktop companion members belong here.
+DESKTOP_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
+
+# iOS-only hand-written body members emitted into the generated wrapper as a stable
+# custom-section (Phase 4.2). These are Kanama ergonomics that can't come from
+# extension_api.json (SceneTree/Tween/IosGodot facade glue, generic node-cast helpers);
+# they used to live behind a `// KANAMA-IOS-SUGAR` marker that had to be hand-re-added
+# after every regen. Emitting them here makes regeneration lossless. Referenced types
+# (SceneTree, Tween, IosGodot, Node, NodePath) are all in the same package, so no extra
+# imports are needed. Gated to IOS_AUDIT_ONLY in render_wrapper.
+# task 100 parcel 7: the ConfigFile setValue/getValue, ShaderMaterial setShaderParameter and Node
+# propagateCall sugar that routed Variant / Array arguments through call() is gone — those members
+# are generated now (Variant / Dictionary / Array are audited arg kinds).
+IOS_MEMBER_SECTIONS: dict[str, str] = {
+    # (RefCounted's ownership section left with task 117 P3': RefCounted is a shared hand root,
+    # SHARED_HAND_ROOTS, and carries close()/checkOpen()/requireOpenHandle() itself.)
+    # (SurfaceTool's no-argument `commit()` overload left with task 129 C: SurfaceTool is generated
+    # once and `existing` defaults to null through KOTLIN_DEFAULT_EXPRESSION_OVERRIDES.)
+}
+
+# iOS-only companion-object custom sections for the iOS-only-generated classes (member-style,
+# 8-space indent). A shared class's iOS-only sugar belongs in IOS_EXTENSION_SECTIONS instead.
+IOS_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
+    # (RefCounted's releaseHandle section left with task 117 P3', like its member section above.)
+    # (InputEventKey's hand KEY_* constant subset left with task 128 A: Godot's `Key` enum is the
+    # generated global value class `Key`, so scripts write `Key.ESCAPE` on every platform.)
+}
+
+
+
+# Custom sections come in three flavours, one table each, keyed by class. The generator refuses a
+# key in the wrong table (a member-style section on a shared class would duplicate on one platform).
+#   *_MEMBER_SECTIONS / *_COMPANION_MEMBER_SECTIONS: member-style text emitted INSIDE the generated
+#     class / companion object. SHARED_* apply to shared-tree classes on every platform (so the text
+#     may only use what both platforms resolve: ObjectCalls.constructObject, isClass, wrappers);
+#     DESKTOP_*/IOS_* apply to the classes generated for that platform only.
+#   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
+#     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
+SHARED_MEMBER_SECTIONS: dict[str, str] = {
+    # Task 129 C: the one member of the retired hand AudioStreamPlayer copies Godot does not have.
+    "AudioStreamPlayer": """
+    /**
+     * Loads an `AudioStream` from [path], assigns it to this player, and releases Kanama's temporary
+     * resource wrapper. Use this when mirroring GDScript's `stream = load(path)` pattern.
+     */
+    fun setStreamFromPath(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE) {
+        ResourceLoader.loadAudioStream(path, cacheMode)?.use { stream -> setStream(stream) }
+    }
+""".strip("\n"),
+    # Task 129 C: the typed loaders and the threaded-load progress reader of the retired hand
+    # ResourceLoader copies (desktop names and defaults). `load` with a type hint, wrapped as the
+    # type it names; the progress goes through the one ObjectCalls helper both platforms implement
+    # (Godot writes it into an out-Array the generated `loadThreadedGetStatus` cannot hand back).
+    "ResourceLoader": """
+    /**
+     * [loadThreadedGetStatusWithProgress]'s result: the status and, when Godot reports it, the
+     * completion ratio. (Named `ThreadLoadStatus` before task 128 A, when that name became Godot's
+     * enum `ResourceLoader.ThreadLoadStatus`.)
+     */
+    data class ThreadLoadProgress(val status: ResourceLoader.ThreadLoadStatus, val progress: Double?)
+
+    /** [loadThreadedGetStatus] with the progress (0..1) Godot reports for [path]. */
+    @JvmStatic
+    fun loadThreadedGetStatusWithProgress(path: String): ThreadLoadProgress {
+        val (status, progress) = ObjectCalls.ptrcallLoadStatusWithProgress(Binds.loadThreadedGetStatusBind, singleton, path)
+        return if (status < 0L) {
+            ThreadLoadProgress(ResourceLoader.ThreadLoadStatus.INVALID_RESOURCE, null)
+        } else {
+            ThreadLoadProgress(ResourceLoader.ThreadLoadStatus(status), progress)
+        }
+    }
+
+    /** [loadThreadedGet] as a `PackedScene` (null when the resource is not one). */
+    @JvmStatic
+    fun loadThreadedGetPackedScene(path: String): PackedScene? =
+        PackedScene.wrapOwned(ObjectCalls.ptrcallWithStringArgRetObject(Binds.loadThreadedGetBind, singleton, path))
+
+    /** [load] with the `PackedScene` type hint. */
+    @JvmStatic
+    fun loadPackedScene(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): PackedScene? =
+        PackedScene.wrapOwned(
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "PackedScene", cacheMode.value),
+        )
+
+    /** [load] with the `Texture2D` type hint. */
+    @JvmStatic
+    fun loadTexture2D(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): Texture2D? =
+        Texture2D.wrapOwned(
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "Texture2D", cacheMode.value),
+        )
+
+    /** [load] with the `AudioStream` type hint. */
+    @JvmStatic
+    fun loadAudioStream(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): AudioStream? =
+        AudioStream.wrapOwned(
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "AudioStream", cacheMode.value),
+        )
+
+    /** [load] with the `LightmapGIData` type hint. */
+    @JvmStatic
+    fun loadLightmapGIData(path: String, cacheMode: ResourceLoader.CacheMode = ResourceLoader.CacheMode.REUSE): LightmapGIData? =
+        LightmapGIData.wrapOwned(
+            ObjectCalls.ptrcallWithTwoStringAndLongArgsRetObject(Binds.loadBind, singleton, path, "LightmapGIData", cacheMode.value),
+        )
+""".strip("\n"),
+    # Task 129 C: ProjectSettings' typed readers (a DESKTOP_MEMBER_SECTIONS entry until the class was
+    # generated once; iOS had only a hand getSettingDouble).
     "ProjectSettings": """
     @JvmStatic
     fun getSettingString(name: String, defaultValue: String = ""): String =
@@ -980,50 +1064,6 @@ DESKTOP_MEMBER_SECTIONS = {
     private fun dictionaryOrDefault(value: Any?, defaultValue: Map<String, Any?>): Map<String, Any?> =
         (value as? Map<*, *>)?.entries?.associate { (key, mapValue) -> key.toString() to mapValue } ?: defaultValue
 """.strip("\n"),
-}
-# Empty since task 119 item 33: every entry this table held was a `from*` downcast helper, and
-# those are rows in FACTORY_HELPERS now. Non-factory desktop companion members belong here.
-DESKTOP_COMPANION_MEMBER_SECTIONS: dict[str, str] = {}
-
-# iOS-only hand-written body members emitted into the generated wrapper as a stable
-# custom-section (Phase 4.2). These are Kanama ergonomics that can't come from
-# extension_api.json (SceneTree/Tween/IosGodot facade glue, generic node-cast helpers);
-# they used to live behind a `// KANAMA-IOS-SUGAR` marker that had to be hand-re-added
-# after every regen. Emitting them here makes regeneration lossless. Referenced types
-# (SceneTree, Tween, IosGodot, Node, NodePath) are all in the same package, so no extra
-# imports are needed. Gated to IOS_AUDIT_ONLY in render_wrapper.
-# task 100 parcel 7: the ConfigFile setValue/getValue, ShaderMaterial setShaderParameter and Node
-# propagateCall sugar that routed Variant / Array arguments through call() is gone — those members
-# are generated now (Variant / Dictionary / Array are audited arg kinds).
-IOS_MEMBER_SECTIONS = {
-    # (RefCounted's ownership section left with task 117 P3': RefCounted is a shared hand root,
-    # SHARED_HAND_ROOTS, and carries close()/checkOpen()/requireOpenHandle() itself.)
-    "SurfaceTool": """
-    // No-arg commit() — the generated commit(existing, flags) doesn't default the nullable `existing`
-    // ArrayMesh; this overload matches the desktop/Android commit() default-arg call.
-    fun commit(): ArrayMesh? = commit(null)
-""".strip("\n"),
-}
-
-# iOS-only companion-object custom sections for the iOS-only-generated classes (member-style,
-# 8-space indent). A shared class's iOS-only sugar belongs in IOS_EXTENSION_SECTIONS instead.
-IOS_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
-    # (RefCounted's releaseHandle section left with task 117 P3', like its member section above.)
-    # (InputEventKey's hand KEY_* constant subset left with task 128 A: Godot's `Key` enum is the
-    # generated global value class `Key`, so scripts write `Key.ESCAPE` on every platform.)
-}
-
-
-
-# Custom sections come in three flavours, one table each, keyed by class. The generator refuses a
-# key in the wrong table (a member-style section on a shared class would duplicate on one platform).
-#   *_MEMBER_SECTIONS / *_COMPANION_MEMBER_SECTIONS: member-style text emitted INSIDE the generated
-#     class / companion object. SHARED_* apply to shared-tree classes on every platform (so the text
-#     may only use what both platforms resolve: ObjectCalls.constructObject, isClass, wrappers);
-#     DESKTOP_*/IOS_* apply to the classes generated for that platform only.
-#   *_EXTENSION_SECTIONS: extension-style text emitted into a shared class's platform companion
-#     file (`<Class>.jvm.kt` / `<Class>.ios.kt`) — platform sugar the other platform cannot compile.
-SHARED_MEMBER_SECTIONS: dict[str, str] = {
     "Viewport": """
     // getCamera3D/getCamera2D camelCase aliases (the generator emits getCamera3d/getCamera2d).
     // They lived twice until task 117 P1'(c): on the hand-written desktop `Viewport` (getCamera3D
@@ -1207,7 +1247,7 @@ SHARED_MEMBER_SECTIONS: dict[str, str] = {
             if (!processAlways && isPaused()) {
                 frameSeconds = 0.0
             } else if (!ignoreTimeScale) {
-                frameSeconds *= engineTimeScale().coerceAtLeast(0.0)
+                frameSeconds *= Engine.getTimeScale().coerceAtLeast(0.0)
             }
 
             elapsedSeconds += frameSeconds
@@ -1249,26 +1289,6 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
         // SceneTree itself, which would clash with the instance method of the same JVM signature.
         // A Kotlin caller writes SceneTree.quit() either way; only active() and the two legacy
         // *Handle helpers, which have no instance twin, can stay @JvmStatic.
-        private const val GET_MAIN_LOOP_HASH = 1016888095L
-        private const val GET_TIME_SCALE_HASH = 191475506L
-
-        private val engineSingleton: RawSegment by lazy {
-            ObjectCalls.getSingleton("Engine")
-        }
-
-        private val getMainLoopBind by lazy {
-            ObjectCalls.getMethodBind("Engine", "get_main_loop", GET_MAIN_LOOP_HASH)
-        }
-
-        private val getTimeScaleBind by lazy {
-            ObjectCalls.getMethodBind("Engine", "get_time_scale", GET_TIME_SCALE_HASH)
-        }
-
-        // Engine.get_time_scale through the singleton above: the desktop `Engine` wrapper has
-        // getTimeScale(), the iOS one does not, and delaySeconds needs it on both.
-        internal fun engineTimeScale(): Double =
-            ObjectCalls.ptrcallNoArgsRetDouble(getTimeScaleBind, engineSingleton)
-
         /**
          * The SceneTree the engine is running, resolved through `Engine.get_main_loop()`.
          *
@@ -1276,13 +1296,13 @@ SHARED_COMPANION_MEMBER_SECTIONS: dict[str, str] = {
          */
         @JvmStatic
         fun active(): SceneTree {
-            val tree = checkNotNull(wrap(ObjectCalls.ptrcallNoArgsRetObject(getMainLoopBind, engineSingleton))) {
+            val loop = checkNotNull(Engine.getMainLoop()) {
                 "SceneTree.active(): Engine.get_main_loop() returned null - no main loop is running"
             }
-            check(tree.isClass("SceneTree")) {
+            check(loop.isClass("SceneTree")) {
                 "SceneTree.active(): the running main loop is not a SceneTree"
             }
-            return tree
+            return SceneTree(loop.handle)
         }
 
         /** The root `Window` of the running tree. Non-null: a running tree always has one. */
@@ -1467,11 +1487,11 @@ class FactorySpec:
 # a row here says WHICH helpers a class gets and the renderer owns the body, so a P1'(a)
 # retirement adds a row instead of copying Kotlin.
 #
-# A key must be a class the generator renders, and the mode it is rendered in picks the body:
-# a shared-tree class gets `ObjectCalls.constructObject`, an iOS-only generated class gets
-# `MemorySegment.ofAddress(IosGodot.constructObject(...))`. `check_section_tables` enforces both
-# that (the key must be in one of the class universes) and that no section still pastes the
-# helper the row now renders.
+# A key must be a class the generator renders; every target constructs through
+# `ObjectCalls.constructObject` (the iOS-only `IosGodot.constructObject` spelling left with task
+# 129 C, when the last iOS-only generated classes were generated once). `check_section_tables`
+# enforces both that (the key must be in one of the class universes) and that no section still
+# pastes the helper the row now renders.
 FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Shared tree (task 117 P1'(a)): the desktop hand files' factory helpers, generated once for
     # every platform.
@@ -1500,20 +1520,30 @@ FACTORY_HELPERS: dict[str, FactorySpec] = {
     # Task 117 P1'(c): the hand copies' only companion sugar (both carried create(), neither a
     # downcast), so the whole class body is generated and the row is all that retirement needs.
     "StandardMaterial3D": FactorySpec(True),
-    # Desktop-only generated classes.
+    # Task 129 C: AudioStreamPlayer's only factory (a Node: the wrapper is not owned).
+    "AudioStreamPlayer": FactorySpec(True),
+    # Task 129 C: the iOS-hand band (desktop and iOS each had a hand copy, or a generated desktop
+    # copy and an iOS hand one); the desktop factories, generated once.
+    "BoxMesh": FactorySpec(True),
+    "BoxShape3D": FactorySpec(True, (Downcast("fromResource", "Resource", False),)),
     "ParticleProcessMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
     "ProceduralSkyMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", False),)),
-    # iOS-only generated classes. `from(value: GodotObject)` is here too: the name is just a field,
-    # and leaving the two of them pasted would reorder InputEventKey's companion, whose hand-written
-    # Key constants (still a section) sit above its factories.
+    # Task 129 C: the desktop hand files' factories (these were iOS-only generated rows before; the
+    # classes are generated once now). NoiseTexture2D and ShaderMaterial keep the desktop downcasts:
+    # `fromObject` and a non-null `fromResource` (iOS took a nullable Resource).
     "ConfigFile": FactorySpec(True),
     "ENetMultiplayerPeer": FactorySpec(True),
     "InputEventKey": FactorySpec(True, (Downcast("from", "GodotObject", False),)),
     "InputEventMouseMotion": FactorySpec(False, (Downcast("from", "GodotObject", False),)),
     "LightmapGI": FactorySpec(True),
     "MeshDataTool": FactorySpec(True),
+    "NoiseTexture2D": FactorySpec(
+        False, (Downcast("fromObject", "GodotObject", False), Downcast("fromResource", "Resource", False))
+    ),
     "SceneMultiplayer": FactorySpec(False, (Downcast("fromApi", "MultiplayerAPI", True, "api"),)),
-    "ShaderMaterial": FactorySpec(False, (Downcast("fromResource", "Resource", True),)),
+    "ShaderMaterial": FactorySpec(
+        False, (Downcast("fromObject", "GodotObject", False), Downcast("fromResource", "Resource", False))
+    ),
     "SurfaceTool": FactorySpec(True),
 }
 
@@ -2796,6 +2826,7 @@ def render_method(
         class_name, method, object_types, wrapper_classes, api_classes, singleton,
     )
     guard_lines = ["        checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
+    guard_lines += precondition_lines(class_name, method.name)
     visibility = METHOD_VISIBILITY_OVERRIDES.get((class_name, method.name), "")
     lines = []
     if singleton:
@@ -2888,6 +2919,7 @@ def render_vararg_method(
     call = f"ObjectCalls.{helper}({bind_name}, {receiver}, {call_args})"
     return_kind = method.logical_return_kind(object_types)
     guard_lines = ["        checkOpen()"] if emits_receiver_guard(class_name, method, singleton, api_classes) else []
+    guard_lines += precondition_lines(class_name, method.name)
     if return_kind == "void":
         lines = []
         if singleton:
@@ -3560,9 +3592,7 @@ def _article(name: str) -> str:
 
 
 def _construct_object(class_name: str) -> str:
-    """The engine-side `constructObject` call, in the spelling the render target compiles."""
-    if RENDER_TARGET == "ios":
-        return f'MemorySegment.ofAddress(IosGodot.constructObject("{class_name}"))'
+    """The engine-side `constructObject` call (the same `ObjectCalls` member on every target)."""
     return f'ObjectCalls.constructObject("{class_name}")'
 
 

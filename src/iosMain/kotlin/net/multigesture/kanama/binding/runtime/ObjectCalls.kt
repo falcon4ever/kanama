@@ -3456,7 +3456,7 @@ actual object ObjectCalls {
 
   // ResourceLoader.load_threaded_get_status(path, progress): the C side supplies the progress
   // out-Array and reads back element 0. Returns status (-1 on error) to progress [0,1].
-  fun ptrcallLoadStatusWithProgress(
+  actual fun ptrcallLoadStatusWithProgress(
     methodBind: MemorySegment,
     instance: MemorySegment,
     path: String,
@@ -4434,7 +4434,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithArrayLongArgs(
+  actual fun ptrcallWithArrayLongArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<Any?>,
@@ -5064,7 +5064,7 @@ actual object ObjectCalls {
     ptrcallRetUtf8(methodBind, instance, types, ptrs, 1, PT_STRING)
   }
 
-  fun ptrcallWithByteArrayIntLongIntArgsRetLong(
+  actual fun ptrcallWithByteArrayIntLongIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     bytes: ByteArray,
@@ -5752,7 +5752,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithDoubleAndIntArgsRetPackedInt32List(
+  actual fun ptrcallWithDoubleAndIntArgsRetPackedInt32List(
     methodBind: MemorySegment,
     instance: MemorySegment,
     doubleArg: Double,
@@ -6025,7 +6025,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithFiveIntArgsRetLong(
+  actual fun ptrcallWithFiveIntArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: Int,
@@ -6788,7 +6788,7 @@ actual object ObjectCalls {
     MemorySegment.ofAddress(ret.value)
   }
 
-  fun ptrcallWithIntAndByteArrayArgRetLong(
+  actual fun ptrcallWithIntAndByteArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -7155,7 +7155,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndObjectArgRetLong(
+  actual fun ptrcallWithIntAndObjectArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -7195,7 +7195,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndPackedInt32ListArgs(
+  actual fun ptrcallWithIntAndPackedInt32ListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     index: Int,
@@ -7252,7 +7252,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithIntAndPlaneArg(
+  actual fun ptrcallWithIntAndPlaneArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
     intValue: Int,
@@ -8105,7 +8105,7 @@ actual object ObjectCalls {
     ptrcallRetPackedVector2List(methodBind, instance, types, ptrs, 1)
   }
 
-  fun ptrcallWithIntArgRetPlane(
+  actual fun ptrcallWithIntArgRetPlane(
     methodBind: MemorySegment,
     instance: MemorySegment,
     value: Int,
@@ -12855,7 +12855,7 @@ actual object ObjectCalls {
     ret.value.toInt()
   }
 
-  fun ptrcallWithObjectAndIntArgRetLong(
+  actual fun ptrcallWithObjectAndIntArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -12936,7 +12936,7 @@ actual object ObjectCalls {
     ptrcallRetTypedVector3List(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithObjectAndLongArgRetLong(
+  actual fun ptrcallWithObjectAndLongArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -12957,7 +12957,7 @@ actual object ObjectCalls {
     ret.value
   }
 
-  fun ptrcallWithObjectAndLongArgsRetObject(
+  actual fun ptrcallWithObjectAndLongArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -13939,7 +13939,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithObjectIntStringArgs(
+  actual fun ptrcallWithObjectIntStringArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -14442,7 +14442,7 @@ actual object ObjectCalls {
     RID(ret.value)
   }
 
-  fun ptrcallWithObjectRIDCallableArgsRetObject(
+  actual fun ptrcallWithObjectRIDCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -16304,7 +16304,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(
+  actual fun ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     vertices: List<Vector3>,
@@ -25288,6 +25288,24 @@ actual object ObjectCalls {
     Unit
   }
 
+  actual fun ptrcallWithStringAndArrayArgRetLong(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    text: String,
+    values: List<Any?>,
+  ): Long = memScoped {
+    val ret = alloc<LongVar>()
+    val c1 = packArrayBlob(values)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING
+    types[1] = PT_ARRAY
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 2, PT_INT64, ret.ptr)
+    ret.value
+  }
+
   actual fun ptrcallWithStringAndBoolArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -25470,7 +25488,7 @@ actual object ObjectCalls {
     ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
-  fun ptrcallWithStringAndByteArrayArgRetLong(
+  actual fun ptrcallWithStringAndByteArrayArgRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
     text: String,
@@ -26140,6 +26158,22 @@ actual object ObjectCalls {
     ret.value.toInt()
   }
 
+  actual fun ptrcallWithStringAndVariantArgRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    text: String,
+    value: Any?,
+  ): Any? = memScoped {
+    val c1 = packVariantDesc(value)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING
+    types[1] = PT_VARIANT
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
+  }
+
   actual fun ptrcallWithStringArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -26316,6 +26350,30 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
     ret.value
+  }
+
+  actual fun ptrcallWithStringBoolIntArgsRetBool(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    text: String,
+    flag: Boolean,
+    number: Int,
+  ): Boolean = memScoped {
+    val ret = alloc<ByteVar>()
+    val c1 = alloc<ByteVar>()
+    c1.value = if (flag) 1 else 0
+    val c2 = alloc<LongVar>()
+    c2.value = number.toLong()
+    val types = allocArray<IntVar>(3)
+    types[0] = PT_STRING
+    types[1] = PT_BOOL
+    types[2] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(3)
+    ptrs[0] = text.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_BOOL, ret.ptr)
+    ret.value.toInt() != 0
   }
 
   actual fun ptrcallWithStringBoolObjectArgs(
@@ -28223,6 +28281,22 @@ actual object ObjectCalls {
     ptrs[2] = context.cstr.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
+  }
+
+  actual fun ptrcallWithStringNamePackedStringListArgRetVariantScalar(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    values: List<String>,
+  ): Any? = memScoped {
+    val c1 = packStringDesc(values)
+    val types = allocArray<IntVar>(2)
+    types[0] = PT_STRING_NAME
+    types[1] = PT_PACKED_STRING_ARRAY
+    val ptrs = allocArray<COpaquePointerVar>(2)
+    ptrs[0] = name.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrcallRetVariantScalar(methodBind, instance, types, ptrs, 2)
   }
 
   actual fun ptrcallWithStringNameStringAndVariantArg(
@@ -30949,7 +31023,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTransform3DRIDObjectArgsRetObject(
+  actual fun ptrcallWithTransform3DRIDObjectArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     transformValue: Transform3D,
@@ -34438,6 +34512,29 @@ actual object ObjectCalls {
     ptrcallRetPackedInt32List(methodBind, instance, types, ptrs, 3)
   }
 
+  actual fun ptrcallWithTwoStringAndLongArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: String,
+    second: String,
+    value: Long,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c2 = alloc<LongVar>()
+    c2.value = value
+    val types = allocArray<IntVar>(3)
+    types[0] = PT_STRING
+    types[1] = PT_STRING
+    types[2] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(3)
+    ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
+
   actual fun ptrcallWithTwoStringAndTwoBoolArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -34519,7 +34616,7 @@ actual object ObjectCalls {
     Unit
   }
 
-  fun ptrcallWithTwoStringArgsRetBool(
+  actual fun ptrcallWithTwoStringArgsRetBool(
     methodBind: MemorySegment,
     instance: MemorySegment,
     first: String,
@@ -34634,6 +34731,33 @@ actual object ObjectCalls {
     ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_INT64, ret.ptr)
+    ret.value
+  }
+
+  actual fun ptrcallWithTwoStringBoolLongArgsRetLong(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: String,
+    second: String,
+    flag: Boolean,
+    mode: Long,
+  ): Long = memScoped {
+    val ret = alloc<LongVar>()
+    val c2 = alloc<ByteVar>()
+    c2.value = if (flag) 1 else 0
+    val c3 = alloc<LongVar>()
+    c3.value = mode
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_STRING
+    types[1] = PT_STRING
+    types[2] = PT_BOOL
+    types[3] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = first.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = second.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
     ret.value
   }
 
@@ -43384,6 +43508,10 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
 
   // Task 133: class tokens, checked casts, script checks, tree accessors, preload, script scope.
   net.multigesture.kanama.api.scriptAccessSelfTestRows(::check)
+
+  // Task 129 C: the classes generated once whose iOS path is new (AudioStreamPlayer,
+  // ResourceLoader, Engine, ProjectSettings, ParticleProcessMaterial, ...).
+  wrappersOnceSelfTestRows(::check)
 
   // The fault counter is process-wide and never reset, so by frame 1 it still holds exactly the
   // seven deliberate probes from the level-2 phase — unless something in between failed quietly,

@@ -1,7 +1,9 @@
 package net.multigesture.kanama.api
 
+import kotlin.jvm.JvmField
+import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
-import java.lang.foreign.MemorySegment
+import net.multigesture.kanama.binding.runtime.RawSegment
 
 /**
  * Helper class to handle INI-style files.
@@ -18,7 +20,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun setValue(section: String, key: String, value: Any?) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringAndVariantArg(setValueBind, segment, section, key, value)
+        ObjectCalls.ptrcallWithTwoStringAndVariantArg(Binds.setValueBind, segment, section, key, value)
     }
 
     /**
@@ -30,7 +32,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getValue(section: String, key: String, default: Any? = null): Any? {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(getValueBind, segment, section, key, default)
+        return ObjectCalls.ptrcallWithTwoStringAndVariantArgRetVariantScalar(Binds.getValueBind, segment, section, key, default)
     }
 
     /**
@@ -40,7 +42,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasSection(section: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetBool(hasSectionBind, segment, section)
+        return ObjectCalls.ptrcallWithStringArgRetBool(Binds.hasSectionBind, segment, section)
     }
 
     /**
@@ -50,7 +52,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun hasSectionKey(section: String, key: String): Boolean {
         checkOpen()
-        return ObjectCalls.ptrcallWithTwoStringArgsRetBool(hasSectionKeyBind, segment, section, key)
+        return ObjectCalls.ptrcallWithTwoStringArgsRetBool(Binds.hasSectionKeyBind, segment, section, key)
     }
 
     /**
@@ -60,7 +62,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSections(): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetPackedStringList(getSectionsBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSectionsBind, segment)
     }
 
     /**
@@ -71,7 +73,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun getSectionKeys(section: String): List<String> {
         checkOpen()
-        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(getSectionKeysBind, segment, section)
+        return ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getSectionKeysBind, segment, section)
     }
 
     /**
@@ -82,7 +84,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun eraseSection(section: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithStringArg(eraseSectionBind, segment, section)
+        ObjectCalls.ptrcallWithStringArg(Binds.eraseSectionBind, segment, section)
     }
 
     /**
@@ -93,7 +95,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun eraseSectionKey(section: String, key: String) {
         checkOpen()
-        ObjectCalls.ptrcallWithTwoStringArgs(eraseSectionKeyBind, segment, section, key)
+        ObjectCalls.ptrcallWithTwoStringArgs(Binds.eraseSectionKeyBind, segment, section, key)
     }
 
     /**
@@ -105,7 +107,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun load(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(loadBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.loadBind, segment, path))
     }
 
     /**
@@ -117,7 +119,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun parse(data: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(parseBind, segment, data))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.parseBind, segment, data))
     }
 
     /**
@@ -129,7 +131,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun save(path: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(saveBind, segment, path))
+        return GodotError(ObjectCalls.ptrcallWithStringArgRetLong(Binds.saveBind, segment, path))
     }
 
     /**
@@ -139,7 +141,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun encodeToText(): String {
         checkOpen()
-        return ObjectCalls.ptrcallNoArgsRetString(encodeToTextBind, segment)
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.encodeToTextBind, segment)
     }
 
     /**
@@ -152,7 +154,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun loadEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(loadEncryptedBind, segment, path, key))
+        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(Binds.loadEncryptedBind, segment, path, key))
     }
 
     /**
@@ -165,7 +167,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun loadEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(loadEncryptedPassBind, segment, path, password))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.loadEncryptedPassBind, segment, path, password))
     }
 
     /**
@@ -177,7 +179,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveEncrypted(path: String, key: ByteArray): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(saveEncryptedBind, segment, path, key))
+        return GodotError(ObjectCalls.ptrcallWithStringAndByteArrayArgRetLong(Binds.saveEncryptedBind, segment, path, key))
     }
 
     /**
@@ -190,7 +192,7 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun saveEncryptedPass(path: String, password: String): GodotError {
         checkOpen()
-        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(saveEncryptedPassBind, segment, path, password))
+        return GodotError(ObjectCalls.ptrcallWithTwoStringArgsRetLong(Binds.saveEncryptedPassBind, segment, path, password))
     }
 
     /**
@@ -200,97 +202,110 @@ class ConfigFile(handle: GodotHandle) : RefCounted(handle) {
      */
     fun clear() {
         checkOpen()
-        ObjectCalls.ptrcallNoArgs(clearBind, segment)
+        ObjectCalls.ptrcallNoArgs(Binds.clearBind, segment)
     }
 
     companion object {
         @JvmStatic
+        fun fromHandle(handle: GodotHandle): ConfigFile? =
+            wrapBorrowed(handle.segment)
+
+        internal fun wrapOwned(handle: RawSegment): ConfigFile? =
+            if (handle.address() == 0L) null else RefCounted.owned(ConfigFile(GodotHandle(handle)))
+
+        internal fun wrapBorrowed(handle: RawSegment): ConfigFile? =
+            if (handle.address() == 0L) null else ConfigFile(GodotHandle(handle))
+
+        // Instantiate a ConfigFile.
+        @JvmStatic
         fun create(): ConfigFile =
             RefCounted.owned(ConfigFile(GodotHandle(ObjectCalls.constructObject("ConfigFile"))))
+    }
 
+    private object Binds {
         private const val SET_VALUE_HASH = 2504492430L
-        private val setValueBind by lazy {
+        @JvmField
+        val setValueBind =
             ObjectCalls.getMethodBind("ConfigFile", "set_value", SET_VALUE_HASH)
-        }
 
         private const val GET_VALUE_HASH = 89809366L
-        private val getValueBind by lazy {
+        @JvmField
+        val getValueBind =
             ObjectCalls.getMethodBind("ConfigFile", "get_value", GET_VALUE_HASH)
-        }
 
         private const val HAS_SECTION_HASH = 3927539163L
-        private val hasSectionBind by lazy {
+        @JvmField
+        val hasSectionBind =
             ObjectCalls.getMethodBind("ConfigFile", "has_section", HAS_SECTION_HASH)
-        }
 
         private const val HAS_SECTION_KEY_HASH = 820780508L
-        private val hasSectionKeyBind by lazy {
+        @JvmField
+        val hasSectionKeyBind =
             ObjectCalls.getMethodBind("ConfigFile", "has_section_key", HAS_SECTION_KEY_HASH)
-        }
 
         private const val GET_SECTIONS_HASH = 1139954409L
-        private val getSectionsBind by lazy {
+        @JvmField
+        val getSectionsBind =
             ObjectCalls.getMethodBind("ConfigFile", "get_sections", GET_SECTIONS_HASH)
-        }
 
         private const val GET_SECTION_KEYS_HASH = 4291131558L
-        private val getSectionKeysBind by lazy {
+        @JvmField
+        val getSectionKeysBind =
             ObjectCalls.getMethodBind("ConfigFile", "get_section_keys", GET_SECTION_KEYS_HASH)
-        }
 
         private const val ERASE_SECTION_HASH = 83702148L
-        private val eraseSectionBind by lazy {
+        @JvmField
+        val eraseSectionBind =
             ObjectCalls.getMethodBind("ConfigFile", "erase_section", ERASE_SECTION_HASH)
-        }
 
         private const val ERASE_SECTION_KEY_HASH = 3186203200L
-        private val eraseSectionKeyBind by lazy {
+        @JvmField
+        val eraseSectionKeyBind =
             ObjectCalls.getMethodBind("ConfigFile", "erase_section_key", ERASE_SECTION_KEY_HASH)
-        }
 
         private const val LOAD_HASH = 166001499L
-        private val loadBind by lazy {
+        @JvmField
+        val loadBind =
             ObjectCalls.getMethodBind("ConfigFile", "load", LOAD_HASH)
-        }
 
         private const val PARSE_HASH = 166001499L
-        private val parseBind by lazy {
+        @JvmField
+        val parseBind =
             ObjectCalls.getMethodBind("ConfigFile", "parse", PARSE_HASH)
-        }
 
         private const val SAVE_HASH = 166001499L
-        private val saveBind by lazy {
+        @JvmField
+        val saveBind =
             ObjectCalls.getMethodBind("ConfigFile", "save", SAVE_HASH)
-        }
 
         private const val ENCODE_TO_TEXT_HASH = 201670096L
-        private val encodeToTextBind by lazy {
+        @JvmField
+        val encodeToTextBind =
             ObjectCalls.getMethodBind("ConfigFile", "encode_to_text", ENCODE_TO_TEXT_HASH)
-        }
 
         private const val LOAD_ENCRYPTED_HASH = 887037711L
-        private val loadEncryptedBind by lazy {
+        @JvmField
+        val loadEncryptedBind =
             ObjectCalls.getMethodBind("ConfigFile", "load_encrypted", LOAD_ENCRYPTED_HASH)
-        }
 
         private const val LOAD_ENCRYPTED_PASS_HASH = 852856452L
-        private val loadEncryptedPassBind by lazy {
+        @JvmField
+        val loadEncryptedPassBind =
             ObjectCalls.getMethodBind("ConfigFile", "load_encrypted_pass", LOAD_ENCRYPTED_PASS_HASH)
-        }
 
         private const val SAVE_ENCRYPTED_HASH = 887037711L
-        private val saveEncryptedBind by lazy {
+        @JvmField
+        val saveEncryptedBind =
             ObjectCalls.getMethodBind("ConfigFile", "save_encrypted", SAVE_ENCRYPTED_HASH)
-        }
 
         private const val SAVE_ENCRYPTED_PASS_HASH = 852856452L
-        private val saveEncryptedPassBind by lazy {
+        @JvmField
+        val saveEncryptedPassBind =
             ObjectCalls.getMethodBind("ConfigFile", "save_encrypted_pass", SAVE_ENCRYPTED_PASS_HASH)
-        }
 
         private const val CLEAR_HASH = 3218959716L
-        private val clearBind by lazy {
+        @JvmField
+        val clearBind =
             ObjectCalls.getMethodBind("ConfigFile", "clear", CLEAR_HASH)
-        }
     }
 }
