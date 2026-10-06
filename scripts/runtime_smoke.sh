@@ -649,6 +649,60 @@ check_absent "Leaked instance: FileAccess"
 check_absent "Leaked instance: DirAccess"
 check_absent "Resource still in use: .*Resource_smoke"
 
+# Exit-time upcall crash -- a JVM-initiated exit (SIGTERM through the JVM's own handler, or
+# System.exit) made HotSpot's VM thread call libc exit() with the engine still live: Godot's static
+# destructors then called ScriptLanguage::get_name through a Panama upcall stub that thread cannot
+# enter (SIGBUS in UpcallStub, exit 134, or a hang). The bootstrap's JNI exit hook ends the process
+# with _exit instead: exit 143 (128 + SIGTERM), no hs_err. Not on Windows (no SIGTERM there).
+case "$UNAME_S" in
+  MINGW*|MSYS*|CYGWIN*) ;;
+  *)
+    SIGTERM_LOG="${LOG_FILE}.sigterm"
+    SIGTERM_ERR_DIR="$(mktemp -d)"
+    JAVA_TOOL_OPTIONS="-XX:ErrorFile=$SIGTERM_ERR_DIR/hs_err_%p.log" \
+      "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit-after 1000000 >"$SIGTERM_LOG" 2>&1 &
+    sigterm_pid=$!
+    for _ in $(seq 1 600); do
+      grep -q "HelloScript(file)._ready" "$SIGTERM_LOG" && break
+      kill -0 "$sigterm_pid" 2>/dev/null || break
+      sleep 0.1
+    done
+    sleep 1
+    kill -TERM "$sigterm_pid" 2>/dev/null || true
+    for _ in $(seq 1 300); do
+      kill -0 "$sigterm_pid" 2>/dev/null || break
+      sleep 0.1
+    done
+    if kill -0 "$sigterm_pid" 2>/dev/null; then
+      kill -KILL "$sigterm_pid" 2>/dev/null || true
+      sigterm_rc=hang
+    fi
+    set +e
+    wait "$sigterm_pid" 2>/dev/null
+    sigterm_wait_rc=$?
+    set -e
+    [[ "${sigterm_rc:-}" == hang ]] || sigterm_rc=$sigterm_wait_rc
+    sigterm_problem=""
+    if ! grep -q "HelloScript(file)._ready" "$SIGTERM_LOG"; then
+      sigterm_problem="the scene never became ready before SIGTERM"
+    elif [[ "$sigterm_rc" != 143 ]]; then
+      sigterm_problem="exit status $sigterm_rc after SIGTERM (want 143; 134 = JVM crash, hang = no exit in 30 s)"
+    elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null || grep -q "A fatal error has been detected" "$SIGTERM_LOG"; then
+      sigterm_problem="JVM fatal error (hs_err) on SIGTERM"
+    elif ! grep -q "\[kanama\] JVM exit (code=143)" "$SIGTERM_LOG"; then
+      sigterm_problem="the bootstrap exit hook did not run"
+    fi
+    if [[ -n "$sigterm_problem" ]]; then
+      echo "[runtime_smoke] SIGTERM log tail:" >&2
+      tail -n 60 "$SIGTERM_LOG" >&2
+      cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null | head -n 40 >&2 || true
+      echo "[runtime_smoke] FAIL -- $sigterm_problem (log: $SIGTERM_LOG)" >&2
+      exit 1
+    fi
+    rm -rf "$SIGTERM_ERR_DIR"
+    ;;
+esac
+
 # task 83 -- no native call adapter may be generated inside a Godot->JVM upcall.
 # The trace (KANAMA_TRACE_NATIVE_ADAPTERS=1, set above) timestamps every adapter and
 # the moment the first lifecycle upcall is installed. Assert the boundary line is
