@@ -1297,6 +1297,19 @@ class Main(godotObject: GodotHandle) :
     return 0L
   }
 
+  /**
+   * Script-initializer engine calls: the InitProbe node's property initializers call an engine
+   * singleton and construct a RefCounted (see InitProbe). 3 when both worked; 0 when the node never
+   * constructed (the failure this probe pins: on Web the constructor ran before the proxy was
+   * wired, so the initializers had no owner and the node never existed).
+   */
+  fun initProbe(value: Long): Long =
+    runCatching {
+        val node = self.requireAs("InitProbe", ::Node)
+        WebExperimentalGenericCall.callImmediate(node, "init_probe", listOf(0L)).asLong()
+      }
+      .getOrDefault(0L)
+
   /** Readback of [shareProbe]: 31 once its frames have passed. */
   fun shareProbeAfter(value: Long): Long = shareMask
 

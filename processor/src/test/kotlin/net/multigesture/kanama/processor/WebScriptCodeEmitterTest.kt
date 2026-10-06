@@ -73,7 +73,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(firstDescriptor >= 0)
     assertTrue(secondDescriptor > firstDescriptor, "resource paths must define stable script IDs")
 
-    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 32"))
+    assertTrue(source.contains("const val PROTOCOL_VERSION: Int = 33"))
     assertTrue(source.contains("1 -> FirstScript(WebObjectId(objectId))"))
     assertTrue(source.contains("2 -> SecondScript(WebObjectId(objectId))"))
     assertTrue(source.contains("WebMemberDescriptor(1, \"greeting\")"))
@@ -155,6 +155,18 @@ class WebScriptCodeEmitterTest {
     assertTrue(proxy.source.contains("@export var greeting: String"))
     assertTrue(proxy.source.contains("JavaScriptBridge.get_interface(\"KanamaWebBridge\")"))
     assertTrue(proxy.source.contains("refreshNode2DSnapshot(_kanama_handle,"))
+    // Two-step creation (protocol 33): the constructor runs only after the callbacks are installed
+    // under the handle, so a property initializer can call the engine; snapshots follow it.
+    val reserve = proxy.source.indexOf("_kanama_bridge.reserve(_KANAMA_SCRIPT_ID)")
+    val install = proxy.source.indexOf("_kanama_bridge.installProxyCallbacks(")
+    val construct = proxy.source.indexOf("_kanama_bridge.construct(_kanama_handle)")
+    val snapshot =
+      proxy.source.indexOf(
+        "_kanama_refresh_self_snapshots()\n\t_kanama_bridge.refreshRenderingMethodSnapshot"
+      )
+    assertTrue(reserve in 0 until install, "reserve must precede installProxyCallbacks")
+    assertTrue(install in 0 until construct, "construct must follow installProxyCallbacks")
+    assertTrue(construct in 0 until snapshot, "snapshots are seeded after construct")
     assertTrue(proxy.source.contains("opcode == 3"))
     assertTrue(proxy.source.contains("opcode == 30"))
     assertTrue(proxy.source.contains("opcode == 32"))
@@ -772,7 +784,7 @@ class WebScriptCodeEmitterTest {
     assertFalse(tileProxy.contains("func _enter_tree()"), "Tile must not emit _enter_tree")
 
     val protocol = emitter.protocolManifest()
-    assertTrue(protocol.contains("\"protocolVersion\": 32"))
+    assertTrue(protocol.contains("\"protocolVersion\": 33"))
     assertTrue(protocol.contains("\"attachTo\": \"Area2D\""))
     assertTrue(protocol.contains("\"type\": \"List<net.multigesture.kanama.api.Texture2D>\""))
     assertTrue(protocol.contains("\"type\": \"net.multigesture.kanama.types.Vector2i\""))
@@ -783,7 +795,7 @@ class WebScriptCodeEmitterTest {
     assertTrue(constants.contains("fun tilePressed("))
     assertTrue(constants.contains("const val setTileType: String = \"set_tile_type\""))
     assertTrue(emitter.compatibilitySources().containsKey("net.multigesture.kanama.demos.match3"))
-    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=32\n"))
+    assertTrue(emitter.proxyManifest().startsWith("# kanama-web-protocol=33\n"))
 
     val registry = emitter.registrySource()
     assertTrue(registry.contains("(script as Main).width = value"))
@@ -1902,7 +1914,7 @@ class WebScriptCodeEmitterTest {
     // The manifest shape is unchanged by slice 2; the bridge contract is not, so the protocol
     // version moved and the schema version did not.
     assertTrue(protocol.contains("\"schemaVersion\": 2"), protocol)
-    assertTrue(protocol.contains("\"protocolVersion\": 32"), protocol)
+    assertTrue(protocol.contains("\"protocolVersion\": 33"), protocol)
 
     // Every shape slice 2 filled must read typed IN THE MANIFEST, not just in the arm table.
     assertTrue(

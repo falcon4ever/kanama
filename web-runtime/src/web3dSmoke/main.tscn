@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://kotlin-src/Main.kt" id="1_main"]
 [ext_resource type="Script" path="res://kotlin-src/SmokeQuit.kt" id="2_smoke"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://kotlin-src/D1Router.kt" id="5_d1router"]
 [ext_resource type="Script" path="res://kotlin-src/D1Emitter.kt" id="6_d1emitter"]
 [ext_resource type="Script" path="res://kotlin-src/HandleShare.kt" id="7_share"]
+[ext_resource type="Script" path="res://kotlin-src/InitProbe.kt" id="8_initprobe"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
 
@@ -165,6 +166,9 @@ script = ExtResource("7_share")
 
 [node name="ShareB" type="Node" parent="."]
 script = ExtResource("7_share")
+
+[node name="InitProbe" type="Node" parent="."]
+script = ExtResource("8_initprobe")
 
 [connection signal="body_entered" from="Coin1" to="Coin1" method="_on_body_entered"]
 [connection signal="body_entered" from="Coin2" to="Coin2" method="_on_body_entered"]

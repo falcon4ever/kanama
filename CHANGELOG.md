@@ -366,20 +366,26 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   desktop (`Basis(x, y, z)`, `withX(value)`, `lookingAt(target, up, useModelFront)`,
   `interpolateWith(xform, weight)`, `withBasis(value)`, `bounce(n)`, `times(scale)`).
 
-### Fixed — Web: a script constructor that calls the engine now says so, and the tps-demo menu boots
+### Fixed — Web: a script's property initializers can call the engine (protocol 33)
 
-- On Web a script's constructor and property initializers run before its proxy registers, so an
-  engine call from one (`val config = ConfigFile.create()` or
-  `RenderingServer.getCurrentRenderingDriverName()` in an initializer) has no owner to route to. For an
-  autoload that is fatal at engine start: the construction failed with a bare "No Kanama Web proxy
-  owns handle=0", and the scripts reading the autoload failed later with an unrelated null cast
-  (the tps-demo menu never became ready in the browser; CI never saw it because tpsdemo is not in the
-  hosted `ci` corpus). The message now names the cause and the fix (move the call into `_ready` or a
-  lazy initializer), a script `create` failure carries its cause chain like a callback failure does,
-  and the bridge keeps every boundary failure (`callbackErrorLog`, first eight), not only the last.
-  The tps driver fails fast on a boundary error before the menu readies and prints that log, instead
-  of waiting three minutes for "did not become ready". kanama-demos: tps-demo's `Settings` autoload
-  builds its `ConfigFile` and defaults lazily.
+- On Web a script's constructor ran before its proxy had installed its callbacks, so a property
+  initializer that called the engine (`private val config = ConfigFile.create()`,
+  `RenderingServer.getCurrentRenderingDriverName()`, as GDScript's `var x = ...` can) had no owner
+  to route to and failed. For an autoload that is fatal at engine start: the tps-demo `Settings`
+  autoload built a `ConfigFile` that way, so `Main._ready` later read an empty config (a null cast)
+  and the menu never became ready in the browser. CI never saw it because tpsdemo is not in the
+  hosted `ci` corpus. Script creation is now two steps, `reserve` (mint the handle) and `construct`
+  (run the constructor once the proxy's callbacks are installed under it), so the initializer's
+  engine calls are applied through the script's own proxy, as on desktop. This changes the proxy
+  contract, so the Web protocol is now 33; rebuild the scripts. Still failing, with a message that
+  names the cause and the way out: engine code that runs before any script exists (a top-level or
+  companion-object initializer at module start). A script's `create` failure now carries its cause
+  chain like a callback failure, and the bridge keeps the first eight boundary failures
+  (`callbackErrorLog`), not only the last. Proof: the web3d smoke's new `InitProbe` script (an
+  engine singleton call and a `ConfigFile` in its initializers; check `scriptInitializersCallEngine`)
+  and the tpsdemo cell, red on main and green with the fix. The tpsdemo driver also stops at the
+  first boundary error before the menu is ready and prints that log instead of waiting three
+  minutes.
 
 ### Fixed — Web: a node looked up by two scripts survives the first script's free
 

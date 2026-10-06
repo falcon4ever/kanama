@@ -2,7 +2,7 @@
 
 The Web backend compiles Kanama project scripts to **Kotlin/Wasm** and runs
 them against a Godot Web export through a generated per-call proxy and a
-versioned JavaScript bridge (protocol 32). <!-- kanama-claim: protocol --> This page is the reproducible export
+versioned JavaScript bridge (protocol 33). <!-- kanama-claim: protocol --> This page is the reproducible export
 workflow: prerequisites, the build/export/serve/smoke/publish commands, the
 browser matrix and budgets you run, and the limitations you meet while
 shipping. The tier, the twelve-demo corpus evidence, the browser floors and
@@ -75,11 +75,13 @@ another property is not — the proxy re-emits the default into GDScript and pus
 it back into Kotlin at hydration), and a property type outside the supported Web
 set is rejected with an error naming the property.
 
-**Do not call the engine from a property initializer or constructor.** On Web a script's
-constructor runs before its proxy registers, so `private val config = ConfigFile.create()` has no
-owner to route to and fails with "No Kanama Web proxy owns handle=0" — fatally for an autoload,
-which is built at engine start. Move the call into `@OnReady` or a `by lazy` initializer; both
-spellings work the same on desktop.
+**A script's property initializers may call the engine**, as GDScript's `var x = ...` can
+(`private val config = ConfigFile.create()`, `RenderingServer.getCurrentRenderingDriverName()`):
+the constructor runs with the script's proxy already wired, so the calls have an owner. What cannot
+call the engine is code that runs before any script exists, such as a top-level or
+companion-object initializer evaluated at module start; it fails with "No Kanama Web proxy owns
+handle=0". A constructor cannot read a mirrored spatial value (`self.position`) either: the
+snapshots are seeded after it returns.
 
 **Physics loops should derive movement from velocity, not from re-reading a
 spatial value they just wrote.** On Web, spatial reads (`self.position`,

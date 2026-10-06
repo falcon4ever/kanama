@@ -434,6 +434,15 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
   }
   trace(`shareProbeAfter: ${shareProbeAfter}`);
 
+  // Script-initializer engine calls: InitProbe's property initializers call an engine singleton and
+  // construct a RefCounted (Main.init_probe reads it back; healthy = 3).
+  const initProbe = Number(
+    await evaluate(
+      `globalThis.KanamaWebBridge.callInt(globalThis.KanamaWebBridge.web3dMainHandle, ${probeId("init_probe")}, 0)`,
+    ),
+  );
+  trace(`initProbe: ${initProbe}`);
+
   // KANAMA_WEB3D_EXTRA_PLAY_MS=<ms>: keep the level running this long before teardown. A timing-dependent
   // defect in the fixture (the Player drifting off its floor, task 118) fires with a small probability per
   // second of play; a long window makes it near-certain, which is this gate's own red run. Unset = no wait.
@@ -516,6 +525,9 @@ export async function runWeb3d({ url, evaluate, navigate, deadline, exportDir })
     // A plain node's handle shared by two scripts survives the first script's free (owner counting),
     // a later lookup of it works, and a node freed under its owners fails cleanly.
     sharedNodeHandleSurvivesFirstFree: shareProbeAfter === 31,
+    // A script whose property initializers call an engine singleton and construct a RefCounted
+    // constructs on Web as it does on desktop (the tps-demo Settings autoload's boot failure).
+    scriptInitializersCallEngine: initProbe === 3,
     // Task 80 slice 4, signal shapes: bit 1 = a ZERO-argument signal reached a Kotlin lambda,
     // bit 2 = a ONE-OBJECT signal delivered a live handle. The scalar shape is dispatch_probe
     // bit 32. The two-argument shape is absent because it CANNOT BE DECLARED: slice 3 makes an

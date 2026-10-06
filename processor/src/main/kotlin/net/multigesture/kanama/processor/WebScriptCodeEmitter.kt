@@ -157,9 +157,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `Mesh.surface_set_material(i, null)` clears the slot (handle id 0). 30 (task 133 C2) adds the
      * `kanamaWebSetColorProperty` entry point: a `Color` export's push arm. 31 (task 133 value
      * types) adds `kanamaWebSetPackedValueProperty`: the push arm of a Vector3i, Rect2, Rect2i,
-     * Plane, Quaternion, Basis or Transform3D export, carried as its packed components.
+     * Plane, Quaternion, Basis or Transform3D export, carried as its packed components. 33 splits
+     * `create` into `reserve` + `construct`: the proxy installs its callbacks between them, so a
+     * script's property initializers can call the engine.
      */
-    const val PROTOCOL_VERSION = 32
+    const val PROTOCOL_VERSION = 33
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -2194,7 +2196,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\tpush_error(\"Kanama Web proxy protocol mismatch: expected %d, received %d\" % [_KANAMA_PROTOCOL_VERSION, int(_kanama_bridge.protocolVersion)])"
     )
     appendLine("\t\treturn 0")
-    appendLine("\t_kanama_handle = int(_kanama_bridge.create(_KANAMA_SCRIPT_ID))")
+    // Two-step creation (protocol 33): `reserve` mints the handle, the callbacks install under it,
+    // and `construct` then runs the Kotlin constructor -- so a property initializer that calls the
+    // engine (as a GDScript `var x = ...` can) is applied through THIS proxy.
+    appendLine("\t_kanama_handle = int(_kanama_bridge.reserve(_KANAMA_SCRIPT_ID))")
     appendLine("\tif _kanama_handle == 0:")
     appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
     appendLine("\t\treturn 0")
@@ -2277,6 +2282,14 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\t_kanama_signal_vector2i_callback,")
     appendLine("\t\t_kanama_tween_callback,")
     appendLine("\t\t_kanama_noargs_vector3_callback)")
+    // The constructor runs only now, with the callbacks installed under the handle, so its property
+    // initializers can call the engine. The snapshots below follow it: seeding one needs the Kotlin
+    // instance. A throwing constructor leaves the proxy unmade.
+    appendLine("\tif int(_kanama_bridge.construct(_kanama_handle)) == 0:")
+    appendLine("\t\t_kanama_object_handles.erase(_kanama_handle)")
+    appendLine("\t\t_kanama_handle = 0")
+    appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
+    appendLine("\t\treturn 0")
     appendLine("\t_kanama_refresh_self_snapshots()")
     // The renderer name is global and any script may branch on it at ready (squash's Main
     // attaches to a plain Node), so every proxy seeds its per-script snapshot.

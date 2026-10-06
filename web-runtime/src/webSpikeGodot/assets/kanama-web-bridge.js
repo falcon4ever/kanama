@@ -9,7 +9,7 @@
   const BROWSER_HANDLE_NAMESPACE = 0x40000000;
   const BROWSER_HANDLE_SLOT_MASK = 0xffff;
   const BROWSER_HANDLE_GENERATION_MASK = 0x3fff;
-  const KANAMA_WEB_PROTOCOL_VERSION = 32;
+  const KANAMA_WEB_PROTOCOL_VERSION = 33;
   // Task 134 D1: the proxy's object-query arm that runs one builtin (value-type) method.
   const KANAMA_WEB_OPCODE_BUILTIN_CALL = 1003;
 
@@ -598,9 +598,24 @@
       this.match3DeferredMethods[key] = (this.match3DeferredMethods[key] ?? 0) + 1;
     },
 
-    create(scriptId) {
-      const handle = this.invoke(0, "create", `script#${scriptId}`, () => this.api.kanamaWebCreate(scriptId), 0);
-      return handle;
+    /**
+     * Script creation is two steps so a script's property initializers can call the engine, as
+     * GDScript's `var x = ...` initializers can. `reserve` mints the handle; the proxy then installs
+     * its callbacks under it (installProxyCallbacks); `construct` runs the Kotlin constructor with
+     * that handle as the active owner, so an engine call from an initializer is applied through the
+     * proxy. Returns 1, or 0 after a failed constructor (the callbacks it installed are cleared).
+     */
+    reserve(scriptId) {
+      return this.invoke(0, "create", `script#${scriptId}`, () => this.api.kanamaWebReserve(scriptId), 0);
+    },
+    construct(handle) {
+      const constructed = this.invoke(handle, "create", "construct", () => this.api.kanamaWebConstruct(handle), 0);
+      if (constructed !== handle) {
+        this.clearProxyCallbacks(handle);
+        this.releaseBrowserHandlesOwnedBy(handle);
+        return 0;
+      }
+      return 1;
     },
     ready(handle) {
       return this.invoke(handle, "_ready", "_ready", () => this.api.kanamaWebReady(handle), 0);
@@ -1233,13 +1248,15 @@
     ownerForHandle(handle) {
       const owner = this.handleOwners.get(handle);
       if (!owner) {
-        // handle=0 is "no script is running": a Godot call from a script CONSTRUCTOR or property
-        // initializer, which runs before its proxy registers (tps-demo's Settings autoload built a
-        // ConfigFile in an initializer and the whole menu never readied). Name the cause.
+        // handle=0 is "no script is running". A script's own constructor and property initializers
+        // are NOT that case (they run with their handle active, see construct above); what remains
+        // is engine code run before any script exists, e.g. a top-level or companion-object
+        // initializer evaluated at module start. Name the cause.
         const hint =
           handle === 0
-            ? " (a Godot call ran outside any script callback -- on Web a script constructor or" +
-              " property initializer cannot call the engine; move it into _ready or a lazy initializer)"
+            ? " (a Godot call ran outside any script callback or constructor -- on Web an engine" +
+              " call needs a running script; a top-level or companion-object initializer has none:" +
+              " move it into a script's _ready or a property initializer)"
             : "";
         throw new Error(`No Kanama Web proxy owns handle=${handle}${hint}`);
       }

@@ -120,22 +120,33 @@ private fun describeCauseChain(error: Throwable, limit: Int = 5): String = build
 
 @JsExport fun kanamaWebPendingSignalCallbackCount(): Int = WebSignalCallbackRegistry.size
 
+/** Step one of script creation: mint the handle only (see [WebInstanceRegistry.reserve]). */
+@JsExport fun kanamaWebReserve(scriptId: Int): Int = instances.reserve(scriptId)
+
+/**
+ * Step two: run the reserved script's constructor, with its proxy's callbacks already installed and
+ * the handle marked as the running script, so a property initializer may call the engine.
+ */
 @JsExport
-fun kanamaWebCreate(scriptId: Int): Int {
+fun kanamaWebConstruct(handle: Int): Int {
+  val scriptName = scriptNameOf(handle)
   return try {
-    instances.create(scriptId)
+    instances.construct(handle) { build -> withActiveWebScriptHandle(handle) { build() } }
   } catch (error: Throwable) {
-    val scriptName =
-      KanamaWebProjectRegistry.scripts.firstOrNull { it.id == scriptId }?.className
-        ?: "script#$scriptId"
-    // Name the cause chain like a callback failure does: a script constructor that throws (an
-    // autoload built before the engine calls it needs have somewhere to go) was otherwise reported
-    // as "create failed" with the reason only in an unprinted `cause`.
+    // Name the cause chain like a callback failure does: a script constructor that throws was
+    // otherwise reported as "create failed" with the reason only in an unprinted `cause`.
     throw IllegalStateException(
       "Kanama Web create failed: script=$scriptName cause=${describeCauseChain(error)}",
       error,
     )
   }
+}
+
+private fun scriptNameOf(handle: Int): String {
+  val scriptId = instances.pendingScriptId(handle)
+  return scriptId?.let { id ->
+    KanamaWebProjectRegistry.scripts.firstOrNull { it.id == id }?.className
+  } ?: "handle=$handle"
 }
 
 @JsExport fun kanamaWebIsLive(objectHandle: Int): Int = if (instances.isLive(objectHandle)) 1 else 0

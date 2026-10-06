@@ -15,26 +15,56 @@ internal data class WebScriptRecord(val scriptId: Int, val script: KanamaWebScri
 internal class WebInstanceRegistry(
   private val createScript: (scriptId: Int, objectHandle: Int) -> KanamaWebScript
 ) {
-  private data class Slot(var generation: Int = 0, var record: WebScriptRecord? = null)
+  private data class Slot(
+    var generation: Int = 0,
+    var record: WebScriptRecord? = null,
+    var pendingScriptId: Int? = null,
+  )
 
   private val slots = mutableListOf(Slot()) // slot zero is never a valid handle
   private val freeSlots = mutableListOf<Int>()
 
-  fun create(scriptId: Int): Int {
+  /**
+   * Step one of creating a script: take a slot and mint its handle, but construct nothing yet.
+   *
+   * Construction is a second step ([construct]) because the proxy must install its callbacks under
+   * the handle BEFORE the Kotlin constructor runs. A script's property initializers may call the
+   * engine (`RenderingServer.getCurrentRenderingDriverName()`, `ConfigFile.create()`), as
+   * GDScript's `var x = ...` initializers do, and those calls are applied through the proxy's
+   * callbacks. The slot is not live ([isLive], [require]) until [construct] returns.
+   */
+  fun reserve(scriptId: Int): Int {
     val slotIndex = if (freeSlots.isEmpty()) allocateSlot() else freeSlots.removeLast()
     val slot = slots[slotIndex]
     slot.generation = nextGeneration(slot.generation)
-    val handle = encode(slotIndex, slot.generation)
-    // Construct the script inside its own owner scope. A script's property initializers run here,
-    // and `KanamaScript` captures the owner for its coroutine scope: the scope must bind to the
-    // script being built, not to whichever callback happened to trigger the construction.
-    slot.record =
-      WebScriptRecord(
-        scriptId,
-        WebFrameScheduler.withOwner(handle) { createScript(scriptId, handle) },
-      )
+    slot.pendingScriptId = scriptId
+    return encode(slotIndex, slot.generation)
+  }
+
+  /**
+   * Step two: construct the reserved script inside its own owner scope. A script's property
+   * initializers run here, and `KanamaScript` captures the owner for its coroutine scope: the scope
+   * must bind to the script being built, not to whichever callback happened to trigger the
+   * construction. [around] wraps only the constructor (the caller marks the handle as the running
+   * script, so engine singleton calls from an initializer have an owner). A constructor that throws
+   * releases the slot before the exception propagates.
+   */
+  fun construct(handle: Int, around: (block: () -> KanamaWebScript) -> KanamaWebScript): Int {
+    val slot = liveSlot(handle)
+    val scriptId = slot?.pendingScriptId ?: error("Kanama Web handle=$handle was not reserved")
+    try {
+      val script = around { WebFrameScheduler.withOwner(handle) { createScript(scriptId, handle) } }
+      slot.record = WebScriptRecord(scriptId, script)
+      slot.pendingScriptId = null
+    } catch (error: Throwable) {
+      free(handle)
+      throw error
+    }
     return handle
   }
+
+  /** The script id a reserved, not yet constructed handle will become, or null. */
+  fun pendingScriptId(handle: Int): Int? = liveSlot(handle)?.pendingScriptId
 
   fun require(handle: Int): WebScriptRecord {
     val slot = liveSlot(handle)
@@ -48,6 +78,7 @@ internal class WebInstanceRegistry(
     val slot = liveSlot(handle) ?: return false
     slot.record?.script?.close()
     slot.record = null
+    slot.pendingScriptId = null
     freeSlots += slotIndex
     return true
   }
