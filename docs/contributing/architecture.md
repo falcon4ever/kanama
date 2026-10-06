@@ -437,6 +437,20 @@ of several references leaves the object alive and the wrapper usable. The
 ownership rules are in
 [RefCounted Return Ownership](wrapper-maintenance.md#refcounted-return-ownership).
 
+### Process exit (desktop)
+
+The desktop JVM is never destroyed: Kanama has no `DestroyJavaVM`. A normal quit runs Godot's
+`Main::cleanup`. That frees the scene tree, and Kanama releases what it owns at the extension
+deinitialize levels (the `OwnedReleases` drain, the script language, the registered classes and the
+owned StringNames). Then `main` returns and libc `exit()` runs Godot's static destructors on the main
+thread while the JVM is still running. An exit that the JVM starts is different. SIGTERM, SIGINT or
+SIGHUP through the JVM's signal handlers, or `System.exit`, run the Java shutdown hooks, and then the
+VM thread ends the process. Godot's cleanup never runs on that path. If libc `exit()` ran there, Godot's
+static destructors would call Kanama upcall stubs from the VM thread at its final safepoint, which
+crashes (SIGBUS in `UpcallStub`) or hangs. `bootstrap.c` therefore passes the JNI invocation API's
+`exit` hook, which flushes stdio and calls `_exit(code)`; the runtime smoke's SIGTERM leg checks it.
+Android (ART, started by the app) and iOS (no JVM) do not have this exit path.
+
 ## Script class model
 
 `@ScriptClass` Kotlin types are separate script objects that hold the

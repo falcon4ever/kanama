@@ -38,6 +38,23 @@ only `--write`.
 
 ## Unreleased
 
+### Fixed — Desktop: a crash or hang when a game is stopped with SIGTERM or `System.exit`
+
+Stopping a desktop game with SIGTERM (a process manager, `kill`, a test harness) -- or with SIGINT or
+SIGHUP when the JVM handled them, or with `System.exit` / `exitProcess` from Kotlin -- crashed the JVM
+(SIGBUS in `UpcallStub`, exit 134, an `hs_err` file) or hung. The JVM's exit path called libc `exit()`
+from its VM thread with Godot still running, and Godot's static destructors then called into Kanama
+(`ScriptLanguage::get_name`) through an upcall stub that thread cannot enter. It was first seen with
+the tps-demo multiplayer host, but any Kanama desktop game crashed the same way. The bootstrap now
+installs the JVM's exit hook and ends the process with `_exit` and the JVM's exit code (143 for
+SIGTERM), the way Godot without Kanama ends on SIGTERM: Java shutdown hooks still run, Godot's cleanup
+does not. A normal quit (`get_tree().quit()`, closing the window) never took this path and is
+unchanged. `scripts/runtime_smoke.sh` now sends SIGTERM and checks for exit 143 with no `hs_err`.
+
+kanama-demos: `tpsBuildAndMultiplayerSmokeGodot` no longer SIGKILLs its peers. The host quits with
+the client still connected, the client quits after it, and both must exit with code 0, with no
+`hs_err` file and no hang.
+
 ### Added — a warning for a direct call to an `@Rpc` function (task 131 item 4)
 
 A plain Kotlin call to an `@Rpc` function runs on this peer only: it is GDScript's
