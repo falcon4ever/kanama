@@ -144,9 +144,10 @@ kanama_web_demo_is_known() {
 
 # Demos CI structurally cannot run -> the reason. This is NOT quarantine: nothing
 # here is a defect and nothing here gets fixed. Safari is the existing example of
-# the same idea at the engine level (no headless mode, so it is a local gate), and
-# tpsdemo is the demo-level one: its Kotlin/Wasm compile is killed by the OOM
-# killer on a 16 GB GitHub-hosted runner, which is a property of the runner.
+# the same idea at the engine level (no headless mode, so it is a local gate).
+# No demo is local-only today: tpsdemo was (its Kotlin/Wasm compile was reported
+# OOM-killed on a 16 GB hosted runner) until a `demo_set=full` run on a hosted
+# runner compiled and passed it on Chrome and Firefox (run 37434285630, 2026-10-06).
 #
 # These still run LOCALLY, where they pass, and the matrix records them as
 # explicitly skipped-with-a-reason rather than quietly leaving them out -- a demo
@@ -154,9 +155,6 @@ kanama_web_demo_is_known() {
 # anything.
 kanama_web_demo_local_only_reason() {
   case "$1" in
-    tpsdemo)
-      echo "the Kotlin/Wasm compile exceeds a GitHub-hosted runner (OOM in compileProductionExecutableKotlinWasmJs); local gate only"
-      ;;
     *) : ;;
   esac
 }

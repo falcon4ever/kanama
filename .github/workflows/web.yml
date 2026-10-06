@@ -11,9 +11,7 @@ name: web
 #   - pull_request  -> the PR subset (match3, web3d, dodge) x Chrome + Firefox, or the full `ci` corpus when the
 #                      PR touches Web code (see the `corpus` output of `changes`).
 #   - push to main  -> the `ci` corpus x Chrome + Firefox: every demo a hosted
-#                      runner can actually build. tpsdemo is excluded because its
-#                      Kotlin/Wasm compile is OOM-killed on a 16 GB runner -- that
-#                      is a runner limit, not a defect, and it stays a LOCAL gate.
+#                      runner can actually build (today: the whole corpus).
 #                      Skipped demos are announced and recorded in the evidence.
 #   - nightly       -> the same, to catch browser-side regressions on a tree that
 #                      has not changed.
