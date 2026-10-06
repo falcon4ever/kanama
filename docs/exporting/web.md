@@ -477,13 +477,13 @@ Not everything can or should run on a hosted runner, and the two reasons are
 different:
 
 - **Local-only** — CI *structurally cannot* do it, and no fix changes that.
-  **Safari** (no headless mode; it needs a logged-in GUI session) and
-  **tps-demo** (its Kotlin/Wasm compile is OOM-killed on a 16 GB GitHub runner)
-  are both in this tier. They are release gates a maintainer runs by hand, and
-  they pass there.
+  **Safari** (no headless mode; it needs a logged-in GUI session) is in this
+  tier: a release gate a maintainer runs by hand. (tps-demo used to be listed
+  here for a reported out-of-memory compile on hosted runners; it compiles and
+  passes there, and is in the `ci` corpus.)
 - **Quarantined** — a real defect, temporary, tied to a task. See below.
 
-`--demo-set ci` is the corpus minus the local-only demos and is what the workflow
+`--demo-set ci` is the corpus minus any local-only demos (none today) and is what the workflow
 runs; `--demo-set full` always means the full corpus, so a local run is never
 quietly narrowed. Skipped demos are **announced and written into the evidence
 JSON** with their reason, because a corpus that silently shrinks is how "the
