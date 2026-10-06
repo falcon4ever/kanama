@@ -38,6 +38,36 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — iOS: no silent method skips; script errors name the Kotlin line on the device (task 131 item 13, N7)
+
+- **Source break:** iOS builds (no API declaration changes) — a script method iOS cannot dispatch
+  now fails the iOS build instead of warning: a registered function or virtual with a parameter
+  type the iOS call path does not pass (`Map`, `List`, `Packed*Array`), or an
+  `@OverrideVirtual` whose return type iOS does not marshal. Before, the method silently never ran
+  on iOS while it worked on desktop. The error names the method, the parameter and the supported
+  types; change the type, or build with `-PkanamaIosAllowSkips=true` to accept the skip (a warning
+  again). That one option now covers every iOS skip: it replaces `kanamaIosAllowExportSkips` from
+  item 9, which was never released. Every demo builds for iOS without it.
+- **iOS: more method types are dispatched** instead: a `RID` parameter (the shim already passed
+  RIDs to typed signals), an `Any?` parameter (`_set`, `_drop_data`; a Variant type iOS does not
+  marshal yet fails that call with a script error naming the type, as a typed signal argument
+  does, instead of arriving as `null`), and `NodePath` and every value type (`Vector3i` …
+  `Projection`) as an `@OverrideVirtual` return (methods already returned the value types). Every
+  script type can now be returned on iOS.
+- **iOS: a script error names the Kotlin file and line on the device** in debug builds
+  (`at: Player.ready (res://kotlin-src/Player.kt:42)`), in the device log and the Debugger's Errors
+  tab. Before, a device report had no file (`at selfTest (:0)`): an iPhone app carries no debug
+  info, and Kotlin/Native symbolicates only from DWARF. The debug addon build now maps the game's
+  functions to their lines ahead of time (`generateIosDeviceDebugSourceLines`, logic in
+  `buildSrc`) and links the table into the addon as static data: for the third-person demo 837
+  functions, 181 KiB of read-only data and 4 s of build time; nothing runs at startup. Where the
+  line is not known for sure the report says line 0, never a wrong line. The device looks lines up
+  by function name, so the app must keep its symbol table: build Godot's exported Xcode project
+  (Export Project Only, then Xcode's Run or `xcodebuild build`). Godot's `.ipa` export and
+  one-click deploy archive and strip the app; there a report names the failing callback with line
+  0. Release builds still have no lines. See
+  [iOS backend](docs/contributing/backends/ios.md#script-errors-the-kotlin-line-on-a-device).
+
 ### Changed — wrapper calls without a lazy check; JVM options for desktop games (task 131 item 18)
 
 - **MethodBinds are static finals.** Each generated wrapper method read its MethodBind
@@ -204,7 +234,7 @@ reproducible). `Mathf` was written three times (desktop 55 members, iOS 18, Web 
   pair checks every member against GDScript over 256 random and 64 edge inputs); the rest
   (`sin`, `pow`, `exp`, the float-to-int conversions, ...) calls `GD`. iOS gains every member it
   lacked, `Mathf.wrap` among them, so City-Builder builds for iOS without
-  `-PkanamaIosAllowExportSkips=true`. On iOS `Mathf.clamp` no longer throws when `min > max`,
+  `-PkanamaIosAllowSkips=true`. On iOS `Mathf.clamp` no longer throws when `min > max`,
   `Mathf.inverseLerp(a, a, x)` divides by zero as Godot does (it returned 0), and `Mathf.lerpAngle`
   takes the shortest way round as Godot's does (iOS used a different formula).
 - **Source break:** `GD` — parameter names follow Godot's (`GD.sin(angleRad)`, `GD.degToRad(deg)`,
@@ -522,7 +552,7 @@ Desktop, Android, iOS and Web.
 - **`@ExportColorNoAlpha`** (GDScript `@export_color_no_alpha`, hint 21); the hint twin row count
   is 38.
 - **iOS:** a `Vector2i` export reaches the script (task 131 item 15; before, a build error unless
-  `-PkanamaIosAllowExportSkips=true`).
+  `-PkanamaIosAllowSkips=true`).
 - **Web:** protocol 30 adds the `Color` export push arm (`kanamaWebSetColorProperty`); a `Color`
   rides the numeric argument channel, the packed return channel and the one-argument signal
   channel (`GodotSignal.connectColor`).
@@ -1089,8 +1119,9 @@ accessors now and the rest in a follow-up (see "Web" below).
   app. A throwing getter, or a value that cannot be encoded, is reported and reads as `null`.
 - **iOS: an exported property iOS cannot deliver is a build error** (F25), for example a typed `Map`
   or a `Vector2i` `@ScriptProperty`. It used to be a warning, and the property silently kept its
-  Kotlin default on iOS. Build with `-PkanamaIosAllowExportSkips=true` to accept the skip (it is then a
-  warning again). See [Exporting to iOS](docs/exporting/ios.md) and
+  Kotlin default on iOS. Build with `-PkanamaIosAllowSkips=true` to accept the skip (it is then a
+  warning again; the option was first named `kanamaIosAllowExportSkips`). See
+  [Exporting to iOS](docs/exporting/ios.md) and
   [Exporting Dictionaries — iOS](docs/game-dev/properties-resources.md#ios).
 - **The editor's New Script template has the documented shape** (F15): a `package` (the one most
   scripts in the target folder use, else derived from the folder, else `game`), a

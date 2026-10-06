@@ -225,7 +225,7 @@ class ScriptErrorsTest {
   fun parsesKotlinNativeStackTraceLines() {
     val withSource =
       ScriptErrorReport.parseNativeFrame(
-        "at 3   libkanama   0x0000000104a1c2f3c kfun:com.example.game.Player#ready(){} + 52 " +
+        "at 3   libkanama   0x0000000104a1c2f3c kfun:com.example.game.Player#ready(){} + 51 " +
           "(/Users/dev/game/kotlin-src/com/example/game/Player.kt:12:5)"
       )
     assertNotNull(withSource)
@@ -253,6 +253,104 @@ class ScriptErrorsTest {
     assertEquals("", defaultPackage.className)
     assertEquals("spawn", defaultPackage.methodName)
     assertEquals(7, defaultPackage.line)
+  }
+
+  @Test
+  fun parsesKotlinNativeInternalDeclarationFrames() {
+    // Real iPhone frames (task 128 evidence): a private or local declaration is
+    // `kfun:<owner>.<function>#internal`, the function the last segment of the owner.
+    val bridge =
+      ScriptErrorReport.parseNativeFrame(
+        "    at 7   KanamaThirdPerson                   0x103cb55df        " +
+          "kfun:net.multigesture.kanama.ios.CoinIosBridge_9dff82c57e384cb5.callV#internal + 379 "
+      )
+    assertNotNull(bridge)
+    assertEquals("net.multigesture.kanama.ios.CoinIosBridge_9dff82c57e384cb5", bridge.className)
+    assertEquals("callV", bridge.methodName)
+
+    val coroutine =
+      ScriptErrorReport.parseNativeFrame(
+        "    at 23  KanamaThirdPerson                   0x103c9510f        " +
+          "kfun:thirdperson.SmokeQuit.\$smokeCoinSpawnCallsCOROUTINE\$1.invokeSuspend#internal + 2271 "
+      )
+    assertNotNull(coroutine)
+    assertEquals("thirdperson.SmokeQuit.\$smokeCoinSpawnCallsCOROUTINE\$1", coroutine.className)
+    assertEquals("invokeSuspend", coroutine.methodName)
+
+    // A repeated name gets a numeric suffix.
+    val repeated =
+      ScriptErrorReport.parseNativeFrame("at 1 lib 0x2 kfun:game.Board.fill#internal.9981 + 8 ")
+    assertNotNull(repeated)
+    assertEquals("game.Board", repeated.className)
+    assertEquals("fill", repeated.methodName)
+  }
+
+  @Test
+  fun aDeviceFrameTakesItsFileAndLineFromTheSourceTable() {
+    // Task 131 item 13: an iPhone frame carries no `(file:line)` (the app has no DWARF); the debug
+    // build's table maps the symbol and the offset to the Kotlin line. Kotlin/Native prints the
+    // return address minus one, so real device offsets are 3 mod 4 (inside the call instruction).
+    val table =
+      mapOf(
+        ("kfun:com.example.game.Player#ready(){}" to 51) to ("Player.kt" to 12),
+        ("kfun:thirdperson.SmokeQuit.\$smokeCoinSpawnCallsCOROUTINE\$1.invokeSuspend#internal" to
+          2271) to ("SmokeQuit.kt" to 88),
+      )
+    val lookups = mutableListOf<Pair<String, Int>>()
+    val sourceOf = { symbol: String, offset: Int ->
+      lookups += symbol to offset
+      table[symbol to offset]
+    }
+    val lines =
+      listOf(
+        "    at 0   KanamaThirdPerson                   0x106c47457        " +
+          "kfun:kotlin.Throwable#<init>(kotlin.String?){} + 99 ",
+        "    at 1   KanamaThirdPerson                   0x106c42aa7        " +
+          "kfun:kotlin.IllegalStateException#<init>(kotlin.String?){} + 95 ",
+        "    at 2   KanamaThirdPerson                   0x103c95000        " +
+          "kfun:com.example.game.Player#ready(){} + 51 ",
+        "    at 3   KanamaThirdPerson                   0x104b22eab        " +
+          "kfun:net.multigesture.kanama.ios#kanamaIosRuntimeScriptInstanceCallV(kotlin.Long;" +
+          "kotlin.Int){}kotlin.Int + 2659 ",
+        "    at 4   libdyld.dylib                       0x1a1b2c3d4        start + 4 ",
+      )
+
+    val report =
+      ScriptErrorReport.of(
+        IllegalStateException("boom"),
+        "Player._ready",
+        "kotlin.IllegalStateException",
+        sourcelessGameFrames = true,
+      ) { _ ->
+        ScriptErrorReport.dropOwnConstructorFrames(
+          lines.mapNotNull { ScriptErrorReport.parseNativeFrame(it, sourceOf) },
+          "kotlin.IllegalStateException",
+        )
+      }
+
+    assertEquals("Player.ready", report.function)
+    assertEquals("Player.kt", report.file)
+    assertEquals(12, report.line)
+    assertTrue(("kfun:com.example.game.Player#ready(){}" to 51) in lookups, "$lookups")
+    // The decimal offset and the full symbol, including a `#internal` one, reach the table.
+    assertEquals(
+      "SmokeQuit.kt" to 88,
+      ScriptErrorReport.parseNativeFrame(
+          "    at 23  KanamaThirdPerson                   0x103c9510f        " +
+            "kfun:thirdperson.SmokeQuit.\$smokeCoinSpawnCallsCOROUTINE\$1.invokeSuspend#internal + 2271 ",
+          sourceOf,
+        )
+        ?.let { it.fileName to it.line },
+    )
+    // A frame Kotlin/Native symbolicated itself keeps its own source; the table is not asked.
+    lookups.clear()
+    val simulator =
+      ScriptErrorReport.parseNativeFrame(
+        "at 3 lib 0x4 kfun:com.example.game.Spawner#spawn(){} + 9 (/g/Spawner.kt:31:9)",
+        sourceOf,
+      )
+    assertEquals(31, simulator?.line)
+    assertEquals(emptyList(), lookups)
   }
 
   @Test

@@ -71,9 +71,9 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       env.platforms.any { it.platformName.equals("JVM", ignoreCase = true) }
   private val emitWebCode: Boolean = WebScriptCodeEmitter.isWebTarget(env.options)
 
-  /** Task 131 item 9: iOS @Export skips stay warnings only when the project opts in. */
-  private val allowIosExportSkips: Boolean =
-    env.options[ALLOW_EXPORT_SKIPS_OPTION]?.trim()?.lowercase().let { it == "true" || it == "1" }
+  /** Task 131 item 9 / N7: iOS skips stay warnings only when the project opts in. */
+  private val allowIosSkips: Boolean =
+    env.options[ALLOW_IOS_SKIPS_OPTION]?.trim()?.lowercase().let { it == "true" || it == "1" }
   private val emitIosCode: Boolean = !emitJvmCode && !emitWebCode
 
   override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -1432,13 +1432,13 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
           if (emitWebCode) {
             // Web keeps its own export rules (WebScriptCodeEmitter); unchanged here.
             env.logger.warn(skip)
-          } else if (allowIosExportSkips) {
-            env.logger.warn("$skip (allowed by $ALLOW_EXPORT_SKIPS_OPTION)")
+          } else if (allowIosSkips) {
+            env.logger.warn("$skip (allowed by $ALLOW_IOS_SKIPS_OPTION)")
           } else {
             env.logger.error(
               "$skip. On iOS the scene and inspector value of this property would be dropped. " +
-                "Accept the skip with -P$ALLOW_EXPORT_SKIPS_OPTION=true (KSP option " +
-                "$ALLOW_EXPORT_SKIPS_OPTION).",
+                "Accept the skip with -P$ALLOW_IOS_SKIPS_OPTION=true (KSP option " +
+                "$ALLOW_IOS_SKIPS_OPTION).",
               prop,
             )
           }
@@ -1743,7 +1743,7 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
         iosScripts,
         warn = { env.logger.warn("[kanama:ksp] $it") },
         error = { env.logger.error("[kanama:ksp] $it") },
-        allowExportSkips = allowIosExportSkips,
+        allowSkips = allowIosSkips,
       )
     val deps = Dependencies(aggregating = true, *scriptAggregatorSources.toTypedArray())
 

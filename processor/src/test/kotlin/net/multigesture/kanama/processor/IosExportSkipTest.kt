@@ -7,14 +7,13 @@ import kotlin.test.assertTrue
 /**
  * Task 131 item 9 (F25): a @Export the iOS backend cannot deliver used to be a warning and silently
  * kept its Kotlin default on iOS, so the scene and inspector value vanished on a Supported
- * platform. It is now a build error unless the project opts in with
- * `-PkanamaIosAllowExportSkips=true` (KSP option [ALLOW_EXPORT_SKIPS_OPTION]), which restores the
- * warning.
+ * platform. It is now a build error unless the project opts in with `-PkanamaIosAllowSkips=true`
+ * (KSP option [ALLOW_IOS_SKIPS_OPTION]), which restores the warning.
  */
 class IosExportSkipTest {
   private class Result(val warnings: List<String>, val errors: List<String>)
 
-  private fun emit(allowExportSkips: Boolean, vararg props: ScriptPropertyModel): Result {
+  private fun emit(allowSkips: Boolean, vararg props: ScriptPropertyModel): Result {
     val warnings = mutableListOf<String>()
     val errors = mutableListOf<String>()
     val model =
@@ -34,7 +33,7 @@ class IosExportSkipTest {
         listOf(IosScriptInput(model, "res://SkipFixture.kt")),
         warn = { warnings += it },
         error = { errors += it },
-        allowExportSkips = allowExportSkips,
+        allowSkips = allowSkips,
       )
       .registrySource()
     return Result(warnings, errors)
@@ -50,7 +49,7 @@ class IosExportSkipTest {
     assertEquals(1, r.errors.size, "one error per property, not one per guard: ${r.errors}")
     val error = r.errors.single()
     assertTrue(error.contains("SkipFixture.regions (Map)"), error)
-    assertTrue(error.contains("-P$ALLOW_EXPORT_SKIPS_OPTION=true"), error)
+    assertTrue(error.contains("-P$ALLOW_IOS_SKIPS_OPTION=true"), error)
     assertEquals(emptyList(), r.warnings)
   }
 
@@ -69,7 +68,7 @@ class IosExportSkipTest {
 
     assertEquals(emptyList(), r.errors)
     assertEquals(2, r.warnings.size, "${r.warnings}")
-    assertTrue(r.warnings.all { it.contains("allowed by $ALLOW_EXPORT_SKIPS_OPTION") })
+    assertTrue(r.warnings.all { it.contains("allowed by $ALLOW_IOS_SKIPS_OPTION") })
   }
 
   @Test

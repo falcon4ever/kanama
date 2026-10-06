@@ -414,11 +414,9 @@ configure<com.google.devtools.ksp.gradle.KspExtension> {
     ),
   )
   arg("kanamaIosRegistryAsResource", "false")
-  // Task 131 item 9: an iOS @Export skip is a build error unless the project opts in.
-  arg(
-    "kanamaIosAllowExportSkips",
-    providers.gradleProperty("kanamaIosAllowExportSkips").orElse("false").get(),
-  )
+  // Task 131 item 9 / N7: an iOS skip (a @Export iOS cannot deliver, a method or virtual it cannot
+  // dispatch) is a build error unless the project opts in.
+  arg("kanamaIosAllowSkips", providers.gradleProperty("kanamaIosAllowSkips").orElse("false").get())
 }
 
 /**
@@ -1617,42 +1615,61 @@ fun appleSdkPath(sdk: String): String {
     .trim()
 }
 
-fun registerCompileIosShimTask(
+/**
+ * Compiles one C file of the iOS addon for [sdk]: the GDExtension shim, or the source-line lookup
+ * (task 131 item 13), which a debug device build compiles with the table in [sourceLinesTable]
+ * (made by [sourceLinesTask]).
+ */
+fun registerCompileIosCTask(
   name: String,
   sdk: String,
   minVersionFlag: String,
+  source: RegularFile,
   outputObjectPath: Provider<RegularFile>,
+  sourceLinesTask: TaskProvider<*>? = null,
+  sourceLinesTable: Provider<Directory>? = null,
 ) =
   tasks.register<Exec>(name) {
     group = "ios"
-    description = "Compile the Kanama iOS GDExtension C shim for $sdk."
+    description = "Compile ${source.asFile.name} of the Kanama iOS GDExtension for $sdk."
 
-    inputs.file(iosShimSource)
+    inputs.file(source)
     inputs.file(layout.projectDirectory.file("gdextension/gdextension_interface.h"))
+    inputs.dir(iosHeaderDir)
     inputs.property("kanamaXcodeDeveloperDir", xcodeDeveloperDir)
     inputs.property("kanamaIosMinVersion", iosMinimumDeploymentTarget)
+    if (sourceLinesTask != null && sourceLinesTable != null) {
+      dependsOn(sourceLinesTask)
+      inputs.dir(sourceLinesTable)
+    }
     outputs.file(outputObjectPath)
 
     doFirst {
       val outputObject = outputObjectPath.get().asFile
       outputObject.parentFile.mkdirs()
+      val table =
+        sourceLinesTable?.let {
+          listOf("-DKANAMA_IOS_SOURCE_LINES=1", "-I", it.get().asFile.absolutePath)
+        }
       commandLine(
-        "xcrun",
-        "--sdk",
-        sdk,
-        "clang",
-        "-arch",
-        "arm64",
-        "-isysroot",
-        appleSdkPath(sdk),
-        "$minVersionFlag=${iosMinimumDeploymentTarget.get()}",
-        "-fvisibility=hidden",
-        "-I",
-        layout.projectDirectory.dir("gdextension").asFile.absolutePath,
-        "-c",
-        iosShimSource.asFile.absolutePath,
-        "-o",
-        outputObject.absolutePath,
+        listOf(
+          "xcrun",
+          "--sdk",
+          sdk,
+          "clang",
+          "-arch",
+          "arm64",
+          "-isysroot",
+          appleSdkPath(sdk),
+          "$minVersionFlag=${iosMinimumDeploymentTarget.get()}",
+          "-fvisibility=hidden",
+          "-I",
+          layout.projectDirectory.dir("gdextension").asFile.absolutePath,
+          "-I",
+          iosHeaderDir.asFile.absolutePath,
+        ) +
+          table.orEmpty() +
+          listOf("-c", source.asFile.absolutePath, "-o", outputObject.absolutePath)
       )
       environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
     }
@@ -1741,147 +1758,166 @@ fun registerCreateIosDeviceXcframeworkTask(
 fun iosRuntimeStaticLib(target: String, buildType: String): Provider<RegularFile> =
   layout.buildDirectory.file("bin/$target/${buildType}Static/libkanama_ios_runtime.a")
 
-val compileIosDeviceDebugShim =
-  registerCompileIosShimTask(
-    "compileIosDeviceDebugShim",
-    "iphoneos",
-    "-miphoneos-version-min",
-    iosBuildDir.map { it.file("shim/iphoneos/debug/kanama_ios_shim.o") },
-  )
-val compileIosDeviceReleaseShim =
-  registerCompileIosShimTask(
-    "compileIosDeviceReleaseShim",
-    "iphoneos",
-    "-miphoneos-version-min",
-    iosBuildDir.map { it.file("shim/iphoneos/release/kanama_ios_shim.o") },
-  )
-val compileIosSimulatorDebugShim =
-  registerCompileIosShimTask(
-    "compileIosSimulatorDebugShim",
+/**
+ * The iOS addon library for one [sdk] and [buildType] ([variant] names its tasks, `DeviceDebug`):
+ * the C shim, the source-line lookup and the Kotlin/Native runtime of [target], combined into
+ * `lib/<sdk>/<buildType>/libkanama_ios.a`.
+ */
+fun registerCombineIosLibTask(
+  variant: String,
+  sdk: String,
+  minVersionFlag: String,
+  target: String,
+  buildType: String,
+  linkTask: String,
+  sourceLinesTask: TaskProvider<*>? = null,
+  sourceLinesTable: Provider<Directory>? = null,
+): TaskProvider<Exec> {
+  val shimObject = iosBuildDir.map { it.file("shim/$sdk/$buildType/kanama_ios_shim.o") }
+  val sourceLinesObject =
+    iosBuildDir.map { it.file("shim/$sdk/$buildType/kanama_ios_source_lines.o") }
+  val compileShim =
+    registerCompileIosCTask(
+      "compileIos${variant}Shim",
+      sdk,
+      minVersionFlag,
+      iosShimSource,
+      shimObject,
+    )
+  val compileSourceLines =
+    registerCompileIosCTask(
+      "compileIos${variant}SourceLines",
+      sdk,
+      minVersionFlag,
+      iosSourceLinesSource,
+      sourceLinesObject,
+      sourceLinesTask,
+      sourceLinesTable,
+    )
+  return tasks.register<Exec>("combineIos${variant}Lib") {
+    group = "ios"
+    description = "Combine the Kanama iOS $sdk $buildType static library."
+    dependsOn(linkTask, compileShim, compileSourceLines)
+    val runtimeLib = iosRuntimeStaticLib(target, buildType)
+    val outputLibPath = iosBuildDir.map { it.file("lib/$sdk/$buildType/libkanama_ios.a") }
+    inputs.file(runtimeLib)
+    inputs.file(shimObject)
+    inputs.file(sourceLinesObject)
+    outputs.file(outputLibPath)
+    doFirst {
+      val outputLib = outputLibPath.get().asFile
+      outputLib.parentFile.mkdirs()
+      commandLine(
+        "xcrun",
+        "--sdk",
+        sdk,
+        "libtool",
+        "-static",
+        "-o",
+        outputLib.absolutePath,
+        shimObject.get().asFile.absolutePath,
+        sourceLinesObject.get().asFile.absolutePath,
+        runtimeLib.get().asFile.absolutePath,
+      )
+      environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
+    }
+  }
+}
+
+// Task 131 item 13: the Kotlin file:line of a script error on an iOS device. Kotlin/Native reads
+// source positions from DWARF, which an iOS app never carries (Apple's linker leaves it in the
+// object files on the Mac), so a device frame is only `kfun:<symbol> + <offset>`. The debug device
+// build maps those to Kotlin lines ahead of time from the debug runtime library's DWARF, for the
+// game's own functions (its script dirs) and the self-test probe; the table is static data in the
+// addon library (ios/bootstrap/kanama_ios_source_lines.c). The generator is
+// buildSrc/.../IosSourceLines.kt, with its tests. Release builds compile the lookup without a
+// table.
+val iosSourceLinesSource = layout.projectDirectory.file("ios/bootstrap/kanama_ios_source_lines.c")
+/** The source-line table of a debug [target] library, in `source-lines/<sdk>/debug`. */
+fun registerIosSourceLinesTask(name: String, sdk: String, target: String): TaskProvider<Task> =
+  tasks.register(name) {
+    group = "ios"
+    description = "Map the debug $sdk library's game functions to their Kotlin lines."
+    dependsOn(tasks.named("linkDebugStatic${target.replaceFirstChar { it.uppercase() }}"))
+    val runtimeLib = iosRuntimeStaticLib(target, "debug")
+    val sourceRoots =
+      iosScriptDirs(configuredIosScriptDirs.orNull).map { file(it) } +
+        file("src/iosMain/kotlin/net/multigesture/kanama/ios/KanamaIosScriptErrorProbe.kt")
+    val outputDir = iosBuildDir.map { it.dir("source-lines/$sdk/debug") }
+    val developerDir = xcodeDeveloperDir
+    inputs.file(runtimeLib)
+    inputs.property("sourceRoots", sourceRoots.map { it.absolutePath })
+    inputs.property("kanamaXcodeDeveloperDir", developerDir)
+    outputs.dir(outputDir)
+    doLast {
+      val started = System.nanoTime()
+      val table = outputDir.get().file("kanama_ios_source_lines_table.inc").asFile
+      val (functions, rows) =
+        net.multigesture.kanama.buildlogic.IosSourceLines.write(
+          runtimeLib.get().asFile,
+          sourceRoots,
+          table,
+          temporaryDir,
+          developerDir.get(),
+        )
+      logger.lifecycle(
+        "iOS source lines ($sdk): $functions functions, $rows rows, " +
+          "${table.length() / 1024} KiB source, ${(System.nanoTime() - started) / 1_000_000} ms"
+      )
+    }
+  }
+
+// The simulator gets the table too: Kotlin/Native's CoreSymbolication finds no DWARF for a
+// simulator app either (its frames end at `+ <offset>`, measured in the simulator smoke).
+val generateIosDeviceDebugSourceLines =
+  registerIosSourceLinesTask("generateIosDeviceDebugSourceLines", "iphoneos", "iosArm64")
+val generateIosSimulatorDebugSourceLines =
+  registerIosSourceLinesTask(
+    "generateIosSimulatorDebugSourceLines",
     "iphonesimulator",
-    "-mios-simulator-version-min",
-    iosBuildDir.map { it.file("shim/iphonesimulator/debug/kanama_ios_shim.o") },
-  )
-val compileIosSimulatorReleaseShim =
-  registerCompileIosShimTask(
-    "compileIosSimulatorReleaseShim",
-    "iphonesimulator",
-    "-mios-simulator-version-min",
-    iosBuildDir.map { it.file("shim/iphonesimulator/release/kanama_ios_shim.o") },
+    "iosSimulatorArm64",
   )
 
 val combineIosDeviceDebugLib =
-  tasks.register<Exec>("combineIosDeviceDebugLib") {
-    group = "ios"
-    description = "Combine the Kanama iOS device debug static library."
-    dependsOn(tasks.named("linkDebugStaticIosArm64"))
-    dependsOn(compileIosDeviceDebugShim)
-    val outputLibPath = iosBuildDir.map { it.file("lib/iphoneos/debug/libkanama_ios.a") }
-    inputs.file(iosRuntimeStaticLib("iosArm64", "debug"))
-    inputs.file(iosBuildDir.map { it.file("shim/iphoneos/debug/kanama_ios_shim.o") })
-    outputs.file(outputLibPath)
-    doFirst {
-      val outputLib = outputLibPath.get().asFile
-      outputLib.parentFile.mkdirs()
-      commandLine(
-        "xcrun",
-        "--sdk",
-        "iphoneos",
-        "libtool",
-        "-static",
-        "-o",
-        outputLib.absolutePath,
-        iosBuildDir.get().file("shim/iphoneos/debug/kanama_ios_shim.o").asFile.absolutePath,
-        iosRuntimeStaticLib("iosArm64", "debug").get().asFile.absolutePath,
-      )
-      environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
-    }
-  }
+  registerCombineIosLibTask(
+    "DeviceDebug",
+    "iphoneos",
+    "-miphoneos-version-min",
+    "iosArm64",
+    "debug",
+    "linkDebugStaticIosArm64",
+    generateIosDeviceDebugSourceLines,
+    iosBuildDir.map { it.dir("source-lines/iphoneos/debug") },
+  )
 val combineIosDeviceReleaseLib =
-  tasks.register<Exec>("combineIosDeviceReleaseLib") {
-    group = "ios"
-    description = "Combine the Kanama iOS device release static library."
-    dependsOn(tasks.named("linkReleaseStaticIosArm64"))
-    dependsOn(compileIosDeviceReleaseShim)
-    val outputLibPath = iosBuildDir.map { it.file("lib/iphoneos/release/libkanama_ios.a") }
-    inputs.file(iosRuntimeStaticLib("iosArm64", "release"))
-    inputs.file(iosBuildDir.map { it.file("shim/iphoneos/release/kanama_ios_shim.o") })
-    outputs.file(outputLibPath)
-    doFirst {
-      val outputLib = outputLibPath.get().asFile
-      outputLib.parentFile.mkdirs()
-      commandLine(
-        "xcrun",
-        "--sdk",
-        "iphoneos",
-        "libtool",
-        "-static",
-        "-o",
-        outputLib.absolutePath,
-        iosBuildDir.get().file("shim/iphoneos/release/kanama_ios_shim.o").asFile.absolutePath,
-        iosRuntimeStaticLib("iosArm64", "release").get().asFile.absolutePath,
-      )
-      environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
-    }
-  }
+  registerCombineIosLibTask(
+    "DeviceRelease",
+    "iphoneos",
+    "-miphoneos-version-min",
+    "iosArm64",
+    "release",
+    "linkReleaseStaticIosArm64",
+  )
 val combineIosSimulatorDebugLib =
-  tasks.register<Exec>("combineIosSimulatorDebugLib") {
-    group = "ios"
-    description = "Combine the Kanama iOS simulator debug static library."
-    dependsOn(tasks.named("linkDebugStaticIosSimulatorArm64"))
-    dependsOn(compileIosSimulatorDebugShim)
-    val outputLibPath = iosBuildDir.map { it.file("lib/iphonesimulator/debug/libkanama_ios.a") }
-    inputs.file(iosRuntimeStaticLib("iosSimulatorArm64", "debug"))
-    inputs.file(iosBuildDir.map { it.file("shim/iphonesimulator/debug/kanama_ios_shim.o") })
-    outputs.file(outputLibPath)
-    doFirst {
-      val outputLib = outputLibPath.get().asFile
-      outputLib.parentFile.mkdirs()
-      commandLine(
-        "xcrun",
-        "--sdk",
-        "iphonesimulator",
-        "libtool",
-        "-static",
-        "-o",
-        outputLib.absolutePath,
-        iosBuildDir.get().file("shim/iphonesimulator/debug/kanama_ios_shim.o").asFile.absolutePath,
-        iosRuntimeStaticLib("iosSimulatorArm64", "debug").get().asFile.absolutePath,
-      )
-      environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
-    }
-  }
+  registerCombineIosLibTask(
+    "SimulatorDebug",
+    "iphonesimulator",
+    "-mios-simulator-version-min",
+    "iosSimulatorArm64",
+    "debug",
+    "linkDebugStaticIosSimulatorArm64",
+    generateIosSimulatorDebugSourceLines,
+    iosBuildDir.map { it.dir("source-lines/iphonesimulator/debug") },
+  )
 val combineIosSimulatorReleaseLib =
-  tasks.register<Exec>("combineIosSimulatorReleaseLib") {
-    group = "ios"
-    description = "Combine the Kanama iOS simulator release static library."
-    dependsOn(tasks.named("linkReleaseStaticIosSimulatorArm64"))
-    dependsOn(compileIosSimulatorReleaseShim)
-    val outputLibPath = iosBuildDir.map { it.file("lib/iphonesimulator/release/libkanama_ios.a") }
-    inputs.file(iosRuntimeStaticLib("iosSimulatorArm64", "release"))
-    inputs.file(iosBuildDir.map { it.file("shim/iphonesimulator/release/kanama_ios_shim.o") })
-    outputs.file(outputLibPath)
-    doFirst {
-      val outputLib = outputLibPath.get().asFile
-      outputLib.parentFile.mkdirs()
-      commandLine(
-        "xcrun",
-        "--sdk",
-        "iphonesimulator",
-        "libtool",
-        "-static",
-        "-o",
-        outputLib.absolutePath,
-        iosBuildDir
-          .get()
-          .file("shim/iphonesimulator/release/kanama_ios_shim.o")
-          .asFile
-          .absolutePath,
-        iosRuntimeStaticLib("iosSimulatorArm64", "release").get().asFile.absolutePath,
-      )
-      environment("DEVELOPER_DIR", xcodeDeveloperDir.get())
-    }
-  }
+  registerCombineIosLibTask(
+    "SimulatorRelease",
+    "iphonesimulator",
+    "-mios-simulator-version-min",
+    "iosSimulatorArm64",
+    "release",
+    "linkReleaseStaticIosSimulatorArm64",
+  )
 
 val createIosDebugXcframework =
   registerCreateIosXcframeworkTask(
