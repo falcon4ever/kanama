@@ -253,11 +253,29 @@ class HelloScript(godotObject: GodotHandle) : KanamaScript<Node>(godotObject, ::
         cacheMode = ResourceLoader.CacheMode.IGNORE,
       )
     val threadedStatusBeforeGet = ResourceLoader.loadThreadedGetStatus(threadedLoadPath)
+    // Task 129 C: ResourceLoader and Engine are generated once; the progress out-array helper
+    // (ptrcallLoadStatusWithProgress), the typed loaders' section and Engine.registerSingleton's
+    // METHOD_PRECONDITIONS row are new code on desktop.
+    val threadedProgress = ResourceLoader.loadThreadedGetStatusWithProgress(threadedLoadPath)
     val threadedResource = ResourceLoader.loadThreadedGet(threadedLoadPath)
     val threadedResourceIsPackedScene = threadedResource?.isClass("PackedScene") ?: false
     val threadedResourcePathLen = threadedResource?.getPath()?.length ?: 0
     val threadedStatusAfterGet = ResourceLoader.loadThreadedGetStatus(threadedLoadPath)
     threadedResource?.close()
+    val typedScene = ResourceLoader.loadPackedScene(threadedLoadPath)
+    val typedSceneCanInstantiate = typedScene?.canInstantiate() ?: false
+    typedScene?.close()
+    val refCountedSingleton = Resource.create()
+    val registerRejected =
+      runCatching { Engine.registerSingleton("KanamaSmokeRefCounted", refCountedSingleton) }
+        .exceptionOrNull() is IllegalArgumentException
+    refCountedSingleton.close()
+    System.err.println(
+      "[kanama:kt] WrappersOnce threaded_progress_status=${threadedProgress.status.value} " +
+        "progress_in_range=${threadedProgress.progress?.let { it in 0.0..1.0 } == true} " +
+        "typed_scene=$typedSceneCanInstantiate register_refcounted_rejected=$registerRejected " +
+        "registered=${Engine.hasSingleton("KanamaSmokeRefCounted")}"
+    )
     val generatedSceneUniqueId = Resource.generateSceneUniqueId()
     val loadedScript = ResourceLoader.load("res://HelloScript.kt", "Script")
     val defaultProbeScript = ResourceLoader.load("res://DefaultProbeScript.kt", "Script")
