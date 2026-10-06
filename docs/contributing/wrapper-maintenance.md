@@ -293,7 +293,7 @@ hand-written Kotlin file of the API (under an `api/` directory, or declaring the
 `runtime-core` (what `extension_api.json` does not describe), `sugar` (GDScript-syntax sugar written
 once) or `transitional` (should be generated; carries the task-129 parcel that retires it). Every
 file has a line ratchet, and so does the hand Kotlin inside the generator tables (each `*_SECTIONS`
-key here and each Web `CLASS_POLICY` string). The gate fails on an unlisted hand file, a listed file
+key and `METHOD_PRECONDITIONS` row here and each Web `CLASS_POLICY` string). The gate fails on an unlisted hand file, a listed file
 that is gone or generated, and any growth. Only the GENERATED ENUMS regions a generator really
 splices into a file are left out of its count; a GENERATED marker pair in any other API file fails
 the gate. A legitimate seam, runtime-core or sugar change raises its ratchet with

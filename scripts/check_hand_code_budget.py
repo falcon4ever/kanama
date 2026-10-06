@@ -19,9 +19,10 @@ when
      really splices into that file (`generate_api_wrapper.enum_region_hosts`,
      `generate_web_wrappers.hand_enum_hosts`) are left out of the count; a BEGIN/END GENERATED
      marker pair in any other API file is itself a failure, so markers cannot hide hand code,
-  4. hand Kotlin inside a generator table grows: every key of the native `*_SECTIONS` tables of
-     `generate_api_wrapper.py` and every string of the Web `CLASS_POLICY` (plus its `SUPPORT_FILE`)
-     has a line ratchet too, so hand code cannot move into Python strings unseen.
+  4. hand Kotlin inside a generator table grows: every key of the native `*_SECTIONS` tables and
+     the `METHOD_PRECONDITIONS` rows of `generate_api_wrapper.py`, and every string of the Web
+     `CLASS_POLICY` (plus its `SUPPORT_FILE`), has a line ratchet too, so hand code cannot move into
+     Python strings unseen.
 
 A ratchet only goes down by itself. A seam, runtime-core or sugar file (or a generator section) that
 legitimately grows raises its ratchet with `--write --reason "<why>"`, which records the reason in
@@ -133,6 +134,12 @@ def section_lines() -> dict[str, int]:
         for key, value in getattr(gen, table).items():
             text = value[1] if isinstance(value, tuple) else value
             counts[f"generate_api_wrapper.{table}[{key}]"] = len(text.strip("\n").splitlines())
+    # Task 129 C: the generator's precondition hook carries Kotlin statements too, keyed by
+    # (class, Godot method).
+    for (owner, method), statements in gen.METHOD_PRECONDITIONS.items():
+        counts[f"generate_api_wrapper.METHOD_PRECONDITIONS[{owner}.{method}]"] = sum(
+            len(statement.strip("\n").splitlines()) for statement in statements
+        )
     for key, policy in web.CLASS_POLICY.items():
         for field in ("custom", "companion", "top_level"):
             if isinstance(policy.get(field), str):

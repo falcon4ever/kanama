@@ -289,6 +289,10 @@
     "generate_api_wrapper.IOS_EXTENSION_SECTIONS[ShapeCast3D]": {
       "lines": 3
     },
+    "generate_api_wrapper.METHOD_PRECONDITIONS[Engine.register_singleton]": {
+      "lines": 3,
+      "reason": "task 129 C: Engine.registerSingleton's RefCounted guard, from the deleted hand desktop Engine (879 lines)"
+    },
     "generate_api_wrapper.SHARED_COMPANION_MEMBER_SECTIONS[SceneTree]": {
       "lines": 174
     },

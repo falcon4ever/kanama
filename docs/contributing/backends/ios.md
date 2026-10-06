@@ -84,9 +84,9 @@ iOS reuses the desktop/Android solution. The Godot API wrappers are **generated*
 ("Generated from Godot docs") by `scripts/generate_api_wrapper.py` from
 `extension_api.json`, once, into the shared tree `src/commonMain/kotlin/.../api/` —
 the module's KMP common fragment since task 117 P4′ — which iOS compiles as-is (task 103). Since task 30 iOS hosts the **full
-desktop-equivalent class set** (the shared classes plus its iOS-only generated,
-hand-shaped and hand-written collision classes; the only exceptions are the documented
-`IOS_UNSUPPORTED_CLASSES`). Methods whose ptrcall shape is not audited on iOS are
+desktop-equivalent class set** (the shared classes plus the hand-written `FileAccess` facade,
+the last collision class since task 129 C generated the other 20 per-platform classes once; the
+only exception is the documented `IOS_UNSUPPORTED_CLASSES` entry, `DirAccess`). Methods whose ptrcall shape is not audited on iOS are
 desktop-only companions, listed in the generated
 [iOS Shape Gap](../../reference/generated/ios-shape-gap.md) page. Each generated
 wrapper caches a `MethodBind` and calls a typed helper on a runtime abstraction
