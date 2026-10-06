@@ -41493,11 +41493,17 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // documented device check (a throwing _ready shows `SCRIPT ERROR:` in the device log). Task 131
   // item 13: the report names the throwing function's Kotlin file and line -- on a device from the
   // debug build's source-line table, on the simulator from Kotlin/Native's own symbolication.
-  val scriptErrorReport =
-    runCatching { net.multigesture.kanama.ios.throwSelfTestScriptError() }
-      .exceptionOrNull()
-      ?.let { IosScriptErrors.reportFor(it, "selfTest") }
-  println("[kanama][ios][kn] OBJECTCALLS SELFTEST script-error report=$scriptErrorReport")
+  val scriptErrorProbe =
+    runCatching { net.multigesture.kanama.ios.throwSelfTestScriptError() }.exceptionOrNull()
+  val scriptErrorReport = scriptErrorProbe?.let { IosScriptErrors.reportFor(it, "selfTest") }
+  // The lookup is keyed by the frame's symbol: an archived app (Godot's .ipa export, one-click
+  // deploy) is stripped, its frames name no function, and no report can carry a line there.
+  val probeSymbolized =
+    scriptErrorProbe?.getStackTrace()?.any { "#throwSelfTestScriptError(" in it } == true
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST script-error report=$scriptErrorReport " +
+      "symbolized=$probeSymbolized"
+  )
   // Task 131 (F4) through the REAL containment path: a built-in script whose method throws is
   // called via the call_v @CName export the shim uses. Contained (the self-test survives), the call
   // reports success with a nil return (as GDScript does for a runtime error in a called function),
@@ -41533,13 +41539,22 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       scriptErrorReport.message ==
         "kotlin.IllegalStateException: kanama self-test: deliberate script error",
   )
-  check(
-    "script-error(report carries the Kotlin file:line) at=${scriptErrorReport?.file}:" +
-      "${scriptErrorReport?.line}",
-    scriptErrorReport?.function == "throwSelfTestScriptError" &&
-      scriptErrorReport.file == "KanamaIosScriptErrorProbe.kt" &&
-      scriptErrorReport.line > 0,
-  )
+  if (probeSymbolized) {
+    check(
+      "script-error(report carries the Kotlin file:line) at=${scriptErrorReport?.file}:" +
+        "${scriptErrorReport?.line}",
+      scriptErrorReport?.function == "throwSelfTestScriptError" &&
+        scriptErrorReport.file == "KanamaIosScriptErrorProbe.kt" &&
+        scriptErrorReport.line > 0,
+    )
+  } else {
+    // A stripped app: the report must still not invent a line.
+    check(
+      "script-error(stripped app: report names the containment site, line 0) " +
+        "at=${scriptErrorReport?.function} (${scriptErrorReport?.file}:${scriptErrorReport?.line})",
+      scriptErrorReport?.function == "selfTest" && scriptErrorReport.line == 0,
+    )
+  }
 
   // Task 131 item 11: a throwing property setter reached through the property-set @CName exports
   // (Long and String paths) is contained -- before, it crossed the export and terminated the app --

@@ -406,15 +406,43 @@ it, which a Godot iOS export does not ship. So a device frame is only
 
 The offset of a return address inside its function is fixed when the static library is built --
 linking moves a function, never its body -- so the debug device build maps it ahead of time.
-`generateIosDeviceDebugSourceLines` (`build.gradle.kts`) reads the debug runtime library's own
-object (`nm` for the function starts, `dwarfdump --debug-line` for the rows, `atos -i` for rows
-inside inlined code) and writes a table of the functions with code from the project's script dirs
-and from the self-test probe `KanamaIosScriptErrorProbe.kt`: symbol, then rows of (offset from the
-function's start, file base name, line). `ios/bootstrap/kanama_ios_source_lines.c` compiles it as
-static data into the addon library and answers `kanama_ios_source_line(symbol, offset)` by binary
-search; nothing runs until an error is reported. Release and simulator builds compile the same
-file with an empty table. The Kanama runtime's own functions are left out on purpose: their table
-would be megabytes (1.9 million line rows), and a script error is reported at the game's frame.
+`generateIosDeviceDebugSourceLines` (`build.gradle.kts`; the logic and its tests are
+`buildSrc/.../IosSourceLines.kt`) reads the debug runtime library's own object (`nm` for the
+function starts, `dwarfdump --debug-line` for the rows, `atos -i` for rows inside inlined code) and
+writes a table of the functions with code from the project's script dirs and from the self-test
+probe `KanamaIosScriptErrorProbe.kt`: symbol and size, then rows of (offset from the function's
+start, file, line). The file is the `res://` path when the script dir is inside a Godot project
+(`res://kotlin-src/Player.kt`, as desktop reports it), else the base name.
+`ios/bootstrap/kanama_ios_source_lines.c` compiles the table as static data into the addon library
+and answers `kanama_ios_source_line(symbol, offset)` by binary search; nothing runs until an error
+is reported. Release and simulator builds compile the same file with an empty table. The Kanama
+runtime's own functions are left out on purpose: their table would be megabytes (1.9 million line
+rows), and a script error is reported at the game's frame.
+
+Rules the generator keeps:
+
+- **Never a wrong line.** A row whose game line is not known for sure -- line 0 in DWARF, inlined
+  code `atos` cannot place in a game file, a base name two files share -- is a line-0 row, and the
+  lookup answers 0 there rather than the line before it; an offset past the function's size
+  answers 0; an `atos -i` answer that does not line up with its addresses fails the build.
+- **Paths may be another checkout's.** Gradle's build cache can hand the build a Kotlin/Native
+  library compiled elsewhere, whose DWARF names that checkout's paths (the device run of 412db412
+  shipped an empty table this way). A game file matches a DWARF path by its path from the source
+  root's parent (`kotlin-src/Player.kt`), and a source root with no code in the library fails the
+  build instead of shipping an empty table.
+- **Offsets as Kotlin/Native prints them.** A device frame's offset is the return address minus
+  one (offsets are 3 mod 4), inside the call instruction, so it is looked up as is.
+
+**The app must keep its symbol table.** The lookup is keyed by the frame's symbol, which `dladdr`
+reads from the app's symbol table. A build of Godot's exported Xcode project (Export Project Only,
+then Xcode's Run or `xcodebuild build`, the documented flow and the demos' device runner) keeps it.
+Godot's own `.ipa` export and its one-click deploy run `xcodebuild archive`, which strips the app
+(`strip -D` under `DEPLOYMENT_POSTPROCESSING`, even for the Debug configuration: measured on a
+4.7.2 template project, 300,637 local symbols after `build`, none after `archive`). Godot gives an
+export plugin no hook for build settings (`$linker_flags` is quoted into `OTHER_LDFLAGS`), so
+Kanama cannot turn that off; such a build reports the containment site with line 0, never a wrong
+line. Shipping the runtime as a dynamic framework (copied unstripped in Debug) would lift this.
+
 The self-test row `script-error(report carries the Kotlin file:line)` proves the device path:
 the report of the probe's exception names `KanamaIosScriptErrorProbe.kt` and a line above 0.
 

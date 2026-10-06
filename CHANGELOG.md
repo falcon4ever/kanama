@@ -51,16 +51,21 @@ only `--write`.
 - **iOS: more method types are dispatched** instead: a `RID` parameter (the shim already passed
   RIDs to typed signals), an `Any?` parameter (`_set`, `_drop_data`; a Variant type iOS does not
   marshal yet fails that call with a script error naming the type, as a typed signal argument
-  does, instead of arriving as `null`), and `NodePath` and every value type (`Vector3i` … `Projection`) as an
-  `@OverrideVirtual` return (methods already returned the value types). Every script type can now
-  be returned on iOS.
+  does, instead of arriving as `null`), and `NodePath` and every value type (`Vector3i` …
+  `Projection`) as an `@OverrideVirtual` return (methods already returned the value types). Every
+  script type can now be returned on iOS.
 - **iOS: a script error names the Kotlin file and line on the device** in debug builds
-  (`at: Player.ready (Player.kt:42)`), in the device log and the Debugger's Errors tab. Before, a
-  device report had no file (`at selfTest (:0)`): an iPhone app carries no debug info, and
-  Kotlin/Native symbolicates only from DWARF. The debug addon build now maps the game's functions
-  to their lines ahead of time (`generateIosDeviceDebugSourceLines`) and links the table into the
-  addon as static data: for the third-person demo 837 functions, 113 KiB of read-only data and
-  4 s of build time; nothing runs at startup. Release builds still name the function with line 0. See
+  (`at: Player.ready (res://kotlin-src/Player.kt:42)`), in the device log and the Debugger's Errors
+  tab. Before, a device report had no file (`at selfTest (:0)`): an iPhone app carries no debug
+  info, and Kotlin/Native symbolicates only from DWARF. The debug addon build now maps the game's
+  functions to their lines ahead of time (`generateIosDeviceDebugSourceLines`, logic in
+  `buildSrc`) and links the table into the addon as static data: for the third-person demo 837
+  functions, 181 KiB of read-only data and 4 s of build time; nothing runs at startup. Where the
+  line is not known for sure the report says line 0, never a wrong line. The device looks lines up
+  by function name, so the app must keep its symbol table: build Godot's exported Xcode project
+  (Export Project Only, then Xcode's Run or `xcodebuild build`). Godot's `.ipa` export and
+  one-click deploy archive and strip the app; there a report names the failing callback with line
+  0. Release builds still have no lines. See
   [iOS backend](docs/contributing/backends/ios.md#script-errors-the-kotlin-line-on-a-device).
 
 ### Changed — wrapper calls without a lazy check; JVM options for desktop games (task 131 item 18)
