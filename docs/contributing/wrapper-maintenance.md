@@ -82,10 +82,18 @@ per-platform files keep `by lazy`. A failed lookup still prints `FAULT
 bind-lookup-failed <Class>.<method>`, now for every bind of the class when its holder is
 first used, called or not. With Godot's official editor and export templates no
 generated bind is missing (the methods Godot binds only in `TOOLS_ENABLED` or
-`DEBUG_ENABLED` builds are not in the generated set); a custom engine build with
-`deprecated=no` lacks the deprecated `DisplayServer.accessibility_*` binds and reports
-them the first time anything calls `DisplayServer`. Hand
-code in a generator section refers to a generated bind as `Binds.xBind`.
+`DEBUG_ENABLED` builds are not in the generated set); in a custom engine built with
+`deprecated=no`, every deprecated bind of a class reports `FAULT` the first time anything
+calls that class, whether or not the deprecated method itself is called. Hand code in a
+generator section refers to a generated bind as `Binds.xBind`.
+
+The holder also changes how a lookup *failure* surfaces. `getMethodBind` itself does not
+throw (a missing bind is the `FAULT` line and a null pointer), but if the holder's
+initialiser does throw -- only possible before `GodotFFI.bootstrap`, e.g. a wrapper called
+from a unit test with no engine -- the first call fails with `ExceptionInInitializerError`
+and every later call through that class with `NoClassDefFoundError`, where the `by lazy`
+retried on each call. Within a running engine that cannot happen: bootstrap precedes the
+first script call.
 
 `NULL_SEGMENT` in the *receiver* position is the tree's static-method marker
 (`_null_segment()` for an `is_static` method), and the two backends read it
