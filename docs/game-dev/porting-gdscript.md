@@ -114,7 +114,8 @@ script's object is freed.
   GDScript `int` that really holds an enum (`var mode := 3`) is worth typing
   during the port. See [Godot Enums and Bitfields](godot-api.md#godot-enums-and-bitfields).
 - For `@Rpc` methods on Kanama scripts, use generated `*Rpcs` sender helpers
-  instead of raw `rpc("method_name")` strings.
+  instead of raw `rpc("method_name")` strings, and port `jump.rpc()` as a
+  sender call, never as `jump()`: a direct call runs on this peer only.
 - For scenes with `MultiplayerSynchronizer`, verify every replicated custom
   `.:property` is exposed with `@Export`.
 - If the port will also run on Web: physics loops should derive movement from
@@ -182,6 +183,7 @@ aliases; `scripts/migrate_script_annotations.py` rewrites a source tree):
 | `@export_tool_button("Label")` | `@ExportToolButton("Label")` |
 | `signal hit(damage)` | `@Signal fun hit(damage: Long) = Unit`; typed handle `player.hit` (`hit.emit(5)`, `player.hit.connect { damage -> }`) |
 | `@rpc(...)` | `@Rpc(...)` on a public function |
+| `jump.rpc()` / `jump.rpc_id(id)` on a `call_local` RPC | `PlayerRpcs.callLocalJump(this)` / `PlayerRpcs.rpcIdJump(this, id)` ([Multiplayer](multiplayer.md#rpc-methods)) |
 | `@tool` | `@Tool` |
 | `class_name Player` | `@GlobalClass` |
 | `func _ready()`, `_enter_tree`, `_exit_tree` | `@OnReady`, `@OnEnterTree`, `@OnExitTree` |

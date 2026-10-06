@@ -143,6 +143,19 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       aggregatorSources += sources
       scriptAggregatorSources += sources
       emitScriptRegistrar(model, sources)
+      val declaringFile = symbol.containingFile!!.filePath
+      for (method in model.methods) {
+        val rpc = method.rpc ?: continue
+        if (method.kind != MethodKind.REGULAR) continue
+        rpcLintTargets +=
+          RpcDirectCallLint.Target(
+            model.simpleName,
+            method.kotlinName,
+            method.godotName,
+            rpc.callLocal,
+            declaringFile,
+          )
+      }
       if (emitIosCode) {
         iosScripts += IosScriptInput(model, scriptResourcePath(symbol.containingFile!!))
       }
@@ -155,7 +168,34 @@ class KanamaProcessor(private val env: SymbolProcessorEnvironment) : SymbolProce
       autoloadsEmitted = true
       emitAutoloads(resolver)
     }
+    if (!rpcLintDone) {
+      rpcLintDone = true
+      lintDirectRpcCalls(resolver)
+    }
     return emptyList()
+  }
+
+  // ---------- Direct @Rpc calls (task 131 item 4) ----------
+
+  private val rpcLintTargets = mutableListOf<RpcDirectCallLint.Target>()
+  private var rpcLintDone = false
+
+  /** Warns on a direct call to an `@Rpc` function ([RpcDirectCallLint] says which and why). */
+  private fun lintDirectRpcCalls(resolver: Resolver) {
+    if (rpcLintTargets.none { !it.callLocal }) return
+    val sources =
+      resolver.getAllFiles().mapNotNull { file ->
+        runCatching { RpcDirectCallLint.Source(file.filePath, File(file.filePath).readText()) }
+          .getOrNull()
+      }
+    for (warning in
+      RpcDirectCallLint.warnings(
+        rpcLintTargets,
+        sources.toList(),
+        EngineMethodTable::isMethodOfAnyClass,
+      )) {
+      env.logger.warn("[kanama:ksp] $warning")
+    }
   }
 
   // ---------- Autoloads (task 133 C) ----------
