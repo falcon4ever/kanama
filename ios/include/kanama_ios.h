@@ -57,6 +57,15 @@ int32_t kanama_ios_report_script_error(
 );
 
 /*
+ * Task 131 item 13 — the Kotlin file and line of a Kotlin/Native frame `kfun:<symbol> + <offset>`
+ * on an iOS device, which carries no DWARF. Writes the file (its `res://` path, or its base name
+ * outside a Godot project) to [file_out] and returns the line, or returns 0 when the line is not
+ * known: only a debug build has a table, covering the game's own functions
+ * (ios/bootstrap/kanama_ios_source_lines.c).
+ */
+int32_t kanama_ios_source_line(const char *symbol, int32_t offset, char *file_out, int32_t file_cap);
+
+/*
  * Task 132 — prints [message] to Godot's output through the `print` utility function, or
  * `push_warning` when [warning] is non-zero, so runtime diagnostics (the GC-release log, the
  * borrowed-close warning) reach the same log as on desktop. Returns 1 when printed, 0 when the

@@ -278,7 +278,7 @@ iOS — the scene and inspector value dropped — an iOS build with a `Map`
 `@Export` **fails** and names the property. The same holds for every
 other `@Export` the iOS backend cannot deliver (for example a
 `Vector2i` value). To accept the skip and build anyway, pass
-`-PkanamaIosAllowExportSkips=true` to the iOS build (or set it in
+`-PkanamaIosAllowSkips=true` to the iOS build (or set it in
 `gradle.properties`); each skipped property is then a warning and keeps its
 Kotlin default on iOS.
 
