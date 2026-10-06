@@ -366,6 +366,37 @@ below applies (`Basis`/`Transform3D` arithmetic now runs in Kotlin).
   desktop (`Basis(x, y, z)`, `withX(value)`, `lookingAt(target, up, useModelFront)`,
   `interpolateWith(xform, weight)`, `withBasis(value)`, `bounce(n)`, `times(scale)`).
 
+### Fixed — Web: a script's property initializers can call the engine (protocol 33)
+
+- On Web a script's constructor ran before its proxy had installed its callbacks, so a property
+  initializer that called the engine (`private val config = ConfigFile.create()`,
+  `RenderingServer.getCurrentRenderingDriverName()`, as GDScript's `var x = ...` can) had no owner
+  to route to and failed. For an autoload that is fatal at engine start: the tps-demo `Settings`
+  autoload built a `ConfigFile` that way, so `Main._ready` later read an empty config (a null cast)
+  and the menu never became ready in the browser. CI never saw it because tpsdemo is not in the
+  hosted `ci` corpus. Script creation is now two steps, `reserve` (mint the handle) and `construct`
+  (run the constructor once the proxy's callbacks are installed under it and its snapshots are
+  seeded), so an initializer's engine calls are applied through the script's own proxy, as on
+  desktop, and an initializer can use `self` (`getTree()`, `getNodeOrNull`, `addChild`, `position`,
+  `RenderingServer.getCurrentRenderingMethod()`). This changes the proxy contract, so the Web
+  protocol is now 33; rebuild the scripts.
+- A constructor that throws no longer leaves anything behind: the node handles it resolved, its
+  signal connections, scheduler jobs and snapshots are released like a freed script's, the commands
+  its initializers queued are dropped, and the proxy does not retry the construction (the failure is
+  reported once). Mutations an initializer queues are now applied at the end of construction instead
+  of being discarded by the next frame's pump.
+- Still failing, with a message that names the cause: engine code that runs with no script running.
+  A companion-object or top-level property initializes on first access inside whichever script
+  touches it, so its engine objects are billed to that script (see
+  [Exporting to the Web](docs/exporting/web.md)). A script's `create` failure carries its cause chain
+  like a callback failure does, and the bridge keeps the first eight boundary failures
+  (`callbackErrorLog`). Proof: the web3d smoke's `InitProbe` script (initializers that call a
+  singleton, build a `ConfigFile`, read `self.getTree()`, `self.position`, a sibling and the
+  rendering method, plus an `@OnReady` bit; check `scriptInitializersCallEngine`, 127 when healthy,
+  35 on main), the registry unit tests, and the tpsdemo cell, red on main and green with the fix.
+  The tpsdemo driver also stops at the first boundary error or fatal before the menu is ready and
+  prints that log instead of waiting three minutes.
+
 ### Fixed — Web: a node looked up by two scripts survives the first script's free
 
 - On Web, when two scripts looked up the same plain node (`requireAs("../Target", ::Node)` in both),

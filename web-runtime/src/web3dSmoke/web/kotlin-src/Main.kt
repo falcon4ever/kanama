@@ -1297,6 +1297,18 @@ class Main(godotObject: GodotHandle) :
     return 0L
   }
 
+  /**
+   * Script-initializer engine calls: the InitProbe node's property initializers call an engine
+   * singleton, construct a RefCounted and read `self` (see InitProbe), and its @OnReady runs. 63
+   * when every row worked. A lookup or call failure is reported in the thrown message, so the
+   * driver's trace says why (the bare 0 it returns for a missing node hid the reason once).
+   */
+  fun initProbe(value: Long): Long {
+    val node =
+      self.getNodeOrNull("InitProbe") ?: error("InitProbe node never constructed (no Node found)")
+    return WebExperimentalGenericCall.callImmediate(node, "init_probe", listOf(0L)).asLong()
+  }
+
   /** Readback of [shareProbe]: 31 once its frames have passed. */
   fun shareProbeAfter(value: Long): Long = shareMask
 

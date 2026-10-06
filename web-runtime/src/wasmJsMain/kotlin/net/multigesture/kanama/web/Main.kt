@@ -120,19 +120,58 @@ private fun describeCauseChain(error: Throwable, limit: Int = 5): String = build
 
 @JsExport fun kanamaWebPendingSignalCallbackCount(): Int = WebSignalCallbackRegistry.size
 
+/** Step one of script creation: mint the handle only (see [WebInstanceRegistry.reserve]). */
+@JsExport fun kanamaWebReserve(scriptId: Int): Int = instances.reserve(scriptId)
+
+/**
+ * Step two: run the reserved script's constructor, with its proxy's callbacks already installed and
+ * the handle marked as the running script, so a property initializer may call the engine.
+ */
 @JsExport
-fun kanamaWebCreate(scriptId: Int): Int {
+fun kanamaWebConstruct(handle: Int): Int {
+  // Checked before the try: the cleanup below frees the slot, which must never be a live script's.
+  check(!instances.isLive(handle)) { "Kanama Web handle=$handle is already constructed" }
+  val scriptName = scriptNameOf(handle)
+  val checkpoint = commands.checkpoint()
   return try {
-    instances.create(scriptId)
+    instances.construct(handle) { build -> withActiveWebScriptHandle(handle) { build() } }
+    // Like every other boundary: apply what the initializers queued now, or the next entry that
+    // clears the buffer (a `_process` pump) drops it.
+    commands.flush()
+    handle
   } catch (error: Throwable) {
-    val scriptName =
-      KanamaWebProjectRegistry.scripts.firstOrNull { it.id == scriptId }?.className
-        ?: "script#$scriptId"
-    throw IllegalStateException("Kanama Web create failed: script=$scriptName", error)
+    // Undo what the half-built script left behind, as kanamaWebFree does for a finished one, and
+    // drop the commands its initializers queued so the next flush does not name a dead owner and
+    // lose other scripts' batch.
+    commands.rollbackTo(checkpoint)
+    instances.free(handle)
+    clearWebPositionSnapshot(handle)
+    WebSignalCallbackRegistry.releaseOwner(handle)
+    WebFrameScheduler.cancelOwner(handle)
+    // Name the cause chain like a callback failure does: a script constructor that throws was
+    // otherwise reported as "create failed" with the reason only in an unprinted `cause`.
+    throw IllegalStateException(
+      "Kanama Web create failed: script=$scriptName cause=${describeCauseChain(error)}",
+      error,
+    )
   }
 }
 
-@JsExport fun kanamaWebIsLive(objectHandle: Int): Int = if (instances.isLive(objectHandle)) 1 else 0
+private fun scriptNameOf(handle: Int): String {
+  val scriptId = instances.pendingScriptId(handle)
+  return scriptId?.let { id ->
+    KanamaWebProjectRegistry.scripts.firstOrNull { it.id == id }?.className
+  } ?: "handle=$handle"
+}
+
+/** 1 for a constructed script and for one whose constructor is still running (its node exists). */
+@JsExport
+fun kanamaWebIsLive(objectHandle: Int): Int =
+  if (instances.isLiveOrConstructing(objectHandle)) 1 else 0
+
+/** 1 only once the script's constructor has returned (the bridge's failure teardown checks it). */
+@JsExport
+fun kanamaWebIsConstructed(objectHandle: Int): Int = if (instances.isLive(objectHandle)) 1 else 0
 
 @JsExport
 fun kanamaWebAdoptNodeHandle(objectHandle: Int): Int {
@@ -429,7 +468,7 @@ fun kanamaWebSetObjectProperty(objectId: Int, propertyId: Int, value: Int): Int 
   // Guard mirrors registerReturnedNode (WebBackendBookkeeping.kt): skip live instances, and
   // leave a handle that is already tracked under another kind alone (a node can be both an
   // exported property and a requireAs child -- City-Builder's view camera).
-  if (value != 0 && !instances.isLive(value) && !containsWebBrowserHandle(value)) {
+  if (value != 0 && !instances.isLiveOrConstructing(value) && !containsWebBrowserHandle(value)) {
     registerWebBrowserHandle(value, WebBrowserHandleKind.RESOURCE)
   }
   return webCallbackBoundary(objectId, "property_set", "property", propertyId) { record ->
@@ -461,7 +500,7 @@ fun kanamaWebSetObjectArrayProperty(objectId: Int, propertyId: Int, encodedValue
   // is tracked by `instances` and must not be pinned in the browser-handle map, which has
   // no removal path for it.
   values.forEach {
-    if (!instances.isLive(it) && !containsWebBrowserHandle(it)) {
+    if (!instances.isLiveOrConstructing(it) && !containsWebBrowserHandle(it)) {
       registerWebBrowserHandle(it, WebBrowserHandleKind.RESOURCE)
     }
   }

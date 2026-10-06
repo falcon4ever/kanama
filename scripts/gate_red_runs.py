@@ -293,7 +293,7 @@ case("check_android_remap_sources.py (invokeExact)", py("check_android_remap_sou
            'needle = ".invokeExact(",', 'needle = ".invokeExactDisabled(",')],
      "src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt", "the remap stops rewriting `.invokeExact(` (the builtin-call downcall would reach ART)")
 case("check_doc_claims.py", py("check_doc_claims.py"),
-     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 32)", "versioned JavaScript bridge (protocol 21)")],
+     [Edit("docs/exporting/web.md", "versioned JavaScript bridge (protocol 33)", "versioned JavaScript bridge (protocol 21)")],
      "stale or malformed claim", "a marked doc line states the wrong Web protocol")
 case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
      [Create(f"{COMMON}/api/ZzRedRun.expect.kt", "package net.multigesture.kanama.api\n\nexpect fun redRun(a: Int = 1)\n")],
@@ -350,8 +350,8 @@ case("check_property_coverage.py", py("check_property_coverage.py"),
      [Edit(f"{COMMON}/api/CanvasItem.kt", "    var visible: Boolean", "    var visibleRedRun: Boolean")],
      "silently dropped", "a generated wrapper property disappears")
 case("check_protocol_pins.py", py("check_protocol_pins.py"),
-     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 32", "KANAMA_WEB_PROTOCOL_VERSION = 31")],
-     "protocol version disagrees", "the bridge pins protocol 31 while the emitter says 32")
+     [Edit("web-runtime/src/webSpikeGodot/assets/kanama-web-bridge.js", "KANAMA_WEB_PROTOCOL_VERSION = 33", "KANAMA_WEB_PROTOCOL_VERSION = 32")],
+     "protocol version disagrees", "the bridge pins protocol 32 while the emitter says 33")
 case("check_pt_tag_tables.py", py("check_pt_tag_tables.py"),
      [Edit("scripts/generate_api_wrapper.py", '    "PT_VOID": 0,', '    "PT_VOID": 99,')],
      "value-mismatch VOID", "one copy of the iOS ptrcall tag table is renumbered")
@@ -372,6 +372,11 @@ case("check_web_callback_flush.py", py("check_web_callback_flush.py"),
            "    KanamaWebProjectRegistry.enterTree(record.scriptId, record.script)\n    commands.flush()",
            "    KanamaWebProjectRegistry.enterTree(record.scriptId, record.script)")],
      "without flushing the command buffer", "a Web callback boundary stops flushing the command buffer")
+case("check_web_callback_flush.py (constructor)", py("check_web_callback_flush.py"),
+     [Edit("web-runtime/src/wasmJsMain/kotlin/net/multigesture/kanama/web/Main.kt",
+           "    commands.flush()\n    handle\n  } catch",
+           "    handle\n  } catch")],
+     "runs a script constructor", "the constructor boundary stops flushing the command buffer")
 case("check_web_typed_enums.py", py("check_web_typed_enums.py"),
      [Edit(f"{WEBGEN}/Node.kt", "  fun setProcessMode(mode: Node.ProcessMode) {", "  fun setProcessMode(mode: Long) {")],
      "web_typed_enums] FAIL", "a Web wrapper enum parameter goes back to a raw Long")

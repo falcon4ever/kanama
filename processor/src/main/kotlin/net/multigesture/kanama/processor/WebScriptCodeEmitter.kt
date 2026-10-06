@@ -157,9 +157,11 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
      * `Mesh.surface_set_material(i, null)` clears the slot (handle id 0). 30 (task 133 C2) adds the
      * `kanamaWebSetColorProperty` entry point: a `Color` export's push arm. 31 (task 133 value
      * types) adds `kanamaWebSetPackedValueProperty`: the push arm of a Vector3i, Rect2, Rect2i,
-     * Plane, Quaternion, Basis or Transform3D export, carried as its packed components.
+     * Plane, Quaternion, Basis or Transform3D export, carried as its packed components. 33 splits
+     * `create` into `reserve` + `construct`: the proxy installs its callbacks between them, so a
+     * script's property initializers can call the engine.
      */
-    const val PROTOCOL_VERSION = 32
+    const val PROTOCOL_VERSION = 33
 
     /**
      * Shape version of `KanamaWebProtocol.generated.json` itself — independent of
@@ -2175,6 +2177,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("var _kanama_tween_callback")
     appendLine("var _kanama_noargs_vector3_callback")
     appendLine("var _kanama_ready_dispatched: bool = false")
+    // Set when the Kotlin constructor threw: the failure was reported once at the boundary, and a
+    // later _kanama_ensure_created must not rebuild the script (a retry that succeeds would leave a
+    // live script whose _ready never runs and whose initializer side effects ran twice).
+    appendLine("var _kanama_create_failed: bool = false")
     appendLine("var _kanama_pulling: bool = false")
     appendLine("var _kanama_object_handles: Dictionary = KanamaWebHandles.handles")
     appendLine("var _kanama_tween_children: Dictionary = {}")
@@ -2185,6 +2191,8 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     appendLine("\t\treturn 0")
     appendLine("\tif _kanama_handle != 0:")
     appendLine("\t\treturn _kanama_handle")
+    appendLine("\tif _kanama_create_failed:")
+    appendLine("\t\treturn 0")
     appendLine("\t_kanama_bridge = JavaScriptBridge.get_interface(\"KanamaWebBridge\")")
     appendLine("\tif _kanama_bridge == null:")
     appendLine("\t\tpush_error(\"Kanama Web bridge was not initialized before Godot\")")
@@ -2194,7 +2202,10 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
       "\t\tpush_error(\"Kanama Web proxy protocol mismatch: expected %d, received %d\" % [_KANAMA_PROTOCOL_VERSION, int(_kanama_bridge.protocolVersion)])"
     )
     appendLine("\t\treturn 0")
-    appendLine("\t_kanama_handle = int(_kanama_bridge.create(_KANAMA_SCRIPT_ID))")
+    // Two-step creation (protocol 33): `reserve` mints the handle, the callbacks install under it,
+    // and `construct` then runs the Kotlin constructor -- so a property initializer that calls the
+    // engine (as a GDScript `var x = ...` can) is applied through THIS proxy.
+    appendLine("\t_kanama_handle = int(_kanama_bridge.reserve(_KANAMA_SCRIPT_ID))")
     appendLine("\tif _kanama_handle == 0:")
     appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
     appendLine("\t\treturn 0")
@@ -2286,6 +2297,17 @@ internal class WebScriptCodeEmitter(inputs: List<WebScriptInput>) {
     if (particlesAttachment) {
       appendLine("\t_kanama_bridge.refreshParticlesSnapshot(_kanama_handle, emitting, lifetime)")
     }
+    // The constructor runs only now: the callbacks are installed under the handle and every
+    // handle-keyed snapshot is seeded, so a property initializer can call the engine and read
+    // `self` (getTree, getNodeOrNull, position, RenderingServer.getCurrentRenderingMethod).
+    // A throwing constructor leaves the proxy unmade, and it is not retried (the failure was
+    // reported once; see _kanama_create_failed).
+    appendLine("\tif int(_kanama_bridge.construct(_kanama_handle)) == 0:")
+    appendLine("\t\t_kanama_object_handles.erase(_kanama_handle)")
+    appendLine("\t\t_kanama_handle = 0")
+    appendLine("\t\t_kanama_create_failed = true")
+    appendLine("\t\tpush_error(\"Kanama Web script construction failed\")")
+    appendLine("\t\treturn 0")
     model.properties.forEachIndexed { index, property ->
       when (propertyArm(property)) {
         WebPropertyArm.STRING ->

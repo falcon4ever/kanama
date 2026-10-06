@@ -62,7 +62,7 @@
             return count;
           },
         };
-        const objectHandle = api.kanamaWebCreate(SCRIPT_ID);
+        const objectHandle = api.kanamaWebConstruct(api.kanamaWebReserve(SCRIPT_ID));
         const checks = [
           requireEqual("protocol", api.kanamaWebProtocolVersion(), 1),
           requireEqual("round trip", api.kanamaWebRoundTrip(57), 57),
@@ -93,7 +93,7 @@
           requireEqual("freed object", api.kanamaWebIsLive(objectHandle), 0),
         ];
 
-        const replacementHandle = api.kanamaWebCreate(SCRIPT_ID);
+        const replacementHandle = api.kanamaWebConstruct(api.kanamaWebReserve(SCRIPT_ID));
         checks.push(
           requireEqual("slot reused with new generation", replacementHandle === objectHandle, false),
         );
