@@ -992,6 +992,23 @@ static HMODULE win_load_jvm_library(const char *jvm_lib) {
 }
 #endif
 
+#ifndef __ANDROID__
+/* JVM-initiated process exit -- SIGTERM/SIGINT/SIGHUP through the JVM's own signal handlers, or
+ * System.exit / exitProcess from Kotlin. HotSpot runs the Java shutdown hooks, then calls this
+ * from the VM thread at its final safepoint, right before it would call libc exit(). Godot's
+ * Main::cleanup never ran on this path, so exit() would run Godot's static destructors with the
+ * engine still live, on the VM thread, and they call back into Kanama (ScriptLanguage::get_name)
+ * through Panama upcall stubs that thread cannot enter: SIGBUS in UpcallStub, or a hang. End the
+ * process the way an unhandled SIGTERM ends a plain Godot run instead: flush stdio, then _exit
+ * with the JVM's exit code. A normal Godot quit never comes here (the JVM is not shut down). */
+static void JNICALL kanama_jvm_exit_hook(jint code) {
+    fprintf(stderr, "[kanama] JVM exit (code=%d): ending the process without static destructors\n",
+            (int)code);
+    fflush(NULL);
+    _exit((int)code);
+}
+#endif
+
 static int start_jvm(const char *jar_path) {
 #ifdef __ANDROID__
     (void)jar_path;
@@ -1049,7 +1066,7 @@ static int start_jvm(const char *jar_path) {
 
     char jdwp_opt[256] = {0};
     char jdwp_address[128] = {0};
-    int n_opts = 2;
+    int n_opts = 3;
     const char *jdwp_port = getenv("KANAMA_JDWP_PORT");
     if (jdwp_port && *jdwp_port) {
         if (is_numeric_port_string(jdwp_port)) {
@@ -1078,17 +1095,20 @@ static int start_jvm(const char *jar_path) {
     if (jdwp_address[0] != '\0') {
         snprintf(jdwp_opt, sizeof jdwp_opt,
             "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%s", jdwp_address);
-        n_opts = 3;
+        n_opts = 4;
         fprintf(stderr, "[kanama] JDWP debug agent enabled at %s\n", jdwp_address);
     }
 
-    JavaVMOption options[3];
+    JavaVMOption options[4];
     options[0].optionString = classpath_opt;
     options[0].extraInfo = NULL;
     options[1].optionString = (char *)"--enable-native-access=ALL-UNNAMED";
     options[1].extraInfo = NULL;
-    options[2].optionString = jdwp_opt;
-    options[2].extraInfo = NULL;
+    /* The JNI invocation API's "exit" hook; see kanama_jvm_exit_hook. */
+    options[2].optionString = (char *)"exit";
+    options[2].extraInfo = (void *)kanama_jvm_exit_hook;
+    options[3].optionString = jdwp_opt;
+    options[3].extraInfo = NULL;
 
     JavaVMInitArgs vm_args;
     vm_args.version = JNI_VERSION_21;
