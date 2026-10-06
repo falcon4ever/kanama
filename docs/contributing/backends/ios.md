@@ -397,12 +397,13 @@ text as a hint.
 A contained Kotlin exception reaches Godot as a script error (`IosScriptErrors`, task 131) with
 the file and line of the game's top frame, parsed from Kotlin/Native's `getStackTrace()` lines by
 the shared `ScriptErrorReport.parseNativeFrame`. Kotlin/Native adds `(File.kt:line:column)` to a
-frame only when it can read DWARF: through CoreSymbolication on the simulator, where the object
-files are on the same Mac. An iPhone app carries no DWARF (Apple's linker leaves it in the object
-files, or a dSYM next to the app), and Kotlin/Native does not offer CoreSymbolication for
+frame only when it can read DWARF. An iPhone app carries no DWARF (Apple's linker leaves it in the
+object files, or a dSYM next to the app), and Kotlin/Native does not offer CoreSymbolication for
 `iosArm64`; `-Xbinary=sourceInfoType=libbacktrace` would read DWARF from the app or a dSYM inside
-it, which a Godot iOS export does not ship. So a device frame is only
-`kfun:<symbol> + <offset>` (task 131 item 13; before it the self-test printed `at selfTest (:0)`).
+it, which a Godot iOS export does not ship. On the simulator, where CoreSymbolication is Kotlin/
+Native's default, the frames carry no source either (measured in `ios_visual_smoke.sh`). So a
+frame is only `kfun:<symbol> + <offset>` (task 131 item 13; before it the self-test printed
+`at selfTest (:0)`).
 
 The offset of a return address inside its function is fixed when the static library is built --
 linking moves a function, never its body -- so the debug device build maps it ahead of time.
@@ -415,7 +416,8 @@ start, file, line). The file is the `res://` path when the script dir is inside 
 (`res://kotlin-src/Player.kt`, as desktop reports it), else the base name.
 `ios/bootstrap/kanama_ios_source_lines.c` compiles the table as static data into the addon library
 and answers `kanama_ios_source_line(symbol, offset)` by binary search; nothing runs until an error
-is reported. Release and simulator builds compile the same file with an empty table. The Kanama
+is reported. The simulator's debug library gets its own table; release builds compile the same
+file with an empty table. The Kanama
 runtime's own functions are left out on purpose: their table would be megabytes (1.9 million line
 rows), and a script error is reported at the game's frame.
 

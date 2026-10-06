@@ -192,10 +192,9 @@ class ScriptErrorReport(
     /**
      * Parses one Kotlin/Native `Throwable.getStackTrace()` line, e.g. `at 3 libfoo 0x1049c2f3c
      * kfun:com.example.Player#ready(){} + 52 (/src/Player.kt:12:5)`. The `(file:line:col)` suffix
-     * is there only when Kotlin/Native itself symbolicates with source info (a debug build on the
-     * simulator or macOS). An iOS device frame ends at `+ <offset>`; [sourceOf] then maps the
-     * symbol and offset to the Kotlin file and line (a debug device build's table, see
-     * kanama_ios_source_lines.c), and without either the frame still names the class and the
+     * is there only when Kotlin/Native itself finds DWARF (a debug build on macOS). An iOS frame
+     * ends at `+ <offset>`; [sourceOf] then maps the symbol and offset to the Kotlin file and line
+     * (a debug iOS build's table, see kanama_ios_source_lines.c), and without either the frame still names the class and the
      * method, with an empty file and line 0. A line without a `kfun:` symbol (a C or Objective-C
      * frame) yields null.
      */

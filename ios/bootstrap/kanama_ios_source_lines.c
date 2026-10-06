@@ -1,7 +1,7 @@
 // Kotlin file:line for a Kotlin/Native stack frame on an iOS device (task 131 item 13).
 //
 // Kotlin/Native symbolicates a stack trace with source positions only through CoreSymbolication
-// (macOS and the simulators) or libbacktrace, and both read DWARF -- which an iOS app never carries:
+// or libbacktrace, and both read DWARF -- which an iOS app, device or simulator, does not carry:
 // Apple's linker leaves the debug info in the object files on the Mac (or a dSYM beside the app),
 // so a device frame is just `kfun:<symbol> + <offset>`. The offset inside a function is fixed when
 // the static library is built (linking moves a function, never its body), so the debug build maps

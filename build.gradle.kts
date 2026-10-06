@@ -1830,20 +1830,20 @@ fun registerCombineIosLibTask(
 // build maps those to Kotlin lines ahead of time from the debug runtime library's DWARF, for the
 // game's own functions (its script dirs) and the self-test probe; the table is static data in the
 // addon library (ios/bootstrap/kanama_ios_source_lines.c). The generator is
-// buildSrc/.../IosSourceLines.kt, with its tests. Release and simulator builds compile the lookup
-// without a table (the simulator symbolicates through CoreSymbolication itself).
+// buildSrc/.../IosSourceLines.kt, with its tests. Release builds compile the lookup without a
+// table.
 val iosSourceLinesSource = layout.projectDirectory.file("ios/bootstrap/kanama_ios_source_lines.c")
-val iosDeviceDebugSourceLinesDir = iosBuildDir.map { it.dir("source-lines/iphoneos/debug") }
-val generateIosDeviceDebugSourceLines by
-  tasks.registering {
+/** The source-line table of a debug [target] library, in `source-lines/<sdk>/debug`. */
+fun registerIosSourceLinesTask(name: String, sdk: String, target: String): TaskProvider<Task> =
+  tasks.register(name) {
     group = "ios"
-    description = "Map the debug iOS device library's game functions to their Kotlin lines."
-    dependsOn(tasks.named("linkDebugStaticIosArm64"))
-    val runtimeLib = iosRuntimeStaticLib("iosArm64", "debug")
+    description = "Map the debug $sdk library's game functions to their Kotlin lines."
+    dependsOn(tasks.named("linkDebugStatic${target.replaceFirstChar { it.uppercase() }}"))
+    val runtimeLib = iosRuntimeStaticLib(target, "debug")
     val sourceRoots =
       iosScriptDirs(configuredIosScriptDirs.orNull).map { file(it) } +
         file("src/iosMain/kotlin/net/multigesture/kanama/ios/KanamaIosScriptErrorProbe.kt")
-    val outputDir = iosDeviceDebugSourceLinesDir
+    val outputDir = iosBuildDir.map { it.dir("source-lines/$sdk/debug") }
     val developerDir = xcodeDeveloperDir
     inputs.file(runtimeLib)
     inputs.property("sourceRoots", sourceRoots.map { it.absolutePath })
@@ -1861,11 +1861,22 @@ val generateIosDeviceDebugSourceLines by
           developerDir.get(),
         )
       logger.lifecycle(
-        "iOS source lines: $functions functions, $rows rows, ${table.length() / 1024} KiB " +
-          "source, ${(System.nanoTime() - started) / 1_000_000} ms"
+        "iOS source lines ($sdk): $functions functions, $rows rows, " +
+          "${table.length() / 1024} KiB source, ${(System.nanoTime() - started) / 1_000_000} ms"
       )
     }
   }
+
+// The simulator gets the table too: Kotlin/Native's CoreSymbolication finds no DWARF for a
+// simulator app either (its frames end at `+ <offset>`, measured in the simulator smoke).
+val generateIosDeviceDebugSourceLines =
+  registerIosSourceLinesTask("generateIosDeviceDebugSourceLines", "iphoneos", "iosArm64")
+val generateIosSimulatorDebugSourceLines =
+  registerIosSourceLinesTask(
+    "generateIosSimulatorDebugSourceLines",
+    "iphonesimulator",
+    "iosSimulatorArm64",
+  )
 
 val combineIosDeviceDebugLib =
   registerCombineIosLibTask(
@@ -1876,7 +1887,7 @@ val combineIosDeviceDebugLib =
     "debug",
     "linkDebugStaticIosArm64",
     generateIosDeviceDebugSourceLines,
-    iosDeviceDebugSourceLinesDir,
+    iosBuildDir.map { it.dir("source-lines/iphoneos/debug") },
   )
 val combineIosDeviceReleaseLib =
   registerCombineIosLibTask(
@@ -1895,6 +1906,8 @@ val combineIosSimulatorDebugLib =
     "iosSimulatorArm64",
     "debug",
     "linkDebugStaticIosSimulatorArm64",
+    generateIosSimulatorDebugSourceLines,
+    iosBuildDir.map { it.dir("source-lines/iphonesimulator/debug") },
   )
 val combineIosSimulatorReleaseLib =
   registerCombineIosLibTask(

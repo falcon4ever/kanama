@@ -41491,8 +41491,8 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // Task 131 (F4): the report a contained script exception sends to Godot. Built, not sent -- a
   // sent one prints `SCRIPT ERROR`, which the visual smoke treats as a failure; delivery is the
   // documented device check (a throwing _ready shows `SCRIPT ERROR:` in the device log). Task 131
-  // item 13: the report names the throwing function's Kotlin file and line -- on a device from the
-  // debug build's source-line table, on the simulator from Kotlin/Native's own symbolication.
+  // item 13: the report names the throwing function's Kotlin file and line, from the debug build's
+  // source-line table (device and simulator).
   val scriptErrorProbe =
     runCatching { net.multigesture.kanama.ios.throwSelfTestScriptError() }.exceptionOrNull()
   val scriptErrorReport = scriptErrorProbe?.let { IosScriptErrors.reportFor(it, "selfTest") }

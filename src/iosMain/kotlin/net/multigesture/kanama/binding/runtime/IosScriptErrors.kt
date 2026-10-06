@@ -19,10 +19,10 @@ import net.multigesture.kanama.ios.cinterop.kanama_ios_source_line
  * debugger show `SCRIPT ERROR:` with the Kotlin file:line of the top game frame. Before task 131
  * such an exception crossed the `@CName` export and terminated the app.
  *
- * The file and line come from Kotlin/Native's symbolicated stack trace where it carries
- * `(File.kt:line:column)` (a debug build on the simulator), and on a device -- whose app carries no
- * DWARF, so its frames end at `kfun:<symbol> + <offset>` -- from the debug build's table of the
- * game's functions (`kanama_ios_source_line`, task 131 item 13). A release frame still names the
+ * The file and line come from Kotlin/Native's stack trace where it carries `(File.kt:line:column)`,
+ * and otherwise -- an iOS app carries no DWARF, so its frames end at `kfun:<symbol> + <offset>`,
+ * on the device and the simulator -- from the debug build's table of the game's functions
+ * (`kanama_ios_source_line`, task 131 item 13). A release frame still names the
  * class and method, reported with an empty file and line 0. Never throws.
  */
 @OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class, ExperimentalAtomicApi::class)
