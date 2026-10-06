@@ -42,14 +42,16 @@ only `--write`.
 
 - **Source break:** iOS builds (no API declaration changes) — a script method iOS cannot dispatch
   now fails the iOS build instead of warning: a registered function or virtual with a parameter
-  type the iOS call path does not pass (`Map`, `List`, `Packed*Array`, `Any?`), or an
+  type the iOS call path does not pass (`Map`, `List`, `Packed*Array`), or an
   `@OverrideVirtual` whose return type iOS does not marshal. Before, the method silently never ran
   on iOS while it worked on desktop. The error names the method, the parameter and the supported
   types; change the type, or build with `-PkanamaIosAllowSkips=true` to accept the skip (a warning
   again). That one option now covers every iOS skip: it replaces `kanamaIosAllowExportSkips` from
   item 9, which was never released. Every demo builds for iOS without it.
 - **iOS: more method types are dispatched** instead: a `RID` parameter (the shim already passed
-  RIDs to typed signals), and `NodePath` and every value type (`Vector3i` … `Projection`) as an
+  RIDs to typed signals), an `Any?` parameter (`_set`, `_drop_data`; a Variant type iOS does not
+  marshal yet fails that call with a script error naming the type, as a typed signal argument
+  does, instead of arriving as `null`), and `NodePath` and every value type (`Vector3i` … `Projection`) as an
   `@OverrideVirtual` return (methods already returned the value types). Every script type can now
   be returned on iOS.
 - **iOS: a script error names the Kotlin file and line on the device** in debug builds

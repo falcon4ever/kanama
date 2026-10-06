@@ -1746,9 +1746,18 @@ internal fun encodeIosRawValue(value: Any?, out: CPointer<ByteVar>): Int {
 }
 
 // Decodes one PT-tagged inbound call arg (see kanama_ios_script_instance_call). OBJECT yields the
-// raw int64 handle; the generated callV branch wraps it in the declared GodotObject subtype.
+// raw int64 handle; the generated callV branch wraps it in the declared GodotObject subtype. A
+// Variant type the shim does not marshal (an `Any?` parameter receiving a Dictionary, task 131 N7)
+// throws, naming the type, like a typed signal argument does: the call is reported as a script
+// error instead of the method silently seeing null.
 @OptIn(ExperimentalForeignApi::class)
 internal fun decodeIosCallArg(tag: Int, ptr: CPointer<ByteVar>?): Any? {
+  if (tag >= IOS_ARG_UNMARSHALLED_BASE) {
+    throw IllegalArgumentException(
+      "a script method argument of Variant type ${tag - IOS_ARG_UNMARSHALLED_BASE} is not " +
+        "marshalled on iOS yet"
+    )
+  }
   if (ptr == null) {
     return null
   }
@@ -2742,6 +2751,19 @@ internal fun kanamaIosVariantReturnSelfTest(value: Any?): Int = memScoped {
   tag.value = IOS_PT_VOID
   encodeIosReturn(value, tag.ptr, buf)
   tag.value
+}
+
+// OBJECTCALLS-SELFTEST hook for an `Any?` script-method argument (task 131 N7): the decoded value
+// of an INT64 cell, and the message of the error an unmarshalled Variant type (a Dictionary, 27)
+// raises instead of decoding to null.
+@OptIn(ExperimentalForeignApi::class)
+internal fun kanamaIosAnyCallArgSelfTest(): Pair<Any?, String?> = memScoped {
+  val cell = alloc<LongVar>()
+  cell.value = 0x1_0000_0003L
+  val decoded = decodeIosCallArg(IOS_PT_INT64, cell.ptr.reinterpret())
+  val refused =
+    runCatching { decodeIosCallArg(IOS_ARG_UNMARSHALLED_BASE + 27, null) }.exceptionOrNull()
+  decoded to refused?.message
 }
 
 // OBJECTCALLS-SELFTEST hook for a RID script-method argument (task 131 N7): the cell

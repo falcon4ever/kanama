@@ -41480,6 +41480,13 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // RID with all 64 bits of the id (a value above 32 bits fails a narrowed cell).
   val ridArg = net.multigesture.kanama.ios.kanamaIosRidCallArgSelfTest(0x1_0000_0002L)
   check("call-arg(RID, 64-bit id) got=$ridArg", ridArg == RID(0x1_0000_0002L))
+  // An `Any?` parameter is dispatched too: it receives every marshalled value, and a Variant type
+  // the shim does not marshal fails the call loudly instead of arriving as null.
+  val (anyArg, anyRefused) = net.multigesture.kanama.ios.kanamaIosAnyCallArgSelfTest()
+  check(
+    "call-arg(Any?: Long decoded, Dictionary refused) got=$anyArg refused=$anyRefused",
+    anyArg == 0x1_0000_0003L && anyRefused?.contains("Variant type 27") == true,
+  )
 
   // Task 131 (F4): the report a contained script exception sends to Godot. Built, not sent -- a
   // sent one prints `SCRIPT ERROR`, which the visual smoke treats as a failure; delivery is the

@@ -112,6 +112,60 @@ class IosMethodSkipTest {
   }
 
   @Test
+  fun eachOverloadIsReportedAndEveryUnsupportedArgumentNamed() {
+    // Two overloads of one Kotlin name are two script methods (two Godot names): both are errors.
+    val r =
+      emit(
+        methods =
+          listOf(
+            method("apply", null, ArgModel("table", TypeMapping.DICTIONARY)),
+            MethodModel(
+              kotlinName = "apply",
+              godotName = "apply_all",
+              returnType = null,
+              args =
+                listOf(
+                  ArgModel("tables", TypeMapping.ARRAY),
+                  ArgModel("count", TypeMapping.INT),
+                  ArgModel("bytes", TypeMapping.PACKED_BYTE_ARRAY),
+                ),
+              kind = MethodKind.REGULAR,
+            ),
+          )
+      )
+
+    assertEquals(2, r.errors.size, "${r.errors}")
+    assertTrue(r.errors[0].contains("argument table: Map<String, Any?> has a type"), r.errors[0])
+    assertTrue(r.errors[1].contains("(godot: apply_all): arguments tables:"), r.errors[1])
+    assertTrue(r.errors[1].contains(", bytes: ") && "count:" !in r.errors[1], r.errors[1])
+    assertTrue(r.errors[1].contains("have types iOS does not pass"), r.errors[1])
+  }
+
+  @Test
+  fun anAnyArgumentIsDispatched() {
+    // `_set(property, value: Any?)`, `_drop_data`: the decode is loud for a type iOS does not
+    // marshal (decodeIosCallArg), so the parameter is served instead of being an error.
+    val r =
+      emit(
+        methods =
+          listOf(
+            method(
+              "store",
+              TypeMapping.BOOL,
+              ArgModel("property", TypeMapping.STRING),
+              ArgModel("value", TypeMapping.VARIANT),
+            )
+          )
+      )
+
+    assertEquals(emptyList(), r.errors)
+    assertTrue(
+      r.source.contains("\"store\" -> script.store(args[0] as String, args[1] as Any?)"),
+      r.source,
+    )
+  }
+
+  @Test
   fun aRidArgumentIsDispatched() {
     val r = emit(methods = listOf(method("useRid", null, ArgModel("rid", TypeMapping.RID))))
 

@@ -75,7 +75,7 @@ internal val IOS_RAW_VALUE_TYPES: Set<TypeMapping> =
 // the C boxing for those four waits for the iOS wrapper-family follow-up slice. Task 133 then
 // shipped every value type as its raw bytes (IOS_RAW_VALUE_TYPES), up to a Projection's 64 bytes,
 // and task 131 N7 put them and NodePath (encodeIosReturn's PT_NODE_PATH) in this one set, which
-// methods and virtuals share: every TypeMapping returns on iOS today (IosSkipTest pins that).
+// methods and virtuals share: every TypeMapping returns on iOS today (IosMethodSkipTest pins that).
 internal val IOS_RETURN_TYPES: Set<TypeMapping> =
   setOf(
     TypeMapping.BOOL,
@@ -267,14 +267,16 @@ internal class IosScriptCodeEmitter(
    * reach it on iOS while it runs on desktop.
    */
   private fun methodArgSkip(className: String, method: IosMethod) {
-    val unsupported =
-      method.args
-        .filter { callArgExpr(0, it) == null }
-        .joinToString { "${it.name}: ${it.kotlinType}" }
+    val unsupported = method.args.filter { callArgExpr(0, it) == null }
+    val named = unsupported.joinToString { "${it.name}: ${it.kotlinType}" }
+    val what =
+      if (unsupported.size == 1) "argument $named has a type"
+      else "arguments $named have types"
+    // Keyed on the Godot name: two overloads of one Kotlin name are two script methods.
     iosSkip(
-      "method:$className.${method.kotlinName}",
-      "[kanama-ios] $className.${method.kotlinName} (godot: ${method.godotName}): argument " +
-        "$unsupported has a type iOS does not pass to a script method",
+      "method-arg:$className.${method.godotName}",
+      "[kanama-ios] $className.${method.kotlinName} (godot: ${method.godotName}): $what iOS " +
+        "does not pass to a script method",
       "On iOS a call to this method from Godot would not run",
       "Use a supported parameter type (${iosCallArgTypeNames()}, a Godot object wrapper or a " +
         "Godot enum)",
@@ -903,7 +905,7 @@ internal class IosScriptCodeEmitter(
     consequence: String,
   ) =
     iosSkip(
-      "method:$className.$kotlinName",
+      "method-return:$className.$godotName",
       "[kanama-ios] $className.$kotlinName (godot: $godotName): return type ${returnType.kotlinType} " +
         "is not marshalled on iOS",
       "On iOS $consequence",
@@ -926,6 +928,9 @@ internal class IosScriptCodeEmitter(
       // Task 131 N7: kanama_ios_marshal_variant_args already tags a RID Variant PT_RID for typed
       // signal arguments; decodeIosCallArg builds the RID for a script method's argument too.
       TypeMapping.RID,
+      // Task 131 N7: an `Any?` parameter gets the decoded Variant; a type the shim does not marshal
+      // throws in decodeIosCallArg (a reported script error), never a silent null.
+      TypeMapping.VARIANT,
     ) + IOS_RAW_VALUE_TYPES
 
   /** The simple names of [iosCallArgTypes], for the error that names what is supported. */

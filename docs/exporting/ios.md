@@ -163,7 +163,7 @@ parcel).
 
 A script method the iOS backend cannot dispatch fails the build the same way
 (task 131 N7): a registered function or virtual with a parameter type the iOS
-call path does not pass (a `Map`, a `List`, a `Packed*Array`, an `Any?`), or an
+call path does not pass (a `Map`, a `List`, a `Packed*Array`), or an
 `@OverrideVirtual` whose return type iOS does not marshal. The error names the
 method, the parameter and the supported types:
 
@@ -176,8 +176,11 @@ with -PkanamaIosAllowSkips=true (KSP option kanamaIosAllowSkips).
 
 Before task 131 this was a warning, and on the phone the method silently never
 ran while it worked on desktop. Parameters of the scalar types, `String`,
-`NodePath`, every value type, `Color`, `RID`, object wrappers and Godot enums
-are passed; every script type can be returned. `-PkanamaIosAllowSkips=true` is
+`NodePath`, every value type, `Color`, `RID`, object wrappers, Godot enums and
+`Any?` are passed; every script type can be returned. An `Any?` parameter that
+receives a Variant type iOS does not marshal yet (a `Dictionary`, an `Array`, a
+`Packed*Array`) fails that call with a script error naming the type, instead of
+seeing `null`. `-PkanamaIosAllowSkips=true` is
 the one opt-in for every iOS skip, exports and methods alike.
 
 To verify an export directly, run the parity check from the exported project
