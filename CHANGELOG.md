@@ -38,6 +38,24 @@ only `--write`.
 
 ## Unreleased
 
+### Added — a warning for a direct call to an `@Rpc` function (task 131 item 4)
+
+A plain Kotlin call to an `@Rpc` function runs on this peer only: it is GDScript's
+`prepare_game()`, not `prepare_game.rpc()`. It compiled without a word, and the tps-demo port had
+turned most of its gameplay `.rpc()` calls into such calls. The processor now warns about a direct
+call to an `@Rpc` function that has no `callLocal`, and the warning names the generated sender to use
+(`MenuRpcs.rpcPrepareGame(this)`, `rpcIdPrepareGame(this, peerId)`, or
+`callLocalPrepareGame(this)` after declaring `@Rpc(callLocal = true)`). `callLocal` functions are
+exempt, because GDScript calls those directly too; port each `x.rpc()` line as a sender call. The check
+reads the source text: it covers calls in the file that declares the `@Rpc` class, and qualified
+calls elsewhere when the name is declared once and is not also a Godot method name
+([Multiplayer](docs/game-dev/multiplayer.md#rpc-methods)).
+
+kanama-demos: tps-demo now sends every RPC its GDScript original sends through the generated
+senders, and `tpsBuildAndMultiplayerSmokeGodot` runs a headless host and client over localhost ENet
+and checks that a server RPC reaches the client. The multiplayer row of
+[C# Compatibility](docs/reference/c-sharp-compat.md) says what that smoke covers and what it does not.
+
 ### Added — Godot's String, NodePath, Callable, Signal and PackedByteArray methods (task 134 D2)
 
 Desktop, Android and iOS; Web as noted. Before, a script had Kotlin's own `String` functions and

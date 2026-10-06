@@ -60,6 +60,27 @@ desktop, Android, and iOS.
 keeps local fallback explicit and prevents accidentally running non-local RPCs
 while offline.
 
+A plain Kotlin call to an `@Rpc` function (`prepareGame()`,
+`robot.hit()`) does not go over the network: it is GDScript's `prepare_game()`,
+not `prepare_game.rpc()`. For a function without `callLocal`, the processor
+warns about such a call and names the sender to use:
+
+```text
+w: [ksp] [kanama:ksp] /path/Menu.kt:376: prepareGame() is an @Rpc function of Menu called
+directly, so it runs on this peer only. Send it with MenuRpcs.rpcPrepareGame(instance) or
+MenuRpcs.rpcIdPrepareGame(instance, peerId); to run it here as well, declare
+@Rpc(callLocal = true) and call MenuRpcs.callLocalPrepareGame(instance).
+```
+
+`@Rpc(callLocal = true)` functions get no warning, because a direct local call
+to one is sometimes what the GDScript original does too (tps `shoot()` calls
+`add_camera_shake_trauma(0.35)` directly). Because of that exemption, port each
+`x.rpc()` line as a sender call yourself: `jump.rpc()` on a `call_local` RPC
+becomes `PlayerRpcs.callLocalJump(this)`, not `jump()`. The check reads the
+source text, so it sees a call in the file that declares the `@Rpc` class, and
+a qualified call (`robot.hit()`) elsewhere only when the name is declared once
+in the sources and is not also a Godot method name.
+
 ## Authority And Synchronizers
 
 For player input, a useful pattern is:
@@ -128,7 +149,8 @@ usually drift during GDScript-to-Kotlin ports:
 - spawned player node names are stable across peers, usually matching peer ids;
 - every custom `.:property` in a `SceneReplicationConfig` is exposed with
   `@Export` or `@Export(name = "...")`;
-- known Kotlin script targets use generated `*Rpcs` helpers or direct typed
-  calls instead of raw string dispatch; and
+- every GDScript `x.rpc()` / `x.rpc_id()` became a generated `*Rpcs` sender
+  call, not a direct Kotlin call (that runs on this peer only), and known
+  Kotlin script targets use typed calls instead of raw string dispatch; and
 - remaining dynamic `call`, `rpc`, or animation-tree property strings are real
   dynamic boundaries and are covered by smoke or manual host/client testing.
