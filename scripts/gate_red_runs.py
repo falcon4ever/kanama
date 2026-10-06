@@ -359,6 +359,9 @@ case("check_public_signature_changes.py", py("check_public_signature_changes.py"
      [Edit(f"{COMMON}/api/Node.kt", "    fun setProcessMode(mode: Node.ProcessMode) {", "    fun setProcessMode(mode: Node.ProcessMode, extra: Int) {")],
      "unannounced source break", "a public signature changes without a CHANGELOG `Source break` line")
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
+     [Edit(f"{JVM}/net/multigesture/kanama/api/FileAccess.kt", "    fun getMd5(path: String): String =", "    fun getMd5RedRun(path: String): String =")],
+     "unannounced source break", "a desktop-only declaration disappears and is not in the common tree (not a move to common, task 129 C)")
+case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],
      "unannounced source break", "the generated Real.kt (a build.gradle.kts template) changes a public signature")
 case("check_typed_enums.py", py("check_typed_enums.py"),
