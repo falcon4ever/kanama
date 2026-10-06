@@ -112,7 +112,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/audit_stale_blockers.py:249` | `except UnicodeDecodeError:` | justified: not text, so it declares no Kotlin symbol |
 | `scripts/audit_stale_blockers.py:489` | `except ValueError:` | justified: --list display of the marker age; the audit verdict is already decided |
 | `scripts/audit_wrapper_abi_policy.py:84` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/audit_wrapper_signatures.py:319` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/audit_wrapper_signatures.py:323` | `except ValueError as e:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_actual_public_surface.py:122` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_actual_public_surface.py:459` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_actual_public_surface.py:480` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -155,10 +155,10 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:199` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:241` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:243` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/generate_api_wrapper.py:1794` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1799` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1804` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_api_wrapper.py:1839` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1859` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1864` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1869` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
+| `scripts/generate_api_wrapper.py:1904` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_gates_index.py:376` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_gates_index.py:420` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
 | `scripts/generate_gates_index.py:438` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
@@ -393,7 +393,6 @@ every pull request that touches `scripts/` or `.github/workflows/` (gated by the
 | `check_android_remap_sources.py` | a runtime source uses a fragment the Android remap cannot compile | `[android-remap-sources] FAIL src/jvmMain/kotlin/net/multigesture/kanama/ZzRedRun.kt:2: forbidden after the Android remap: 'Files.readString' (call a function value as f(args) / f?.let { it(args) }, ne` | green |
 | `check_android_remap_sources.py (invokeExact)` | the remap stops rewriting `.invokeExact(` (the builtin-call downcall would reach ART) | `[android-remap-sources] FAIL src/jvmMain/kotlin/binding/runtime/BuiltinFrame.kt:190: forbidden after the Android remap: '.invokeExact(' (call a function value as f(args) / f?.let { it(args) }, never .` | green |
 | `check_doc_claims.py` | a marked doc line states the wrong Web protocol | `check_doc_claims: FAIL — 1 stale or malformed claim(s): / docs/exporting/web.md:5: claims protocol 21, but WebScriptCodeEmitter declares 31` | green |
-| `check_doc_claims.py (jvm-default)` | a marked doc line names a JVM default the bootstrap does not pass | `docs/exporting/desktop.md:134: claims the JVM default `-XX:MaxNewSize=256m`, but bootstrap/bootstrap.c passes ['-XX:MaxNewSize=128m']` | green |
 | `check_expect_no_defaults.py` | an `expect fun` declares a default argument | `[expect_defaults] FAIL 1 default argument(s) on an 'expect' declaration. The Android lane skips *.expect.kt, so the default would not exist there; declare an overload per omitted argument instead (tas` | green |
 | `check_gate_evidence.py` | the evidence ledger carries a wrong schema version | `[check_gate_evidence] FAIL ledger must be an object with schemaVersion 1: evidence/gates.json` | green |
 | `check_godot_version_pin.py` | gradle.properties pins a different Godot than CI | `[check_godot_version_pin] FAIL — Godot version pins drifted: / - .github/workflows/package.yml: GODOT_VERSION=4.7.2-stable but expected 4.7.1-stable (from kanamaGodotVersion=4.7.1.stable)` | green |
