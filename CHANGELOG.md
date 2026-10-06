@@ -38,6 +38,43 @@ only `--write`.
 
 ## Unreleased
 
+### Changed — no slow frames after a large spawn; wrapper calls without a lazy check (task 131 item 18)
+
+- **Embedded JVM default `-XX:MaxNewSize=128m`.** After a large spawn, frames ran ~20–30 %
+  slower until the first young collection (Bunnymark V1 Sprites, 10,000 bunnies: ~2,250 µs
+  instead of ~1,750 µs for ~900 frames). The cause is memory layout, not barriers or TLABs:
+  the new objects sit in eden interleaved with the garbage the spawn produced (~1.9 KB per
+  bunny in V1, ~6 KB in V3) until a collection copies them together, and G1 had grown eden
+  to ~450–600 MiB, so that collection came seconds later. Evidence (100-frame windows):
+  forcing a young collection right after the spawn removes the phase; adding 4 KB of garbage
+  per bunny makes it ~15 % worse; a full collection (everything promoted, so old→young card
+  marking on every store) removes it too. With the cap the phase lasts ~200 frames (V1
+  Sprites, frames 100–800 after the spawn: +22–30 % → +1 %). The cost is ~5× more, shorter
+  young pauses (V3: ~1.1 ms instead of ~2.6 ms each), which only an allocation-heavy loop
+  feels: Bunnymark V3/V2 (~0.5–0.9 GB/s) run 1–5 % slower with the cap than without (10–12
+  interleaved rounds; more under heavy machine load), V1 Sprites ~1 %. `-XX:MaxNewSize=256m`
+  halves both the phase and the cost; `-Xmn64m`/`MaxNewSize=64m` double the collections;
+  `-Xms64m` ends the phase only while the heap is still small; ZGC and Shenandoah were
+  slower. Table and method: [Desktop and Packaging → JVM Options](docs/exporting/desktop.md#jvm-options).
+- **`KANAMA_JVM_OPTIONS`** passes your own JVM options (whitespace-separated, after the
+  defaults; one that sizes the young generation replaces the cap). G1 discards
+  `-XX:MaxNewSize` from `JAVA_TOOL_OPTIONS`, so Kanama keeps its cap then; `-Xmn` works in
+  either variable. The runtime smoke checks all three cases.
+- **MethodBinds are static finals.** Each generated wrapper method read its MethodBind
+  through a per-method `by lazy` (`SynchronizedLazyImpl.getValue` on every call), and every
+  wrapper class spun one lambda and one `Lazy` per method when it was initialised. A class
+  now keeps its binds in one `private object Binds` (singletons: with the engine singleton
+  handle), bound on the first call through any of its methods — still lazy per class, and a
+  class absent from the running engine is never looked up — then read as `static final`
+  fields the JIT folds. Same for `GodotObject`'s binds, RefCounted reference/unreference and
+  the post-initialize notification. Bunnymark steady state (same JVM options, 12
+  interleaved rounds): V3 −5 %, V2 −3 %, V1 Sprites −3 %; example project first frame
+  ~1,180 → ~1,000 ms (12–16 interleaved launches; the cap does not change it); `kanama.jar`
+  14.7 → 13.6 MB. A bind Godot does not have
+  still prints `FAULT bind-lookup-failed`, now when its class is first called.
+- Net, both changes against the previous release (Apple M1 Max, 12 interleaved rounds):
+  V1 Sprites −1 %, V2 −2 %, V3 +4 % (the cap's 1–5 % outweighs the binds' −5 % there; −4 %
+  with the cap's low-load cost), and no slow phase after a spawn.
 ### Fixed — Desktop: a crash or hang when a game is stopped with SIGTERM or `System.exit`
 
 Stopping a desktop game with SIGTERM (a process manager, `kill`, a test harness) -- or with SIGINT or

@@ -128,6 +128,58 @@ kit or store addon, clear quarantine on the project copy you trust:
 xattr -dr com.apple.quarantine /absolute/path/to/project
 ```
 
+## JVM Options
+
+The native bootstrap starts the JVM inside Godot's process with one default of
+its own, `-XX:MaxNewSize=128m`, which caps G1's young generation at 128 MiB. <!-- kanama-claim: jvm-default -->
+Without it G1 grows eden to ~450–600 MiB on a game's small live set, so after a
+large spawn (a level load, 10,000 Bunnymark sprites) the next young collection
+comes seconds later. Until then the new objects sit in eden interleaved with the
+garbage the spawn produced, and every frame that walks them is slower: Bunnymark
+V1 frames run ~20–30 % slower for ~900 frames, then recover the moment that
+collection copies the survivors together. With the cap the phase lasts ~200
+frames. The cost is more, shorter young pauses (Bunnymark V3: ~128 instead of
+~26 young collections over 4,500 frames, ~1.1 ms instead of ~2.6 ms each), which
+shows in steady-state frame time only where a game allocates heavily: Bunnymark
+V3 and V2 allocate ~0.5–0.9 GB/s and run 1–5 % slower with the cap (the more
+the machine is loaded, the more it costs), V1 Sprites ~1 %. A game that
+allocates less collects proportionally less often, and its slow phase without
+the cap would last proportionally longer.
+
+Pass your own options with `KANAMA_JVM_OPTIONS` (whitespace-separated). They are
+applied after the defaults, and one that sizes the young generation
+(`-XX:MaxNewSize`, `-XX:NewSize`, `-Xmn`, `-XX:NewRatio`) replaces the cap:
+
+```sh
+KANAMA_JVM_OPTIONS="-XX:MaxNewSize=256m -Xlog:gc" godot --path my_game
+```
+
+`JAVA_TOOL_OPTIONS` works as for any JVM, with one HotSpot rule to know: G1 only
+honours young-generation sizes given on the command line, and the JVM reads
+`JAVA_TOOL_OPTIONS` as environment options, so a `-XX:MaxNewSize` there is
+discarded (Kanama keeps its cap in that case). `-Xmn` is honoured in either
+variable and replaces the cap.
+
+| Young generation (Bunnymark, 10,000 bunnies) | Frames 100–800 after the spawn vs steady state (V1 Sprites) | Steady state vs G1 default, V3 / V2 / V1 Sprites | Young GCs per second (V3) |
+| --- | --- | --- | --- |
+| G1 default (no cap, before) | +22–30 % | — | ~1.4 |
+| `-XX:MaxNewSize=128m` (default now) | +1 % | +1–5 % / +3 % / +1 % | ~7 |
+| `-XX:MaxNewSize=256m` | +17–24 % | +2.5 % / +1 % / −1 % | ~3.3 |
+| `-XX:MaxNewSize=64m` | 0 % | +3 % / −5 % / +1.5 % | ~15 |
+| `-Xmn64m` | 0 % | 0 % / −3 % / −0.5 % | ~15 |
+| `-Xms64m` | +1 % | +3 % / −2 % / +3 % | ~6 (falling as the heap grows) |
+
+Apple M1 Max, editor binary, median frame time after a 1,500–3,000-frame
+warm-up, each option interleaved with the default in the same rounds on a
+machine shared with other builds: 10–12 rounds for the default and the two
+`MaxNewSize=128m`/`256m` rows, 4 rounds (±3 % is noise) for the others.
+`-Xms64m` ends the phase only while the heap is small: G1 grows the heap (and
+eden with it, to ~300 MiB in V3) as the game runs, so a later spawn is slow
+again. `-Xmn64m` and `-XX:MaxNewSize=64m` double the collections again for no
+gain on the phase. ZGC and generational Shenandoah were dropped after one
+screening run each (Shenandoah: V3 frames ~2× slower; ZGC: the slow phase lasted
+~2,000 frames and V3 had 70 ms p99 frames).
+
 ## Exported Games
 
 The decided end state (issue #102) is **unpack-and-play**: exported desktop

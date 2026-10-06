@@ -59,6 +59,28 @@ def _current_protocol(root: Path) -> int:
     return int(match.group(1))
 
 
+BOOTSTRAP = Path("bootstrap/bootstrap.c")
+
+
+def _jvm_defaults(root: Path) -> set[str]:
+    """The options of the bootstrap's KANAMA_DEFAULT_JVM_OPTIONS table (task 131 item 18)."""
+    source = (root / BOOTSTRAP).read_text()
+    table = re.search(r"KANAMA_DEFAULT_JVM_OPTIONS\[\] = \{(.*?)\n\};", source, re.S)
+    # An entry is {"<option>", {<skip keys>}, {<skip keys>}}: the option is the string before a brace.
+    options = set(re.findall(r'\{"(-[^"]+)",\s*\{', table.group(1))) if table else set()
+    if not options:
+        raise SystemExit(
+            f"check_doc_claims: FAIL — could not read KANAMA_DEFAULT_JVM_OPTIONS from {BOOTSTRAP}; "
+            "the source of truth moved and this check would silently pass"
+        )
+    return options
+
+
+def _stated_jvm_option(line: str) -> str | None:
+    match = re.search(r"`(-X[^`\s]+)`", line)
+    return match.group(1) if match else None
+
+
 def _stated_protocol(line: str) -> int | None:
     match = re.search(r"protocol (\d+)", line)
     return int(match.group(1)) if match else None
@@ -78,6 +100,7 @@ def main() -> int:
         return 2
 
     protocol = _current_protocol(root)
+    jvm_defaults = _jvm_defaults(root)
     checked = 0
     failures: list[str] = []
 
@@ -99,6 +122,18 @@ def main() -> int:
                     failures.append(
                         f"{path}:{number}: claims protocol {stated}, but "
                         f"WebScriptCodeEmitter declares {protocol}"
+                    )
+            elif kind == "jvm-default":
+                stated_option = _stated_jvm_option(line)
+                checked += 1
+                if stated_option is None:
+                    failures.append(
+                        f"{path}:{number}: marked as a jvm-default claim but names no `-X…` option"
+                    )
+                elif stated_option not in jvm_defaults:
+                    failures.append(
+                        f"{path}:{number}: claims the JVM default `{stated_option}`, but "
+                        f"{BOOTSTRAP} passes {sorted(jvm_defaults)}"
                     )
             else:
                 # An unknown kind is a failure, never a skip: a marker nobody checks is

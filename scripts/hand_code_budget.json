@@ -22,7 +22,7 @@
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotObject.kt": {
       "category": "runtime-core",
-      "lines": 642,
+      "lines": 508,
       "reason": "lifetime root GodotObject (Object); its enum region is generated"
     },
     "src/commonMain/kotlin/net/multigesture/kanama/api/GodotSignal.expect.kt": {

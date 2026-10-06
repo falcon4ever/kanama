@@ -143,6 +143,13 @@ Key points:
 
 - **`bootstrap.c` runs once and stops.** It does not stay in the call path.
   After step 6 the C frame returns and is never re-entered.
+- **The bootstrap chooses the JVM options.** The classpath, native access, JDWP
+  when configured, Kanama's one heap default (`-XX:MaxNewSize=128m`, which ends <!-- kanama-claim: jvm-default -->
+  the slow frames after a large spawn sooner; numbers in
+  [Desktop and Packaging → JVM Options](../exporting/desktop.md#jvm-options)),
+  then the user's `KANAMA_JVM_OPTIONS`. They are JNI options, which HotSpot
+  treats as command-line ones; G1 ignores young-generation sizes from
+  `JAVA_TOOL_OPTIONS`.
 - **The proc-address getter is the only thing C hands to Kotlin.** A single
   `long`. Everything else Kotlin needs, it asks for itself via that getter.
 - **Class registration happens during the `initialize` upcall**, not during

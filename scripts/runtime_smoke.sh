@@ -702,6 +702,31 @@ case "$UNAME_S" in
     rm -rf "$SIGTERM_ERR_DIR"
     ;;
 esac
+# task 131 item 18 -- the embedded JVM's young-generation cap. The bootstrap's default reaches the
+# JVM as a command-line option (G1 discards a MaxNewSize from JAVA_TOOL_OPTIONS, so an
+# environment-variable origin would mean the cap is not applied), KANAMA_JVM_OPTIONS replaces it,
+# and a MaxNewSize in JAVA_TOOL_OPTIONS does not drop it.
+JVM_OPTIONS_LOG="${LOG_FILE}.jvm_options"
+jvm_max_new_size() {
+  # "<bytes> <origin>" of MaxNewSize from -XX:+PrintFlagsFinal, e.g. "134217728 command line".
+  sed -nE 's/^ +size_t MaxNewSize += ([0-9]+) +\{product\} \{([a-z ]+)\}.*/\1 \2/p' "$JVM_OPTIONS_LOG" | head -n 1
+}
+check_jvm_max_new_size() {
+  local label="$1" expected="$2" actual
+  actual="$(jvm_max_new_size)"
+  if [[ "$actual" != "$expected" ]]; then
+    echo "[runtime_smoke] FAIL -- embedded JVM MaxNewSize ($label): expected '$expected', got '$actual'" >&2
+    echo "[runtime_smoke] full log: $JVM_OPTIONS_LOG" >&2
+    exit 1
+  fi
+  echo "[runtime_smoke] embedded JVM MaxNewSize ($label): $actual"
+}
+JAVA_TOOL_OPTIONS="-XX:+PrintFlagsFinal" "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit >"$JVM_OPTIONS_LOG" 2>&1
+check_jvm_max_new_size "default" "134217728 command line"
+KANAMA_JVM_OPTIONS="-XX:MaxNewSize=96m" JAVA_TOOL_OPTIONS="-XX:+PrintFlagsFinal" "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit >"$JVM_OPTIONS_LOG" 2>&1
+check_jvm_max_new_size "KANAMA_JVM_OPTIONS=-XX:MaxNewSize=96m" "100663296 command line"
+JAVA_TOOL_OPTIONS="-XX:+PrintFlagsFinal -XX:MaxNewSize=80m" "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit >"$JVM_OPTIONS_LOG" 2>&1
+check_jvm_max_new_size "JAVA_TOOL_OPTIONS=-XX:MaxNewSize=80m" "134217728 command line"
 
 # task 83 -- no native call adapter may be generated inside a Godot->JVM upcall.
 # The trace (KANAMA_TRACE_NATIVE_ADAPTERS=1, set above) timestamps every adapter and
